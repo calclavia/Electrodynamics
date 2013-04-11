@@ -2,6 +2,9 @@ package mffs;
 
 import java.util.logging.Logger;
 
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
