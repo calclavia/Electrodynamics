@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -50,6 +51,7 @@ public class ModularForceFieldSystem
 	 * Directories Definition
 	 */
 	public static final String RESOURCE_DIRECTORY = "/mods/mffs/";
+	public static final String LANGUAGE_DIRECTORY = RESOURCE_DIRECTORY + "languages/";
 	public static final String TEXTURE_DIRECTORY = RESOURCE_DIRECTORY + "textures/";
 	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
 	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
@@ -62,16 +64,26 @@ public class ModularForceFieldSystem
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		/**
+		 * General Registery
+		 */
 		LOGGER.setParent(FMLLog.getLogger());
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, ModularForceFieldSystem.proxy);
+		
+		
 	}
 
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
 		/**
-		 * Write metadata information.
+		 * Load language file(s)
+		 */
+		LOGGER.fine("Language(s) Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US" }));
+
+		/**
+		 * Write metadata information
 		 */
 		metadata.modId = CHANNEL;
 		metadata.name = NAME;
