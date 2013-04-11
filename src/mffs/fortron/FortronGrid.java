@@ -1,4 +1,4 @@
-package mffs;
+package mffs.fortron;
 
 import java.util.HashSet;
 import java.util.Iterator;
