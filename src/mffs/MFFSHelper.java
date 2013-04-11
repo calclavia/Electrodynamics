@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * @author Calclavia
  * 
  */
-public class MFFSHelpers
+public class MFFSHelper
 {
 	public static List<String> splitStringPerWord(String string, int wordsPerLine)
 	{
