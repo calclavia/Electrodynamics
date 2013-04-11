@@ -83,6 +83,14 @@ public class ModularForceFieldSystem
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, ModularForceFieldSystem.proxy);
 
+		Settings.load();
+
+		/**
+		 * Start instantiating blocks and items.
+		 */
+		Settings.CONFIGURATION.load();
+
+		Settings.CONFIGURATION.save();
 	}
 
 	@Init

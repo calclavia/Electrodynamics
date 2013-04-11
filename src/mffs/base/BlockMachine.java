@@ -6,17 +6,13 @@ import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.card.ICardLink;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
-import universalelectricity.prefab.implement.IRotatable;
 
 public abstract class BlockMachine extends BlockRotatable implements ICamouflageMaterial
 {
@@ -50,44 +46,6 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 		}
 
 		return true;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityliving, ItemStack itemStack)
-	{
-		TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-		if (tile instanceof IRotatable)
-		{
-			IRotatable rotatable = (IRotatable) tile;
-			int side = MathHelper.floor_double(entityliving.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			int height = Math.round(entityliving.rotationPitch);
-
-			if (height >= 65)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(1));
-			}
-			else if (height <= -65)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(0));
-			}
-			else if (side == 0)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(2));
-			}
-			else if (side == 1)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(5));
-			}
-			else if (side == 2)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(3));
-			}
-			else if (side == 3)
-			{
-				rotatable.setDirection(world, x, y, z, ForgeDirection.getOrientation(4));
-			}
-		}
 	}
 
 	@Override
