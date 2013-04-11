@@ -13,9 +13,11 @@ import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, useMetadata = true)
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketManager.class)
@@ -39,6 +41,8 @@ public class ModularForceFieldSystem
 	public static ModularForceFieldSystem instance;
 	@Mod.Metadata(ModularForceFieldSystem.CHANNEL)
 	public static ModMetadata metadata;
+	@SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
+	public static CommonProxy proxy;
 
 	public static final Logger LOGGER = Logger.getLogger(NAME);
 
@@ -60,17 +64,19 @@ public class ModularForceFieldSystem
 	{
 		LOGGER.setParent(FMLLog.getLogger());
 		Modstats.instance().getReporter().registerMod(this);
+		NetworkRegistry.instance().registerGuiHandler(this, ModularForceFieldSystem.proxy);
 	}
 
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
+		/**
+		 * Write metadata information.
+		 */
 		metadata.modId = CHANNEL;
 		metadata.name = NAME;
 		metadata.description = "Modular Force Field System is a mod that adds force fields, " + "high tech machinery and defensive measures to Minecraft.";
-
 		metadata.url = "http://www.universalelectricity.com/mffs/";
-
 		metadata.logoFile = "/mffs_logo.png";
 		metadata.version = VERSION + "." + BUILD_VERSION;
 		metadata.authorList = Arrays.asList(new String[] { "Calclavia" });
