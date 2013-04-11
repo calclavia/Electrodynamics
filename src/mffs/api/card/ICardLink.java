@@ -3,7 +3,7 @@ package mffs.api.card;
 import net.minecraft.item.ItemStack;
 import universalelectricity.core.vector.Vector3;
 
-public interface ILink
+public interface ICardLink
 {
 	public void setLink(ItemStack itemStack, Vector3 position);
 

@@ -1,4 +1,4 @@
-package mffs.api;
+package mffs.api.security;
 
 public enum SecurityPermission
 {

@@ -1,4 +1,4 @@
-package mffs.api;
+package mffs.api.security;
 
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public interface IDefenseStation extends IInventory, IFortronFrequency, IModuleA
 
 	public int getFortronCost();
 
-	public ISecurityCenter getSecurityCenter();
+	public IBiometricIdentifier getSecurityCenter();
 
 	/**
 	 * @return Is the defense station currently active?

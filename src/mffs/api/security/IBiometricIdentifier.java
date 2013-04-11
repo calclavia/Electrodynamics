@@ -1,11 +1,11 @@
-package mffs.api;
+package mffs.api.security;
 
 import net.minecraft.item.ItemStack;
 
 /**
- * Applied to security centers TileEntities.
+ * Applied to Biometric Identifiers (extends TileEntity).
  */
-public interface ISecurityCenter
+public interface IBiometricIdentifier
 {
 	/**
 	 * Is access granted to this specific user?

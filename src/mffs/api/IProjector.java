@@ -5,6 +5,7 @@ import java.util.Set;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
 import mffs.api.modules.IProjectorMode;
+import mffs.api.security.IBiometricIdentifier;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
@@ -63,6 +64,6 @@ public abstract interface IProjector extends IInventory, IModuleAcceptor, IRotat
 	 */
 	public int getConstructionSpeed();
 
-	ISecurityCenter getSecurityCenter();
+	IBiometricIdentifier getSecurityCenter();
 
 }
