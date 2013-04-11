@@ -2,8 +2,8 @@
 Modular Force Field System (or MFFS) is a mod that adds force fields, high tech machinery and defensive measures to Minecraft.
 
 ### Note on Transfer
-This repository contains version 3 of Modular Force Field System completely rewritten from the ground up by Calclavia.
-To find Thunderdark's original code for MFFS 2.0, it is inside of a branch. This mod is NOT derived from Thunderdark's mod
+This repository contains version 3 of Modular Force Field System which is completely rewritten from the ground up by Calclavia.
+To find Thunderdark's original code for MFFS 2.0, check out the version 2 branch. This mod is NOT derived from Thunderdark's mod
 but instead is the official successor of MFFS 2.0 and basing some ideas off the original MFFS.
 
 ### Website & Download
@@ -11,6 +11,7 @@ The mod can be found and downloaded at: http://universalelectricity.com/mffs/
 
 ### Developement
 **Project Leader** - Calclavia
+
 **Original Developer** - ThunderDark
 
 ### Translations

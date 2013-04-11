@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="UniversalElectricity" default="build">
+
+	<property file="build.properties" />
+	<property environment="env" />
+	<property name="file.JarFile" 	value="BasicComponents_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.APIFile" 	value="UniversalElectricity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
+
+	<target name="build">
+
+		<delete dir="DevContents" />
+		<delete dir="UeContents" />
+		<delete dir="BcContents" />
+		<delete dir="output" />
+		<delete dir="${dir.development}/forge" />
+		
+		<copy todir="${dir.development}">
+			<fileset dir="../Minecraft Forge/" />
+		</copy>
+
+		<copy todir="${dir.mcp}/src/minecraft">
+			
+			<fileset dir="${dir.development}src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+			
+		</copy>
+		
+		<mkdir dir="DevContents" />
+		<mkdir dir="UeContents" />
+		<mkdir dir="BcContents" />
+		<mkdir dir="output" />
+		
+		<replace dir="${dir.mcp}/src/minecraft" token="@MAJOR@" value="${version.mod.major}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@MINOR@" value="${version.mod.minor}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@REVIS@" value="${version.mod.revis}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@BUILD@" value="${env.BUILD_NUMBER}" />
+
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
+			<arg line="recompile.bat" />
+		</exec>
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
+			<arg line="reobfuscate_srg.bat" />
+		</exec>
+		
+		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
+			<arg line="recompile.sh" />
+		</exec>
+		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
+			<arg line="reobfuscate_srg.sh" />
+		</exec>
+
+		<copy todir="DevContents">
+			<fileset dir="${dir.mcp}/bin/minecraft">
+				<include name="**/mffs/**" />
+				<include name="**/universalelectricity/**" />
+			</fileset>
+		
+			<fileset dir="${dir.development}resources">
+				<exclude name=".git/**" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="UeContents">
+			<fileset dir="${dir.development}src" excludes=".git/**" />
+		
+			<fileset dir="${dir.development}resources">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>		
+		</copy>
+		
+		<copy todir="BcContents">
+			<fileset dir="${dir.mcp}/reobf/minecraft" excludes=".git/**" />
+		
+			<fileset dir="${dir.development}resources">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.java"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+		</copy>
+		
+		<jar destfile="output/${file.JarFile}">
+			<fileset dir="BcContents" />
+		</jar>
+
+		<zip destfile="output/${file.APIFile}">
+			<fileset dir="UeContents" />
+		</zip>
+
+		<echo file="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/info.txt" append="true" >
+		@ ${env.BUILD_NUMBER} ${version.minecraft} ${file.JarFile} ${file.APIFile}</echo>
+		
+		<copy todir="output" file="build.properties" />
+	</target>
+</project>
