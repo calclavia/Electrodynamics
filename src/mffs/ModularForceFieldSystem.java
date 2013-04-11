@@ -40,7 +40,7 @@ public class ModularForceFieldSystem
 
 	@Instance(ModularForceFieldSystem.ID)
 	public static ModularForceFieldSystem instance;
-	@Mod.Metadata(ModularForceFieldSystem.CHANNEL)
+	@Mod.Metadata(ModularForceFieldSystem.ID)
 	public static ModMetadata metadata;
 	@SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
 	public static CommonProxy proxy;
@@ -70,8 +70,7 @@ public class ModularForceFieldSystem
 		LOGGER.setParent(FMLLog.getLogger());
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, ModularForceFieldSystem.proxy);
-		
-		
+
 	}
 
 	@Init
@@ -85,9 +84,9 @@ public class ModularForceFieldSystem
 		/**
 		 * Write metadata information
 		 */
-		metadata.modId = CHANNEL;
+		metadata.modId = ID;
 		metadata.name = NAME;
-		metadata.description = "Modular Force Field System is a mod that adds force fields, " + "high tech machinery and defensive measures to Minecraft.";
+		metadata.description = "Modular Force Field System is a mod that adds force fields, high tech machinery and defensive measures to Minecraft.";
 		metadata.url = "http://www.universalelectricity.com/mffs/";
 		metadata.logoFile = "/mffs_logo.png";
 		metadata.version = VERSION + "." + BUILD_VERSION;
