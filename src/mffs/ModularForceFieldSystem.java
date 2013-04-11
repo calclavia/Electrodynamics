@@ -3,6 +3,9 @@ package mffs;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import mffs.base.BlockBase;
+import mffs.base.BlockMachine;
+
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
@@ -60,6 +63,15 @@ public class ModularForceFieldSystem
 	public static final String GUI_BASE_DIRECTORY = GUI_DIRECTORY + "gui_base.png";
 	public static final String GUI_COMPONENTS = GUI_DIRECTORY + "gui_components.png";
 	public static final String GUI_BUTTON = GUI_DIRECTORY + "gui_button.png";
+
+	/**
+	 * Blocks
+	 */
+	public static BlockMachine blockCoercionExtractor, blockFortronCapacitor,
+			blockForceFieldProjector, blockBiometricIdentifier, blockDefenseStation;
+
+	public static BlockBase blockFortronite;
+	public static BlockBase blockForcefield;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
