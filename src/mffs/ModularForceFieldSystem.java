@@ -2,12 +2,16 @@ package mffs;
 
 import java.util.logging.Logger;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "after:ThermalExpansion")
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL })
+@ModstatInfo(prefix = "mffs")
 public class ModularForceFieldSystem
 {
 	/**
@@ -36,4 +40,10 @@ public class ModularForceFieldSystem
 	public static final String GUI_COMPONENTS = GUI_DIRECTORY + "gui_components.png";
 	public static final String GUI_BUTTON = GUI_DIRECTORY + "gui_button.png";
 
+	@PreInit
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		LOGGER.setParent(FMLLog.getLogger());
+		Modstats.instance().getReporter().registerMod(this);
+	}
 }
