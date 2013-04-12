@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
+import mffs.block.BlockFortronCapacitor;
 import mffs.item.module.ItemModule;
-import net.minecraft.block.Block;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -24,6 +24,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, useMetadata = true)
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketManager.class)
@@ -107,8 +108,11 @@ public class ModularForceFieldSystem
 		 * Start instantiating blocks and items.
 		 */
 		Settings.CONFIGURATION.load();
+		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 
 		Settings.CONFIGURATION.save();
+
+		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName2());
 	}
 
 	@Init
