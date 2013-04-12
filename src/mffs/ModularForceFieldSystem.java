@@ -5,8 +5,13 @@ import java.util.logging.Logger;
 
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
+import mffs.base.ItemBase;
 import mffs.block.BlockFortronCapacitor;
+import mffs.fortron.FortronHelper;
 import mffs.item.module.ItemModule;
+import net.minecraft.item.Item;
+import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.liquids.LiquidStack;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -76,6 +81,11 @@ public class ModularForceFieldSystem
 	public static BlockBase blockForceField;
 
 	/**
+	 * Items
+	 */
+	public static Item itemFortron;
+
+	/**
 	 * Modules
 	 */
 	// General Modules
@@ -108,6 +118,12 @@ public class ModularForceFieldSystem
 		 * Start instantiating blocks and items.
 		 */
 		Settings.CONFIGURATION.load();
+		/**
+		 * The Fortron Liquid
+		 */
+		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
+		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
+
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 
 		Settings.CONFIGURATION.save();

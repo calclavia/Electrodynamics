@@ -15,7 +15,6 @@ public class MFFSCreativeTab extends CreativeTabs
 	@Override
 	public ItemStack getIconItemStack()
 	{
-		// TODO: changed this.
-		return null;
+		return new ItemStack(ModularForceFieldSystem.blockFortronCapacitor);
 	}
 }
