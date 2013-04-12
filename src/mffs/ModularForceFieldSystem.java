@@ -121,11 +121,11 @@ public class ModularForceFieldSystem
 		/**
 		 * The Fortron Liquid
 		 */
-		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
-		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
-
+		
+		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
+		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName2());

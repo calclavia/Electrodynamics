@@ -59,10 +59,15 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public int getModuleCount(IModule module, int... slots)
 	{
-		String cacheID = "getModuleCount_" + module.hashCode() + "_" + Arrays.hashCode(slots);
+		String cacheID = "getModuleCount_" + module.hashCode();
+
+		if (slots != null)
+		{
+			cacheID += "_" + Arrays.hashCode(slots);
+		}
+
 		if (Settings.USE_CACHE)
 		{
-
 			if (this.cache.containsKey(cacheID))
 			{
 				if (this.cache.get(cacheID) instanceof Integer)
@@ -109,7 +114,12 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public Set<ItemStack> getModuleStacks(int... slots)
 	{
-		String cacheID = "getModuleStacks_" + Arrays.hashCode(slots);
+		String cacheID = "getModuleStacks_";
+
+		if (slots != null)
+		{
+			cacheID += Arrays.hashCode(slots);
+		}
 
 		if (Settings.USE_CACHE)
 		{
@@ -166,10 +176,15 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public Set<IModule> getModules(int... slots)
 	{
-		String cacheID = "getModules_" + Arrays.hashCode(slots);
+		String cacheID = "getModules_";
+
+		if (slots != null)
+		{
+			cacheID += Arrays.hashCode(slots);
+		}
+
 		if (Settings.USE_CACHE)
 		{
-
 			if (this.cache.containsKey(cacheID))
 			{
 				if (this.cache.get(cacheID) instanceof Set)
