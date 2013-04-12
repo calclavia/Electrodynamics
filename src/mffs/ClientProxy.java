@@ -2,6 +2,7 @@ package mffs;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class ClientProxy extends CommonProxy
@@ -10,6 +11,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		super.preInit();
+		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 	}
 
 	@Override
