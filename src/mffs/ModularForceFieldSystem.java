@@ -7,7 +7,9 @@ import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
 import mffs.base.ItemBase;
 import mffs.block.BlockFortronCapacitor;
+import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
+import mffs.item.card.ItemCardInfinite;
 import mffs.item.module.ItemModule;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.item.Item;
@@ -87,6 +89,12 @@ public class ModularForceFieldSystem
 	public static Item itemFortron;
 
 	/**
+	 * Cards
+	 */
+	public static ItemCard itemCardBlank, itemCardInfinite, itemCardFrequency, itemCardID,
+			itemCardLink;
+
+	/**
 	 * Modules
 	 */
 	// General Modules
@@ -127,6 +135,10 @@ public class ModularForceFieldSystem
 
 		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
+
+		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
+		itemCardInfinite = new ItemCardInfinite(Settings.getNextItemID());
+
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, "MFFSFortronCapacitor");
