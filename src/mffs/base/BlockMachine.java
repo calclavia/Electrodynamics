@@ -1,10 +1,14 @@
 package mffs.base;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.card.ICardLink;
+import mffs.render.RenderBlockHandler;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -87,4 +91,30 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 	{
 		return 100.0F;
 	}
+
+	@Override
+	public void registerIcons(IconRegister par1IconRegister)
+	{
+		this.blockIcon = par1IconRegister.registerIcon(ModularForceFieldSystem.PREFIX + "machine");
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RenderBlockHandler.ID;
+	}
+
 }

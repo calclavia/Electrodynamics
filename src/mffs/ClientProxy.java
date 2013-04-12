@@ -1,9 +1,14 @@
 package mffs;
 
+import mffs.render.RenderBlockHandler;
+import mffs.render.RenderFortronCapacitor;
+import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
@@ -17,6 +22,9 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void init()
 	{
+		super.init();
+		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
 	}
 
 	@Override
