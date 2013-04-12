@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
+import mffs.item.module.ItemModule;
+import net.minecraft.block.Block;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -65,13 +67,29 @@ public class ModularForceFieldSystem
 	public static final String GUI_BUTTON = GUI_DIRECTORY + "gui_button.png";
 
 	/**
-	 * Blocks
+	 * Machines
 	 */
 	public static BlockMachine blockCoercionExtractor, blockFortronCapacitor,
 			blockForceFieldProjector, blockBiometricIdentifier, blockDefenseStation;
 
-	public static BlockBase blockFortronite;
-	public static BlockBase blockForcefield;
+	public static BlockBase blockForceField;
+
+	/**
+	 * Modules
+	 */
+	// General Modules
+	public static ItemModule itemModule, itemModuleSpeed, itemModuleCapacity,
+			itemModuleTranslation, itemModuleScale, itemModuleRotation;
+
+	// Projector Modules
+	public static ItemModule itemModuleShock, itemModuleSponge, itemModuleManipulator,
+			itemModuleDisintegration, itemModuleJammer, itemModuleFusion, itemModuleGlow,
+			itemModuleStablize;
+
+	// Defense Station Modules
+	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
+			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
+			itemModuleBlockAlter;
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
