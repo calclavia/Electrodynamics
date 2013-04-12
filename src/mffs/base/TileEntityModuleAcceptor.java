@@ -1,9 +1,11 @@
 package mffs.base;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import mffs.Settings;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
 import net.minecraft.item.Item;
@@ -25,11 +27,14 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	{
 		String cacheID = "getModule_" + module.hashCode();
 
-		if (this.cache.containsKey(cacheID))
+		if (Settings.USE_CACHE)
 		{
-			if (this.cache.get(cacheID) instanceof ItemStack)
+			if (this.cache.containsKey(cacheID))
 			{
-				return (ItemStack) this.cache.get(cacheID);
+				if (this.cache.get(cacheID) instanceof ItemStack)
+				{
+					return (ItemStack) this.cache.get(cacheID);
+				}
 			}
 		}
 
@@ -43,7 +48,10 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
-		this.cache.put(cacheID, returnStack.copy());
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, returnStack.copy());
+		}
 
 		return returnStack;
 	}
@@ -51,13 +59,16 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public int getModuleCount(IModule module, int... slots)
 	{
-		String cacheID = "getModuleCount_" + module.hashCode() + "_" + slots.hashCode();
-
-		if (this.cache.containsKey(cacheID))
+		String cacheID = "getModuleCount_" + module.hashCode() + "_" + Arrays.hashCode(slots);
+		if (Settings.USE_CACHE)
 		{
-			if (this.cache.get(cacheID) instanceof Integer)
+
+			if (this.cache.containsKey(cacheID))
 			{
-				return (int) this.cache.get(cacheID);
+				if (this.cache.get(cacheID) instanceof Integer)
+				{
+					return (int) this.cache.get(cacheID);
+				}
 			}
 		}
 
@@ -87,7 +98,10 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
-		this.cache.put(cacheID, count);
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, count);
+		}
 
 		return count;
 	}
@@ -95,13 +109,16 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public Set<ItemStack> getModuleStacks(int... slots)
 	{
-		String cacheID = "getModuleStacks_" + slots.hashCode();
+		String cacheID = "getModuleStacks_" + Arrays.hashCode(slots);
 
-		if (this.cache.containsKey(cacheID))
+		if (Settings.USE_CACHE)
 		{
-			if (this.cache.get(cacheID) instanceof Set)
+			if (this.cache.containsKey(cacheID))
 			{
-				return (Set<ItemStack>) this.cache.get(cacheID);
+				if (this.cache.get(cacheID) instanceof Set)
+				{
+					return (Set<ItemStack>) this.cache.get(cacheID);
+				}
 			}
 		}
 
@@ -138,20 +155,27 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
-		this.cache.put(cacheID, modules);
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, modules);
+		}
+
 		return modules;
 	}
 
 	@Override
 	public Set<IModule> getModules(int... slots)
 	{
-		String cacheID = "getModules_" + slots.hashCode();
-
-		if (this.cache.containsKey(cacheID))
+		String cacheID = "getModules_" + Arrays.hashCode(slots);
+		if (Settings.USE_CACHE)
 		{
-			if (this.cache.get(cacheID) instanceof Set)
+
+			if (this.cache.containsKey(cacheID))
 			{
-				return (Set<IModule>) this.cache.get(cacheID);
+				if (this.cache.get(cacheID) instanceof Set)
+				{
+					return (Set<IModule>) this.cache.get(cacheID);
+				}
 			}
 		}
 
@@ -188,7 +212,10 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
-		this.cache.put(cacheID, modules);
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, modules);
+		}
 
 		return modules;
 	}

@@ -44,6 +44,7 @@ public class Settings
 	public static int MAX_FORCE_FIELD_SCALE = 150;
 	public static boolean LOAD_CHUNKS = true;
 	public static boolean OP_OVERRIDE = true;
+	public static boolean USE_CACHE = true;
 
 	public static void load()
 	{
@@ -57,7 +58,11 @@ public class Settings
 
 		Property propOpOverride = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Op Override", OP_OVERRIDE);
 		propOpOverride.comment = "Allow the operator(s) to override security measures created by MFFS?";
-		OP_OVERRIDE = propOpOverride.getBoolean(LOAD_CHUNKS);
+		OP_OVERRIDE = propOpOverride.getBoolean(OP_OVERRIDE);
+
+		Property propUseCache = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Cache", USE_CACHE);
+		propUseCache.comment = "Cache allows temporary data saving to decrease calculations required.";
+		USE_CACHE = propUseCache.getBoolean(USE_CACHE);
 
 		Property maxFFGenPerTick = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", MAX_FORCE_FIELDS_PER_TICK);
 		maxFFGenPerTick.comment = "How many force field blocks can be generated per tick? Less reduces lag.";
