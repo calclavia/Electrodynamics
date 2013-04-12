@@ -59,53 +59,56 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public int getModuleCount(IModule module, int... slots)
 	{
-		String cacheID = "getModuleCount_" + module.hashCode();
-
-		if (slots != null)
-		{
-			cacheID += "_" + Arrays.hashCode(slots);
-		}
-
-		if (Settings.USE_CACHE)
-		{
-			if (this.cache.containsKey(cacheID))
-			{
-				if (this.cache.get(cacheID) instanceof Integer)
-				{
-					return (int) this.cache.get(cacheID);
-				}
-			}
-		}
-
 		int count = 0;
 
-		if (slots != null && slots.length > 0)
+		if (module != null)
 		{
-			for (int slotID : slots)
+			String cacheID = "getModuleCount_" + module.hashCode();
+
+			if (slots != null)
 			{
-				if (this.getStackInSlot(slotID) != null)
+				cacheID += "_" + Arrays.hashCode(slots);
+			}
+
+			if (Settings.USE_CACHE)
+			{
+				if (this.cache.containsKey(cacheID))
 				{
-					if (this.getStackInSlot(slotID).getItem() == module)
+					if (this.cache.get(cacheID) instanceof Integer)
 					{
-						count += this.getStackInSlot(slotID).stackSize;
+						return (int) this.cache.get(cacheID);
 					}
 				}
 			}
-		}
-		else
-		{
-			for (ItemStack itemStack : getModuleStacks())
+
+			if (slots != null && slots.length > 0)
 			{
-				if (itemStack.getItem() == module)
+				for (int slotID : slots)
 				{
-					count += itemStack.stackSize;
+					if (this.getStackInSlot(slotID) != null)
+					{
+						if (this.getStackInSlot(slotID).getItem() == module)
+						{
+							count += this.getStackInSlot(slotID).stackSize;
+						}
+					}
 				}
 			}
-		}
+			else
+			{
+				for (ItemStack itemStack : getModuleStacks())
+				{
+					if (itemStack.getItem() == module)
+					{
+						count += itemStack.stackSize;
+					}
+				}
+			}
 
-		if (Settings.USE_CACHE)
-		{
-			this.cache.put(cacheID, count);
+			if (Settings.USE_CACHE)
+			{
+				this.cache.put(cacheID, count);
+			}
 		}
 
 		return count;

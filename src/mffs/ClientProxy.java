@@ -1,9 +1,11 @@
 package mffs;
 
+import mffs.gui.GuiFortronCapacitor;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderFortronCapacitor;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -36,6 +38,16 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity != null)
+		{
+			if (tileEntity.getClass() == TileEntityFortronCapacitor.class)
+			{
+				return new GuiFortronCapacitor(player, (TileEntityFortronCapacitor) tileEntity);
+			}
+		}
+
 		return null;
 	}
 }

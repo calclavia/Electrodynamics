@@ -119,10 +119,10 @@ public class ModularForceFieldSystem
 		 * Start instantiating blocks and items.
 		 */
 		Settings.CONFIGURATION.load();
+
 		/**
 		 * The Fortron Liquid
 		 */
-
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 
 		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
