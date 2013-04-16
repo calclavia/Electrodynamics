@@ -1,7 +1,5 @@
 package mffs.base;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
@@ -17,6 +15,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BlockMachine extends BlockRotatable implements ICamouflageMaterial
 {

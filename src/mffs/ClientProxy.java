@@ -1,9 +1,12 @@
 package mffs;
 
+import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.render.FXBeam;
 import mffs.render.RenderBlockHandler;
+import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
+import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +32,7 @@ public class ClientProxy extends CommonProxy
 		super.init();
 		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
 	}
 
 	@Override
@@ -47,6 +51,10 @@ public class ClientProxy extends CommonProxy
 			if (tileEntity.getClass() == TileEntityFortronCapacitor.class)
 			{
 				return new GuiFortronCapacitor(player, (TileEntityFortronCapacitor) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityForceFieldProjector.class)
+			{
+				return new GuiForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
 			}
 		}
 

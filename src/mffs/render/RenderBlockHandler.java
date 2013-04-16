@@ -1,6 +1,7 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
+import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -23,14 +24,26 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		if (modelID == ID && block instanceof BlockFortronCapacitor)
+		if (modelID == ID)
 		{
 			GL11.glPushMatrix();
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderFortronCapacitor.TEXTURE_ON));
-			GL11.glTranslated(0.5, 1.95, 0.5);
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-			GL11.glScalef(1.3f, 1.3f, 1.3f);
-			RenderFortronCapacitor.MODEL.render(0.0625F);
+
+			if (block instanceof BlockFortronCapacitor)
+			{
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderFortronCapacitor.TEXTURE_ON));
+				GL11.glTranslated(0.5, 1.95, 0.5);
+				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+				GL11.glScalef(1.3f, 1.3f, 1.3f);
+				RenderFortronCapacitor.MODEL.render(0.0625F);
+			}
+			else if (block instanceof BlockForceFieldProjector)
+			{
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderForceFieldProjector.TEXTURE_ON));
+				GL11.glTranslated(0.5, 1.5, 0.5);
+				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+				RenderForceFieldProjector.MODEL.render(0, 0.0625F);
+			}
+
 			GL11.glPopMatrix();
 		}
 		else
@@ -74,11 +87,10 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess iBlockAccess, int x, int y, int z, Block block, int modelID, RenderBlocks renderer)
 	{
-		if (!(block instanceof BlockFortronCapacitor))
-		{
-			renderer.renderStandardBlock(block, x, y, z);
-		}
-
+		/*
+		 * if (!(block instanceof BlockFortronCapacitor)) { renderer.renderStandardBlock(block, x,
+		 * y, z); }
+		 */
 		return false;
 	}
 
