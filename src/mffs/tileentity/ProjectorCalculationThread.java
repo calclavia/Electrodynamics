@@ -38,6 +38,7 @@ public class ProjectorCalculationThread extends Thread
 		this.callBack = callBack;
 	}
 
+	@Override
 	public void run()
 	{
 		this.projector.isCalculating = true;

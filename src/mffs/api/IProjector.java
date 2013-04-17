@@ -7,7 +7,6 @@ import mffs.api.modules.IModuleAcceptor;
 import mffs.api.modules.IProjectorMode;
 import mffs.api.security.IBiometricIdentifier;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;

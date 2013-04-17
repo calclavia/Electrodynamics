@@ -498,7 +498,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			{
 				if (this.cache.get(cacheID) instanceof Integer)
 				{
-					return (int) this.cache.get(cacheID);
+					return (Integer) this.cache.get(cacheID);
 				}
 			}
 		}
@@ -525,7 +525,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			{
 				if (this.cache.get(cacheID) instanceof Integer)
 				{
-					return (int) this.cache.get(cacheID);
+					return (Integer) this.cache.get(cacheID);
 				}
 			}
 		}

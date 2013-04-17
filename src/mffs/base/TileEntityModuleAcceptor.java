@@ -76,7 +76,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 				{
 					if (this.cache.get(cacheID) instanceof Integer)
 					{
-						return (int) this.cache.get(cacheID);
+						return (Integer) this.cache.get(cacheID);
 					}
 				}
 			}
@@ -238,6 +238,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		return modules;
 	}
 
+	@Override
 	public void onInventoryChanged()
 	{
 		/**

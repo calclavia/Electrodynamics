@@ -2,7 +2,6 @@ package mffs.base;
 
 import java.util.List;
 
-import universalelectricity.prefab.TranslationHelper;
 import mffs.MFFSCreativeTab;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
@@ -10,6 +9,7 @@ import mffs.Settings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import universalelectricity.prefab.TranslationHelper;
 
 public class ItemBase extends Item
 {
