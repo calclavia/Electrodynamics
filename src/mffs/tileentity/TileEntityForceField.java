@@ -89,7 +89,7 @@ public class TileEntityForceField extends TileEntityAdvanced implements IPacketR
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.projector = Vector3.readFromNBT(nbt.getCompoundTag("zhuYao"));
+		this.projector = Vector3.readFromNBT(nbt.getCompoundTag("projector"));
 
 	}
 
@@ -103,7 +103,7 @@ public class TileEntityForceField extends TileEntityAdvanced implements IPacketR
 
 		if (this.getProjector() != null)
 		{
-			nbt.setCompoundTag("zhuYao", this.projector.writeToNBT(new NBTTagCompound()));
+			nbt.setCompoundTag("projector", this.projector.writeToNBT(new NBTTagCompound()));
 		}
 	}
 }

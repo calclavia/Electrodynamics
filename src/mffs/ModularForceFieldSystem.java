@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
 import mffs.base.ItemBase;
+import mffs.block.BlockForceField;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.card.ItemCard;
@@ -109,7 +110,7 @@ public class ModularForceFieldSystem
 	// Projector Modules
 	public static ItemModule itemModuleShock, itemModuleSponge, itemModuleManipulator,
 			itemModuleDisintegration, itemModuleJammer, itemModuleFusion, itemModuleGlow,
-			itemModuleStablize;
+			itemModuleStablize, itemModuleCamouflage;
 
 	// Defense Station Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
@@ -136,6 +137,7 @@ public class ModularForceFieldSystem
 		/**
 		 * Blocks
 		 */
+		blockForceField = new BlockForceField(Settings.getNextBlockID());
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 
