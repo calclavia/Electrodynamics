@@ -19,6 +19,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,7 +33,6 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	protected final Set<Vector3> forceFields = new HashSet<Vector3>();
 
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
-	protected final Set<Vector3> calculatedFieldInterior = Collections.synchronizedSet(new HashSet<Vector3>());
 
 	private boolean isCalculated = false;
 
@@ -129,23 +129,17 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			if (this.getMode() != null)
 			{
 				this.calculatedField.clear();
-				this.calculatedFieldInterior.clear();
 
-				this.getMode().calculateField(this, this.calculatedField, this.calculatedFieldInterior);
+				this.getMode().calculateField(this, this.calculatedField);
 
 				for (Vector3 position : this.calculatedField)
 				{
 					position.add(new Vector3(this));
 				}
 
-				for (Vector3 position : this.calculatedFieldInterior)
-				{
-					position.add(new Vector3(this));
-				}
-
 				for (IModule module : this.getModules(this.getModuleSlots()))
 				{
-					module.onCalculate(this, this.calculatedField, this.calculatedFieldInterior);
+					module.onCalculate(this, this.calculatedField);
 				}
 
 				this.isCalculated = true;
@@ -162,7 +156,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		if (!this.worldObj.isRemote && this.isCalculated)
 		{
 			int constructionCount = 0;
-			int constructionSpeed = Math.min(this.getConstructionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
+			int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
 			this.forceFields.clear();
 
 			HashSet<Vector3> fieldToBeProjected = new HashSet<Vector3>();
@@ -253,7 +247,6 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		}
 
 		this.calculatedField.clear();
-		this.calculatedFieldInterior.clear();
 		this.isCalculated = false;
 	}
 
@@ -265,7 +258,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	}
 
 	@Override
-	public int getConstructionSpeed()
+	public int getProjectionSpeed()
 	{
 		return 100 + 20 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed, this.getModuleSlots());
 	}
@@ -279,34 +272,12 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public IProjectorMode getMode()
 	{
-		if (this.getModeStack() != null)
+		if (this.getStackInSlot(MODULE_SLOT_ID) != null)
 		{
-			return (IProjectorMode) this.getModeStack().getItem();
+			return (IProjectorMode) this.getStackInSlot(MODULE_SLOT_ID).getItem();
 		}
 
 		return null;
-	}
-
-	@Override
-	public ItemStack getModeStack()
-	{
-		ItemStack itemStack = this.getStackInSlot(MODULE_SLOT_ID);
-
-		if (itemStack != null)
-		{
-			if (itemStack.getItem() instanceof IProjectorMode)
-			{
-				return itemStack;
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public Set<Vector3> getInteriorPoints()
-	{
-		return this.calculatedFieldInterior;
 	}
 
 	@Override
@@ -405,5 +376,171 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	public long getTicks()
 	{
 		return this.ticks;
+	}
+
+	@Override
+	public Vector3 getTranslation()
+	{
+		String cacheID = "getTranslation";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Vector3)
+				{
+					return (Vector3) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+		int zTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)));
+		int zTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)));
+
+		int xTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)));
+		int xTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)));
+
+		int yTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.UP));
+		int yTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.DOWN));
+
+		Vector3 translation = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg);
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, translation);
+		}
+
+		return translation;
+	}
+
+	@Override
+	public Vector3 getPositiveScale()
+	{
+		String cacheID = "getPositiveScale";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Vector3)
+				{
+					return (Vector3) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+		int zScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)));
+		int xScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)));
+		int yScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.UP));
+
+		int omnidirectionalScale = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getModuleSlots());
+
+		zScalePos += omnidirectionalScale;
+		xScalePos += omnidirectionalScale;
+		yScalePos += omnidirectionalScale;
+
+		Vector3 positiveScale = new Vector3(xScalePos, yScalePos, zScalePos);
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, positiveScale);
+		}
+
+		return positiveScale;
+	}
+
+	@Override
+	public Vector3 getNegativeScale()
+	{
+		String cacheID = "getNegativeScale";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Vector3)
+				{
+					return (Vector3) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+		int zScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)));
+		int xScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)));
+		int yScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.DOWN));
+
+		int omnidirectionalScale = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getModuleSlots());
+
+		zScaleNeg += omnidirectionalScale;
+		xScaleNeg += omnidirectionalScale;
+		yScaleNeg += omnidirectionalScale;
+
+		Vector3 negativeScale = new Vector3(xScaleNeg, yScaleNeg, zScaleNeg);
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, negativeScale);
+		}
+
+		return negativeScale;
+	}
+
+	@Override
+	public int getRotationYaw()
+	{
+		String cacheID = "getRotationYaw";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Integer)
+				{
+					return (int) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		int horizontalRotation = this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST))) - this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST))) + this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH))) - this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)));
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, horizontalRotation);
+		}
+
+		return horizontalRotation;
+	}
+
+	@Override
+	public int getRotationPitch()
+	{
+		String cacheID = "getRotationPitch";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Integer)
+				{
+					return (int) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		int verticleRotation = this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(ForgeDirection.UP)) - this.getModuleCount(ModularForceFieldSystem.itemModuleRotate, this.getSlotsBasedOnDirection(ForgeDirection.DOWN));
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, verticleRotation);
+		}
+
+		return verticleRotation;
 	}
 }
