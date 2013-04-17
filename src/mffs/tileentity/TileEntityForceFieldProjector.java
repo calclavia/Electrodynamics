@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import calclavia.lib.CalculationHelper;
-
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IProjector;
@@ -14,6 +12,7 @@ import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileEntityModuleAcceptor;
 import mffs.card.ItemCard;
+import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,7 +24,7 @@ import universalelectricity.core.vector.VectorHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor implements IProjector
+public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor implements IProjector, IThreadCallBack
 {
 	private static final int MODULE_SLOT_ID = 2;
 
@@ -36,7 +35,8 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
 
-	private boolean isCalculated = false;
+	public boolean isCalculating = false;
+	public boolean isCalculated = false;
 
 	public int animation = 0;
 
@@ -51,8 +51,12 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	{
 		super.initiate();
 		this.calculateForceField();
-		this.destroyField();
+	}
 
+	@Override
+	public void onThreadComplete()
+	{
+		this.destroyField();
 	}
 
 	@Override
@@ -72,8 +76,10 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 					{
 						this.calculateForceField();
 					}
-
-					this.projectField();
+					else
+					{
+						this.projectField();
+					}
 				}
 			}
 			else
@@ -114,51 +120,27 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public void onInventoryChanged()
 	{
-		final boolean active = this.isActive();
-		this.setActive(false);
-		this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
+		super.onInventoryChanged();
+		this.destroyField();
+	}
 
-		if (active)
+	private void calculateForceField(IThreadCallBack callBack)
+	{
+		if (!this.worldObj.isRemote && !this.isCalculating)
 		{
-			this.setActive(true);
+			if (this.getMode() != null)
+			{
+				this.calculatedField.clear();
+
+				// Start multi-threading calculation
+				(new ProjectorCalculationThread(this, callBack)).start();
+			}
 		}
 	}
 
 	private void calculateForceField()
 	{
-		if (!this.worldObj.isRemote)
-		{
-			if (this.getMode() != null)
-			{
-				this.calculatedField.clear();
-				Set<Vector3> newField = new HashSet<Vector3>();
-
-				this.getMode().calculateField(this, newField);
-
-				Vector3 translation = this.getTranslation();
-
-				for (Vector3 position : this.calculatedField)
-				{
-					CalculationHelper.rotateXZByAngle(position, this.getRotationYaw());
-					CalculationHelper.rotateYByAngle(position, this.getRotationPitch());
-
-					position.add(new Vector3(this));
-					position.add(translation);
-
-					if (position.intY() <= this.worldObj.getHeight())
-					{
-						this.calculatedField.add(position);
-					}
-				}
-
-				for (IModule module : this.getModules(this.getModuleSlots()))
-				{
-					module.onCalculate(this, this.calculatedField);
-				}
-
-				this.isCalculated = true;
-			}
-		}
+		this.calculateForceField(null);
 	}
 
 	/**
@@ -167,7 +149,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public void projectField()
 	{
-		if (!this.worldObj.isRemote && this.isCalculated)
+		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
 		{
 			int constructionCount = 0;
 			int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
@@ -242,7 +224,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public void destroyField()
 	{
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
 		{
 			HashSet<Vector3> copiedSet = new HashSet<Vector3>();
 			copiedSet.addAll(this.calculatedField);
@@ -557,4 +539,5 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 		return verticleRotation;
 	}
+
 }

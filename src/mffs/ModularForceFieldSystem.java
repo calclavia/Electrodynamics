@@ -12,10 +12,13 @@ import mffs.block.BlockFortronCapacitor;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardInfinite;
+import mffs.item.mode.ItemMode;
+import mffs.item.mode.ItemModeCube;
 import mffs.item.module.ItemModule;
 import mffs.item.module.ItemModuleRotate;
 import mffs.item.module.ItemModuleScale;
 import mffs.item.module.ItemModuleTranslate;
+import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.item.Item;
@@ -31,10 +34,12 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -101,6 +106,10 @@ public class ModularForceFieldSystem
 			itemCardLink;
 
 	/**
+	 * Modes
+	 */
+	public static ItemMode itemModeCube, itemModeSphere, itemModeTube, itemModePyramid;
+	/**
 	 * Modules
 	 */
 	// General Modules
@@ -142,7 +151,12 @@ public class ModularForceFieldSystem
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 
 		/**
-		 * Items
+		 * Modes
+		 */
+		itemModeCube = new ItemModeCube(Settings.getNextItemID());
+
+		/**
+		 * Modules
 		 */
 		itemModuleTranslate = new ItemModuleTranslate(Settings.getNextItemID());
 		itemModuleScale = new ItemModuleScale(Settings.getNextItemID());
@@ -159,9 +173,11 @@ public class ModularForceFieldSystem
 
 		Settings.CONFIGURATION.save();
 
+		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName2());
 		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName2());
 		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName2());
 
+		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName2());
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName2());
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName2());
 

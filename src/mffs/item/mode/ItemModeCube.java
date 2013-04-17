@@ -2,10 +2,8 @@ package mffs.item.mode;
 
 import java.util.Set;
 
-import mffs.ModularForceFieldSystem;
 import mffs.api.IProjector;
 import mffs.render.model.ModelCube;
-import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
