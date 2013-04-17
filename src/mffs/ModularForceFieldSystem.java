@@ -12,6 +12,9 @@ import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardInfinite;
 import mffs.item.module.ItemModule;
+import mffs.item.module.ItemModuleRotate;
+import mffs.item.module.ItemModuleScale;
+import mffs.item.module.ItemModuleTranslate;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.item.Item;
@@ -100,8 +103,8 @@ public class ModularForceFieldSystem
 	 * Modules
 	 */
 	// General Modules
-	public static ItemModule itemModule, itemModuleSpeed, itemModuleCapacity,
-			itemModuleTranslation, itemModuleScale, itemModuleRotation;
+	public static ItemModule itemModule, itemModuleSpeed, itemModuleCapacity, itemModuleTranslate,
+			itemModuleScale, itemModuleRotate;
 
 	// Projector Modules
 	public static ItemModule itemModuleShock, itemModuleSponge, itemModuleManipulator,
@@ -131,11 +134,21 @@ public class ModularForceFieldSystem
 		Settings.CONFIGURATION.load();
 
 		/**
-		 * The Fortron Liquid
+		 * Blocks
 		 */
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 
+		/**
+		 * Items
+		 */
+		itemModuleTranslate = new ItemModuleTranslate(Settings.getNextItemID());
+		itemModuleScale = new ItemModuleScale(Settings.getNextItemID());
+		itemModuleRotate = new ItemModuleRotate(Settings.getNextItemID());
+
+		/**
+		 * The Fortron Liquid
+		 */
 		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 

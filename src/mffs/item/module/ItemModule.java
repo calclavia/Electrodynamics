@@ -1,18 +1,14 @@
 package mffs.item.module;
 
-import java.util.List;
 import java.util.Set;
 
-import mffs.MFFSHelper;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.base.ItemBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.TranslationHelper;
 
 public class ItemModule extends ItemBase implements IModule
 {
@@ -21,17 +17,6 @@ public class ItemModule extends ItemBase implements IModule
 	public ItemModule(int id, String name)
 	{
 		super(id, name);
-	}
-
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
-	{
-		String tooltip = TranslationHelper.getLocal(this.getUnlocalizedName() + ".tooltip");
-
-		if (tooltip != null && tooltip.length() > 0)
-		{
-			info.addAll(MFFSHelper.splitStringPerWord(tooltip, 5));
-		}
 	}
 
 	@Override
@@ -66,6 +51,6 @@ public class ItemModule extends ItemBase implements IModule
 	@Override
 	public float getFortronCost(int amplifier)
 	{
-		return fortronCost;
+		return this.fortronCost;
 	}
 }

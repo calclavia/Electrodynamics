@@ -1,9 +1,15 @@
 package mffs.base;
 
+import java.util.List;
+
+import universalelectricity.prefab.TranslationHelper;
 import mffs.MFFSCreativeTab;
+import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class ItemBase extends Item
 {
@@ -13,5 +19,16 @@ public class ItemBase extends Item
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
 		this.setNoRepair();
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
+	{
+		String tooltip = TranslationHelper.getLocal(this.getUnlocalizedName() + ".tooltip");
+
+		if (tooltip != null && tooltip.length() > 0)
+		{
+			info.addAll(MFFSHelper.splitStringPerWord(tooltip, 5));
+		}
 	}
 }
