@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<project name="UniversalElectricity" default="build">
+<project name="MFFS" default="build">
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.JarFile" 	value="BasicComponents_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-	<property name="file.APIFile" 	value="UniversalElectricity_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
+	<property name="file.JarFile" 	value="MFFS_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.APIFile" 	value="MFFS_API_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
 
 	<target name="build">
 
@@ -51,30 +51,8 @@
 		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
 			<arg line="reobfuscate_srg.sh" />
 		</exec>
-
-		<copy todir="DevContents">
-			<fileset dir="${dir.mcp}/bin/minecraft">
-				<include name="**/mffs/**" />
-				<include name="**/universalelectricity/**" />
-			</fileset>
 		
-			<fileset dir="${dir.development}resources">
-				<exclude name=".git/**" />
-				<exclude name="**/*.java" />
-				<exclude name="**/*.xml" />
-			</fileset>
-		</copy>
-		
-		<copy todir="UeContents">
-			<fileset dir="${dir.development}src" excludes=".git/**" />
-		
-			<fileset dir="${dir.development}resources">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>		
-		</copy>
-		
-		<copy todir="BcContents">
+		<copy todir="ModContents">
 			<fileset dir="${dir.mcp}/reobf/minecraft" excludes=".git/**" />
 		
 			<fileset dir="${dir.development}resources">
@@ -84,12 +62,16 @@
 			</fileset>
 		</copy>
 		
+		<copy todir="APIContents">
+			<fileset dir="${dir.development}src/mffs/api" excludes=".git/**" />
+		</copy>
+
 		<jar destfile="output/${file.JarFile}">
-			<fileset dir="BcContents" />
+			<fileset dir="ModContents" />
 		</jar>
 
 		<zip destfile="output/${file.APIFile}">
-			<fileset dir="UeContents" />
+			<fileset dir="APIContents" />
 		</zip>
 
 		<echo file="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/info.txt" append="true" >
