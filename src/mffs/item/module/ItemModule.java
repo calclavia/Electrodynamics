@@ -20,7 +20,7 @@ public class ItemModule extends ItemBase implements IModule
 	}
 
 	@Override
-	public void onCalculate(IProjector projector, Set<Vector3> position, Set<Vector3> fieldDefinition)
+	public void onCalculate(IProjector projector, Set<Vector3> position)
 	{
 	}
 

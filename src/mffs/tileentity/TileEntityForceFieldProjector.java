@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import calclavia.lib.CalculationHelper;
+
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IProjector;
@@ -129,12 +131,24 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			if (this.getMode() != null)
 			{
 				this.calculatedField.clear();
+				Set<Vector3> newField = new HashSet<Vector3>();
 
-				this.getMode().calculateField(this, this.calculatedField);
+				this.getMode().calculateField(this, newField);
+
+				Vector3 translation = this.getTranslation();
 
 				for (Vector3 position : this.calculatedField)
 				{
+					CalculationHelper.rotateXZByAngle(position, this.getRotationYaw());
+					CalculationHelper.rotateYByAngle(position, this.getRotationPitch());
+
 					position.add(new Vector3(this));
+					position.add(translation);
+
+					if (position.intY() <= this.worldObj.getHeight())
+					{
+						this.calculatedField.add(position);
+					}
 				}
 
 				for (IModule module : this.getModules(this.getModuleSlots()))

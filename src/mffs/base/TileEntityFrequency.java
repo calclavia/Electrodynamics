@@ -77,7 +77,7 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 	 * 
 	 * @return
 	 */
-	public IBiometricIdentifier getSecurityCenter()
+	public IBiometricIdentifier getBiometricIdentifier()
 	{
 		/**
 		 * Try to find in the cards first.

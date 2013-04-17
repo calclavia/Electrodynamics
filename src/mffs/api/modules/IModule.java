@@ -48,6 +48,6 @@ public interface IModule
 	 * 
 	 * @return False if to prevent this position from being added to the projection que.
 	 */
-	public void onCalculate(IProjector projector, Set<Vector3> fieldDefinition, Set<Vector3> fieldInterior);
+	public void onCalculate(IProjector projector, Set<Vector3> fieldDefinition);
 
 }
