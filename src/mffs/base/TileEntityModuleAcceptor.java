@@ -114,6 +114,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		return count;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<ItemStack> getModuleStacks(int... slots)
 	{
@@ -175,7 +176,8 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 
 		return modules;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<IModule> getModules(int... slots)
 	{
