@@ -6,11 +6,13 @@ import java.util.logging.Logger;
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
 import mffs.base.ItemBase;
+import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceField;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
+import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardInfinite;
 import mffs.item.mode.ItemMode;
 import mffs.item.mode.ItemModeCube;
@@ -145,6 +147,7 @@ public class ModularForceFieldSystem
 		 * Blocks
 		 */
 		blockForceField = new BlockForceField(Settings.getNextBlockID());
+		blockCoercionDeriver = new BlockCoercionDeriver(Settings.getNextBlockID());
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 
@@ -159,6 +162,11 @@ public class ModularForceFieldSystem
 		itemModuleTranslate = new ItemModuleTranslate(Settings.getNextItemID());
 		itemModuleScale = new ItemModuleScale(Settings.getNextItemID());
 		itemModuleRotate = new ItemModuleRotate(Settings.getNextItemID());
+
+		/**
+		 * Cards
+		 */
+		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
 
 		/**
 		 * The Fortron Liquid
