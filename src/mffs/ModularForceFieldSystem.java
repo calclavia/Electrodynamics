@@ -20,6 +20,7 @@ import mffs.item.module.ItemModule;
 import mffs.item.module.ItemModuleRotate;
 import mffs.item.module.ItemModuleScale;
 import mffs.item.module.ItemModuleTranslate;
+import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -180,10 +181,12 @@ public class ModularForceFieldSystem
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName2());
+		GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName2());
 		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName2());
 		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName2());
 
 		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName2());
+		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName2());
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName2());
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName2());
 
