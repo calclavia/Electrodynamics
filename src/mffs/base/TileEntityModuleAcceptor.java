@@ -176,7 +176,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 
 		return modules;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Set<IModule> getModules(int... slots)

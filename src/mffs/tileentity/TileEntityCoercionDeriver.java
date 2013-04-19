@@ -31,6 +31,8 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	 */
 	public static final int WATTAGE = 1000;
 	public static final int REQUIRED_TIME = 20 * 20;
+	public static final int NORMAL_PRODUCTION = 12;
+	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
@@ -55,10 +57,22 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 			{
 				if (this.isInversed)
 				{
+					// Convert Fortron to Electricity
+					double watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
 
+					ElectricityPack remainder = this.produce(watts);
+					double electricItemGiven = 0;
+
+					if (remainder.getWatts() > 0)
+					{
+						electricItemGiven = ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), remainder.getWatts(), this.getVoltage());
+					}
+
+					this.requestFortron((int) ((watts - (remainder.getWatts() - electricItemGiven)) / FORTRON_UE_RATIO), true);
 				}
 				else
 				{
+					// Convert Electricity to Fortron
 					this.wattsReceived += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
 					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE)
@@ -69,7 +83,7 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 
 							if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 							{
-								production *= 12;
+								production *= NORMAL_PRODUCTION;
 							}
 
 							this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
@@ -161,6 +175,10 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 			this.isInversed = dataStream.readBoolean();
 			this.wattsReceived = dataStream.readDouble();
 			// this.processTime = dataStream.readInt();
+		}
+		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
+		{
+			this.isInversed = !this.isInversed;
 		}
 	}
 

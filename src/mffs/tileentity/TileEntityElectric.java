@@ -3,6 +3,7 @@ package mffs.tileentity;
 import java.util.EnumSet;
 
 import mffs.base.TileEntityFortron;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -11,6 +12,8 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
@@ -74,6 +77,33 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 		}
 	}
 
+	public ElectricityPack produce(double watts)
+	{
+		ElectricityPack pack = new ElectricityPack(watts / this.getVoltage(), this.getVoltage());
+		ElectricityPack remaining = ElectricityNetworkHelper.produceFromMultipleSides(this, pack);
+
+		/**
+		 * Try outputting BuildCraft power.
+		 */
+		if (remaining.getWatts() > 0)
+		{
+			EnumSet<ForgeDirection> approachingDirections = ElectricityNetworkHelper.getDirections(this);
+
+			for (ForgeDirection direction : approachingDirections)
+			{
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
+
+				if (this.getPowerProvider(tileEntity) != null)
+				{
+					this.getPowerProvider(tileEntity).receiveEnergy((float) remaining.getWatts(), direction.getOpposite());
+					remaining = new ElectricityPack();
+				}
+			}
+		}
+
+		return remaining;
+	}
+
 	protected EnumSet<ForgeDirection> getConsumingSides()
 	{
 		return ElectricityNetworkHelper.getDirections(this);
@@ -126,11 +156,13 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 		return 120;
 	}
 
+	@Override
 	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
+	@Override
 	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 2);
@@ -163,5 +195,15 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 		}
 
 		return 0;
+	}
+
+	public IPowerProvider getPowerProvider(TileEntity tileEntity)
+	{
+		if (tileEntity instanceof IPowerReceptor)
+		{
+			return ((IPowerReceptor) tileEntity).getPowerProvider();
+		}
+
+		return null;
 	}
 }

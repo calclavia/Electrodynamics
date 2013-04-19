@@ -1,16 +1,21 @@
 package mffs.gui;
 
+import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
+import universalelectricity.prefab.network.PacketManager;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiCoercionDeriver extends GuiBase
 {
@@ -27,6 +32,7 @@ public class GuiCoercionDeriver extends GuiBase
 	{
 		this.textFieldPos = new Vector2(30, 43);
 		super.initGui();
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 50, 20, "Reverse"));
 	}
 
 	@Override
@@ -41,6 +47,9 @@ public class GuiCoercionDeriver extends GuiBase
 		GL11.glRotatef(-90, 0, 0, 1);
 		this.drawTextWithTooltip("upgrade", -95, 140, x, y);
 		GL11.glPopMatrix();
+
+		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 40, 4210752);
+		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 50, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES), 8, 105, x, y);
@@ -77,5 +86,16 @@ public class GuiCoercionDeriver extends GuiBase
 		 * Force Power Bar
 		 */
 		this.drawForce(8, 115, (float) this.tileEntity.getFortronEnergy() / (float) this.tileEntity.getFortronCapacity());
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton guibutton)
+	{
+		super.actionPerformed(guibutton);
+
+		if (guibutton.id == 1)
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
+		}
 	}
 }
