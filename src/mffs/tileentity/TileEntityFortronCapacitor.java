@@ -135,8 +135,6 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 							}
 							case DISTRIBUTE:
 							{
-								machines.remove(this);
-
 								final int amountToSet = totalFortron / machines.size();
 
 								for (IFortronFrequency machine : machines)
@@ -263,11 +261,11 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TPacketType.DESCRIPTION.ordinal())
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			this.transferMode = TransferMode.values()[dataStream.readInt()];
 		}
-		else if (packetID == TPacketType.TOGGLE_MODE.ordinal())
+		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
 		{
 			this.transferMode = this.transferMode.toggle();
 		}

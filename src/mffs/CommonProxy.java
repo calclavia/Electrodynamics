@@ -1,7 +1,9 @@
 package mffs;
 
+import mffs.container.ContainerCoercionDeriver;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.container.ContainerFortronCapacitor;
+import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,6 +42,10 @@ public class CommonProxy implements IGuiHandler
 			else if (tileEntity.getClass() == TileEntityForceFieldProjector.class)
 			{
 				return new ContainerForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
+			{
+				return new ContainerCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
 			}
 		}
 

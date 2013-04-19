@@ -11,7 +11,6 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.prefab.implement.IRotatable;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
@@ -62,11 +61,16 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 				ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack());
 			}
 		}
+
 		if (this.powerProvider != null)
 		{
 			int requiredEnergy = (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(requiredEnergy, requiredEnergy, true);
-			this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
+
+			if (energyReceived > 0)
+			{
+				this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
+			}
 		}
 	}
 
@@ -119,18 +123,7 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 	@Override
 	public double getVoltage()
 	{
-		return 0;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		if (this instanceof IRotatable)
-		{
-			return direction == ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
-		}
-
-		return true;
+		return 120;
 	}
 
 	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)

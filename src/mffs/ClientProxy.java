@@ -1,11 +1,13 @@
 package mffs;
 
+import mffs.gui.GuiCoercionDeriver;
 import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.render.FXBeam;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
+import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,6 +57,10 @@ public class ClientProxy extends CommonProxy
 			else if (tileEntity.getClass() == TileEntityForceFieldProjector.class)
 			{
 				return new GuiForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
+			{
+				return new GuiCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
 			}
 		}
 

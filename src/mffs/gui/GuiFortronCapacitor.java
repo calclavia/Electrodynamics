@@ -2,7 +2,7 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
-import mffs.base.TileEntityBase.TPacketType;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.gui.button.GuiButtonPressTransferMode;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -84,7 +84,7 @@ public class GuiFortronCapacitor extends GuiBase
 
 		if (guibutton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TPacketType.TOGGLE_MODE.ordinal()));
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal()));
 		}
 	}
 }

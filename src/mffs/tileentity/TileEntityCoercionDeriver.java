@@ -10,8 +10,11 @@ import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.item.ElectricItemHelper;
+import universalelectricity.core.item.IItemElectric;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -27,8 +30,14 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	 * The amount of watts this machine uses.
 	 */
 	public static final int WATTAGE = 1000;
-	public static final int REQUIRED_TIME = 20 * 15;
+	public static final int REQUIRED_TIME = 20 * 20;
+
+	public static final int SLOT_FREQUENCY = 0;
+	public static final int SLOT_BATTERY = 1;
+	public static final int SLOT_FUEL = 2;
+
 	public int processTime = 0;
+	private boolean isInversed = false;
 
 	public TileEntityCoercionDeriver()
 	{
@@ -42,45 +51,53 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isDisabled())
+			if (!this.isDisabled() && this.isActive())
 			{
-
-				if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE)
+				if (this.isInversed)
 				{
-					if (this.processTime == 0)
-					{
-						this.processTime = REQUIRED_TIME;
-					}
 
-					if (this.processTime > 0)
-					{
-						// We are processing
-						this.processTime--;
+				}
+				else
+				{
+					this.wattsReceived += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
+					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE)
+					{
 						if (this.ticks % 20 == 0)
 						{
 							int production = 1;
 
-							if (this.isStackValidForSlot(0, this.getStackInSlot(0)))
+							if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 							{
-								production *= 10;
+								production *= 12;
 							}
 
 							this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 						}
 
-						if (this.processTime < 1)
+						if (this.processTime == 0)
 						{
-							this.decrStackSize(0, 1);
+							this.processTime = REQUIRED_TIME;
+						}
+
+						if (this.processTime > 0)
+						{
+							// We are processing
+							this.processTime--;
+
+							if (this.processTime < 1)
+							{
+								this.decrStackSize(SLOT_FUEL, 1);
+								this.processTime = 0;
+							}
+						}
+						else
+						{
 							this.processTime = 0;
 						}
-					}
-					else
-					{
-						this.processTime = 0;
-					}
 
-					this.wattsReceived -= WATTAGE;
+						this.wattsReceived -= WATTAGE;
+					}
 				}
 			}
 		}
@@ -89,13 +106,13 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	@Override
 	public int getSizeInventory()
 	{
-		return 5;
+		return 6;
 	}
 
 	@Override
 	public ElectricityPack getRequest()
 	{
-		if (this.canUse() && !this.isPoweredByRedstone())
+		if (this.canConsume() && !this.isInversed)
 		{
 			return new ElectricityPack(WATTAGE / this.getVoltage(), this.getVoltage());
 		}
@@ -106,12 +123,12 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	@Override
 	public boolean isActive()
 	{
-		return !this.isPoweredByRedstone();
+		return this.isPoweredByRedstone();
 	}
 
-	public boolean canUse()
+	public boolean canConsume()
 	{
-		if (!this.isDisabled())
+		if (this.isActive() && !this.isInversed)
 		{
 			return FortronHelper.getAmount(this.fortronTank) < this.fortronTank.getCapacity();
 		}
@@ -128,7 +145,9 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	{
 		List objects = new LinkedList();
 		objects.addAll(super.getPacketUpdate());
-		objects.add(this.processTime);
+		objects.add(this.isInversed);
+		objects.add(this.wattsReceived);
+		// objects.add(this.processTime);
 		return objects;
 	}
 
@@ -136,9 +155,12 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
 		super.onReceivePacket(packetID, dataStream);
-		if (packetID == 1)
+
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
-			this.processTime = dataStream.readInt();
+			this.isInversed = dataStream.readBoolean();
+			this.wattsReceived = dataStream.readDouble();
+			// this.processTime = dataStream.readInt();
 		}
 	}
 
@@ -146,16 +168,16 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
 		this.processTime = nbt.getInteger("processTime");
+		this.isInversed = nbt.getBoolean("isInversed");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
 		nbt.setInteger("processTime", this.processTime);
+		nbt.setBoolean("isInversed", this.isInversed);
 	}
 
 	@Override
@@ -163,20 +185,28 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 	{
 		if (itemStack != null)
 		{
-			if (slotID >= 2 && slotID <= 4)
+			if (slotID > SLOT_FUEL)
 			{
 				return itemStack.getItem() instanceof IModule;
 			}
 
 			switch (slotID)
 			{
-				case 0:
-					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 4));
-				case 1:
+				case SLOT_FREQUENCY:
 					return itemStack.getItem() instanceof ItemCardFrequency;
+				case SLOT_BATTERY:
+					return itemStack.getItem() instanceof IItemElectric;
+				case SLOT_FUEL:
+					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4));
 			}
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return true;
 	}
 }

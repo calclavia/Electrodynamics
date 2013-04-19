@@ -3,7 +3,7 @@ package mffs.base;
 import icbm.api.IBlockFrequency;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
-import mffs.base.TileEntityBase.TPacketType;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.gui.button.GuiButtonPress;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -114,7 +114,7 @@ public class GuiBase extends GuiContainer
 
 		if (this.frequencyTile != null && guibutton.id == 0)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TPacketType.TOGGLE_ACTIVATION.ordinal()));
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_ACTIVATION.ordinal()));
 		}
 	}
 

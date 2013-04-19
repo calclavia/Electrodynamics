@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.Player;
 
 public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor
 {
-	public enum TPacketType
+	public enum TilePacketType
 	{
 		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY;
 	}
@@ -53,7 +53,7 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	public List getPacketUpdate()
 	{
 		List objects = new ArrayList();
-		objects.add(TPacketType.DESCRIPTION.ordinal());
+		objects.add(TilePacketType.DESCRIPTION.ordinal());
 		objects.add(this.isActive);
 		return objects;
 	}
@@ -102,7 +102,7 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	 */
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
-		if (packetID == TPacketType.DESCRIPTION.ordinal())
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			boolean prevActive = this.isActive;
 			this.isActive = dataStream.readBoolean();
@@ -112,7 +112,7 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 				this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
-		else if (packetID == TPacketType.TOGGLE_ACTIVATION.ordinal())
+		else if (packetID == TilePacketType.TOGGLE_ACTIVATION.ordinal())
 		{
 			this.toggleActive();
 		}

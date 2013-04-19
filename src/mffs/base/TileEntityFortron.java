@@ -60,7 +60,7 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TPacketType.DESCRIPTION.ordinal())
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			this.fortronTank.setLiquid(FortronHelper.getFortron(dataStream.readInt()));
 		}

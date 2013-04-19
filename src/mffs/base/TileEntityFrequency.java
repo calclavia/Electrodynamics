@@ -36,11 +36,11 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TPacketType.DESCRIPTION.ordinal())
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			this.setFrequency(dataStream.readInt());
 		}
-		else if (packetID == TPacketType.FREQUENCY.ordinal())
+		else if (packetID == TilePacketType.FREQUENCY.ordinal())
 		{
 			this.setFrequency(dataStream.readInt());
 		}

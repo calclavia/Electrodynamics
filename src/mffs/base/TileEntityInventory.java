@@ -47,7 +47,7 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 
 		if (this.worldObj.isRemote)
 		{
-			if (packetID == TPacketType.DESCRIPTION.ordinal() || packetID == TPacketType.INVENTORY.ordinal())
+			if (packetID == TilePacketType.DESCRIPTION.ordinal() || packetID == TilePacketType.INVENTORY.ordinal())
 			{
 				this.readFromNBT(PacketManager.readNBTTagCompound(dataStream));
 			}
@@ -58,7 +58,7 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TPacketType.INVENTORY.ordinal(), nbt));
+		PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.INVENTORY.ordinal(), nbt));
 	}
 
 	/**
