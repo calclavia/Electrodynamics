@@ -50,7 +50,7 @@ public class ItemModule extends ItemBase implements IModule
 
 	public ItemModule setMaxStackSize(int par1)
 	{
-		this.setMaxStackSize(par1);
+		super.setMaxStackSize(par1);
 		return this;
 	}
 

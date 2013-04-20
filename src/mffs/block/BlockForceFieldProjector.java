@@ -35,18 +35,6 @@ public class BlockForceFieldProjector extends BlockMachine
 	}
 
 	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
-
-	@Override
 	public int getLightValue(IBlockAccess iBlockAccess, int x, int y, int z)
 	{
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
