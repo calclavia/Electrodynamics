@@ -173,6 +173,7 @@ public class ModularForceFieldSystem
 
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
 		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
+		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f);
 
 		/**
 		 * Cards
