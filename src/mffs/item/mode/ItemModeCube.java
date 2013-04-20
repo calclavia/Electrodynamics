@@ -27,11 +27,11 @@ public class ItemModeCube extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		for (float x = -negScale.intX(); x <= posScale.intX(); x += 1)
+		for (float x = -negScale.intX(); x <= posScale.intX(); x += 0.5f)
 		{
-			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 1)
+			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 0.5f)
 			{
-				for (float y = -negScale.intY(); y <= posScale.intY(); y += 1)
+				for (float y = -negScale.intY(); y <= posScale.intY(); y += 0.5f)
 				{
 					if (y == -negScale.intY() || y == posScale.intY() || x == -negScale.intX() || x == posScale.intX() || z == -negScale.intZ() || z == posScale.intZ())
 					{
@@ -50,12 +50,6 @@ public class ItemModeCube extends ItemMode
 		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
 		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
 		Region3 region = new Region3(projector.getNegativeScale().clone().multiply(-1), projector.getPositiveScale());
-
-		if (((TileEntity) projector).worldObj.isRemote)
-		{
-			((TileEntity) projector).worldObj.spawnParticle("smoke", relativePosition.x+projectorPos.x, relativePosition.y+projectorPos.y, relativePosition.z+projectorPos.z, 0, -0.1, 0);
-		}
-
 		return region.isIn(relativePosition);
 	}
 

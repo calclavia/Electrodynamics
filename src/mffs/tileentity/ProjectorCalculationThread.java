@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.modules.IModule;
-import net.minecraft.util.MathHelper;
 import universalelectricity.core.vector.Vector3;
 import calclavia.lib.CalculationHelper;
 
@@ -48,8 +47,8 @@ public class ProjectorCalculationThread extends Thread
 		this.projector.getMode().calculateField(this.projector, newField);
 
 		Vector3 translation = this.projector.getTranslation();
-		int rotationYaw = (int) MathHelper.wrapAngleTo180_float(this.projector.getRotationYaw());
-		int rotationPitch = (int) MathHelper.wrapAngleTo180_float(this.projector.getRotationPitch());
+		int rotationYaw = this.projector.getRotationYaw();
+		int rotationPitch = this.projector.getRotationPitch();
 
 		for (Vector3 position : newField)
 		{
