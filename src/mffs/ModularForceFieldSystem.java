@@ -194,15 +194,15 @@ public class ModularForceFieldSystem
 
 		Settings.CONFIGURATION.save();
 
-		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName2());
-		GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName2());
-		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName2());
-		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName2());
+		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName());
+		GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName());
+		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName());
+		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName());
 
-		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName2());
-		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName2());
-		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName2());
-		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName2());
+		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 
 		proxy.preInit();
 	}
