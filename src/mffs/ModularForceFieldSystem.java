@@ -20,9 +20,6 @@ import mffs.item.mode.ItemModeCube;
 import mffs.item.mode.ItemModeSphere;
 import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
-import mffs.item.module.ItemModuleRotate;
-import mffs.item.module.ItemModuleScale;
-import mffs.item.module.ItemModuleTranslate;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
@@ -166,9 +163,12 @@ public class ModularForceFieldSystem
 		/**
 		 * Modules
 		 */
-		itemModuleTranslate = new ItemModuleTranslate(Settings.getNextItemID());
-		itemModuleScale = new ItemModuleScale(Settings.getNextItemID());
-		itemModuleRotate = new ItemModuleRotate(Settings.getNextItemID());
+		itemModuleTranslate = new ItemModule(Settings.getNextItemID(), "moduleTranslate").setCost(1.5f);
+		itemModuleScale = new ItemModule(Settings.getNextItemID(), "moduleScale").setCost(1.2f);
+		itemModuleRotate = new ItemModule(Settings.getNextItemID(), "moduleRotate").setCost(0.1f);
+
+		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.2f);
+		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.4f);
 
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
 

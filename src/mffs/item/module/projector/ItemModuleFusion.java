@@ -16,7 +16,7 @@ public class ItemModuleFusion extends ItemModule
 	{
 		super(i, "moduleFusion");
 		this.setMaxStackSize(1);
-
+		this.setCost(1f);
 	}
 
 	@Override

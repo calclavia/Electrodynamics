@@ -40,6 +40,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 		this.setBlockUnbreakable();
 		this.setResistance(999.0F);
 		this.setCreativeTab(null);
+		this.setTickRandomly(true);
 	}
 
 	@Override
@@ -80,6 +81,12 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 		int i1 = par1IBlockAccess.getBlockId(par2, par3, par4);
 		return i1 == this.blockID ? false : super.shouldSideBeRendered(par1IBlockAccess, par2, par3, par4, par5);
 	}
+	
+	@Override
+	 public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    {
+		System.out.println("WORK");
+    }
 
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer entityPlayer)
