@@ -14,6 +14,7 @@ import mffs.base.TileEntityModuleAcceptor;
 import mffs.card.ItemCard;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -38,7 +39,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	public boolean isCalculating = false;
 	public boolean isCalculated = false;
 
-	public int animation = 0;
+	public float animation = 0;
 
 	public TileEntityForceFieldProjector()
 	{
@@ -86,6 +87,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			{
 				if (this.isActive())
 				{
+					System.out.println("Testing: "+this.getMode().isInField(this, new Vector3(Minecraft.getMinecraft().thePlayer)));
 					this.animation += this.getFortronCost() / 3;
 				}
 			}

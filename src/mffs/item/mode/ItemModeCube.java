@@ -4,10 +4,13 @@ import java.util.Set;
 
 import mffs.api.IProjector;
 import mffs.render.model.ModelCube;
+import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.vector.Region3;
+import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,6 +40,20 @@ public class ItemModeCube extends ItemMode
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean isInField(IProjector projector, Vector3 position)
+	{
+		Vector3 projectorPos = new Vector3((TileEntity) projector);
+		Vector3 relativePosition = position.clone().subtract(projectorPos);
+		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
+		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
+		
+		//TODO: FIX THIS.
+		System.out.println("isInField: "+relativePosition.add(projectorPos));
+		Region3 region = new Region3(projector.getNegativeScale().clone().subtract(projectorPos), projector.getPositiveScale().clone().add(projectorPos));
+		return region.isIn(relativePosition);
 	}
 
 	@SideOnly(Side.CLIENT)
