@@ -18,9 +18,7 @@ public class GuiButtonPress extends GuiButton
 	 * Stuck determines if the button is hard pressed done, or disabled looking.
 	 */
 	public boolean stuck = false;
-	private int type;
 	private GuiBase mainGui;
-	private String name;
 
 	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiBase mainGui, String name)
 	{

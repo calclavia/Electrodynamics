@@ -17,6 +17,7 @@ import mffs.item.card.ItemCardInfinite;
 import mffs.item.card.ItemCardLink;
 import mffs.item.mode.ItemMode;
 import mffs.item.mode.ItemModeCube;
+import mffs.item.mode.ItemModeSphere;
 import mffs.item.module.ItemModule;
 import mffs.item.module.ItemModuleRotate;
 import mffs.item.module.ItemModuleScale;
@@ -158,6 +159,7 @@ public class ModularForceFieldSystem
 		 * Modes
 		 */
 		itemModeCube = new ItemModeCube(Settings.getNextItemID());
+		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 
 		/**
 		 * Modules

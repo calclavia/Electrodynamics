@@ -22,7 +22,7 @@ public class ItemModeCube extends ItemMode
 	}
 
 	@Override
-	public void calculateField(IProjector projector, Set<Vector3> blockDef)
+	public void calculateField(IProjector projector, Set<Vector3> fieldBlocks)
 	{
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
@@ -35,7 +35,7 @@ public class ItemModeCube extends ItemMode
 				{
 					if (y == -negScale.intY() || y == posScale.intY() || x == -negScale.intX() || x == posScale.intX() || z == -negScale.intZ() || z == posScale.intZ())
 					{
-						blockDef.add(new Vector3(x, y, z));
+						fieldBlocks.add(new Vector3(x, y, z));
 					}
 				}
 			}
