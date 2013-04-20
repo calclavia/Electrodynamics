@@ -87,8 +87,8 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			{
 				if (this.isActive())
 				{
-					System.out.println("Testing: "+this.getMode().isInField(this, new Vector3(Minecraft.getMinecraft().thePlayer)));
 					this.animation += this.getFortronCost() / 3;
+					System.out.println(new Vector3(this)+": "+this.getMode().isInField(this, new Vector3(Minecraft.getMinecraft().thePlayer)));
 				}
 			}
 
@@ -190,7 +190,6 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 							this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 
 							// Sets the controlling projector of the force field block to this one.
-
 							TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
 							if (tileEntity instanceof TileEntityForceField)

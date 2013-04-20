@@ -20,6 +20,7 @@ import mffs.item.module.ItemModule;
 import mffs.item.module.ItemModuleRotate;
 import mffs.item.module.ItemModuleScale;
 import mffs.item.module.ItemModuleTranslate;
+import mffs.item.module.projector.ItemModuleFusion;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -163,6 +164,8 @@ public class ModularForceFieldSystem
 		itemModuleTranslate = new ItemModuleTranslate(Settings.getNextItemID());
 		itemModuleScale = new ItemModuleScale(Settings.getNextItemID());
 		itemModuleRotate = new ItemModuleRotate(Settings.getNextItemID());
+
+		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
 
 		/**
 		 * Cards
