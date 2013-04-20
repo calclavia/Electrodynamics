@@ -48,6 +48,12 @@ public class ItemModule extends ItemBase implements IModule
 		return this;
 	}
 
+	public ItemModule setMaxStackSize(int par1)
+	{
+		this.setMaxStackSize(par1);
+		return this;
+	}
+
 	@Override
 	public float getFortronCost(int amplifier)
 	{
