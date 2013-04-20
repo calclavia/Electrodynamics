@@ -14,6 +14,7 @@ import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardInfinite;
+import mffs.item.card.ItemCardLink;
 import mffs.item.mode.ItemMode;
 import mffs.item.mode.ItemModeCube;
 import mffs.item.module.ItemModule;
@@ -170,7 +171,9 @@ public class ModularForceFieldSystem
 		/**
 		 * Cards
 		 */
+		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
 		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
+		itemCardLink = new ItemCardLink(Settings.getNextItemID());
 
 		/**
 		 * The Fortron Liquid
