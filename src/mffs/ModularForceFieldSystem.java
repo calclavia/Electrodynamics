@@ -21,6 +21,7 @@ import mffs.item.mode.ItemModeSphere;
 import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
 import mffs.item.module.projector.ItemModuleFusion;
+import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -171,6 +172,7 @@ public class ModularForceFieldSystem
 		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.4f);
 
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
+		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
 
 		/**
 		 * Cards
