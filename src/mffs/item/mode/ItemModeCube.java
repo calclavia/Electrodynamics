@@ -16,9 +16,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemModeCube extends ItemMode
 {
+	public ItemModeCube(int i, String name)
+	{
+		super(i, name);
+	}
+
 	public ItemModeCube(int i)
 	{
-		super(i, "modeCube");
+		this(i, "modeCube");
 	}
 
 	@Override
