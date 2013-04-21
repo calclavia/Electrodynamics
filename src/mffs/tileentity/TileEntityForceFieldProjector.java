@@ -38,8 +38,6 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	public boolean isCalculating = false;
 	public boolean isCalculated = false;
 
-	public float animation = 0;
-
 	public TileEntityForceFieldProjector()
 	{
 		this.fortronTank.setCapacity(20 * LiquidContainerRegistry.BUCKET_VOLUME);

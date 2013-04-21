@@ -1,5 +1,7 @@
 package mffs.render.model;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
@@ -98,7 +100,7 @@ public class ModelCoercionDeriver extends ModelBase
 		setRotation(bottom, 0F, 0F, 0F);
 	}
 
-	public void render(float f5)
+	public void render(float movement, float f5)
 	{
 		corner1.render(f5);
 		corner2.render(f5);
@@ -107,7 +109,12 @@ public class ModelCoercionDeriver extends ModelBase
 		Bout.render(f5);
 		Baout.render(f5);
 		Fout.render(f5);
+
+		GL11.glPushMatrix();
+		GL11.glRotatef(movement, 0, 1, 0);
 		Tout.render(f5);
+		GL11.glPopMatrix();
+
 		Core.render(f5);
 		Movingthingright.render(f5);
 		Movingthingleft.render(f5);

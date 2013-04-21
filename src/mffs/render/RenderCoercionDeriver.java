@@ -36,7 +36,7 @@ public class RenderCoercionDeriver extends TileEntitySpecialRenderer
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		GL11.glScalef(1.3f, 1.3f, 1.3f);
 
-		MODEL.render(0.0625F);
+		MODEL.render(tileEntity.animation, 0.0625F);
 
 		GL11.glPopMatrix();
 	}

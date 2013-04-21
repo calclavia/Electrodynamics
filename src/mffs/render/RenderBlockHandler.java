@@ -50,7 +50,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 				GL11.glTranslated(0.5, 1.95, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
-				RenderCoercionDeriver.MODEL.render(0.0625F);
+				RenderCoercionDeriver.MODEL.render(0, 0.0625F);
 			}
 
 			GL11.glPopMatrix();

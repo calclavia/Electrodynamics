@@ -48,6 +48,11 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	public final List<EntityPlayer> playersUsing = new ArrayList<EntityPlayer>();
 
 	/**
+	 * Used for client side animations.
+	 */
+	public float animation = 0;
+
+	/**
 	 * Override this for packet updating list.
 	 */
 	public List getPacketUpdate()
@@ -114,7 +119,16 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 		}
 		else if (packetID == TilePacketType.TOGGLE_ACTIVATION.ordinal())
 		{
-			this.toggleActive();
+			this.isRedstoneActive = !this.isRedstoneActive;
+
+			if (this.isRedstoneActive)
+			{
+				this.setActive(true);
+			}
+			else
+			{
+				this.setActive(false);
+			}
 		}
 	}
 
@@ -128,14 +142,15 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	{
 		super.readFromNBT(nbttagcompound);
 		this.isActive = nbttagcompound.getBoolean("isActive");
+		this.isRedstoneActive = nbttagcompound.getBoolean("isRedstoneActive");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound)
 	{
 		super.writeToNBT(nbttagcompound);
-
 		nbttagcompound.setBoolean("isActive", this.isActive);
+		nbttagcompound.setBoolean("isRedstoneActive", this.isRedstoneActive);
 	}
 
 	public boolean isActive()
@@ -147,18 +162,6 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	{
 		this.isActive = flag;
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-	}
-
-	public void toggleActive()
-	{
-		if (this.isActive())
-		{
-			this.setActive(false);
-		}
-		else
-		{
-			this.setActive(true);
-		}
 	}
 
 	/**
@@ -185,6 +188,9 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	@Override
 	public void onPowerOff()
 	{
-		this.setActive(false);
+		if (!this.isRedstoneActive && !this.worldObj.isRemote)
+		{
+			this.setActive(false);
+		}
 	}
 }

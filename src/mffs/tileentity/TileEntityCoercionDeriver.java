@@ -69,6 +69,8 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 					}
 
 					this.requestFortron((int) ((watts - (remainder.getWatts() - electricItemGiven)) / FORTRON_UE_RATIO), true);
+
+					this.animation++;
 				}
 				else
 				{
@@ -112,8 +114,13 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 
 						this.wattsReceived -= WATTAGE;
 					}
+
 				}
 			}
+		}
+		else if (this.isActive())
+		{
+			this.animation++;
 		}
 	}
 
@@ -132,12 +139,6 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 		}
 
 		return super.getRequest();
-	}
-
-	@Override
-	public boolean isActive()
-	{
-		return this.isPoweredByRedstone();
 	}
 
 	public boolean canConsume()
