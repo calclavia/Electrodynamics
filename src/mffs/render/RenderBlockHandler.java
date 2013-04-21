@@ -1,6 +1,7 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
+import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import net.minecraft.block.Block;
@@ -42,6 +43,14 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 				GL11.glTranslated(0.5, 1.5, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				RenderForceFieldProjector.MODEL.render(0, 0.0625F);
+			}
+			else if (block instanceof BlockCoercionDeriver)
+			{
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderCoercionDeriver.TEXTURE_ON));
+				GL11.glTranslated(0.5, 1.95, 0.5);
+				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+				GL11.glScalef(1.3f, 1.3f, 1.3f);
+				RenderCoercionDeriver.MODEL.render(0.0625F);
 			}
 
 			GL11.glPopMatrix();
@@ -87,10 +96,6 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess iBlockAccess, int x, int y, int z, Block block, int modelID, RenderBlocks renderer)
 	{
-		/*
-		 * if (!(block instanceof BlockFortronCapacitor)) { renderer.renderStandardBlock(block, x,
-		 * y, z); }
-		 */
 		return false;
 	}
 

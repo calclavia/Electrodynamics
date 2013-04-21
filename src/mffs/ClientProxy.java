@@ -5,6 +5,7 @@ import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.render.FXBeam;
 import mffs.render.RenderBlockHandler;
+import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
 import mffs.tileentity.TileEntityCoercionDeriver;
@@ -34,6 +35,7 @@ public class ClientProxy extends CommonProxy
 		super.init();
 		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoercionDeriver.class, new RenderCoercionDeriver());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
 	}
 
