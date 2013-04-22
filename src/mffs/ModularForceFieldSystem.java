@@ -12,6 +12,7 @@ import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
+import mffs.item.ItemRemoteController;
 import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardInfinite;
 import mffs.item.card.ItemCardLink;
@@ -20,6 +21,7 @@ import mffs.item.mode.ItemModeCube;
 import mffs.item.mode.ItemModeSphere;
 import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
+import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.item.module.projector.ItemModuleShock;
@@ -105,6 +107,7 @@ public class ModularForceFieldSystem
 	 * Items
 	 */
 	public static Item itemFortron;
+	public static Item itemRemoteController;
 
 	/**
 	 * Cards
@@ -162,13 +165,18 @@ public class ModularForceFieldSystem
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 
 		/**
+		 * Items
+		 */
+		itemRemoteController = new ItemRemoteController(Settings.getNextItemID());
+
+		/**
 		 * Modes
 		 */
 		itemModeCube = new ItemModeCube(Settings.getNextItemID());
 		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 		itemModeTube = new ItemModeTube(Settings.getNextItemID());
 		// itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
-		// itemModePyramid = new ItemModeCube(Settings.getNextItemID());
+		itemModePyramid = new ItemModePyramid(Settings.getNextItemID());
 
 		/**
 		 * Modules
