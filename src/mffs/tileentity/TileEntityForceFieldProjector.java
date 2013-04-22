@@ -268,7 +268,10 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	{
 		if (this.getStackInSlot(MODULE_SLOT_ID) != null)
 		{
-			return (IProjectorMode) this.getStackInSlot(MODULE_SLOT_ID).getItem();
+			if (this.getStackInSlot(MODULE_SLOT_ID).getItem() instanceof IProjectorMode)
+			{
+				return (IProjectorMode) this.getStackInSlot(MODULE_SLOT_ID).getItem();
+			}
 		}
 
 		return null;

@@ -4,7 +4,7 @@ import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.card.ICardLink;
+import mffs.item.card.ItemCardLink;
 import mffs.render.RenderBlockHandler;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
@@ -37,16 +37,13 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 		{
 			if (entityPlayer.getCurrentEquippedItem() != null)
 			{
-				if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ICardLink)
+				if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCardLink)
 				{
 					return false;
 				}
 			}
 
-			if (!world.isRemote)
-			{
-				entityPlayer.openGui(ModularForceFieldSystem.instance, 0, world, x, y, z);
-			}
+			entityPlayer.openGui(ModularForceFieldSystem.instance, 0, world, x, y, z);
 		}
 
 		return true;
