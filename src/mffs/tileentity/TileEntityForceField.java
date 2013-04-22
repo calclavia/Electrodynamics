@@ -78,7 +78,7 @@ public class TileEntityForceField extends TileEntityAdvanced implements IPacketR
 		{
 			if (this.projector.getTileEntity(this.worldObj) instanceof TileEntityForceFieldProjector)
 			{
-				if (((TileEntityForceFieldProjector) this.projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
+				if (this.worldObj.isRemote || ((TileEntityForceFieldProjector) this.projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
 				{
 					return (TileEntityForceFieldProjector) this.projector.getTileEntity(this.worldObj);
 				}

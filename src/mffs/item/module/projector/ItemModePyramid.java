@@ -3,17 +3,16 @@ package mffs.item.module.projector;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.lwjgl.opengl.GL11;
-
-import calclavia.lib.CalculationHelper;
-
+import mffs.api.IProjector;
+import mffs.item.mode.ItemMode;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 
-import mffs.api.IProjector;
-import mffs.item.mode.ItemMode;
+import org.lwjgl.opengl.GL11;
+
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.vector.Region3;
+import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -61,7 +60,7 @@ public class ItemModePyramid extends ItemMode
 						fieldBlocks.add(new Vector3(x, y, -z).add(translation));
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
 					}
-					
+
 					if (y == 0 && (Math.abs(x) + Math.abs(z)) < (xStretch + yStretch) / 2)
 					{
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
@@ -84,7 +83,7 @@ public class ItemModePyramid extends ItemMode
 		int xStretch = posScale.intX() + negScale.intX();
 		int yStretch = posScale.intY() + negScale.intY();
 		int zStretch = posScale.intZ() + negScale.intZ();
-		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
+		Vector3 translation = new Vector3(0, -0.4, 0);
 
 		for (float x = -xStretch; x <= xStretch; x++)
 		{
@@ -93,8 +92,8 @@ public class ItemModePyramid extends ItemMode
 				for (float y = 0; y <= yStretch; y++)
 				{
 					Vector3 position = new Vector3(x, y, z).add(translation);
-
-					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity)projector))))
+					
+					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector))))
 					{
 						fieldBlocks.add(position);
 					}
@@ -114,9 +113,11 @@ public class ItemModePyramid extends ItemMode
 		int xStretch = posScale.intX() + negScale.intX();
 		int yStretch = posScale.intY() + negScale.intY();
 		int zStretch = posScale.intZ() + negScale.intZ();
+		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
-
+		//projectorPos.add(translation);
+		
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
 		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
