@@ -26,6 +26,7 @@ import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
+import mffs.item.module.projector.ItemModuleStablize;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -130,7 +131,7 @@ public class ModularForceFieldSystem
 	// Projector Modules
 	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
 			itemModuleDisintegration, itemModuleShock, itemModuleGlow, itemModuleSponge,
-			itemModuleJammer, itemModuleStablize;
+			itemModuleStablize;
 
 	// Defense Station Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
@@ -196,7 +197,7 @@ public class ModularForceFieldSystem
 		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
 		itemModuleGlow = new ItemModule(Settings.getNextItemID(), "moduleGlow");
 		itemModuleSponge = new ItemModuleSponge(Settings.getNextItemID());
-
+		itemModuleStablize = new ItemModuleStablize(Settings.getNextItemID());
 		/**
 		 * Cards
 		 */

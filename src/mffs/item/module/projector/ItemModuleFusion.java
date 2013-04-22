@@ -28,7 +28,7 @@ public class ItemModuleFusion extends ItemModule
 		{
 			if (compareProjector instanceof IProjector && compareProjector != projector)
 			{
-				if (((TileEntityBase) compareProjector).isActive())
+				if (((TileEntityBase) compareProjector).isActive() && ((IProjector) compareProjector).getMode() != null)
 				{
 					Iterator<Vector3> it = fieldBlocks.iterator();
 

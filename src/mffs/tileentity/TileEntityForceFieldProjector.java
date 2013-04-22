@@ -182,7 +182,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 					if (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 || block == null || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) || block == ModularForceFieldSystem.blockForceField)
 					{
-						if (block != ModularForceFieldSystem.blockForceField)
+						if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
 						{
 							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
