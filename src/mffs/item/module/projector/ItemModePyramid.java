@@ -116,6 +116,7 @@ public class ItemModePyramid extends ItemMode
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());
+		projectorPos.add(new Vector3(0, -negScale.intY() + 1, 0));
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
