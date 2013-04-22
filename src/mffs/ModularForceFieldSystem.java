@@ -12,6 +12,7 @@ import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
+import mffs.item.ItemFortron;
 import mffs.item.ItemRemoteController;
 import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardID;
@@ -33,9 +34,11 @@ import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -63,6 +66,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, useMetadata = true)
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketManager.class)
@@ -222,7 +227,7 @@ public class ModularForceFieldSystem
 		/**
 		 * The Fortron Liquid
 		 */
-		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
+		itemFortron = new ItemFortron(Settings.getNextItemID());
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 
 		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
@@ -241,6 +246,16 @@ public class ModularForceFieldSystem
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 
 		proxy.preInit();
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Post event)
+	{
+		if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems)
+		{
+			LiquidDictionary.getCanonicalLiquid("Fortron").setRenderingIcon(itemFortron.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
+		}
 	}
 
 	@Init
@@ -268,7 +283,7 @@ public class ModularForceFieldSystem
 		 * Add recipes
 		 */
 		UniversalRecipes.init();
-		
+
 		// -- General Items --
 		// Focus Matrix
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 5), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
