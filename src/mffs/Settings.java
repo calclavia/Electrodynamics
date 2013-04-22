@@ -47,7 +47,7 @@ public class Settings
 	public static boolean LOAD_CHUNKS = true;
 	public static boolean OP_OVERRIDE = true;
 	public static boolean USE_CACHE = true;
-	public static boolean USE_ELECTRICITY = true;
+	public static boolean ENABLE_ELECTRICITY = true;
 
 	public static void load()
 	{
@@ -73,12 +73,12 @@ public class Settings
 
 		if (!UniversalElectricity.isNetworkActive && !Loader.isModLoaded("IC2") && !Loader.isModLoaded("BuildCraft|Core"))
 		{
-			USE_ELECTRICITY = false;
+			ENABLE_ELECTRICITY = false;
 		}
 
-		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Electricity?", USE_ELECTRICITY);
+		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Electricity?", ENABLE_ELECTRICITY);
 		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";
-		USE_ELECTRICITY = useElectricity.getBoolean(USE_ELECTRICITY);
+		ENABLE_ELECTRICITY = useElectricity.getBoolean(ENABLE_ELECTRICITY);
 		CONFIGURATION.save();
 	}
 }

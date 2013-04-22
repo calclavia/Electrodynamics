@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import mffs.Settings;
 import mffs.api.modules.IModule;
 import mffs.base.TileEntityUniversalEnergy;
 import mffs.fortron.FortronHelper;
@@ -56,7 +57,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		{
 			if (!this.isDisabled() && this.isActive())
 			{
-				if (this.isInversed)
+				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
 					// Convert Fortron to Electricity
 					double watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
@@ -78,7 +79,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					// Convert Electricity to Fortron
 					this.wattsReceived += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
-					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE)
+					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || !Settings.ENABLE_ELECTRICITY)
 					{
 						if (this.ticks % 20 == 0)
 						{
