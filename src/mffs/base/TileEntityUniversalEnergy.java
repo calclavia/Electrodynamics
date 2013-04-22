@@ -1,12 +1,15 @@
 package mffs.base;
 
 import ic2.api.Direction;
+import ic2.api.energy.tile.IEnergySink;
 
 import java.util.EnumSet;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
+import universalelectricity.core.block.IConnector;
+import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
@@ -14,9 +17,8 @@ import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
-import calclavia.lib.IUniversalEnergyTile;
 
-public abstract class TileEntityUniversalEnergy extends TileEntityFortron implements IUniversalEnergyTile
+public abstract class TileEntityUniversalEnergy extends TileEntityFortron implements IPowerReceptor, IEnergySink, IConnector, IVoltage
 {
 	/**
 	 * The amount of watts received this tick. This variable should be deducted when used.
