@@ -93,6 +93,7 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 
 						if (this.processTime == 0)
 						{
+							this.decrStackSize(SLOT_FUEL, 1);
 							this.processTime = REQUIRED_TIME;
 						}
 
@@ -103,7 +104,6 @@ public class TileEntityCoercionDeriver extends TileEntityElectric
 
 							if (this.processTime < 1)
 							{
-								this.decrStackSize(SLOT_FUEL, 1);
 								this.processTime = 0;
 							}
 						}
