@@ -2,6 +2,8 @@ package mffs;
 
 import java.io.File;
 
+import universalelectricity.core.UniversalElectricity;
+
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.Loader;
@@ -45,6 +47,7 @@ public class Settings
 	public static boolean LOAD_CHUNKS = true;
 	public static boolean OP_OVERRIDE = true;
 	public static boolean USE_CACHE = true;
+	public static boolean USE_ELECTRICITY = true;
 
 	public static void load()
 	{
@@ -67,6 +70,15 @@ public class Settings
 		Property maxFFGenPerTick = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", MAX_FORCE_FIELDS_PER_TICK);
 		maxFFGenPerTick.comment = "How many force field blocks can be generated per tick? Less reduces lag.";
 		MAX_FORCE_FIELDS_PER_TICK = maxFFGenPerTick.getInt(MAX_FORCE_FIELDS_PER_TICK);
+
+		if (!UniversalElectricity.isNetworkActive && !Loader.isModLoaded("IC2") && !Loader.isModLoaded("BuildCraft|Core"))
+		{
+			USE_ELECTRICITY = false;
+		}
+
+		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Electricity?", USE_ELECTRICITY);
+		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";
+		USE_ELECTRICITY = useElectricity.getBoolean(USE_ELECTRICITY);
 		CONFIGURATION.save();
 	}
 }

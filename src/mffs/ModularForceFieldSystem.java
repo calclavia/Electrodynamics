@@ -198,6 +198,7 @@ public class ModularForceFieldSystem
 		itemModuleGlow = new ItemModule(Settings.getNextItemID(), "moduleGlow");
 		itemModuleSponge = new ItemModuleSponge(Settings.getNextItemID());
 		itemModuleStablize = new ItemModuleStablize(Settings.getNextItemID());
+		
 		/**
 		 * Cards
 		 */

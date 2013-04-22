@@ -149,10 +149,30 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 							}
 							case DRAIN:
 							{
+								machines.remove(this);
+
+								for (IFortronFrequency machine : machines)
+								{
+									if (machine != null)
+									{
+										double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
+										int amountToSet = (int) (totalFortron * capacityPercentage);
+
+										if (amountToSet - machine.getFortronEnergy() > 0)
+										{
+											this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
+										}
+									}
+								}
+
+								break;
+							}
+							case FILL:
+							{
 								if (this.getFortronEnergy() < this.getFortronCapacity())
 								{
 									machines.remove(this);
-									
+
 									// The amount of energy required to be full.
 									int requiredFortron = this.getFortronCapacity() - this.getFortronEnergy();
 
@@ -168,28 +188,6 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 												this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
 											}
 										}
-									}
-								}
-								break;
-							}
-							case FILL:
-							{
-								machines.remove(this);
-
-								/**
-								 * Take total Fortron energy and consume it, then distribute the
-								 * rest. Removes this capacitor from the list.
-								 */
-								totalFortron -= this.provideFortron(totalFortron, true);
-								totalCapacity -= this.getFortronCapacity();
-
-								for (IFortronFrequency machine : machines)
-								{
-									if (machine != null)
-									{
-										double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
-										int amountToSet = (int) (totalFortron * capacityPercentage);
-										this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
 									}
 								}
 
