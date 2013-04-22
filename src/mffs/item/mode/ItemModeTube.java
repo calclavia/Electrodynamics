@@ -1,5 +1,6 @@
 package mffs.item.mode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.IProjector;
@@ -21,8 +22,9 @@ public class ItemModeTube extends ItemModeCube
 	}
 
 	@Override
-	public void calculateField(IProjector projector, Set<Vector3> fieldBlocks)
+	public Set<Vector3> getExteriorPoints(IProjector projector)
 	{
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		ForgeDirection direction = projector.getDirection(((TileEntity) projector).worldObj, ((TileEntity) projector).xCoord, ((TileEntity) projector).yCoord, ((TileEntity) projector).zCoord);
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
@@ -53,6 +55,7 @@ public class ItemModeTube extends ItemModeCube
 				}
 			}
 		}
+		return fieldBlocks;
 	}
 
 	@SideOnly(Side.CLIENT)

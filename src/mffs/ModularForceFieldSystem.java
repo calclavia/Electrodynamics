@@ -23,6 +23,7 @@ import mffs.item.module.ItemModule;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.item.module.projector.ItemModuleShock;
+import mffs.item.module.projector.ItemModuleSponge;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -124,9 +125,9 @@ public class ModularForceFieldSystem
 			itemModuleScale, itemModuleRotate;
 
 	// Projector Modules
-	public static ItemModule itemModuleShock, itemModuleSponge, itemModuleManipulator,
-			itemModuleDisintegration, itemModuleJammer, itemModuleFusion, itemModuleGlow,
-			itemModuleStablize, itemModuleCamouflage;
+	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
+			itemModuleDisintegration, itemModuleShock, itemModuleGlow, itemModuleSponge,
+			itemModuleJammer, itemModuleStablize;
 
 	// Defense Station Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
@@ -179,12 +180,14 @@ public class ModularForceFieldSystem
 		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.2f);
 		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.4f);
 
+		// Force Field Projector Modules
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
 		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
 		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f).setMaxStackSize(1);
 		itemModuleDisintegration = new ItemModule(Settings.getNextItemID(), "moduleDisintegration").setCost(2f).setMaxStackSize(1);
 		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
 		itemModuleGlow = new ItemModule(Settings.getNextItemID(), "moduleGlow");
+		itemModuleSponge = new ItemModuleSponge(Settings.getNextItemID());
 
 		/**
 		 * Cards

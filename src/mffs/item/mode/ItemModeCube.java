@@ -1,5 +1,6 @@
 package mffs.item.mode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.IProjector;
@@ -27,8 +28,9 @@ public class ItemModeCube extends ItemMode
 	}
 
 	@Override
-	public void calculateField(IProjector projector, Set<Vector3> fieldBlocks)
+	public Set<Vector3> getExteriorPoints(IProjector projector)
 	{
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
@@ -45,6 +47,28 @@ public class ItemModeCube extends ItemMode
 				}
 			}
 		}
+		return fieldBlocks;
+	}
+
+	@Override
+	public Set<Vector3> getInteriorPoints(IProjector projector)
+	{
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		Vector3 posScale = projector.getPositiveScale();
+		Vector3 negScale = projector.getNegativeScale();
+
+		for (int x = -negScale.intX(); x <= posScale.intX(); x++)
+		{
+			for (int z = -negScale.intZ(); z <= posScale.intZ(); z++)
+			{
+				for (int y = -negScale.intY(); y <= posScale.intY(); y++)
+				{
+					fieldBlocks.add(new Vector3(x, y, z));
+				}
+			}
+		}
+
+		return fieldBlocks;
 	}
 
 	@Override
@@ -65,4 +89,5 @@ public class ItemModeCube extends ItemMode
 		GL11.glScalef(0.5f, 0.5f, 0.5f);
 		ModelCube.INSTNACE.render();
 	}
+
 }

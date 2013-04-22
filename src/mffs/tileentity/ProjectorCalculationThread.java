@@ -1,6 +1,5 @@
 package mffs.tileentity;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.modules.IModule;
@@ -42,9 +41,7 @@ public class ProjectorCalculationThread extends Thread
 	{
 		this.projector.isCalculating = true;
 
-		Set<Vector3> newField = new HashSet<Vector3>();
-
-		this.projector.getMode().calculateField(this.projector, newField);
+		Set<Vector3> newField = this.projector.getMode().getExteriorPoints(this.projector);
 
 		Vector3 translation = this.projector.getTranslation();
 		int rotationYaw = this.projector.getRotationYaw();

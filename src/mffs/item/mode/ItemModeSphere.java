@@ -1,5 +1,6 @@
 package mffs.item.mode;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
@@ -21,8 +22,9 @@ public class ItemModeSphere extends ItemMode
 	}
 
 	@Override
-	public void calculateField(IProjector projector, Set<Vector3> fieldBlocks)
+	public Set<Vector3> getExteriorPoints(IProjector projector)
 	{
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		int radius = projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 
 		int steps = (int) Math.ceil(Math.PI / Math.atan(1.0D / radius / 2));
@@ -38,6 +40,34 @@ public class ItemModeSphere extends ItemMode
 				fieldBlocks.add(point);
 			}
 		}
+
+		return fieldBlocks;
+	}
+
+	@Override
+	public Set<Vector3> getInteriorPoints(IProjector projector)
+	{
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		int radius = projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
+
+		int steps = (int) Math.ceil(Math.PI / Math.atan(1.0D / radius / 2));
+
+		for (int r = 0; r < radius; r++)
+		{
+			for (int phi_n = 0; phi_n < 2 * steps; phi_n++)
+			{
+				for (int theta_n = 0; theta_n < steps; theta_n++)
+				{
+					double phi = Math.PI * 2 / steps * phi_n;
+					double theta = Math.PI / steps * theta_n;
+
+					Vector3 point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)).multiply(radius);
+					fieldBlocks.add(point);
+				}
+			}
+		}
+
+		return fieldBlocks;
 	}
 
 	@Override

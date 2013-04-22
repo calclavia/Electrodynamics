@@ -32,7 +32,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			if (block instanceof BlockFortronCapacitor)
 			{
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderFortronCapacitor.TEXTURE_ON));
-				GL11.glTranslated(0.5, 1.95, 0.5);
+				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
 				RenderFortronCapacitor.MODEL.render(0.0625F);
@@ -47,7 +47,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			else if (block instanceof BlockCoercionDeriver)
 			{
 				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderCoercionDeriver.TEXTURE_ON));
-				GL11.glTranslated(0.5, 1.95, 0.5);
+				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
 				RenderCoercionDeriver.MODEL.render(0, 0.0625F);

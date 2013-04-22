@@ -21,6 +21,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -535,6 +536,34 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		}
 
 		return verticleRotation;
+	}
+
+	@Override
+	public Set<Vector3> getInteriorPoints()
+	{
+		Set<Vector3> newField = this.getMode().getInteriorPoints(this);
+
+		Vector3 translation = this.getTranslation();
+		int rotationYaw = this.getRotationYaw();
+		int rotationPitch = this.getRotationPitch();
+
+		for (Vector3 position : newField)
+		{
+			if (rotationYaw != 0)
+			{
+				CalculationHelper.rotateXZByAngle(position, rotationYaw);
+			}
+
+			if (rotationPitch != 0)
+			{
+				CalculationHelper.rotateYByAngle(position, rotationPitch);
+			}
+
+			position.add(new Vector3(this));
+			position.add(translation);
+		}
+
+		return newField;
 	}
 
 }
