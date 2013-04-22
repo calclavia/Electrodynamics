@@ -73,7 +73,7 @@ public class ItemModeSphere extends ItemMode
 	@Override
 	public boolean isInField(IProjector projector, Vector3 position)
 	{
-		return new Vector3((TileEntity) projector).distanceTo(position) < projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
+		return new Vector3((TileEntity) projector).add(projector.getTranslation()).distanceTo(position) < projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 	}
 
 	@SideOnly(Side.CLIENT)

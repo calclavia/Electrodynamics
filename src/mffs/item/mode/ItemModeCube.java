@@ -75,6 +75,7 @@ public class ItemModeCube extends ItemMode
 	public boolean isInField(IProjector projector, Vector3 position)
 	{
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
+		projectorPos.add(projector.getTranslation());
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
 		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());

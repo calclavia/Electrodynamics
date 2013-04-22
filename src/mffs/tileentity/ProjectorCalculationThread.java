@@ -64,7 +64,7 @@ public class ProjectorCalculationThread extends Thread
 
 			if (position.intY() <= this.projector.worldObj.getHeight())
 			{
-				this.projector.getCalculatedField().add(position);
+				this.projector.getCalculatedField().add(position.round());
 			}
 		}
 

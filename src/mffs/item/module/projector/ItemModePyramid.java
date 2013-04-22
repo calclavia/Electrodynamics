@@ -38,11 +38,11 @@ public class ItemModePyramid extends ItemMode
 
 		int inverseThickness = 1000;
 
-		for (float x = -xStretch; x <= xStretch; x++)
+		for (float x = -xStretch; x <= xStretch; x += 0.5)
 		{
-			for (float z = -zStretch; z <= zStretch; z++)
+			for (float z = -zStretch; z <= zStretch; z += 0.5)
 			{
-				for (float y = 0; y <= yStretch; y++)
+				for (float y = 0; y <= yStretch; y += 0.5)
 				{
 					double q = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;
 					double p = (y / yStretch) * inverseThickness;
@@ -92,7 +92,7 @@ public class ItemModePyramid extends ItemMode
 				for (float y = 0; y <= yStretch; y++)
 				{
 					Vector3 position = new Vector3(x, y, z).add(translation);
-					
+
 					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector))))
 					{
 						fieldBlocks.add(position);
@@ -113,11 +113,10 @@ public class ItemModePyramid extends ItemMode
 		int xStretch = posScale.intX() + negScale.intX();
 		int yStretch = posScale.intY() + negScale.intY();
 		int zStretch = posScale.intZ() + negScale.intZ();
-		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
-		//projectorPos.add(translation);
-		
+		projectorPos.add(projector.getTranslation());
+
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
 		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
