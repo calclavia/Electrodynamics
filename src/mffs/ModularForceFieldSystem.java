@@ -111,7 +111,8 @@ public class ModularForceFieldSystem
 	/**
 	 * Modes
 	 */
-	public static ItemMode itemModeCube, itemModeSphere, itemModeTube, itemModePyramid;
+	public static ItemMode itemModeCube, itemModeSphere, itemModeTube, itemModeCylinder,
+			itemModePyramid;
 	/**
 	 * Modules
 	 */
@@ -160,6 +161,8 @@ public class ModularForceFieldSystem
 		itemModeCube = new ItemModeCube(Settings.getNextItemID());
 		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 		itemModeTube = new ItemModeTube(Settings.getNextItemID());
+		itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
+		itemModePyramid = new ItemModeCube(Settings.getNextItemID());
 
 		/**
 		 * Modules
