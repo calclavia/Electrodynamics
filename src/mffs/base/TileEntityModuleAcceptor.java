@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.liquids.LiquidContainerRegistry;
 
 public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor
 {
@@ -243,6 +245,9 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	@Override
 	public void onInventoryChanged()
 	{
+		super.onInventoryChanged();
+		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * 10 + 500) * LiquidContainerRegistry.BUCKET_VOLUME);
+
 		/**
 		 * Clears the cache.
 		 */

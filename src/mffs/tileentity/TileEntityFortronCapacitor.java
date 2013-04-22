@@ -240,13 +240,6 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 		}
 	}
 
-	@Override
-	public void onInventoryChanged()
-	{
-		super.onInventoryChanged();
-		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * 10 + 500) * LiquidContainerRegistry.BUCKET_VOLUME);
-	}
-
 	/**
 	 * Packet Methods
 	 */
