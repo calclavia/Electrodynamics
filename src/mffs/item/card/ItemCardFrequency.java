@@ -4,10 +4,13 @@ import icbm.api.IItemFrequency;
 
 import java.util.List;
 
+import mffs.base.TileEntityFrequency;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {
@@ -50,5 +53,39 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 
 			itemStack.getTagCompound().setInteger("frequency", frequency);
 		}
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
+	{
+		if (!world.isRemote)
+		{
+			if (player.isSneaking())
+			{
+				this.setFrequency(world.rand.nextInt(Integer.MAX_VALUE), itemStack);
+				player.addChatMessage("Generated random frequency: " + this.getFrequency(itemStack));
+			}
+		}
+
+		return itemStack;
+	}
+
+	@Override
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileEntityFrequency)
+		{
+			if (!world.isRemote)
+			{
+				((TileEntityFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
+				player.addChatMessage("Frequency set to: " + this.getFrequency(itemStack));
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 }

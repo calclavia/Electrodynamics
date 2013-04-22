@@ -4,7 +4,8 @@ import icbm.api.IBlockFrequency;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.base.TileEntityBase.TilePacketType;
-import mffs.gui.button.GuiButtonPress;
+import mffs.gui.button.GuiIcon;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -58,7 +59,7 @@ public class GuiBase extends GuiContainer
 	{
 		super.initGui();
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButtonPress(0, this.width / 2 - 81, this.height / 2 - 104));
+		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Block.torchRedstoneIdle)));
 
 		Keyboard.enableRepeatEvents(true);
 
@@ -128,6 +129,18 @@ public class GuiBase extends GuiContainer
 			if (!this.textFieldFrequency.isFocused())
 			{
 				this.textFieldFrequency.setText(this.frequencyTile.getFrequency() + "");
+			}
+		}
+
+		if (this.frequencyTile instanceof TileEntityBase)
+		{
+			if (((TileEntityBase) this.frequencyTile).isActive())
+			{
+				((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneActive);
+			}
+			else
+			{
+				((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneIdle);
 			}
 		}
 	}

@@ -46,10 +46,10 @@ public class GuiFortronCapacitor extends GuiBase
 		this.drawTextWithTooltip("upgrade", -95, 140, x, y);
 		GL11.glPopMatrix();
 
-		this.drawTextWithTooltip("linkedDevice", "%1: " + this.tileEntity.getLinkedDevices().size(), 8, 26, x, y);
-		this.drawTextWithTooltip("transmissionRate", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), ElectricUnit.JOULES), 8, 38, x, y);
-		this.drawTextWithTooltip("range", "%1: " + this.tileEntity.getTransmissionRange(), 8, 50, x, y);
-		this.drawTextWithTooltip("frequency", "%1:", 8, 62, x, y);
+		this.drawTextWithTooltip("linkedDevice", "%1: " + this.tileEntity.getLinkedDevices().size(), 8, 28, x, y);
+		this.drawTextWithTooltip("transmissionRate", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), ElectricUnit.JOULES), 8, 40, x, y);
+		this.drawTextWithTooltip("range", "%1: " + this.tileEntity.getTransmissionRange(), 8, 52, x, y);
+		this.drawTextWithTooltip("frequency", "%1:", 8, 63, x, y);
 		this.textFieldFrequency.drawTextBox();
 		this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y);
 		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 105, 4210752);
