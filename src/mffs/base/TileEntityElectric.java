@@ -1,15 +1,12 @@
-package mffs.tileentity;
+package mffs.base;
+
+import ic2.api.Direction;
 
 import java.util.EnumSet;
 
-import mffs.base.TileEntityFortron;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.block.IVoltage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
@@ -17,8 +14,9 @@ import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerProvider;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
+import calclavia.lib.IUniversalEnergyTile;
 
-public abstract class TileEntityElectric extends TileEntityFortron implements IPowerReceptor, IConnector, IVoltage
+public abstract class TileEntityElectric extends TileEntityFortron implements IUniversalEnergyTile
 {
 	/**
 	 * The amount of watts received this tick. This variable should be deducted when used.
@@ -156,18 +154,59 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IP
 		return 120;
 	}
 
+	/**
+	 * IC2
+	 */
 	@Override
-	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
+	public boolean acceptsEnergyFrom(TileEntity emitter, Direction direction)
 	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
+		if (this.getConsumingSides() != null)
+		{
+			return this.getConsumingSides().contains(direction.toForgeDirection());
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	@Override
-	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
+	public boolean isAddedToEnergyNet()
 	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 2);
+		return this.ticks > 0;
 	}
 
+	@Override
+	public int demandsEnergy()
+	{
+		return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_IC2_RATIO);
+	}
+
+	@Override
+	public int injectEnergy(Direction direction, int i)
+	{
+		double givenElectricity = i * UniversalElectricity.IC2_RATIO;
+		double rejects = 0;
+
+		if (givenElectricity > this.getWattBuffer())
+		{
+			rejects = givenElectricity - this.getRequest().getWatts();
+		}
+
+		this.onReceive(new ElectricityPack(givenElectricity / this.getVoltage(), this.getVoltage()));
+
+		return (int) (rejects * UniversalElectricity.TO_IC2_RATIO);
+	}
+
+	@Override
+	public int getMaxSafeInput()
+	{
+		return 2048;
+	}
+
+	/**
+	 * Buildcraft
+	 */
 	@Override
 	public void setPowerProvider(IPowerProvider provider)
 	{

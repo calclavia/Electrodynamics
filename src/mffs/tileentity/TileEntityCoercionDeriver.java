@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mffs.api.modules.IModule;
+import mffs.base.TileEntityElectric;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
