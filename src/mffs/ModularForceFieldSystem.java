@@ -166,8 +166,8 @@ public class ModularForceFieldSystem
 		itemModeCube = new ItemModeCube(Settings.getNextItemID());
 		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 		itemModeTube = new ItemModeTube(Settings.getNextItemID());
-		//itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
-		//itemModePyramid = new ItemModeCube(Settings.getNextItemID());
+		// itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
+		// itemModePyramid = new ItemModeCube(Settings.getNextItemID());
 
 		/**
 		 * Modules
@@ -184,6 +184,8 @@ public class ModularForceFieldSystem
 		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f).setMaxStackSize(1);
 		itemModuleDisintegration = new ItemModule(Settings.getNextItemID(), "moduleDisintegration").setCost(2f).setMaxStackSize(1);
 		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
+		itemModuleGlow = new ItemModule(Settings.getNextItemID(), "moduleGlow");
+
 		/**
 		 * Cards
 		 */

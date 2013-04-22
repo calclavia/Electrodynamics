@@ -80,6 +80,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			if (!world.isRemote)
 			{
 				((TileEntityFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
+				world.markBlockForUpdate(x, y, z);
 				player.addChatMessage("Frequency set to: " + this.getFrequency(itemStack));
 			}
 
