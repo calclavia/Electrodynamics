@@ -35,7 +35,7 @@ public class ItemModePyramid extends ItemMode
 		int xStretch = posScale.intX() + negScale.intX();
 		int yStretch = posScale.intY() + negScale.intY();
 		int zStretch = posScale.intZ() + negScale.intZ();
-		Vector3 translation = new Vector3(0, -negScale.intY(), 0);
+		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
 
 		int inverseThickness = 1000;
 
@@ -45,8 +45,8 @@ public class ItemModePyramid extends ItemMode
 			{
 				for (float y = 0; y <= yStretch; y++)
 				{
-					double q = (1 - (x / xStretch) - (z / yStretch)) * inverseThickness;
-					double p = (y / zStretch) * inverseThickness;
+					double q = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;
+					double p = (y / yStretch) * inverseThickness;
 
 					if (x >= 0 && z >= 0 && Math.round(q) == (Math.round(p)))
 					{
@@ -54,13 +54,14 @@ public class ItemModePyramid extends ItemMode
 						fieldBlocks.add(new Vector3(x, y, -z).add(translation));
 					}
 
-					q = (1 + (x / xStretch) - (z / yStretch)) * inverseThickness;
+					q = (1 + (x / xStretch) - (z / zStretch)) * inverseThickness;
 
 					if (x <= 0 && z >= 0 && Math.round(q) == (Math.round(p)))
 					{
 						fieldBlocks.add(new Vector3(x, y, -z).add(translation));
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
 					}
+					
 					if (y == 0 && (Math.abs(x) + Math.abs(z)) < (xStretch + yStretch) / 2)
 					{
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
@@ -75,18 +76,38 @@ public class ItemModePyramid extends ItemMode
 	@Override
 	public Set<Vector3> getInteriorPoints(IProjector projector)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+
+		Vector3 posScale = projector.getPositiveScale();
+		Vector3 negScale = projector.getNegativeScale();
+
+		int xStretch = posScale.intX() + negScale.intX();
+		int yStretch = posScale.intY() + negScale.intY();
+		int zStretch = posScale.intZ() + negScale.intZ();
+		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
+
+		for (float x = -xStretch; x <= xStretch; x++)
+		{
+			for (float z = -zStretch; z <= zStretch; z++)
+			{
+				for (float y = 0; y <= yStretch; y++)
+				{
+					Vector3 position = new Vector3(x, y, z).add(translation);
+
+					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity)projector))))
+					{
+						fieldBlocks.add(position);
+					}
+				}
+			}
+		}
+
+		return fieldBlocks;
 	}
 
 	@Override
 	public boolean isInField(IProjector projector, Vector3 position)
 	{
-		Vector3 projectorPos = new Vector3((TileEntity) projector);
-		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
-		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
-
 		Vector3 posScale = projector.getPositiveScale().clone();
 		Vector3 negScale = projector.getNegativeScale().clone();
 
@@ -94,11 +115,17 @@ public class ItemModePyramid extends ItemMode
 		int yStretch = posScale.intY() + negScale.intY();
 		int zStretch = posScale.intZ() + negScale.intZ();
 
+		Vector3 projectorPos = new Vector3((TileEntity) projector);
+
+		Vector3 relativePosition = position.clone().subtract(projectorPos);
+		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
+		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
+
 		Region3 region = new Region3(negScale.multiply(-1), posScale);
 
-		if (region.isIn(relativePosition))
+		if (region.isIn(relativePosition) && relativePosition.y > 0)
 		{
-			if ((1 - (Math.abs(relativePosition.x) / xStretch) - (Math.abs(relativePosition.z) / zStretch) <= relativePosition.y / yStretch))
+			if ((1 - (Math.abs(relativePosition.x) / xStretch) - (Math.abs(relativePosition.z) / zStretch) > relativePosition.y / yStretch))
 			{
 				return true;
 			}

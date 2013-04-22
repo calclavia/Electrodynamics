@@ -165,53 +165,66 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 				}
 			}
 
-			Iterator<Vector3> it = fieldToBeProjected.iterator();
+			Iterator<Vector3> it = this.calculatedField.iterator();
 
 			while (it.hasNext())
 			{
 				Vector3 vector = it.next();
 
-				if (constructionCount > constructionSpeed)
+				if (fieldToBeProjected.contains(vector))
 				{
-					break;
-				}
-
-				Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
-
-				if (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 || block == null || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) || block == ModularForceFieldSystem.blockForceField)
-				{
-					if (block != ModularForceFieldSystem.blockForceField)
+					if (constructionCount > constructionSpeed)
 					{
-						if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
+						break;
+					}
+
+					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+					if (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 || block == null || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) || block == ModularForceFieldSystem.blockForceField)
+					{
+						if (block != ModularForceFieldSystem.blockForceField)
 						{
-							this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-
-							// Sets the controlling projector of the force field block to this one.
-							TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
-
-							if (tileEntity instanceof TileEntityForceField)
+							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
-								((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
-							}
+								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 
-							boolean cancel = false;
+								// Sets the controlling projector of the force field block to this
+								// one.
+								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
-							for (IModule module : this.getModules(this.getModuleSlots()))
-							{
-								if (module.onProject(this, vector.clone()))
+								if (tileEntity instanceof TileEntityForceField)
 								{
-									cancel = true;
+									((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
+								}
+
+								boolean cancel = false;
+
+								for (IModule module : this.getModules(this.getModuleSlots()))
+								{
+									if (module.onProject(this, vector.clone()))
+									{
+										cancel = true;
+									}
+								}
+
+								this.forceFields.add(vector);
+								constructionCount++;
+
+								if (cancel)
+								{
+									break;
 								}
 							}
-
-							this.forceFields.add(vector);
-							constructionCount++;
-
-							if (cancel)
-							{
-								break;
-							}
 						}
+					}
+				}
+				else
+				{
+					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+					if (block == ModularForceFieldSystem.blockForceField)
+					{
+						this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0, 0, 3);
 					}
 				}
 			}

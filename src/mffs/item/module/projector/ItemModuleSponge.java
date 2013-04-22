@@ -15,6 +15,7 @@ public class ItemModuleSponge extends ItemModule
 	public ItemModuleSponge(int i)
 	{
 		super(i, "moduleSponge");
+		this.setMaxStackSize(1);
 	}
 
 	@Override
