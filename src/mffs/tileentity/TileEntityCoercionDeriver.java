@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mffs.api.modules.IModule;
-import mffs.base.TileEntityElectric;
+import mffs.base.TileEntityUniversalEnergy;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
@@ -25,7 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEntityCoercionDeriver extends TileEntityElectric
+public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 {
 	/**
 	 * The amount of watts this machine uses.

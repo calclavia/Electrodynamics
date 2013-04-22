@@ -1,9 +1,9 @@
 package mffs.render.model;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+
+import org.lwjgl.opengl.GL11;
 
 public class ModelCoercionDeriver extends ModelBase
 {

@@ -149,22 +149,27 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 							}
 							case DRAIN:
 							{
-								machines.remove(this);
-
-								for (IFortronFrequency machine : machines)
+								if (this.getFortronEnergy() < this.getFortronCapacity())
 								{
-									if (machine != null)
-									{
-										double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
-										int amountToSet = (int) (totalFortron * capacityPercentage);
+									machines.remove(this);
+									
+									// The amount of energy required to be full.
+									int requiredFortron = this.getFortronCapacity() - this.getFortronEnergy();
 
-										if (amountToSet - machine.getFortronEnergy() > 0)
+									for (IFortronFrequency machine : machines)
+									{
+										if (machine != null)
 										{
-											this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
+											int amountToConsume = Math.min(requiredFortron, machine.getFortronEnergy());
+											int amountToSet = -machine.getFortronEnergy() - amountToConsume;
+
+											if (amountToConsume > 0)
+											{
+												this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
+											}
 										}
 									}
 								}
-
 								break;
 							}
 							case FILL:

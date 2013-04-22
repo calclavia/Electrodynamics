@@ -48,6 +48,7 @@ public class ItemModule extends ItemBase implements IModule
 		return this;
 	}
 
+	@Override
 	public ItemModule setMaxStackSize(int par1)
 	{
 		super.setMaxStackSize(par1);

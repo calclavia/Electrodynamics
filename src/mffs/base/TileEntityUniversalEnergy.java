@@ -16,7 +16,7 @@ import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
 import calclavia.lib.IUniversalEnergyTile;
 
-public abstract class TileEntityElectric extends TileEntityFortron implements IUniversalEnergyTile
+public abstract class TileEntityUniversalEnergy extends TileEntityFortron implements IUniversalEnergyTile
 {
 	/**
 	 * The amount of watts received this tick. This variable should be deducted when used.
@@ -25,7 +25,7 @@ public abstract class TileEntityElectric extends TileEntityFortron implements IU
 
 	private IPowerProvider powerProvider;
 
-	public TileEntityElectric()
+	public TileEntityUniversalEnergy()
 	{
 		if (PowerFramework.currentFramework != null)
 		{

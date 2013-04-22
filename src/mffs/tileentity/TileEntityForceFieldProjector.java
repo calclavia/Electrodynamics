@@ -383,6 +383,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		return AxisAlignedBB.getAABBPool().getAABB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
 	}
 
+	@Override
 	public long getTicks()
 	{
 		return this.ticks;
