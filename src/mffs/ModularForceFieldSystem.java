@@ -22,17 +22,20 @@ import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
+import mffs.item.module.projector.ItemModuleShock;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import universalelectricity.prefab.CustomDamageSource;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
@@ -130,6 +133,8 @@ public class ModularForceFieldSystem
 			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
 			itemModuleBlockAlter;
 
+	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
+
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -161,8 +166,8 @@ public class ModularForceFieldSystem
 		itemModeCube = new ItemModeCube(Settings.getNextItemID());
 		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 		itemModeTube = new ItemModeTube(Settings.getNextItemID());
-		itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
-		itemModePyramid = new ItemModeCube(Settings.getNextItemID());
+		//itemModeCylinder = new ItemModeCube(Settings.getNextItemID());
+		//itemModePyramid = new ItemModeCube(Settings.getNextItemID());
 
 		/**
 		 * Modules
@@ -178,7 +183,7 @@ public class ModularForceFieldSystem
 		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
 		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f).setMaxStackSize(1);
 		itemModuleDisintegration = new ItemModule(Settings.getNextItemID(), "moduleDisintegration").setCost(2f).setMaxStackSize(1);
-
+		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
 		/**
 		 * Cards
 		 */
