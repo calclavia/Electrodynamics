@@ -47,12 +47,16 @@ public class Settings
 	public static boolean OP_OVERRIDE = true;
 	public static boolean USE_CACHE = true;
 	public static boolean ENABLE_ELECTRICITY = true;
+	public static int INTERDICTION_MURDER_ENERGY = 0;
 
 	public static void load()
 	{
 		CONFIGURATION.load();
 		Property propFieldScale = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
 		MAX_FORCE_FIELD_SCALE = propFieldScale.getInt(MAX_FORCE_FIELD_SCALE);
+
+		Property propInterdiction = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Interdiction Murder Fortron Consumption", INTERDICTION_MURDER_ENERGY);
+		INTERDICTION_MURDER_ENERGY = propInterdiction.getInt(INTERDICTION_MURDER_ENERGY);
 
 		Property propChunkLoading = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Load Chunks", LOAD_CHUNKS);
 		propChunkLoading.comment = "Set this to false to turn off the MFFS Chunkloading capabilities.";
