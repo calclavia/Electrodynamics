@@ -4,6 +4,7 @@ import mffs.gui.GuiBiometricIdentifier;
 import mffs.gui.GuiCoercionDeriver;
 import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
+import mffs.gui.GuiInterdictionMatrix;
 import mffs.render.FXBeam;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
@@ -13,6 +14,7 @@ import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
+import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -69,6 +71,10 @@ public class ClientProxy extends CommonProxy
 			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
 			{
 				return new GuiBiometricIdentifier(player, (TileEntityBiometricIdentifier) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityInterdictionMatrix.class)
+			{
+				return new GuiInterdictionMatrix(player, (TileEntityInterdictionMatrix) tileEntity);
 			}
 		}
 

@@ -1,11 +1,11 @@
 package mffs.block;
 
+import mffs.base.BlockMachine;
+import mffs.base.TileEntityBase;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import mffs.base.BlockMachine;
-import mffs.base.TileEntityBase;
 
 public class BlockMachineBlock extends BlockMachine
 {

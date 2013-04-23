@@ -38,15 +38,10 @@ import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.liquids.LiquidDictionary;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -70,8 +65,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, useMetadata = true)
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketManager.class)
@@ -155,7 +148,7 @@ public class ModularForceFieldSystem
 	// Interdiction Matrix Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
 			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
-			itemModuleBlockAlter;
+			itemModuleBlockAlter, itemModuleAntiSpawn;
 
 	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
 
@@ -168,7 +161,7 @@ public class ModularForceFieldSystem
 		LOGGER.setParent(FMLLog.getLogger());
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new SubscribeEventHandler());
 
 		Settings.load();
 
@@ -351,29 +344,4 @@ public class ModularForceFieldSystem
 		proxy.init();
 	}
 
-	@ForgeSubscribe
-	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Post event)
-	{
-		if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems)
-		{
-			LiquidDictionary.getCanonicalLiquid("Fortron").setRenderingIcon(itemFortron.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
-		}
-	}
-
-	@ForgeSubscribe
-	public void playerInteractEvent(PlayerInteractEvent evt)
-	{
-		if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
-		{
-			/**
-			 * Disable block breaking of force fields.
-			 */
-			if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlockId(evt.x, evt.y, evt.z) == blockForceField.blockID)
-			{
-				evt.setCanceled(true);
-				return;
-			}
-		}
-	}
 }

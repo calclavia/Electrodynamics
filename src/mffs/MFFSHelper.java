@@ -5,6 +5,7 @@ import java.util.List;
 
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
+import mffs.api.security.Permission;
 import mffs.fortron.FortronGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,9 @@ import universalelectricity.core.vector.Vector3;
  */
 public class MFFSHelper
 {
+	/**
+	 * Gets the nearest active Interdiction Matrix.
+	 */
 	public static IInterdictionMatrix getNearestInterdictionMatrix(World world, Vector3 position)
 	{
 		for (IFortronFrequency frequencyTile : FortronGrid.instance().get())
@@ -28,14 +32,39 @@ public class MFFSHelper
 			{
 				IInterdictionMatrix interdictionMatrix = (IInterdictionMatrix) frequencyTile;
 
-				if (position.distanceTo(new Vector3((TileEntity) interdictionMatrix)) <= interdictionMatrix.getActionRange())
+				if (interdictionMatrix.isActive())
 				{
-					return interdictionMatrix;
+					if (position.distanceTo(new Vector3((TileEntity) interdictionMatrix)) <= interdictionMatrix.getActionRange())
+					{
+						return interdictionMatrix;
+					}
 				}
 			}
 		}
 
 		return null;
+	}
+
+	public static boolean isAllowedByInterdictionMatrix(IInterdictionMatrix interdictionMatrix, String username, Permission... permissions)
+	{
+		if (interdictionMatrix != null)
+		{
+			if (interdictionMatrix.isActive())
+			{
+				if (interdictionMatrix.getBiometricIdentifier() != null)
+				{
+					for (Permission permission : permissions)
+					{
+						if (!interdictionMatrix.getBiometricIdentifier().isAccessGranted(username, permission))
+						{
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	public static List<String> splitStringPerWord(String string, int wordsPerLine)

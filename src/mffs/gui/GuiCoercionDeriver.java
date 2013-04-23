@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
@@ -48,8 +49,10 @@ public class GuiCoercionDeriver extends GuiBase
 		this.drawTextWithTooltip("upgrade", -95, 140, x, y);
 		GL11.glPopMatrix();
 
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 40, 4210752);
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 50, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
+		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 50, 4210752);
+		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 60, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES), 8, 105, x, y);

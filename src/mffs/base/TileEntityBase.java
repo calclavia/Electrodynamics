@@ -154,11 +154,13 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 		nbttagcompound.setBoolean("isRedstoneActive", this.isRedstoneActive);
 	}
 
+	@Override
 	public boolean isActive()
 	{
 		return this.isActive;
 	}
 
+	@Override
 	public void setActive(boolean flag)
 	{
 		this.isActive = flag;

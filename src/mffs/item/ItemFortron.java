@@ -1,8 +1,8 @@
 package mffs.item;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import mffs.base.ItemBase;
 import mffs.fortron.FortronHelper;
+import net.minecraft.client.renderer.texture.IconRegister;
 
 public class ItemFortron extends ItemBase
 {
