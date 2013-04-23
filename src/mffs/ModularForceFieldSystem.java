@@ -228,6 +228,7 @@ public class ModularForceFieldSystem
 		 * Interdiction Modules
 		 */
 		itemModuleAntiFriendly = new ItemModuleAntiFriendly(Settings.getNextItemID());
+		itemModuleAntiHostile = new ItemModuleAntiFriendly(Settings.getNextItemID());
 
 		/**
 		 * The Fortron Liquid
