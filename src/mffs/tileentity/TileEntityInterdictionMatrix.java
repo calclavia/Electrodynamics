@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.modules.IDefenseStationModule;
+import mffs.api.modules.IInterdictionMatrixModule;
 import mffs.api.modules.IModule;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.IInterdictionMatrix;
@@ -149,9 +149,9 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 		for (ItemStack itemStack : this.getModuleStacks())
 		{
-			if (itemStack.getItem() instanceof IDefenseStationModule)
+			if (itemStack.getItem() instanceof IInterdictionMatrixModule)
 			{
-				IDefenseStationModule module = (IDefenseStationModule) itemStack.getItem();
+				IInterdictionMatrixModule module = (IInterdictionMatrixModule) itemStack.getItem();
 
 				if (module.onDefend(this, entityLiving) || entityLiving.isDead)
 				{

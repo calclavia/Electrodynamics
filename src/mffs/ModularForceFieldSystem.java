@@ -25,6 +25,7 @@ import mffs.item.mode.ItemModeCube;
 import mffs.item.mode.ItemModeSphere;
 import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
+import mffs.item.module.interdiction.ItemModuleAntiFriendly;
 import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
@@ -222,6 +223,11 @@ public class ModularForceFieldSystem
 		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
 		itemCardLink = new ItemCardLink(Settings.getNextItemID());
 		itemCardID = new ItemCardID(Settings.getNextItemID());
+
+		/**
+		 * Interdiction Modules
+		 */
+		itemModuleAntiFriendly = new ItemModuleAntiFriendly(Settings.getNextItemID());
 
 		/**
 		 * The Fortron Liquid
