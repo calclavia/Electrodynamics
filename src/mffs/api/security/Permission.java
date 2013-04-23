@@ -9,7 +9,7 @@ public class Permission
 	/**
 	 * Access - Allows to open GUIs and activate blocks.
 	 */
-	public static final Permission BLOCK_PLACE_ACCESS = new Permission(1, "blockPlaceAccess");
+	public static final Permission BLOCK_ALTER = new Permission(1, "blockPlaceAccess");
 	/**
 	 * Configure - Allows to configure security stations.
 	 */

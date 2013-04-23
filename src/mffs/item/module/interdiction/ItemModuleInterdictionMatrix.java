@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public abstract class ItemModuleInterdictionMatrix extends ItemModule implements IInterdictionMatrixModule
+public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdictionMatrixModule
 {
 	public ItemModuleInterdictionMatrix(int id, String name)
 	{

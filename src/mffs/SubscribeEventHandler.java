@@ -1,6 +1,7 @@
 package mffs;
 
 import mffs.api.security.IInterdictionMatrix;
+import mffs.api.security.Permission;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -36,6 +37,44 @@ public class SubscribeEventHandler
 			{
 				evt.setCanceled(true);
 				return;
+			}
+
+			/**
+			 * Check if Interdiction Matrix blocked a specific action.
+			 */
+			IInterdictionMatrix interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.entityPlayer.worldObj, new Vector3(evt.entityPlayer));
+
+			if (interdictionMatrix != null)
+			{
+				boolean hasPermission = true;
+
+				if (evt.action == Action.RIGHT_CLICK_BLOCK)
+				{
+					if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
+					{
+						hasPermission = false;
+
+						if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ACCESS))
+						{
+							hasPermission = true;
+						}
+					}
+				}
+				else if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
+				{
+					hasPermission = false;
+
+					if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ALTER))
+					{
+						hasPermission = true;
+					}
+				}
+
+				if (!hasPermission)
+				{
+					evt.entityPlayer.sendChatToPlayer("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!");
+					evt.setCanceled(true);
+				}
 			}
 		}
 	}

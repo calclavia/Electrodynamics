@@ -45,7 +45,7 @@ public class MFFSHelper
 		return null;
 	}
 
-	public static boolean isAllowedByInterdictionMatrix(IInterdictionMatrix interdictionMatrix, String username, Permission... permissions)
+	public static boolean isPermittedByInterdictionMatrix(IInterdictionMatrix interdictionMatrix, String username, Permission... permissions)
 	{
 		if (interdictionMatrix != null)
 		{

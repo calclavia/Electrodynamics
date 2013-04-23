@@ -29,6 +29,7 @@ import mffs.item.module.interdiction.ItemModuleAntiFriendly;
 import mffs.item.module.interdiction.ItemModuleAntiHostile;
 import mffs.item.module.interdiction.ItemModuleAntiPersonnel;
 import mffs.item.module.interdiction.ItemModuleConfiscate;
+import mffs.item.module.interdiction.ItemModuleInterdictionMatrix;
 import mffs.item.module.interdiction.ItemModuleWarn;
 import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleFusion;
@@ -228,6 +229,8 @@ public class ModularForceFieldSystem
 		itemModuleAntiPersonnel = new ItemModuleAntiPersonnel(Settings.getNextItemID());
 		itemModuleConfiscate = new ItemModuleConfiscate(Settings.getNextItemID());
 		itemModuleWarn = new ItemModuleWarn(Settings.getNextItemID());
+		itemModuleBlockAccess = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAccess");
+		itemModuleBlockAlter = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAlter");
 
 		/**
 		 * Cards
