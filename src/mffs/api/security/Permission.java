@@ -1,9 +1,5 @@
 package mffs.api.security;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class Permission
 {
 	/**
@@ -35,7 +31,7 @@ public class Permission
 	 */
 	public static final Permission REMOTE_CONTROL = new Permission(6, "remoteControl");
 
-	private static final HashMap<Integer, Permission> LIST = new HashMap<Integer, Permission>();
+	private static Permission[] LIST;
 
 	public final int id;
 	public final String name;
@@ -44,16 +40,27 @@ public class Permission
 	{
 		this.id = id;
 		this.name = name;
-		LIST.put(this.id, this);
+
+		if (LIST == null)
+		{
+			LIST = new Permission[7];
+		}
+
+		LIST[this.id] = this;
 	}
 
 	public static Permission getPermission(int id)
 	{
-		return LIST.get(id);
+		if (id < LIST.length && id >= 0)
+		{
+			return LIST[id];
+		}
+
+		return null;
 	}
 
-	public static List<Permission> getPermissions()
+	public static Permission[] getPermissions()
 	{
-		return new ArrayList<Permission>(LIST.values());
+		return LIST;
 	}
 }

@@ -9,6 +9,7 @@ import mffs.api.card.ICardIdentification;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.TileEntityFrequency;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
 
@@ -59,13 +60,14 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == 3)
+		if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
 		{
 			if (this.getManipulatingCard() != null)
 			{
 				ICardIdentification idCard = (ICardIdentification) this.getManipulatingCard().getItem();
 
-				Permission permission = Permission.getPermission(dataStream.readInt());
+				int id = dataStream.readInt();
+				Permission permission = Permission.getPermission(id);
 
 				if (permission != null)
 				{
@@ -78,8 +80,9 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 						idCard.removePermission(this.getManipulatingCard(), permission);
 					}
 				}
+				else
 				{
-					ModularForceFieldSystem.LOGGER.severe("Error handling security station permission packet!");
+					ModularForceFieldSystem.LOGGER.severe("Error handling security station permission packet: " + id + " - " + permission);
 				}
 			}
 		}

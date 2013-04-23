@@ -66,7 +66,7 @@ public class GuiBase extends GuiContainer
 		if (this.frequencyTile != null)
 		{
 			this.textFieldFrequency = new GuiTextField(this.fontRenderer, this.textFieldPos.intX(), this.textFieldPos.intY(), 50, 12);
-			this.textFieldFrequency.setMaxStringLength(6);
+			this.textFieldFrequency.setMaxStringLength(7);
 			this.textFieldFrequency.setText(frequencyTile.getFrequency() + "");
 		}
 	}
@@ -109,11 +109,11 @@ public class GuiBase extends GuiContainer
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton guibutton)
+	protected void actionPerformed(GuiButton guiButton)
 	{
-		super.actionPerformed(guibutton);
+		super.actionPerformed(guiButton);
 
-		if (this.frequencyTile != null && guibutton.id == 0)
+		if (this.frequencyTile != null && guiButton.id == 0)
 		{
 			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_ACTIVATION.ordinal()));
 		}

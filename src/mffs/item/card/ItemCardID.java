@@ -44,7 +44,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 		{
 			if (this.hasPermission(itemStack, permission))
 			{
-				if (permission != Permission.getPermissions().get(0))
+				if (permission != Permission.getPermissions()[0])
 				{
 					tooltip += ", ";
 				}

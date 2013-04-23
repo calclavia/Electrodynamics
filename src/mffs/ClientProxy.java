@@ -1,5 +1,6 @@
 package mffs;
 
+import mffs.gui.GuiBiometricIdentifier;
 import mffs.gui.GuiCoercionDeriver;
 import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
@@ -8,6 +9,7 @@ import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
+import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -63,6 +65,10 @@ public class ClientProxy extends CommonProxy
 			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
 			{
 				return new GuiCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
+			{
+				return new GuiBiometricIdentifier(player, (TileEntityBiometricIdentifier) tileEntity);
 			}
 		}
 

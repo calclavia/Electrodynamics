@@ -1,8 +1,10 @@
 package mffs;
 
+import mffs.container.ContainerBiometricIdentifier;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.container.ContainerFortronCapacitor;
+import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -48,6 +50,10 @@ public class CommonProxy implements IGuiHandler
 			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
 			{
 				return new ContainerCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
+			{
+				return new ContainerBiometricIdentifier(player, (TileEntityBiometricIdentifier) tileEntity);
 			}
 		}
 

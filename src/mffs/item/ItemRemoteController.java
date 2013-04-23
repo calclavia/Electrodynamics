@@ -20,6 +20,7 @@ public class ItemRemoteController extends ItemBase implements ICardLink
 	public ItemRemoteController(int id)
 	{
 		super(id, "remoteController");
+		this.setMaxStackSize(1);
 	}
 
 	@Override
