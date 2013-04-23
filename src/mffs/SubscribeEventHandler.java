@@ -40,6 +40,11 @@ public class SubscribeEventHandler
 				return;
 			}
 
+			if (evt.entityPlayer.capabilities.isCreativeMode)
+			{
+				return;
+			}
+
 			/**
 			 * Check if Interdiction Matrix blocked a specific action.
 			 */
@@ -49,7 +54,7 @@ public class SubscribeEventHandler
 			{
 				boolean hasPermission = true;
 
-				if (evt.action == Action.RIGHT_CLICK_BLOCK)
+				if (evt.action == Action.RIGHT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlockTileEntity(evt.x, evt.y, evt.z) != null)
 				{
 					if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
 					{
@@ -61,13 +66,18 @@ public class SubscribeEventHandler
 						}
 					}
 				}
-				else if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
-				{
-					hasPermission = false;
 
-					if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ALTER))
+				if (hasPermission)
+				{
+
+					if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
 					{
-						hasPermission = true;
+						hasPermission = false;
+
+						if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ALTER))
+						{
+							hasPermission = true;
+						}
 					}
 				}
 
