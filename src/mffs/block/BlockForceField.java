@@ -149,7 +149,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 
 		if (tileEntity instanceof TileEntityForceField)
 		{
-			if (((TileEntityForceField) tileEntity).getProjector() != null)
+			if (this.getProjector(world, x, y, z) != null)
 			{
 				for (ItemStack moduleStack : ((TileEntityForceField) tileEntity).getProjector().getModuleStacks(((TileEntityForceField) tileEntity).getProjector().getModuleSlots()))
 				{
@@ -158,54 +158,53 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 						return;
 					}
 				}
-			}
-		}
 
-		if (new Vector3(entity).distanceTo(new Vector3(x, y, z).add(0.4)) < 0.5)
-		{
-			if (entity instanceof EntityLiving && !world.isRemote)
-			{
-				((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3));
-				((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1));
+				IBiometricIdentifier biometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier();
 
-				boolean hasPermission = false;
-
-				if (this.getProjector(world, x, y, z) != null)
+				if (new Vector3(entity).distanceTo(new Vector3(x, y, z).add(0.4)) < 0.5)
 				{
-					IBiometricIdentifier BiometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier();
-
-					List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 0.9, z + 1));
-
-					for (EntityPlayer entityPlayer : entities)
+					if (entity instanceof EntityLiving && !world.isRemote)
 					{
-						if (entityPlayer != null)
-						{
-							if (entityPlayer.isSneaking())
-							{
-								if (entityPlayer.capabilities.isCreativeMode)
-								{
-									hasPermission = true;
-									break;
+						((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3));
+						((EntityLiving) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1));
 
-								}
-								else if (BiometricIdentifier != null)
+						boolean hasPermission = false;
+
+						List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 0.9, z + 1));
+
+						for (EntityPlayer entityPlayer : entities)
+						{
+							if (entityPlayer != null)
+							{
+								if (entityPlayer.isSneaking())
 								{
-									if (BiometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+									if (entityPlayer.capabilities.isCreativeMode)
 									{
 										hasPermission = true;
+										break;
+
+									}
+									else if (biometricIdentifier != null)
+									{
+										if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+										{
+											hasPermission = true;
+										}
 									}
 								}
 							}
 						}
-					}
-				}
 
-				if (!hasPermission)
-				{
-					entity.attackEntityFrom(CustomDamageSource.electrocution, Integer.MAX_VALUE);
+						if (!hasPermission)
+						{
+
+							entity.attackEntityFrom(CustomDamageSource.electrocution, Integer.MAX_VALUE);
+						}
+					}
 				}
 			}
 		}
+
 	}
 
 	@Override
@@ -256,6 +255,62 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 		}
 
 		return this.getIcon(side, iBlockAccess.getBlockMetadata(x, y, z));
+	}
+
+	/**
+	 * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color.
+	 * Note only called when first determining what to render.
+	 */
+	@Override
+	public int colorMultiplier(IBlockAccess iBlockAccess, int x, int y, int z)
+	{
+		try
+		{
+			TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
+
+			if (tileEntity instanceof TileEntityForceField)
+			{
+				IProjector projector = this.getProjector(iBlockAccess, x, y, z);
+
+				if (projector != null)
+				{
+					if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+					{
+						for (int i : projector.getModuleSlots())
+						{
+							ItemStack checkStack = projector.getStackInSlot(i);
+
+							if (checkStack != null)
+							{
+								if (checkStack.getItem() instanceof ItemBlock)
+								{
+									try
+									{
+										Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
+
+										if (block != null)
+										{
+											return block.colorMultiplier(iBlockAccess, x, y, x);
+
+										}
+									}
+									catch (Exception e)
+									{
+										e.printStackTrace();
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return super.colorMultiplier(iBlockAccess, x, y, z);
 	}
 
 	@Override

@@ -303,6 +303,8 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFortronCapacitor), "MFM", "FCF", "MFM", 'D', Item.diamond, 'C', UniversalRecipes.BATTERY, 'F', itemFocusMatix, 'M', UniversalRecipes.PRIMARY_METAL));
 		// Force Field Projector
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceFieldProjector), " D ", "FFF", "MCM", 'D', Item.diamond, 'C', UniversalRecipes.BATTERY, 'F', itemFocusMatix, 'M', UniversalRecipes.PRIMARY_METAL));
+		// Biometric Identifier
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBiometricIdentifier), "FMF", "MCM", "FMF", 'C', itemCardBlank, 'M', UniversalRecipes.PRIMARY_METAL, 'F', itemFocusMatix));
 
 		// -- Cards --
 		// Blank
