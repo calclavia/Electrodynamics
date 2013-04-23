@@ -4,6 +4,7 @@ import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -88,7 +89,7 @@ public class SubscribeEventHandler
 		{
 			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleAntiSpawn) > 0)
 			{
-				evt.setCanceled(true);
+				evt.setResult(Result.DENY);
 			}
 		}
 	}

@@ -14,13 +14,12 @@ public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdi
 	public ItemModuleInterdictionMatrix(int id, String name)
 	{
 		super(id, name);
-		this.setMaxStackSize(1);
 	}
 
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add("\u00a74InterdictionMatrix");
+		info.add("\u00a74Interdiction Matrix");
 		super.addInformation(itemStack, player, info, b);
 	}
 

@@ -40,7 +40,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	{
 		this.fortronTank.setCapacity(20 * LiquidContainerRegistry.BUCKET_VOLUME);
 		this.startModuleIndex = 2;
-		this.endModuleIndex = 8;
+		this.endModuleIndex = 9;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 		{
 			IBiometricIdentifier biometricIdentifier = this.getBiometricIdentifier();
 
-			AxisAlignedBB emptyBounds = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+			AxisAlignedBB emptyBounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord, this.yCoord, this.zCoord);
 
 			List<EntityLiving> warningList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getWarningRange(), getWarningRange(), getWarningRange()));
 			List<EntityLiving> actionList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getActionRange(), getActionRange(), getActionRange()));
@@ -149,12 +149,13 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 		for (ItemStack itemStack : this.getModuleStacks())
 		{
+
 			if (itemStack.getItem() instanceof IInterdictionMatrixModule)
 			{
 				IInterdictionMatrixModule module = (IInterdictionMatrixModule) itemStack.getItem();
-
 				if (module.onDefend(this, entityLiving) || entityLiving.isDead)
 				{
+
 					break;
 				}
 			}
