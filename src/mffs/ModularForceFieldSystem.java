@@ -357,6 +357,22 @@ public class ModularForceFieldSystem
 		// Stabilizer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleStablize), "FFF", "PSA", "FFF", 'F', itemFocusMatix, 'P', Item.pickaxeDiamond, 'S', Item.shovelDiamond, 'A', Item.axeDiamond));
 
+		// -- -- Interdiction Matrix -- --
+		// Anti-Hostile
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiHostile), " R ", "GFB", " S ", 'F', itemFocusMatix, 'G', Item.gunpowder, 'R', Item.rottenFlesh, 'B', Item.bone, 'S', Item.ghastTear));
+		// Anti-Friendly
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiFriendly), " R ", "GFB", " S ", 'F', itemFocusMatix, 'G', Item.porkCooked, 'R', new ItemStack(Block.cloth, 1, -1), 'B', Item.leather, 'S', Item.slimeBall));
+		// Anti-Personnel
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiPersonnel), "BFG", 'F', itemFocusMatix, 'B', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
+		// Confiscate
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl));
+		// Warn
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleWarn), "NFN", 'F', itemFocusMatix, 'N', Block.music));
+		// Block Access
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAccess), " C ", "BFB", " C ", 'F', itemFocusMatix, 'B', Block.blockIron, 'C', Block.chest));
+		// Block Alter
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAlter), " G ", "GFG", " G ", 'F', itemModuleBlockAccess, 'G', Block.blockGold));
+
 		proxy.init();
 	}
 
