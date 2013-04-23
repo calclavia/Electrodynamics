@@ -229,8 +229,9 @@ public class ModularForceFieldSystem
 		itemModuleAntiPersonnel = new ItemModuleAntiPersonnel(Settings.getNextItemID());
 		itemModuleConfiscate = new ItemModuleConfiscate(Settings.getNextItemID());
 		itemModuleWarn = new ItemModuleWarn(Settings.getNextItemID());
-		itemModuleBlockAccess = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAccess");
-		itemModuleBlockAlter = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAlter");
+		itemModuleBlockAccess = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAccess").setCost(10);
+		itemModuleBlockAlter = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAlter").setCost(15);
+		itemModuleAntiSpawn = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleAntiSpawn").setCost(10);
 
 		/**
 		 * Cards
