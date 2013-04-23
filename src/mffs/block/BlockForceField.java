@@ -9,7 +9,7 @@ import mffs.api.IProjector;
 import mffs.api.fortron.IFortronStorage;
 import mffs.api.modules.IModule;
 import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.SecurityPermission;
+import mffs.api.security.Permission;
 import mffs.base.BlockBase;
 import mffs.tileentity.TileEntityForceField;
 import net.minecraft.block.Block;
@@ -122,7 +122,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 						}
 						else if (BiometricIdentifier != null)
 						{
-							if (BiometricIdentifier.isAccessGranted(entityPlayer.username, SecurityPermission.FORCE_FIELD_WARP))
+							if (BiometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
 							{
 								return null;
 							}
@@ -190,7 +190,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 								}
 								else if (BiometricIdentifier != null)
 								{
-									if (BiometricIdentifier.isAccessGranted(entityPlayer.username, SecurityPermission.FORCE_FIELD_WARP))
+									if (BiometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
 									{
 										hasPermission = true;
 									}

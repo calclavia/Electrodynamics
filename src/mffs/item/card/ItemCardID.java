@@ -4,7 +4,7 @@ import java.util.List;
 
 import mffs.MFFSHelper;
 import mffs.api.card.ICardIdentification;
-import mffs.api.security.SecurityPermission;
+import mffs.api.security.Permission;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -40,11 +40,11 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 
 		String tooltip = "";
 
-		for (SecurityPermission permission : SecurityPermission.values())
+		for (Permission permission : Permission.getPermissions())
 		{
 			if (this.hasPermission(itemStack, permission))
 			{
-				if (permission != SecurityPermission.values()[0])
+				if (permission != Permission.getPermissions().get(0))
 				{
 					tooltip += ", ";
 				}
@@ -89,25 +89,25 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	}
 
 	@Override
-	public boolean hasPermission(ItemStack itemStack, SecurityPermission permission)
+	public boolean hasPermission(ItemStack itemStack, Permission permission)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		return nbt.getBoolean(NBT_PREFIX + permission.ordinal());
+		return nbt.getBoolean(NBT_PREFIX + permission.id);
 	}
 
 	@Override
-	public boolean addPermission(ItemStack itemStack, SecurityPermission permission)
+	public boolean addPermission(ItemStack itemStack, Permission permission)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		nbt.setBoolean(NBT_PREFIX + permission.ordinal(), true);
+		nbt.setBoolean(NBT_PREFIX + permission.id, true);
 		return false;
 	}
 
 	@Override
-	public boolean removePermission(ItemStack itemStack, SecurityPermission permission)
+	public boolean removePermission(ItemStack itemStack, Permission permission)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		nbt.setBoolean(NBT_PREFIX + permission.ordinal(), false);
+		nbt.setBoolean(NBT_PREFIX + permission.id, false);
 		return false;
 	}
 }
