@@ -1,6 +1,6 @@
 package mffs.api.modules;
 
-import mffs.api.security.IDefenseStation;
+import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLiving;
 
 public interface IDefenseStationModule extends IModule
@@ -12,5 +12,5 @@ public interface IDefenseStationModule extends IModule
 	 * @param entityLiving
 	 * @return True if to stop processing other modules in this list.
 	 */
-	public boolean onDefend(IDefenseStation defenseStation, EntityLiving entityLiving);
+	public boolean onDefend(IInterdictionMatrix defenseStation, EntityLiving entityLiving);
 }

@@ -11,6 +11,7 @@ import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceField;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
+import mffs.block.BlockInterdictionMatrix;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
 import mffs.item.ItemFortron;
@@ -35,6 +36,7 @@ import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
+import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -116,7 +118,7 @@ public class ModularForceFieldSystem
 	 * Machines
 	 */
 	public static BlockMachine blockCoercionDeriver, blockFortronCapacitor,
-			blockForceFieldProjector, blockBiometricIdentifier, blockDefenseStation;
+			blockForceFieldProjector, blockBiometricIdentifier, blockInterdictionMatrix;
 
 	public static BlockBase blockForceField;
 
@@ -150,7 +152,7 @@ public class ModularForceFieldSystem
 			itemModuleDisintegration, itemModuleShock, itemModuleGlow, itemModuleSponge,
 			itemModuleStablize;
 
-	// Defense Station Modules
+	// Interdiction Matrix Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
 			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
 			itemModuleBlockAlter;
@@ -183,6 +185,7 @@ public class ModularForceFieldSystem
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 		blockBiometricIdentifier = new BlockBiometricIdentifier(Settings.getNextBlockID());
+		blockInterdictionMatrix = new BlockInterdictionMatrix(Settings.getNextBlockID());
 
 		/**
 		 * Items
@@ -243,24 +246,16 @@ public class ModularForceFieldSystem
 		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName());
 		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBiometricIdentifier, blockBiometricIdentifier.getUnlocalizedName());
+		GameRegistry.registerBlock(blockInterdictionMatrix, blockInterdictionMatrix.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
 
 		proxy.preInit();
-	}
-
-	@ForgeSubscribe
-	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Post event)
-	{
-		if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems)
-		{
-			LiquidDictionary.getCanonicalLiquid("Fortron").setRenderingIcon(itemFortron.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
-		}
 	}
 
 	@Init
@@ -305,6 +300,8 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceFieldProjector), " D ", "FFF", "MCM", 'D', Item.diamond, 'C', UniversalRecipes.BATTERY, 'F', itemFocusMatix, 'M', UniversalRecipes.PRIMARY_METAL));
 		// Biometric Identifier
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBiometricIdentifier), "FMF", "MCM", "FMF", 'C', itemCardBlank, 'M', UniversalRecipes.PRIMARY_METAL, 'F', itemFocusMatix));
+		// Interdiction Matrix
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInterdictionMatrix), "SSS", "FFF", "FEF", 'S', itemModuleShock, 'E', Block.enderChest, 'F', itemFocusMatix));
 
 		// -- Cards --
 		// Blank
@@ -352,6 +349,16 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleStablize), "FFF", "PSA", "FFF", 'F', itemFocusMatix, 'P', Item.pickaxeDiamond, 'S', Item.shovelDiamond, 'A', Item.axeDiamond));
 
 		proxy.init();
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Post event)
+	{
+		if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems)
+		{
+			LiquidDictionary.getCanonicalLiquid("Fortron").setRenderingIcon(itemFortron.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
+		}
 	}
 
 	@ForgeSubscribe

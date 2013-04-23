@@ -3,10 +3,14 @@ package mffs;
 import java.util.ArrayList;
 import java.util.List;
 
+import mffs.api.fortron.IFortronFrequency;
+import mffs.api.security.IInterdictionMatrix;
+import mffs.fortron.FortronGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
 /**
  * A class containing some general helpful functions.
@@ -16,6 +20,24 @@ import cpw.mods.fml.common.FMLCommonHandler;
  */
 public class MFFSHelper
 {
+	public static IInterdictionMatrix getNearestInterdictionMatrix(World world, Vector3 position)
+	{
+		for (IFortronFrequency frequencyTile : FortronGrid.instance().get())
+		{
+			if (((TileEntity) frequencyTile).worldObj == world && frequencyTile instanceof IInterdictionMatrix)
+			{
+				IInterdictionMatrix interdictionMatrix = (IInterdictionMatrix) frequencyTile;
+
+				if (position.distanceTo(new Vector3((TileEntity) interdictionMatrix)) <= interdictionMatrix.getActionRange())
+				{
+					return interdictionMatrix;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	public static List<String> splitStringPerWord(String string, int wordsPerLine)
 	{
 		String[] words = string.split(" ");

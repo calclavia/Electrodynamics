@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mffs.ModularForceFieldSystem;
-import mffs.aou.IActivatable;
+import mffs.api.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;

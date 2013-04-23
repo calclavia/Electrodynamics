@@ -1,4 +1,4 @@
-package mffs.aou;
+package mffs.api;
 
 public interface IActivatable
 {
