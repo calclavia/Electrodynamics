@@ -21,7 +21,7 @@ public class Permission
 	/**
 	 * Bypass Confiscation - Allows the bypassing of defense station confiscation.
 	 */
-	public static final Permission BYPASS_DEFENSE_STATION = new Permission(4, "bypassDefense");
+	public static final Permission BYPASS_INTERDICTION_MATRIX = new Permission(4, "bypassDefense");
 	/**
 	 * Remote Control - Allows the usage of a remote control to open GUIs remotely.
 	 */

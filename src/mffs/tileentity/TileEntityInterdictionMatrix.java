@@ -89,7 +89,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 					{
 						boolean isGranted = false;
 
-						if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_DEFENSE_STATION))
+						if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
 						{
 							isGranted = true;
 						}
@@ -141,7 +141,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 			IBiometricIdentifier biometricIdentifier = this.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_DEFENSE_STATION))
+			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
 			{
 				return;
 			}

@@ -14,11 +14,10 @@ public class ItemModuleAntiHostile extends ItemModuleInterdictionMatrix
 	}
 
 	@Override
-	public boolean onDefend(IInterdictionMatrix defenseStation, EntityLiving entityLiving)
+	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
 	{
 		if (entityLiving instanceof IMob && !(entityLiving instanceof INpc))
 		{
-
 			entityLiving.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 20);
 		}
 
