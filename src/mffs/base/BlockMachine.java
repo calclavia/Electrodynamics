@@ -24,7 +24,6 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 	{
 		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), UniversalElectricity.machine);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
-		this.setBlockUnbreakable();
 		this.setResistance(100.0F);
 		this.setStepSound(soundMetalFootstep);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);

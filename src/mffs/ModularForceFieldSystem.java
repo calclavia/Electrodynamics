@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
 import mffs.base.ItemBase;
+import mffs.block.BlockBiometricIdentifier;
 import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceField;
 import mffs.block.BlockForceFieldProjector;
@@ -29,6 +30,7 @@ import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
 import mffs.item.module.projector.ItemModuleStablize;
+import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -180,6 +182,7 @@ public class ModularForceFieldSystem
 		blockCoercionDeriver = new BlockCoercionDeriver(Settings.getNextBlockID());
 		blockFortronCapacitor = new BlockFortronCapacitor(Settings.getNextBlockID());
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
+		blockBiometricIdentifier = new BlockBiometricIdentifier(Settings.getNextBlockID());
 
 		/**
 		 * Items
@@ -239,11 +242,13 @@ public class ModularForceFieldSystem
 		GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName());
 		GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName());
 		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName());
+		GameRegistry.registerBlock(blockBiometricIdentifier, blockBiometricIdentifier.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
 
 		proxy.preInit();
 	}

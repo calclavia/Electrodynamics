@@ -82,15 +82,15 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 		/**
 		 * Try to find in the cards first.
 		 */
-		if (this.getSecurityCenters().size() > 0)
+		if (this.getBiometricIdentifiers().size() > 0)
 		{
-			return this.getSecurityCenters().get(0);
+			return this.getBiometricIdentifiers().get(0);
 		}
 
 		return null;
 	}
 
-	public List<IBiometricIdentifier> getSecurityCenters()
+	public List<IBiometricIdentifier> getBiometricIdentifiers()
 	{
 		List<IBiometricIdentifier> securityCenters = new ArrayList<IBiometricIdentifier>();
 

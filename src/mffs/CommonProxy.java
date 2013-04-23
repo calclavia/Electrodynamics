@@ -7,9 +7,11 @@ import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler
@@ -55,6 +57,24 @@ public class CommonProxy implements IGuiHandler
 	public World getClientWorld()
 	{
 		return null;
+	}
+
+	/**
+	 * Checks if the player is an operator.
+	 * 
+	 * @author King_Lemming
+	 * @param username
+	 */
+	public boolean isOp(String username)
+	{
+		MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+		if (theServer != null)
+		{
+			return theServer.getConfigurationManager().getOps().contains(username.trim().toLowerCase());
+		}
+
+		return false;
 	}
 
 	public void renderBeam(World world, Vector3 position, Vector3 target, float red, float green, float blue, int age)
