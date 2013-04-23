@@ -25,7 +25,7 @@ public abstract class ItemModuleInterdictionMatrix extends ItemModule implements
 	}
 
 	@Override
-	public boolean onDefend(IInterdictionMatrix IInterdictionMatrix, EntityLiving entityLiving)
+	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
 	{
 		return false;
 	}

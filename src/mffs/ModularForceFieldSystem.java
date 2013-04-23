@@ -28,6 +28,8 @@ import mffs.item.module.ItemModule;
 import mffs.item.module.interdiction.ItemModuleAntiFriendly;
 import mffs.item.module.interdiction.ItemModuleAntiHostile;
 import mffs.item.module.interdiction.ItemModuleAntiPersonnel;
+import mffs.item.module.interdiction.ItemModuleConfiscate;
+import mffs.item.module.interdiction.ItemModuleWarn;
 import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
@@ -219,28 +221,28 @@ public class ModularForceFieldSystem
 		itemModuleStablize = new ItemModuleStablize(Settings.getNextItemID());
 
 		/**
+		 * Interdiction Modules
+		 */
+		itemModuleAntiFriendly = new ItemModuleAntiFriendly(Settings.getNextItemID());
+		itemModuleAntiHostile = new ItemModuleAntiHostile(Settings.getNextItemID());
+		itemModuleAntiPersonnel = new ItemModuleAntiPersonnel(Settings.getNextItemID());
+		itemModuleConfiscate = new ItemModuleConfiscate(Settings.getNextItemID());
+		itemModuleWarn = new ItemModuleWarn(Settings.getNextItemID());
+
+		/**
 		 * Cards
 		 */
 		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
 		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
 		itemCardLink = new ItemCardLink(Settings.getNextItemID());
 		itemCardID = new ItemCardID(Settings.getNextItemID());
-
-		/**
-		 * Interdiction Modules
-		 */
-		itemModuleAntiFriendly = new ItemModuleAntiFriendly(Settings.getNextItemID());
-		itemModuleAntiHostile = new ItemModuleAntiHostile(Settings.getNextItemID());
-		itemModuleAntiPersonnel = new ItemModuleAntiPersonnel(Settings.getNextItemID());
+		itemCardInfinite = new ItemCardInfinite(Settings.getNextItemID());
 
 		/**
 		 * The Fortron Liquid
 		 */
 		itemFortron = new ItemFortron(Settings.getNextItemID());
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
-
-		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
-		itemCardInfinite = new ItemCardInfinite(Settings.getNextItemID());
 
 		Settings.CONFIGURATION.save();
 
