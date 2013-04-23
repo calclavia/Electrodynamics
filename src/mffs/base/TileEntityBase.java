@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mffs.ModularForceFieldSystem;
+import mffs.aou.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -25,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor
+public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor, IActivatable
 {
 	public enum TilePacketType
 	{
