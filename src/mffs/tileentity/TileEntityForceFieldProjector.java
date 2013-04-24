@@ -180,7 +180,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
 
-					if (block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1 && (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 || block == null || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ())))
+					if (block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()))
 					{
 						/**
 						 * Prevents the force field projector from disintegrating itself.

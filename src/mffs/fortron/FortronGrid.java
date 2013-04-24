@@ -115,6 +115,16 @@ public class FortronGrid
 
 	}
 
+	/**
+	 * Called to re-initiate the grid. Used when server restarts or when player rejoins a world to
+	 * clean up previously registered objects.
+	 */
+	public static void reinitiate()
+	{
+		CLIENT_INSTANCE = new FortronGrid();
+		SERVER_INSTANCE = new FortronGrid();
+	}
+
 	public static FortronGrid instance()
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)

@@ -13,6 +13,7 @@ import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.block.BlockInterdictionMatrix;
 import mffs.card.ItemCard;
+import mffs.fortron.FortronGrid;
 import mffs.fortron.FortronHelper;
 import mffs.item.ItemFortron;
 import mffs.item.ItemRemoteController;
@@ -64,10 +65,12 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -376,6 +379,12 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiSpawn), " H ", "G G", " H ", 'H', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 
 		proxy.init();
+	}
+
+	@ServerStarting
+	public void serverStarting(FMLServerStartingEvent evt)
+	{
+		FortronGrid.reinitiate();
 	}
 
 }
