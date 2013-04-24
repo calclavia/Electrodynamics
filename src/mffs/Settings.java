@@ -48,6 +48,7 @@ public class Settings
 	public static boolean USE_CACHE = true;
 	public static boolean ENABLE_ELECTRICITY = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
+	public static final int MAX_FREQUENCY_DIGITS = 6;
 
 	public static void load()
 	{

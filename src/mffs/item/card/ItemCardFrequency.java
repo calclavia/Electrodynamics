@@ -4,6 +4,7 @@ import icbm.api.IItemFrequency;
 
 import java.util.List;
 
+import mffs.Settings;
 import mffs.base.TileEntityFrequency;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 		{
 			if (player.isSneaking())
 			{
-				this.setFrequency(world.rand.nextInt(Integer.MAX_VALUE), itemStack);
+				this.setFrequency(world.rand.nextInt(10 ^ Settings.MAX_FREQUENCY_DIGITS - 1), itemStack);
 				player.addChatMessage("Generated random frequency: " + this.getFrequency(itemStack));
 			}
 		}
