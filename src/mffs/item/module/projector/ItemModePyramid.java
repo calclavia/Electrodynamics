@@ -26,41 +26,43 @@ public class ItemModePyramid extends ItemMode
 	@Override
 	public Set<Vector3> getExteriorPoints(IProjector projector)
 	{
-		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		final Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 
-		Vector3 posScale = projector.getPositiveScale();
-		Vector3 negScale = projector.getNegativeScale();
+		final Vector3 posScale = projector.getPositiveScale();
+		final Vector3 negScale = projector.getNegativeScale();
 
-		int xStretch = posScale.intX() + negScale.intX();
-		int yStretch = posScale.intY() + negScale.intY();
-		int zStretch = posScale.intZ() + negScale.intZ();
+		final int xStretch = posScale.intX() + negScale.intX();
+		final int yStretch = posScale.intY() + negScale.intY();
+		final int zStretch = posScale.intZ() + negScale.intZ();
 		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
 
-		int inverseThickness = 1000;
+		final int inverseThickness = 8;
 
-		for (float x = -xStretch; x <= xStretch; x += 0.5f)
+		for (float y = 0; y <= yStretch; y++)
 		{
-			for (float z = -zStretch; z <= zStretch; z += 0.5f)
+			for (float x = -xStretch; x <= xStretch; x++)
 			{
-				for (float y = 0; y <= yStretch; y += 0.5f)
+				for (float z = -zStretch; z <= zStretch; z++)
 				{
-					double q = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;
-					double p = (y / yStretch) * inverseThickness;
+					double yTest = (y / yStretch) * inverseThickness;
+					double xzPositivePlane = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;
+					double xzNegativePlane = (1 + (x / xStretch) - (z / zStretch)) * inverseThickness;
 
-					if (x >= 0 && z >= 0 && Math.round(q) == (Math.round(p)))
+					// Positive Positive Plane
+					if (x >= 0 && z >= 0 && Math.round(xzPositivePlane) == Math.round(yTest))
 					{
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
 						fieldBlocks.add(new Vector3(x, y, -z).add(translation));
 					}
 
-					q = (1 + (x / xStretch) - (z / zStretch)) * inverseThickness;
-
-					if (x <= 0 && z >= 0 && Math.round(q) == (Math.round(p)))
+					// Negative Positive Plane
+					if (x <= 0 && z >= 0 && Math.round(xzNegativePlane) == Math.round(yTest))
 					{
 						fieldBlocks.add(new Vector3(x, y, -z).add(translation));
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));
 					}
 
+					// Ground Level Plane
 					if (y == 0 && (Math.abs(x) + Math.abs(z)) < (xStretch + yStretch) / 2)
 					{
 						fieldBlocks.add(new Vector3(x, y, z).add(translation));

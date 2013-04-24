@@ -207,7 +207,7 @@ public class ModularForceFieldSystem
 		/**
 		 * Modules
 		 */
-		itemModuleTranslate = new ItemModule(Settings.getNextItemID(), "moduleTranslate").setCost(1.5f);
+		itemModuleTranslate = new ItemModule(Settings.getNextItemID(), "moduleTranslate").setCost(1.6f);
 		itemModuleScale = new ItemModule(Settings.getNextItemID(), "moduleScale").setCost(1.2f);
 		itemModuleRotate = new ItemModule(Settings.getNextItemID(), "moduleRotate").setCost(0.1f);
 
