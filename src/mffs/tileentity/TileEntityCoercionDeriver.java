@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IModule;
 import mffs.base.TileEntityUniversalEnergy;
@@ -32,8 +33,8 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 * The amount of watts this machine uses.
 	 */
 	public static final int WATTAGE = 1000;
-	public static final int REQUIRED_TIME = 20 * 20;
-	public static final int NORMAL_PRODUCTION = 12;
+	public static final int REQUIRED_TIME = 10 * 20;
+	public static final int NORMAL_PRODUCTION = 30;
 	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -41,11 +42,12 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	public static final int SLOT_FUEL = 2;
 
 	public int processTime = 0;
-	private boolean isInversed = false;
+	public boolean isInversed = false;
 
 	public TileEntityCoercionDeriver()
 	{
 		this.fortronTank.setCapacity(10 * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.startModuleIndex = 3;
 	}
 
 	@Override
@@ -97,7 +99,11 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 						{
 							this.decrStackSize(SLOT_FUEL, 1);
 							this.processTime = REQUIRED_TIME;
-							
+
+							if (this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) > 0)
+							{
+								this.processTime = this.processTime * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 30;
+							}
 						}
 
 						if (this.processTime > 0)
@@ -207,7 +213,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	{
 		if (itemStack != null)
 		{
-			if (slotID > SLOT_FUEL)
+			if (slotID >= this.startModuleIndex)
 			{
 				return itemStack.getItem() instanceof IModule;
 			}

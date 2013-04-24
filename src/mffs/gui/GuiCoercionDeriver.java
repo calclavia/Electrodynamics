@@ -83,7 +83,19 @@ public class GuiCoercionDeriver extends GuiBase
 		this.drawSlot(8, 82, SlotType.BATTERY);
 		this.drawSlot(8 + 20, 82);
 
+		if (this.tileEntity.isInversed)
+		{
+			GL11.glPushMatrix();
+			GL11.glTranslatef(372, 205, 0);
+			GL11.glRotatef(180, 0, 0, 1);
+		}
+
 		this.drawBar(50, 84, 1);
+
+		if (this.tileEntity.isInversed)
+		{
+			GL11.glPopMatrix();
+		}
 
 		/**
 		 * Force Power Bar
