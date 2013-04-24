@@ -52,21 +52,22 @@ public class ContainerBase extends Container
 	 * Called to transfer a stack from one inventory to the other eg. when shift clicking.
 	 */
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1)
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotID)
 	{
 		ItemStack var2 = null;
-		try
+		// try
 		{
-			Slot var3 = (Slot) this.inventorySlots.get(par1);
+			Slot var3 = (Slot) this.inventorySlots.get(slotID);
 
 			if (var3 != null && var3.getHasStack())
 			{
 				ItemStack itemStack = var3.getStack();
 				var2 = itemStack.copy();
 
-				if (par1 >= this.slotCount)
+				// A slot ID greater than the slot count means it is inside the TileEntity GUI.
+				if (slotID >= this.slotCount)
 				{
-					// PLayer Inventory, Try to place into slot.
+					// Player Inventory, Try to place into slot.
 					boolean didTry = false;
 
 					for (int i = 0; i < this.slotCount; i++)
@@ -75,23 +76,23 @@ public class ContainerBase extends Container
 						{
 							didTry = true;
 
-							if (!this.mergeItemStack(itemStack, i, i + 1, false))
+							if (this.mergeItemStack(itemStack, i, i + 1, false))
 							{
+								break;
 							}
-
 						}
 					}
 
 					if (!didTry)
 					{
-						if (par1 < 27 + this.slotCount)
+						if (slotID < 27 + this.slotCount)
 						{
 							if (!this.mergeItemStack(itemStack, 27 + this.slotCount, 36 + this.slotCount, false))
 							{
 								return null;
 							}
 						}
-						else if (par1 >= 27 + this.slotCount && par1 < 36 + this.slotCount && !this.mergeItemStack(itemStack, slotCount, 27 + slotCount, false))
+						else if (slotID >= 27 + this.slotCount && slotID < 36 + this.slotCount && !this.mergeItemStack(itemStack, slotCount, 27 + slotCount, false))
 						{
 							return null;
 						}
@@ -119,10 +120,9 @@ public class ContainerBase extends Container
 				var3.onPickupFromSlot(par1EntityPlayer, itemStack);
 			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		/*
+		 * catch (Exception e) { e.printStackTrace(); }
+		 */
 
 		return var2;
 	}

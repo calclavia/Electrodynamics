@@ -386,5 +386,4 @@ public class ModularForceFieldSystem
 	{
 		FortronGrid.reinitiate();
 	}
-
 }

@@ -249,7 +249,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	@Override
 	public int getSizeInventory()
 	{
-		return 2 + 8 + 9 * 2;
+		return 2 + 8 + 9;
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			return itemStack.getItem() instanceof ItemCard;
 		}
 
-		if (slotID >= this.endModuleIndex)
+		if (slotID > this.endModuleIndex)
 		{
 			return true;
 		}

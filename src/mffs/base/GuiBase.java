@@ -3,6 +3,7 @@ package mffs.base;
 import icbm.api.IBlockFrequency;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
+import mffs.Settings;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.gui.button.GuiIcon;
 import net.minecraft.block.Block;
@@ -66,7 +67,7 @@ public class GuiBase extends GuiContainer
 		if (this.frequencyTile != null)
 		{
 			this.textFieldFrequency = new GuiTextField(this.fontRenderer, this.textFieldPos.intX(), this.textFieldPos.intY(), 50, 12);
-			this.textFieldFrequency.setMaxStringLength(7);
+			this.textFieldFrequency.setMaxStringLength(Settings.MAX_FREQUENCY_DIGITS);
 			this.textFieldFrequency.setText(frequencyTile.getFrequency() + "");
 		}
 	}
