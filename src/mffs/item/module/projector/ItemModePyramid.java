@@ -146,18 +146,17 @@ public class ItemModePyramid extends ItemMode
 
 		float height = 0.5f;
 		float width = 0.3f;
-		int uvMaxX = 112;
-		int uvMaxY = 70;
+		int uvMaxX = 2;
+		int uvMaxY = 2;
 		Vector3 translation = new Vector3(0, -0.4, 0);
-
 		tessellator.startDrawing(6);
 		tessellator.setColorRGBA(72, 198, 255, 255);
 		tessellator.addVertexWithUV(0 + translation.x, 0 + translation.y, 0 + translation.z, 0, 0);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, uvMaxX, uvMaxY);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, width + translation.z, uvMaxX, uvMaxY);
+		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY);
+		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, width + translation.z, -uvMaxX, uvMaxY);
 		tessellator.addVertexWithUV(width + translation.x, height + translation.y, width + translation.z, uvMaxX, uvMaxY);
-		tessellator.addVertexWithUV(width + translation.x, height + translation.y, -width + translation.z, uvMaxX, uvMaxY);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, uvMaxX, uvMaxY);
+		tessellator.addVertexWithUV(width + translation.x, height + translation.y, -width + translation.z, uvMaxX, -uvMaxY);
+		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY);
 		tessellator.draw();
 		GL11.glPopMatrix();
 	}
