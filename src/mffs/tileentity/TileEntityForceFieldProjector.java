@@ -91,7 +91,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 			if (this.ticks % (2 * 20) == 0)
 			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.field", 1f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.field", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 			}
 		}
 		else if (!this.worldObj.isRemote)

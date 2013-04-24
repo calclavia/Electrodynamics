@@ -211,8 +211,8 @@ public class ModularForceFieldSystem
 		itemModuleScale = new ItemModule(Settings.getNextItemID(), "moduleScale").setCost(1.2f);
 		itemModuleRotate = new ItemModule(Settings.getNextItemID(), "moduleRotate").setCost(0.1f);
 
-		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.2f);
-		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.4f);
+		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.3f);
+		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.5f);
 
 		// Force Field Projector Modules
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());

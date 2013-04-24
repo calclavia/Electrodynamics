@@ -7,6 +7,8 @@ import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FortronGrid;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -85,6 +87,28 @@ public class MFFSHelper
 		}
 
 		return lines;
+	}
+
+	public static Block getCamoBlock(ItemStack itemStack)
+	{
+		if (itemStack != null)
+		{
+			if (itemStack.getItem() instanceof ItemBlock)
+			{
+				if (((ItemBlock) itemStack.getItem()).getBlockID() < Block.blocksList.length)
+				{
+					Block block = Block.blocksList[((ItemBlock) itemStack.getItem()).getBlockID()];
+
+					if (block.renderAsNormalBlock())
+					{
+						return block;
+					}
+				}
+			}
+		}
+
+		return null;
+
 	}
 
 	/**

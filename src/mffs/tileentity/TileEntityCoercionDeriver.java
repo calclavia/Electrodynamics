@@ -97,6 +97,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 						{
 							this.decrStackSize(SLOT_FUEL, 1);
 							this.processTime = REQUIRED_TIME;
+							
 						}
 
 						if (this.processTime > 0)

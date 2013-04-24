@@ -3,6 +3,7 @@ package mffs.block;
 import java.util.List;
 import java.util.Random;
 
+import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IForceFieldBlock;
 import mffs.api.IProjector;
@@ -17,7 +18,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -223,29 +223,22 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 					for (int i : projector.getModuleSlots())
 					{
 						ItemStack checkStack = projector.getStackInSlot(i);
+						Block block = MFFSHelper.getCamoBlock(checkStack);
 
-						if (checkStack != null)
+						if (block != null)
 						{
-							if (checkStack.getItem() instanceof ItemBlock)
+							try
 							{
-								try
-								{
-									Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
+								Icon icon = block.getIcon(side, checkStack.getItemDamage());
 
-									if (block != null)
-									{
-										Icon icon = block.getIcon(side, checkStack.getItemDamage());
-
-										if (icon != null)
-										{
-											return icon;
-										}
-									}
-								}
-								catch (Exception e)
+								if (icon != null)
 								{
-									e.printStackTrace();
+									return icon;
 								}
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
 							}
 						}
 					}
@@ -280,24 +273,17 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 						{
 							ItemStack checkStack = projector.getStackInSlot(i);
 
-							if (checkStack != null)
+							Block block = MFFSHelper.getCamoBlock(checkStack);
+
+							if (block != null)
 							{
-								if (checkStack.getItem() instanceof ItemBlock)
+								try
 								{
-									try
-									{
-										Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
-
-										if (block != null)
-										{
-											return block.colorMultiplier(iBlockAccess, x, y, x);
-
-										}
-									}
-									catch (Exception e)
-									{
-										e.printStackTrace();
-									}
+									return block.colorMultiplier(iBlockAccess, x, y, x);
+								}
+								catch (Exception e)
+								{
+									e.printStackTrace();
 								}
 							}
 						}
