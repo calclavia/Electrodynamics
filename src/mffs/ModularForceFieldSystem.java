@@ -295,7 +295,7 @@ public class ModularForceFieldSystem
 
 		// -- General Items --
 		// Focus Matrix
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 5), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 6), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
 
 		// Remote Controller
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemRemoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipes.WIRE, 'C', UniversalRecipes.BATTERY, 'M', UniversalRecipes.PRIMARY_METAL));
@@ -372,6 +372,8 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAccess), " C ", "BFB", " C ", 'F', itemFocusMatix, 'B', Block.blockIron, 'C', Block.chest));
 		// Block Alter
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAlter), " G ", "GFG", " G ", 'F', itemModuleBlockAccess, 'G', Block.blockGold));
+		// Anti-Spawn
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiSpawn), " H ", "G G", " H ", 'H', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 
 		proxy.init();
 	}
