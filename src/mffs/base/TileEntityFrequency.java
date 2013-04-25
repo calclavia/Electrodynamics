@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import mffs.api.IBiometricIdentifierLink;
 import mffs.api.card.ICardLink;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IBiometricIdentifier;
@@ -18,7 +19,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileEntityFrequency extends TileEntityInventory implements IBlockFrequency
+public abstract class TileEntityFrequency extends TileEntityInventory implements IBlockFrequency, IBiometricIdentifierLink
 {
 	private int frequency;
 
@@ -77,6 +78,7 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 	 * 
 	 * @return
 	 */
+	@Override
 	public IBiometricIdentifier getBiometricIdentifier()
 	{
 		/**
@@ -90,6 +92,7 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 		return null;
 	}
 
+	@Override
 	public List<IBiometricIdentifier> getBiometricIdentifiers()
 	{
 		List<IBiometricIdentifier> securityCenters = new ArrayList<IBiometricIdentifier>();
