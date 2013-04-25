@@ -4,6 +4,8 @@ import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.IBiometricIdentifierLink;
+import mffs.api.security.Permission;
 import mffs.item.card.ItemCardLink;
 import mffs.render.RenderBlockHandler;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -57,9 +59,25 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 	@Override
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-		world.setBlock(x, y, z, 0);
-		return true;
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof IBiometricIdentifierLink)
+		{
+			if (((IBiometricIdentifierLink) tileEntity).getBiometricIdentifier() != null)
+			{
+				if (((IBiometricIdentifierLink) tileEntity).getBiometricIdentifier().isAccessGranted(entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
+				{
+					this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+					world.setBlock(x, y, z, 0);
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
