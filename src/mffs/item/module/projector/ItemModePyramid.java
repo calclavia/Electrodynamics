@@ -38,11 +38,11 @@ public class ItemModePyramid extends ItemMode
 
 		final int inverseThickness = 8;
 
-		for (float y = 0; y <= yStretch; y++)
+		for (float y = 0; y <= yStretch; y += 0.5f)
 		{
-			for (float x = -xStretch; x <= xStretch; x++)
+			for (float x = -xStretch; x <= xStretch; x += 0.5f)
 			{
-				for (float z = -zStretch; z <= zStretch; z++)
+				for (float z = -zStretch; z <= zStretch; z += 0.5f)
 				{
 					double yTest = (y / yStretch) * inverseThickness;
 					double xzPositivePlane = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;
@@ -121,8 +121,7 @@ public class ItemModePyramid extends ItemMode
 		projectorPos.add(new Vector3(0, -negScale.intY() + 1, 0));
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
-		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
+		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
 
 		Region3 region = new Region3(negScale.multiply(-1), posScale);
 

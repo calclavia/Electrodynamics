@@ -11,6 +11,7 @@ import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileEntityModuleAcceptor;
+import mffs.block.BlockForceField;
 import mffs.card.ItemCard;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
@@ -227,7 +228,10 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 					if (block == ModularForceFieldSystem.blockForceField)
 					{
-						this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0, 0, 3);
+						if (((BlockForceField) block).getProjector(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) == this)
+						{
+							this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0);
+						}
 					}
 				}
 			}
@@ -569,14 +573,9 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 		for (Vector3 position : newField)
 		{
-			if (rotationYaw != 0)
+			if (rotationYaw != 0 || rotationPitch != 0)
 			{
-				CalculationHelper.rotateXZByAngle(position, rotationYaw);
-			}
-
-			if (rotationPitch != 0)
-			{
-				CalculationHelper.rotateYByAngle(position, rotationPitch);
+				CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
 			}
 
 			position.add(new Vector3(this));

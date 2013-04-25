@@ -8,6 +8,7 @@ import mffs.api.fortron.IFortronFrequency;
 import mffs.base.TileEntityBase;
 import mffs.fortron.FortronGrid;
 import mffs.item.module.ItemModule;
+import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
 
 public class ItemModuleFusion extends ItemModule
@@ -28,17 +29,20 @@ public class ItemModuleFusion extends ItemModule
 		{
 			if (compareProjector instanceof IProjector && compareProjector != projector)
 			{
-				if (((TileEntityBase) compareProjector).isActive() && ((IProjector) compareProjector).getMode() != null)
+				if (((TileEntity) compareProjector).worldObj == ((TileEntity) projector).worldObj)
 				{
-					Iterator<Vector3> it = fieldBlocks.iterator();
-
-					while (it.hasNext())
+					if (((TileEntityBase) compareProjector).isActive() && ((IProjector) compareProjector).getMode() != null)
 					{
-						Vector3 position = it.next();
+						Iterator<Vector3> it = fieldBlocks.iterator();
 
-						if (((IProjector) compareProjector).getMode().isInField((IProjector) compareProjector, position.clone()))
+						while (it.hasNext())
 						{
-							it.remove();
+							Vector3 position = it.next();
+
+							if (((IProjector) compareProjector).getMode().isInField((IProjector) compareProjector, position.clone()))
+							{
+								it.remove();
+							}
 						}
 					}
 				}

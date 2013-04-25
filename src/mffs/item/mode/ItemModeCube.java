@@ -77,8 +77,7 @@ public class ItemModeCube extends ItemMode
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateXZByAngle(relativePosition, -projector.getRotationYaw());
-		CalculationHelper.rotateYByAngle(relativePosition, -projector.getRotationPitch());
+		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
 		Region3 region = new Region3(projector.getNegativeScale().clone().multiply(-1), projector.getPositiveScale());
 		return region.isIn(relativePosition);
 	}

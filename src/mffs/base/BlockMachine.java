@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.block.BlockRotatable;
 import universalelectricity.prefab.implement.IRedstoneReceptor;
@@ -24,7 +23,7 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 	{
 		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), UniversalElectricity.machine);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
-		this.setHardness(1f);
+		this.setBlockUnbreakable();
 		this.setResistance(100.0F);
 		this.setStepSound(soundMetalFootstep);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
@@ -58,7 +57,8 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 	@Override
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		this.setDirection(world, x, y, z, ForgeDirection.getOrientation(ForgeDirection.ROTATION_MATRIX[2][this.getDirection(world, x, y, z).ordinal()]));
+		this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+		world.setBlock(x, y, z, 0);
 		return true;
 	}
 

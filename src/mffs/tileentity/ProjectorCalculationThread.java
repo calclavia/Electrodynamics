@@ -49,14 +49,9 @@ public class ProjectorCalculationThread extends Thread
 
 		for (Vector3 position : newField)
 		{
-			if (rotationYaw != 0)
+			if (rotationYaw != 0 || rotationPitch != 0)
 			{
-				CalculationHelper.rotateXZByAngle(position, rotationYaw);
-			}
-
-			if (rotationPitch != 0)
-			{
-				CalculationHelper.rotateYByAngle(position, rotationPitch);
+				CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
 			}
 
 			position.add(new Vector3(this.projector));
