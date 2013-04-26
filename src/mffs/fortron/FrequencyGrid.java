@@ -1,10 +1,11 @@
 package mffs.fortron;
 
+import icbm.api.IBlockFrequency;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import mffs.api.fortron.IFortronFrequency;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
@@ -18,26 +19,26 @@ import cpw.mods.fml.relauncher.Side;
  * @author Calclavia
  * 
  */
-public class FortronGrid
+public class FrequencyGrid
 {
-	private static FortronGrid CLIENT_INSTANCE = new FortronGrid();
-	private static FortronGrid SERVER_INSTANCE = new FortronGrid();
+	private static FrequencyGrid CLIENT_INSTANCE = new FrequencyGrid();
+	private static FrequencyGrid SERVER_INSTANCE = new FrequencyGrid();
 
-	private final Set<IFortronFrequency> frequencyGrid = new HashSet<IFortronFrequency>();
+	private final Set<IBlockFrequency> frequencyGrid = new HashSet<IBlockFrequency>();
 
-	public void register(IFortronFrequency tileEntity)
+	public void register(IBlockFrequency tileEntity)
 	{
 		this.cleanUp();
 		this.frequencyGrid.add(tileEntity);
 	}
 
-	public void unregister(IFortronFrequency tileEntity)
+	public void unregister(IBlockFrequency tileEntity)
 	{
 		this.frequencyGrid.remove(tileEntity);
 		this.cleanUp();
 	}
 
-	public Set<IFortronFrequency> get()
+	public Set<IBlockFrequency> get()
 	{
 		return this.frequencyGrid;
 	}
@@ -47,11 +48,11 @@ public class FortronGrid
 	 * 
 	 * @param frequency - The Frequency
 	 * */
-	public Set<IFortronFrequency> get(int frequency)
+	public Set<IBlockFrequency> get(int frequency)
 	{
-		Set<IFortronFrequency> set = new HashSet<IFortronFrequency>();
+		Set<IBlockFrequency> set = new HashSet<IBlockFrequency>();
 
-		for (IFortronFrequency tile : this.get())
+		for (IBlockFrequency tile : this.get())
 		{
 			if (tile != null && !((TileEntity) tile).isInvalid())
 			{
@@ -69,11 +70,11 @@ public class FortronGrid
 	{
 		try
 		{
-			Iterator<IFortronFrequency> it = this.frequencyGrid.iterator();
+			Iterator<IBlockFrequency> it = this.frequencyGrid.iterator();
 
 			while (it.hasNext())
 			{
-				IFortronFrequency frequency = it.next();
+				IBlockFrequency frequency = it.next();
 
 				if (frequency == null)
 				{
@@ -100,15 +101,18 @@ public class FortronGrid
 		}
 	}
 
-	public Set<IFortronFrequency> get(World world, Vector3 position, int radius, int frequency)
+	public Set<IBlockFrequency> get(World world, Vector3 position, int radius, int frequency)
 	{
-		Set<IFortronFrequency> set = new HashSet<IFortronFrequency>();
+		Set<IBlockFrequency> set = new HashSet<IBlockFrequency>();
 
-		for (IFortronFrequency tileEntity : this.get(frequency))
+		for (IBlockFrequency tileEntity : this.get(frequency))
 		{
-			if (Vector3.distance(new Vector3((TileEntity) tileEntity), position) <= radius)
+			if (((TileEntity) tileEntity).worldObj == world)
 			{
-				set.add(tileEntity);
+				if (Vector3.distance(new Vector3((TileEntity) tileEntity), position) <= radius)
+				{
+					set.add(tileEntity);
+				}
 			}
 		}
 		return set;
@@ -121,11 +125,11 @@ public class FortronGrid
 	 */
 	public static void reinitiate()
 	{
-		CLIENT_INSTANCE = new FortronGrid();
-		SERVER_INSTANCE = new FortronGrid();
+		CLIENT_INSTANCE = new FrequencyGrid();
+		SERVER_INSTANCE = new FrequencyGrid();
 	}
 
-	public static FortronGrid instance()
+	public static FrequencyGrid instance()
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{

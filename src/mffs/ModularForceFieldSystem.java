@@ -13,7 +13,7 @@ import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.block.BlockInterdictionMatrix;
 import mffs.card.ItemCard;
-import mffs.fortron.FortronGrid;
+import mffs.fortron.FrequencyGrid;
 import mffs.fortron.FortronHelper;
 import mffs.item.ItemFortron;
 import mffs.item.ItemRemoteController;
@@ -386,6 +386,6 @@ public class ModularForceFieldSystem
 	@ServerStarting
 	public void serverStarting(FMLServerStartingEvent evt)
 	{
-		FortronGrid.reinitiate();
+		FrequencyGrid.reinitiate();
 	}
 }

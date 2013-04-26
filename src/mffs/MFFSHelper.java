@@ -1,12 +1,13 @@
 package mffs;
 
+import icbm.api.IBlockFrequency;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import mffs.fortron.FortronGrid;
+import mffs.fortron.FrequencyGrid;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -28,7 +29,7 @@ public class MFFSHelper
 	 */
 	public static IInterdictionMatrix getNearestInterdictionMatrix(World world, Vector3 position)
 	{
-		for (IFortronFrequency frequencyTile : FortronGrid.instance().get())
+		for (IBlockFrequency frequencyTile : FrequencyGrid.instance().get())
 		{
 			if (((TileEntity) frequencyTile).worldObj == world && frequencyTile instanceof IInterdictionMatrix)
 			{

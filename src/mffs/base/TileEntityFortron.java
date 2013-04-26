@@ -6,7 +6,6 @@ import java.util.List;
 
 import mffs.api.card.ICard;
 import mffs.api.fortron.IFortronFrequency;
-import mffs.fortron.FortronGrid;
 import mffs.fortron.FortronHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,20 +27,6 @@ import com.google.common.io.ByteArrayDataInput;
 public abstract class TileEntityFortron extends TileEntityFrequency implements ITankContainer, IFortronFrequency
 {
 	protected LiquidTank fortronTank = new LiquidTank(FortronHelper.LIQUID_FORTRON.copy(), LiquidContainerRegistry.BUCKET_VOLUME, this);
-
-	@Override
-	public void initiate()
-	{
-		FortronGrid.instance().register(this);
-		super.initiate();
-	}
-
-	@Override
-	public void invalidate()
-	{
-		FortronGrid.instance().unregister(this);
-		super.invalidate();
-	}
 
 	/**
 	 * Packet Methods

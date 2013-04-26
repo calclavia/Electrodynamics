@@ -9,6 +9,7 @@ import mffs.api.card.ICardIdentification;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.TileEntityFrequency;
+import mffs.fortron.FrequencyGrid;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
 
@@ -16,6 +17,12 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityBiometricIdentifier extends TileEntityFrequency implements IBiometricIdentifier
 {
+	public TileEntityBiometricIdentifier()
+	{
+		super();
+		FrequencyGrid.instance().register(this);
+	}
+
 	@Override
 	public boolean isAccessGranted(String username, Permission permission)
 	{

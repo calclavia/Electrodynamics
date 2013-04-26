@@ -1,12 +1,14 @@
 package mffs.item.module.projector;
 
+import icbm.api.IBlockFrequency;
+
 import java.util.Iterator;
 import java.util.Set;
 
 import mffs.api.IProjector;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.base.TileEntityBase;
-import mffs.fortron.FortronGrid;
+import mffs.fortron.FrequencyGrid;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
@@ -23,9 +25,9 @@ public class ItemModuleFusion extends ItemModule
 	@Override
 	public boolean onProject(IProjector projector, Set<Vector3> fieldBlocks)
 	{
-		Set<IFortronFrequency> machines = FortronGrid.instance().get(((IFortronFrequency) projector).getFrequency());
+		Set<IBlockFrequency> machines = FrequencyGrid.instance().get(((IFortronFrequency) projector).getFrequency());
 
-		for (IFortronFrequency compareProjector : machines)
+		for (IBlockFrequency compareProjector : machines)
 		{
 			if (compareProjector instanceof IProjector && compareProjector != projector)
 			{

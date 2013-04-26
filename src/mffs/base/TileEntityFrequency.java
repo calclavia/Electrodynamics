@@ -10,9 +10,8 @@ import java.util.Set;
 
 import mffs.api.IBiometricIdentifierLink;
 import mffs.api.card.ICardLink;
-import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IBiometricIdentifier;
-import mffs.fortron.FortronGrid;
+import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +22,20 @@ import com.google.common.io.ByteArrayDataInput;
 public abstract class TileEntityFrequency extends TileEntityInventory implements IBlockFrequency, IBiometricIdentifierLink
 {
 	private int frequency;
+
+	@Override
+	public void initiate()
+	{
+		FrequencyGrid.instance().register(this);
+		super.initiate();
+	}
+
+	@Override
+	public void invalidate()
+	{
+		FrequencyGrid.instance().unregister(this);
+		super.invalidate();
+	}
 
 	@Override
 	public List getPacketUpdate()
@@ -116,7 +129,7 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 			}
 		}
 
-		for (IFortronFrequency tileEntity : FortronGrid.instance().get(this.getFrequency()))
+		for (IBlockFrequency tileEntity : FrequencyGrid.instance().get(this.getFrequency()))
 		{
 			if (tileEntity instanceof IBiometricIdentifier)
 			{

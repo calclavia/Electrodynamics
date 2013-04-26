@@ -1,5 +1,7 @@
 package mffs.tileentity;
 
+import icbm.api.IBlockFrequency;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,7 +18,7 @@ import mffs.api.fortron.IFortronStorage;
 import mffs.api.modules.IModule;
 import mffs.base.TileEntityInventory;
 import mffs.base.TileEntityModuleAcceptor;
-import mffs.fortron.FortronGrid;
+import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
@@ -290,7 +292,18 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 	@Override
 	public Set<IFortronFrequency> getLinkedDevices()
 	{
-		return FortronGrid.instance().get(this.worldObj, new Vector3(this), this.getTransmissionRange(), this.getFrequency());
+		Set<IFortronFrequency> fortronBlocks = new HashSet<IFortronFrequency>();
+		Set<IBlockFrequency> frequencyBlocks = FrequencyGrid.instance().get(this.worldObj, new Vector3(this), this.getTransmissionRange(), this.getFrequency());
+
+		for (IBlockFrequency frequencyBlock : frequencyBlocks)
+		{
+			if (frequencyBlock instanceof IFortronFrequency)
+			{
+				fortronBlocks.add((IFortronFrequency) frequencyBlock);
+			}
+		}
+
+		return fortronBlocks;
 	}
 
 	@Override
