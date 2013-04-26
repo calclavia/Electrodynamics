@@ -166,7 +166,7 @@ public class ModularForceFieldSystem
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		/**
-		 * General Registery
+		 * General Registry
 		 */
 		LOGGER.setParent(FMLLog.getLogger());
 		Modstats.instance().getReporter().registerMod(this);
@@ -331,6 +331,7 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeCube), "FFF", "FFF", "FFF", 'F', itemFocusMatix));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeTube), "FFF", "   ", "FFF", 'F', itemFocusMatix));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModePyramid), "F  ", "FF ", "FFF", 'F', itemFocusMatix));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeCustom), " C ", "TFP", " S ", 'S', itemModeSphere, 'C', itemModeCube, 'T', itemModeTube, 'P', itemModePyramid, 'F', itemFocusMatix));
 
 		// -- Modules --
 		// -- -- General -- --

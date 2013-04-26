@@ -3,9 +3,10 @@ package mffs.base;
 import icbm.api.IBlockFrequency;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import mffs.api.IBiometricIdentifierLink;
 import mffs.api.card.ICardLink;
@@ -86,16 +87,16 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 		 */
 		if (this.getBiometricIdentifiers().size() > 0)
 		{
-			return this.getBiometricIdentifiers().get(0);
+			return (IBiometricIdentifier) this.getBiometricIdentifiers().toArray()[0];
 		}
 
 		return null;
 	}
 
 	@Override
-	public List<IBiometricIdentifier> getBiometricIdentifiers()
+	public Set<IBiometricIdentifier> getBiometricIdentifiers()
 	{
-		List<IBiometricIdentifier> securityCenters = new ArrayList<IBiometricIdentifier>();
+		Set<IBiometricIdentifier> list = new HashSet<IBiometricIdentifier>();
 
 		/**
 		 * Try to find in the cards first.
@@ -110,10 +111,7 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 
 				if (linkedPosition != null && tileEntity instanceof IBiometricIdentifier)
 				{
-					if (!securityCenters.contains(tileEntity))
-					{
-						securityCenters.add((IBiometricIdentifier) tileEntity);
-					}
+					list.add((IBiometricIdentifier) tileEntity);
 				}
 			}
 		}
@@ -122,13 +120,10 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 		{
 			if (tileEntity instanceof IBiometricIdentifier)
 			{
-				if (!securityCenters.contains(tileEntity))
-				{
-					securityCenters.add((IBiometricIdentifier) tileEntity);
-				}
+				list.add((IBiometricIdentifier) tileEntity);
 			}
 		}
 
-		return securityCenters;
+		return list;
 	}
 }

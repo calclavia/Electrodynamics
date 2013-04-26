@@ -1,6 +1,6 @@
 package mffs.api;
 
-import java.util.List;
+import java.util.Set;
 
 import mffs.api.security.IBiometricIdentifier;
 
@@ -14,5 +14,5 @@ public interface IBiometricIdentifierLink
 {
 	public IBiometricIdentifier getBiometricIdentifier();
 
-	public List<IBiometricIdentifier> getBiometricIdentifiers();
+	public Set<IBiometricIdentifier> getBiometricIdentifiers();
 }

@@ -1,8 +1,8 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
@@ -159,10 +159,10 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 	}
 
 	@Override
-	public List<IBiometricIdentifier> getBiometricIdentifiers()
+	public Set<IBiometricIdentifier> getBiometricIdentifiers()
 	{
-		List<IBiometricIdentifier> list = new ArrayList<IBiometricIdentifier>();
-		list.add(this);
-		return list;
+		Set<IBiometricIdentifier> set = new HashSet<IBiometricIdentifier>();
+		set.add(this);
+		return set;
 	}
 }
