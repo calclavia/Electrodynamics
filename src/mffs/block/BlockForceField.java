@@ -137,12 +137,6 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		return AxisAlignedBB.getBoundingBox(x, y, z, x, y, z);
-	}
-
-	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);

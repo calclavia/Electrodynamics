@@ -91,6 +91,14 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 				}
 			}
 		}
+		else if (packetID == TilePacketType.STRING.ordinal())
+		{
+			if (this.getManipulatingCard() != null)
+			{
+				ICardIdentification idCard = (ICardIdentification) this.getManipulatingCard().getItem();
+				idCard.setUsername(this.getManipulatingCard(), dataStream.readUTF());
+			}
+		}
 	}
 
 	@Override

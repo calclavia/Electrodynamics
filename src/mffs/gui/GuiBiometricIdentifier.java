@@ -12,6 +12,7 @@ import mffs.tileentity.TileEntityBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -69,7 +70,6 @@ public class GuiBiometricIdentifier extends GuiBase
 
 				if (idCard.getUsername(this.tileEntity.getManipulatingCard()) != null)
 				{
-					this.textFieldUsername.setText(idCard.getUsername(this.tileEntity.getManipulatingCard()));
 
 					for (int i = 0; i < this.buttonList.size(); i++)
 					{
@@ -118,6 +118,25 @@ public class GuiBiometricIdentifier extends GuiBase
 	}
 
 	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+
+		if (!this.textFieldUsername.isFocused())
+		{
+			if (this.tileEntity.getManipulatingCard() != null)
+			{
+				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getManipulatingCard().getItem();
+
+				if (idCard.getUsername(this.tileEntity.getManipulatingCard()) != null)
+				{
+					this.textFieldUsername.setText(idCard.getUsername(this.tileEntity.getManipulatingCard()));
+				}
+			}
+		}
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
 		super.drawGuiContainerBackgroundLayer(f, x, y);
@@ -132,6 +151,32 @@ public class GuiBiometricIdentifier extends GuiBase
 		{
 			this.drawSlot(8 + var4 * 18 - 1, 110);
 		}
+	}
+
+	@Override
+	protected void keyTyped(char par1, int par2)
+	{
+		super.keyTyped(par1, par2);
+
+		/**
+		 * Every time a key is typed, try to reset the frequency.
+		 */
+		this.textFieldUsername.textboxKeyTyped(par1, par2);
+
+		try
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.STRING.ordinal(), this.textFieldUsername.getText()));
+		}
+		catch (NumberFormatException e)
+		{
+		}
+	}
+
+	@Override
+	protected void mouseClicked(int x, int y, int par3)
+	{
+		super.mouseClicked(x, y, par3);
+		this.textFieldUsername.mouseClicked(x - containerWidth, y - containerHeight, par3);
 	}
 
 	@Override

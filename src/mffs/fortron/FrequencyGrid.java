@@ -29,7 +29,6 @@ public class FrequencyGrid
 	public void register(IBlockFrequency tileEntity)
 	{
 		this.frequencyGrid.add(tileEntity);
-		this.cleanUp();
 	}
 
 	public void unregister(IBlockFrequency tileEntity)

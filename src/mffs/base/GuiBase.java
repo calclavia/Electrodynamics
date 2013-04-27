@@ -101,7 +101,7 @@ public class GuiBase extends GuiContainer
 				int newFrequency = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText()));
 				this.frequencyTile.setFrequency(newFrequency);
 				this.textFieldFrequency.setText(this.frequencyTile.getFrequency() + "");
-				PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, 2, this.frequencyTile.getFrequency()));
+				PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.FREQUENCY, this.frequencyTile.getFrequency()));
 			}
 			catch (NumberFormatException e)
 			{
@@ -250,19 +250,6 @@ public class GuiBase extends GuiContainer
 		{
 			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 18 * type.ordinal(), 18, 18);
 		}
-
-		/*
-		 * switch (type) { default: break; case BATTERY:
-		 * this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 18, 18,
-		 * 18); break; case LIQUID: this.drawTexturedModalRect(this.containerWidth + x,
-		 * this.containerHeight + y, 0, 18 * 2, 18, 18); break; case ARR_UP:
-		 * this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 18 * 5,
-		 * 18, 18); break; case ARR_DOWN: this.drawTexturedModalRect(this.containerWidth + x,
-		 * this.containerHeight + y, 0, 18 * 6, 18, 18); break; case ARR_LEFT:
-		 * this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 18 * 7,
-		 * 18, 18); break; case ARR_RIGHT: this.drawTexturedModalRect(this.containerWidth + x,
-		 * this.containerHeight + y, 0, 18 * 8, 18, 18); break; }
-		 */
 	}
 
 	protected void drawSlot(int x, int y, SlotType type)

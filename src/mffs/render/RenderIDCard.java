@@ -59,7 +59,6 @@ public class RenderIDCard implements IItemRenderer
 		 * 
 		 * this.renderItem3D((EntityLiving) data[1], itemStack, 0); glPopMatrix(); }
 		 */
-
 		if (itemStack.getItem() instanceof ICardIdentification)
 		{
 			ICardIdentification card = (ICardIdentification) itemStack.getItem();
