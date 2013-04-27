@@ -72,7 +72,7 @@ public class RenderIDCard implements IItemRenderer
 			{
 				glTranslatef(0f, 0f, 0.002f);
 				renderItemIcon(ModularForceFieldSystem.itemCardID.getIcon(itemStack, 0));
-				RenderManager.instance.itemRenderer.renderItemIn2D(Tessellator.instance, par1, par2, par3, par4, par5, par6, par7)
+				//RenderManager.instance.itemRenderer.renderItemIn2D(Tessellator.instance, par1, par2, par3, par4, par5, par6, par7)
 			}
 
 			glEnable(GL_CULL_FACE);
