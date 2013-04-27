@@ -41,26 +41,28 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		if (this.getUsername(itemStack) != null)
+		if (this.getUsername(itemStack) != null && !this.getUsername(itemStack).isEmpty())
 		{
 			info.add("Username: " + this.getUsername(itemStack));
 		}
 		else
 		{
-			info.add("Unspecified");
+			info.add("Unidentified");
 		}
 
 		String tooltip = "";
+		boolean isFirst = true;
 
 		for (Permission permission : Permission.getPermissions())
 		{
 			if (this.hasPermission(itemStack, permission))
 			{
-				if (permission != Permission.getPermissions()[0])
+				if (!isFirst)
 				{
 					tooltip += ", ";
 				}
 
+				isFirst = false;
 				tooltip += TranslationHelper.getLocal("gui." + permission.name + ".name");
 			}
 		}

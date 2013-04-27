@@ -144,6 +144,7 @@ public class GuiBiometricIdentifier extends GuiBase
 		this.drawSlot(87, 90);
 
 		this.drawSlot(7, 45);
+		this.drawSlot(7, 65);
 		this.drawSlot(7, 90);
 
 		// Internal Inventory

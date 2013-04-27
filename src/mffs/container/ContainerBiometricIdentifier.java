@@ -22,6 +22,8 @@ public class ContainerBiometricIdentifier extends ContainerBase
 			this.addSlotToContainer(new SlotBase(tileentity, 3 + var4, 8 + var4 * 18, 111));
 		}
 
+		this.addSlotToContainer(new SlotBase(tileentity, TileEntityBiometricIdentifier.SLOT_COPY, 8, 66));
+
 		this.addPlayerInventory(player);
 	}
 

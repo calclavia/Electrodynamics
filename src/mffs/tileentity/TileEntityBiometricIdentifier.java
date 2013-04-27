@@ -17,6 +17,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityBiometricIdentifier extends TileEntityFrequency implements IBiometricIdentifier
 {
+	public static final int SLOT_COPY = 12;
+
 	public TileEntityBiometricIdentifier()
 	{
 		FrequencyGrid.instance().register(this);
@@ -131,9 +133,34 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 	}
 
 	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+
+		// Try to copy ID card data.
+		if (this.getManipulatingCard() != null && this.getStackInSlot(SLOT_COPY) != null && this.getStackInSlot(SLOT_COPY).getItem() instanceof ICardIdentification)
+		{
+			ICardIdentification masterCard = ((ICardIdentification) this.getManipulatingCard().getItem());
+			ICardIdentification copyCard = ((ICardIdentification) this.getStackInSlot(SLOT_COPY).getItem());
+
+			for (Permission permission : Permission.getPermissions())
+			{
+				if (masterCard.hasPermission(this.getManipulatingCard(), permission))
+				{
+					copyCard.addPermission(this.getStackInSlot(SLOT_COPY), permission);
+				}
+				else
+				{
+					copyCard.removePermission(this.getStackInSlot(SLOT_COPY), permission);
+				}
+			}
+		}
+	}
+
+	@Override
 	public int getSizeInventory()
 	{
-		return 12;
+		return 13;
 	}
 
 	@Override
