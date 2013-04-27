@@ -13,9 +13,8 @@ import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.block.BlockInterdictionMatrix;
 import mffs.card.ItemCard;
-import mffs.fortron.FrequencyGrid;
 import mffs.fortron.FortronHelper;
-import mffs.item.ItemFortron;
+import mffs.fortron.FrequencyGrid;
 import mffs.item.ItemRemoteController;
 import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardID;
@@ -249,7 +248,7 @@ public class ModularForceFieldSystem
 		/**
 		 * The Fortron Liquid
 		 */
-		itemFortron = new ItemFortron(Settings.getNextItemID());
+		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron");
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 
 		Settings.CONFIGURATION.save();
