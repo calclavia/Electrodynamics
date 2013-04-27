@@ -1,6 +1,7 @@
 package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
+import mffs.Settings;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.base.GuiBase;
@@ -9,6 +10,7 @@ import mffs.container.ContainerBiometricIdentifier;
 import mffs.gui.button.GuiButtonPress;
 import mffs.tileentity.TileEntityBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
@@ -17,6 +19,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class GuiBiometricIdentifier extends GuiBase
 {
 	private TileEntityBiometricIdentifier tileEntity;
+	private GuiTextField textFieldUsername;
 
 	public GuiBiometricIdentifier(EntityPlayer player, TileEntityBiometricIdentifier tileEntity)
 	{
@@ -29,6 +32,9 @@ public class GuiBiometricIdentifier extends GuiBase
 	{
 		this.textFieldPos = new Vector2(109, 92);
 		super.initGui();
+
+		this.textFieldUsername = new GuiTextField(this.fontRenderer, 52, 18, 90, 12);
+		this.textFieldUsername.setMaxStringLength(30);
 
 		int x = 0;
 		int y = 0;
@@ -51,7 +57,7 @@ public class GuiBiometricIdentifier extends GuiBase
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
 
-		this.drawTextWithTooltip("rights", "%1", 85, 22, x, y, 0);
+		this.drawTextWithTooltip("rights", "%1", 8, 32, x, y, 0);
 
 		try
 		{
@@ -59,8 +65,12 @@ public class GuiBiometricIdentifier extends GuiBase
 			{
 				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getManipulatingCard().getItem();
 
+				this.textFieldUsername.drawTextBox();
+
 				if (idCard.getUsername(this.tileEntity.getManipulatingCard()) != null)
 				{
+					this.textFieldUsername.setText(idCard.getUsername(this.tileEntity.getManipulatingCard()));
+
 					for (int i = 0; i < this.buttonList.size(); i++)
 					{
 						if (this.buttonList.get(i) instanceof GuiButtonPress)
@@ -114,7 +124,7 @@ public class GuiBiometricIdentifier extends GuiBase
 
 		this.drawSlot(87, 90);
 
-		this.drawSlot(7, 34);
+		this.drawSlot(7, 45);
 		this.drawSlot(7, 90);
 
 		// Internal Inventory

@@ -6,6 +6,7 @@ import mffs.MFFSHelper;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.card.ItemCard;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +25,17 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	public ItemCardID(int i, String name)
 	{
 		super(i, name);
+	}
+
+	@Override
+	public boolean hitEntity(ItemStack itemStack, EntityLiving entityLiving, EntityLiving par3EntityLiving)
+	{
+		if (entityLiving instanceof EntityPlayer)
+		{
+			this.setUsername(itemStack, ((EntityPlayer) entityLiving).username);
+		}
+
+		return false;
 	}
 
 	@Override
@@ -49,7 +61,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 					tooltip += ", ";
 				}
 
-				tooltip += "\u00a72" + TranslationHelper.getLocal("gui." + permission.name + ".name");
+				tooltip += TranslationHelper.getLocal("gui." + permission.name + ".name");
 			}
 		}
 		if (tooltip != null && tooltip.length() > 0)

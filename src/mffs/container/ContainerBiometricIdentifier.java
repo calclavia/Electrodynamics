@@ -14,7 +14,7 @@ public class ContainerBiometricIdentifier extends ContainerBase
 
 		this.addSlotToContainer(new SlotCard(tileentity, 0, 88, 91));
 
-		this.addSlotToContainer(new SlotBase(tileentity, 1, 8, 35));
+		this.addSlotToContainer(new SlotBase(tileentity, 1, 8, 46));
 		this.addSlotToContainer(new SlotBase(tileentity, 2, 8, 91));
 
 		for (int var4 = 0; var4 < 9; var4++)
