@@ -4,6 +4,7 @@ import icbm.api.IBlockFrequency;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.IBiometricIdentifierLink;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.gui.button.GuiIcon;
 import net.minecraft.block.Block;
@@ -34,8 +35,11 @@ public class GuiBase extends GuiContainer
 		ARR_DOWN_LEFT, ARR_DOWN_RIGHT
 	}
 
+	private static final int METER_X = 54;
 	public static final int METER_HEIGHT = 49;
 	public static final int METER_WIDTH = 14;
+	public static final int METER_END = METER_X + METER_WIDTH;
+
 	protected GuiTextField textFieldFrequency;
 	protected Vector2 textFieldPos = new Vector2();
 	public String tooltip = "";
@@ -101,7 +105,7 @@ public class GuiBase extends GuiContainer
 				int newFrequency = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText()));
 				this.frequencyTile.setFrequency(newFrequency);
 				this.textFieldFrequency.setText(this.frequencyTile.getFrequency() + "");
-				PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.FREQUENCY, this.frequencyTile.getFrequency()));
+				PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.FREQUENCY.ordinal(), this.frequencyTile.getFrequency()));
 			}
 			catch (NumberFormatException e)
 			{
@@ -187,6 +191,27 @@ public class GuiBase extends GuiContainer
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
+
+		if (this.frequencyTile instanceof IBiometricIdentifierLink)
+		{
+			this.drawBulb(167, 4, ((IBiometricIdentifierLink) this.frequencyTile).getBiometricIdentifier() != null);
+		}
+	}
+
+	protected void drawBulb(int x, int y, boolean isOn)
+	{
+		this.mc.renderEngine.bindTexture(ModularForceFieldSystem.GUI_COMPONENTS);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		if (isOn)
+		{
+			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 161, 0, 6, 6);
+
+		}
+		else
+		{
+			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 161, 4, 6, 6);
+		}
 	}
 
 	protected void drawSlot(int x, int y, ItemStack itemStack)
@@ -296,7 +321,7 @@ public class GuiBase extends GuiContainer
 			/**
 			 * Draw white color actual progress.
 			 */
-			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 54, 11, (int) (scale * 107), 11);
+			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, METER_X, 11, (int) (scale * 107), 11);
 		}
 	}
 
