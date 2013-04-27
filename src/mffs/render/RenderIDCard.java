@@ -17,40 +17,49 @@ import static org.lwjgl.opengl.GL11.glTexCoord2f;
 import static org.lwjgl.opengl.GL11.glTranslated;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex2f;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.IItemRenderer;
+import universalelectricity.core.vector.Vector2;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * All thanks to Briman for the ID card face rendering! Check out the mod MineForver!
  * 
- * @author Briman
+ * @author Calclavia, Briman
  * 
  */
+@SideOnly(Side.CLIENT)
 public class RenderIDCard implements IItemRenderer
 {
-	@Override
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
-	{
-		return item.getItemDamage() == 0;
-	}
+	private Minecraft mc;
 
-	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	public RenderIDCard()
 	{
-		return false;
+		this.mc = Minecraft.getMinecraft();
 	}
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data)
 	{
+		/*
+		 * if (type == ItemRenderType.EQUIPPED) { glPushMatrix();
+		 * 
+		 * this.renderItem3D((EntityLiving) data[1], itemStack, 0); glPopMatrix(); }
+		 */
+
 		if (itemStack.getItem() instanceof ICardIdentification)
 		{
 			ICardIdentification card = (ICardIdentification) itemStack.getItem();
@@ -63,27 +72,28 @@ public class RenderIDCard implements IItemRenderer
 
 			if (type != ItemRenderType.INVENTORY)
 			{
-				glTranslatef(0f, 0f, -0.001f);
+				// Prevent Z fighting.
+				glTranslatef(0f, 0f, -0.0005f);
 			}
 
-			this.renderFace(this.getSkin(card.getUsername(itemStack)));
+			this.renderPlayerFace(this.getSkin(card.getUsername(itemStack)));
 
 			if (type != ItemRenderType.INVENTORY)
 			{
 				glTranslatef(0f, 0f, 0.002f);
-				renderItemIcon(ModularForceFieldSystem.itemCardID.getIcon(itemStack, 0));
-				//RenderManager.instance.itemRenderer.renderItemIn2D(Tessellator.instance, par1, par2, par3, par4, par5, par6, par7)
+				this.renderItemIcon(ModularForceFieldSystem.itemCardID.getIcon(itemStack, 0));
 			}
 
 			glEnable(GL_CULL_FACE);
 			glPopMatrix();
 		}
+
 	}
 
 	private void transform(ItemRenderType type)
 	{
 		float scale = 0.0625f;
-		
+
 		if (type != ItemRenderType.INVENTORY)
 		{
 			glScalef(scale, -scale, -scale);
@@ -114,19 +124,26 @@ public class RenderIDCard implements IItemRenderer
 		{
 			e.printStackTrace();
 		}
+
 		return 0;
 	}
 
-	private void renderFace(int texID)
+	private void renderPlayerFace(int texID)
 	{
-		int topLX = 2;
-		int topRX = 7;
-		int botLX = 2;
-		int botRX = 7;
-		int topLY = 5;
-		int topRY = 4;
-		int botLY = 10;
-		int botRY = 9;
+		Vector2 translation = new Vector2(9, 5);
+		int xSize = 4;
+		int ySize = 4;
+
+		int topLX = translation.intX();
+		int topRX = translation.intX() + xSize;
+		int botLX = translation.intX();
+		int botRX = translation.intX() + xSize;
+
+		int topLY = translation.intY();
+		int topRY = translation.intY();
+		int botLY = translation.intY() + ySize;
+		int botRY = translation.intY() + ySize;
+
 		glBindTexture(GL_TEXTURE_2D, texID);
 		glColor4f(1, 1, 1, 1);
 		// face
@@ -182,4 +199,86 @@ public class RenderIDCard implements IItemRenderer
 		}
 		glEnd();
 	}
+
+	private void renderItem3D(EntityLiving par1EntityLiving, ItemStack par2ItemStack, int par3)
+	{
+		Icon icon = par1EntityLiving.getItemIcon(par2ItemStack, par3);
+
+		if (icon == null)
+		{
+			GL11.glPopMatrix();
+			return;
+		}
+
+		if (par2ItemStack.getItemSpriteNumber() == 0)
+		{
+			this.mc.renderEngine.bindTexture("/terrain.png");
+		}
+		else
+		{
+			this.mc.renderEngine.bindTexture("/gui/items.png");
+		}
+
+		Tessellator tessellator = Tessellator.instance;
+		float f = icon.getMinU();
+		float f1 = icon.getMaxU();
+		float f2 = icon.getMinV();
+		float f3 = icon.getMaxV();
+		float f4 = 0.0F;
+		float f5 = 0.3F;
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		GL11.glTranslatef(-f4, -f5, 0.0F);
+		float f6 = 1.5F;
+		GL11.glScalef(f6, f6, f6);
+		GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
+		RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getSheetWidth(), icon.getSheetHeight(), 0.0625F);
+
+		if (par2ItemStack != null && par2ItemStack.hasEffect() && par3 == 0)
+		{
+			GL11.glDepthFunc(GL11.GL_EQUAL);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			this.mc.renderEngine.bindTexture("%blur%/misc/glint.png");
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
+			float f7 = 0.76F;
+			GL11.glColor4f(0.5F * f7, 0.25F * f7, 0.8F * f7, 1.0F);
+			GL11.glMatrixMode(GL11.GL_TEXTURE);
+			GL11.glPushMatrix();
+			float f8 = 0.125F;
+			GL11.glScalef(f8, f8, f8);
+			float f9 = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
+			GL11.glTranslatef(f9, 0.0F, 0.0F);
+			GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
+			RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
+			GL11.glPopMatrix();
+			GL11.glPushMatrix();
+			GL11.glScalef(f8, f8, f8);
+			f9 = (float) (Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
+			GL11.glTranslatef(-f9, 0.0F, 0.0F);
+			GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
+			RenderManager.instance.itemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
+			GL11.glPopMatrix();
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glDepthFunc(GL11.GL_LEQUAL);
+		}
+
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+	}
+
+	@Override
+	public boolean handleRenderType(ItemStack item, ItemRenderType type)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	{
+		return false;
+	}
+
 }
