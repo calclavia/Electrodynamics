@@ -19,7 +19,6 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 {
 	public TileEntityBiometricIdentifier()
 	{
-		super();
 		FrequencyGrid.instance().register(this);
 	}
 

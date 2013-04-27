@@ -10,6 +10,7 @@ import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
+import mffs.render.RenderIDCard;
 import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -18,6 +19,7 @@ import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -38,6 +40,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init();
 		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
+		MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID.itemID, new RenderIDCard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoercionDeriver.class, new RenderCoercionDeriver());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
