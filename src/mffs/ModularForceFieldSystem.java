@@ -32,6 +32,7 @@ import mffs.item.module.interdiction.ItemModuleConfiscate;
 import mffs.item.module.interdiction.ItemModuleInterdictionMatrix;
 import mffs.item.module.interdiction.ItemModuleWarn;
 import mffs.item.module.projector.ItemModeCustom;
+import mffs.item.module.projector.ItemModeCylinder;
 import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
@@ -202,6 +203,7 @@ public class ModularForceFieldSystem
 		itemModeSphere = new ItemModeSphere(Settings.getNextItemID());
 		itemModeTube = new ItemModeTube(Settings.getNextItemID());
 		itemModePyramid = new ItemModePyramid(Settings.getNextItemID());
+		itemModeCylinder = new ItemModeCylinder(Settings.getNextItemID());
 		itemModeCustom = new ItemModeCustom(Settings.getNextItemID());
 
 		/**
