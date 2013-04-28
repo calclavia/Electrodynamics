@@ -85,7 +85,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					{
 						if (this.ticks % 20 == 0)
 						{
-							int production = 3;
+							int production = 5;
 
 							if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 							{
