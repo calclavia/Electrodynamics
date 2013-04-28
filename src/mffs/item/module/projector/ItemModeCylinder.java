@@ -6,13 +6,11 @@ import java.util.Set;
 import mffs.api.IProjector;
 import mffs.item.mode.ItemMode;
 import mffs.render.model.ModelCube;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.vector.Region3;
 import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

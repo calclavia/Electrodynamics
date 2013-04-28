@@ -1,11 +1,14 @@
 package mffs.base;
 
 import ic2.api.Direction;
+import ic2.api.energy.event.EnergyTileSourceEvent;
+import ic2.api.energy.tile.IEnergySource;
 
 import java.util.EnumSet;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
@@ -16,7 +19,7 @@ import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerFramework;
 import calclavia.lib.IUniversalEnergyTile;
 
-public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor implements IUniversalEnergyTile
+public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor implements IEnergySource, IUniversalEnergyTile
 {
 	/**
 	 * The amount of watts received this tick. This variable should be deducted when used.
@@ -93,10 +96,16 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 
 				if (this.getPowerProvider(tileEntity) != null)
 				{
-					this.getPowerProvider(tileEntity).receiveEnergy((float) remaining.getWatts(), direction.getOpposite());
-					remaining = new ElectricityPack();
+					this.getPowerProvider(tileEntity).receiveEnergy((float) (remaining.getWatts() * UniversalElectricity.TO_BC_RATIO), direction.getOpposite());
 				}
 			}
+		}
+
+		if (remaining.getWatts() > 0)
+		{
+			EnergyTileSourceEvent evt = new EnergyTileSourceEvent(this, (int) (remaining.getWatts() * UniversalElectricity.TO_IC2_RATIO));
+			MinecraftForge.EVENT_BUS.post(evt);
+			remaining = new ElectricityPack((evt.amount * UniversalElectricity.IC2_RATIO) / remaining.voltage, remaining.voltage);
 		}
 
 		return remaining;
@@ -200,6 +209,18 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 
 	@Override
 	public int getMaxSafeInput()
+	{
+		return 2048;
+	}
+
+	@Override
+	public boolean emitsEnergyTo(TileEntity receiver, Direction direction)
+	{
+		return this.canConnect(direction.toForgeDirection());
+	}
+
+	@Override
+	public int getMaxEnergyOutput()
 	{
 		return 2048;
 	}
