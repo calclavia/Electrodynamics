@@ -5,6 +5,7 @@ import java.util.Set;
 
 import mffs.api.IProjector;
 import mffs.item.mode.ItemMode;
+import mffs.render.model.ModelCube;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 
@@ -121,25 +122,35 @@ public class ItemModeCylinder extends ItemMode
 	@Override
 	public void render(IProjector projector, double x, double y, double z, float f, long ticks)
 	{
-		Tessellator tessellator = Tessellator.instance;
+		float scale = 0.15f;
+		float detail = 0.5f;
 
-		GL11.glPushMatrix();
-		GL11.glRotatef(180, 0, 0, 1);
+		GL11.glScalef(scale, scale, scale);
 
-		float height = 0.5f;
-		float width = 0.3f;
-		int uvMaxX = 2;
-		int uvMaxY = 2;
-		Vector3 translation = new Vector3(0, -0.4, 0);
-		tessellator.startDrawing(6);
-		tessellator.setColorRGBA(72, 198, 255, 255);
-		tessellator.addVertexWithUV(0 + translation.x, 0 + translation.y, 0 + translation.z, 0, 0);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, width + translation.z, -uvMaxX, uvMaxY);
-		tessellator.addVertexWithUV(width + translation.x, height + translation.y, width + translation.z, uvMaxX, uvMaxY);
-		tessellator.addVertexWithUV(width + translation.x, height + translation.y, -width + translation.z, uvMaxX, -uvMaxY);
-		tessellator.addVertexWithUV(-width + translation.x, height + translation.y, -width + translation.z, -uvMaxX, -uvMaxY);
-		tessellator.draw();
-		GL11.glPopMatrix();
+		float radius = 1.5f;
+
+		int i = 0;
+
+		for (float renderX = -radius; renderX <= radius; renderX += detail)
+		{
+			for (float renderZ = -radius; renderZ <= radius; renderZ += detail)
+			{
+				for (float renderY = -radius; renderY <= radius; renderY += detail)
+				{
+					if (((renderX * renderX + renderZ * renderZ + RADIUS_Expansion) <= (radius * radius) && (renderX * renderX + renderZ * renderZ + RADIUS_Expansion) >= ((radius - 1) * (radius - 1))) || ((renderY == 0 || renderY == radius - 1) && (renderX * renderX + renderZ * renderZ + RADIUS_Expansion) <= (radius * radius)))
+					{
+						if (i % 2 == 0)
+						{
+							Vector3 vector = new Vector3(renderX, renderY, renderZ);
+							GL11.glTranslated(vector.x, vector.y, vector.z);
+							ModelCube.INSTNACE.render();
+							GL11.glTranslated(-vector.x, -vector.y, -vector.z);
+						}
+
+						i++;
+					}
+				}
+			}
+		}
 	}
 }
