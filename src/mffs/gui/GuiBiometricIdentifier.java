@@ -1,7 +1,6 @@
 package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
-import mffs.Settings;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.base.GuiBase;
@@ -12,7 +11,6 @@ import mffs.tileentity.TileEntityBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;

@@ -13,6 +13,7 @@ import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.BlockBase;
 import mffs.tileentity.TileEntityForceField;
+import micdoodle8.mods.galacticraft.API.IPartialSealedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -32,7 +33,7 @@ import universalelectricity.prefab.CustomDamageSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockForceField extends BlockBase implements IForceFieldBlock
+public class BlockForceField extends BlockBase implements IForceFieldBlock, IPartialSealedBlock
 {
 	public BlockForceField(int id)
 	{
@@ -360,5 +361,11 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean isSealed(World world, int x, int y, int z)
+	{
+		return true;
 	}
 }
