@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemModeCylinder extends ItemMode
 {
-	private static final int RADIUS_TRANSLATION = 2;
+	private static final int RADIUS_Expansion = 0;
 
 	public ItemModeCylinder(int i)
 	{
@@ -48,11 +48,11 @@ public class ItemModeCylinder extends ItemMode
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if ((y == 0 || y == height - 1) && (x * x + z * z + RADIUS_TRANSLATION) <= (radius * radius))
+					if ((y == 0 || y == height - 1) && (x * x + z * z + RADIUS_Expansion) <= (radius * radius))
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 					}
-					if ((x * x + z * z + RADIUS_TRANSLATION) <= (radius * radius) && (x * x + z * z + RADIUS_TRANSLATION) >= ((radius - 1) * (radius - 1)))
+					if ((x * x + z * z + RADIUS_Expansion) <= (radius * radius) && (x * x + z * z + RADIUS_Expansion) >= ((radius - 1) * (radius - 1)))
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 					}
@@ -98,8 +98,8 @@ public class ItemModeCylinder extends ItemMode
 	@Override
 	public boolean isInField(IProjector projector, Vector3 position)
 	{
-		Vector3 posScale = projector.getPositiveScale().clone();
-		Vector3 negScale = projector.getNegativeScale().clone();
+		Vector3 posScale = projector.getPositiveScale();
+		Vector3 negScale = projector.getNegativeScale();
 
 		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
 
@@ -109,18 +109,9 @@ public class ItemModeCylinder extends ItemMode
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
 
-		Region3 region = new Region3(negScale.multiply(-1), posScale);
-
-		if (region.isIn(relativePosition) && relativePosition.y > 0)
+		if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + RADIUS_Expansion <= radius * radius)
 		{
-			if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + RADIUS_TRANSLATION <= radius * radius)
-			{
-				return true;
-			}
-			else
-			{
-				System.out.println(relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + " vs " + radius * radius);
-			}
+			return true;
 		}
 
 		return false;
