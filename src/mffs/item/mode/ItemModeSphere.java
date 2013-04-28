@@ -48,21 +48,22 @@ public class ItemModeSphere extends ItemMode
 	public Set<Vector3> getInteriorPoints(IProjector projector)
 	{
 		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		final Vector3 translation = projector.getTranslation();
+
 		int radius = projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 
-		int steps = (int) Math.ceil(Math.PI / Math.atan(1.0D / radius / 2));
-
-		for (int r = 0; r < radius; r++)
+		for (int x = -radius; x <= radius; x++)
 		{
-			for (int phi_n = 0; phi_n < 2 * steps; phi_n++)
+			for (int z = -radius; z <= radius; z++)
 			{
-				for (int theta_n = 0; theta_n < steps; theta_n++)
+				for (int y = -radius; y <= radius; y++)
 				{
-					double phi = Math.PI * 2 / steps * phi_n;
-					double theta = Math.PI / steps * theta_n;
+					Vector3 position = new Vector3(x, y, z);
 
-					Vector3 point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)).multiply(radius);
-					fieldBlocks.add(point);
+					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector)).add(translation)))
+					{
+						fieldBlocks.add(position);
+					}
 				}
 			}
 		}

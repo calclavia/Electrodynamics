@@ -24,6 +24,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemModeCylinder extends ItemMode
 {
+	private static final int RADIUS_TRANSLATION = 2;
+
 	public ItemModeCylinder(int i)
 	{
 		super(i, "modeCylinder");
@@ -40,21 +42,19 @@ public class ItemModeCylinder extends ItemMode
 		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
 		int height = posScale.intY() + negScale.intY();
 
-		int x0 = 0, y0 = 0, z0 = 0;
-
 		for (int x = -radius; x <= radius; x++)
 		{
 			for (int z = -radius; z <= radius; z++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					if ((y == 0 || y == height - 1) && (x * x + z * z + 3) <= (radius * radius))
+					if ((y == 0 || y == height - 1) && (x * x + z * z + RADIUS_TRANSLATION) <= (radius * radius))
 					{
-						fieldBlocks.add(new Vector3(x + x0, y + y0, z + z0));
+						fieldBlocks.add(new Vector3(x, y, z));
 					}
-					if ((x * x + z * z + 3) <= (radius * radius) && (x * x + z * z + 3) >= ((radius - 1) * (radius - 1)))
+					if ((x * x + z * z + RADIUS_TRANSLATION) <= (radius * radius) && (x * x + z * z + RADIUS_TRANSLATION) >= ((radius - 1) * (radius - 1)))
 					{
-						fieldBlocks.add(new Vector3(x + x0, y + y0, z + z0));
+						fieldBlocks.add(new Vector3(x, y, z));
 					}
 				}
 			}
@@ -66,25 +66,25 @@ public class ItemModeCylinder extends ItemMode
 	@Override
 	public Set<Vector3> getInteriorPoints(IProjector projector)
 	{
-		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		final Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 
-		Vector3 posScale = projector.getPositiveScale();
-		Vector3 negScale = projector.getNegativeScale();
+		final Vector3 translation = projector.getTranslation();
 
-		int xStretch = posScale.intX() + negScale.intX();
-		int yStretch = posScale.intY() + negScale.intY();
-		int zStretch = posScale.intZ() + negScale.intZ();
-		Vector3 translation = new Vector3(0, -0.4, 0);
+		final Vector3 posScale = projector.getPositiveScale();
+		final Vector3 negScale = projector.getNegativeScale();
 
-		for (float x = -xStretch; x <= xStretch; x++)
+		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
+		int height = posScale.intY() + negScale.intY();
+
+		for (int x = -radius; x <= radius; x++)
 		{
-			for (float z = -zStretch; z <= zStretch; z++)
+			for (int z = -radius; z <= radius; z++)
 			{
-				for (float y = 0; y <= yStretch; y++)
+				for (int y = 0; y < height; y++)
 				{
-					Vector3 position = new Vector3(x, y, z).add(translation);
+					Vector3 position = new Vector3(x, y, z);
 
-					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector))))
+					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector)).add(translation)))
 					{
 						fieldBlocks.add(position);
 					}
@@ -101,13 +101,10 @@ public class ItemModeCylinder extends ItemMode
 		Vector3 posScale = projector.getPositiveScale().clone();
 		Vector3 negScale = projector.getNegativeScale().clone();
 
-		int xStretch = posScale.intX() + negScale.intX();
-		int yStretch = posScale.intY() + negScale.intY();
-		int zStretch = posScale.intZ() + negScale.intZ();
+		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());
-		projectorPos.add(new Vector3(0, -negScale.intY() + 1, 0));
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
@@ -116,9 +113,13 @@ public class ItemModeCylinder extends ItemMode
 
 		if (region.isIn(relativePosition) && relativePosition.y > 0)
 		{
-			if ((1 - (Math.abs(relativePosition.x) / xStretch) - (Math.abs(relativePosition.z) / zStretch) > relativePosition.y / yStretch))
+			if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + RADIUS_TRANSLATION <= radius * radius)
 			{
 				return true;
+			}
+			else
+			{
+				System.out.println(relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + " vs " + radius * radius);
 			}
 		}
 

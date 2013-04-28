@@ -33,7 +33,7 @@ public class GuiCoercionDeriver extends GuiBase
 	{
 		this.textFieldPos = new Vector2(30, 43);
 		super.initGui();
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 50, 20, "Reverse"));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, "Integrate"));
 	}
 
 	@Override
@@ -48,6 +48,18 @@ public class GuiCoercionDeriver extends GuiBase
 		GL11.glRotatef(-90, 0, 0, 1);
 		this.drawTextWithTooltip("upgrade", -95, 140, x, y);
 		GL11.glPopMatrix();
+
+		if (this.buttonList.get(1) instanceof GuiButton)
+		{
+			if (this.tileEntity.isInversed)
+			{
+				((GuiButton) this.buttonList.get(1)).displayString = "Derive";
+			}
+			else
+			{
+				((GuiButton) this.buttonList.get(1)).displayString = "Integrate";
+			}
+		}
 
 		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
 		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
@@ -83,19 +95,7 @@ public class GuiCoercionDeriver extends GuiBase
 		this.drawSlot(8, 82, SlotType.BATTERY);
 		this.drawSlot(8 + 20, 82);
 
-		if (this.tileEntity.isInversed)
-		{
-			GL11.glPushMatrix();
-			GL11.glTranslatef(372, 205, 0);
-			GL11.glRotatef(180, 0, 0, 1);
-		}
-
 		this.drawBar(50, 84, 1);
-
-		if (this.tileEntity.isInversed)
-		{
-			GL11.glPopMatrix();
-		}
 
 		/**
 		 * Force Power Bar
