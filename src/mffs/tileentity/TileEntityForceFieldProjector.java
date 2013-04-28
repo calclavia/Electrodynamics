@@ -576,6 +576,19 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public Set<Vector3> getInteriorPoints()
 	{
+		String cacheID = "getInteriorPoints";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Set)
+				{
+					return (Set<Vector3>) this.cache.get(cacheID);
+				}
+			}
+		}
+
 		Set<Vector3> newField = this.getMode().getInteriorPoints(this);
 
 		Vector3 translation = this.getTranslation();
@@ -591,6 +604,11 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 			position.add(new Vector3(this));
 			position.add(translation);
+		}
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, newField);
 		}
 
 		return newField;
