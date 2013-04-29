@@ -34,7 +34,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 */
 	public static final int WATTAGE = 1000;
 	public static final int REQUIRED_TIME = 10 * 20;
-	public static final int NORMAL_PRODUCTION = 20;
+	public static final int NORMAL_PRODUCTION = 10;
 	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -65,6 +65,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					double watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
 
 					ElectricityPack remainder = this.produce(watts);
+					
 					double electricItemGiven = 0;
 
 					if (remainder.getWatts() > 0)
@@ -83,17 +84,14 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || !Settings.ENABLE_ELECTRICITY)
 					{
-						if (this.ticks % 20 == 0)
+						int production = 3;
+
+						if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 						{
-							int production = 5;
-
-							if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
-							{
-								production *= NORMAL_PRODUCTION;
-							}
-
-							this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
+							production *= NORMAL_PRODUCTION;
 						}
+
+						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
 						if (this.processTime == 0)
 						{
@@ -142,7 +140,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	@Override
 	public ElectricityPack getRequest()
 	{
-		if (this.canConsume() && !this.isInversed)
+		if (this.canConsume())
 		{
 			return new ElectricityPack(WATTAGE / this.getVoltage(), this.getVoltage());
 		}

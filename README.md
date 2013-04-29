@@ -21,7 +21,7 @@ The mod can be found and downloaded at: http://universalelectricity.com/mffs/
 Please submit a pull request if you would be willing to translate this mod into another language.
 
 ### Contact
-Join *#universalelectricity* on EsperNet. Remember to follow the rules and respect others as with any other channel.
+Join *#mffs* or *#universalelectricity* on EsperNet (irc.esper.net:5555). Remember to follow the rules and respect others as with any other channel.
 
 ### License
 Modular Force Field System is licensed under Calclavia's Restricted Public License (http://calclavia.com/license/rpl).

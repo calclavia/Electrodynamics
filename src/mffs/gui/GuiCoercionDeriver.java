@@ -33,7 +33,7 @@ public class GuiCoercionDeriver extends GuiBase
 	{
 		this.textFieldPos = new Vector2(30, 43);
 		super.initGui();
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, "Integrate"));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, "Derive"));
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class GuiCoercionDeriver extends GuiBase
 
 		if (this.buttonList.get(1) instanceof GuiButton)
 		{
-			if (this.tileEntity.isInversed)
+			if (!this.tileEntity.isInversed)
 			{
 				((GuiButton) this.buttonList.get(1)).displayString = "Derive";
 			}

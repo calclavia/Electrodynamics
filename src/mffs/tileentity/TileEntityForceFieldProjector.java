@@ -211,6 +211,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 									}
 								}
 
+								this.requestFortron(1, true);
 								this.forceFields.add(vector);
 								constructionCount++;
 
