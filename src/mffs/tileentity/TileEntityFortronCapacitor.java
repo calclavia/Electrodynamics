@@ -221,7 +221,7 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 				toBeInjected = this.requestFortron(machine.provideFortron(toBeInjected, true), true);
 
 				// Draw Beam Effect
-				if (this.worldObj.isRemote && toBeInjected > 0)
+				if (this.worldObj.isRemote && toBeInjected > 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) <= 0)
 				{
 					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, Vector3.add(new Vector3(this), 0.5), Vector3.add(new Vector3((TileEntityInventory) machine), 0.5), 0.6f, 0.6f, 1, 20);
 				}
@@ -234,7 +234,7 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 				toBeEjected = machine.requestFortron(this.provideFortron(toBeEjected, true), true);
 
 				// Draw Beam Effect
-				if (this.worldObj.isRemote && toBeEjected > 0)
+				if (this.worldObj.isRemote && toBeEjected > 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) <= 0)
 				{
 					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, Vector3.add(new Vector3((TileEntityInventory) machine), 0.5), Vector3.add(new Vector3(this), 0.5), 0.6f, 0.6f, 1, 20);
 				}

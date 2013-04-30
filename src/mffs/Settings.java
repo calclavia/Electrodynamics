@@ -75,12 +75,7 @@ public class Settings
 		maxFFGenPerTick.comment = "How many force field blocks can be generated per tick? Less reduces lag.";
 		MAX_FORCE_FIELDS_PER_TICK = maxFFGenPerTick.getInt(MAX_FORCE_FIELDS_PER_TICK);
 
-		if (!UniversalElectricity.isNetworkActive && !Loader.isModLoaded("IC2") && !Loader.isModLoaded("BuildCraft|Core"))
-		{
-			ENABLE_ELECTRICITY = false;
-		}
-
-		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Electricity?", ENABLE_ELECTRICITY);
+		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Require Electricity?", ENABLE_ELECTRICITY);
 		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";
 		ENABLE_ELECTRICITY = useElectricity.getBoolean(ENABLE_ELECTRICITY);
 		CONFIGURATION.save();
