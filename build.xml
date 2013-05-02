@@ -75,9 +75,6 @@
 		<zip destfile="output/${file.APIFile}">
 			<fileset dir="APIContents" />
 		</zip>
-
-		<echo file="${env.JENKINS_HOME}/jobs/${env.JOB_NAME}/info.txt" append="true" >
-		@ ${env.BUILD_NUMBER} ${version.minecraft} ${file.JarFile} ${file.APIFile}</echo>
 		
 		<copy todir="output" file="build.properties" />
 	</target>
