@@ -4,13 +4,14 @@ import mffs.ModularForceFieldSystem;
 import mffs.render.model.ModelForceFieldProjector;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
+
+import calclavia.lib.CalclaviaRenderHelper;
 
 public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 {
@@ -101,13 +102,10 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 				this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + "force_cube.png");
 
 				// Enable Blending
-				GL11.glShadeModel(GL11.GL_SMOOTH);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				CalclaviaRenderHelper.enableBlending();
 
 				// Disable Lighting/Glow On
-				RenderHelper.disableStandardItemLighting();
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+				CalclaviaRenderHelper.disableLighting();
 
 				GL11.glPushMatrix();
 				GL11.glColor4f(1, 1, 1, (float) Math.sin((double) tileEntity.getTicks() / 10) / 2 + 1);
@@ -118,13 +116,10 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 
 				// Enable Lighting/Glow Off
-				RenderHelper.enableStandardItemLighting();
+				CalclaviaRenderHelper.enableLighting();
 
 				// Disable Blending
-				GL11.glShadeModel(GL11.GL_FLAT);
-				GL11.glDisable(GL11.GL_LINE_SMOOTH);
-				GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
-				GL11.glDisable(GL11.GL_BLEND);
+				CalclaviaRenderHelper.disableBlending();
 
 				GL11.glPopMatrix();
 			}
