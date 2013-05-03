@@ -5,15 +5,18 @@ import icbm.api.IBlockFrequency;
 import java.util.ArrayList;
 import java.util.List;
 
+import mffs.api.IProjector;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
 import net.minecraft.block.Block;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
 /**
@@ -88,6 +91,84 @@ public class MFFSHelper
 		}
 
 		return lines;
+	}
+
+	/**
+	 * Gets the first itemStack that is an ItemBlock in this TileEntity or in nearby chests.
+	 * 
+	 * @param itemStack
+	 * @return
+	 */
+	public static ItemStack getFirstItemBlock(TileEntity tileEntity, ItemStack itemStack)
+	{
+		return getFirstItemBlock(tileEntity, itemStack, true);
+	}
+
+	public static ItemStack getFirstItemBlock(TileEntity tileEntity, ItemStack itemStack, boolean recur)
+	{
+		if (tileEntity instanceof IProjector)
+		{
+			for (int i : ((IProjector) tileEntity).getModuleSlots())
+			{
+				ItemStack checkStack = getFirstItemBlock(i, ((IProjector) tileEntity), itemStack);
+
+				if (checkStack != null)
+				{
+					return checkStack;
+				}
+			}
+		}
+		else if (tileEntity instanceof IInventory)
+		{
+			IInventory inventory = (IInventory) tileEntity;
+
+			for (int i = 0; i < inventory.getSizeInventory(); i++)
+			{
+				ItemStack checkStack = getFirstItemBlock(i, inventory, itemStack);
+
+				if (checkStack != null)
+				{
+					return checkStack;
+				}
+			}
+		}
+
+		if (recur)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection direction = ForgeDirection.getOrientation(i);
+				Vector3 vector = new Vector3(tileEntity);
+				vector.modifyPositionFromSide(direction);
+				TileEntity checkTile = vector.getTileEntity(tileEntity.worldObj);
+
+				if (checkTile != null)
+				{
+					ItemStack checkStack = getFirstItemBlock(checkTile, itemStack, false);
+
+					if (checkStack != null)
+					{
+						return checkStack;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static ItemStack getFirstItemBlock(int i, IInventory inventory, ItemStack itemStack)
+	{
+		ItemStack checkStack = inventory.getStackInSlot(i);
+
+		if (checkStack != null && checkStack.getItem() instanceof ItemBlock)
+		{
+			if (itemStack == null || checkStack.isItemEqual(itemStack))
+			{
+				return checkStack;
+			}
+		}
+		return null;
 	}
 
 	public static Block getCamoBlock(ItemStack itemStack)
