@@ -65,7 +65,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					double watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
 
 					ElectricityPack remainder = this.produce(watts);
-					
+
 					double electricItemGiven = 0;
 
 					if (remainder.getWatts() > 0)
@@ -82,7 +82,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					// Convert Electricity to Fortron
 					this.wattsReceived += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
-					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || !Settings.ENABLE_ELECTRICITY)
+					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						int production = 3;
 
