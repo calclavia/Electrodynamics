@@ -1,5 +1,6 @@
 package mffs.item.module.projector;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,8 @@ public class ItemModeCustom extends ItemMode
 	private static final String NBT_POINT_1 = "point1";
 	private static final String NBT_POINT_2 = "point2";
 	private static final String NBT_FIELD_BLOCK_LIST = "fieldPoints";
+	private static final String NBT_FIELD_BLOCK_ID = "blockID";
+	private static final String NBT_FIELD_BLOCK_METADATA = "blockMetadata";
 
 	public ItemModeCustom(int i)
 	{
@@ -93,11 +96,11 @@ public class ItemModeCustom extends ItemMode
 
 							NBTTagList list = new NBTTagList();
 
-							for (int x = minPoint.intX(); x < maxPoint.intX(); x++)
+							for (int x = minPoint.intX(); x <= maxPoint.intX(); x++)
 							{
-								for (int y = minPoint.intY(); y < maxPoint.intY(); y++)
+								for (int y = minPoint.intY(); y <= maxPoint.intY(); y++)
 								{
-									for (int z = minPoint.intZ(); z < maxPoint.intZ(); z++)
+									for (int z = minPoint.intZ(); z <= maxPoint.intZ(); z++)
 									{
 										Vector3 position = new Vector3(x, y, z);
 										Vector3 targetCheck = Vector3.add(midPoint, position);
@@ -107,8 +110,8 @@ public class ItemModeCustom extends ItemMode
 										{
 											NBTTagCompound vectorTag = new NBTTagCompound();
 											position.writeToNBT(vectorTag);
-											vectorTag.setInteger("blockID", blockID);
-											vectorTag.setInteger("blockMetadata", targetCheck.getBlockMetadata(world));
+											vectorTag.setInteger(NBT_FIELD_BLOCK_ID, blockID);
+											vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world));
 											list.appendTag(vectorTag);
 										}
 									}
@@ -145,6 +148,32 @@ public class ItemModeCustom extends ItemMode
 				if (position != null)
 				{
 					fieldBlocks.add(position);
+				}
+			}
+		}
+
+		return fieldBlocks;
+	}
+
+	public HashMap<Vector3, int[]> getFieldBlockMap(ItemStack itemStack)
+	{
+		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
+
+		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+
+		if (nbt != null)
+		{
+			NBTTagList nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST);
+
+			for (int i = 0; i < nbtTagList.tagCount(); i++)
+			{
+				NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
+				Vector3 position = Vector3.readFromNBT(vectorTag);
+				int[] blockInfo = new int[] { vectorTag.getInteger(NBT_FIELD_BLOCK_ID), vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA) };
+
+				if (position != null)
+				{
+					fieldBlocks.put(position, blockInfo);
 				}
 			}
 		}

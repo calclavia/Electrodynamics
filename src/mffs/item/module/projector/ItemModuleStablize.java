@@ -1,5 +1,9 @@
 package mffs.item.module.projector;
 
+import java.util.HashMap;
+
+import calclavia.lib.CalculationHelper;
+
 import mffs.api.IProjector;
 import mffs.item.module.ItemModule;
 import net.minecraft.inventory.IInventory;
@@ -16,12 +20,23 @@ public class ItemModuleStablize extends ItemModule
 	{
 		super(id, "moduleStabilize");
 		this.setMaxStackSize(1);
-		this.setCost(10);
+		this.setCost(15);
 	}
 
 	@Override
 	public boolean onProject(IProjector projector, Vector3 position)
 	{
+		int[] blockInfo = null;
+
+		if (projector.getMode() instanceof ItemModeCustom)
+		{
+			HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
+			Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+			Vector3 relativePosition = position.clone().subtract(fieldCenter);
+			CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+			blockInfo = fieldBlocks.get(relativePosition.round());
+		}
+
 		// Search nearby inventories to extract blocks.
 		for (int dir = 0; dir < 6; dir++)
 		{
@@ -40,14 +55,21 @@ public class ItemModuleStablize extends ItemModule
 					{
 						if (checkStack.getItem() instanceof ItemBlock)
 						{
-							try
+							if (blockInfo == null || (blockInfo[0] == ((ItemBlock) checkStack.getItem()).getBlockID()))
 							{
-								((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, checkStack.getItemDamage());
-								inventory.decrStackSize(i, 1);
-							}
-							catch (Exception e)
-							{
-								e.printStackTrace();
+								try
+								{
+									// checkStack.getHasSubtypes()
+									int metadata = blockInfo != null ? blockInfo[1] : 0;
+									((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
+
+									inventory.decrStackSize(i, 1);
+									return true;
+								}
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
 							}
 						}
 					}
@@ -55,7 +77,7 @@ public class ItemModuleStablize extends ItemModule
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
