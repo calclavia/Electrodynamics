@@ -155,7 +155,10 @@ public class GuiBiometricIdentifier extends GuiBase
 	@Override
 	protected void keyTyped(char par1, int par2)
 	{
-		super.keyTyped(par1, par2);
+		if (par1 != 'e' && par1 != 'E')
+		{
+			super.keyTyped(par1, par2);
+		}
 
 		/**
 		 * Every time a key is typed, try to reset the frequency.

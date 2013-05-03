@@ -86,12 +86,7 @@ public class GuiBase extends GuiContainer
 	@Override
 	protected void keyTyped(char par1, int par2)
 	{
-		// Escape
-		if (par2 == 1)
-		{
-			this.mc.thePlayer.closeScreen();
-			return;
-		}
+		super.keyTyped(par1, par2);
 
 		if (this.textFieldFrequency != null)
 		{
