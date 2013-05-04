@@ -28,7 +28,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Basic-Components/">
+			<fileset dir="${dir.development}Basic-Components/src/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
