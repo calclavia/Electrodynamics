@@ -38,7 +38,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * All thanks to Briman for the ID card face rendering! Check out the mod MineForver!
  * 
- * @author Calclavia, Briman
+ * @author Briman, Calclavia
  * 
  */
 @SideOnly(Side.CLIENT)

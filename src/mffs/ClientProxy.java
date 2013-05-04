@@ -6,6 +6,7 @@ import mffs.gui.GuiForceFieldProjector;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.gui.GuiInterdictionMatrix;
 import mffs.render.FXBeam;
+import mffs.render.FXHologram;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceFieldProjector;
@@ -94,5 +95,11 @@ public class ClientProxy extends CommonProxy
 	public void renderBeam(World world, Vector3 position, Vector3 target, float red, float green, float blue, int age)
 	{
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXBeam(world, position, target, red, green, blue, age));
+	}
+
+	@Override
+	public void renderTemporaryHologram(World world, Vector3 position, int age)
+	{
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, age));
 	}
 }

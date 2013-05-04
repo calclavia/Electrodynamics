@@ -2,9 +2,9 @@ package mffs.item.module.projector;
 
 import java.util.HashMap;
 
-import calclavia.lib.CalculationHelper;
-
+import mffs.ModularForceFieldSystem;
 import mffs.api.IProjector;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.item.module.ItemModule;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
@@ -13,6 +13,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.prefab.network.PacketManager;
+import calclavia.lib.CalculationHelper;
 
 public class ItemModuleStablize extends ItemModule
 {
@@ -28,47 +30,50 @@ public class ItemModuleStablize extends ItemModule
 	{
 		int[] blockInfo = null;
 
-		if (projector.getMode() instanceof ItemModeCustom)
+		if (projector.getTicks() % 40 == 0)
 		{
-			HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
-			Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
-			Vector3 relativePosition = position.clone().subtract(fieldCenter);
-			CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
-			blockInfo = fieldBlocks.get(relativePosition.round());
-		}
-
-		// Search nearby inventories to extract blocks.
-		for (int dir = 0; dir < 6; dir++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(dir);
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(((TileEntity) projector).worldObj, new Vector3((TileEntity) projector), direction);
-
-			if (tileEntity instanceof IInventory)
+			if (projector.getMode() instanceof ItemModeCustom)
 			{
-				IInventory inventory = ((IInventory) tileEntity);
+				HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
+				Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+				Vector3 relativePosition = position.clone().subtract(fieldCenter);
+				CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+				blockInfo = fieldBlocks.get(relativePosition.round());
+			}
 
-				for (int i = 0; i < inventory.getSizeInventory(); i++)
+			// Search nearby inventories to extract blocks.
+			for (int dir = 0; dir < 6; dir++)
+			{
+				ForgeDirection direction = ForgeDirection.getOrientation(dir);
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(((TileEntity) projector).worldObj, new Vector3((TileEntity) projector), direction);
+
+				if (tileEntity instanceof IInventory)
 				{
-					ItemStack checkStack = inventory.getStackInSlot(i);
+					IInventory inventory = ((IInventory) tileEntity);
 
-					if (checkStack != null)
+					for (int i = 0; i < inventory.getSizeInventory(); i++)
 					{
-						if (checkStack.getItem() instanceof ItemBlock)
-						{
-							if (blockInfo == null || (blockInfo[0] == ((ItemBlock) checkStack.getItem()).getBlockID()))
-							{
-								try
-								{
-									// checkStack.getHasSubtypes()
-									int metadata = blockInfo != null ? blockInfo[1] : 0;
-									((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
+						ItemStack checkStack = inventory.getStackInSlot(i);
 
-									inventory.decrStackSize(i, 1);
-									return true;
-								}
-								catch (Exception e)
+						if (checkStack != null)
+						{
+							if (checkStack.getItem() instanceof ItemBlock)
+							{
+								if (blockInfo == null || (blockInfo[0] == ((ItemBlock) checkStack.getItem()).getBlockID()))
 								{
-									e.printStackTrace();
+									try
+									{
+										// checkStack.getHasSubtypes()
+										int metadata = blockInfo != null ? blockInfo[1] : 0;
+										((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
+										inventory.decrStackSize(i, 1);
+										PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+										return true;
+									}
+									catch (Exception e)
+									{
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -76,8 +81,11 @@ public class ItemModuleStablize extends ItemModule
 				}
 			}
 		}
+		else
+		{
+		}
 
-		return false;
+		return true;
 	}
 
 	@Override

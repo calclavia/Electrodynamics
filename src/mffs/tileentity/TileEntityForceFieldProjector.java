@@ -1,5 +1,6 @@
 package mffs.tileentity;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,9 @@ import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import calclavia.lib.CalculationHelper;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,6 +55,22 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	{
 		super.initiate();
 		this.calculateForceField();
+	}
+
+	@Override
+	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
+	{
+		super.onReceivePacket(packetID, dataStream);
+
+		/**
+		 * Stablizer Module Construction FXs
+		 */
+		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		{
+			Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+			ModularForceFieldSystem.proxy.renderBeam(this.worldObj, new Vector3(this), vector, 0.6f, 0.6f, 1, 40);
+			ModularForceFieldSystem.proxy.renderTemporaryHologram(this.worldObj, vector.add(0.5), 40);
+		}
 	}
 
 	@Override
@@ -190,17 +210,6 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 						{
 							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
-								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-
-								// Sets the controlling projector of the force field block to this
-								// one.
-								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
-
-								if (tileEntity instanceof TileEntityForceField)
-								{
-									((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
-								}
-
 								boolean cancel = false;
 
 								for (IModule module : this.getModules(this.getModuleSlots()))
@@ -211,11 +220,24 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 									}
 								}
 
-								this.requestFortron(1, true);
-								this.forceFields.add(vector);
-								constructionCount++;
+								if (!cancel)
+								{
+									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 
-								if (cancel)
+									// Sets the controlling projector of the force field block to
+									// this one.
+									TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
+
+									if (tileEntity instanceof TileEntityForceField)
+									{
+										((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
+									}
+
+									this.requestFortron(1, true);
+									this.forceFields.add(vector);
+									constructionCount++;
+								}
+								else
 								{
 									break;
 								}

@@ -316,7 +316,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 			e.printStackTrace();
 		}
 
-		return super.getLightValue(iBlockAccess, x, y, z);
+		return 0;
 	}
 
 	@Override
