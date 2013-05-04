@@ -94,7 +94,7 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
-	public void renderTemporaryHologram(World world, Vector3 position, int age)
+	public void renderHologram(World world, Vector3 position, float red, float green, float blue, int age)
 	{
 
 	}

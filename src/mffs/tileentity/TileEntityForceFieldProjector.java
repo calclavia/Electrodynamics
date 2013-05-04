@@ -67,9 +67,20 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		 */
 		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
 		{
-			Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
-			ModularForceFieldSystem.proxy.renderBeam(this.worldObj, new Vector3(this), vector, 0.6f, 0.6f, 1, 40);
-			ModularForceFieldSystem.proxy.renderTemporaryHologram(this.worldObj, vector.add(0.5), 40);
+			int type = dataStream.readInt();
+			Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()).add(0.5);
+			Vector3 root = new Vector3(this).add(0.5);
+
+			if (type == 1)
+			{
+				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, 0.6f, 0.6f, 1, 40);
+				ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 50);
+			}
+			else if (type == 2)
+			{
+				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, 1f, 0f, 0f, 40);
+				ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 50);
+			}
 		}
 	}
 

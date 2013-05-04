@@ -13,9 +13,10 @@ import net.minecraft.world.World;
 
 public class FXHologram extends EntityFX
 {
-	public FXHologram(World par1World, Vector3 position, int age)
+	public FXHologram(World par1World, Vector3 position, float red, float green, float blue, int age)
 	{
 		super(par1World, position.x, position.y, position.z);
+		this.setRBGColorF(red, green, blue);
 		this.particleMaxAge = age;
 		this.noClip = true;
 	}

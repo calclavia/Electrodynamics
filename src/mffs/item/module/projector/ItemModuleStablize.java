@@ -22,7 +22,7 @@ public class ItemModuleStablize extends ItemModule
 	{
 		super(id, "moduleStabilize");
 		this.setMaxStackSize(1);
-		this.setCost(15);
+		this.setCost(20);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class ItemModuleStablize extends ItemModule
 										int metadata = blockInfo != null ? blockInfo[1] : 0;
 										((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
 										inventory.decrStackSize(i, 1);
-										PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+										PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
 										return true;
 									}
 									catch (Exception e)
@@ -80,9 +80,6 @@ public class ItemModuleStablize extends ItemModule
 					}
 				}
 			}
-		}
-		else
-		{
 		}
 
 		return true;

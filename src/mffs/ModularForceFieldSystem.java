@@ -34,6 +34,7 @@ import mffs.item.module.interdiction.ItemModuleWarn;
 import mffs.item.module.projector.ItemModeCustom;
 import mffs.item.module.projector.ItemModeCylinder;
 import mffs.item.module.projector.ItemModePyramid;
+import mffs.item.module.projector.ItemModuleDisintegration;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
 import mffs.item.module.projector.ItemModuleShock;
@@ -224,7 +225,7 @@ public class ModularForceFieldSystem
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
 		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
 		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f).setMaxStackSize(1);
-		itemModuleDisintegration = new ItemModule(Settings.getNextItemID(), "moduleDisintegration").setCost(2f).setMaxStackSize(1);
+		itemModuleDisintegration = new ItemModuleDisintegration(Settings.getNextItemID());
 		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
 		itemModuleGlow = new ItemModule(Settings.getNextItemID(), "moduleGlow");
 		itemModuleSponge = new ItemModuleSponge(Settings.getNextItemID());
@@ -273,13 +274,12 @@ public class ModularForceFieldSystem
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
 
-
 		/**
 		 * Load Basic Components
 		 */
 		BasicComponents.requestItem("ingotSteel", 0);
 		BasicComponents.requestItem("dustSteel", 0);
-		
+
 		proxy.preInit();
 	}
 
