@@ -1,6 +1,7 @@
 package mffs.item.module.projector;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.api.IProjector;
@@ -18,6 +19,8 @@ import calclavia.lib.CalculationHelper;
 
 public class ItemModuleStablize extends ItemModule
 {
+	private int blockCount = 0;
+
 	public ItemModuleStablize(int id)
 	{
 		super(id, "moduleStabilize");
@@ -26,7 +29,14 @@ public class ItemModuleStablize extends ItemModule
 	}
 
 	@Override
-	public boolean onProject(IProjector projector, Vector3 position)
+	public boolean onProject(IProjector projector, Set<Vector3> fields)
+	{
+		this.blockCount = 0;
+		return false;
+	}
+
+	@Override
+	public int onProject(IProjector projector, Vector3 position)
 	{
 		int[] blockInfo = null;
 
@@ -68,7 +78,15 @@ public class ItemModuleStablize extends ItemModule
 										((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
 										inventory.decrStackSize(i, 1);
 										PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
-										return true;
+
+										if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
+										{
+											return 2;
+										}
+										else
+										{
+											return 1;
+										}
 									}
 									catch (Exception e)
 									{
@@ -82,7 +100,7 @@ public class ItemModuleStablize extends ItemModule
 			}
 		}
 
-		return true;
+		return 1;
 	}
 
 	@Override

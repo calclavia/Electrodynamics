@@ -218,7 +218,7 @@ public class ModularForceFieldSystem
 		itemModuleScale = new ItemModule(Settings.getNextItemID(), "moduleScale").setCost(1.2f);
 		itemModuleRotate = new ItemModule(Settings.getNextItemID(), "moduleRotate").setCost(0.1f);
 
-		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.3f);
+		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(1f);
 		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.5f);
 
 		// Force Field Projector Modules
@@ -353,7 +353,7 @@ public class ModularForceFieldSystem
 		// -- Modules --
 		// -- -- General -- --
 		// Speed
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed), "F", "R", "F", 'F', itemFocusMatix, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed), "FFF", "RRR", "FFF", 'F', itemFocusMatix, 'R', Item.redstone));
 		// Capacity
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCapacity, 2), "FCF", 'F', itemFocusMatix, 'C', UniversalRecipes.BATTERY));
 		// Shock

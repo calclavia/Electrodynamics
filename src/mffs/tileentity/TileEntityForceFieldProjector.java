@@ -1,11 +1,14 @@
 package mffs.tileentity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import mffs.DelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IProjector;
@@ -33,6 +36,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor implements IProjector, IThreadCallBack
 {
 	private static final int MODULE_SLOT_ID = 2;
+
+	public final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
 
 	/**
 	 * A set containing all positions of all force field blocks.
@@ -94,6 +99,22 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	public void updateEntity()
 	{
 		super.updateEntity();
+
+		Iterator<DelayedEvent> it = this.delayedEvents.iterator();
+
+		while (it.hasNext())
+		{
+			DelayedEvent evt = it.next();
+
+			if (evt.ticks <= 0)
+			{
+				it.remove();
+			}
+			else
+			{
+				evt.update();
+			}
+		}
 
 		if (this.isActive() && this.getMode() != null && this.requestFortron(this.getFortronCost(), false) >= this.getFortronCost())
 		{
@@ -199,6 +220,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 			Iterator<Vector3> it = this.calculatedField.iterator();
 
+			fieldLoop:
 			while (it.hasNext())
 			{
 				Vector3 vector = it.next();
@@ -221,37 +243,34 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 						{
 							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
-								boolean cancel = false;
-
 								for (IModule module : this.getModules(this.getModuleSlots()))
 								{
-									if (module.onProject(this, vector.clone()))
+									int flag = module.onProject(this, vector.clone());
+
+									if (flag == 1)
 									{
-										cancel = true;
+										continue fieldLoop;
+									}
+									else if (flag == 2)
+									{
+										break fieldLoop;
 									}
 								}
 
-								if (!cancel)
+								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
+
+								// Sets the controlling projector of the force field block to
+								// this one.
+								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
+
+								if (tileEntity instanceof TileEntityForceField)
 								{
-									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-
-									// Sets the controlling projector of the force field block to
-									// this one.
-									TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
-
-									if (tileEntity instanceof TileEntityForceField)
-									{
-										((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
-									}
-
-									this.requestFortron(1, true);
-									this.forceFields.add(vector);
-									constructionCount++;
+									((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
 								}
-								else
-								{
-									break;
-								}
+
+								this.requestFortron(1, true);
+								this.forceFields.add(vector);
+								constructionCount++;
 							}
 						}
 					}

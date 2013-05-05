@@ -31,9 +31,9 @@ public class ItemModule extends ItemBase implements IModule
 	}
 
 	@Override
-	public boolean onProject(IProjector projector, Vector3 position)
+	public int onProject(IProjector projector, Vector3 position)
 	{
-		return false;
+		return 0;
 	}
 
 	@Override
