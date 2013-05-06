@@ -274,18 +274,25 @@ public class ModularForceFieldSystem
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
 
-		/**
-		 * Load Basic Components
-		 */
-		BasicComponents.requestItem("ingotSteel", 0);
-		BasicComponents.requestItem("dustSteel", 0);
-
 		proxy.preInit();
 	}
 
 	@Init
 	public void load(FMLInitializationEvent evt)
 	{
+		/**
+		 * Load Basic Components
+		 */
+		BasicComponents.register(this, CHANNEL);
+
+		BasicComponents.requestItem("ingotSteel", 0);
+		BasicComponents.requestItem("dustSteel", 0);
+
+		BasicComponents.requestItem("ingotCopper", 0);
+		BasicComponents.requestBlock("oreCopper", 0);
+
+		BasicComponents.requestItem("copperWire", 0);
+
 		/**
 		 * Load language file(s)
 		 */
