@@ -292,6 +292,7 @@ public class ModularForceFieldSystem
 		BasicComponents.requestBlock("oreCopper", 0);
 
 		BasicComponents.requestItem("copperWire", 0);
+		BasicComponents.requestItem("wrench", 0);
 
 		/**
 		 * Load language file(s)
