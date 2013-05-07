@@ -118,7 +118,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 		if (this.isActive() && this.getMode() != null && this.requestFortron(this.getFortronCost(), false) >= this.getFortronCost())
 		{
-			this.requestFortron(this.getFortronCost(), true);
+			this.consumeCost();
 
 			if (!this.worldObj.isRemote)
 			{
@@ -154,19 +154,9 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	}
 
 	@Override
-	public int getFortronCost()
+	public float getAmplifier()
 	{
-		float cost = 2;
-
-		for (ItemStack itemStack : this.getModuleStacks())
-		{
-			if (itemStack != null)
-			{
-				cost += itemStack.stackSize * ((IModule) itemStack.getItem()).getFortronCost(this.getCalculatedField().size());
-			}
-		}
-
-		return Math.round(cost);
+		return Math.max(Math.min((this.getCalculatedField().size() / 1000), 10), 1);
 	}
 
 	@Override

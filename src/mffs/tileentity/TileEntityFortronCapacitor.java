@@ -42,6 +42,8 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 	{
 		super.updateEntity();
 
+		this.consumeCost();
+
 		if (!this.isDisabled())
 		{
 			/**
@@ -83,6 +85,12 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 				MFFSHelper.transferFortron(this, machines, transferMode, this.getTransmissionRate());
 			}
 		}
+	}
+
+	@Override
+	public float getAmplifier()
+	{
+		return 0.001f;
 	}
 
 	/**

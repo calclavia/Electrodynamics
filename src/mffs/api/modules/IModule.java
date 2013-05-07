@@ -16,7 +16,7 @@ public interface IModule
 	 * 
 	 * @return
 	 */
-	public float getFortronCost(int amplifier);
+	public float getFortronCost(float amplifier);
 
 	/**
 	 * Called before the projector projects a field.

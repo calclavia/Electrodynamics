@@ -102,10 +102,4 @@ public class ItemModuleStablize extends ItemModule
 
 		return 1;
 	}
-
-	@Override
-	public float getFortronCost(int amplifier)
-	{
-		return super.getFortronCost(amplifier) * Math.max(Math.min((amplifier / 500), 1000), 1);
-	}
 }

@@ -24,6 +24,14 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public int startModuleIndex = 0;
 	public int endModuleIndex = this.getSizeInventory() - 1;
 
+	public void consumeCost()
+	{
+		if (this.getFortronCost() > 0)
+		{
+			this.requestFortron(this.getFortronCost(), true);
+		}
+	}
+
 	@Override
 	public ItemStack getModule(IModule module)
 	{
@@ -240,6 +248,47 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		}
 
 		return modules;
+	}
+
+	@Override
+	public int getFortronCost()
+	{
+		String cacheID = "getFortronCost";
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof Integer)
+				{
+					return (Integer) this.cache.get(cacheID);
+				}
+			}
+		}
+
+		float cost = 0;
+
+		for (ItemStack itemStack : this.getModuleStacks())
+		{
+			if (itemStack != null)
+			{
+				cost += itemStack.stackSize * ((IModule) itemStack.getItem()).getFortronCost(this.getAmplifier());
+			}
+		}
+
+		int result = Math.round(cost);
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, result);
+		}
+
+		return result;
+	}
+
+	protected float getAmplifier()
+	{
+		return 1;
 	}
 
 	@Override

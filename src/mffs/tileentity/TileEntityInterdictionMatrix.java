@@ -64,6 +64,12 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 		}
 	}
 
+	@Override
+	public float getAmplifier()
+	{
+		return Math.max(Math.min((this.getActionRange() / 20), 10), 1);
+	}
+
 	/**
 	 * Scans the surroundings.
 	 */
@@ -250,22 +256,6 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	public int getSizeInventory()
 	{
 		return 2 + 8 + 9;
-	}
-
-	@Override
-	public int getFortronCost()
-	{
-		float cost = 2;
-
-		for (ItemStack itemStack : this.getModuleStacks())
-		{
-			if (itemStack != null)
-			{
-				cost += itemStack.stackSize * ((IModule) itemStack.getItem()).getFortronCost(this.getActionRange());
-			}
-		}
-
-		return Math.round(cost);
 	}
 
 	@Override

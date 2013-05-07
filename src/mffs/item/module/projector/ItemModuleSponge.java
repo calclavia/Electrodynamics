@@ -36,10 +36,4 @@ public class ItemModuleSponge extends ItemModule
 
 		return super.onProject(projector, fields);
 	}
-
-	@Override
-	public float getFortronCost(int amplifier)
-	{
-		return super.getFortronCost(amplifier) * Math.max(Math.min((amplifier / 500), 1000), 1);
-	}
 }

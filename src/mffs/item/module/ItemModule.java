@@ -56,8 +56,8 @@ public class ItemModule extends ItemBase implements IModule
 	}
 
 	@Override
-	public float getFortronCost(int amplifier)
+	public float getFortronCost(float amplifier)
 	{
-		return this.fortronCost;
+		return this.fortronCost * amplifier;
 	}
 }
