@@ -15,9 +15,14 @@ import net.minecraft.world.World;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {
+	public ItemCardFrequency(String name, int i)
+	{
+		super(i, name);
+	}
+
 	public ItemCardFrequency(int i)
 	{
-		super(i, "cardFrequency");
+		this("cardFrequency", i);
 	}
 
 	@Override

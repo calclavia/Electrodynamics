@@ -1,26 +1,31 @@
 package mffs.item;
 
 import java.util.List;
+import java.util.Set;
 
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardLink;
-import mffs.base.ItemBase;
+import mffs.api.fortron.IFortronFrequency;
+import mffs.fortron.FrequencyGrid;
+import mffs.item.card.ItemCardFrequency;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
+import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector3;
 
-public class ItemRemoteController extends ItemBase implements ICardLink
+public class ItemRemoteController extends ItemCardFrequency implements ICardLink
 {
 	public ItemRemoteController(int id)
 	{
-		super(id, "remoteController");
-		this.setMaxStackSize(1);
+		super("remoteController", id);
 	}
 
 	@Override
@@ -46,9 +51,9 @@ public class ItemRemoteController extends ItemBase implements ICardLink
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
-		if (entityPlayer.isSneaking())
+		if (player.isSneaking())
 		{
 			if (!world.isRemote)
 			{
@@ -58,7 +63,7 @@ public class ItemRemoteController extends ItemBase implements ICardLink
 
 				if (Block.blocksList[vector.getBlockID(world)] != null)
 				{
-					entityPlayer.addChatMessage("Linked remote to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+					player.addChatMessage("Linked remote to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
 				}
 
 			}
@@ -82,24 +87,47 @@ public class ItemRemoteController extends ItemBase implements ICardLink
 
 				if (Block.blocksList[blockId] != null)
 				{
-					int requiredEnergy = (int) Vector3.distance(new Vector3(entityPlayer), position) * (LiquidContainerRegistry.BUCKET_VOLUME / 10);
-
 					Chunk chunk = world.getChunkFromBlockCoords(position.intX(), position.intZ());
 
 					if (chunk != null && chunk.isChunkLoaded)
 					{
-						try
-						{
-							Block.blocksList[blockId].onBlockActivated(world, position.intX(), position.intY(), position.intZ(), entityPlayer, 0, 0, 0, 0);
+						double requiredEnergy = Vector3.distance(new Vector3(entityPlayer), position) * (LiquidContainerRegistry.BUCKET_VOLUME / 100);
+						int receivedEnergy = 0;
 
-							if (!world.isRemote)
+						Set<IFortronFrequency> fortronTiles = FrequencyGrid.instance().getFortronTiles(world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack));
+
+						for (IFortronFrequency fortronTile : fortronTiles)
+						{
+							int consumedEnergy = fortronTile.requestFortron((int) Math.ceil(requiredEnergy / fortronTiles.size()), true);
+
+							if (consumedEnergy > 0)
 							{
-								ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight(), 0)), position.add(0.5), 0.6f, 0.6f, 1, 20);
+								if (!world.isRemote)
+								{
+									ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight() - 0.2, 0)), new Vector3((TileEntity) fortronTile).add(0.5), 0.6f, 0.6f, 1, 20);
+								}
+
+								receivedEnergy += consumedEnergy;
+							}
+
+							if (receivedEnergy >= requiredEnergy)
+							{
+								try
+								{
+									Block.blocksList[blockId].onBlockActivated(world, position.intX(), position.intY(), position.intZ(), entityPlayer, 0, 0, 0, 0);
+								}
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+
+								return itemStack;
 							}
 						}
-						catch (Exception e)
+
+						if (!world.isRemote)
 						{
-							e.printStackTrace();
+							entityPlayer.addChatMessage("Unable to harness " + ElectricityDisplay.getDisplay(requiredEnergy, ElectricUnit.JOULES) + " from the Fortron field.");
 						}
 					}
 				}
