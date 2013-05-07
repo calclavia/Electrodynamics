@@ -1,15 +1,16 @@
 package mffs.render;
 
-import org.lwjgl.opengl.GL11;
-
-import calclavia.lib.CalclaviaRenderHelper;
-import universalelectricity.core.vector.Vector3;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+
+import org.lwjgl.opengl.GL11;
+
+import universalelectricity.core.vector.Vector3;
+import calclavia.lib.CalclaviaRenderHelper;
 
 public class FXHologram extends EntityFX
 {

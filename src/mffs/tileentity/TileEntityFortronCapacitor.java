@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
+import mffs.TransferMode;
 import mffs.api.card.ICard;
 import mffs.api.card.ICardInfinite;
 import mffs.api.card.ICardLink;
@@ -16,7 +18,6 @@ import mffs.api.fortron.IFortronCapacitor;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.fortron.IFortronStorage;
 import mffs.api.modules.IModule;
-import mffs.base.TileEntityInventory;
 import mffs.base.TileEntityModuleAcceptor;
 import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
@@ -28,23 +29,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor implements IFortronStorage, IFortronCapacitor
 {
-	public enum TransferMode
-	{
-		EQUALIZE, DISTRIBUTE, DRAIN, FILL;
-
-		public TransferMode toggle()
-		{
-			int newOrdinal = this.ordinal() + 1;
-
-			if (newOrdinal >= TransferMode.values().length)
-			{
-				newOrdinal = 0;
-			}
-			return TransferMode.values()[newOrdinal];
-		}
-
-	}
-
 	private TransferMode transferMode = TransferMode.EQUALIZE;
 
 	public TileEntityFortronCapacitor()
@@ -87,7 +71,6 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 								machines.add(this);
 								machines.add((IFortronFrequency) linkPosition.getTileEntity(this.worldObj));
 							}
-
 						}
 					}
 				}
@@ -97,147 +80,7 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 					machines = this.getLinkedDevices();
 				}
 
-				if (machines.size() > 1)
-				{
-					/**
-					 * Check spread mode. Equal, Give All, Take All
-					 */
-					int totalFortron = 0;
-					int totalCapacity = 0;
-
-					for (IFortronFrequency machine : machines)
-					{
-						if (machine != null)
-						{
-							totalFortron += machine.getFortronEnergy();
-							totalCapacity += machine.getFortronCapacity();
-						}
-					}
-
-					if (totalFortron > 0 && totalCapacity > 0)
-					{
-						/**
-						 * Test each mode and based on the mode, spread Fortron energy.
-						 */
-						switch (this.transferMode)
-						{
-							case EQUALIZE:
-							{
-								for (IFortronFrequency machine : machines)
-								{
-									if (machine != null)
-									{
-										double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
-										int amountToSet = (int) (totalFortron * capacityPercentage);
-										this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
-									}
-								}
-
-								break;
-							}
-							case DISTRIBUTE:
-							{
-								final int amountToSet = totalFortron / machines.size();
-
-								for (IFortronFrequency machine : machines)
-								{
-									if (machine != null)
-									{
-										this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
-									}
-								}
-
-								break;
-							}
-							case DRAIN:
-							{
-								machines.remove(this);
-
-								for (IFortronFrequency machine : machines)
-								{
-									if (machine != null)
-									{
-										double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
-										int amountToSet = (int) (totalFortron * capacityPercentage);
-
-										if (amountToSet - machine.getFortronEnergy() > 0)
-										{
-											this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
-										}
-									}
-								}
-
-								break;
-							}
-							case FILL:
-							{
-								if (this.getFortronEnergy() < this.getFortronCapacity())
-								{
-									machines.remove(this);
-
-									// The amount of energy required to be full.
-									int requiredFortron = this.getFortronCapacity() - this.getFortronEnergy();
-
-									for (IFortronFrequency machine : machines)
-									{
-										if (machine != null)
-										{
-											int amountToConsume = Math.min(requiredFortron, machine.getFortronEnergy());
-											int amountToSet = -machine.getFortronEnergy() - amountToConsume;
-
-											if (amountToConsume > 0)
-											{
-												this.transferFortron(machine, amountToSet - machine.getFortronEnergy());
-											}
-										}
-									}
-								}
-
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Tries to transfer Fortron to a specific machine from this capacitor. Renders an animation on
-	 * the client side.
-	 * 
-	 * @param machine: The machine to be transfered to.
-	 * @param joules: The amount of energy to be transfered.
-	 */
-	private void transferFortron(IFortronFrequency machine, int joules)
-	{
-		if (machine != null)
-		{
-			if (joules > 0)
-			{
-				// Transfer energy to machine.
-				joules = Math.min(joules, this.getTransmissionRate());
-				int toBeInjected = machine.provideFortron(this.requestFortron(joules, false), false);
-				toBeInjected = this.requestFortron(machine.provideFortron(toBeInjected, true), true);
-
-				// Draw Beam Effect
-				if (this.worldObj.isRemote && toBeInjected > 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) <= 0)
-				{
-					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, Vector3.add(new Vector3(this), 0.5), Vector3.add(new Vector3((TileEntityInventory) machine), 0.5), 0.6f, 0.6f, 1, 20);
-				}
-			}
-			else
-			{
-				// Take energy from machine.
-				joules = Math.min(Math.abs(joules), this.getTransmissionRate());
-				int toBeEjected = this.provideFortron(machine.requestFortron(joules, false), false);
-				toBeEjected = machine.requestFortron(this.provideFortron(toBeEjected, true), true);
-
-				// Draw Beam Effect
-				if (this.worldObj.isRemote && toBeEjected > 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) <= 0)
-				{
-					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, Vector3.add(new Vector3((TileEntityInventory) machine), 0.5), Vector3.add(new Vector3(this), 0.5), 0.6f, 0.6f, 1, 20);
-				}
+				MFFSHelper.transferFortron(this, machines, transferMode, this.getTransmissionRate());
 			}
 		}
 	}

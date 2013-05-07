@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import mffs.api.fortron.IFortronFrequency;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
@@ -111,6 +112,24 @@ public class FrequencyGrid
 				if (Vector3.distance(new Vector3((TileEntity) tileEntity), position) <= radius)
 				{
 					set.add(tileEntity);
+				}
+			}
+		}
+		return set;
+
+	}
+
+	public Set<IFortronFrequency> getFortronTiles(World world, Vector3 position, int radius, int frequency)
+	{
+		Set<IFortronFrequency> set = new HashSet<IFortronFrequency>();
+
+		for (IBlockFrequency tileEntity : this.get(frequency))
+		{
+			if (((TileEntity) tileEntity).worldObj == world && tileEntity instanceof IFortronFrequency)
+			{
+				if (Vector3.distance(new Vector3((TileEntity) tileEntity), position) <= radius)
+				{
+					set.add((IFortronFrequency) tileEntity);
 				}
 			}
 		}

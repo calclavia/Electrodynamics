@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import mffs.MFFSHelper;
+import mffs.TransferMode;
 import mffs.api.card.ICard;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.fortron.FortronHelper;
+import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,6 +18,7 @@ import net.minecraftforge.liquids.ITankContainer;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
+import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -27,6 +31,14 @@ import com.google.common.io.ByteArrayDataInput;
 public abstract class TileEntityFortron extends TileEntityFrequency implements ITankContainer, IFortronFrequency
 {
 	protected LiquidTank fortronTank = new LiquidTank(FortronHelper.LIQUID_FORTRON.copy(), LiquidContainerRegistry.BUCKET_VOLUME, this);
+
+	@Override
+	public void invalidate()
+	{
+		// Let remaining Fortron escape.
+		MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
+		super.invalidate();
+	}
 
 	/**
 	 * Packet Methods

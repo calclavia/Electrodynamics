@@ -4,8 +4,11 @@ import icbm.api.IBlockFrequency;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import mffs.api.IProjector;
+import mffs.api.fortron.IFortronFrequency;
+import mffs.api.modules.IModuleAcceptor;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
@@ -27,6 +30,163 @@ import universalelectricity.core.vector.Vector3;
  */
 public class MFFSHelper
 {
+	public static void transferFortron(IFortronFrequency transferer, Set<IFortronFrequency> frequencyTiles, TransferMode transferMode, int limit)
+	{
+		if (transferer != null && frequencyTiles.size() > 1)
+		{
+			/**
+			 * Check spread mode. Equal, Give All, Take All
+			 */
+			int totalFortron = 0;
+			int totalCapacity = 0;
+
+			for (IFortronFrequency machine : frequencyTiles)
+			{
+				if (machine != null)
+				{
+					totalFortron += machine.getFortronEnergy();
+					totalCapacity += machine.getFortronCapacity();
+				}
+			}
+
+			if (totalFortron > 0 && totalCapacity > 0)
+			{
+				/**
+				 * Test each mode and based on the mode, spread Fortron energy.
+				 */
+				switch (transferMode)
+				{
+					case EQUALIZE:
+					{
+						for (IFortronFrequency machine : frequencyTiles)
+						{
+							if (machine != null)
+							{
+								double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
+								int amountToSet = (int) (totalFortron * capacityPercentage);
+								doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy(), limit);
+							}
+						}
+
+						break;
+					}
+					case DISTRIBUTE:
+					{
+						final int amountToSet = totalFortron / frequencyTiles.size();
+
+						for (IFortronFrequency machine : frequencyTiles)
+						{
+							if (machine != null)
+							{
+								doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy(), limit);
+							}
+						}
+
+						break;
+					}
+					case DRAIN:
+					{
+						frequencyTiles.remove(transferer);
+
+						for (IFortronFrequency machine : frequencyTiles)
+						{
+							if (machine != null)
+							{
+								double capacityPercentage = (double) machine.getFortronCapacity() / (double) totalCapacity;
+								int amountToSet = (int) (totalFortron * capacityPercentage);
+
+								if (amountToSet - machine.getFortronEnergy() > 0)
+								{
+									doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy(), limit);
+								}
+							}
+						}
+
+						break;
+					}
+					case FILL:
+					{
+						if (transferer.getFortronEnergy() < transferer.getFortronCapacity())
+						{
+							frequencyTiles.remove(transferer);
+
+							// The amount of energy required to be full.
+							int requiredFortron = transferer.getFortronCapacity() - transferer.getFortronEnergy();
+
+							for (IFortronFrequency machine : frequencyTiles)
+							{
+								if (machine != null)
+								{
+									int amountToConsume = Math.min(requiredFortron, machine.getFortronEnergy());
+									int amountToSet = -machine.getFortronEnergy() - amountToConsume;
+
+									if (amountToConsume > 0)
+									{
+										doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy(), limit);
+									}
+								}
+							}
+						}
+
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Tries to transfer Fortron to a specific machine from this capacitor. Renders an animation on
+	 * the client side.
+	 * 
+	 * @param receiver: The machine to be transfered to.
+	 * @param joules: The amount of energy to be transfered.
+	 */
+	public static void doTransferFortron(IFortronFrequency transferer, IFortronFrequency receiver, int joules, int limit)
+	{
+		if (transferer != null && receiver != null)
+		{
+			TileEntity tileEntity = ((TileEntity) transferer);
+			World world = tileEntity.worldObj;
+
+			boolean isCamo = false;
+
+			if (transferer instanceof IModuleAcceptor)
+			{
+				isCamo = ((IModuleAcceptor) transferer).getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0;
+			}
+
+			if (joules > 0)
+			{
+				// Transfer energy to receiver.
+				joules = Math.min(joules, limit);
+				int toBeInjected = receiver.provideFortron(transferer.requestFortron(joules, false), false);
+				toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true);
+
+				// Draw Beam Effect
+				if (world.isRemote && toBeInjected > 0 && !isCamo)
+				{
+					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.add(new Vector3(tileEntity), 0.5), Vector3.add(new Vector3((TileEntity) receiver), 0.5), 0.6f, 0.6f, 1, 20);
+				}
+			}
+			else
+			{
+				// Take energy from receiver.
+				joules = Math.min(Math.abs(joules), limit);
+				int toBeEjected = transferer.provideFortron(receiver.requestFortron(joules, false), false);
+				toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true);
+
+				// Draw Beam Effect
+				if (world.isRemote && toBeEjected > 0 && !isCamo)
+				{
+					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.add(new Vector3((TileEntity) receiver), 0.5), Vector3.add(new Vector3(tileEntity), 0.5), 0.6f, 0.6f, 1, 20);
+				}
+
+			}
+		}
+
+	}
+
 	/**
 	 * Gets the nearest active Interdiction Matrix.
 	 */
@@ -213,4 +373,5 @@ public class MFFSHelper
 
 		return null;
 	}
+
 }
