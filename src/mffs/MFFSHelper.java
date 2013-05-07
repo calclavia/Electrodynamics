@@ -3,8 +3,11 @@ package mffs;
 import icbm.api.IBlockFrequency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import calclavia.lib.CalculationHelper;
 
 import mffs.api.IProjector;
 import mffs.api.fortron.IFortronFrequency;
@@ -12,6 +15,7 @@ import mffs.api.modules.IModuleAcceptor;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
+import mffs.item.module.projector.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
@@ -351,6 +355,46 @@ public class MFFSHelper
 
 		return null;
 
+	}
+
+	public static ItemStack getCamoBlock(IProjector projector, Vector3 position)
+	{
+		if (projector != null)
+		{
+			if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+			{
+				if (projector.getMode() instanceof ItemModeCustom)
+				{
+					HashMap<Vector3, int[]> fieldMap = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
+
+					if (fieldMap != null)
+					{
+						Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+						Vector3 relativePosition = position.clone().subtract(fieldCenter);
+						CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+						int[] blockInfo = fieldMap.get(relativePosition.round());
+
+						if (blockInfo != null && blockInfo[0] > 0)
+						{
+							return new ItemStack(Block.blocksList[blockInfo[0]], 1, blockInfo[1]);
+						}
+					}
+				}
+
+				for (int i : projector.getModuleSlots())
+				{
+					ItemStack checkStack = projector.getStackInSlot(i);
+					Block block = getCamoBlock(checkStack);
+
+					if (block != null)
+					{
+						return checkStack;
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**

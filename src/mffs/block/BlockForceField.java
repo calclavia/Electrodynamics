@@ -19,6 +19,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -209,37 +210,24 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 		if (tileEntity instanceof TileEntityForceField)
 		{
-			IProjector projector = this.getProjector(iBlockAccess, x, y, z);
+			ItemStack checkStack = MFFSHelper.getCamoBlock(this.getProjector(iBlockAccess, x, y, z), new Vector3(x, y, z));
 
-			if (projector != null)
+			if (checkStack != null)
 			{
-				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+				try
 				{
-					for (int i : projector.getModuleSlots())
+					Icon icon = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()].getIcon(side, checkStack.getItemDamage());
+
+					if (icon != null)
 					{
-						ItemStack checkStack = projector.getStackInSlot(i);
-						Block block = MFFSHelper.getCamoBlock(checkStack);
-
-						if (block != null)
-						{
-							try
-							{
-								Icon icon = block.getIcon(side, checkStack.getItemDamage());
-
-								if (icon != null)
-								{
-									return icon;
-								}
-							}
-							catch (Exception e)
-							{
-								e.printStackTrace();
-							}
-						}
+						return icon;
 					}
 				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
-
 		}
 
 		return this.getIcon(side, iBlockAccess.getBlockMetadata(x, y, z));
@@ -258,30 +246,17 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 			if (tileEntity instanceof TileEntityForceField)
 			{
-				IProjector projector = this.getProjector(iBlockAccess, x, y, z);
+				ItemStack checkStack = MFFSHelper.getCamoBlock(this.getProjector(iBlockAccess, x, y, z), new Vector3(x, y, z));
 
-				if (projector != null)
+				if (checkStack != null)
 				{
-					if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+					try
 					{
-						for (int i : projector.getModuleSlots())
-						{
-							ItemStack checkStack = projector.getStackInSlot(i);
-
-							Block block = MFFSHelper.getCamoBlock(checkStack);
-
-							if (block != null)
-							{
-								try
-								{
-									return block.colorMultiplier(iBlockAccess, x, y, x);
-								}
-								catch (Exception e)
-								{
-									e.printStackTrace();
-								}
-							}
-						}
+						return Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()].colorMultiplier(iBlockAccess, x, y, x);
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
 					}
 				}
 			}
