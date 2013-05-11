@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
+import universalelectricity.prefab.vector.Region2;
 
 public class GuiForceFieldProjector extends GuiBase
 {
@@ -23,6 +24,26 @@ public class GuiForceFieldProjector extends GuiBase
 	{
 		this.textFieldPos = new Vector2(48, 91);
 		super.initGui();
+
+		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
+
+		this.tooltips.put(new Region2(new Vector2(90, 17), new Vector2(90, 17).add(18)), "Up");
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17), new Vector2(90 + 18 * 3, 17).add(18)), "Up");
+
+		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 3), new Vector2(90, 17 + 18 * 3).add(18)), "Down");
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 3), new Vector2(90 + 18 * 3, 17 + 18 * 3).add(18)), "Down");
+
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 1, 17), new Vector2(90 + 18 * 1, 17).add(18)), "Front");
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 2, 17), new Vector2(90 + 18 * 2, 17).add(18)), "Front");
+
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 1, 17 + 18 * 3), new Vector2(90 + 18 * 1, 17 + 18 * 3).add(18)), "Back");
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 2, 17 + 18 * 3), new Vector2(90 + 18 * 2, 17 + 18 * 3).add(18)), "Back");
+
+		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 1), new Vector2(90 + 18 * 1, 17 + 18 * 1).add(18)), "Left");
+		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 2), new Vector2(90 + 18 * 1, 17 + 18 * 2).add(18)), "Left");
+
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 1), new Vector2(90 + 18 * 3, 17 + 18 * 1).add(18)), "Right");
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 2), new Vector2(90 + 18 * 3, 17 + 18 * 2).add(18)), "Right");
 	}
 
 	@Override

@@ -1,6 +1,11 @@
 package mffs.base;
 
 import icbm.api.IBlockFrequency;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -25,6 +30,7 @@ import org.lwjgl.opengl.GL12;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
+import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBase extends GuiContainer
@@ -46,6 +52,8 @@ public class GuiBase extends GuiContainer
 	protected int containerWidth;
 	protected int containerHeight;
 	protected IBlockFrequency frequencyTile;
+
+	protected HashMap<Region2, String> tooltips = new HashMap<Region2, String>();
 
 	public GuiBase(Container container)
 	{
@@ -164,6 +172,19 @@ public class GuiBase extends GuiContainer
 			if (this.isPointInRegion(textFieldPos.intX(), textFieldPos.intY(), this.textFieldFrequency.getWidth(), 12, mouseX, mouseY))
 			{
 				this.tooltip = TranslationHelper.getLocal("gui.frequency.tooltip");
+			}
+		}
+
+		Iterator<Entry<Region2, String>> it = this.tooltips.entrySet().iterator();
+
+		while (it.hasNext())
+		{
+			Entry<Region2, String> entry = it.next();
+
+			if (entry.getKey().isIn(new Vector2(mouseX - this.guiLeft, mouseY - this.guiTop)))
+			{
+				this.tooltip = entry.getValue();
+				break;
 			}
 		}
 
