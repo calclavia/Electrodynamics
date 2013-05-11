@@ -323,7 +323,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public int getProjectionSpeed()
 	{
-		return 100 + 20 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed, this.getModuleSlots());
+		return 25 + 25 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed, this.getModuleSlots());
 	}
 
 	@Override
