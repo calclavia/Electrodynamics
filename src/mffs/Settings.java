@@ -42,6 +42,7 @@ public class Settings
 	 */
 	public static int MAX_FORCE_FIELDS_PER_TICK = 1000000;
 	public static int MAX_FORCE_FIELD_SCALE = 200;
+	public static boolean INTERACT_CREATIVE = true;
 	public static boolean LOAD_CHUNKS = true;
 	public static boolean OP_OVERRIDE = true;
 	public static boolean USE_CACHE = true;
@@ -57,6 +58,10 @@ public class Settings
 
 		Property propInterdiction = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Interdiction Murder Fortron Consumption", INTERDICTION_MURDER_ENERGY);
 		INTERDICTION_MURDER_ENERGY = propInterdiction.getInt(INTERDICTION_MURDER_ENERGY);
+
+		Property propCreative = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Effect Creative Players", INTERACT_CREATIVE);
+		propCreative.comment = "Should the interdiction matrix interact with creative players?.";
+		INTERACT_CREATIVE = propCreative.getBoolean(INTERACT_CREATIVE);
 
 		Property propChunkLoading = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Load Chunks", LOAD_CHUNKS);
 		propChunkLoading.comment = "Set this to false to turn off the MFFS Chunkloading capabilities.";

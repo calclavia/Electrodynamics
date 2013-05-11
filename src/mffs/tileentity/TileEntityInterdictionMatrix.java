@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
+import mffs.Settings;
 import mffs.api.modules.IInterdictionMatrixModule;
 import mffs.api.modules.IModule;
 import mffs.api.security.IBiometricIdentifier;
@@ -151,11 +152,15 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			{
 				return;
 			}
+
+			if (!Settings.INTERACT_CREATIVE && player.capabilities.isCreativeMode)
+			{
+				return;
+			}
 		}
 
 		for (ItemStack itemStack : this.getModuleStacks())
 		{
-
 			if (itemStack.getItem() instanceof IInterdictionMatrixModule)
 			{
 				IInterdictionMatrixModule module = (IInterdictionMatrixModule) itemStack.getItem();
