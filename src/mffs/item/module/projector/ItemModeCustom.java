@@ -1,5 +1,6 @@
 package mffs.item.module.projector;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,23 +12,29 @@ import mffs.Settings;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
 import mffs.item.mode.ItemMode;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.flag.NBTFileLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemModeCustom extends ItemMode
 {
+	private static final String NBT_ID = "id";
 	private static final String NBT_POINT_1 = "point1";
 	private static final String NBT_POINT_2 = "point2";
 	private static final String NBT_FIELD_BLOCK_LIST = "fieldPoints";
 	private static final String NBT_FIELD_BLOCK_ID = "blockID";
 	private static final String NBT_FIELD_BLOCK_METADATA = "blockMetadata";
+	private static final String NBT_FIELD_SIZE = "fieldSize";
+	private static final String NBT_FILE_SAVE_PREFIX = "custom_mode_";
 
 	public ItemModeCustom(int i)
 	{
@@ -45,18 +52,32 @@ public class ItemModeCustom extends ItemMode
 		Vector3 point2 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_2));
 		list.add("Point 2: " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
 
-		Set<Vector3> vectors = this.getFieldBlocks(itemStack);
+		int modeID = nbt.getInteger(NBT_ID);
 
-		if (vectors.size() > 0)
+		if (modeID > 0)
 		{
-			list.add("Field size: " + vectors.size());
+			list.add("Mode ID: " + modeID);
+
+			int fieldSize = nbt.getInteger(NBT_FIELD_SIZE);
+
+			if (fieldSize > 0)
+			{
+				list.add("Field size: " + fieldSize);
+			}
+			else
+			{
+				list.add("Field not saved.");
+			}
+		}
+
+		if (GuiScreen.isShiftKeyDown())
+		{
+			super.addInformation(itemStack, par2EntityPlayer, list, par4);
 		}
 		else
 		{
-			list.add("Field not saved.");
+			list.add("Hold shift for more...");
 		}
-
-		super.addInformation(itemStack, par2EntityPlayer, list, par4);
 	}
 
 	@Override
@@ -118,9 +139,14 @@ public class ItemModeCustom extends ItemMode
 								}
 							}
 
-							nbt.setTag(NBT_FIELD_BLOCK_LIST, list);
+							NBTTagCompound saveNBT = new NBTTagCompound();
+							saveNBT.setTag(NBT_FIELD_BLOCK_LIST, list);
 
-							entityPlayer.addChatMessage("Field structure saved. Cleared coordinate data.");
+							nbt.setInteger(NBT_FIELD_SIZE, list.tagCount());
+
+							NBTFileLoader.saveData(getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT);
+
+							entityPlayer.addChatMessage("Field structure saved.");
 						}
 					}
 				}
@@ -130,36 +156,56 @@ public class ItemModeCustom extends ItemMode
 		return itemStack;
 	}
 
-	public Set<Vector3> getFieldBlocks(ItemStack itemStack)
+	public int getModeID(ItemStack itemStack)
 	{
-		final Set<Vector3> fieldBlocks = new HashSet<Vector3>();
-
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
 
-		if (nbt != null)
+		int id = nbt.getInteger(NBT_ID);
+
+		if (id <= 0)
 		{
-			NBTTagList nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST);
-
-			for (int i = 0; i < nbtTagList.tagCount(); i++)
-			{
-				NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
-				Vector3 position = Vector3.readFromNBT(vectorTag);
-
-				if (position != null)
-				{
-					fieldBlocks.add(position);
-				}
-			}
+			nbt.setInteger(NBT_ID, getNextAvaliableID());
+			id = nbt.getInteger(NBT_ID);
 		}
 
-		return fieldBlocks;
+		return id;
+	}
+
+	public int getNextAvaliableID()
+	{
+		int i = 1;
+
+		for (final File fileEntry : this.getSaveDirectory().listFiles())
+		{
+			System.out.println(fileEntry.getName());
+			i++;
+		}
+
+		return i;
+	}
+
+	public File getSaveDirectory()
+	{
+		File file = new File(NBTFileLoader.getSaveDirectory(MinecraftServer.getServer().getFolderName()), "mffs");
+
+		if (!file.exists())
+		{
+			file.mkdir();
+		}
+
+		return file;
+	}
+
+	public Set<Vector3> getFieldBlocks(ItemStack itemStack)
+	{
+		return this.getFieldBlockMap(itemStack).keySet();
 	}
 
 	public HashMap<Vector3, int[]> getFieldBlockMap(ItemStack itemStack)
 	{
 		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
 
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
 
 		if (nbt != null)
 		{

@@ -154,6 +154,12 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	}
 
 	@Override
+	public int getFortronCost()
+	{
+		return super.getFortronCost() + 5;
+	}
+
+	@Override
 	public float getAmplifier()
 	{
 		return Math.max(Math.min((this.getCalculatedField().size() / 1000), 10), 1);
