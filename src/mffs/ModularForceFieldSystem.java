@@ -291,7 +291,7 @@ public class ModularForceFieldSystem
 		BasicComponents.requestItem("ingotCopper", 0);
 		BasicComponents.requestBlock("oreCopper", 0);
 
-		BasicComponents.requestItem("copperWire", 0);
+		BasicComponents.requestBlock("copperWire", 0);
 		BasicComponents.requestItem("wrench", 0);
 
 		/**

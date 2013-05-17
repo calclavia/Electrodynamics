@@ -24,7 +24,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Modding-Library/">
+			<fileset dir="${dir.development}Modding-Library/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -68,6 +68,12 @@
 			</fileset>
 			
 			<fileset dir="${dir.development}Basic-Components/resources/">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.java"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+			
+			<fileset dir="${dir.development}Modding-Library/resources/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
