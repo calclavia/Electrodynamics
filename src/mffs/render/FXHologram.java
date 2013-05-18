@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
-import calclavia.lib.CalclaviaRenderHelper;
+import calclavia.lib.render.CalclaviaRenderHelper;
 
 public class FXHologram extends EntityFX
 {

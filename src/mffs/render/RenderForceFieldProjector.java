@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import calclavia.lib.CalclaviaRenderHelper;
+import calclavia.lib.render.CalclaviaRenderHelper;
 
 @SideOnly(Side.CLIENT)
 public class RenderForceFieldProjector extends TileEntitySpecialRenderer
