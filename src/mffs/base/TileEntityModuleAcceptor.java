@@ -7,13 +7,14 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.ICache;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 
-public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor
+public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor, ICache
 {
 	/**
 	 * Caching for the module stack data. This is used to reduce calculation time. Cache gets reset
@@ -300,6 +301,24 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		/**
 		 * Clears the cache.
 		 */
+		this.clearCache();
+	}
+
+	@Override
+	public Object getCache(String cacheID)
+	{
+		return this.cache.get(cacheID);
+	}
+
+	@Override
+	public void clearCache(String cacheID)
+	{
+		this.cache.remove(cacheID);
+	}
+
+	@Override
+	public void clearCache()
+	{
 		this.cache.clear();
 	}
 }

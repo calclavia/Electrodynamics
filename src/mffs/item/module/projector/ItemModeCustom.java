@@ -9,6 +9,7 @@ import java.util.Set;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.ICache;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
 import mffs.item.mode.ItemMode;
@@ -25,7 +26,7 @@ import universalelectricity.prefab.flag.NBTFileLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemModeCustom extends ItemMode
+public class ItemModeCustom extends ItemMode implements ICache
 {
 	private static final String NBT_ID = "id";
 	private static final String NBT_POINT_1 = "point1";
@@ -35,6 +36,7 @@ public class ItemModeCustom extends ItemMode
 	private static final String NBT_FIELD_BLOCK_METADATA = "blockMetadata";
 	private static final String NBT_FIELD_SIZE = "fieldSize";
 	private static final String NBT_FILE_SAVE_PREFIX = "custom_mode_";
+	private final HashMap<String, Object> cache = new HashMap<String, Object>();
 
 	public ItemModeCustom(int i)
 	{
@@ -146,6 +148,8 @@ public class ItemModeCustom extends ItemMode
 
 							NBTFileLoader.saveData(getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT);
 
+							this.clearCache("itemStack_" + itemStack.hashCode());
+
 							entityPlayer.addChatMessage("Field structure saved.");
 						}
 					}
@@ -201,8 +205,22 @@ public class ItemModeCustom extends ItemMode
 		return this.getFieldBlockMap(itemStack).keySet();
 	}
 
+	@SuppressWarnings("unchecked")
 	public HashMap<Vector3, int[]> getFieldBlockMap(ItemStack itemStack)
 	{
+		String cacheID = "itemStack_" + itemStack.hashCode();
+
+		if (Settings.USE_CACHE)
+		{
+			if (this.cache.containsKey(cacheID))
+			{
+				if (this.cache.get(cacheID) instanceof HashMap)
+				{
+					return (HashMap<Vector3, int[]>) this.cache.get(cacheID);
+				}
+			}
+		}
+
 		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
 
 		NBTTagCompound nbt = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
@@ -224,7 +242,30 @@ public class ItemModeCustom extends ItemMode
 			}
 		}
 
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, fieldBlocks);
+		}
+
 		return fieldBlocks;
+	}
+
+	@Override
+	public Object getCache(String cacheID)
+	{
+		return this.cache.get(cacheID);
+	}
+
+	@Override
+	public void clearCache(String cacheID)
+	{
+		this.cache.remove(cacheID);
+	}
+
+	@Override
+	public void clearCache()
+	{
+		this.cache.clear();
 	}
 
 	@Override

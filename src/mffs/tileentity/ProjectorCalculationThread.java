@@ -41,31 +41,39 @@ public class ProjectorCalculationThread extends Thread
 	{
 		this.projector.isCalculating = true;
 
-		Set<Vector3> newField = this.projector.getMode().getExteriorPoints(this.projector);
-
-		Vector3 translation = this.projector.getTranslation();
-		int rotationYaw = this.projector.getRotationYaw();
-		int rotationPitch = this.projector.getRotationPitch();
-
-		for (Vector3 position : newField)
+		try
 		{
-			if (rotationYaw != 0 || rotationPitch != 0)
+
+			Set<Vector3> newField = this.projector.getMode().getExteriorPoints(this.projector);
+
+			Vector3 translation = this.projector.getTranslation();
+			int rotationYaw = this.projector.getRotationYaw();
+			int rotationPitch = this.projector.getRotationPitch();
+
+			for (Vector3 position : newField)
 			{
-				CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
+				if (rotationYaw != 0 || rotationPitch != 0)
+				{
+					CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
+				}
+
+				position.add(new Vector3(this.projector));
+				position.add(translation);
+
+				if (position.intY() <= this.projector.worldObj.getHeight())
+				{
+					this.projector.getCalculatedField().add(position.round());
+				}
 			}
 
-			position.add(new Vector3(this.projector));
-			position.add(translation);
-
-			if (position.intY() <= this.projector.worldObj.getHeight())
+			for (IModule module : this.projector.getModules(this.projector.getModuleSlots()))
 			{
-				this.projector.getCalculatedField().add(position.round());
+				module.onCalculate(this.projector, this.projector.getCalculatedField());
 			}
 		}
-
-		for (IModule module : this.projector.getModules(this.projector.getModuleSlots()))
+		catch (Exception e)
 		{
-			module.onCalculate(this.projector, this.projector.getCalculatedField());
+			e.printStackTrace();
 		}
 
 		this.projector.isCalculating = false;

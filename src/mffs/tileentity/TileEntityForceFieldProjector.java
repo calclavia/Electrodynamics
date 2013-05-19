@@ -11,6 +11,7 @@ import java.util.Set;
 import mffs.DelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.ICache;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
@@ -178,6 +179,11 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 		{
 			if (this.getMode() != null)
 			{
+				if (this.getModeStack().getItem() instanceof ICache)
+				{
+					((ICache) this.getModeStack().getItem()).clearCache();
+				}
+
 				this.calculatedField.clear();
 
 				// Start multi-threading calculation
