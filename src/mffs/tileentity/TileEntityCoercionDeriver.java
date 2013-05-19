@@ -34,7 +34,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 */
 	public static final int WATTAGE = 1000;
 	public static final int REQUIRED_TIME = 10 * 20;
-	public static final int NORMAL_PRODUCTION = 10;
+	public static final int NORMAL_PRODUCTION = 8;
 	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -84,7 +84,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
-						int production = 3;
+						int production = 5;
 
 						if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 						{
@@ -223,7 +223,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 				case SLOT_BATTERY:
 					return itemStack.getItem() instanceof IItemElectric;
 				case SLOT_FUEL:
-					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4));
+					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4)) || itemStack.isItemEqual(new ItemStack(Item.netherQuartz));
 			}
 		}
 
