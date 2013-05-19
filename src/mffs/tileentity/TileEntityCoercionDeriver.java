@@ -34,7 +34,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 */
 	public static final int WATTAGE = 1000;
 	public static final int REQUIRED_TIME = 10 * 20;
-	public static final int NORMAL_PRODUCTION = 8;
+	public static final int NORMAL_PRODUCTION = 4;
 	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -84,24 +84,21 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
-						int production = 5;
+						// Fill Fortron
+						int production = 40;
 
-						if (this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
+						if (this.processTime > 0)
 						{
 							production *= NORMAL_PRODUCTION;
 						}
 
 						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
-						if (this.processTime == 0)
+						// Use fuel
+						if (this.processTime == 0 && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 						{
 							this.decrStackSize(SLOT_FUEL, 1);
-							this.processTime = REQUIRED_TIME;
-
-							if (this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) > 0)
-							{
-								this.processTime = this.processTime * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 30;
-							}
+							this.processTime = REQUIRED_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 20, 1);
 						}
 
 						if (this.processTime > 0)

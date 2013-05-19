@@ -103,8 +103,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 						if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
 						{
-							player.addChatMessage("[" + this.getInvName() + "] Warning! You are in scanning range!");
-							player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 1);
+							player.addChatMessage("[" + this.getInvName() + "] Warning! You are near the scanning range!");
 						}
 
 					}
@@ -228,24 +227,27 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 				for (int i = 0; i < inventory.getSizeInventory(); i++)
 				{
-					ItemStack checkStack = inventory.getStackInSlot(i);
-
-					if (checkStack == null)
+					if (inventory.isStackValidForSlot(i, itemStack))
 					{
-						inventory.setInventorySlotContents(i, itemStack);
-						return true;
-					}
-					else if (checkStack.isItemEqual(itemStack))
-					{
-						int freeSpace = checkStack.getMaxStackSize() - checkStack.stackSize;
+						ItemStack checkStack = inventory.getStackInSlot(i);
 
-						checkStack.stackSize += Math.min(itemStack.stackSize, freeSpace);
-						itemStack.stackSize -= freeSpace;
-
-						if (itemStack.stackSize <= 0)
+						if (checkStack == null)
 						{
-							itemStack = null;
+							inventory.setInventorySlotContents(i, itemStack);
 							return true;
+						}
+						else if (checkStack.isItemEqual(itemStack))
+						{
+							int freeSpace = checkStack.getMaxStackSize() - checkStack.stackSize;
+
+							checkStack.stackSize += Math.min(itemStack.stackSize, freeSpace);
+							itemStack.stackSize -= freeSpace;
+
+							if (itemStack.stackSize <= 0)
+							{
+								itemStack = null;
+								return true;
+							}
 						}
 					}
 				}

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
+import mffs.Settings;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
@@ -35,7 +36,7 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 		/**
 		 * Check if the player is an operator or not.
 		 */
-		if (ModularForceFieldSystem.proxy.isOp(username))
+		if (ModularForceFieldSystem.proxy.isOp(username) && Settings.OP_OVERRIDE)
 		{
 			return true;
 		}

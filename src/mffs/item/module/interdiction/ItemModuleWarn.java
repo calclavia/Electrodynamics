@@ -4,7 +4,6 @@ import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 
-//TODO: Add the ability to add custom defense message.
 public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 {
 	public ItemModuleWarn(int i)

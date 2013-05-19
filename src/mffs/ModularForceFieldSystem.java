@@ -60,6 +60,7 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import universalelectricity.prefab.CustomDamageSource;
+import universalelectricity.prefab.RecipeHelper;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import basiccomponents.common.BasicComponents;
@@ -395,7 +396,7 @@ public class ModularForceFieldSystem
 		// Anti-Personnel
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiPersonnel), "BFG", 'F', itemFocusMatix, 'B', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 		// Confiscate
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl));
+		RecipeHelper.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl), Settings.CONFIGURATION, true);
 		// Warn
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleWarn), "NFN", 'F', itemFocusMatix, 'N', Block.music));
 		// Block Access

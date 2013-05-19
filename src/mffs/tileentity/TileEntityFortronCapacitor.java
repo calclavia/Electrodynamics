@@ -193,6 +193,6 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 	@Override
 	public int getTransmissionRate()
 	{
-		return 200 + 50 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed);
+		return 250 + 50 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed);
 	}
 }
