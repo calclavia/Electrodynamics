@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.CalculationHelper;
-
 import mffs.api.IProjector;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.modules.IModuleAcceptor;
@@ -25,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import calclavia.lib.CalculationHelper;
 
 /**
  * A class containing some general helpful functions.

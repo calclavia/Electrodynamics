@@ -10,6 +10,7 @@ public class SlotActive extends SlotBase
 		super(tileEntity, id, par4, par5);
 	}
 
+	@Override
 	public boolean canTakeStack(EntityPlayer par1EntityPlayer)
 	{
 		return !this.tileEntity.isActive();

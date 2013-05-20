@@ -47,6 +47,7 @@ public class Settings
 	public static boolean OP_OVERRIDE = true;
 	public static boolean USE_CACHE = true;
 	public static boolean ENABLE_ELECTRICITY = true;
+	public static boolean CONSERVE_PACKETS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
 
@@ -82,6 +83,11 @@ public class Settings
 		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Require Electricity?", ENABLE_ELECTRICITY);
 		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";
 		ENABLE_ELECTRICITY = useElectricity.getBoolean(ENABLE_ELECTRICITY);
+
+		Property conservePackets = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Conserve Packets?", CONSERVE_PACKETS);
+		conservePackets.comment = "Turning this to false will enable better client side packet and updates but in the cost of more packets sent.";
+		CONSERVE_PACKETS = conservePackets.getBoolean(CONSERVE_PACKETS);
+
 		CONFIGURATION.save();
 	}
 }
