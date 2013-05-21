@@ -148,7 +148,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 							NBTFileLoader.saveData(getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT);
 
-							this.clearCache("itemStack_" + itemStack.hashCode());
+							this.clearCache();
 
 							entityPlayer.addChatMessage("Field structure saved.");
 						}
@@ -158,6 +158,34 @@ public class ItemModeCustom extends ItemMode implements ICache
 		}
 
 		return itemStack;
+	}
+
+	@Override
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+	{
+		if (!world.isRemote)
+		{
+			NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+
+			if (nbt != null)
+			{
+				Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
+
+				if (!nbt.hasKey(NBT_POINT_1) || point1.equals(new Vector3(0, 0, 0)))
+				{
+					nbt.setCompoundTag(NBT_POINT_1, new Vector3(x, y, z).writeToNBT(new NBTTagCompound()));
+					entityPlayer.addChatMessage("Set point 1: " + x + ", " + y + ", " + z + ".");
+				}
+				else
+				{
+					nbt.setCompoundTag(NBT_POINT_2, new Vector3(x, y, z).writeToNBT(new NBTTagCompound()));
+					entityPlayer.addChatMessage("Set point 2: " + x + ", " + y + ", " + z + ".");
+				}
+
+			}
+		}
+
+		return true;
 	}
 
 	public int getModeID(ItemStack itemStack)
@@ -266,41 +294,6 @@ public class ItemModeCustom extends ItemMode implements ICache
 	public void clearCache()
 	{
 		this.cache.clear();
-	}
-
-	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-	{
-		if (!world.isRemote)
-		{
-			NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-
-			if (nbt != null)
-			{
-				if (entityPlayer.isSneaking())
-				{
-					// Clear NBT Data
-					nbt.removeTag(NBT_POINT_1);
-					nbt.removeTag(NBT_POINT_2);
-				}
-
-				Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
-
-				if (!nbt.hasKey(NBT_POINT_1) || point1.equals(new Vector3(0, 0, 0)))
-				{
-					nbt.setCompoundTag(NBT_POINT_1, new Vector3(x, y, z).writeToNBT(new NBTTagCompound()));
-					entityPlayer.addChatMessage("Set point 1: " + x + ", " + y + ", " + z + ".");
-				}
-				else
-				{
-					nbt.setCompoundTag(NBT_POINT_2, new Vector3(x, y, z).writeToNBT(new NBTTagCompound()));
-					entityPlayer.addChatMessage("Set point 2: " + x + ", " + y + ", " + z + ".");
-				}
-
-			}
-		}
-
-		return true;
 	}
 
 	@Override

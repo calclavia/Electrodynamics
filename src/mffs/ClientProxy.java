@@ -9,6 +9,7 @@ import mffs.render.FXBeam;
 import mffs.render.FXHologram;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
+import mffs.render.RenderForceField;
 import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderFortronCapacitor;
 import mffs.render.RenderIDCard;
@@ -41,6 +42,7 @@ public class ClientProxy extends CommonProxy
 	{
 		super.init();
 		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
+		RenderingRegistry.registerBlockHandler(new RenderForceField());
 		MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID.itemID, new RenderIDCard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoercionDeriver.class, new RenderCoercionDeriver());

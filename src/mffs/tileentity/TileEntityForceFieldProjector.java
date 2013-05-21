@@ -184,6 +184,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 					((ICache) this.getModeStack().getItem()).clearCache();
 				}
 
+				this.forceFields.clear();
 				this.calculatedField.clear();
 
 				// Start multi-threading calculation
@@ -205,9 +206,16 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	{
 		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
 		{
+			if (this.forceFields.size() <= 0)
+			{
+				if (this.getModeStack().getItem() instanceof ICache)
+				{
+					((ICache) this.getModeStack().getItem()).clearCache();
+				}
+			}
+
 			int constructionCount = 0;
 			int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
-			this.forceFields.clear();
 
 			HashSet<Vector3> fieldToBeProjected = new HashSet<Vector3>();
 			fieldToBeProjected.addAll(this.calculatedField);
@@ -315,6 +323,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 			}
 		}
 
+		this.forceFields.clear();
 		this.calculatedField.clear();
 		this.isCalculated = false;
 	}
@@ -329,7 +338,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 	@Override
 	public int getProjectionSpeed()
 	{
-		return 25 + 25 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed, this.getModuleSlots());
+		return 28 + 28 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed, this.getModuleSlots());
 	}
 
 	@Override

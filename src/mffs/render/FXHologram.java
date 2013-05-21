@@ -11,7 +11,10 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import calclavia.lib.render.CalclaviaRenderHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class FXHologram extends EntityFX
 {
 	public FXHologram(World par1World, Vector3 position, float red, float green, float blue, int age)

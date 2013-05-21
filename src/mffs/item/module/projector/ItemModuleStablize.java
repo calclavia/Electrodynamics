@@ -74,18 +74,21 @@ public class ItemModuleStablize extends ItemModule
 									try
 									{
 										// checkStack.getHasSubtypes()
-										int metadata = blockInfo != null ? blockInfo[1] : 0;
-										((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
-										inventory.decrStackSize(i, 1);
-										PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+										if (((TileEntity) projector).worldObj.canPlaceEntityOnSide(((ItemBlock) checkStack.getItem()).getBlockID(), position.intX(), position.intY(), position.intZ(), false, 0, null, checkStack))
+										{
+											int metadata = blockInfo != null ? blockInfo[1] : 0;
+											((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
+											inventory.decrStackSize(i, 1);
+											PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
 
-										if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
-										{
-											return 2;
-										}
-										else
-										{
-											return 1;
+											if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
+											{
+												return 2;
+											}
+											else
+											{
+												return 1;
+											}
 										}
 									}
 									catch (Exception e)

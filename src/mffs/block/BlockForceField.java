@@ -1,5 +1,6 @@
 package mffs.block;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -12,6 +13,7 @@ import mffs.api.modules.IModule;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.BlockBase;
+import mffs.render.RenderForceField;
 import mffs.tileentity.TileEntityForceField;
 import micdoodle8.mods.galacticraft.API.IPartialSealedBlock;
 import net.minecraft.block.Block;
@@ -73,6 +75,13 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	public int getRenderBlockPass()
 	{
 		return 1;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RenderForceField.ID;
 	}
 
 	@Override
@@ -216,11 +225,18 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 			{
 				try
 				{
-					Icon icon = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()].getIcon(side, checkStack.getItemDamage());
+					Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
 
-					if (icon != null)
+					final Integer[] allowedRenderTypes = { 0, 1, 4, 31, 20, 39, 5, 13, 23, 6, 8, 7, 12, 29, 30, 14, 16, 17 };
+
+					if (Arrays.asList(allowedRenderTypes).contains(block.getRenderType()))
 					{
-						return icon;
+						Icon icon = block.getIcon(side, checkStack.getItemDamage());
+
+						if (icon != null)
+						{
+							return icon;
+						}
 					}
 				}
 				catch (Exception e)

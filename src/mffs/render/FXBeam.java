@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Based off Thaumcraft's Beam Renderer.
@@ -18,6 +20,7 @@ import universalelectricity.core.vector.Vector3;
  * @author Calclavia, Azanor
  * 
  */
+@SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
 {
 	double movX = 0.0D;
