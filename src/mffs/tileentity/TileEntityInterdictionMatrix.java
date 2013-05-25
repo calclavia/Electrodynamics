@@ -80,7 +80,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 		{
 			IBiometricIdentifier biometricIdentifier = this.getBiometricIdentifier();
 
-			AxisAlignedBB emptyBounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord, this.yCoord, this.zCoord);
+			AxisAlignedBB emptyBounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
 
 			List<EntityLiving> warningList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getWarningRange(), getWarningRange(), getWarningRange()));
 			List<EntityLiving> actionList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getActionRange(), getActionRange(), getActionRange()));
@@ -90,23 +90,19 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 				if (entityLiving instanceof EntityPlayer && !actionList.contains(entityLiving))
 				{
 					EntityPlayer player = (EntityPlayer) entityLiving;
-					double distance = Vector3.distance(new Vector3(this), new Vector3(entityLiving));
 
-					if (distance <= this.getWarningRange())
+					boolean isGranted = false;
+
+					if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
 					{
-						boolean isGranted = false;
-
-						if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
-						{
-							isGranted = true;
-						}
-
-						if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
-						{
-							player.addChatMessage("[" + this.getInvName() + "] Warning! You are near the scanning range!");
-						}
-
+						isGranted = true;
 					}
+
+					if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
+					{
+						player.addChatMessage("[" + this.getInvName() + "] Warning! You are near the scanning range!");
+					}
+
 				}
 			}
 
@@ -114,12 +110,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			{
 				for (EntityLiving entityLiving : actionList)
 				{
-					double distance = Vector3.distance(new Vector3(this), new Vector3(entityLiving));
-
-					if (distance <= this.getActionRange())
-					{
-						this.applyAction(entityLiving);
-					}
+					this.applyAction(entityLiving);
 				}
 			}
 
