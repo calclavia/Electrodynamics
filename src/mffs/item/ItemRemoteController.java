@@ -7,6 +7,7 @@ import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardLink;
 import mffs.api.fortron.IFortronFrequency;
+import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.block.Block;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
@@ -89,7 +91,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICardLink
 				{
 					Chunk chunk = world.getChunkFromBlockCoords(position.intX(), position.intZ());
 
-					if (chunk != null && chunk.isChunkLoaded)
+					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer.username) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer.username)))
 					{
 						double requiredEnergy = Vector3.distance(new Vector3(entityPlayer), position) * (LiquidContainerRegistry.BUCKET_VOLUME / 100);
 						int receivedEnergy = 0;
@@ -102,7 +104,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICardLink
 
 							if (consumedEnergy > 0)
 							{
-								if (!world.isRemote)
+								if (world.isRemote)
 								{
 									ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight() - 0.2, 0)), new Vector3((TileEntity) fortronTile).add(0.5), 0.6f, 0.6f, 1, 20);
 								}

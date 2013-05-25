@@ -45,41 +45,23 @@ public class SubscribeEventHandler
 				return;
 			}
 
+			Vector3 position = new Vector3(evt.x, evt.y, evt.z);
+
 			/**
 			 * Check if Interdiction Matrix blocked a specific action.
 			 */
-			IInterdictionMatrix interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.entityPlayer.worldObj, new Vector3(evt.entityPlayer));
+			IInterdictionMatrix interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.entityPlayer.worldObj, position);
 
 			if (interdictionMatrix != null)
 			{
-				boolean hasPermission = true;
+				int blockID = position.getBlockID(evt.entityPlayer.worldObj);
 
-				if (evt.action == Action.RIGHT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlockTileEntity(evt.x, evt.y, evt.z) != null)
+				if (ModularForceFieldSystem.blockBiometricIdentifier.blockID == blockID && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
 				{
-					if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
-					{
-						hasPermission = false;
-
-						if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ACCESS))
-						{
-							hasPermission = true;
-						}
-					}
+					return;
 				}
 
-				if (hasPermission)
-				{
-
-					if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
-					{
-						hasPermission = false;
-
-						if (MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.BLOCK_ALTER))
-						{
-							hasPermission = true;
-						}
-					}
-				}
+				boolean hasPermission = MFFSHelper.hasPermission(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), interdictionMatrix, evt.action, evt.entityPlayer.username);
 
 				if (!hasPermission)
 				{

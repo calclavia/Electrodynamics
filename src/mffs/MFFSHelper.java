@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.core.vector.Vector3;
 import calclavia.lib.CalculationHelper;
 
@@ -415,6 +416,63 @@ public class MFFSHelper
 		}
 
 		return null;
+	}
+
+	public static boolean hasPermission(World world, Vector3 position, Permission permission, String username)
+	{
+		IInterdictionMatrix interdictionMatrix = getNearestInterdictionMatrix(world, position);
+
+		if (interdictionMatrix != null)
+		{
+			return isPermittedByInterdictionMatrix(interdictionMatrix, username, permission);
+		}
+
+		return true;
+	}
+
+	public static boolean hasPermission(World world, Vector3 position, Action action, String username)
+	{
+		IInterdictionMatrix interdictionMatrix = getNearestInterdictionMatrix(world, position);
+
+		if (interdictionMatrix != null)
+		{
+			return MFFSHelper.hasPermission(world, position, interdictionMatrix, action, username);
+		}
+
+		return true;
+	}
+
+	public static boolean hasPermission(World world, Vector3 position, IInterdictionMatrix interdictionMatrix, Action action, String username)
+	{
+		boolean hasPermission = true;
+
+		if (action == Action.RIGHT_CLICK_BLOCK && position.getTileEntity(world) != null)
+		{
+			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
+			{
+				hasPermission = false;
+
+				if (isPermittedByInterdictionMatrix(interdictionMatrix, username, Permission.BLOCK_ACCESS))
+				{
+					hasPermission = true;
+				}
+			}
+		}
+
+		if (hasPermission)
+		{
+			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
+			{
+				hasPermission = false;
+
+				if (isPermittedByInterdictionMatrix(interdictionMatrix, username, Permission.BLOCK_ALTER))
+				{
+					hasPermission = true;
+				}
+			}
+		}
+
+		return hasPermission;
 	}
 
 }

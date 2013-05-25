@@ -1,11 +1,13 @@
 package mffs.item.module;
 
+import java.util.List;
 import java.util.Set;
 
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.base.ItemBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
@@ -17,6 +19,13 @@ public class ItemModule extends ItemBase implements IModule
 	public ItemModule(int id, String name)
 	{
 		super(id, name);
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
+	{
+		info.add("Fortron: " + this.getFortronCost(1));
+		super.addInformation(itemStack, player, info, b);
 	}
 
 	@Override
