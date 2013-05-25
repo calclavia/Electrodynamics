@@ -1,4 +1,4 @@
-package mffs.block;
+package mffs.tileentity;
 
 import java.util.Iterator;
 import java.util.List;
