@@ -154,7 +154,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			if (itemStack.getItem() instanceof IInterdictionMatrixModule)
 			{
 				IInterdictionMatrixModule module = (IInterdictionMatrixModule) itemStack.getItem();
-				
+
 				if (module.onDefend(this, entityLiving) || entityLiving.isDead)
 				{
 					break;

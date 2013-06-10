@@ -29,6 +29,38 @@ public class FrequencyGrid
 
 	public void register(IBlockFrequency tileEntity)
 	{
+		try
+		{
+			Iterator<IBlockFrequency> it = this.frequencyGrid.iterator();
+
+			while (it.hasNext())
+			{
+				IBlockFrequency frequency = it.next();
+
+				if (frequency == null)
+				{
+					it.remove();
+					continue;
+				}
+
+				if (((TileEntity) frequency).isInvalid())
+				{
+					it.remove();
+					continue;
+				}
+
+				if (new Vector3((TileEntity) frequency).equals(new Vector3((TileEntity) tileEntity)))
+				{
+					it.remove();
+					continue;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		this.frequencyGrid.add(tileEntity);
 	}
 
