@@ -39,7 +39,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 	public TileEntityInterdictionMatrix()
 	{
-		this.fortronTank.setCapacity(20 * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.capacityBase = 30;
 		this.startModuleIndex = 2;
 		this.endModuleIndex = 9;
 	}
@@ -154,7 +154,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			if (itemStack.getItem() instanceof IInterdictionMatrixModule)
 			{
 				IInterdictionMatrixModule module = (IInterdictionMatrixModule) itemStack.getItem();
-				
+
 				if (module.onDefend(this, entityLiving) || entityLiving.isDead)
 				{
 					break;

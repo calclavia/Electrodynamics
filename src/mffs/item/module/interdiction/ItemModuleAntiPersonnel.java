@@ -21,16 +21,23 @@ public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 		if (!hasPermission && entityLiving instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer) entityLiving;
-			player.addChatMessage("[" + interdictionMatrix.getInvName() + "] Fairwell.");
 
-			for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+			if (!player.capabilities.isCreativeMode && !player.isEntityInvulnerable())
 			{
-				interdictionMatrix.mergeIntoInventory(player.inventory.getStackInSlot(i));
-				player.inventory.setInventorySlotContents(i, null);
-			}
+				for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+				{
+					if (player.inventory.getStackInSlot(i) != null)
+					{
+						interdictionMatrix.mergeIntoInventory(player.inventory.getStackInSlot(i));
+						player.inventory.setInventorySlotContents(i, null);
+					}
+				}
 
-			player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, Integer.MAX_VALUE);
-			interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
+				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, Integer.MAX_VALUE);
+				interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
+
+				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] Fairwell.");
+			}
 		}
 
 		return false;

@@ -22,7 +22,6 @@ import mffs.base.TileEntityModuleAcceptor;
 import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -33,7 +32,8 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 
 	public TileEntityFortronCapacitor()
 	{
-		this.fortronTank.setCapacity(500 * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.capacityBase = 700;
+		this.capacityBoost = 10;
 		this.startModuleIndex = 2;
 	}
 
@@ -82,7 +82,7 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 					machines = this.getLinkedDevices();
 				}
 
-				MFFSHelper.transferFortron(this, machines, transferMode, this.getTransmissionRate());
+				MFFSHelper.transferFortron(this, machines, this.transferMode, this.getTransmissionRate());
 			}
 		}
 	}

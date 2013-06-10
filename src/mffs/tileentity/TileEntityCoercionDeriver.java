@@ -46,7 +46,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 	public TileEntityCoercionDeriver()
 	{
-		this.fortronTank.setCapacity(10 * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.capacityBase = 30;
 		this.startModuleIndex = 3;
 	}
 

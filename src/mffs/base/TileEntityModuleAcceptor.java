@@ -25,6 +25,16 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public int startModuleIndex = 0;
 	public int endModuleIndex = this.getSizeInventory() - 1;
 
+	protected int capacityBase = 500;
+	protected int capacityBoost = 5;
+
+	@Override
+	public void initiate()
+	{
+		super.initiate();
+		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * LiquidContainerRegistry.BUCKET_VOLUME);
+	}
+
 	public void consumeCost()
 	{
 		if (this.getFortronCost() > 0)
@@ -296,7 +306,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public void onInventoryChanged()
 	{
 		super.onInventoryChanged();
-		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * 10 + 500) * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * LiquidContainerRegistry.BUCKET_VOLUME);
 
 		/**
 		 * Clears the cache.
