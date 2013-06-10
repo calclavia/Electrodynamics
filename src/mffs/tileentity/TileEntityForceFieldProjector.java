@@ -24,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import calclavia.lib.CalculationHelper;
@@ -52,7 +51,7 @@ public class TileEntityForceFieldProjector extends TileEntityModuleAcceptor impl
 
 	public TileEntityForceFieldProjector()
 	{
-		this.fortronTank.setCapacity(20 * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.capacityBase = 50;
 		this.startModuleIndex = 1;
 	}
 
