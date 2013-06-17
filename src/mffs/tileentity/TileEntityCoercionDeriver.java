@@ -84,12 +84,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
-						int production = 40;
-
-						if (this.processTime > 0)
-						{
-							production *= NORMAL_PRODUCTION;
-						}
+						int production = getProductionRate();
 
 						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
@@ -125,6 +120,26 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		{
 			this.animation++;
 		}
+	}
+
+	public int getProductionRate()
+	{
+		if (!this.isDisabled() && this.isActive())
+		{
+			if (!this.isInversed)
+			{
+				int production = 40;
+
+				if (this.processTime > 0)
+				{
+					production *= NORMAL_PRODUCTION;
+				}
+
+				return production;
+			}
+		}
+
+		return 0;
 	}
 
 	@Override
