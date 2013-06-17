@@ -15,6 +15,7 @@ import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
 import mffs.item.module.projector.ItemModeCustom;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -215,6 +216,14 @@ public class MFFSHelper
 		return null;
 	}
 
+	/**
+	 * Returns true of the interdictionMatrix has a specific set of permissions.
+	 * 
+	 * @param interdictionMatrix
+	 * @param username
+	 * @param permissions
+	 * @return
+	 */
 	public static boolean isPermittedByInterdictionMatrix(IInterdictionMatrix interdictionMatrix, String username, Permission... permissions)
 	{
 		if (interdictionMatrix != null)
@@ -418,31 +427,31 @@ public class MFFSHelper
 		return null;
 	}
 
-	public static boolean hasPermission(World world, Vector3 position, Permission permission, String username)
+	public static boolean hasPermission(World world, Vector3 position, Permission permission, EntityPlayer player)
 	{
 		IInterdictionMatrix interdictionMatrix = getNearestInterdictionMatrix(world, position);
 
 		if (interdictionMatrix != null)
 		{
-			return isPermittedByInterdictionMatrix(interdictionMatrix, username, permission);
+			return isPermittedByInterdictionMatrix(interdictionMatrix, player.username, permission);
 		}
 
 		return true;
 	}
 
-	public static boolean hasPermission(World world, Vector3 position, Action action, String username)
+	public static boolean hasPermission(World world, Vector3 position, Action action, EntityPlayer player)
 	{
 		IInterdictionMatrix interdictionMatrix = getNearestInterdictionMatrix(world, position);
 
 		if (interdictionMatrix != null)
 		{
-			return MFFSHelper.hasPermission(world, position, interdictionMatrix, action, username);
+			return MFFSHelper.hasPermission(world, position, interdictionMatrix, action, player);
 		}
 
 		return true;
 	}
 
-	public static boolean hasPermission(World world, Vector3 position, IInterdictionMatrix interdictionMatrix, Action action, String username)
+	public static boolean hasPermission(World world, Vector3 position, IInterdictionMatrix interdictionMatrix, Action action, EntityPlayer player)
 	{
 		boolean hasPermission = true;
 
@@ -452,7 +461,7 @@ public class MFFSHelper
 			{
 				hasPermission = false;
 
-				if (isPermittedByInterdictionMatrix(interdictionMatrix, username, Permission.BLOCK_ACCESS))
+				if (isPermittedByInterdictionMatrix(interdictionMatrix, player.username, Permission.BLOCK_ACCESS))
 				{
 					hasPermission = true;
 				}
@@ -461,11 +470,11 @@ public class MFFSHelper
 
 		if (hasPermission)
 		{
-			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0)
+			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0 && (player.getCurrentEquippedItem() != null || action == Action.LEFT_CLICK_BLOCK))
 			{
 				hasPermission = false;
 
-				if (isPermittedByInterdictionMatrix(interdictionMatrix, username, Permission.BLOCK_ALTER))
+				if (isPermittedByInterdictionMatrix(interdictionMatrix, player.username, Permission.BLOCK_ALTER))
 				{
 					hasPermission = true;
 				}
