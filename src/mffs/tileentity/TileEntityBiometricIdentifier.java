@@ -20,11 +20,6 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 {
 	public static final int SLOT_COPY = 12;
 
-	public TileEntityBiometricIdentifier()
-	{
-		FrequencyGrid.instance().register(this);
-	}
-
 	@Override
 	public boolean isAccessGranted(String username, Permission permission)
 	{
@@ -183,12 +178,6 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 		}
 
 		return null;
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return false;
 	}
 
 	@Override

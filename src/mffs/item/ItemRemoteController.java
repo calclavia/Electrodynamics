@@ -91,7 +91,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICardLink
 				{
 					Chunk chunk = world.getChunkFromBlockCoords(position.intX(), position.intZ());
 
-					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer.username) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer.username)))
+					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer)))
 					{
 						double requiredEnergy = Vector3.distance(new Vector3(entityPlayer), position) * (LiquidContainerRegistry.BUCKET_VOLUME / 100);
 						int receivedEnergy = 0;
