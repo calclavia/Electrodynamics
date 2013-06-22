@@ -68,7 +68,7 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 
 		if (this.powerProvider != null)
 		{
-			int requiredEnergy = (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			float requiredEnergy = (float) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
 			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
 
 			if (energyReceived > 0)
@@ -251,7 +251,7 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	{
 		if (this.canConnect(from))
 		{
-			return (int) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
+			return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
 		}
 
 		return 0;
