@@ -108,9 +108,9 @@ public class ItemModeCustom extends ItemMode implements ICache
 							midPoint.x = (point1.x + point2.x) / 2;
 							midPoint.y = (point1.y + point2.y) / 2;
 							midPoint.z = (point1.z + point2.z) / 2;
-							midPoint.floor();
+							midPoint = midPoint.floor();
 
-							// Center the two coords to zero.
+							// Center the two coords to origin.
 							point1.subtract(midPoint);
 							point2.subtract(midPoint);
 
@@ -209,7 +209,6 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 		for (final File fileEntry : this.getSaveDirectory().listFiles())
 		{
-			System.out.println(fileEntry.getName());
 			i++;
 		}
 
