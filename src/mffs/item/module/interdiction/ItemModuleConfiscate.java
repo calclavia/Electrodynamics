@@ -20,6 +20,18 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 	@Override
 	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
 	{
+		if (entityLiving instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer) entityLiving;
+
+			IBiometricIdentifier biometricIdentifier = interdictionMatrix.getBiometricIdentifier();
+
+			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.DEFENSE_STATION_CONFISCATION))
+			{
+				return false;
+			}
+		}
+
 		Set<ItemStack> controlledStacks = interdictionMatrix.getFilteredItems();
 
 		int confiscationCount = 0;

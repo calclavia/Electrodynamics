@@ -244,7 +244,10 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 			}
 		}
 
-		this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 1, this.zCoord + 0.5, itemStack));
+		if (!this.worldObj.isRemote)
+		{
+			this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 1, this.zCoord + 0.5, itemStack));
+		}
 
 		return false;
 	}
