@@ -15,9 +15,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class FXHologram extends EntityFX
+public class FXHologramMoving extends EntityFX
 {
-	public FXHologram(World par1World, Vector3 position, float red, float green, float blue, int age)
+	public FXHologramMoving(World par1World, Vector3 position, float red, float green, float blue, int age)
 	{
 		super(par1World, position.x, position.y, position.z);
 		this.setRBGColorF(red, green, blue);
@@ -49,6 +49,10 @@ public class FXHologram extends EntityFX
 		float zz = (float) (this.prevPosZ + (this.posZ - this.prevPosZ) * f - interpPosZ);
 		GL11.glTranslated(xx, yy, zz);
 		GL11.glScalef(1.01f, 1.01f, 1.01f);
+
+		double completion = (double) this.particleAge / (double) this.particleMaxAge;
+		GL11.glTranslated(0, (completion - 1) / 2, 0);
+		GL11.glScaled(1, completion, 1);
 
 		float op = 0.5f;
 
