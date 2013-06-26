@@ -33,8 +33,9 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 */
 	public static final int WATTAGE = 1000;
 	public static final int REQUIRED_TIME = 10 * 20;
-	public static final int NORMAL_PRODUCTION = 4;
-	public static final float FORTRON_UE_RATIO = WATTAGE / (NORMAL_PRODUCTION + NORMAL_PRODUCTION / 2);
+	private static final int INITIAL_PRODUCTION = 40;
+	public static final int MULTIPLE_PRODUCTION = 4;
+	public static final float FORTRON_UE_RATIO = WATTAGE / (INITIAL_PRODUCTION * MULTIPLE_PRODUCTION);
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
@@ -73,8 +74,6 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					}
 
 					this.requestFortron((int) ((watts - (remainder.getWatts() - electricItemGiven)) / FORTRON_UE_RATIO), true);
-
-					this.animation++;
 				}
 				else
 				{
@@ -128,11 +127,11 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		{
 			if (!this.isInversed)
 			{
-				int production = 40;
+				int production = INITIAL_PRODUCTION;
 
 				if (this.processTime > 0)
 				{
-					production *= NORMAL_PRODUCTION;
+					production *= MULTIPLE_PRODUCTION;
 				}
 
 				return production;
