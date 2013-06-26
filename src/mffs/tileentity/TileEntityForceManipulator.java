@@ -11,7 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
-public class TileEntityMobilizer extends TileEntityModuleAcceptor
+public class TileEntityForceManipulator extends TileEntityModuleAcceptor
 {
 	@Override
 	public void updateEntity()

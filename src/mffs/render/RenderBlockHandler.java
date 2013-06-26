@@ -3,6 +3,7 @@ package mffs.render;
 import mffs.ModularForceFieldSystem;
 import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceFieldProjector;
+import mffs.block.BlockForceManipulator;
 import mffs.block.BlockFortronCapacitor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -51,6 +52,13 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
 				RenderCoercionDeriver.MODEL.render(0, 0.0625F);
+			}
+			else if (block instanceof BlockForceManipulator)
+			{
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderForceManipulator.TEXTURE_ON));
+				GL11.glTranslated(0.5, 1.4, 0.5);
+				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+				RenderForceManipulator.MODEL.render(0.0625F);
 			}
 
 			GL11.glPopMatrix();

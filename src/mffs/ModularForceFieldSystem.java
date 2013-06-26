@@ -12,7 +12,7 @@ import mffs.block.BlockForceField;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockFortronCapacitor;
 import mffs.block.BlockInterdictionMatrix;
-import mffs.block.BlockMobilizer;
+import mffs.block.BlockForceManipulator;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
 import mffs.fortron.FrequencyGrid;
@@ -47,7 +47,7 @@ import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import mffs.tileentity.TileEntityInterdictionMatrix;
-import mffs.tileentity.TileEntityMobilizer;
+import mffs.tileentity.TileEntityForceManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -198,7 +198,7 @@ public class ModularForceFieldSystem
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 		blockBiometricIdentifier = new BlockBiometricIdentifier(Settings.getNextBlockID());
 		blockInterdictionMatrix = new BlockInterdictionMatrix(Settings.getNextBlockID());
-		blockMobilizer = new BlockMobilizer(Settings.getNextBlockID());
+		blockMobilizer = new BlockForceManipulator(Settings.getNextBlockID());
 
 		/**
 		 * Items
@@ -279,7 +279,7 @@ public class ModularForceFieldSystem
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityMobilizer.class, blockMobilizer.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityForceManipulator.class, blockMobilizer.getUnlocalizedName());
 
 		proxy.preInit();
 	}

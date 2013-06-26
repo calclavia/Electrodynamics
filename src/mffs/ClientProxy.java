@@ -11,11 +11,13 @@ import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceField;
 import mffs.render.RenderForceFieldProjector;
+import mffs.render.RenderForceManipulator;
 import mffs.render.RenderFortronCapacitor;
 import mffs.render.RenderIDCard;
 import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileEntityForceManipulator;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +48,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID.itemID, new RenderIDCard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoercionDeriver.class, new RenderCoercionDeriver());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceManipulator.class, new RenderForceManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
 	}
 
