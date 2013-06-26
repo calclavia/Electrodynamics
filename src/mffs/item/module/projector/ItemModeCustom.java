@@ -217,7 +217,14 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 	public File getSaveDirectory()
 	{
-		File file = new File(NBTFileLoader.getSaveDirectory(MinecraftServer.getServer().getFolderName()), "mffs");
+		File saveDirectory = NBTFileLoader.getSaveDirectory(MinecraftServer.getServer().getFolderName());
+
+		if (!saveDirectory.exists())
+		{
+			saveDirectory.mkdir();
+		}
+
+		File file = new File(saveDirectory, "mffs");
 
 		if (!file.exists())
 		{
