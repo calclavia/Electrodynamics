@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
@@ -45,7 +46,7 @@ public class ItemModeSphere extends ItemMode
 	}
 
 	@Override
-	public Set<Vector3> getInteriorPoints(IProjector projector)
+	public Set<Vector3> getInteriorPoints(IFieldInteraction projector)
 	{
 		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		final Vector3 translation = projector.getTranslation();
@@ -72,7 +73,7 @@ public class ItemModeSphere extends ItemMode
 	}
 
 	@Override
-	public boolean isInField(IProjector projector, Vector3 position)
+	public boolean isInField(IFieldInteraction projector, Vector3 position)
 	{
 		return new Vector3((TileEntity) projector).add(projector.getTranslation()).distanceTo(position) < projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 	}

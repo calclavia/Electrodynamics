@@ -3,6 +3,7 @@ package mffs.item.module.projector;
 import java.util.HashSet;
 import java.util.Set;
 
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.item.mode.ItemMode;
 import mffs.render.model.ModelCube;
@@ -63,7 +64,7 @@ public class ItemModeCylinder extends ItemMode
 	}
 
 	@Override
-	public Set<Vector3> getInteriorPoints(IProjector projector)
+	public Set<Vector3> getInteriorPoints(IFieldInteraction projector)
 	{
 		final Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 
@@ -95,7 +96,7 @@ public class ItemModeCylinder extends ItemMode
 	}
 
 	@Override
-	public boolean isInField(IProjector projector, Vector3 position)
+	public boolean isInField(IFieldInteraction projector, Vector3 position)
 	{
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();

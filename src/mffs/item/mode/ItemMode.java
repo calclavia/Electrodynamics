@@ -1,5 +1,6 @@
 package mffs.item.mode;
 
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.ItemBase;
@@ -23,7 +24,7 @@ public abstract class ItemMode extends ItemBase implements IProjectorMode
 	}
 
 	@Override
-	public boolean isInField(IProjector projector, Vector3 position)
+	public boolean isInField(IFieldInteraction projector, Vector3 position)
 	{
 		return false;
 	}

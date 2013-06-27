@@ -1,21 +1,21 @@
 package mffs.gui;
 
 import mffs.base.GuiBase;
-import mffs.container.ContainerForceFieldProjector;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.container.ContainerForceManipulator;
+import mffs.tileentity.TileEntityForceManipulator;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.vector.Region2;
 
-public class GuiForceFieldProjector extends GuiBase
+public class GuiForceManipulator extends GuiBase
 {
-	private TileEntityForceFieldProjector tileEntity;
+	private TileEntityForceManipulator tileEntity;
 
-	public GuiForceFieldProjector(EntityPlayer player, TileEntityForceFieldProjector tileEntity)
+	public GuiForceManipulator(EntityPlayer player, TileEntityForceManipulator tileEntity)
 	{
-		super(new ContainerForceFieldProjector(player, tileEntity), tileEntity);
+		super(new ContainerForceManipulator(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;
 	}
 
@@ -25,6 +25,7 @@ public class GuiForceFieldProjector extends GuiBase
 		this.textFieldPos = new Vector2(48, 91);
 		super.initGui();
 
+		this.buttonList.clear();
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
 		this.tooltips.put(new Region2(new Vector2(90, 17), new Vector2(90, 17).add(18)), "Up");

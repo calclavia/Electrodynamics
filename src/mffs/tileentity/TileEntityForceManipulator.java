@@ -3,7 +3,6 @@ package mffs.tileentity;
 import java.util.Iterator;
 import java.util.List;
 
-import mffs.base.TileEntityModuleAcceptor;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -11,19 +10,18 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
-public class TileEntityForceManipulator extends TileEntityModuleAcceptor
+public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		if (this.isActive())
+		if (!this.worldObj.isRemote)
 		{
-			this.updatePushedObjects(1, 0.25f);
-
-			if (!this.worldObj.isRemote)
+			if (this.isActive())
 			{
+				this.updatePushedObjects(1, 0.25f);
 				ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 				this.moveBlock(new Vector3(this).modifyPositionFromSide(dir), dir);
 			}
@@ -32,33 +30,44 @@ public class TileEntityForceManipulator extends TileEntityModuleAcceptor
 
 	protected void moveBlock(Vector3 position, ForgeDirection direction)
 	{
-		Vector3 newPosition = position.clone().modifyPositionFromSide(direction);
-
-		TileEntity tileEntity = position.getTileEntity(this.worldObj);
-		int blockID = position.getBlockID(this.worldObj);
-		int blockMetadata = position.getBlockMetadata(this.worldObj);
-
-		if (blockID > 0 && newPosition.getBlockID(this.worldObj) == 0)
+		if (!this.worldObj.isRemote)
 		{
-			if (tileEntity != null)
+			Vector3 newPosition = position.clone().modifyPositionFromSide(direction);
+
+			TileEntity tileEntity = position.getTileEntity(this.worldObj);
+			int blockID = position.getBlockID(this.worldObj);
+
+			if (blockID > 0 && newPosition.getBlockID(this.worldObj) == 0)
 			{
-				NBTTagCompound tileData = new NBTTagCompound();
-				tileEntity.writeToNBT(tileData);
-				this.worldObj.removeBlockTileEntity(position.intX(), position.intY(), position.intZ());
-				position.setBlock(this.worldObj, 0);
-				newPosition.setBlock(this.worldObj, blockID);
-				this.worldObj.setBlockMetadataWithNotify(newPosition.intX(), newPosition.intY(), newPosition.intZ(), blockMetadata, 2);
-				TileEntity newTile = newPosition.getTileEntity(this.worldObj);
-				newTile.readFromNBT(tileData);
-				newTile.xCoord = position.intX();
-				newTile.yCoord = position.intY();
-				newTile.zCoord = position.intZ();
-				this.worldObj.setBlockTileEntity(position.intX(), position.intY(), position.intZ(), newTile);
-			}
-			else
-			{
-				position.setBlock(this.worldObj, 0);
-				newPosition.setBlock(this.worldObj, blockID, blockMetadata);
+				int blockMetadata = position.getBlockMetadata(this.worldObj);
+
+				if (tileEntity != null)
+				{
+					this.worldObj.removeBlockTileEntity(position.intX(), position.intY(), position.intZ());
+					position.setBlock(this.worldObj, 0);
+					newPosition.setBlock(this.worldObj, blockID, blockMetadata);
+					NBTTagCompound tileData = new NBTTagCompound();
+					tileEntity.writeToNBT(tileData);
+					TileEntity newTile = newPosition.getTileEntity(this.worldObj);
+					newTile.readFromNBT(tileData);
+					newTile.worldObj = this.worldObj;
+					newTile.xCoord = newPosition.intX();
+					newTile.yCoord = newPosition.intY();
+					newTile.zCoord = newPosition.intZ();
+					tileEntity.validate();
+					/*
+					 * tileEntity.worldObj = this.worldObj; tileEntity.xCoord = newPosition.intX();
+					 * tileEntity.yCoord = newPosition.intY(); tileEntity.zCoord =
+					 * newPosition.intZ(); tileEntity.validate();
+					 * this.worldObj.setBlockTileEntity(newPosition.intX(), newPosition.intY(),
+					 * newPosition.intZ(), tileEntity);
+					 */
+				}
+				else
+				{
+					position.setBlock(this.worldObj, 0);
+					newPosition.setBlock(this.worldObj, blockID, blockMetadata);
+				}
 			}
 		}
 	}
@@ -77,7 +86,7 @@ public class TileEntityForceManipulator extends TileEntityModuleAcceptor
 			while (iterator.hasNext())
 			{
 				Entity entity = iterator.next();
-				entity.moveEntity((double) (amount * dir.offsetX), (double) (amount * dir.offsetY), (double) (amount * dir.offsetZ));
+				entity.moveEntity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
 			}
 		}
 	}
@@ -101,7 +110,7 @@ public class TileEntityForceManipulator extends TileEntityModuleAcceptor
 	@Override
 	public int getSizeInventory()
 	{
-		return 0;
+		return 3 + 18;
 	}
 
 }

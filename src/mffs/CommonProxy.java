@@ -3,11 +3,13 @@ package mffs;
 import mffs.container.ContainerBiometricIdentifier;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.container.ContainerForceFieldProjector;
+import mffs.container.ContainerForceManipulator;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.container.ContainerInterdictionMatrix;
 import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileEntityForceManipulator;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,6 +62,10 @@ public class CommonProxy implements IGuiHandler
 			else if (tileEntity.getClass() == TileEntityInterdictionMatrix.class)
 			{
 				return new ContainerInterdictionMatrix(player, (TileEntityInterdictionMatrix) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityForceManipulator.class)
+			{
+				return new ContainerForceManipulator(player, (TileEntityForceManipulator) tileEntity);
 			}
 		}
 

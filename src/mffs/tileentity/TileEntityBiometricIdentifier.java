@@ -10,7 +10,6 @@ import mffs.api.card.ICardIdentification;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.TileEntityFrequency;
-import mffs.fortron.FrequencyGrid;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
 

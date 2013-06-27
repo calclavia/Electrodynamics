@@ -142,13 +142,16 @@ public class GuiBase extends GuiContainer
 
 		if (this.frequencyTile instanceof TileEntityBase)
 		{
-			if (((TileEntityBase) this.frequencyTile).isActive())
+			if (this.buttonList.size() > 0 && this.buttonList.get(0) != null)
 			{
-				((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneActive);
-			}
-			else
-			{
-				((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneIdle);
+				if (((TileEntityBase) this.frequencyTile).isActive())
+				{
+					((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneActive);
+				}
+				else
+				{
+					((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneIdle);
+				}
 			}
 		}
 	}

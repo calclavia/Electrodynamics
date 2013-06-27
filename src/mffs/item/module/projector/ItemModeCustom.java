@@ -10,6 +10,7 @@ import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ICache;
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
 import mffs.item.mode.ItemMode;
@@ -309,13 +310,13 @@ public class ItemModeCustom extends ItemMode implements ICache
 	}
 
 	@Override
-	public Set<Vector3> getInteriorPoints(IProjector projector)
+	public Set<Vector3> getInteriorPoints(IFieldInteraction projector)
 	{
 		return new HashSet<Vector3>();
 	}
 
 	@Override
-	public boolean isInField(IProjector projector, Vector3 position)
+	public boolean isInField(IFieldInteraction projector, Vector3 position)
 	{
 		return false;
 	}

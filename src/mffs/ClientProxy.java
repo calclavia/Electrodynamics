@@ -3,6 +3,7 @@ package mffs;
 import mffs.gui.GuiBiometricIdentifier;
 import mffs.gui.GuiCoercionDeriver;
 import mffs.gui.GuiForceFieldProjector;
+import mffs.gui.GuiForceManipulator;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.gui.GuiInterdictionMatrix;
 import mffs.render.FXBeam;
@@ -84,6 +85,10 @@ public class ClientProxy extends CommonProxy
 			else if (tileEntity.getClass() == TileEntityInterdictionMatrix.class)
 			{
 				return new GuiInterdictionMatrix(player, (TileEntityInterdictionMatrix) tileEntity);
+			}
+			else if (tileEntity.getClass() == TileEntityForceManipulator.class)
+			{
+				return new GuiForceManipulator(player, (TileEntityForceManipulator) tileEntity);
 			}
 		}
 
