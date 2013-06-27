@@ -3,10 +3,12 @@ package mffs.tileentity;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import mffs.BlockSetDelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.ForceManipulatorBlacklist;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -20,51 +22,34 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
 	private static final int ANIMATION_TIME = 20;
+	public Vector3 anchor = null;
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
+		if (anchor == null)
+		{
+			anchor = new Vector3(this);
+		}
+
 		if (!this.worldObj.isRemote && this.getMode() != null)
 		{
 			if (this.isActive() && this.ticks % 20 == 0)
 			{
-
 				/**
 				 * Move
 				 */
 				ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-				boolean canMove = true;
 
-				/**
-				 * Scan target area...
-				 */
-				for (Vector3 position : this.getInteriorPoints())
-				{
-					if (position.getBlockID(this.worldObj) > 0)
-					{
-						Vector3 targetPosition = position.clone().modifyPositionFromSide(dir);
+				Set<Vector3> mobilizationPoints = this.getInteriorPoints();
 
-						if (!this.getInteriorPoints().contains(targetPosition))
-						{
-							int blockID = targetPosition.getBlockID(this.worldObj);
-
-							if (!(blockID == 0 || (blockID > 0 && Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()))))
-							{
-								System.out.println("BREAK AT " + position + " vs " + position.getBlockID(this.worldObj) + " in " + targetPosition + ":" + blockID);
-								canMove = false;
-								break;
-							}
-						}
-					}
-				}
-
-				if (canMove)
+				if (canMove())
 				{
 					this.updatePushedObjects(1, 0.25f);
 
-					for (Vector3 position : this.getInteriorPoints())
+					for (Vector3 position : mobilizationPoints)
 					{
 						this.moveBlock(position, dir);
 					}
@@ -81,7 +66,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			// Manipulation area preview
 			if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS)
 			{
-				for (Vector3 position : this.getCalculatedField())
+				for (Vector3 position : this.getInteriorPoints())
 				{
 					if (position.getBlockID(this.worldObj) > 0)
 					{
@@ -115,6 +100,46 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		this.isCalculated = false;
 	}
 
+	/**
+	 * Scan target area...
+	 */
+	protected boolean canMove()
+	{
+		Set<Vector3> mobilizationPoints = this.getInteriorPoints();
+		ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+		loop:
+		for (Vector3 position : mobilizationPoints)
+		{
+			if (position.getBlockID(this.worldObj) > 0)
+			{
+				if (ForceManipulatorBlacklist.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
+				{
+					return false;
+				}
+
+				Vector3 targetPosition = position.clone().modifyPositionFromSide(dir);
+
+				for (Vector3 checkPos : mobilizationPoints)
+				{
+					if (checkPos.equals(targetPosition))
+					{
+						continue loop;
+					}
+				}
+
+				int blockID = targetPosition.getBlockID(this.worldObj);
+
+				if (!(blockID == 0 || (blockID > 0 && Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()))))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	protected void moveBlock(Vector3 position, ForgeDirection direction)
 	{
 		if (!this.worldObj.isRemote)
@@ -124,11 +149,13 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
 
-			if (blockID > 0 && newPosition.getBlockID(this.worldObj) == 0)
+			if (blockID > 0)
 			{
 				if (Block.blocksList[blockID].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) != -1 && tileEntity != this)
 				{
 					this.getDelayedEvents().add(new BlockSetDelayedEvent(ANIMATION_TIME, this.worldObj, position, newPosition));
+					this.worldObj.removeBlockTileEntity(position.intX(), position.intY(), position.intZ());
+					position.setBlock(this.worldObj, 0);
 					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), worldObj, position, 50);
 				}
 			}

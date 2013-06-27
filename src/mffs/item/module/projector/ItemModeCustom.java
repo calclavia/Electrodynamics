@@ -312,7 +312,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public Set<Vector3> getInteriorPoints(IFieldInteraction projector)
 	{
-		return new HashSet<Vector3>();
+		return this.getFieldBlocks(projector.getModeStack());
 	}
 
 	@Override

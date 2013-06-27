@@ -51,7 +51,6 @@ public class GuiForceManipulator extends GuiBase
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
-		this.drawTextWithTooltip("matrix", 32, 20, x, y);
 		this.drawTextWithTooltip("frequency", "%1:", 8, 76, x, y);
 		this.textFieldFrequency.drawTextBox();
 
@@ -124,11 +123,11 @@ public class GuiForceManipulator extends GuiBase
 		}
 
 		// Upgrades
-		for (int xSlot = 0; xSlot < 3; xSlot++)
+		for (int xSlot = 0; xSlot < 2; xSlot++)
 		{
-			for (int ySlot = 0; ySlot < 2; ySlot++)
+			for (int ySlot = 0; ySlot < 3; ySlot++)
 			{
-				this.drawSlot(18 + 18 * xSlot, 35 + 18 * ySlot);
+				this.drawSlot(18 + 18 * xSlot, 20 + 18 * ySlot);
 			}
 		}
 

@@ -2,6 +2,8 @@ package mffs;
 
 import java.io.File;
 
+import mffs.api.ForceManipulatorBlacklist;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import cpw.mods.fml.common.Loader;
@@ -92,6 +94,30 @@ public class Settings
 		Property highGraphics = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "High Graphics", HIGH_GRAPHICS);
 		highGraphics.comment = "Turning this to false will reduce rendering and client side packet graphical packets.";
 		CONSERVE_PACKETS = highGraphics.getBoolean(HIGH_GRAPHICS);
+
+		Property forceManipulatorBlacklist = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "");
+		highGraphics.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space.";
+		String blackListString = forceManipulatorBlacklist.getString();
+
+		if (blackListString != null)
+		{
+			for (String blockIDString : blackListString.split(","))
+			{
+				if (blockIDString != null)
+				{
+					try
+					{
+						int blockID = Integer.parseInt(blockIDString);
+						ForceManipulatorBlacklist.blackList.add(Block.blocksList[blockID]);
+					}
+					catch (Exception e)
+					{
+						ModularForceFieldSystem.LOGGER.severe("Invalid block ID!");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
 		CONFIGURATION.save();
 	}
