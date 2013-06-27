@@ -17,12 +17,24 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FXHologram extends EntityFX
 {
+	private Vector3 targetPosition = null;
+
 	public FXHologram(World par1World, Vector3 position, float red, float green, float blue, int age)
 	{
 		super(par1World, position.x, position.y, position.z);
 		this.setRBGColorF(red, green, blue);
 		this.particleMaxAge = age;
 		this.noClip = true;
+	}
+
+	public FXHologram setTarget(Vector3 targetPosition)
+	{
+		this.targetPosition = targetPosition;
+		this.motionX = (this.targetPosition.x - this.posX) / this.particleMaxAge;
+		this.motionY = (this.targetPosition.y - this.posY) / this.particleMaxAge;
+		this.motionZ = (this.targetPosition.z - this.posZ) / this.particleMaxAge;
+
+		return this;
 	}
 
 	@Override
@@ -35,6 +47,12 @@ public class FXHologram extends EntityFX
 		if (this.particleAge++ >= this.particleMaxAge)
 		{
 			this.setDead();
+			return;
+		}
+
+		if (this.targetPosition != null)
+		{
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		}
 	}
 
@@ -64,7 +82,7 @@ public class FXHologram extends EntityFX
 		Minecraft.getMinecraft().renderEngine.bindTexture("/terrain.png");
 		CalclaviaRenderHelper.renderNormalBlockAsItem(ModularForceFieldSystem.blockForceField, 0, new RenderBlocks());
 		CalclaviaRenderHelper.disableBlending();
-		CalclaviaRenderHelper.enableLighting();
+		// CalclaviaRenderHelper.enableLighting();
 		GL11.glPopMatrix();
 
 		tessellator.startDrawingQuads();

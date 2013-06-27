@@ -1,6 +1,7 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
+import mffs.Settings;
 import mffs.render.model.ModelForceFieldProjector;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.client.Minecraft;
@@ -97,34 +98,37 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 				RenderHelper.enableStandardItemLighting();
 				GL11.glPopMatrix();
 
-				/**
-				 * Render Hologram
-				 */
-				GL11.glPushMatrix();
-				GL11.glTranslated(x + 0.5, y + 1.35, z + 0.5);
-				this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + "force_cube.png");
+				if (Settings.HIGH_GRAPHICS)
+				{
+					/**
+					 * Render Hologram
+					 */
+					GL11.glPushMatrix();
+					GL11.glTranslated(x + 0.5, y + 1.35, z + 0.5);
+					this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + "force_cube.png");
 
-				// Enable Blending
-				CalclaviaRenderHelper.enableBlending();
+					// Enable Blending
+					CalclaviaRenderHelper.enableBlending();
 
-				// Disable Lighting/Glow On
-				CalclaviaRenderHelper.disableLighting();
+					// Disable Lighting/Glow On
+					CalclaviaRenderHelper.disableLighting();
 
-				GL11.glPushMatrix();
-				GL11.glColor4f(1, 1, 1, (float) Math.sin((double) tileEntity.getTicks() / 10) / 2 + 1);
-				GL11.glTranslatef(0, (float) Math.sin(Math.toRadians(tileEntity.getTicks() * 3)) / 7, 0);
-				GL11.glRotatef(tileEntity.getTicks() * 4, 0, 1, 0);
-				GL11.glRotatef(36f + tileEntity.getTicks() * 4, 0, 1, 1);
-				tileEntity.getMode().render(tileEntity, x, y, z, f, tileEntity.getTicks());
-				GL11.glPopMatrix();
+					GL11.glPushMatrix();
+					GL11.glColor4f(1, 1, 1, (float) Math.sin((double) tileEntity.getTicks() / 10) / 2 + 1);
+					GL11.glTranslatef(0, (float) Math.sin(Math.toRadians(tileEntity.getTicks() * 3)) / 7, 0);
+					GL11.glRotatef(tileEntity.getTicks() * 4, 0, 1, 0);
+					GL11.glRotatef(36f + tileEntity.getTicks() * 4, 0, 1, 1);
+					tileEntity.getMode().render(tileEntity, x, y, z, f, tileEntity.getTicks());
+					GL11.glPopMatrix();
 
-				// Enable Lighting/Glow Off
-				CalclaviaRenderHelper.enableLighting();
+					// Enable Lighting/Glow Off
+					CalclaviaRenderHelper.enableLighting();
 
-				// Disable Blending
-				CalclaviaRenderHelper.disableBlending();
+					// Disable Blending
+					CalclaviaRenderHelper.disableBlending();
 
-				GL11.glPopMatrix();
+					GL11.glPopMatrix();
+				}
 			}
 		}
 	}

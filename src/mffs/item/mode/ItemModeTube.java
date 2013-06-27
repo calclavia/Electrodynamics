@@ -3,6 +3,7 @@ package mffs.item.mode;
 import java.util.HashSet;
 import java.util.Set;
 
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.render.model.ModelPlane;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +23,7 @@ public class ItemModeTube extends ItemModeCube
 	}
 
 	@Override
-	public Set<Vector3> getExteriorPoints(IProjector projector)
+	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
 		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		ForgeDirection direction = projector.getDirection(((TileEntity) projector).worldObj, ((TileEntity) projector).xCoord, ((TileEntity) projector).yCoord, ((TileEntity) projector).zCoord);

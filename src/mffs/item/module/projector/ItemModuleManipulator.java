@@ -3,7 +3,7 @@ package mffs.item.module.projector;
 import java.util.Iterator;
 import java.util.Set;
 
-import mffs.api.IProjector;
+import mffs.api.IFieldInteraction;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
@@ -16,7 +16,7 @@ public class ItemModuleManipulator extends ItemModule
 	}
 
 	@Override
-	public void onCalculate(IProjector projector, Set<Vector3> fieldBlocks)
+	public void onCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
 		Iterator<Vector3> it = fieldBlocks.iterator();
 

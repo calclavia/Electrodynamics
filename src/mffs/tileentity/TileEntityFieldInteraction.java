@@ -1,22 +1,81 @@
 package mffs.tileentity;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import mffs.DelayedEvent;
+import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import mffs.api.ICache;
 import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileEntityModuleAcceptor;
+import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import calclavia.lib.CalculationHelper;
 
-public abstract class TileEntityFieldInteraction extends TileEntityModuleAcceptor implements IFieldInteraction
+public abstract class TileEntityFieldInteraction extends TileEntityModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
 {
 	protected static final int MODULE_SLOT_ID = 2;
+	protected boolean isCalculating = false;
+	protected boolean isCalculated = false;
+	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
+	private final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		Iterator<DelayedEvent> it = this.delayedEvents.iterator();
+
+		while (it.hasNext())
+		{
+			DelayedEvent evt = it.next();
+
+			if (evt.ticks <= 0)
+			{
+				it.remove();
+			}
+			else
+			{
+				evt.update();
+			}
+		}
+	}
+
+	protected void calculateForceField(IThreadCallBack callBack)
+	{
+		if (!this.worldObj.isRemote && !this.isCalculating)
+		{
+			if (this.getMode() != null)
+			{
+				if (this.getModeStack().getItem() instanceof ICache)
+				{
+					((ICache) this.getModeStack().getItem()).clearCache();
+				}
+
+				this.calculatedField.clear();
+
+				// Start multi-threading calculations
+				(new ProjectorCalculationThread(this, callBack)).start();
+			}
+		}
+	}
+
+	protected void calculateForceField()
+	{
+		this.calculateForceField(null);
+	}
 
 	@Override
 	public ItemStack getModeStack()
@@ -239,6 +298,7 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 		return verticleRotation;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Vector3> getInteriorPoints()
 	{
@@ -300,5 +360,29 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 			case EAST:
 				return new int[] { 12, 13 };
 		}
+	}
+
+	@Override
+	public void setCalculating(boolean bool)
+	{
+		this.isCalculating = bool;
+	}
+
+	@Override
+	public void setCalculated(boolean bool)
+	{
+		this.isCalculated = bool;
+	}
+
+	@Override
+	public Set<Vector3> getCalculatedField()
+	{
+		return this.calculatedField;
+	}
+
+	@Override
+	public List<DelayedEvent> getDelayedEvents()
+	{
+		return this.delayedEvents;
 	}
 }

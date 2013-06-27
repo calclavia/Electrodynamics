@@ -29,7 +29,7 @@ public class ItemModeCube extends ItemMode
 	}
 
 	@Override
-	public Set<Vector3> getExteriorPoints(IProjector projector)
+	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
 		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 		Vector3 posScale = projector.getPositiveScale();

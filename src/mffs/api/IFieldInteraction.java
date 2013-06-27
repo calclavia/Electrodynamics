@@ -8,8 +8,9 @@ import mffs.api.modules.IProjectorMode;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.implement.IRotatable;
 
-public interface IFieldInteraction extends IModuleAcceptor
+public interface IFieldInteraction extends IModuleAcceptor, IRotatable, IActivatable
 {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
@@ -49,10 +50,22 @@ public interface IFieldInteraction extends IModuleAcceptor
 	public int getRotationPitch();
 
 	/**
+	 * * @return Gets all the blocks that are occupying the force field.
+	 */
+	public Set<Vector3> getCalculatedField();
+
+	/**
 	 * Gets the interior points of the projector. This might cause lag so call sparingly.
 	 * 
 	 * @return
 	 */
 	public Set<Vector3> getInteriorPoints();
+
+	/**
+	 * Force field calculation flags.
+	 */
+	public void setCalculating(boolean bool);
+
+	public void setCalculated(boolean bool);
 
 }

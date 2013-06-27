@@ -2,7 +2,9 @@ package mffs.tileentity;
 
 import java.util.Set;
 
+import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
+import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
 import calclavia.lib.CalculationHelper;
 
@@ -22,15 +24,15 @@ public class ProjectorCalculationThread extends Thread
 		public void onThreadComplete();
 	}
 
-	private TileEntityForceFieldProjector projector;
+	private IFieldInteraction projector;
 	private IThreadCallBack callBack;
 
-	public ProjectorCalculationThread(TileEntityForceFieldProjector projector)
+	public ProjectorCalculationThread(IFieldInteraction projector)
 	{
 		this.projector = projector;
 	}
 
-	public ProjectorCalculationThread(TileEntityForceFieldProjector projector, IThreadCallBack callBack)
+	public ProjectorCalculationThread(IFieldInteraction projector, IThreadCallBack callBack)
 	{
 		this(projector);
 		this.callBack = callBack;
@@ -39,7 +41,7 @@ public class ProjectorCalculationThread extends Thread
 	@Override
 	public void run()
 	{
-		this.projector.isCalculating = true;
+		this.projector.setCalculating(true);
 
 		try
 		{
@@ -57,10 +59,10 @@ public class ProjectorCalculationThread extends Thread
 					CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
 				}
 
-				position.add(new Vector3(this.projector));
+				position.add(new Vector3((TileEntity) this.projector));
 				position.add(translation);
 
-				if (position.intY() <= this.projector.worldObj.getHeight())
+				if (position.intY() <= ((TileEntity) this.projector).worldObj.getHeight())
 				{
 					this.projector.getCalculatedField().add(position.round());
 				}
@@ -76,8 +78,8 @@ public class ProjectorCalculationThread extends Thread
 			e.printStackTrace();
 		}
 
-		this.projector.isCalculating = false;
-		this.projector.isCalculated = true;
+		this.projector.setCalculating(false);
+		this.projector.setCalculated(true);
 
 		if (this.callBack != null)
 		{

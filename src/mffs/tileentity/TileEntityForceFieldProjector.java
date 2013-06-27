@@ -2,7 +2,6 @@ package mffs.tileentity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,17 +30,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityForceFieldProjector extends TileEntityFieldInteraction implements IProjector, IThreadCallBack
 {
-	public final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
-
 	/**
 	 * A set containing all positions of all force field blocks.
 	 */
 	protected final Set<Vector3> forceFields = new HashSet<Vector3>();
-
-	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
-
-	public boolean isCalculating = false;
-	public boolean isCalculated = false;
 
 	public TileEntityForceFieldProjector()
 	{
@@ -73,14 +65,28 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 			if (type == 1)
 			{
 				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, 0.6f, 0.6f, 1, 40);
-				ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 50);
+				ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 1, 1, 50);
 			}
 			else if (type == 2)
 			{
 				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, 1f, 0f, 0f, 40);
-				ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 50);
+				ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 0, 0, 50);
 			}
 		}
+	}
+
+	@Override
+	protected void calculateForceField(IThreadCallBack callBack)
+	{
+		if (!this.worldObj.isRemote && !this.isCalculating)
+		{
+			if (this.getMode() != null)
+			{
+				this.forceFields.clear();
+			}
+		}
+
+		super.calculateForceField(callBack);
 	}
 
 	@Override
@@ -93,22 +99,6 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	public void updateEntity()
 	{
 		super.updateEntity();
-
-		Iterator<DelayedEvent> it = this.delayedEvents.iterator();
-
-		while (it.hasNext())
-		{
-			DelayedEvent evt = it.next();
-
-			if (evt.ticks <= 0)
-			{
-				it.remove();
-			}
-			else
-			{
-				evt.update();
-			}
-		}
 
 		if (this.isActive() && this.getMode() != null && this.requestFortron(this.getFortronCost(), false) >= this.getFortronCost())
 		{
@@ -164,31 +154,6 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	{
 		super.onInventoryChanged();
 		this.destroyField();
-	}
-
-	private void calculateForceField(IThreadCallBack callBack)
-	{
-		if (!this.worldObj.isRemote && !this.isCalculating)
-		{
-			if (this.getMode() != null)
-			{
-				if (this.getModeStack().getItem() instanceof ICache)
-				{
-					((ICache) this.getModeStack().getItem()).clearCache();
-				}
-
-				this.forceFields.clear();
-				this.calculatedField.clear();
-
-				// Start multi-threading calculation
-				(new ProjectorCalculationThread(this, callBack)).start();
-			}
-		}
-	}
-
-	private void calculateForceField()
-	{
-		this.calculateForceField(null);
 	}
 
 	/**
@@ -341,12 +306,6 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	}
 
 	@Override
-	public Set<Vector3> getCalculatedField()
-	{
-		return this.calculatedField;
-	}
-
-	@Override
 	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
 	{
 		if (slotID == 0 || slotID == 1)
@@ -378,7 +337,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return AxisAlignedBB.getAABBPool().getAABB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
+		return AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public interface IProjectorMode
 	 * @param forceField - The blocks actually making up the force field. This array of blocks are
 	 * NOT affected by rotation or translation.
 	 */
-	public Set<Vector3> getExteriorPoints(IProjector projector);
+	public Set<Vector3> getExteriorPoints(IFieldInteraction projector);
 
 	/**
 	 * @return Gets all interior points. Not translated or rotated.

@@ -45,7 +45,7 @@ public class ItemModuleDisintegration extends ItemModule
 				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 2, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
 
 				// TODO: Modularize this
-				((TileEntityForceFieldProjector) projector).delayedEvents.add(new BlockDropDelayedEvent(39, block, tileEntity.worldObj, position));
+				((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent(39, block, tileEntity.worldObj, position));
 
 				if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
 				{

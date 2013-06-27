@@ -32,7 +32,7 @@ public class ItemModeCylinder extends ItemMode
 	}
 
 	@Override
-	public Set<Vector3> getExteriorPoints(IProjector projector)
+	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
 		final Set<Vector3> fieldBlocks = new HashSet<Vector3>();
 

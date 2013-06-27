@@ -3,6 +3,7 @@ package mffs.item.module;
 import java.util.List;
 import java.util.Set;
 
+import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.base.ItemBase;
@@ -29,7 +30,7 @@ public class ItemModule extends ItemBase implements IModule
 	}
 
 	@Override
-	public void onCalculate(IProjector projector, Set<Vector3> position)
+	public void onCalculate(IFieldInteraction projector, Set<Vector3> position)
 	{
 	}
 

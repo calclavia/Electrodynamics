@@ -7,6 +7,7 @@ import mffs.gui.GuiForceManipulator;
 import mffs.gui.GuiFortronCapacitor;
 import mffs.gui.GuiInterdictionMatrix;
 import mffs.render.FXBeam;
+import mffs.render.FXHologram;
 import mffs.render.FXHologramMoving;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
@@ -108,7 +109,13 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void renderHologram(World world, Vector3 position, float red, float green, float blue, int age)
+	public void renderHologram(World world, Vector3 position, float red, float green, float blue, int age, Vector3 targetPosition)
+	{
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age).setTarget(targetPosition));
+	}
+
+	@Override
+	public void renderHologramMoving(World world, Vector3 position, float red, float green, float blue, int age)
 	{
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologramMoving(world, position, red, green, blue, age));
 	}

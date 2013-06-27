@@ -304,7 +304,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	}
 
 	@Override
-	public Set<Vector3> getExteriorPoints(IProjector projector)
+	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
 		return this.getFieldBlocks(projector.getModeStack());
 	}

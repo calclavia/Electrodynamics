@@ -48,6 +48,7 @@ public class Settings
 	public static boolean USE_CACHE = true;
 	public static boolean ENABLE_ELECTRICITY = true;
 	public static boolean CONSERVE_PACKETS = true;
+	public static boolean HIGH_GRAPHICS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
 
@@ -87,6 +88,10 @@ public class Settings
 		Property conservePackets = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Conserve Packets?", CONSERVE_PACKETS);
 		conservePackets.comment = "Turning this to false will enable better client side packet and updates but in the cost of more packets sent.";
 		CONSERVE_PACKETS = conservePackets.getBoolean(CONSERVE_PACKETS);
+
+		Property highGraphics = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "High Graphics", HIGH_GRAPHICS);
+		highGraphics.comment = "Turning this to false will reduce rendering and client side packet graphical packets.";
+		CONSERVE_PACKETS = highGraphics.getBoolean(HIGH_GRAPHICS);
 
 		CONFIGURATION.save();
 	}
