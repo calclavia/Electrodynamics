@@ -157,7 +157,8 @@ public class ModularForceFieldSystem
 	 */
 	// General Modules
 	public static ItemModule itemModule, itemModuleSpeed, itemModuleCapacity, itemModuleTranslate,
-			itemModuleScale, itemModuleRotate;
+			itemModuleScale, itemModuleRotate, itemModuleCollection, itemModuleInvert,
+			itemModuleSilence;
 
 	// Projector Modules
 	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
@@ -263,6 +264,13 @@ public class ModularForceFieldSystem
 		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
 		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
 
+		/**
+		 * More Modules
+		 */
+		itemModuleCollection = new ItemModule(Settings.getNextItemID(), "moduleCollection").setMaxStackSize(1).setCost(15);
+		itemModuleInvert = new ItemModule(Settings.getNextItemID(), "moduleInvert").setMaxStackSize(1).setCost(15);
+		itemModuleSilence = new ItemModule(Settings.getNextItemID(), "moduleSilence").setMaxStackSize(1).setCost(1);
+
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName());
@@ -330,7 +338,7 @@ public class ModularForceFieldSystem
 
 		// -- General Items --
 		// Focus Matrix
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 6), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 10), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
 
 		// Remote Controller
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemRemoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipes.WIRE, 'C', UniversalRecipes.BATTERY, 'M', UniversalRecipes.PRIMARY_METAL));
@@ -368,7 +376,7 @@ public class ModularForceFieldSystem
 		// -- Modules --
 		// -- -- General -- --
 		// Speed
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed), "FFF", "RRR", "FFF", 'F', itemFocusMatix, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed, 2), "FFF", "RRR", "FFF", 'F', itemFocusMatix, 'R', Item.redstone));
 		// Capacity
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCapacity, 2), "FCF", 'F', itemFocusMatix, 'C', UniversalRecipes.BATTERY));
 		// Shock
@@ -393,6 +401,12 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleGlow, 4), "GGG", "GFG", "GGG", 'F', itemFocusMatix, 'G', Block.glowStone));
 		// Stabilizer
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleStablize), "FDF", "PSA", "FDF", 'F', itemFocusMatix, 'P', Item.pickaxeDiamond, 'S', Item.shovelDiamond, 'A', Item.axeDiamond, 'D', Item.diamond));
+		// Collection
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCollection), "F F", " H ", "F F", 'F', itemFocusMatix, 'H', Block.hopperBlock));
+		// Invert
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleInvert), "L", "F", "L", 'F', itemFocusMatix, 'L', Block.blockLapis));
+		// Silence
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSilence), " N ", "NFN", " N ", 'F', itemFocusMatix, 'N', Block.music));
 
 		// -- -- Interdiction Matrix -- --
 		// Anti-Hostile

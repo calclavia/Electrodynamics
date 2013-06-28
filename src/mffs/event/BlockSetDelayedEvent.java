@@ -1,5 +1,6 @@
-package mffs;
+package mffs.event;
 
+import mffs.DelayedEvent;
 import mffs.api.ForceManipulator.ISpecialForceManipulation;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;

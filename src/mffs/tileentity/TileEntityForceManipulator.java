@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import mffs.BlockSetDelayedEvent;
-import mffs.BlockSneakySetDelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ForceManipulator;
 import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import mffs.event.BlockSetDelayedEvent;
+import mffs.event.BlockSneakySetDelayedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;

@@ -1,14 +1,15 @@
-package mffs;
+package mffs.event;
 
+import mffs.DelayedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
 public class BlockDropDelayedEvent extends DelayedEvent
 {
-	private Block block;
-	private World world;
-	private Vector3 position;
+	protected Block block;
+	protected World world;
+	protected Vector3 position;
 
 	public BlockDropDelayedEvent(int ticks, Block block, World world, Vector3 position)
 	{

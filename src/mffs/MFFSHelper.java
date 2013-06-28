@@ -236,14 +236,28 @@ public class MFFSHelper
 					{
 						if (!interdictionMatrix.getBiometricIdentifier().isAccessGranted(username, permission))
 						{
-							return false;
+							if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+							{
+								return true;
+							}
+							else
+							{
+								return false;
+							}
 						}
 					}
 				}
 			}
 		}
 
-		return true;
+		if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 	public static List<String> splitStringPerWord(String string, int wordsPerLine)

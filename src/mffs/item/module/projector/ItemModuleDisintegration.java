@@ -2,10 +2,12 @@ package mffs.item.module.projector;
 
 import java.util.Set;
 
-import mffs.BlockDropDelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IProjector;
 import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityInventory;
+import mffs.event.BlockDropDelayedEvent;
+import mffs.event.BlockInventoryDropDelayedEvent;
 import mffs.item.module.ItemModule;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.block.Block;
@@ -44,8 +46,14 @@ public class ItemModuleDisintegration extends ItemModule
 			{
 				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 2, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
 
-				// TODO: Modularize this
-				((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent(39, block, tileEntity.worldObj, position));
+				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCollection) > 0)
+				{
+					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockInventoryDropDelayedEvent(39, block, tileEntity.worldObj, position, (TileEntityInventory) projector));
+				}
+				else
+				{
+					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent(39, block, tileEntity.worldObj, position));
+				}
 
 				if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
 				{

@@ -2,6 +2,7 @@ package mffs.tileentity;
 
 import java.util.Set;
 
+import mffs.ModularForceFieldSystem;
 import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import net.minecraft.tileentity.TileEntity;
@@ -45,8 +46,16 @@ public class ProjectorCalculationThread extends Thread
 
 		try
 		{
+			Set<Vector3> newField;
 
-			Set<Vector3> newField = this.projector.getMode().getExteriorPoints(this.projector);
+			if (this.projector.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+			{
+				newField = this.projector.getMode().getInteriorPoints(this.projector);
+			}
+			else
+			{
+				newField = this.projector.getMode().getExteriorPoints(this.projector);
+			}
 
 			Vector3 translation = this.projector.getTranslation();
 			int rotationYaw = this.projector.getRotationYaw();

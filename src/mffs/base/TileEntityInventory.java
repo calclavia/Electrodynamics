@@ -7,11 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -199,6 +204,54 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 		Set<ItemStack> cards = new HashSet<ItemStack>();
 		cards.add(this.getStackInSlot(0));
 		return cards;
+	}
+
+	public boolean mergeIntoInventory(ItemStack itemStack)
+	{
+		for (int dir = 0; dir < 5; dir++)
+		{
+			ForgeDirection direction = ForgeDirection.getOrientation(dir);
+			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
+
+			if (tileEntity instanceof IInventory)
+			{
+				IInventory inventory = (IInventory) tileEntity;
+
+				for (int i = 0; i < inventory.getSizeInventory(); i++)
+				{
+					if (inventory.isStackValidForSlot(i, itemStack))
+					{
+						ItemStack checkStack = inventory.getStackInSlot(i);
+
+						if (checkStack == null)
+						{
+							inventory.setInventorySlotContents(i, itemStack);
+							return true;
+						}
+						else if (checkStack.isItemEqual(itemStack))
+						{
+							int freeSpace = checkStack.getMaxStackSize() - checkStack.stackSize;
+
+							checkStack.stackSize += Math.min(itemStack.stackSize, freeSpace);
+							itemStack.stackSize -= freeSpace;
+
+							if (itemStack.stackSize <= 0)
+							{
+								itemStack = null;
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (!this.worldObj.isRemote)
+		{
+			this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 1, this.zCoord + 0.5, itemStack));
+		}
+
+		return false;
 	}
 
 	@Override

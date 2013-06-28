@@ -1,5 +1,6 @@
-package mffs;
+package mffs.event;
 
+import mffs.DelayedEvent;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 

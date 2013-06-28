@@ -123,7 +123,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 				}
 			}
 
-			if (this.ticks % (2 * 20) == 0)
+			if (this.ticks % (2 * 20) == 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.field", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 			}

@@ -1,6 +1,5 @@
 package mffs.gui;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
 import mffs.base.TileEntityBase.TilePacketType;
@@ -14,6 +13,7 @@ import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.vector.Region2;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiBase
 {
