@@ -1,5 +1,6 @@
 package mffs;
 
+import mffs.api.ForceManipulator.ISpecialForceManipulation;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -66,6 +67,11 @@ public class BlockSetDelayedEvent extends DelayedEvent
 							newTile.yCoord = this.newPosition.intY();
 							newTile.zCoord = this.newPosition.intZ();
 							newTile.validate();
+
+							if (newTile instanceof ISpecialForceManipulation)
+							{
+								((ISpecialForceManipulation) newTile).postMove();
+							}
 						}
 						else
 						{

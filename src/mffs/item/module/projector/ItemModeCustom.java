@@ -29,6 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemModeCustom extends ItemMode implements ICache
 {
 	private static final String NBT_ID = "id";
+	private static final String NBT_MODE = "mode";
 	private static final String NBT_POINT_1 = "point1";
 	private static final String NBT_POINT_2 = "point2";
 	private static final String NBT_FIELD_BLOCK_LIST = "fieldPoints";
@@ -47,6 +48,8 @@ public class ItemModeCustom extends ItemMode implements ICache
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+
+		list.add("Mode: " + (nbt.getBoolean(NBT_MODE) ? "Additive" : "Substraction"));
 
 		Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
 		list.add("Point 1: " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
@@ -117,7 +120,23 @@ public class ItemModeCustom extends ItemMode implements ICache
 							Vector3 minPoint = new Vector3(Math.min(point1.x, point2.x), Math.min(point1.y, point2.y), Math.min(point1.z, point2.z));
 							Vector3 maxPoint = new Vector3(Math.max(point1.x, point2.x), Math.max(point1.y, point2.y), Math.max(point1.z, point2.z));
 
-							NBTTagList list = new NBTTagList();
+							NBTTagCompound saveNBT = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
+
+							if (saveNBT == null)
+							{
+								saveNBT = new NBTTagCompound();
+							}
+
+							NBTTagList list;
+
+							if (saveNBT.hasKey(NBT_FIELD_BLOCK_LIST))
+							{
+								list = (NBTTagList) saveNBT.getTag(NBT_FIELD_BLOCK_LIST);
+							}
+							else
+							{
+								list = new NBTTagList();
+							}
 
 							for (int x = minPoint.intX(); x <= maxPoint.intX(); x++)
 							{
@@ -131,17 +150,31 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 										if (blockID > 0)
 										{
-											NBTTagCompound vectorTag = new NBTTagCompound();
-											position.writeToNBT(vectorTag);
-											vectorTag.setInteger(NBT_FIELD_BLOCK_ID, blockID);
-											vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world));
-											list.appendTag(vectorTag);
+											if (nbt.getBoolean(NBT_MODE))
+											{
+												NBTTagCompound vectorTag = new NBTTagCompound();
+												position.writeToNBT(vectorTag);
+												vectorTag.setInteger(NBT_FIELD_BLOCK_ID, blockID);
+												vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world));
+												list.appendTag(vectorTag);
+											}
+											else
+											{
+												for (int i = 0; i < list.tagCount(); i++)
+												{
+													Vector3 vector = Vector3.readFromNBT((NBTTagCompound) list.tagAt(i));
+
+													if (vector.equals(position))
+													{
+														list.removeTag(i);
+													}
+												}
+											}
 										}
 									}
 								}
 							}
 
-							NBTTagCompound saveNBT = new NBTTagCompound();
 							saveNBT.setTag(NBT_FIELD_BLOCK_LIST, list);
 
 							nbt.setInteger(NBT_FIELD_SIZE, list.tagCount());
@@ -153,6 +186,17 @@ public class ItemModeCustom extends ItemMode implements ICache
 							entityPlayer.addChatMessage("Field structure saved.");
 						}
 					}
+				}
+			}
+			else
+			{
+
+				NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+
+				if (nbt != null)
+				{
+					nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE));
+					entityPlayer.addChatMessage("Changed selection mode to " + (nbt.getBoolean(NBT_MODE) ? "additive" : "substraction"));
 				}
 			}
 		}

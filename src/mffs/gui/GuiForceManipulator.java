@@ -1,12 +1,18 @@
 package mffs.gui;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
+import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.tileentity.TileEntityForceManipulator;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
+import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.vector.Region2;
 
 public class GuiForceManipulator extends GuiBase
@@ -25,7 +31,8 @@ public class GuiForceManipulator extends GuiBase
 		this.textFieldPos = new Vector2(48, 91);
 		super.initGui();
 
-		this.buttonList.clear();
+		this.buttonList.add(new GuiButton(1, this.width / 2 + 15, this.height / 2 - 20, 40, 20, "Reset"));
+
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
 		this.tooltips.put(new Region2(new Vector2(90, 17), new Vector2(90, 17).add(18)), "Up");
@@ -133,5 +140,16 @@ public class GuiForceManipulator extends GuiBase
 
 		// Fortron Bar
 		this.drawForce(8, 120, Math.min((float) this.tileEntity.getFortronEnergy() / (float) this.tileEntity.getFortronCapacity(), 1));
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton guiButton)
+	{
+		super.actionPerformed(guiButton);
+
+		if (this.frequencyTile != null && guiButton.id == 1)
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
+		}
 	}
 }

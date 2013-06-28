@@ -8,9 +8,13 @@ import mffs.BlockSetDelayedEvent;
 import mffs.BlockSneakySetDelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.ForceManipulatorBlacklist;
+import mffs.api.ForceManipulator;
+import mffs.api.ForceManipulator.ISpecialForceManipulation;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
@@ -41,21 +45,38 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			if (this.manipulationVectors != null && !this.isCalculatingManipulation)
 			{
+				/**
+				 * This section is called when blocks set events are set and animation packets are
+				 * to be sent.
+				 */
 				ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+				NBTTagCompound nbt = new NBTTagCompound();
+				NBTTagList nbtList = new NBTTagList();
 
 				for (Vector3 position : this.manipulationVectors)
 				{
-					this.moveBlock(position, dir);
+					if (this.moveBlock(position, dir))
+					{
+						nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+					}
 				}
 
-				this.updatePushedObjects(5);
+				nbt.setByte("type", (byte) 2);
+				nbt.setTag("list", nbtList);
 
+				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+
+				this.anchor = this.anchor.modifyPositionFromSide(dir);
+
+				this.updatePushedObjects(5);
 				this.manipulationVectors = null;
+				this.onInventoryChanged();
 			}
 
-			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost() * 100, false) > 0)
+			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
 			{
-				this.requestFortron(this.getFortronCost() * 100, true);
+				this.requestFortron(this.getFortronCost(), true);
 				// Start multi-threading calculations
 				(new ManipulatorCalculationThread(this)).start();
 
@@ -70,13 +91,21 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			// Manipulation area preview
 			if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS)
 			{
+				NBTTagCompound nbt = new NBTTagCompound();
+				NBTTagList nbtList = new NBTTagList();
+
 				for (Vector3 position : this.getInteriorPoints())
 				{
 					if (position.getBlockID(this.worldObj) > 0)
 					{
-						PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), worldObj, position, 50);
+						nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 					}
 				}
+
+				nbt.setByte("type", (byte) 1);
+				nbt.setTag("list", nbtList);
+
+				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
 			}
 		}
 	}
@@ -91,10 +120,36 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		 */
 		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
 		{
-			Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()).add(0.5);
-			ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+			NBTTagCompound nbt = PacketManager.readNBTTagCompound(dataStream);
+			byte type = nbt.getByte("type");
 
+			NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
+
+			for (int i = 0; i < nbtList.tagCount(); i++)
+			{
+				Vector3 vector = Vector3.readFromNBT((NBTTagCompound) nbtList.tagAt(i)).add(0.5);
+
+				if (type == 1)
+				{
+					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+				}
+				else if (type == 2)
+				{
+					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+				}
+			}
 		}
+		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal() && !this.worldObj.isRemote)
+		{
+			this.anchor = new Vector3(this);
+			this.onInventoryChanged();
+		}
+	}
+
+	@Override
+	public int getFortronCost()
+	{
+		return super.getFortronCost() * 100;
 	}
 
 	@Override
@@ -117,7 +172,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			if (position.getBlockID(this.worldObj) > 0)
 			{
-				if (ForceManipulatorBlacklist.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
+				if (ForceManipulator.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
 				{
 					return false;
 				}
@@ -134,7 +189,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				int blockID = targetPosition.getBlockID(this.worldObj);
 
-				if (!(blockID == 0 || (blockID > 0 && Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()))))
+				if (!(blockID == 0 || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || Block.blocksList[blockID] instanceof BlockFluid))))
 				{
 					return false;
 				}
@@ -144,7 +199,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		return true;
 	}
 
-	protected void moveBlock(Vector3 position, ForgeDirection direction)
+	protected boolean moveBlock(Vector3 position, ForgeDirection direction)
 	{
 		if (!this.worldObj.isRemote)
 		{
@@ -157,12 +212,22 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			{
 				if (Block.blocksList[blockID].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) != -1 && tileEntity != this)
 				{
+					if (tileEntity instanceof ISpecialForceManipulation)
+					{
+						if (!((ISpecialForceManipulation) tileEntity).preMove(newPosition.intX(), newPosition.intY(), newPosition.intZ()))
+						{
+							return false;
+						}
+					}
+
 					this.getDelayedEvents().add(new BlockSneakySetDelayedEvent(ANIMATION_TIME - 1, this.worldObj, position, 0, 0));
 					this.getDelayedEvents().add(new BlockSetDelayedEvent(ANIMATION_TIME, this.worldObj, position, newPosition));
-					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), worldObj, position, 50);
+					return true;
 				}
 			}
 		}
+
+		return false;
 	}
 
 	public void updatePushedObjects(float amount)
@@ -174,7 +239,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			@SuppressWarnings("unchecked")
 			List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, axisalignedbb);
-			System.out.println(entities.size() + " vs " + axisalignedbb);
+
 			for (Entity entity : entities)
 			{
 				entity.moveEntity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
@@ -191,6 +256,12 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		Vector3 maxScale = new Vector3(Math.max(positiveScale.x, negativeScale.x), Math.max(positiveScale.y, negativeScale.y), Math.max(positiveScale.z, negativeScale.z));
 
 		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
+	}
+
+	@Override
+	public Vector3 getTranslation()
+	{
+		return super.getTranslation().add(Vector3.subtract(this.anchor, new Vector3(this)));
 	}
 
 	@Override
