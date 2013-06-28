@@ -1,11 +1,11 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import mffs.BlockSetDelayedEvent;
+import mffs.BlockSneakySetDelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ForceManipulatorBlacklist;
@@ -24,36 +24,40 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	private static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
 
+	public boolean isCalculatingManipulation = false;
+	public Set<Vector3> manipulationVectors = null;
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		if (anchor == null)
+		if (this.anchor == null)
 		{
-			anchor = new Vector3(this);
+			this.anchor = new Vector3(this);
 		}
 
 		if (!this.worldObj.isRemote && this.getMode() != null)
 		{
-			if (this.isActive() && this.ticks % 20 == 0)
+			if (this.manipulationVectors != null && !this.isCalculatingManipulation)
 			{
-				/**
-				 * Move
-				 */
 				ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 
-				Set<Vector3> mobilizationPoints = this.getInteriorPoints();
-
-				if (canMove())
+				for (Vector3 position : this.manipulationVectors)
 				{
-					this.updatePushedObjects(1, 0.25f);
-
-					for (Vector3 position : mobilizationPoints)
-					{
-						this.moveBlock(position, dir);
-					}
+					this.moveBlock(position, dir);
 				}
+
+				this.updatePushedObjects(5);
+
+				this.manipulationVectors = null;
+			}
+
+			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost() * 100, false) > 0)
+			{
+				this.requestFortron(this.getFortronCost() * 100, true);
+				// Start multi-threading calculations
+				(new ManipulatorCalculationThread(this)).start();
 
 				this.setActive(false);
 			}
@@ -153,48 +157,40 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			{
 				if (Block.blocksList[blockID].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) != -1 && tileEntity != this)
 				{
+					this.getDelayedEvents().add(new BlockSneakySetDelayedEvent(ANIMATION_TIME - 1, this.worldObj, position, 0, 0));
 					this.getDelayedEvents().add(new BlockSetDelayedEvent(ANIMATION_TIME, this.worldObj, position, newPosition));
-					this.worldObj.removeBlockTileEntity(position.intX(), position.intY(), position.intZ());
-					position.setBlock(this.worldObj, 0);
 					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), position.intX(), position.intY(), position.intZ()), worldObj, position, 50);
 				}
 			}
 		}
 	}
 
-	private void updatePushedObjects(float distance, float amount)
+	public void updatePushedObjects(float amount)
 	{
 		ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-		AxisAlignedBB axisalignedbb = this.getSearchAxisAlignedBB(distance, dir.ordinal());
+		AxisAlignedBB axisalignedbb = this.getSearchAxisAlignedBB();
 
 		if (axisalignedbb != null)
 		{
-			List<Entity> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
-
-			Iterator<Entity> iterator = list.iterator();
-
-			while (iterator.hasNext())
+			@SuppressWarnings("unchecked")
+			List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, axisalignedbb);
+			System.out.println(entities.size() + " vs " + axisalignedbb);
+			for (Entity entity : entities)
 			{
-				Entity entity = iterator.next();
 				entity.moveEntity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
 			}
 		}
 	}
 
-	public AxisAlignedBB getSearchAxisAlignedBB(float distance, int direction)
+	public AxisAlignedBB getSearchAxisAlignedBB()
 	{
-		AxisAlignedBB axisalignedbb = this.getBlockType().getCollisionBoundingBoxFromPool(worldObj, xCoord, yCoord, zCoord);
+		Vector3 positiveScale = new Vector3(this).add(this.getTranslation()).add(this.getPositiveScale());
+		Vector3 negativeScale = new Vector3(this).add(this.getTranslation()).subtract(this.getTranslation());
 
-		if (axisalignedbb == null)
-		{
-			return null;
-		}
-		else
-		{
-			axisalignedbb.maxY += distance;
-			return axisalignedbb;
-		}
+		Vector3 minScale = new Vector3(Math.min(positiveScale.x, negativeScale.x), Math.min(positiveScale.y, negativeScale.y), Math.min(positiveScale.z, negativeScale.z));
+		Vector3 maxScale = new Vector3(Math.max(positiveScale.x, negativeScale.x), Math.max(positiveScale.y, negativeScale.y), Math.max(positiveScale.z, negativeScale.z));
 
+		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
 	}
 
 	@Override

@@ -1,13 +1,10 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-import mffs.DelayedEvent;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ICache;
