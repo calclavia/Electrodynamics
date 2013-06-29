@@ -312,7 +312,7 @@ public class ModularForceFieldSystem
 		/**
 		 * Load language file(s)
 		 */
-		LOGGER.fine("Language(s) Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US", "zh_CN", "de_DE" }));
+		LOGGER.fine("Language(s) Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US", "zh_CN" }));
 
 		/**
 		 * Write metadata information
