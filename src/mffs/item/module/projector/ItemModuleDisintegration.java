@@ -2,6 +2,7 @@ package mffs.item.module.projector;
 
 import java.util.Set;
 
+import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IProjector;
 import mffs.base.TileEntityBase.TilePacketType;
@@ -48,11 +49,11 @@ public class ItemModuleDisintegration extends ItemModule
 
 				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCollection) > 0)
 				{
-					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockInventoryDropDelayedEvent(39, block, tileEntity.worldObj, position, (TileEntityInventory) projector));
+					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockInventoryDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position, (TileEntityInventory) projector));
 				}
 				else
 				{
-					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent(39, block, tileEntity.worldObj, position));
+					((TileEntityForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position));
 				}
 
 				if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)

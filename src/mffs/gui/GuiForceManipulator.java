@@ -134,7 +134,7 @@ public class GuiForceManipulator extends GuiBase
 		{
 			for (int ySlot = 0; ySlot < 3; ySlot++)
 			{
-				this.drawSlot(18 + 18 * xSlot, 20 + 18 * ySlot);
+				this.drawSlot(35 + 18 * xSlot, 20 + 18 * ySlot);
 			}
 		}
 

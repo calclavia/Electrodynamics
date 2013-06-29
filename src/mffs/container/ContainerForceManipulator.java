@@ -43,7 +43,7 @@ public class ContainerForceManipulator extends ContainerBase
 		{
 			for (int ySlot = 0; ySlot < 3; ySlot++)
 			{
-				this.addSlotToContainer(new SlotBase(tileEntity, i, 19 + 18 * xSlot, 21 + 18 * ySlot));
+				this.addSlotToContainer(new SlotBase(tileEntity, i, 36 + 18 * xSlot, 21 + 18 * ySlot));
 				i++;
 			}
 		}

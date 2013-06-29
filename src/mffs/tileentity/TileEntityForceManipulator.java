@@ -8,8 +8,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ForceManipulator;
 import mffs.api.ForceManipulator.ISpecialForceManipulation;
-import mffs.event.BlockSetDelayedEvent;
-import mffs.event.BlockSneakySetDelayedEvent;
+import mffs.event.BlockPreMoveDelayedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;
@@ -25,7 +24,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
-	private static final int ANIMATION_TIME = 20;
+	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
 
 	public boolean isCalculatingManipulation = false;
@@ -34,6 +33,15 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	@Override
 	public void updateEntity()
 	{
+		/**
+		 * Sort delayed events to prioritize sneaky block sets.
+		 * 
+		 * Collections.sort(this.getDelayedEvents(), new Comparator<DelayedEvent>() { public int
+		 * compare(DelayedEvent o1, DelayedEvent o2) { if (o1.getPriority() == o2.getPriority()) {
+		 * return 0; }
+		 * 
+		 * return o1.getPriority() < o2.getPriority() ? -1 : 1; } });
+		 */
 		super.updateEntity();
 
 		if (this.anchor == null)
@@ -41,73 +49,84 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			this.anchor = new Vector3(this);
 		}
 
-		if (!this.worldObj.isRemote && this.getMode() != null)
+		if (this.getMode() != null)
 		{
-			if (this.manipulationVectors != null && !this.isCalculatingManipulation)
+			if (!this.worldObj.isRemote)
 			{
-				/**
-				 * This section is called when blocks set events are set and animation packets are
-				 * to be sent.
-				 */
-				ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-
-				NBTTagCompound nbt = new NBTTagCompound();
-				NBTTagList nbtList = new NBTTagList();
-
-				for (Vector3 position : this.manipulationVectors)
+				if (this.manipulationVectors != null && !this.isCalculatingManipulation)
 				{
-					if (this.moveBlock(position, dir))
+					/**
+					 * This section is called when blocks set events are set and animation packets
+					 * are to be sent.
+					 */
+					ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+
+					NBTTagCompound nbt = new NBTTagCompound();
+					NBTTagList nbtList = new NBTTagList();
+
+					for (Vector3 position : this.manipulationVectors)
 					{
-						nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+						if (this.moveBlock(position, dir))
+						{
+							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+						}
 					}
+
+					nbt.setByte("type", (byte) 2);
+					nbt.setTag("list", nbtList);
+
+					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+
+					this.anchor = this.anchor.modifyPositionFromSide(dir);
+
+					this.updatePushedObjects(5);
+					this.manipulationVectors = null;
+					this.onInventoryChanged();
 				}
-
-				nbt.setByte("type", (byte) 2);
-				nbt.setTag("list", nbtList);
-
-				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
-
-				this.anchor = this.anchor.modifyPositionFromSide(dir);
-
-				this.updatePushedObjects(5);
-				this.manipulationVectors = null;
-				this.onInventoryChanged();
 			}
 
 			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
 			{
-				this.requestFortron(this.getFortronCost(), true);
-				// Start multi-threading calculations
-				(new ManipulatorCalculationThread(this)).start();
+				if (!this.worldObj.isRemote)
+				{
+					this.requestFortron(this.getFortronCost(), true);
+					// Start multi-threading calculations
+					(new ManipulatorCalculationThread(this)).start();
+				}
+				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 
 				this.setActive(false);
 			}
 
-			if (!this.isCalculated)
+			if (!this.worldObj.isRemote)
 			{
-				this.calculateForceField();
-			}
-
-			// Manipulation area preview
-			if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS)
-			{
-				NBTTagCompound nbt = new NBTTagCompound();
-				NBTTagList nbtList = new NBTTagList();
-
-				for (Vector3 position : this.getInteriorPoints())
+				if (!this.isCalculated)
 				{
-					if (position.getBlockID(this.worldObj) > 0)
-					{
-						nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
-					}
+					this.calculateForceField();
 				}
 
-				nbt.setByte("type", (byte) 1);
-				nbt.setTag("list", nbtList);
+				// Manipulation area preview
+				if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.getDelayedEvents().size() <= 0)
+				{
+					NBTTagCompound nbt = new NBTTagCompound();
+					NBTTagList nbtList = new NBTTagList();
 
-				PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+					for (Vector3 position : this.getInteriorPoints())
+					{
+						if (position.getBlockID(this.worldObj) > 0)
+						{
+							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+						}
+					}
+
+					nbt.setByte("type", (byte) 1);
+					nbt.setTag("list", nbtList);
+
+					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+				}
 			}
 		}
+
 	}
 
 	@Override
@@ -149,7 +168,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	@Override
 	public int getFortronCost()
 	{
-		return super.getFortronCost() * 100;
+		return super.getFortronCost() * 1000;
 	}
 
 	@Override
@@ -220,8 +239,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 						}
 					}
 
-					this.getDelayedEvents().add(new BlockSneakySetDelayedEvent(ANIMATION_TIME - 1, this.worldObj, position, 0, 0));
-					this.getDelayedEvents().add(new BlockSetDelayedEvent(ANIMATION_TIME, this.worldObj, position, newPosition));
+					this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, ANIMATION_TIME, this.worldObj, position, newPosition));
 					return true;
 				}
 			}

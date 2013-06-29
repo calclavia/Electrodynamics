@@ -32,6 +32,8 @@ public class ForceManipulator
 		 */
 		public boolean preMove(int x, int y, int z);
 
+		public void move(int x, int y, int z);
+
 		/**
 		 * Called after the TileEntity is moved.
 		 */

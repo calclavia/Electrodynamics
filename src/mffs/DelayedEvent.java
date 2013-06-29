@@ -3,9 +3,11 @@ package mffs;
 public abstract class DelayedEvent
 {
 	public int ticks = 0;
+	protected IDelayedEventHandler handler;
 
-	public DelayedEvent(int ticks)
+	public DelayedEvent(IDelayedEventHandler handler, int ticks)
 	{
+		this.handler = handler;
 		this.ticks = ticks;
 	}
 
@@ -19,5 +21,15 @@ public abstract class DelayedEvent
 		{
 			this.onEvent();
 		}
+	}
+
+	/**
+	 * The higher the number, the higher the priority.
+	 * 
+	 * @return
+	 */
+	public int getPriority()
+	{
+		return 0;
 	}
 }

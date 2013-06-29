@@ -25,7 +25,7 @@ public class ManipulatorHelper
 	public static final String[] CHUNK_PROPOGATE_SKY_LIGHT_OCCLUSION = { "propagateSkylightOcclusion", "func_76595_e" };
 
 	/**
-	 * Sets a block in a hacky way to bypass some restraints.
+	 * Sets a block in a sneaky way to bypass some restraints.
 	 * 
 	 * @param world
 	 * @param position
@@ -33,7 +33,7 @@ public class ManipulatorHelper
 	 * @param metadata
 	 * @param tileEntity
 	 */
-	public static void setBlock(World world, Vector3 position, int id, int metadata, TileEntity tileEntity)
+	public static void setBlockSneaky(World world, Vector3 position, int id, int metadata, TileEntity tileEntity)
 	{
 		Chunk chunk = world.getChunkFromChunkCoords(position.intX() >> 4, position.intZ() >> 4);
 		Vector3 chunkPosition = new Vector3(position.intX() & 0xF, position.intY() & 0xF, position.intZ() & 0xF);

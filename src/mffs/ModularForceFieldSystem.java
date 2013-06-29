@@ -130,7 +130,7 @@ public class ModularForceFieldSystem
 	 */
 	public static BlockMachine blockCoercionDeriver, blockFortronCapacitor,
 			blockForceFieldProjector, blockBiometricIdentifier, blockInterdictionMatrix,
-			blockMobilizer;
+			blockForceManipulator;
 
 	public static BlockBase blockForceField;
 
@@ -199,7 +199,7 @@ public class ModularForceFieldSystem
 		blockForceFieldProjector = new BlockForceFieldProjector(Settings.getNextBlockID());
 		blockBiometricIdentifier = new BlockBiometricIdentifier(Settings.getNextBlockID());
 		blockInterdictionMatrix = new BlockInterdictionMatrix(Settings.getNextBlockID());
-		blockMobilizer = new BlockForceManipulator(Settings.getNextBlockID());
+		blockForceManipulator = new BlockForceManipulator(Settings.getNextBlockID());
 
 		/**
 		 * Items
@@ -279,7 +279,7 @@ public class ModularForceFieldSystem
 		GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBiometricIdentifier, blockBiometricIdentifier.getUnlocalizedName());
 		GameRegistry.registerBlock(blockInterdictionMatrix, blockInterdictionMatrix.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMobilizer, blockMobilizer.getUnlocalizedName());
+		GameRegistry.registerBlock(blockForceManipulator, blockForceManipulator.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
@@ -287,7 +287,7 @@ public class ModularForceFieldSystem
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityForceManipulator.class, blockMobilizer.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityForceManipulator.class, blockForceManipulator.getUnlocalizedName());
 
 		proxy.preInit();
 	}
@@ -354,6 +354,8 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBiometricIdentifier), "FMF", "MCM", "FMF", 'C', itemCardBlank, 'M', UniversalRecipes.PRIMARY_METAL, 'F', itemFocusMatix));
 		// Interdiction Matrix
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInterdictionMatrix), "SSS", "FFF", "FEF", 'S', itemModuleShock, 'E', Block.enderChest, 'F', itemFocusMatix));
+		// Force Manipulator
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceManipulator), "F F", "FMF", "F F", 'F', itemFocusMatix, 'M', UniversalRecipes.MOTOR));
 
 		// -- Cards --
 		// Blank

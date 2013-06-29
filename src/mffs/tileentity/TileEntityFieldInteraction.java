@@ -30,26 +30,36 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 	protected boolean isCalculated = false;
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
 	private final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
+	private final List<DelayedEvent> quedDelayedEvents = new ArrayList<DelayedEvent>();
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		Iterator<DelayedEvent> it = this.delayedEvents.iterator();
-
-		while (it.hasNext())
+		if (this.delayedEvents.size() > 0)
 		{
-			DelayedEvent evt = it.next();
+			do
+			{
+				this.quedDelayedEvents.clear();
 
-			if (evt.ticks <= 0)
-			{
-				it.remove();
+				Iterator<DelayedEvent> it = this.delayedEvents.iterator();
+
+				while (it.hasNext())
+				{
+					DelayedEvent evt = it.next();
+
+					evt.update();
+
+					if (evt.ticks <= 0)
+					{
+						it.remove();
+					}
+				}
+
+				this.delayedEvents.addAll(this.quedDelayedEvents);
 			}
-			else
-			{
-				evt.update();
-			}
+			while (!this.quedDelayedEvents.isEmpty());
 		}
 	}
 
@@ -386,5 +396,11 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 	public List<DelayedEvent> getDelayedEvents()
 	{
 		return this.delayedEvents;
+	}
+
+	@Override
+	public List<DelayedEvent> getQuedDelayedEvents()
+	{
+		return this.quedDelayedEvents;
 	}
 }
