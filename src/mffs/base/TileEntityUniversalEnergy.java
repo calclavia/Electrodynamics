@@ -1,7 +1,9 @@
 package mffs.base;
 
 import ic2.api.Direction;
+import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileSourceEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySource;
 
 import java.util.EnumSet;
@@ -38,6 +40,20 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
 			}
 		}
+	}
+
+	@Override
+	public void initiate()
+	{
+		super.initiate();
+		MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+	}
+
+	@Override
+	public void invalidate()
+	{
+		MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+		super.invalidate();
 	}
 
 	@Override
