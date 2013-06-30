@@ -1,9 +1,5 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 import mffs.MFFSHelper;
 import mffs.Settings;
 import mffs.TransferMode;
@@ -21,8 +17,6 @@ import net.minecraftforge.liquids.LiquidStack;
 import net.minecraftforge.liquids.LiquidTank;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
-
-import com.google.common.io.ByteArrayDataInput;
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -54,29 +48,6 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 		// Let remaining Fortron escape.
 		MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
 		super.invalidate();
-	}
-
-	/**
-	 * Packet Methods
-	 */
-	@Override
-	public List getPacketUpdate()
-	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
-		objects.add(FortronHelper.getAmount(this.fortronTank.getLiquid()));
-		return objects;
-	}
-
-	@Override
-	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
-	{
-		super.onReceivePacket(packetID, dataStream);
-
-		if (packetID == TilePacketType.DESCRIPTION.ordinal())
-		{
-			this.fortronTank.setLiquid(FortronHelper.getFortron(dataStream.readInt()));
-		}
 	}
 
 	/**

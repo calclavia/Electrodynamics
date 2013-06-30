@@ -1,7 +1,6 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,25 +38,6 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
-
-	/**
-	 * Packet Methods
-	 */
-	@Override
-	public List getPacketUpdate()
-	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
-
-		if (this.anchor != null)
-		{
-			objects.add(this.anchor.intX());
-			objects.add(this.anchor.intY());
-			objects.add(this.anchor.intZ());
-		}
-		
-		return objects;
-	}
 
 	@Override
 	public void updateEntity()
@@ -154,12 +134,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TilePacketType.DESCRIPTION.ordinal())
-		{
-			//this.anchor = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
-			// this.displayMode = dataStream.readBoolean();
-		}
-		else if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
 		{
 			/**
 			 * Holographic FXs
