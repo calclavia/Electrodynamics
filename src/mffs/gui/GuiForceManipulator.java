@@ -1,5 +1,7 @@
 package mffs.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
 import mffs.base.TileEntityBase.TilePacketType;
@@ -63,6 +65,12 @@ public class GuiForceManipulator extends GuiBase
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
+
+		GL11.glPushMatrix();
+		GL11.glRotatef(-90, 0, 0, 1);
+		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -90, 10, 4210752);
+
+		GL11.glPopMatrix();
 
 		this.fontRenderer.drawString("Anchor:", 30, 60, 4210752);
 

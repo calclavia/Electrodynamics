@@ -38,24 +38,11 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 	}
 
 	@Override
-	public List getPacketUpdate()
-	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
-		objects.add(this.getFrequency());
-		return objects;
-	}
-
-	@Override
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TilePacketType.DESCRIPTION.ordinal())
-		{
-			this.setFrequency(dataStream.readInt());
-		}
-		else if (packetID == TilePacketType.FREQUENCY.ordinal())
+		if (packetID == TilePacketType.FREQUENCY.ordinal())
 		{
 			this.setFrequency(dataStream.readInt());
 		}

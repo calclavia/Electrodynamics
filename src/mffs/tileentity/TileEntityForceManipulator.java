@@ -79,7 +79,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					this.anchor = this.anchor.modifyPositionFromSide(dir);
 
-					this.updatePushedObjects(5);
+					this.updatePushedObjects(0.022f);
 					this.manipulationVectors = null;
 					this.onInventoryChanged();
 				}
@@ -93,7 +93,11 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					// Start multi-threading calculations
 					(new ManipulatorCalculationThread(this)).start();
 				}
-				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+
+				if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
+				{
+					this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+				}
 
 				this.setActive(false);
 			}
@@ -154,7 +158,9 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				}
 				else if (type == 2)
 				{
+					// Red
 					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+					this.updatePushedObjects(0.022f);
 				}
 			}
 		}
@@ -264,7 +270,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 			for (Entity entity : entities)
 			{
-				entity.moveEntity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
+				entity.addVelocity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
 			}
 		}
 	}
@@ -272,7 +278,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	public AxisAlignedBB getSearchAxisAlignedBB()
 	{
 		Vector3 positiveScale = new Vector3(this).add(this.getTranslation()).add(this.getPositiveScale());
-		Vector3 negativeScale = new Vector3(this).add(this.getTranslation()).subtract(this.getTranslation());
+		Vector3 negativeScale = new Vector3(this).add(this.getTranslation()).subtract(this.getNegativeScale());
 
 		Vector3 minScale = new Vector3(Math.min(positiveScale.x, negativeScale.x), Math.min(positiveScale.y, negativeScale.y), Math.min(positiveScale.z, negativeScale.z));
 		Vector3 maxScale = new Vector3(Math.max(positiveScale.x, negativeScale.x), Math.max(positiveScale.y, negativeScale.y), Math.max(positiveScale.z, negativeScale.z));

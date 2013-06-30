@@ -44,16 +44,16 @@ public class BlockForceManipulator extends BlockMachine
 		int metadata = determineOrientation(world, x, y, z, (EntityPlayer) par5EntityLiving);
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 	}
-	
 
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		/**
-		 * NOTE! This will rotate the block only in all 4 horizontal directions. If your block
-		 * rotates up or down, you should override this.
-		 */
-		this.setDirection(world, x, y, z, ForgeDirection.getOrientation(ForgeDirection.ROTATION_MATRIX[0][this.getDirection(world, x, y, z).ordinal()]));
+		int mask = 0x7;
+		int rotMeta = world.getBlockMetadata(x, y, z);
+		int masked = rotMeta & ~mask;
+		ForgeDirection orientation = ForgeDirection.getOrientation(rotMeta & mask);
+		ForgeDirection rotated = orientation.getRotation(ForgeDirection.getOrientation(side));
+		world.setBlockMetadataWithNotify(x, y, z, rotated.ordinal() & mask | masked, 3);
 		return true;
 	}
 
