@@ -31,8 +31,11 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
 	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
-	
 
+	/**
+	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
+	 */
+	public int displayMode = 1;
 
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
@@ -45,9 +48,14 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	{
 		List objects = new LinkedList();
 		objects.addAll(super.getPacketUpdate());
-		objects.add(this.anchor.intX());
-		objects.add(this.anchor.intY());
-		objects.add(this.anchor.intZ());
+
+		if (this.anchor != null)
+		{
+			objects.add(this.anchor.intX());
+			objects.add(this.anchor.intY());
+			objects.add(this.anchor.intZ());
+		}
+		
 		return objects;
 	}
 
@@ -118,14 +126,14 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				}
 
 				// Manipulation area preview
-				if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.getDelayedEvents().size() <= 0)
+				if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.getDelayedEvents().size() <= 0 && this.displayMode > 0)
 				{
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
 
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						// if (position.getBlockID(this.worldObj) > 0)
+						if (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 						}
@@ -148,7 +156,8 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
-			this.anchor = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+			//this.anchor = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+			// this.displayMode = dataStream.readBoolean();
 		}
 		else if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
 		{
@@ -178,6 +187,10 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			this.anchor = null;
 			this.onInventoryChanged();
+		}
+		else if (packetID == TilePacketType.TOGGLE_MODE_2.ordinal() && !this.worldObj.isRemote)
+		{
+			this.displayMode = (this.displayMode + 1) % 3;
 		}
 	}
 
@@ -319,13 +332,20 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	{
 		super.readFromNBT(nbt);
 		this.anchor = Vector3.readFromNBT(nbt.getCompoundTag("anchor"));
+		this.displayMode = nbt.getInteger("displayMode");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setCompoundTag("anchor", this.anchor.writeToNBT(new NBTTagCompound()));
+
+		if (this.anchor != null)
+		{
+			nbt.setCompoundTag("anchor", this.anchor.writeToNBT(new NBTTagCompound()));
+		}
+
+		nbt.setInteger("displayMode", this.displayMode);
 	}
 
 	@Override

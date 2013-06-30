@@ -72,7 +72,7 @@ public class GuiBase extends GuiContainer
 	{
 		super.initGui();
 		this.buttonList.clear();
-		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Block.torchRedstoneIdle)));
+		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Block.torchRedstoneIdle), new ItemStack(Block.torchRedstoneActive)));
 
 		Keyboard.enableRepeatEvents(true);
 
@@ -144,14 +144,7 @@ public class GuiBase extends GuiContainer
 		{
 			if (this.buttonList.size() > 0 && this.buttonList.get(0) != null)
 			{
-				if (((TileEntityBase) this.frequencyTile).isActive())
-				{
-					((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneActive);
-				}
-				else
-				{
-					((GuiIcon) this.buttonList.get(0)).itemStack = new ItemStack(Block.torchRedstoneIdle);
-				}
+				((GuiIcon) this.buttonList.get(0)).setIndex(((TileEntityBase) this.frequencyTile).isActive() ? 1 : 0);
 			}
 		}
 	}

@@ -1,10 +1,12 @@
 package mffs.gui.button;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
@@ -12,12 +14,22 @@ import org.lwjgl.opengl.GL11;
 public class GuiIcon extends GuiButton
 {
 	public static RenderItem itemRenderer = new RenderItem();
-	public ItemStack itemStack;
+	public ItemStack[] itemStacks;
 
-	public GuiIcon(int par1, int par2, int par3, ItemStack itemStack)
+	private int index = 0;
+
+	public GuiIcon(int par1, int par2, int par3, ItemStack... itemStacks)
 	{
 		super(par1, par2, par3, 20, 20, "");
-		this.itemStack = itemStack;
+		this.itemStacks = itemStacks;
+	}
+
+	public void setIndex(int i)
+	{
+		if (i >= 0 && i < this.itemStacks.length)
+		{
+			this.index = i;
+		}
 	}
 
 	@Override
@@ -25,9 +37,20 @@ public class GuiIcon extends GuiButton
 	{
 		super.drawButton(par1Minecraft, par2, par3);
 
-		if (this.drawButton)
+		if (this.drawButton && this.itemStacks[this.index] != null)
 		{
-			this.drawItemStack(this.itemStack, this.xPosition, this.yPosition);
+			int yDisplacement = 2;
+
+			if (this.itemStacks[this.index].itemID == Block.torchRedstoneIdle.blockID || this.itemStacks[this.index].itemID == Block.torchRedstoneActive.blockID)
+			{
+				yDisplacement = 0;
+			}
+			else if (this.itemStacks[this.index].getItem() instanceof ItemBlock)
+			{
+				yDisplacement = 3;
+			}
+
+			this.drawItemStack(this.itemStacks[this.index], this.xPosition, this.yPosition + yDisplacement);
 		}
 	}
 

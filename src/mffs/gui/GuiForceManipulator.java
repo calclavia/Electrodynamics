@@ -4,9 +4,13 @@ import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerForceManipulator;
+import mffs.gui.button.GuiIcon;
 import mffs.tileentity.TileEntityForceManipulator;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
@@ -32,6 +36,7 @@ public class GuiForceManipulator extends GuiBase
 		super.initGui();
 
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 60, this.height / 2 - 22, 40, 20, "Reset"));
+		this.buttonList.add(new GuiIcon(2, this.width / 2 - 82, this.height / 2 - 82, null, new ItemStack(Item.redstone), new ItemStack(Block.blockRedstone)));
 
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
@@ -71,6 +76,13 @@ public class GuiForceManipulator extends GuiBase
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 110, x, y);
 		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost(), ElectricUnit.JOULES), 120, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
+	}
+
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		((GuiIcon) this.buttonList.get(2)).setIndex(this.tileEntity.displayMode);
 	}
 
 	@Override
@@ -154,9 +166,13 @@ public class GuiForceManipulator extends GuiBase
 	{
 		super.actionPerformed(guiButton);
 
-		if (this.frequencyTile != null && guiButton.id == 1)
+		if (guiButton.id == 1)
 		{
 			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
+		}
+		else if (guiButton.id == 2)
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_2.ordinal()));
 		}
 	}
 }
