@@ -58,7 +58,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 			{
 				try
 				{
-					ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, this.tileEntity);
+					ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, null);
 
 					if (this.tileEntity != null)
 					{
@@ -79,7 +79,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 						if (Loader.isModLoaded("BuildCraft|Factory"))
 						{
 							/**
-							 * Special quarry compatiblity code.
+							 * Special quarry compatibility code.
 							 */
 							try
 							{

@@ -28,10 +28,10 @@ public class GuiForceManipulator extends GuiBase
 	@Override
 	public void initGui()
 	{
-		this.textFieldPos = new Vector2(48, 91);
+		this.textFieldPos = new Vector2(111, 93);
 		super.initGui();
 
-		this.buttonList.add(new GuiButton(1, this.width / 2 + 15, this.height / 2 - 20, 40, 20, "Reset"));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 60, this.height / 2 - 22, 40, 20, "Reset"));
 
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
@@ -58,7 +58,14 @@ public class GuiForceManipulator extends GuiBase
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
-		this.drawTextWithTooltip("frequency", "%1:", 8, 76, x, y);
+
+		this.fontRenderer.drawString("Anchor:", 30, 60, 4210752);
+
+		if (this.tileEntity.anchor != null)
+		{
+			this.fontRenderer.drawString(this.tileEntity.anchor.intX() + ", " + this.tileEntity.anchor.intY() + ", " + this.tileEntity.anchor.intZ(), 30, 72, 4210752);
+		}
+
 		this.textFieldFrequency.drawTextBox();
 
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 110, x, y);
@@ -72,8 +79,8 @@ public class GuiForceManipulator extends GuiBase
 		super.drawGuiContainerBackgroundLayer(f, x, y);
 
 		// Frequency Card Slot
-		this.drawSlot(9, 88);
-		this.drawSlot(9 + 18, 88);
+		this.drawSlot(72, 90);
+		this.drawSlot(72 + 18, 90);
 
 		/**
 		 * Matrix Slots
@@ -129,12 +136,12 @@ public class GuiForceManipulator extends GuiBase
 			}
 		}
 
-		// Upgrades
-		for (int xSlot = 0; xSlot < 2; xSlot++)
+		// General
+		for (int xSlot = 0; xSlot < 3; xSlot++)
 		{
-			for (int ySlot = 0; ySlot < 3; ySlot++)
+			for (int ySlot = 0; ySlot < 2; ySlot++)
 			{
-				this.drawSlot(35 + 18 * xSlot, 20 + 18 * ySlot);
+				this.drawSlot(30 + 18 * xSlot, 18 + 18 * ySlot);
 			}
 		}
 

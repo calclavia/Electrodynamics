@@ -1,6 +1,7 @@
 package mffs.tileentity;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -8,10 +9,14 @@ import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ForceManipulator;
 import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import mffs.api.modules.IModule;
+import mffs.api.modules.IProjectorMode;
+import mffs.card.ItemCard;
 import mffs.event.BlockPreMoveDelayedEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
@@ -26,27 +31,34 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
 	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
+	
+
 
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
 
+	/**
+	 * Packet Methods
+	 */
+	@Override
+	public List getPacketUpdate()
+	{
+		List objects = new LinkedList();
+		objects.addAll(super.getPacketUpdate());
+		objects.add(this.anchor.intX());
+		objects.add(this.anchor.intY());
+		objects.add(this.anchor.intZ());
+		return objects;
+	}
+
 	@Override
 	public void updateEntity()
 	{
-		/**
-		 * Sort delayed events to prioritize sneaky block sets.
-		 * 
-		 * Collections.sort(this.getDelayedEvents(), new Comparator<DelayedEvent>() { public int
-		 * compare(DelayedEvent o1, DelayedEvent o2) { if (o1.getPriority() == o2.getPriority()) {
-		 * return 0; }
-		 * 
-		 * return o1.getPriority() < o2.getPriority() ? -1 : 1; } });
-		 */
 		super.updateEntity();
 
 		if (this.anchor == null)
 		{
-			this.anchor = new Vector3(this);
+			this.anchor = new Vector3();
 		}
 
 		if (this.getMode() != null)
@@ -113,7 +125,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (position.getBlockID(this.worldObj) > 0)
+						// if (position.getBlockID(this.worldObj) > 0)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 						}
@@ -134,11 +146,15 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		/**
-		 * Holographic FXs
-		 */
-		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
+			this.anchor = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+		}
+		else if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		{
+			/**
+			 * Holographic FXs
+			 */
 			NBTTagCompound nbt = PacketManager.readNBTTagCompound(dataStream);
 			byte type = nbt.getByte("type");
 
@@ -160,7 +176,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		}
 		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal() && !this.worldObj.isRemote)
 		{
-			this.anchor = new Vector3(this);
+			this.anchor = null;
 			this.onInventoryChanged();
 		}
 	}
@@ -277,9 +293,45 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	}
 
 	@Override
+	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	{
+		if (slotID == 0 || slotID == 1)
+		{
+			return itemStack.getItem() instanceof ItemCard;
+		}
+		else if (slotID == MODULE_SLOT_ID)
+		{
+			return itemStack.getItem() instanceof IProjectorMode;
+		}
+		else if (slotID >= 15)
+		{
+			return true;
+		}
+
+		return itemStack.getItem() instanceof IModule;
+	}
+
+	/**
+	 * NBT Methods
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.anchor = Vector3.readFromNBT(nbt.getCompoundTag("anchor"));
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setCompoundTag("anchor", this.anchor.writeToNBT(new NBTTagCompound()));
+	}
+
+	@Override
 	public Vector3 getTranslation()
 	{
-		return super.getTranslation().add(Vector3.subtract(this.anchor, new Vector3(this)));
+		return super.getTranslation().clone().add(this.anchor);
 	}
 
 	@Override

@@ -15,8 +15,8 @@ public class ContainerForceManipulator extends ContainerBase
 		/**
 		 * Frequency Card
 		 */
-		this.addSlotToContainer(new SlotCard(tileEntity, 0, 10, 89));
-		this.addSlotToContainer(new SlotCard(tileEntity, 1, 28, 89));
+		this.addSlotToContainer(new SlotCard(tileEntity, 0, 73, 91));
+		this.addSlotToContainer(new SlotCard(tileEntity, 1, 73 + 18, 91));
 
 		/**
 		 * Force Field Manipulation Matrix. Center slot is the mode.
@@ -39,11 +39,11 @@ public class ContainerForceManipulator extends ContainerBase
 		}
 
 		// Misc Modules
-		for (int xSlot = 0; xSlot < 2; xSlot++)
+		for (int xSlot = 0; xSlot < 3; xSlot++)
 		{
-			for (int ySlot = 0; ySlot < 3; ySlot++)
+			for (int ySlot = 0; ySlot < 2; ySlot++)
 			{
-				this.addSlotToContainer(new SlotBase(tileEntity, i, 36 + 18 * xSlot, 21 + 18 * ySlot));
+				this.addSlotToContainer(new SlotBase(tileEntity, i, 31 + 18 * xSlot, 19 + 18 * ySlot));
 				i++;
 			}
 		}

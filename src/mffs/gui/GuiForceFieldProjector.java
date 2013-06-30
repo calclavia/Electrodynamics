@@ -122,7 +122,7 @@ public class GuiForceFieldProjector extends GuiBase
 			}
 		}
 
-		// Upgrades
+		// General
 		for (int xSlot = 0; xSlot < 3; xSlot++)
 		{
 			for (int ySlot = 0; ySlot < 2; ySlot++)
