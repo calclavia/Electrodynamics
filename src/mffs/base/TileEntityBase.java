@@ -30,7 +30,8 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 {
 	public enum TilePacketType
 	{
-		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS, TOGGLE_MODE_2;
+		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS,
+		TOGGLE_MODE_2, TOGGLE_MODE_3;
 	}
 
 	/**

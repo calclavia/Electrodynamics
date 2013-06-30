@@ -1,7 +1,5 @@
 package mffs.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiBase;
 import mffs.base.TileEntityBase.TilePacketType;
@@ -14,6 +12,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+
+import org.lwjgl.opengl.GL11;
+
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
@@ -39,6 +40,7 @@ public class GuiForceManipulator extends GuiBase
 
 		this.buttonList.add(new GuiButton(1, this.width / 2 - 60, this.height / 2 - 22, 40, 20, "Reset"));
 		this.buttonList.add(new GuiIcon(2, this.width / 2 - 82, this.height / 2 - 82, null, new ItemStack(Item.redstone), new ItemStack(Block.blockRedstone)));
+		this.buttonList.add(new GuiIcon(3, this.width / 2 - 82, this.height / 2 - 60, null, new ItemStack(Block.anvil)));
 
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
@@ -68,8 +70,7 @@ public class GuiForceManipulator extends GuiBase
 
 		GL11.glPushMatrix();
 		GL11.glRotatef(-90, 0, 0, 1);
-		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -90, 10, 4210752);
-
+		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -100, 10, 4210752);
 		GL11.glPopMatrix();
 
 		this.fontRenderer.drawString("Anchor:", 30, 60, 4210752);
@@ -91,6 +92,7 @@ public class GuiForceManipulator extends GuiBase
 	{
 		super.updateScreen();
 		((GuiIcon) this.buttonList.get(2)).setIndex(this.tileEntity.displayMode);
+		((GuiIcon) this.buttonList.get(3)).setIndex(this.tileEntity.doAnchor ? 1 : 0);
 	}
 
 	@Override
@@ -181,6 +183,10 @@ public class GuiForceManipulator extends GuiBase
 		else if (guiButton.id == 2)
 		{
 			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_2.ordinal()));
+		}
+		else if (guiButton.id == 3)
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_3.ordinal()));
 		}
 	}
 }

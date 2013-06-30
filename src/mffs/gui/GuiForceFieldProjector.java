@@ -1,5 +1,7 @@
 package mffs.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import mffs.base.GuiBase;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.tileentity.TileEntityForceFieldProjector;
@@ -50,6 +52,12 @@ public class GuiForceFieldProjector extends GuiBase
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
+		
+		GL11.glPushMatrix();
+		GL11.glRotatef(-90, 0, 0, 1);
+		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -63, 8, 4210752);
+		GL11.glPopMatrix();
+
 		this.drawTextWithTooltip("matrix", 32, 20, x, y);
 		this.drawTextWithTooltip("frequency", "%1:", 8, 76, x, y);
 		this.textFieldFrequency.drawTextBox();

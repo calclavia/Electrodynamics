@@ -38,6 +38,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
+	public boolean doAnchor = true;
 
 	@Override
 	public void updateEntity()
@@ -77,8 +78,11 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
 
-					this.anchor = this.anchor.modifyPositionFromSide(dir);
-
+					if (this.doAnchor)
+					{
+						this.anchor = this.anchor.modifyPositionFromSide(dir);
+					}
+					
 					this.updatePushedObjects(0.022f);
 					this.manipulationVectors = null;
 					this.onInventoryChanged();
@@ -173,12 +177,16 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			this.displayMode = (this.displayMode + 1) % 3;
 		}
+		else if (packetID == TilePacketType.TOGGLE_MODE_3.ordinal() && !this.worldObj.isRemote)
+		{
+			this.doAnchor = !this.doAnchor;
+		}
 	}
 
 	@Override
 	public int getFortronCost()
 	{
-		return super.getFortronCost() * 1000;
+		return (int) ((super.getFortronCost() + this.anchor.getMagnitude()) * 1000);
 	}
 
 	@Override
@@ -314,6 +322,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		super.readFromNBT(nbt);
 		this.anchor = Vector3.readFromNBT(nbt.getCompoundTag("anchor"));
 		this.displayMode = nbt.getInteger("displayMode");
+		this.doAnchor = nbt.getBoolean("doAnchor");
 	}
 
 	@Override
@@ -327,6 +336,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		}
 
 		nbt.setInteger("displayMode", this.displayMode);
+		nbt.setBoolean("doAnchor", this.doAnchor);
 	}
 
 	@Override
