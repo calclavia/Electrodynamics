@@ -33,50 +33,54 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 		if (!this.world.isRemote)
 		{
 			this.world.notifyBlocksOfNeighborChange(this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockID(this.world));
+
 			TileEntity newTile = this.position.getTileEntity(this.world);
 
-			if (newTile instanceof ISpecialForceManipulation)
+			if (newTile != null)
 			{
-				((ISpecialForceManipulation) newTile).postMove();
-			}
-
-			if (Loader.isModLoaded("BuildCraft|Factory"))
-			{
-				/**
-				 * Special quarry compatibility code.
-				 */
-				try
+				if (newTile instanceof ISpecialForceManipulation)
 				{
-					Class clazz = Class.forName("buildcraft.factory.TileQuarry");
+					((ISpecialForceManipulation) newTile).postMove();
+				}
 
-					if (clazz == newTile.getClass())
+				if (Loader.isModLoaded("BuildCraft|Factory"))
+				{
+					/**
+					 * Special quarry compatibility code.
+					 */
+					try
 					{
-						ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive");
+						Class clazz = Class.forName("buildcraft.factory.TileQuarry");
+
+						if (clazz == newTile.getClass())
+						{
+							ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive");
+						}
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
 					}
 				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
 
-			if (Loader.isModLoaded("ThermalExpansion"))
-			{
-				/**
-				 * Special conduit compatibility code
-				 */
-				try
+				if (Loader.isModLoaded("ThermalExpansion"))
 				{
-					Class clazz = Class.forName("thermalexpansion.block.conduit.TileConduitRoot");
-
-					if (clazz.isInstance(newTile))
+					/**
+					 * Special conduit compatibility code
+					 */
+					try
 					{
-						clazz.getMethod("onNeighborBlockChange").invoke(newTile);
+						Class clazz = Class.forName("thermalexpansion.block.conduit.TileConduitRoot");
+
+						if (clazz.isInstance(newTile))
+						{
+							clazz.getMethod("checkConnections").invoke(newTile);
+						}
 					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 		}
