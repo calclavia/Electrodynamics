@@ -2,8 +2,12 @@ package mffs.event;
 
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
+import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * Removes the TileEntity
@@ -29,6 +33,52 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 		if (!this.world.isRemote)
 		{
 			this.world.notifyBlocksOfNeighborChange(this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockID(this.world));
+			TileEntity newTile = this.position.getTileEntity(this.world);
+
+			if (newTile instanceof ISpecialForceManipulation)
+			{
+				((ISpecialForceManipulation) newTile).postMove();
+			}
+
+			if (Loader.isModLoaded("BuildCraft|Factory"))
+			{
+				/**
+				 * Special quarry compatibility code.
+				 */
+				try
+				{
+					Class clazz = Class.forName("buildcraft.factory.TileQuarry");
+
+					if (clazz == newTile.getClass())
+					{
+						ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive");
+					}
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+
+			if (Loader.isModLoaded("ThermalExpansion"))
+			{
+				/**
+				 * Special conduit compatibility code
+				 */
+				try
+				{
+					Class clazz = Class.forName("thermalexpansion.block.conduit.TileConduitRoot");
+
+					if (clazz.isInstance(newTile))
+					{
+						clazz.getMethod("onNeighborBlockChange").invoke(newTile);
+					}
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

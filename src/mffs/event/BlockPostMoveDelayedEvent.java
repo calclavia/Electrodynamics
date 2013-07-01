@@ -3,13 +3,10 @@ package mffs.event;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ManipulatorHelper;
-import mffs.api.ForceManipulator.ISpecialForceManipulation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * Sets the new position into the original TileEntities' block.
@@ -68,33 +65,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 						newTile.xCoord = this.newPosition.intX();
 						newTile.yCoord = this.newPosition.intY();
 						newTile.zCoord = this.newPosition.intZ();
-
 						newTile.validate();
-
-						if (newTile instanceof ISpecialForceManipulation)
-						{
-							((ISpecialForceManipulation) newTile).postMove();
-						}
-
-						if (Loader.isModLoaded("BuildCraft|Factory"))
-						{
-							/**
-							 * Special quarry compatibility code.
-							 */
-							try
-							{
-								Class clazz = Class.forName("buildcraft.factory.TileQuarry");
-
-								if (clazz == newTile.getClass())
-								{
-									ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive");
-								}
-							}
-							catch (Exception e)
-							{
-								e.printStackTrace();
-							}
-						}
 					}
 
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
