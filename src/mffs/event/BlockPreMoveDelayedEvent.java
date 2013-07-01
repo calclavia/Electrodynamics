@@ -44,14 +44,14 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 			int blockID = this.position.getBlockID(this.world);
 			int blockMetadata = this.position.getBlockMetadata(this.world);
 
-			ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
-
 			NBTTagCompound tileData = new NBTTagCompound();
 
 			if (tileEntity != null)
 			{
 				tileEntity.writeToNBT(tileData);
 			}
+
+			ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
 
 			this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
 		}

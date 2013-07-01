@@ -55,17 +55,13 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 			{
 				try
 				{
-					ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, null);
-
-					if (this.tileData != null)
+					if (this.tileEntity != null && this.tileData != null)
 					{
-						TileEntity newTile = this.newPosition.getTileEntity(this.world);
-						newTile.readFromNBT(this.tileData);
-						newTile.worldObj = this.world;
-						newTile.xCoord = this.newPosition.intX();
-						newTile.yCoord = this.newPosition.intY();
-						newTile.zCoord = this.newPosition.intZ();
-						newTile.validate();
+						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, TileEntity.createAndLoadEntity(this.tileData));
+					}
+					else
+					{
+						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, null);
 					}
 
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
