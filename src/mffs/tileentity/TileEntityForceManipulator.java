@@ -82,7 +82,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					{
 						this.anchor = this.anchor.modifyPositionFromSide(dir);
 					}
-					
+
 					this.updatePushedObjects(0.022f);
 					this.manipulationVectors = null;
 					this.onInventoryChanged();

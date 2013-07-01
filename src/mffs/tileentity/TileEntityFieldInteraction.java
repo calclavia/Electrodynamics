@@ -314,7 +314,7 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 	@Override
 	public Set<Vector3> getInteriorPoints()
 	{
-		String cacheID = "getInteriorPoints";
+		final String cacheID = "getInteriorPoints";
 
 		if (Settings.USE_CACHE)
 		{
@@ -328,6 +328,7 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 		}
 
 		Set<Vector3> newField = this.getMode().getInteriorPoints(this);
+		Set<Vector3> returnField = new HashSet<Vector3>();
 
 		Vector3 translation = this.getTranslation();
 		int rotationYaw = this.getRotationYaw();
@@ -335,13 +336,17 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 
 		for (Vector3 position : newField)
 		{
+			Vector3 newPosition = position.clone();
+
 			if (rotationYaw != 0 || rotationPitch != 0)
 			{
-				CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
+				CalculationHelper.rotateByAngle(newPosition, rotationYaw, rotationPitch);
 			}
 
-			position.add(new Vector3(this));
-			position.add(translation);
+			newPosition.add(new Vector3(this));
+			newPosition.add(translation);
+
+			returnField.add(newPosition);
 		}
 
 		if (Settings.USE_CACHE)

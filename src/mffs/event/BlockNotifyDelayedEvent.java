@@ -62,26 +62,6 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 						e.printStackTrace();
 					}
 				}
-
-				if (Loader.isModLoaded("ThermalExpansion"))
-				{
-					/**
-					 * Special conduit compatibility code
-					 */
-					try
-					{
-						Class clazz = Class.forName("thermalexpansion.block.conduit.TileConduitRoot");
-
-						if (clazz.isInstance(newTile))
-						{
-							clazz.getMethod("checkConnections").invoke(newTile);
-						}
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
 			}
 		}
 	}

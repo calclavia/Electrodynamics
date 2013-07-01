@@ -84,7 +84,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 			list.add("Hold shift for more...");
 		}
 	}
-
+	
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
@@ -355,7 +355,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public Set<Vector3> getInteriorPoints(IFieldInteraction projector)
 	{
-		return this.getFieldBlocks(projector.getModeStack());
+		return this.getExteriorPoints(projector);
 	}
 
 	@Override
