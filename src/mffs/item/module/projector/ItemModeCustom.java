@@ -321,11 +321,11 @@ public class ItemModeCustom extends ItemMode implements ICache
 					}
 				}
 			}
-		}
 
-		if (Settings.USE_CACHE)
-		{
-			this.cache.put(cacheID, fieldBlocks);
+			if (Settings.USE_CACHE)
+			{
+				this.cache.put(cacheID, fieldBlocks);
+			}
 		}
 
 		return fieldBlocks;

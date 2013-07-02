@@ -54,7 +54,7 @@ public class ManipulatorCalculationThread extends Thread
 
 				for (Vector3 position : mobilizationPoints)
 				{
-					this.manipulator.manipulationVectors.add(position);
+					this.manipulator.manipulationVectors.add(position.clone());
 				}
 			}
 		}

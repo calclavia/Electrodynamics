@@ -327,6 +327,11 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 			}
 		}
 
+		if (this.getModeStack().getItem() instanceof ICache)
+		{
+			((ICache) this.getModeStack().getItem()).clearCache();
+		}
+
 		Set<Vector3> newField = this.getMode().getInteriorPoints(this);
 		Set<Vector3> returnField = new HashSet<Vector3>();
 
@@ -351,10 +356,10 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 
 		if (Settings.USE_CACHE)
 		{
-			this.cache.put(cacheID, newField);
+			this.cache.put(cacheID, returnField);
 		}
 
-		return newField;
+		return returnField;
 	}
 
 	@Override
