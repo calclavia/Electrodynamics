@@ -214,6 +214,16 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					return false;
 				}
 
+				TileEntity tileEntity = position.getTileEntity(this.worldObj);
+
+				if (tileEntity instanceof ISpecialForceManipulation)
+				{
+					if (!((ISpecialForceManipulation) tileEntity).preMove(position.intX(), position.intY(), position.intZ()))
+					{
+						return false;
+					}
+				}
+
 				Vector3 targetPosition = position.clone().modifyPositionFromSide(dir);
 
 				for (Vector3 checkPos : mobilizationPoints)
@@ -245,21 +255,10 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
 
-			if (blockID > 0)
+			if (blockID > 0 && tileEntity != this)
 			{
-				if (Block.blocksList[blockID].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) != -1 && tileEntity != this)
-				{
-					if (tileEntity instanceof ISpecialForceManipulation)
-					{
-						if (!((ISpecialForceManipulation) tileEntity).preMove(newPosition.intX(), newPosition.intY(), newPosition.intZ()))
-						{
-							return false;
-						}
-					}
-
-					this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, ANIMATION_TIME, this.worldObj, position, newPosition));
-					return true;
-				}
+				this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, ANIMATION_TIME, this.worldObj, position, newPosition));
+				return true;
 			}
 		}
 

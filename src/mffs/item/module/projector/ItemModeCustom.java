@@ -84,7 +84,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 			list.add("Hold shift for more...");
 		}
 	}
-	
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
@@ -301,21 +301,24 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
 
-		NBTTagCompound nbt = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
-
-		if (nbt != null)
+		if (this.getSaveDirectory() != null)
 		{
-			NBTTagList nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST);
+			NBTTagCompound nbt = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
 
-			for (int i = 0; i < nbtTagList.tagCount(); i++)
+			if (nbt != null)
 			{
-				NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
-				Vector3 position = Vector3.readFromNBT(vectorTag);
-				int[] blockInfo = new int[] { vectorTag.getInteger(NBT_FIELD_BLOCK_ID), vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA) };
+				NBTTagList nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST);
 
-				if (position != null)
+				for (int i = 0; i < nbtTagList.tagCount(); i++)
 				{
-					fieldBlocks.put(position, blockInfo);
+					NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
+					Vector3 position = Vector3.readFromNBT(vectorTag);
+					int[] blockInfo = new int[] { vectorTag.getInteger(NBT_FIELD_BLOCK_ID), vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA) };
+
+					if (position != null)
+					{
+						fieldBlocks.put(position, blockInfo);
+					}
 				}
 			}
 		}
