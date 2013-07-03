@@ -3,7 +3,6 @@ package mffs;
 import java.io.File;
 
 import mffs.api.Blacklist;
-import mffs.api.ForceManipulator;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
@@ -109,7 +108,7 @@ public class Settings
 					try
 					{
 						int blockID = Integer.parseInt(blockIDString);
-						ForceManipulator.blackList.add(Block.blocksList[blockID]);
+						Blacklist.blackList.add(Block.blocksList[blockID]);
 					}
 					catch (Exception e)
 					{

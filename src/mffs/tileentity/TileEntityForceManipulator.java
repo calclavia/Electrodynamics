@@ -6,8 +6,8 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.ForceManipulator;
-import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import mffs.api.Blacklist;
+import mffs.api.ISpecialForceManipulation;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
@@ -25,6 +25,8 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import dan200.computer.api.IComputerAccess;
 
 public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
@@ -209,7 +211,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			if (position.getBlockID(this.worldObj) > 0)
 			{
-				if (ForceManipulator.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
+				if (Blacklist.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
 				{
 					return false;
 				}
@@ -350,4 +352,24 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		return 3 + 18;
 	}
 
+	@Override
+	public String[] getMethodNames()
+	{
+		return new String[] { "isActivate", "setActivate", "resetAnchor" };
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+	{
+		switch (method)
+		{
+			case 2:
+			{
+				this.anchor = null;
+				return null;
+			}
+		}
+
+		return super.callMethod(computer, method, arguments);
+	}
 }

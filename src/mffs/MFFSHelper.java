@@ -388,7 +388,7 @@ public class MFFSHelper
 			{
 				if (projector.getMode() instanceof ItemModeCustom)
 				{
-					HashMap<Vector3, int[]> fieldMap = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
+					HashMap<Vector3, int[]> fieldMap = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
 
 					if (fieldMap != null)
 					{

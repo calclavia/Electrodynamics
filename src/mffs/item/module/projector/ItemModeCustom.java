@@ -278,13 +278,13 @@ public class ItemModeCustom extends ItemMode implements ICache
 		return file;
 	}
 
-	public Set<Vector3> getFieldBlocks(ItemStack itemStack)
+	public Set<Vector3> getFieldBlocks(IFieldInteraction projector, ItemStack itemStack)
 	{
-		return this.getFieldBlockMap(itemStack).keySet();
+		return this.getFieldBlockMap(projector, itemStack).keySet();
 	}
 
 	@SuppressWarnings("unchecked")
-	public HashMap<Vector3, int[]> getFieldBlockMap(ItemStack itemStack)
+	public HashMap<Vector3, int[]> getFieldBlockMap(IFieldInteraction projector, ItemStack itemStack)
 	{
 		String cacheID = "itemStack_" + itemStack.hashCode();
 
@@ -298,6 +298,8 @@ public class ItemModeCustom extends ItemMode implements ICache
 				}
 			}
 		}
+
+		float scale = (float) projector.getModuleCount(ModularForceFieldSystem.itemModuleScale) / 3;
 
 		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
 
@@ -313,6 +315,12 @@ public class ItemModeCustom extends ItemMode implements ICache
 				{
 					NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
 					Vector3 position = Vector3.readFromNBT(vectorTag);
+
+					if (scale > 0)
+					{
+						position.multiply(scale);
+					}
+
 					int[] blockInfo = new int[] { vectorTag.getInteger(NBT_FIELD_BLOCK_ID), vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA) };
 
 					if (position != null)
@@ -352,7 +360,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
-		return this.getFieldBlocks(projector.getModeStack());
+		return this.getFieldBlocks(projector, projector.getModeStack());
 	}
 
 	@Override

@@ -121,6 +121,9 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		}
 	}
 
+	/**
+	 * @return Rate is per tick!
+	 */
 	public int getProductionRate()
 	{
 		if (!this.isDisabled() && this.isActive())

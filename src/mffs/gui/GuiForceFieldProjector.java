@@ -1,11 +1,12 @@
 package mffs.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import mffs.base.GuiBase;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.entity.player.EntityPlayer;
+
+import org.lwjgl.opengl.GL11;
+
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
@@ -63,7 +64,7 @@ public class GuiForceFieldProjector extends GuiBase
 		this.textFieldFrequency.drawTextBox();
 
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost(), ElectricUnit.JOULES), 120, 121, 4210752);
+		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, ElectricUnit.JOULES), 120, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

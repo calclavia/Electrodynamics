@@ -160,6 +160,11 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 
 		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 
+		if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+		{
+			direction = ForgeDirection.NORTH;
+		}
+
 		int zTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)));
 		int zTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)));
 

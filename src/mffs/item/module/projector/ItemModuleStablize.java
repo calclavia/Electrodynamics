@@ -48,7 +48,7 @@ public class ItemModuleStablize extends ItemModule
 		{
 			if (projector.getMode() instanceof ItemModeCustom)
 			{
-				HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector.getModeStack());
+				HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
 				Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
 				Vector3 relativePosition = position.clone().subtract(fieldCenter);
 				CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());

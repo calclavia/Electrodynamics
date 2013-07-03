@@ -261,6 +261,9 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		return modules;
 	}
 
+	/**
+	 * Returns Fortron cost in ticks.
+	 */
 	@Override
 	public int getFortronCost()
 	{

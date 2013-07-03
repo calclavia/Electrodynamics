@@ -1,7 +1,6 @@
 package mffs.item.module.projector;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import mffs.IDelayedEventHandler;
@@ -54,7 +53,8 @@ public class ItemModuleDisintegration extends ItemModule
 			{
 				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
 				{
-					List<Block> filterBlocks = new ArrayList<Block>();
+					int blockMetadata = position.getBlockMetadata(tileEntity.worldObj);
+					Set<ItemStack> filterStacks = new HashSet<ItemStack>();
 
 					for (int i : projector.getModuleSlots())
 					{
@@ -63,11 +63,21 @@ public class ItemModuleDisintegration extends ItemModule
 
 						if (filterBlock != null)
 						{
-							filterBlocks.add(filterBlock);
+							filterStacks.add(checkStack);
+						}
+					}
+					boolean contains = false;
+
+					for (ItemStack filterStack : filterStacks)
+					{
+						if (filterStack.isItemEqual(new ItemStack(blockID, 1, blockMetadata)))
+						{
+							contains = true;
+							break;
 						}
 					}
 
-					if (!filterBlocks.contains(block))
+					if (!contains)
 					{
 						return 1;
 					}

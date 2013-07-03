@@ -42,11 +42,11 @@ public class ItemModeCylinder extends ItemMode
 		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
 		int height = posScale.intY() + negScale.intY();
 
-		for (float x = -radius; x <= radius; x += 0.5f)
+		for (float x = -radius; x <= radius; x += 1)
 		{
-			for (float z = -radius; z <= radius; z += 0.5f)
+			for (float z = -radius; z <= radius; z += 1)
 			{
-				for (float y = 0; y < height; y += 0.5f)
+				for (float y = 0; y < height; y += 1)
 				{
 					if ((y == 0 || y == height - 1) && (x * x + z * z + RADIUS_Expansion) <= (radius * radius))
 					{

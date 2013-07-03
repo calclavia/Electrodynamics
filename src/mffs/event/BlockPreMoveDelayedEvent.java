@@ -3,7 +3,7 @@ package mffs.event;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ManipulatorHelper;
-import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import mffs.api.ISpecialForceManipulation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

@@ -25,8 +25,9 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import dan200.computer.api.IPeripheral;
 
-public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor, IActivatable
+public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor, IActivatable, IPeripheral
 {
 	public enum TilePacketType
 	{
@@ -197,4 +198,5 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 			this.setActive(false);
 		}
 	}
+
 }

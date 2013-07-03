@@ -2,7 +2,7 @@ package mffs.event;
 
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.api.ForceManipulator.ISpecialForceManipulation;
+import mffs.api.ISpecialForceManipulation;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;

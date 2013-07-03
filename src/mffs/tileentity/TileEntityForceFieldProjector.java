@@ -134,6 +134,9 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		}
 	}
 
+	/**
+	 * Returns Fortron cost in ticks.
+	 */
 	@Override
 	public int getFortronCost()
 	{
