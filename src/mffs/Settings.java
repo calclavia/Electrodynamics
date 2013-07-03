@@ -2,6 +2,7 @@ package mffs;
 
 import java.io.File;
 
+import mffs.api.Blacklist;
 import mffs.api.ForceManipulator;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
@@ -112,12 +113,71 @@ public class Settings
 					}
 					catch (Exception e)
 					{
-						ModularForceFieldSystem.LOGGER.severe("Invalid block ID!");
+						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
 						e.printStackTrace();
 					}
 				}
 			}
 		}
+
+		Property blacklist1 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "");
+		String blackListString1 = blacklist1.getString();
+
+		if (blackListString1 != null)
+		{
+			for (String blockIDString : blackListString1.split(","))
+			{
+				if (blockIDString != null && !blockIDString.isEmpty())
+				{
+					try
+					{
+						int blockID = Integer.parseInt(blockIDString);
+						Blacklist.stabilizationBlacklist.add(Block.blocksList[blockID]);
+					}
+					catch (Exception e)
+					{
+						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		Property blacklist2 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "");
+		String blackListString2 = blacklist1.getString();
+
+		if (blackListString2 != null)
+		{
+			for (String blockIDString : blackListString2.split(","))
+			{
+				if (blockIDString != null && !blockIDString.isEmpty())
+				{
+					try
+					{
+						int blockID = Integer.parseInt(blockIDString);
+						Blacklist.disintegrationBlacklist.add(Block.blocksList[blockID]);
+					}
+					catch (Exception e)
+					{
+						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		/**
+		 * Default blacklist variables.
+		 */
+		Blacklist.stabilizationBlacklist.add(Block.waterStill);
+		Blacklist.stabilizationBlacklist.add(Block.waterMoving);
+		Blacklist.stabilizationBlacklist.add(Block.lavaStill);
+		Blacklist.stabilizationBlacklist.add(Block.lavaMoving);
+
+		Blacklist.disintegrationBlacklist.add(Block.waterStill);
+		Blacklist.disintegrationBlacklist.add(Block.waterMoving);
+		Blacklist.disintegrationBlacklist.add(Block.lavaStill);
+		Blacklist.stabilizationBlacklist.add(Block.lavaMoving);
 
 		CONFIGURATION.save();
 	}

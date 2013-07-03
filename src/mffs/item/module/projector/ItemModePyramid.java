@@ -39,11 +39,11 @@ public class ItemModePyramid extends ItemMode
 
 		final int inverseThickness = 8;
 
-		for (float y = 0; y <= yStretch; y += 0.5f)
+		for (float y = 0; y <= yStretch; y += 1f)
 		{
-			for (float x = -xStretch; x <= xStretch; x += 0.5f)
+			for (float x = -xStretch; x <= xStretch; x += 1f)
 			{
-				for (float z = -zStretch; z <= zStretch; z += 0.5f)
+				for (float z = -zStretch; z <= zStretch; z += 1f)
 				{
 					double yTest = (y / yStretch) * inverseThickness;
 					double xzPositivePlane = (1 - (x / xStretch) - (z / zStretch)) * inverseThickness;

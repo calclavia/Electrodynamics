@@ -52,7 +52,7 @@ public class GuiForceFieldProjector extends GuiBase
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
-		
+
 		GL11.glPushMatrix();
 		GL11.glRotatef(-90, 0, 0, 1);
 		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -63, 8, 4210752);

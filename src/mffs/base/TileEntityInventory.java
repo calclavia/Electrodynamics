@@ -10,13 +10,15 @@ import mffs.ModularForceFieldSystem;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -206,49 +208,157 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 		return cards;
 	}
 
-	public boolean mergeIntoInventory(ItemStack itemStack)
+	/**
+	 * Tries to place an itemStack in a specific position if it is an inventory.
+	 * 
+	 * @return The ItemStack remained after place attempt
+	 */
+	public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection dir)
 	{
-		for (int dir = 0; dir < 5; dir++)
+		TileEntity tileEntity = position.getTileEntity(this.worldObj);
+		ForgeDirection direction = dir.getOpposite();
+
+		if (tileEntity != null && itemStack != null)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(dir);
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
-
-			if (tileEntity instanceof IInventory)
+			/** Try to put items into a chest. */
+			if (tileEntity instanceof TileEntityMulti)
 			{
-				IInventory inventory = (IInventory) tileEntity;
+				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
 
-				for (int i = 0; i < inventory.getSizeInventory(); i++)
+				if (mainBlockPosition != null)
 				{
-					if (inventory.isStackValidForSlot(i, itemStack))
+					if (!(mainBlockPosition.getTileEntity(this.worldObj) instanceof TileEntityMulti))
 					{
-						ItemStack checkStack = inventory.getStackInSlot(i);
+						return tryPlaceInPosition(itemStack, mainBlockPosition, direction);
+					}
+				}
+			}
+			else if (tileEntity instanceof TileEntityChest)
+			{
+				TileEntityChest[] chests = { (TileEntityChest) tileEntity, null };
 
-						if (checkStack == null)
+				/** Try to find a double chest. */
+				for (int i = 2; i < 6; i++)
+				{
+					ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
+					Vector3 searchPosition = position.clone();
+					searchPosition.modifyPositionFromSide(searchDirection);
+
+					if (searchPosition.getTileEntity(this.worldObj) != null)
+					{
+						if (searchPosition.getTileEntity(this.worldObj).getClass() == chests[0].getClass())
 						{
-							inventory.setInventorySlotContents(i, itemStack);
-							return true;
+							chests[1] = (TileEntityChest) searchPosition.getTileEntity(this.worldObj);
+							break;
 						}
-						else if (checkStack.isItemEqual(itemStack))
+					}
+				}
+
+				for (TileEntityChest chest : chests)
+				{
+					if (chest != null)
+					{
+						for (int i = 0; i < chest.getSizeInventory(); i++)
 						{
-							int freeSpace = checkStack.getMaxStackSize() - checkStack.stackSize;
-
-							checkStack.stackSize += Math.min(itemStack.stackSize, freeSpace);
-							itemStack.stackSize -= freeSpace;
-
-							if (itemStack.stackSize <= 0)
+							itemStack = this.addStackToInventory(i, chest, itemStack);
+							if (itemStack == null)
 							{
-								itemStack = null;
-								return true;
+								return null;
 							}
 						}
 					}
 				}
 			}
+			else if (tileEntity instanceof ISidedInventory)
+			{
+				ISidedInventory inventory = (ISidedInventory) tileEntity;
+				int[] slots = inventory.getAccessibleSlotsFromSide(direction.ordinal());
+				for (int i = 0; i < slots.length; i++)
+				{
+					if (inventory.canInsertItem(slots[i], itemStack, direction.ordinal()))
+					{
+						itemStack = this.addStackToInventory(slots[i], inventory, itemStack);
+					}
+					if (itemStack == null)
+					{
+						return null;
+					}
+				}
+
+			}
+			else if (tileEntity instanceof IInventory)
+			{
+				IInventory inventory = (IInventory) tileEntity;
+
+				for (int i = 0; i < inventory.getSizeInventory(); i++)
+				{
+					itemStack = this.addStackToInventory(i, inventory, itemStack);
+					if (itemStack == null)
+					{
+						return null;
+					}
+				}
+			}
 		}
 
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
+
+		return itemStack;
+	}
+
+	public ItemStack addStackToInventory(int slotIndex, IInventory inventory, ItemStack itemStack)
+	{
+		if (inventory.getSizeInventory() > slotIndex)
+		{
+			ItemStack stackInInventory = inventory.getStackInSlot(slotIndex);
+
+			if (stackInInventory == null)
+			{
+				inventory.setInventorySlotContents(slotIndex, itemStack);
+				if (inventory.getStackInSlot(slotIndex) == null)
+				{
+					return itemStack;
+				}
+				return null;
+			}
+			else if (stackInInventory.isItemEqual(itemStack) && stackInInventory.isStackable())
+			{
+				stackInInventory = stackInInventory.copy();
+				int stackLim = Math.min(inventory.getInventoryStackLimit(), itemStack.getMaxStackSize());
+				int rejectedAmount = Math.max((stackInInventory.stackSize + itemStack.stackSize) - stackLim, 0);
+				stackInInventory.stackSize = Math.min(Math.max((stackInInventory.stackSize + itemStack.stackSize - rejectedAmount), 0), inventory.getInventoryStackLimit());
+				itemStack.stackSize = rejectedAmount;
+				inventory.setInventorySlotContents(slotIndex, stackInInventory);
+			}
+		}
+
+		if (itemStack.stackSize <= 0)
+		{
+			return null;
+		}
+
+		return itemStack;
+	}
+
+	public boolean mergeIntoInventory(ItemStack itemStack)
+	{
 		if (!this.worldObj.isRemote)
 		{
-			this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 1, this.zCoord + 0.5, itemStack));
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (itemStack != null)
+				{
+					itemStack = this.tryPlaceInPosition(itemStack, new Vector3(this).modifyPositionFromSide(direction), direction);
+				}
+			}
+
+			if (itemStack != null)
+			{
+				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, this.xCoord + 0.5, this.yCoord + 1, this.zCoord + 0.5, itemStack));
+			}
 		}
 
 		return false;

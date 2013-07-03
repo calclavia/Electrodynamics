@@ -358,7 +358,7 @@ public class MFFSHelper
 		return null;
 	}
 
-	public static Block getCamoBlock(ItemStack itemStack)
+	public static Block getFilterBlock(ItemStack itemStack)
 	{
 		if (itemStack != null)
 		{
@@ -407,7 +407,7 @@ public class MFFSHelper
 				for (int i : projector.getModuleSlots())
 				{
 					ItemStack checkStack = projector.getStackInSlot(i);
-					Block block = getCamoBlock(checkStack);
+					Block block = getFilterBlock(checkStack);
 
 					if (block != null)
 					{
