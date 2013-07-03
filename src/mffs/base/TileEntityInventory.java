@@ -432,7 +432,7 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 			}
 			case 1:
 			{
-				this.setActive((boolean) arguments[0]);
+				this.setActive((Boolean) arguments[0]);
 				return null;
 			}
 		}
