@@ -23,6 +23,8 @@ import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import dan200.computer.api.IComputerAccess;
+
 /**
  * All TileEntities that have an inventory should extend this.
  * 
@@ -402,5 +404,58 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 		}
 
 		nbttagcompound.setTag("Items", nbtTagList);
+	}
+
+	/**
+	 * ComputerCraft
+	 */
+	@Override
+	public String getType()
+	{
+		return this.getInvName();
+	}
+
+	@Override
+	public String[] getMethodNames()
+	{
+		return new String[] { "isActivate", "setActivate" };
+	}
+
+	@Override
+	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+	{
+		switch (method)
+		{
+			case 0:
+			{
+				return new Object[] { this.isActive() };
+			}
+			case 1:
+			{
+				this.setActive((boolean) arguments[0]);
+				return null;
+			}
+		}
+
+		throw new Exception("Invalid method.");
+
+	}
+
+	@Override
+	public boolean canAttachToSide(int side)
+	{
+		return true;
+	}
+
+	@Override
+	public void attach(IComputerAccess computer)
+	{
+
+	}
+
+	@Override
+	public void detach(IComputerAccess computer)
+	{
+
 	}
 }
