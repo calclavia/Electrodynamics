@@ -382,36 +382,39 @@ public class MFFSHelper
 
 	public static ItemStack getCamoBlock(IProjector projector, Vector3 position)
 	{
-		if (projector != null)
+		if (!((TileEntity) projector).worldObj.isRemote)
 		{
-			if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+			if (projector != null)
 			{
-				if (projector.getMode() instanceof ItemModeCustom)
+				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
 				{
-					HashMap<Vector3, int[]> fieldMap = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
-
-					if (fieldMap != null)
+					if (projector.getMode() instanceof ItemModeCustom)
 					{
-						Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
-						Vector3 relativePosition = position.clone().subtract(fieldCenter);
-						CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
-						int[] blockInfo = fieldMap.get(relativePosition.round());
+						HashMap<Vector3, int[]> fieldMap = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
 
-						if (blockInfo != null && blockInfo[0] > 0)
+						if (fieldMap != null)
 						{
-							return new ItemStack(Block.blocksList[blockInfo[0]], 1, blockInfo[1]);
+							Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+							Vector3 relativePosition = position.clone().subtract(fieldCenter);
+							CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+							int[] blockInfo = fieldMap.get(relativePosition.round());
+
+							if (blockInfo != null && blockInfo[0] > 0)
+							{
+								return new ItemStack(Block.blocksList[blockInfo[0]], 1, blockInfo[1]);
+							}
 						}
 					}
-				}
 
-				for (int i : projector.getModuleSlots())
-				{
-					ItemStack checkStack = projector.getStackInSlot(i);
-					Block block = getFilterBlock(checkStack);
-
-					if (block != null)
+					for (int i : projector.getModuleSlots())
 					{
-						return checkStack;
+						ItemStack checkStack = projector.getStackInSlot(i);
+						Block block = getFilterBlock(checkStack);
+
+						if (block != null)
+						{
+							return checkStack;
+						}
 					}
 				}
 			}

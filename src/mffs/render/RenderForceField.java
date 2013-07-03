@@ -36,7 +36,7 @@ public class RenderForceField implements ISimpleBlockRenderingHandler
 
 		if (tileEntity instanceof TileEntityForceField)
 		{
-			ItemStack checkStack = MFFSHelper.getCamoBlock(((BlockForceField) block).getProjector(iBlockAccess, x, y, z), new Vector3(x, y, z));
+			ItemStack checkStack = ((TileEntityForceField) tileEntity).camoStack;
 
 			if (checkStack != null)
 			{

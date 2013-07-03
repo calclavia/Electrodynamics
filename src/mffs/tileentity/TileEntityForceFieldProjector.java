@@ -233,7 +233,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 								if (tileEntity instanceof TileEntityForceField)
 								{
-									((TileEntityForceField) tileEntity).setZhuYao(new Vector3(this));
+									((TileEntityForceField) tileEntity).setProjector(new Vector3(this));
 								}
 
 								this.requestFortron(1, true);

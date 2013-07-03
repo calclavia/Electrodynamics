@@ -219,7 +219,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 		if (tileEntity instanceof TileEntityForceField)
 		{
-			ItemStack checkStack = MFFSHelper.getCamoBlock(this.getProjector(iBlockAccess, x, y, z), new Vector3(x, y, z));
+			ItemStack checkStack = ((TileEntityForceField) tileEntity).camoStack;
 
 			if (checkStack != null)
 			{
@@ -262,7 +262,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 			if (tileEntity instanceof TileEntityForceField)
 			{
-				ItemStack checkStack = MFFSHelper.getCamoBlock(this.getProjector(iBlockAccess, x, y, z), new Vector3(x, y, z));
+				ItemStack checkStack = ((TileEntityForceField) tileEntity).camoStack;
 
 				if (checkStack != null)
 				{
