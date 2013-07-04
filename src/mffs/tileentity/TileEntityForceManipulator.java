@@ -146,6 +146,8 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 	public boolean isBlockVisible(Vector3 position)
 	{
+		int i = 0;
+
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
 			Vector3 checkPos = position.clone().modifyPositionFromSide(direction);
@@ -157,13 +159,13 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				{
 					if (Block.blocksList[blockID].isOpaqueCube())
 					{
-						return false;
+						i++;
 					}
 				}
 			}
 		}
 
-		return true;
+		return !(i >= ForgeDirection.VALID_DIRECTIONS.length);
 	}
 
 	@Override
@@ -254,6 +256,11 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				}
 
 				Vector3 targetPosition = position.clone().modifyPositionFromSide(dir);
+
+				if (targetPosition.getTileEntity(this.worldObj) == this)
+				{
+					return false;
+				}
 
 				for (Vector3 checkPos : mobilizationPoints)
 				{
