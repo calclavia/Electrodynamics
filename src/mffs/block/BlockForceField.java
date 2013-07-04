@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IForceFieldBlock;
 import mffs.api.IProjector;

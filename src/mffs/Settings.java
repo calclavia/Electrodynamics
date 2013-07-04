@@ -53,10 +53,14 @@ public class Settings
 	public static boolean HIGH_GRAPHICS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
+	public static boolean ENABLE_MANIPULATOR = false;
 
 	public static void load()
 	{
 		CONFIGURATION.load();
+
+		ENABLE_MANIPULATOR = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Enable Force Manipulator", ENABLE_MANIPULATOR).getBoolean(ENABLE_MANIPULATOR);
+
 		Property propFieldScale = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
 		MAX_FORCE_FIELD_SCALE = propFieldScale.getInt(MAX_FORCE_FIELD_SCALE);
 

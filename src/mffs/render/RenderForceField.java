@@ -1,7 +1,5 @@
 package mffs.render;
 
-import mffs.MFFSHelper;
-import mffs.block.BlockForceField;
 import mffs.tileentity.TileEntityForceField;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -9,7 +7,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import universalelectricity.core.vector.Vector3;
 import calclavia.lib.render.CalclaviaRenderHelper;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;

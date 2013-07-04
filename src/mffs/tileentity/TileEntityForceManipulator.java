@@ -52,7 +52,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			this.anchor = new Vector3();
 		}
 
-		if (this.getMode() != null)
+		if (this.getMode() != null && Settings.ENABLE_MANIPULATOR)
 		{
 			if (!this.worldObj.isRemote)
 			{
