@@ -42,7 +42,7 @@ public class Settings
 	/**
 	 * MFFS Configuration Settings
 	 */
-	public static int MAX_FORCE_FIELDS_PER_TICK = 1000000;
+	public static int MAX_FORCE_FIELDS_PER_TICK = 1000;
 	public static int MAX_FORCE_FIELD_SCALE = 200;
 	public static boolean INTERACT_CREATIVE = true;
 	public static boolean LOAD_CHUNKS = true;

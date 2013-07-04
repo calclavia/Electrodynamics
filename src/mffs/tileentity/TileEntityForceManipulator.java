@@ -67,11 +67,14 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
 
+					int i = 0;
+
 					for (Vector3 position : this.manipulationVectors)
 					{
-						if (this.moveBlock(position, dir))
+						if (this.moveBlock(position, dir) && this.isBlockVisible(position) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+							i++;
 						}
 					}
 
@@ -121,11 +124,14 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
 
+					int i = 0;
+
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0)
+						if (this.isBlockVisible(position) && (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+							i++;
 						}
 					}
 
@@ -136,7 +142,28 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				}
 			}
 		}
+	}
 
+	public boolean isBlockVisible(Vector3 position)
+	{
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			Vector3 checkPos = position.clone().modifyPositionFromSide(direction);
+			int blockID = checkPos.getBlockID(this.worldObj);
+
+			if (blockID > 0)
+			{
+				if (Block.blocksList[blockID] != null)
+				{
+					if (Block.blocksList[blockID].isOpaqueCube())
+					{
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	@Override
