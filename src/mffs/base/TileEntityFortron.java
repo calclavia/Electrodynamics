@@ -3,6 +3,7 @@ package mffs.base;
 import mffs.MFFSHelper;
 import mffs.Settings;
 import mffs.TransferMode;
+import mffs.api.ISpecialForceManipulation;
 import mffs.api.card.ICard;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.fortron.FortronHelper;
@@ -24,9 +25,10 @@ import universalelectricity.prefab.network.PacketManager;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityFortron extends TileEntityFrequency implements ITankContainer, IFortronFrequency
+public abstract class TileEntityFortron extends TileEntityFrequency implements ITankContainer, IFortronFrequency, ISpecialForceManipulation
 {
 	protected LiquidTank fortronTank = new LiquidTank(FortronHelper.LIQUID_FORTRON.copy(), LiquidContainerRegistry.BUCKET_VOLUME, this);
+	private boolean markSendFortron = true;
 
 	@Override
 	public void updateEntity()
@@ -45,9 +47,30 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 	@Override
 	public void invalidate()
 	{
-		// Let remaining Fortron escape.
-		MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
+		if (this.markSendFortron)
+		{
+			// Let remaining Fortron escape.
+			MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
+		}
 		super.invalidate();
+	}
+
+	@Override
+	public boolean preMove(int x, int y, int z)
+	{
+		return true;
+	}
+
+	@Override
+	public void move(int x, int y, int z)
+	{
+		this.markSendFortron = false;
+	}
+
+	@Override
+	public void postMove()
+	{
+
 	}
 
 	/**

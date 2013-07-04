@@ -248,4 +248,5 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	{
 		return true;
 	}
+
 }
