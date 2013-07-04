@@ -156,7 +156,6 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 		{
 			if (electricityPack.voltage > this.getVoltage())
 			{
-				this.worldObj.createExplosion(null, this.xCoord, this.yCoord, this.zCoord, 1.5f, true);
 				return;
 			}
 		}
