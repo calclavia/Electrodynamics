@@ -201,7 +201,10 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 		}
 
 		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-
+		if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+		{
+			direction = ForgeDirection.NORTH;
+		}
 		int zScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)));
 		int xScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)));
 		int yScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.UP));
@@ -239,7 +242,10 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 		}
 
 		ForgeDirection direction = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-
+		if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+		{
+			direction = ForgeDirection.NORTH;
+		}
 		int zScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)));
 		int xScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)));
 		int yScaleNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.DOWN));
