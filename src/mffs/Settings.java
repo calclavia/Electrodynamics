@@ -53,7 +53,7 @@ public class Settings
 	public static boolean HIGH_GRAPHICS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
-	public static boolean ENABLE_MANIPULATOR = false;
+	public static boolean ENABLE_MANIPULATOR = true;
 
 	public static void load()
 	{
