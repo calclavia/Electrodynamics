@@ -240,7 +240,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		{
 			if (position.getBlockID(this.worldObj) > 0)
 			{
-				if (Blacklist.blackList.contains(Block.blocksList[position.getBlockID(this.worldObj)]) || Block.blocksList[position.getBlockID(this.worldObj)].getBlockHardness(this.worldObj, position.intX(), position.intY(), position.intZ()) == -1)
+				if (Blacklist.forceManipulationBlacklist.contains(Block.blocksList[position.getBlockID(this.worldObj)]))
 				{
 					return false;
 				}

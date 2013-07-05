@@ -17,6 +17,7 @@ import universalelectricity.core.vector.Vector3;
 public class BlockPostMoveDelayedEvent extends DelayedEvent
 {
 	private World world;
+	private Vector3 originalPosition;
 	private Vector3 newPosition;
 
 	private int blockID = 0;
@@ -24,21 +25,11 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 	private TileEntity tileEntity;
 	private NBTTagCompound tileData;
 
-	/**
-	 * 
-	 * @param handler
-	 * @param ticks
-	 * @param world
-	 * @param newPosition
-	 * @param blockID
-	 * @param blockMetadata
-	 * @param tileEntity - The original tile entity object
-	 * @param tileData
-	 */
-	public BlockPostMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 newPosition, int blockID, int blockMetadata, TileEntity tileEntity, NBTTagCompound tileData)
+	public BlockPostMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 originalPosition, Vector3 newPosition, int blockID, int blockMetadata, TileEntity tileEntity, NBTTagCompound tileData)
 	{
 		super(handler, ticks);
 		this.world = world;
+		this.originalPosition = originalPosition;
 		this.newPosition = newPosition;
 		this.blockID = blockID;
 		this.blockMetadata = blockMetadata;
@@ -64,6 +55,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, null);
 					}
 
+					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
 				}
 				catch (Exception e)

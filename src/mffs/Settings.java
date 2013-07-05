@@ -112,7 +112,7 @@ public class Settings
 					try
 					{
 						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.blackList.add(Block.blocksList[blockID]);
+						Blacklist.forceManipulationBlacklist.add(Block.blocksList[blockID]);
 					}
 					catch (Exception e)
 					{
@@ -181,6 +181,9 @@ public class Settings
 		Blacklist.disintegrationBlacklist.add(Block.waterMoving);
 		Blacklist.disintegrationBlacklist.add(Block.lavaStill);
 		Blacklist.stabilizationBlacklist.add(Block.lavaMoving);
+
+		Blacklist.forceManipulationBlacklist.add(Block.bedrock);
+		Blacklist.forceManipulationBlacklist.add(ModularForceFieldSystem.blockForceField);
 
 		CONFIGURATION.save();
 	}

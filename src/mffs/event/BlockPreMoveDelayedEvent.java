@@ -52,8 +52,7 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 			}
 
 			ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
-
-			this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
+			this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.position, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
 		}
 	}
 }

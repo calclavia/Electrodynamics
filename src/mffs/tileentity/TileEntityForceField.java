@@ -120,7 +120,10 @@ public class TileEntityForceField extends TileEntityAdvanced implements IPacketR
 	 */
 	public void refreshCamoBlock()
 	{
-		this.camoStack = MFFSHelper.getCamoBlock(this.getProjector(), new Vector3(this));
+		if (this.getProjectorSafe() != null)
+		{
+			this.camoStack = MFFSHelper.getCamoBlock(this.getProjector(), new Vector3(this));
+		}
 	}
 
 	@Override
