@@ -1,6 +1,5 @@
 package mffs.render;
 
-import mffs.ModularForceFieldSystem;
 import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceFieldProjector;
 import mffs.block.BlockForceManipulator;
@@ -32,7 +31,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 
 			if (block instanceof BlockFortronCapacitor)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderFortronCapacitor.TEXTURE_ON));
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderFortronCapacitor.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
@@ -40,14 +39,14 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			}
 			else if (block instanceof BlockForceFieldProjector)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderForceFieldProjector.TEXTURE_ON));
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderForceFieldProjector.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.5, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				RenderForceFieldProjector.MODEL.render(0, 0.0625F);
 			}
 			else if (block instanceof BlockCoercionDeriver)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderCoercionDeriver.TEXTURE_ON));
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderCoercionDeriver.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
@@ -55,7 +54,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			}
 			else if (block instanceof BlockForceManipulator)
 			{
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, FMLClientHandler.instance().getClient().renderEngine.getTexture(ModularForceFieldSystem.MODEL_DIRECTORY + RenderForceManipulator.TEXTURE_ON));
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderForceManipulator.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.4, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				RenderForceManipulator.MODEL.render(0.0625F);

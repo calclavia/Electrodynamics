@@ -10,7 +10,9 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
+import calclavia.lib.Calclavia;
 import calclavia.lib.render.CalclaviaRenderHelper;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -65,13 +67,13 @@ public class FXHologramMoving extends EntityFX
 
 		CalclaviaRenderHelper.disableLighting();
 		CalclaviaRenderHelper.enableBlending();
-		Minecraft.getMinecraft().renderEngine.bindTexture("/terrain.png");
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(Calclavia.TERRAIN_RESOURCE);
 		CalclaviaRenderHelper.renderNormalBlockAsItem(ModularForceFieldSystem.blockForceField, 0, new RenderBlocks());
 		CalclaviaRenderHelper.disableBlending();
 		CalclaviaRenderHelper.enableLighting();
 		GL11.glPopMatrix();
 
 		tessellator.startDrawingQuads();
-		Minecraft.getMinecraft().renderEngine.bindTexture("/particles.png");
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(Calclavia.PARTICLE_RESOURCE);
 	}
 }

@@ -4,13 +4,17 @@ import mffs.ModularForceFieldSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.client.resources.ResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import calclavia.lib.Calclavia;
+
 import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,6 +27,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
 {
+	private static final ResourceLocation fortronTexture = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.BLOCK_DIRECTORY + "fortron.png");
+
 	double movX = 0.0D;
 	double movY = 0.0D;
 	double movZ = 0.0D;
@@ -66,7 +72,8 @@ public class FXBeam extends EntityFX
 		/**
 		 * Sets the particle age based on distance.
 		 */
-		EntityLiving renderentity = Minecraft.getMinecraft().renderViewEntity;
+		EntityLivingBase renderentity = Minecraft.getMinecraft().renderViewEntity;
+
 		int visibleDistance = 50;
 
 		if (!Minecraft.getMinecraft().gameSettings.fancyGraphics)
@@ -136,7 +143,7 @@ public class FXBeam extends EntityFX
 			op = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
 		}
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(ModularForceFieldSystem.BLOCK_DIRECTORY + "fortron.png");
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(fortronTexture);
 
 		GL11.glTexParameterf(3553, 10242, 10497.0F);
 		GL11.glTexParameterf(3553, 10243, 10497.0F);
@@ -198,6 +205,6 @@ public class FXBeam extends EntityFX
 		tessellator.startDrawingQuads();
 		this.prevSize = size;
 
-		Minecraft.getMinecraft().renderEngine.bindTexture("/particles.png");
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(Calclavia.PARTICLE_RESOURCE);
 	}
 }

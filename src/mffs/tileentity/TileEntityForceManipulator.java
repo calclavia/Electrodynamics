@@ -88,7 +88,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 						this.anchor = this.anchor.modifyPositionFromSide(dir);
 					}
 
-					this.updatePushedObjects(0.022f);
+					this.updatePushedObjects(0.02f);
 					this.manipulationVectors = null;
 					this.onInventoryChanged();
 				}
@@ -105,7 +105,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 				{
-					this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs.fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+					this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs:fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 				}
 
 				this.setActive(false);
@@ -195,7 +195,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 				{
 					// Red
 					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
-					this.updatePushedObjects(0.022f);
+					this.updatePushedObjects(0.02f);
 				}
 			}
 		}

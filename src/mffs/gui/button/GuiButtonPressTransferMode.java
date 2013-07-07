@@ -1,6 +1,6 @@
 package mffs.gui.button;
 
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.client.Minecraft;
 import universalelectricity.core.vector.Vector2;
@@ -9,7 +9,7 @@ public class GuiButtonPressTransferMode extends GuiButtonPress
 {
 	private TileEntityFortronCapacitor tileEntity;
 
-	public GuiButtonPressTransferMode(int id, int x, int y, GuiBase mainGui, TileEntityFortronCapacitor tileEntity)
+	public GuiButtonPressTransferMode(int id, int x, int y, GuiMFFS mainGui, TileEntityFortronCapacitor tileEntity)
 	{
 		super(id, x, y, new Vector2(), mainGui);
 		this.tileEntity = tileEntity;

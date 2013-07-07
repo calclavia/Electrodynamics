@@ -1,6 +1,6 @@
 package mffs.gui;
 
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.vector.Region2;
 
-public class GuiForceFieldProjector extends GuiBase
+public class GuiForceFieldProjector extends GuiMFFS
 {
 	private TileEntityForceFieldProjector tileEntity;
 

@@ -2,14 +2,14 @@ package mffs;
 
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.liquids.LiquidDictionary;
+import net.minecraftforge.fluids.FluidRegistry;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,10 +20,7 @@ public class SubscribeEventHandler
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Post event)
 	{
-		if (event.map == Minecraft.getMinecraft().renderEngine.textureMapItems)
-		{
-			LiquidDictionary.getCanonicalLiquid("Fortron").setRenderingIcon(ModularForceFieldSystem.itemFortron.getIconFromDamage(0)).setTextureSheet("/gui/items.png");
-		}
+		FluidRegistry.getFluid("fortron").setIcons(ModularForceFieldSystem.itemFortron.getIconFromDamage(0));
 	}
 
 	@ForgeSubscribe
@@ -65,7 +62,7 @@ public class SubscribeEventHandler
 
 				if (!hasPermission)
 				{
-					evt.entityPlayer.sendChatToPlayer("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!");
+					evt.entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!"));
 					evt.setCanceled(true);
 				}
 			}

@@ -1,7 +1,7 @@
 package mffs.gui.button;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 
@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.TranslationHelper;
+import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiButtonPress extends GuiButton
 {
@@ -18,16 +19,16 @@ public class GuiButtonPress extends GuiButton
 	 * Stuck determines if the button is hard pressed done, or disabled looking.
 	 */
 	public boolean stuck = false;
-	private GuiBase mainGui;
+	private GuiMFFS mainGui;
 
-	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiBase mainGui, String name)
+	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiMFFS mainGui, String name)
 	{
 		super(id, x, y, 18, 18, name);
 		this.offset = offset;
 		this.mainGui = mainGui;
 	}
 
-	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiBase mainGui)
+	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiMFFS mainGui)
 	{
 		this(id, x, y, offset, mainGui, "");
 	}
@@ -47,7 +48,7 @@ public class GuiButtonPress extends GuiButton
 	{
 		if (this.drawButton)
 		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(ModularForceFieldSystem.GUI_BUTTON);
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ModularForceFieldSystem.GUI_BUTTON);
 
 			if (this.stuck)
 			{

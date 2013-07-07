@@ -11,11 +11,12 @@ import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquidTank;
-import net.minecraftforge.liquids.ITankContainer;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -25,9 +26,9 @@ import universalelectricity.prefab.network.PacketManager;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityFortron extends TileEntityFrequency implements ITankContainer, IFortronFrequency, ISpecialForceManipulation
+public abstract class TileEntityFortron extends TileEntityFrequency implements IFluidHandler, IFortronFrequency, ISpecialForceManipulation
 {
-	protected LiquidTank fortronTank = new LiquidTank(FortronHelper.LIQUID_FORTRON.copy(), LiquidContainerRegistry.BUCKET_VOLUME, this);
+	protected FluidTank fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private boolean markSendFortron = true;
 
 	@Override
@@ -80,7 +81,7 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.fortronTank.setLiquid(LiquidStack.loadLiquidStackFromNBT(nbt.getCompoundTag("fortron")));
+		this.fortronTank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fortron")));
 	}
 
 	@Override
@@ -88,22 +89,20 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 	{
 		super.writeToNBT(nbt);
 
-		if (this.fortronTank.getLiquid() != null)
+		if (this.fortronTank.getFluid() != null)
 		{
-			NBTTagCompound fortronCompound = new NBTTagCompound();
-			this.fortronTank.getLiquid().writeToNBT(fortronCompound);
-			nbt.setTag("fortron", fortronCompound);
+			nbt.setTag("fortron", this.fortronTank.getFluid().writeToNBT(new NBTTagCompound()));
 		}
 
 	}
 
 	/**
-	 * Liquid Functions.
+	 * Fluid Functions.
 	 */
 	@Override
-	public int fill(ForgeDirection from, LiquidStack resource, boolean doFill)
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource.isLiquidEqual(FortronHelper.LIQUID_FORTRON))
+		if (resource.isFluidEqual(FortronHelper.FLUID_FORTRON))
 		{
 			return this.fortronTank.fill(resource, doFill);
 		}
@@ -112,44 +111,43 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 	}
 
 	@Override
-	public int fill(int tankIndex, LiquidStack resource, boolean doFill)
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return this.fill(ForgeDirection.getOrientation(tankIndex), resource, doFill);
-	}
-
-	@Override
-	public LiquidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return this.fortronTank.drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public LiquidStack drain(int tankIndex, int maxDrain, boolean doDrain)
-	{
-		return this.drain(ForgeDirection.getOrientation(tankIndex), maxDrain, doDrain);
-	}
-
-	@Override
-	public ILiquidTank[] getTanks(ForgeDirection direction)
-	{
-		return new ILiquidTank[] { this.fortronTank };
-	}
-
-	@Override
-	public ILiquidTank getTank(ForgeDirection direction, LiquidStack type)
-	{
-		if (type.isLiquidEqual(FortronHelper.LIQUID_FORTRON))
+		if (resource == null || !resource.isFluidEqual(fortronTank.getFluid()))
 		{
-			return this.fortronTank;
+			return null;
 		}
+		return fortronTank.drain(resource.amount, doDrain);
+	}
 
-		return null;
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return fortronTank.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[] { this.fortronTank.getInfo() };
 	}
 
 	@Override
 	public void setFortronEnergy(int joules)
 	{
-		this.fortronTank.setLiquid(FortronHelper.getFortron(joules));
+		this.fortronTank.setFluid(FortronHelper.getFortron(joules));
 	}
 
 	@Override
@@ -195,4 +193,5 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 
 		return null;
 	}
+
 }

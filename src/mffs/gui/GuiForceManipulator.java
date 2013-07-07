@@ -1,7 +1,7 @@
 package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.gui.button.GuiIcon;
@@ -22,7 +22,7 @@ import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiForceManipulator extends GuiBase
+public class GuiForceManipulator extends GuiMFFS
 {
 	private TileEntityForceManipulator tileEntity;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import mffs.api.modules.IInterdictionMatrixModule;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.item.module.ItemModule;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -24,7 +24,7 @@ public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdi
 	}
 
 	@Override
-	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
+	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLivingBase entityLiving)
 	{
 		return false;
 	}

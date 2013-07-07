@@ -6,7 +6,7 @@ import mffs.MFFSHelper;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.card.ItemCard;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +28,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack itemStack, EntityLiving entityLiving, EntityLiving par3EntityLiving)
+	public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityLiving, EntityLivingBase par3EntityLiving)
 	{
 		if (entityLiving instanceof EntityPlayer)
 		{

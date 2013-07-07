@@ -2,9 +2,7 @@ package mffs.render;
 
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glColor4f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -20,9 +18,11 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ImageBufferDownload;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -32,6 +32,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import universalelectricity.core.vector.Vector2;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,21 +45,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderIDCard implements IItemRenderer
 {
-	private Minecraft mc;
-
-	public RenderIDCard()
-	{
-		this.mc = Minecraft.getMinecraft();
-	}
-
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data)
 	{
-		/*
-		 * if (type == ItemRenderType.EQUIPPED) { glPushMatrix();
-		 * 
-		 * this.renderItem3D((EntityLiving) data[1], itemStack, 0); glPopMatrix(); }
-		 */
 		if (itemStack.getItem() instanceof ICardIdentification)
 		{
 			ICardIdentification card = (ICardIdentification) itemStack.getItem();
@@ -75,14 +64,9 @@ public class RenderIDCard implements IItemRenderer
 				glTranslatef(0f, 0f, -0.0005f);
 			}
 
-			this.renderPlayerFace(this.getSkin(card.getUsername(itemStack)));
+			this.renderPlayerFace(this.getSkinFace(card.getUsername(itemStack)));
 
-			if (type != ItemRenderType.INVENTORY)
-			{
-				glTranslatef(0f, 0f, 0.002f);
-				this.renderItemIcon(ModularForceFieldSystem.itemCardID.getIcon(itemStack, 0));
-			}
-
+			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			glEnable(GL_CULL_FACE);
 			glPopMatrix();
 		}
@@ -109,79 +93,86 @@ public class RenderIDCard implements IItemRenderer
 		}
 	}
 
-	private int getSkin(String name)
+	private ResourceLocation getSkinFace(String name)
 	{
 		try
 		{
-			String skin = "http://skins.minecraft.net/MinecraftSkins/" + name + ".png";
-			Minecraft mc = Minecraft.getMinecraft();
-			if (!mc.renderEngine.hasImageData(skin))
-				mc.renderEngine.obtainImageData(skin, new ImageBufferDownload());
-			return mc.renderEngine.getTextureForDownloadableImage(skin, "/mob/char.png");
+			ResourceLocation resourcelocation = AbstractClientPlayer.field_110314_b;
+
+			if (name != null && !name.isEmpty())
+			{
+				resourcelocation = AbstractClientPlayer.func_110305_h(name);
+				AbstractClientPlayer.func_110304_a(resourcelocation, name);
+				return resourcelocation;
+			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		return 0;
+		return null;
 	}
 
-	private void renderPlayerFace(int texID)
+	private void renderPlayerFace(ResourceLocation resourcelocation)
 	{
-		Vector2 translation = new Vector2(9, 5);
-		int xSize = 4;
-		int ySize = 4;
-
-		int topLX = translation.intX();
-		int topRX = translation.intX() + xSize;
-		int botLX = translation.intX();
-		int botRX = translation.intX() + xSize;
-
-		int topLY = translation.intY();
-		int topRY = translation.intY();
-		int botLY = translation.intY() + ySize;
-		int botRY = translation.intY() + ySize;
-
-		glBindTexture(GL_TEXTURE_2D, texID);
-		glColor4f(1, 1, 1, 1);
-		// face
-		glBegin(GL_QUADS);
+		if (resourcelocation != null)
 		{
-			glTexCoord2f(1f / 8f, 1f / 4f);
-			glVertex2f(topLX, topLY);
+			Vector2 translation = new Vector2(9, 5);
+			int xSize = 4;
+			int ySize = 4;
 
-			glTexCoord2f(1f / 8f, 2f / 4f);
-			glVertex2f(botLX, botLY);
+			int topLX = translation.intX();
+			int topRX = translation.intX() + xSize;
+			int botLX = translation.intX();
+			int botRX = translation.intX() + xSize;
 
-			glTexCoord2f(2f / 8f, 2f / 4f);
-			glVertex2f(botRX, botRY);
+			int topLY = translation.intY();
+			int topRY = translation.intY();
+			int botLY = translation.intY() + ySize;
+			int botRY = translation.intY() + ySize;
 
-			glTexCoord2f(2f / 8f, 1f / 4f);
-			glVertex2f(topRX, topRY);
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(resourcelocation);
+			// glBindTexture(GL_TEXTURE_2D, texID);
+
+			glColor4f(1, 1, 1, 1);
+			// Face
+			glBegin(GL_QUADS);
+			{
+				glTexCoord2f(1f / 8f, 1f / 4f);
+				glVertex2f(topLX, topLY);
+
+				glTexCoord2f(1f / 8f, 2f / 4f);
+				glVertex2f(botLX, botLY);
+
+				glTexCoord2f(2f / 8f, 2f / 4f);
+				glVertex2f(botRX, botRY);
+
+				glTexCoord2f(2f / 8f, 1f / 4f);
+				glVertex2f(topRX, topRY);
+			}
+			glEnd();
+			// mask
+			glBegin(GL_QUADS);
+			{
+				glTexCoord2f(5f / 8f, 1f / 4f);
+				glVertex2f(topLX, topLY);
+
+				glTexCoord2f(5f / 8f, 2f / 4f);
+				glVertex2f(botLX, botLY);
+
+				glTexCoord2f(6f / 8f, 2f / 4f);
+				glVertex2f(botRX, botRY);
+
+				glTexCoord2f(6f / 8f, 1f / 4f);
+				glVertex2f(topRX, topRY);
+			}
+			glEnd();
 		}
-		glEnd();
-		// mask
-		glBegin(GL_QUADS);
-		{
-			glTexCoord2f(5f / 8f, 1f / 4f);
-			glVertex2f(topLX, topLY);
-
-			glTexCoord2f(5f / 8f, 2f / 4f);
-			glVertex2f(botLX, botLY);
-
-			glTexCoord2f(6f / 8f, 2f / 4f);
-			glVertex2f(botRX, botRY);
-
-			glTexCoord2f(6f / 8f, 1f / 4f);
-			glVertex2f(topRX, topRY);
-		}
-		glEnd();
 	}
 
 	private void renderItemIcon(Icon icon)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture("/gui/items.png");
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(icon.getMinU(), icon.getMinV());
@@ -209,15 +200,6 @@ public class RenderIDCard implements IItemRenderer
 			return;
 		}
 
-		if (par2ItemStack.getItemSpriteNumber() == 0)
-		{
-			this.mc.renderEngine.bindTexture("/terrain.png");
-		}
-		else
-		{
-			this.mc.renderEngine.bindTexture("/gui/items.png");
-		}
-
 		Tessellator tessellator = Tessellator.instance;
 		float f = icon.getMinU();
 		float f1 = icon.getMaxU();
@@ -232,39 +214,7 @@ public class RenderIDCard implements IItemRenderer
 		GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getSheetWidth(), icon.getSheetHeight(), 0.0625F);
-
-		if (par2ItemStack != null && par2ItemStack.hasEffect() && par3 == 0)
-		{
-			GL11.glDepthFunc(GL11.GL_EQUAL);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			this.mc.renderEngine.bindTexture("%blur%/misc/glint.png");
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
-			float f7 = 0.76F;
-			GL11.glColor4f(0.5F * f7, 0.25F * f7, 0.8F * f7, 1.0F);
-			GL11.glMatrixMode(GL11.GL_TEXTURE);
-			GL11.glPushMatrix();
-			float f8 = 0.125F;
-			GL11.glScalef(f8, f8, f8);
-			float f9 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
-			GL11.glTranslatef(f9, 0.0F, 0.0F);
-			GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-			ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
-			GL11.glPopMatrix();
-			GL11.glPushMatrix();
-			GL11.glScalef(f8, f8, f8);
-			f9 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F;
-			GL11.glTranslatef(-f9, 0.0F, 0.0F);
-			GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
-			ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
-			GL11.glPopMatrix();
-			GL11.glMatrixMode(GL11.GL_MODELVIEW);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glDepthFunc(GL11.GL_LEQUAL);
-		}
-
+		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getOriginX(), icon.getOriginY(), 0.0625F);
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 	}
 

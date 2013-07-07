@@ -11,41 +11,30 @@ import java.util.EnumSet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.compatiblity.Compatiblity;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import buildcraft.api.power.IPowerProvider;
+import universalelectricity.prefab.implement.IRotatable;
 import buildcraft.api.power.IPowerReceptor;
-import buildcraft.api.power.PowerFramework;
+import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
+import buildcraft.api.power.PowerHandler.Type;
 import calclavia.lib.IUniversalEnergyTile;
+import cpw.mods.fml.common.Loader;
 
 public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor implements IEnergySource, IUniversalEnergyTile
 {
-	/**
-	 * The amount of watts received this tick. This variable should be deducted when used.
-	 */
-	public double prevWatts, wattsReceived = 0;
+	public float energyStored;
 
-	private IPowerProvider powerProvider;
-
-	public TileEntityUniversalEnergy()
-	{
-		if (PowerFramework.currentFramework != null)
-		{
-			if (this.powerProvider == null)
-			{
-				this.powerProvider = PowerFramework.currentFramework.createPowerProvider();
-				this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
-			}
-		}
-	}
+	private PowerHandler powerHandler = new PowerHandler(this, Type.MACHINE);
 
 	@Override
 	public void initiate()
 	{
 		super.initiate();
+		this.powerHandler.configure(0, Integer.MAX_VALUE, 0, (float) Math.ceil(this.getMaxEnergyStored() * Compatiblity.TO_BC_RATIO));
 		MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 	}
 
@@ -61,39 +50,17 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	{
 		super.updateEntity();
 
-		this.prevWatts = this.wattsReceived;
-
-		/**
-		 * ElectricityManager works on server side.
-		 */
-		if (!this.worldObj.isRemote)
+		if (!this.worldObj.isRemote && this.powerHandler != null)
 		{
-			/**
-			 * If the machine is disabled, stop requesting electricity.
-			 */
-			if (!this.isDisabled())
-			{
-				ElectricityPack electricityPack = ElectricityNetworkHelper.consumeFromMultipleSides(this, this.getConsumingSides(), this.getRequest());
-				this.onReceive(electricityPack);
-			}
-			else
-			{
-				ElectricityNetworkHelper.consumeFromMultipleSides(this, new ElectricityPack());
-			}
-		}
-
-		if (this.powerProvider != null)
-		{
-			this.powerProvider.configure(0, 0, Integer.MAX_VALUE, 0, (int) Math.ceil(this.getWattBuffer() * UniversalElectricity.TO_BC_RATIO));
-			float requiredEnergy = (float) (this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
-			float energyReceived = this.powerProvider.useEnergy(0, requiredEnergy, true);
-			this.onReceive(ElectricityPack.getFromWatts(UniversalElectricity.BC3_RATIO * energyReceived, this.getVoltage()));
+			float requiredEnergy = (float) (this.getRequest(null) * Compatiblity.TO_BC_RATIO);
+			float energyReceived = this.powerHandler.useEnergy(0, requiredEnergy, true);
+			this.receiveElectricity(ElectricityPack.getFromWatts(Compatiblity.BC3_RATIO * energyReceived, this.getVoltage()), true);
 		}
 	}
 
-	public ElectricityPack produce(double watts)
+	public ElectricityPack produce(float watts)
 	{
-		ElectricityPack pack = new ElectricityPack(watts / this.getVoltage(), this.getVoltage());
+		ElectricityPack pack = ElectricityPack.getFromWatts(watts, this.getVoltage());
 		ElectricityPack remaining = ElectricityNetworkHelper.produceFromMultipleSides(this, pack);
 
 		/**
@@ -107,72 +74,85 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 			{
 				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
 
-				if (this.getPowerProvider(tileEntity) != null)
+				if (tileEntity instanceof IPowerReceptor)
 				{
-					this.getPowerProvider(tileEntity).receiveEnergy((float) (remaining.getWatts() * UniversalElectricity.TO_BC_RATIO), direction.getOpposite());
+					PowerReceiver receiver = ((IPowerReceptor) tileEntity).getPowerReceiver(direction.getOpposite());
+
+					if (receiver != null)
+					{
+						receiver.receiveEnergy(Type.MACHINE, remaining.getWatts() * Compatiblity.TO_BC_RATIO, direction.getOpposite());
+					}
 				}
 			}
 		}
 
-		if (remaining.getWatts() > 0)
+		if (Loader.isModLoaded("IC2") && remaining.getWatts() > 0)
 		{
-			EnergyTileSourceEvent evt = new EnergyTileSourceEvent(this, (int) (remaining.getWatts() * UniversalElectricity.TO_IC2_RATIO));
+			EnergyTileSourceEvent evt = new EnergyTileSourceEvent(this, (int) (remaining.getWatts() * Compatiblity.TO_IC2_RATIO));
 			MinecraftForge.EVENT_BUS.post(evt);
-			remaining = new ElectricityPack((evt.amount * UniversalElectricity.IC2_RATIO) / remaining.voltage, remaining.voltage);
+			remaining = new ElectricityPack((evt.amount * Compatiblity.IC2_RATIO) / remaining.voltage, remaining.voltage);
 		}
 
 		return remaining;
 	}
 
-	protected EnumSet<ForgeDirection> getConsumingSides()
+	@Override
+	public boolean canConnect(ForgeDirection direction)
 	{
-		return ElectricityNetworkHelper.getDirections(this);
-	}
-
-	/**
-	 * Returns the amount of energy being requested this tick. Return an empty ElectricityPack if no
-	 * electricity is desired.
-	 */
-	public ElectricityPack getRequest()
-	{
-		return new ElectricityPack();
-	}
-
-	/**
-	 * Called right after electricity is transmitted to the TileEntity. Override this if you wish to
-	 * have another effect for a voltage overcharge.
-	 * 
-	 * @param electricityPack
-	 */
-	public void onReceive(ElectricityPack electricityPack)
-	{
-		/**
-		 * Creates an explosion if the voltage is too high.
-		 */
-		if (UniversalElectricity.isVoltageSensitive)
+		if (this instanceof IRotatable)
 		{
-			if (electricityPack.voltage > this.getVoltage())
-			{
-				return;
-			}
+			return direction.ordinal() == this.getBlockMetadata();
 		}
 
-		this.wattsReceived = Math.min(this.wattsReceived + electricityPack.getWatts(), this.getWattBuffer());
-	}
-
-	/**
-	 * @return The amount of internal buffer that may be stored within this machine. This will make
-	 * the machine run smoother as electricity might not always be consistent.
-	 */
-	public double getWattBuffer()
-	{
-		return this.getRequest().getWatts() * 2;
+		return true;
 	}
 
 	@Override
-	public double getVoltage()
+	public float receiveElectricity(ElectricityPack electricityPack, boolean doReceive)
+	{
+		return 0;
+	}
+
+	@Override
+	public float getRequest(ForgeDirection direction)
+	{
+		return 0;
+	}
+
+	@Override
+	public float getVoltage()
 	{
 		return 120;
+	}
+
+	public void setEnergyStored(float energy)
+	{
+		this.energyStored = Math.max(Math.min(energy, this.getMaxEnergyStored()), 0);
+	}
+
+	public float getEnergyStored()
+	{
+		return this.energyStored;
+	}
+
+	public float getMaxEnergyStored()
+	{
+		return this.getRequest(ForgeDirection.UNKNOWN) * 2;
+	}
+
+	/**
+	 * Buildcraft
+	 */
+	@Override
+	public PowerReceiver getPowerReceiver(ForgeDirection side)
+	{
+		return this.powerHandler.getPowerReceiver();
+	}
+
+	@Override
+	public void doWork(PowerHandler workProvider)
+	{
+
 	}
 
 	/**
@@ -181,14 +161,13 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	@Override
 	public boolean acceptsEnergyFrom(TileEntity emitter, Direction direction)
 	{
-		if (this.getConsumingSides() != null)
-		{
-			return this.getConsumingSides().contains(direction.toForgeDirection());
-		}
-		else
-		{
-			return true;
-		}
+		return this.canConnect(direction.toForgeDirection());
+	}
+
+	@Override
+	public boolean emitsEnergyTo(TileEntity receiver, Direction direction)
+	{
+		return this.canConnect(direction.toForgeDirection());
 	}
 
 	@Override
@@ -200,82 +179,34 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	@Override
 	public int demandsEnergy()
 	{
-		return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_IC2_RATIO);
+		return (int) Math.ceil(this.getRequest(ForgeDirection.UNKNOWN) * Compatiblity.TO_IC2_RATIO);
 	}
 
 	@Override
 	public int injectEnergy(Direction direction, int i)
 	{
-		double givenElectricity = i * UniversalElectricity.IC2_RATIO;
-		double rejects = 0;
+		float givenElectricity = i * Compatiblity.IC2_RATIO;
+		float rejects = 0;
 
-		if (givenElectricity > this.getWattBuffer())
+		if (givenElectricity > this.getMaxEnergyStored())
 		{
-			rejects = givenElectricity - this.getRequest().getWatts();
+			rejects = givenElectricity - this.getMaxEnergyStored();
 		}
 
-		this.onReceive(new ElectricityPack(givenElectricity / this.getVoltage(), this.getVoltage()));
+		this.receiveElectricity(ElectricityPack.getFromWatts(givenElectricity, this.getVoltage()), true);
 
-		return (int) (rejects * UniversalElectricity.TO_IC2_RATIO);
+		return (int) (rejects * Compatiblity.TO_IC2_RATIO);
 	}
 
 	@Override
 	public int getMaxSafeInput()
 	{
-		return 2048;
-	}
-
-	@Override
-	public boolean emitsEnergyTo(TileEntity receiver, Direction direction)
-	{
-		return this.canConnect(direction.toForgeDirection());
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	public int getMaxEnergyOutput()
 	{
-		return 2048;
-	}
-
-	/**
-	 * Buildcraft
-	 */
-	@Override
-	public void setPowerProvider(IPowerProvider provider)
-	{
-		this.powerProvider = provider;
-	}
-
-	@Override
-	public IPowerProvider getPowerProvider()
-	{
-		return this.powerProvider;
-	}
-
-	@Override
-	public void doWork()
-	{
-
-	}
-
-	@Override
-	public int powerRequest(ForgeDirection from)
-	{
-		if (this.canConnect(from))
-		{
-			return (int) Math.ceil(this.getRequest().getWatts() * UniversalElectricity.TO_BC_RATIO);
-		}
-
-		return 0;
-	}
-
-	public IPowerProvider getPowerProvider(TileEntity tileEntity)
-	{
-		if (tileEntity instanceof IPowerReceptor)
-		{
-			return ((IPowerReceptor) tileEntity).getPowerProvider();
-		}
-
-		return null;
+		return Integer.MAX_VALUE;
 	}
 }

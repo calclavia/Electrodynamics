@@ -1,7 +1,7 @@
 package mffs.api.modules;
 
 import mffs.api.security.IInterdictionMatrix;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 public interface IInterdictionMatrixModule extends IModule
 {
@@ -10,5 +10,5 @@ public interface IInterdictionMatrixModule extends IModule
 	 * 
 	 * @return True if to stop processing other modules in this list.
 	 */
-	public boolean onDefend(IInterdictionMatrix defenseStation, EntityLiving entityLiving);
+	public boolean onDefend(IInterdictionMatrix defenseStation, EntityLivingBase entityLiving);
 }

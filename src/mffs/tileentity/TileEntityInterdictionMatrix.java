@@ -16,6 +16,7 @@ import mffs.api.security.Permission;
 import mffs.base.TileEntityModuleAcceptor;
 import mffs.card.ItemCard;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,10 +76,10 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 			AxisAlignedBB emptyBounds = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
 
-			List<EntityLiving> warningList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getWarningRange(), getWarningRange(), getWarningRange()));
-			List<EntityLiving> actionList = this.worldObj.getEntitiesWithinAABB(EntityLiving.class, emptyBounds.expand(getActionRange(), getActionRange(), getActionRange()));
+			List<EntityLivingBase> warningList = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, emptyBounds.expand(getWarningRange(), getWarningRange(), getWarningRange()));
+			List<EntityLivingBase> actionList = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, emptyBounds.expand(getActionRange(), getActionRange(), getActionRange()));
 
-			for (EntityLiving entityLiving : warningList)
+			for (EntityLivingBase entityLiving : warningList)
 			{
 				if (entityLiving instanceof EntityPlayer && !actionList.contains(entityLiving))
 				{
@@ -101,7 +102,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 
 			if (this.worldObj.rand.nextInt(3) == 0)
 			{
-				for (EntityLiving entityLiving : actionList)
+				for (EntityLivingBase entityLiving : actionList)
 				{
 					this.applyAction(entityLiving);
 				}
@@ -120,7 +121,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	 * 
 	 * @param entityLiving
 	 */
-	public void applyAction(EntityLiving entityLiving)
+	public void applyAction(EntityLivingBase entityLiving)
 	{
 		/**
 		 * Check for security permission to see if this player should be ignored.

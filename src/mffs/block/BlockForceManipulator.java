@@ -2,7 +2,7 @@ package mffs.block;
 
 import mffs.base.BlockMachine;
 import mffs.tileentity.TileEntityForceManipulator;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +17,7 @@ public class BlockForceManipulator extends BlockMachine
 		super(i, "manipulator");
 	}
 
-	public static int determineOrientation(World world, int x, int y, int z, EntityPlayer entityPlayer)
+	public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entityPlayer)
 	{
 		if (MathHelper.abs((float) entityPlayer.posX - x) < 2.0F && MathHelper.abs((float) entityPlayer.posZ - z) < 2.0F)
 		{
@@ -39,9 +39,9 @@ public class BlockForceManipulator extends BlockMachine
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving par5EntityLiving, ItemStack stack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
 	{
-		int metadata = determineOrientation(world, x, y, z, (EntityPlayer) par5EntityLiving);
+		int metadata = determineOrientation(world, x, y, z, par5EntityLiving);
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 	}
 

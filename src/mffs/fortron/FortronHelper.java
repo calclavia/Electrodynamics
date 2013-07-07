@@ -1,7 +1,7 @@
 package mffs.fortron;
 
-import net.minecraftforge.liquids.LiquidStack;
-import net.minecraftforge.liquids.LiquidTank;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 /**
  * A class with useful functions related to Fortron.
@@ -11,16 +11,16 @@ import net.minecraftforge.liquids.LiquidTank;
  */
 public class FortronHelper
 {
-	public static LiquidStack LIQUID_FORTRON;
+	public static FluidStack FLUID_FORTRON;
 
-	public static LiquidStack getFortron(int amount)
+	public static FluidStack getFortron(int amount)
 	{
-		LiquidStack stack = FortronHelper.LIQUID_FORTRON.copy();
+		FluidStack stack = FortronHelper.FLUID_FORTRON.copy();
 		stack.amount = amount;
 		return stack;
 	}
 
-	public static int getAmount(LiquidStack liquidStack)
+	public static int getAmount(FluidStack liquidStack)
 	{
 		if (liquidStack != null)
 		{
@@ -29,11 +29,11 @@ public class FortronHelper
 		return 0;
 	}
 
-	public static int getAmount(LiquidTank fortronTank)
+	public static int getAmount(FluidTank fortronTank)
 	{
 		if (fortronTank != null)
 		{
-			return getAmount(fortronTank.getLiquid());
+			return getAmount(fortronTank.getFluid());
 		}
 
 		return 0;

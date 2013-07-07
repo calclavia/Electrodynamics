@@ -1,5 +1,6 @@
 package mffs.block;
 
+import mffs.ModularForceFieldSystem;
 import mffs.base.BlockMachine;
 import mffs.base.TileEntityBase;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -45,10 +46,10 @@ public class BlockMachineBlock extends BlockMachine
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(this.getUnlocalizedName2());
-		this.blockIconTop = par1IconRegister.registerIcon(this.getUnlocalizedName2() + "_top");
-		this.blockIconOn = par1IconRegister.registerIcon(this.getUnlocalizedName2() + "_on");
-		this.blockIconTopOn = par1IconRegister.registerIcon(this.getUnlocalizedName2() + "_top_on");
+		this.blockIcon = par1IconRegister.registerIcon(this.func_111023_E());
+		this.blockIconTop = par1IconRegister.registerIcon(this.func_111023_E() + "_top");
+		this.blockIconOn = par1IconRegister.registerIcon(this.func_111023_E() + "_on");
+		this.blockIconTopOn = par1IconRegister.registerIcon(this.func_111023_E() + "_top_on");
 	}
 
 	@Override

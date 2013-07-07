@@ -1,7 +1,7 @@
 package mffs.item.module.interdiction;
 
 import mffs.api.security.IInterdictionMatrix;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ItemModuleWarn extends ItemModuleInterdictionMatrix
@@ -12,7 +12,7 @@ public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 	}
 
 	@Override
-	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
+	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLivingBase entityLiving)
 	{
 		boolean hasPermission = false;
 		if (!hasPermission && entityLiving instanceof EntityPlayer)

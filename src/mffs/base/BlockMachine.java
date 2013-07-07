@@ -29,6 +29,7 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 		this.setResistance(100.0F);
 		this.setStepSound(soundMetalFootstep);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
+		this.func_111022_d(ModularForceFieldSystem.PREFIX + name);
 	}
 
 	@Override

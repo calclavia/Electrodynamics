@@ -6,14 +6,14 @@ import java.util.Set;
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
-import mffs.base.ItemBase;
+import mffs.base.ItemMFFS;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
-public class ItemModule extends ItemBase implements IModule
+public class ItemModule extends ItemMFFS implements IModule
 {
 	private float fortronCost = 0.5f;
 

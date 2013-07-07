@@ -1,7 +1,7 @@
 package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerInterdictionMatrix;
 import mffs.tileentity.TileEntityInterdictionMatrix;
@@ -13,7 +13,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiInterdictionMatrix extends GuiBase
+public class GuiInterdictionMatrix extends GuiMFFS
 {
 	private TileEntityInterdictionMatrix tileEntity;
 

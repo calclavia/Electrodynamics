@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import mffs.base.BlockBase;
 import mffs.base.BlockMachine;
-import mffs.base.ItemBase;
+import mffs.base.ItemMFFS;
 import mffs.block.BlockBiometricIdentifier;
 import mffs.block.BlockCoercionDeriver;
 import mffs.block.BlockForceField;
@@ -49,12 +49,14 @@ import mffs.tileentity.TileEntityForceManipulator;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.liquids.LiquidDictionary;
-import net.minecraftforge.liquids.LiquidStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -70,11 +72,8 @@ import basiccomponents.common.BasicComponents;
 import calclavia.lib.UniversalRecipes;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
-import cpw.mods.fml.common.Mod.ServerStarting;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -96,7 +95,8 @@ public class ModularForceFieldSystem
 	public static final String CHANNEL = "MFFS";
 	public static final String ID = "MFFS";
 	public static final String NAME = "Modular Force Field System";
-	public static final String PREFIX = "mffs:";
+	public static final String DOMAIN = "mffs";
+	public static final String PREFIX = DOMAIN + ":";
 	public static final String MAJOR_VERSION = "@MAJOR@";
 	public static final String MINOR_VERSION = "@MINOR@";
 	public static final String REVISION_VERSION = "@REVIS@";
@@ -115,16 +115,16 @@ public class ModularForceFieldSystem
 	/**
 	 * Directories Definition
 	 */
-	public static final String RESOURCE_DIRECTORY = "/mods/mffs/";
+	public static final String RESOURCE_DIRECTORY = "/assets/mffs/";
 	public static final String LANGUAGE_DIRECTORY = RESOURCE_DIRECTORY + "languages/";
-	public static final String TEXTURE_DIRECTORY = RESOURCE_DIRECTORY + "textures/";
+
+	public static final String TEXTURE_DIRECTORY = "textures/";
 	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
 	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
 	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-	public static final String GUI_BASE_DIRECTORY = GUI_DIRECTORY + "gui_base.png";
-	public static final String GUI_COMPONENTS = GUI_DIRECTORY + "gui_components.png";
-	public static final String GUI_BUTTON = GUI_DIRECTORY + "gui_button.png";
+	public static final ResourceLocation GUI_BUTTON = new ResourceLocation(DOMAIN, GUI_DIRECTORY + "gui_button.png");
+	public static final ResourceLocation HOLOGAM_TEXTURE = new ResourceLocation(DOMAIN, BLOCK_DIRECTORY + "forceField.png");
 
 	/**
 	 * Machines
@@ -173,7 +173,7 @@ public class ModularForceFieldSystem
 
 	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
 
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		/**
@@ -206,7 +206,7 @@ public class ModularForceFieldSystem
 		 * Items
 		 */
 		itemRemoteController = new ItemRemoteController(Settings.getNextItemID());
-		itemFocusMatix = new ItemBase(Settings.getNextItemID(), "focusMatrix");
+		itemFocusMatix = new ItemMFFS(Settings.getNextItemID(), "focusMatrix");
 
 		/**
 		 * Modes
@@ -239,6 +239,14 @@ public class ModularForceFieldSystem
 		itemModuleStablize = new ItemModuleStablize(Settings.getNextItemID());
 
 		/**
+		 * Cards
+		 */
+		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
+		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
+		itemCardLink = new ItemCardLink(Settings.getNextItemID());
+		itemCardID = new ItemCardID(Settings.getNextItemID());
+		itemCardInfinite = new ItemCardInfinite(Settings.getNextItemID());
+		/**
 		 * Interdiction Modules
 		 */
 		itemModuleAntiFriendly = new ItemModuleAntiFriendly(Settings.getNextItemID());
@@ -249,28 +257,16 @@ public class ModularForceFieldSystem
 		itemModuleBlockAccess = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAccess").setCost(10);
 		itemModuleBlockAlter = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleBlockAlter").setCost(15);
 		itemModuleAntiSpawn = new ItemModuleInterdictionMatrix(Settings.getNextItemID(), "moduleAntiSpawn").setCost(10);
-
-		/**
-		 * Cards
-		 */
-		itemCardBlank = new ItemCard(Settings.getNextItemID(), "cardBlank");
-		itemCardFrequency = new ItemCardFrequency(Settings.getNextItemID());
-		itemCardLink = new ItemCardLink(Settings.getNextItemID());
-		itemCardID = new ItemCardID(Settings.getNextItemID());
-		itemCardInfinite = new ItemCardInfinite(Settings.getNextItemID());
+		itemModuleCollection = new ItemModule(Settings.getNextItemID(), "moduleCollection").setMaxStackSize(1).setCost(15);
+		itemModuleInvert = new ItemModule(Settings.getNextItemID(), "moduleInvert").setMaxStackSize(1).setCost(15);
+		itemModuleSilence = new ItemModule(Settings.getNextItemID(), "moduleSilence").setMaxStackSize(1).setCost(1);
 
 		/**
 		 * The Fortron Liquid
 		 */
-		itemFortron = new ItemBase(Settings.getNextItemID(), "fortron").setCreativeTab(null);
-		FortronHelper.LIQUID_FORTRON = LiquidDictionary.getOrCreateLiquid("Fortron", new LiquidStack(itemFortron, 0));
-
-		/**
-		 * More Modules
-		 */
-		itemModuleCollection = new ItemModule(Settings.getNextItemID(), "moduleCollection").setMaxStackSize(1).setCost(15);
-		itemModuleInvert = new ItemModule(Settings.getNextItemID(), "moduleInvert").setMaxStackSize(1).setCost(15);
-		itemModuleSilence = new ItemModule(Settings.getNextItemID(), "moduleSilence").setMaxStackSize(1).setCost(1);
+		itemFortron = new ItemMFFS(Settings.getNextItemID(), "fortron").setCreativeTab(null);
+		FluidRegistry.registerFluid(new Fluid("fortron"));
+		FortronHelper.FLUID_FORTRON = new FluidStack(FluidRegistry.getFluidID("fortron"), 0);
 
 		Settings.CONFIGURATION.save();
 
@@ -293,13 +289,13 @@ public class ModularForceFieldSystem
 		proxy.preInit();
 	}
 
-	@Init
+	@EventHandler
 	public void load(FMLInitializationEvent evt)
 	{
 		/**
 		 * Load Basic Components
 		 */
-		BasicComponents.register(this, CHANNEL);
+		BasicComponents.register(CHANNEL);
 
 		BasicComponents.requestItem("ingotSteel", 0);
 		BasicComponents.requestItem("dustSteel", 0);
@@ -329,7 +325,7 @@ public class ModularForceFieldSystem
 		metadata.autogenerated = false;
 	}
 
-	@PostInit
+	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		/**
@@ -433,7 +429,7 @@ public class ModularForceFieldSystem
 		proxy.init();
 	}
 
-	@ServerStarting
+	@EventHandler
 	public void serverStarting(FMLServerStartingEvent evt)
 	{
 		FrequencyGrid.reinitiate();

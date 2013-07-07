@@ -6,18 +6,22 @@ import mffs.MFFSCreativeTab;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import universalelectricity.prefab.TranslationHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBase extends Item
+public class ItemMFFS extends Item
 {
-	public ItemBase(int id, String name)
+	public ItemMFFS(int id, String name)
 	{
 		super(Settings.CONFIGURATION.getItem(name, id).getInt(id));
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
+		this.func_111206_d(ModularForceFieldSystem.PREFIX + name);
 		this.setNoRepair();
 	}
 

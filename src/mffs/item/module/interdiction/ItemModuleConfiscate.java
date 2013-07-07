@@ -5,7 +5,7 @@ import java.util.Set;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 	}
 
 	@Override
-	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLiving entityLiving)
+	public boolean onDefend(IInterdictionMatrix interdictionMatrix, EntityLivingBase entityLiving)
 	{
 		if (entityLiving instanceof EntityPlayer)
 		{

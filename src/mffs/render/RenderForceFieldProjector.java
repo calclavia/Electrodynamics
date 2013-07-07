@@ -8,19 +8,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
 import calclavia.lib.render.CalclaviaRenderHelper;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 {
-	public static final String TEXTURE_ON = "projector_on.png";
-	public static final String TEXTURE_OFF = "projector_off.png";
+	public static final ResourceLocation TEXTURE_ON = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.MODEL_DIRECTORY + "projector_on.png");
+	public static final ResourceLocation TEXTURE_OFF = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.MODEL_DIRECTORY + "projector_off.png");
+	public static final ResourceLocation FORCE_CUBE = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.MODEL_DIRECTORY + "force_cube.png");
+
 	public static final ModelForceFieldProjector MODEL = new ModelForceFieldProjector();
 
 	@Override
@@ -38,11 +42,11 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 
 			if (tileEntity.isActive())
 			{
-				this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_ON);
 			}
 			else
 			{
-				this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + TEXTURE_OFF);
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_OFF);
 			}
 
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
@@ -105,7 +109,7 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 					 */
 					GL11.glPushMatrix();
 					GL11.glTranslated(x + 0.5, y + 1.35, z + 0.5);
-					this.bindTextureByName(ModularForceFieldSystem.MODEL_DIRECTORY + "force_cube.png");
+					FMLClientHandler.instance().getClient().renderEngine.func_110577_a(FORCE_CUBE);
 
 					// Enable Blending
 					CalclaviaRenderHelper.enableBlending();

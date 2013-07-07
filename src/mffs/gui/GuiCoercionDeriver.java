@@ -1,7 +1,7 @@
 package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.GuiBase;
+import mffs.base.GuiMFFS;
 import mffs.base.TileEntityBase.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.tileentity.TileEntityCoercionDeriver;
@@ -11,14 +11,14 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.compatiblity.Compatiblity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class GuiCoercionDeriver extends GuiBase
+public class GuiCoercionDeriver extends GuiMFFS
 {
 	private TileEntityCoercionDeriver tileEntity;
 
@@ -61,8 +61,8 @@ public class GuiCoercionDeriver extends GuiBase
 			}
 		}
 
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * UniversalElectricity.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatiblity.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatiblity.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
 		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 50, 4210752);
 		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 60, 4210752);
 

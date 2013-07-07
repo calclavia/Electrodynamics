@@ -62,7 +62,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
 					// Convert Fortron to Electricity
-					double watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
+					float watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
 
 					ElectricityPack remainder = this.produce(watts);
 
@@ -78,9 +78,9 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 				else
 				{
 					// Convert Electricity to Fortron
-					this.wattsReceived += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
+					this.energyStored += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
-					if (this.wattsReceived >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (this.energyStored >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
 						int production = getProductionRate();
@@ -109,7 +109,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 							this.processTime = 0;
 						}
 
-						this.wattsReceived -= WATTAGE;
+						this.energyStored -= WATTAGE;
 					}
 
 				}
@@ -151,14 +151,14 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	}
 
 	@Override
-	public ElectricityPack getRequest()
+	public float getRequest(ForgeDirection direction)
 	{
 		if (this.canConsume())
 		{
-			return new ElectricityPack(WATTAGE / this.getVoltage(), this.getVoltage());
+			return WATTAGE;
 		}
 
-		return super.getRequest();
+		return 0;
 	}
 
 	public boolean canConsume()
@@ -181,7 +181,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		List objects = new LinkedList();
 		objects.addAll(super.getPacketUpdate());
 		objects.add(this.isInversed);
-		objects.add(this.wattsReceived);
+		objects.add(this.energyStored);
 		// objects.add(this.processTime);
 		return objects;
 	}
@@ -194,7 +194,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			this.isInversed = dataStream.readBoolean();
-			this.wattsReceived = dataStream.readDouble();
+			this.energyStored = dataStream.readFloat();
 			// this.processTime = dataStream.readInt();
 		}
 		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
