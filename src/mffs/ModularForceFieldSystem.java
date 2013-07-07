@@ -339,7 +339,7 @@ public class ModularForceFieldSystem
 
 		// -- General Items --
 		// Focus Matrix
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 10), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 9), "RMR", "MDM", "RMR", 'M', UniversalRecipes.PRIMARY_METAL, 'D', Item.diamond, 'R', Item.redstone));
 
 		// Remote Controller
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemRemoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipes.WIRE, 'C', UniversalRecipes.BATTERY, 'M', UniversalRecipes.PRIMARY_METAL));
@@ -396,11 +396,11 @@ public class ModularForceFieldSystem
 		// Fusion
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleFusion), "FJF", 'F', itemFocusMatix, 'J', itemModuleShock));
 		// Scale
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleScale), "FRF", 'F', itemFocusMatix));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleScale, 2), "FRF", 'F', itemFocusMatix));
 		// Translate
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleTranslate), "FSF", 'F', itemFocusMatix, 'S', itemModuleScale));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleTranslate, 2), "FSF", 'F', itemFocusMatix, 'S', itemModuleScale));
 		// Rotate
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRotate), "F  ", " F ", "  F", 'F', itemFocusMatix));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRotate, 4), "F  ", " F ", "  F", 'F', itemFocusMatix));
 		// Glow
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleGlow, 4), "GGG", "GFG", "GGG", 'F', itemFocusMatix, 'G', Block.glowStone));
 		// Stabilizer
