@@ -3,6 +3,7 @@ package mffs.base;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import mffs.ModularForceFieldSystem;
@@ -20,6 +21,7 @@ import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.tile.TileEntityDisableable;
+import calclavia.lib.IPlayerUsing;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -27,7 +29,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dan200.computer.api.IPeripheral;
 
-public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IRotatable, IRedstoneReceptor, IActivatable, IPeripheral
+public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IPlayerUsing, IRotatable, IRedstoneReceptor, IActivatable, IPeripheral
 {
 	public enum TilePacketType
 	{
@@ -48,7 +50,7 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	/**
 	 * The players to send packets to for machine update info.
 	 */
-	public final List<EntityPlayer> playersUsing = new ArrayList<EntityPlayer>();
+	public final HashSet<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	/**
 	 * Used for client side animations.
@@ -197,6 +199,12 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 		{
 			this.setActive(false);
 		}
+	}
+
+	@Override
+	public HashSet<EntityPlayer> getPlayersUsing()
+	{
+		return this.playersUsing;
 	}
 
 }
