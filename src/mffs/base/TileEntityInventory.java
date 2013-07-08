@@ -165,7 +165,7 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
 	{
 		return true;
 	}

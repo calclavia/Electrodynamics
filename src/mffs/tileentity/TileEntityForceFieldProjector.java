@@ -306,7 +306,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
 	{
 		if (slotID == 0 || slotID == 1)
 		{

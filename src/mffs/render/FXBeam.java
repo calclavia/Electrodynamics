@@ -11,9 +11,8 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.Calclavia;
-
 import universalelectricity.core.vector.Vector3;
+import calclavia.lib.Calclavia;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

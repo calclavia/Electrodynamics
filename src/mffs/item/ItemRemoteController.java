@@ -18,7 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector3;
@@ -93,7 +93,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICardLink
 
 					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer)))
 					{
-						double requiredEnergy = Vector3.distance(new Vector3(entityPlayer), position) * (LiquidContainerRegistry.BUCKET_VOLUME / 100);
+						double requiredEnergy = Vector3.distance(new Vector3(entityPlayer), position) * (FluidContainerRegistry.BUCKET_VOLUME / 100);
 						int receivedEnergy = 0;
 
 						Set<IFortronFrequency> fortronTiles = FrequencyGrid.instance().getFortronTiles(world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack));

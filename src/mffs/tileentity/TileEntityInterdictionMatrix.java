@@ -15,7 +15,6 @@ import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.base.TileEntityModuleAcceptor;
 import mffs.card.ItemCard;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -226,7 +225,7 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
 	{
 		if (slotID == 0 || slotID == 1)
 		{

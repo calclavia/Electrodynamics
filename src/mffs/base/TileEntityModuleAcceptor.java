@@ -12,7 +12,7 @@ import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.liquids.LiquidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor, ICache
 {
@@ -32,7 +32,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public void initiate()
 	{
 		super.initiate();
-		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME);
 	}
 
 	public void consumeCost()
@@ -309,7 +309,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public void onInventoryChanged()
 	{
 		super.onInventoryChanged();
-		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * LiquidContainerRegistry.BUCKET_VOLUME);
+		this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME);
 
 		/**
 		 * Clears the cache.

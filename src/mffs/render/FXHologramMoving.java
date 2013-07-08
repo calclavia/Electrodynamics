@@ -1,7 +1,6 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;

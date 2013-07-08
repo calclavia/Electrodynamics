@@ -15,7 +15,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.liquids.ILiquid;
+import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.PacketManager;
@@ -83,7 +83,7 @@ public class ItemModuleStablize extends ItemModule
 
 											Block block = blockInfo != null ? Block.blocksList[blockInfo[0]] : null;
 
-											if (Blacklist.stabilizationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof ILiquid)
+											if (Blacklist.stabilizationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof IFluidBlock)
 											{
 												return 1;
 											}

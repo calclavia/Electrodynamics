@@ -17,7 +17,7 @@ public class SlotBase extends Slot
 	@Override
 	public boolean isItemValid(ItemStack itemStack)
 	{
-		return this.tileEntity.isStackValidForSlot(this.slotNumber, itemStack);
+		return this.tileEntity.isItemValidForSlot(this.slotNumber, itemStack);
 	}
 
 	@Override

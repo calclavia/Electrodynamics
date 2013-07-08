@@ -80,7 +80,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 					// Convert Electricity to Fortron
 					this.energyStored += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
 
-					if (this.energyStored >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (this.energyStored >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
 						int production = getProductionRate();
@@ -88,7 +88,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
 						// Use fuel
-						if (this.processTime == 0 && this.isStackValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
+						if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 						{
 							this.decrStackSize(SLOT_FUEL, 1);
 							this.processTime = REQUIRED_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 20, 1);
@@ -220,7 +220,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
 	{
 		if (itemStack != null)
 		{

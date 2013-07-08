@@ -99,7 +99,7 @@ public class TileEntityBiometricIdentifier extends TileEntityFrequency implement
 	}
 
 	@Override
-	public boolean isStackValidForSlot(int slotID, ItemStack itemStack)
+	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
 	{
 		if (slotID == 0)
 		{

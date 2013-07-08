@@ -1,6 +1,5 @@
 package mffs.block;
 
-import mffs.ModularForceFieldSystem;
 import mffs.base.BlockMachine;
 import mffs.base.TileEntityBase;
 import net.minecraft.client.renderer.texture.IconRegister;

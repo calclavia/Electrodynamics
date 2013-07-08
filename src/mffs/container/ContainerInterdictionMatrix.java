@@ -1,10 +1,10 @@
 package mffs.container;
 
-import mffs.base.ContainerBase;
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
+import calclavia.lib.gui.ContainerBase;
 
 public class ContainerInterdictionMatrix extends ContainerBase
 {

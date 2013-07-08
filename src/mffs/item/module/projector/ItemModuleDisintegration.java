@@ -18,7 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.liquids.ILiquid;
+import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
 
@@ -83,7 +83,7 @@ public class ItemModuleDisintegration extends ItemModule
 					}
 				}
 
-				if (Blacklist.disintegrationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof ILiquid)
+				if (Blacklist.disintegrationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof IFluidBlock)
 				{
 					return 1;
 				}
