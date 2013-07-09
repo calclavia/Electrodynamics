@@ -16,7 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.compatiblity.Compatiblity;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
-import universalelectricity.core.electricity.ElectricityNetworkHelper;
+import universalelectricity.core.electricity.ElectricalEventHandler;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -64,14 +64,14 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	public ElectricityPack produce(float watts)
 	{
 		ElectricityPack pack = ElectricityPack.getFromWatts(watts, this.getVoltage());
-		ElectricityPack remaining = ElectricityNetworkHelper.produceFromMultipleSides(this, pack);
+		ElectricityPack remaining = ElectricalEventHandler.produceFromMultipleSides(this, pack);
 
 		/**
 		 * Try outputting BuildCraft power.
 		 */
 		if (remaining.getWatts() > 0)
 		{
-			EnumSet<ForgeDirection> approachingDirections = ElectricityNetworkHelper.getDirections(this);
+			EnumSet<ForgeDirection> approachingDirections = ElectricalEventHandler.getDirections(this);
 
 			for (ForgeDirection direction : approachingDirections)
 			{
