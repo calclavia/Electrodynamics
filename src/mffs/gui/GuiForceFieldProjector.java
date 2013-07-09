@@ -56,7 +56,7 @@ public class GuiForceFieldProjector extends GuiMFFS
 
 		GL11.glPushMatrix();
 		GL11.glRotatef(-90, 0, 0, 1);
-		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -63, 8, 4210752);
+		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), -63, 8, 4210752);
 		GL11.glPopMatrix();
 
 		this.drawTextWithTooltip("matrix", 32, 20, x, y);

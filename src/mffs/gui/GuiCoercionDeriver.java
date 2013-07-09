@@ -2,7 +2,7 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;

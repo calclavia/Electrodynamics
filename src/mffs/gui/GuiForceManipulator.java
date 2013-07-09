@@ -2,7 +2,7 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.gui.button.GuiIcon;
 import mffs.tileentity.TileEntityForceManipulator;
@@ -70,7 +70,7 @@ public class GuiForceManipulator extends GuiMFFS
 
 		GL11.glPushMatrix();
 		GL11.glRotatef(-90, 0, 0, 1);
-		this.fontRenderer.drawString(this.tileEntity.getDirection(this.tileEntity.worldObj, this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord).name(), -100, 10, 4210752);
+		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), -100, 10, 4210752);
 		GL11.glPopMatrix();
 
 		this.fontRenderer.drawString("Anchor:", 30, 60, 4210752);

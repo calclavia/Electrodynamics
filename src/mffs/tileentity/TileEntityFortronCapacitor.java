@@ -44,46 +44,43 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 
 		this.consumeCost();
 
-		if (!this.isDisabled())
+		/**
+		 * Transmit Fortrons in frequency network, evenly distributing them.
+		 */
+		/**
+		 * Gets the card.
+		 */
+		if (this.isActive() && this.ticks % 10 == 0)
 		{
-			/**
-			 * Transmit Fortrons in frequency network, evenly distributing them.
-			 */
-			/**
-			 * Gets the card.
-			 */
-			if (this.isActive() && this.ticks % 10 == 0)
+			Set<IFortronFrequency> machines = new HashSet<IFortronFrequency>();
+
+			for (ItemStack itemStack : this.getCards())
 			{
-				Set<IFortronFrequency> machines = new HashSet<IFortronFrequency>();
-
-				for (ItemStack itemStack : this.getCards())
+				if (itemStack != null)
 				{
-					if (itemStack != null)
+					if (itemStack.getItem() instanceof ICardInfinite)
 					{
-						if (itemStack.getItem() instanceof ICardInfinite)
-						{
-							this.setFortronEnergy(this.getFortronCapacity());
-						}
-						else if (itemStack.getItem() instanceof ICardLink)
-						{
-							Vector3 linkPosition = ((ICardLink) itemStack.getItem()).getLink(itemStack);
+						this.setFortronEnergy(this.getFortronCapacity());
+					}
+					else if (itemStack.getItem() instanceof ICardLink)
+					{
+						Vector3 linkPosition = ((ICardLink) itemStack.getItem()).getLink(itemStack);
 
-							if (linkPosition != null && linkPosition.getTileEntity(this.worldObj) instanceof IFortronFrequency)
-							{
-								machines.add(this);
-								machines.add((IFortronFrequency) linkPosition.getTileEntity(this.worldObj));
-							}
+						if (linkPosition != null && linkPosition.getTileEntity(this.worldObj) instanceof IFortronFrequency)
+						{
+							machines.add(this);
+							machines.add((IFortronFrequency) linkPosition.getTileEntity(this.worldObj));
 						}
 					}
 				}
-
-				if (machines.size() < 1)
-				{
-					machines = this.getLinkedDevices();
-				}
-
-				MFFSHelper.transferFortron(this, machines, this.transferMode, this.getTransmissionRate());
 			}
+
+			if (machines.size() < 1)
+			{
+				machines = this.getLinkedDevices();
+			}
+
+			MFFSHelper.transferFortron(this, machines, this.transferMode, this.getTransmissionRate());
 		}
 	}
 

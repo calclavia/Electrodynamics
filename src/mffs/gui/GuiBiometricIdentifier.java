@@ -4,7 +4,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.container.ContainerBiometricIdentifier;
 import mffs.gui.button.GuiButtonPress;
 import mffs.tileentity.TileEntityBiometricIdentifier;

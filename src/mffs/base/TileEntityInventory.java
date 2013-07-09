@@ -18,8 +18,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.multiblock.TileEntityMulti;
 import universalelectricity.prefab.network.PacketManager;
+import calclavia.lib.multiblock.TileEntityMulti;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -31,7 +31,7 @@ import dan200.computer.api.IComputerAccess;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityInventory extends TileEntityBase implements IInventory
+public abstract class TileEntityInventory extends TileEntityMFFS implements IInventory
 {
 	/**
 	 * The inventory of the TileEntity.

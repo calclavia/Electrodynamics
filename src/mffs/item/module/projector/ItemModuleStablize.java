@@ -6,7 +6,7 @@ import java.util.Set;
 import mffs.ModularForceFieldSystem;
 import mffs.api.Blacklist;
 import mffs.api.IProjector;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;

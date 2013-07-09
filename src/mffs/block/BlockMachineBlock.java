@@ -1,7 +1,7 @@
 package mffs.block;
 
 import mffs.base.BlockMachine;
-import mffs.base.TileEntityBase;
+import mffs.base.TileEntityMFFS;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -21,9 +21,9 @@ public class BlockMachineBlock extends BlockMachine
 	{
 		TileEntity tileEntity = par1IBlockAccess.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityBase)
+		if (tileEntity instanceof TileEntityMFFS)
 		{
-			if (((TileEntityBase) tileEntity).isActive())
+			if (((TileEntityMFFS) tileEntity).isActive())
 			{
 				if (side == 0 || side == 1)
 				{

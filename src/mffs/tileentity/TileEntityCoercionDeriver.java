@@ -1,13 +1,11 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IModule;
-import mffs.base.TileEntityUniversalEnergy;
+import mffs.base.TileEntityMFFSUniversal;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
@@ -17,6 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
+import universalelectricity.prefab.tile.ElectricityHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -26,7 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
+public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 {
 	/**
 	 * The amount of watts this machine uses.
@@ -46,6 +45,8 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 	public TileEntityCoercionDeriver()
 	{
+		super();
+		this.electricityHandler = new ElectricityHandler(this, WATTAGE);
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
 	}
@@ -57,7 +58,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 		if (!this.worldObj.isRemote)
 		{
-			if (!this.isDisabled() && this.isActive())
+			if (this.isActive())
 			{
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
@@ -70,7 +71,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 
 					if (remainder.getWatts() > 0)
 					{
-						electricItemGiven = ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), remainder.getWatts(), this.getVoltage());
+						electricItemGiven = ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), remainder.getWatts());
 					}
 
 					this.requestFortron((int) ((watts - (remainder.getWatts() - electricItemGiven)) / FORTRON_UE_RATIO), true);
@@ -78,9 +79,9 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 				else
 				{
 					// Convert Electricity to Fortron
-					this.energyStored += ElectricItemHelper.dechargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE, this.getVoltage());
+					this.electricityHandler.receiveElectricity(ElectricItemHelper.dischargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE), true);
 
-					if (this.energyStored >= TileEntityCoercionDeriver.WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (this.electricityHandler.provideElectricity(WATTAGE, false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
 						int production = getProductionRate();
@@ -109,7 +110,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 							this.processTime = 0;
 						}
 
-						this.energyStored -= WATTAGE;
+						this.electricityHandler.provideElectricity(WATTAGE, true);
 					}
 
 				}
@@ -126,7 +127,7 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 	 */
 	public int getProductionRate()
 	{
-		if (!this.isDisabled() && this.isActive())
+		if (this.isActive())
 		{
 			if (!this.isInversed)
 			{
@@ -171,33 +172,12 @@ public class TileEntityCoercionDeriver extends TileEntityUniversalEnergy
 		return false;
 	}
 
-	/**
-	 * Packet Methods
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public List getPacketUpdate()
-	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
-		objects.add(this.isInversed);
-		objects.add(this.energyStored);
-		// objects.add(this.processTime);
-		return objects;
-	}
-
 	@Override
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (packetID == TilePacketType.DESCRIPTION.ordinal())
-		{
-			this.isInversed = dataStream.readBoolean();
-			this.energyStored = dataStream.readFloat();
-			// this.processTime = dataStream.readInt();
-		}
-		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
+		if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
 		{
 			this.isInversed = !this.isInversed;
 		}

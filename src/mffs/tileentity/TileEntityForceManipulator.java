@@ -62,7 +62,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					 * This section is called when blocks set events are set and animation packets
 					 * are to be sent.
 					 */
-					ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+					ForgeDirection dir = this.getDirection();
 
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
@@ -189,12 +189,12 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				if (type == 1)
 				{
-					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
 				}
 				else if (type == 2)
 				{
 					// Red
-					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord)));
+					ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
 					this.updatePushedObjects(0.02f);
 				}
 			}
@@ -233,7 +233,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	protected boolean canMove()
 	{
 		Set<Vector3> mobilizationPoints = this.getInteriorPoints();
-		ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		ForgeDirection dir = this.getDirection();
 
 		loop:
 		for (Vector3 position : mobilizationPoints)
@@ -303,7 +303,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 	public void updatePushedObjects(float amount)
 	{
-		ForgeDirection dir = this.getDirection(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+		ForgeDirection dir = this.getDirection();
 		AxisAlignedBB axisalignedbb = this.getSearchAxisAlignedBB();
 
 		if (axisalignedbb != null)

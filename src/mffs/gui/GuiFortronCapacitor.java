@@ -2,7 +2,7 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.gui.button.GuiButtonPressTransferMode;
 import mffs.tileentity.TileEntityFortronCapacitor;

@@ -10,7 +10,7 @@ import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IBiometricIdentifierLink;
-import mffs.base.TileEntityBase.TilePacketType;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.gui.button.GuiIcon;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
@@ -20,24 +20,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.vector.Region2;
-import calclavia.lib.Calclavia;
 import calclavia.lib.gui.GuiContainerBase;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase
 {
-	public enum SlotType
-	{
-		NONE, BATTERY, LIQUID, ARR_UP, ARR_DOWN, ARR_LEFT, ARR_RIGHT, ARR_UP_RIGHT, ARR_UP_LEFT,
-		ARR_DOWN_LEFT, ARR_DOWN_RIGHT
-	}
-
 	protected GuiTextField textFieldFrequency;
 	protected Vector2 textFieldPos = new Vector2();
 	public String tooltip = "";
@@ -130,11 +122,11 @@ public class GuiMFFS extends GuiContainerBase
 			}
 		}
 
-		if (this.frequencyTile instanceof TileEntityBase)
+		if (this.frequencyTile instanceof TileEntityMFFS)
 		{
 			if (this.buttonList.size() > 0 && this.buttonList.get(0) != null)
 			{
-				((GuiIcon) this.buttonList.get(0)).setIndex(((TileEntityBase) this.frequencyTile).isActive() ? 1 : 0);
+				((GuiIcon) this.buttonList.get(0)).setIndex(((TileEntityMFFS) this.frequencyTile).isActive() ? 1 : 0);
 			}
 		}
 	}
@@ -194,11 +186,13 @@ public class GuiMFFS extends GuiContainerBase
 		}
 	}
 
+	@Override
 	protected void drawTextWithTooltip(String textName, String format, int x, int y, int mouseX, int mouseY)
 	{
 		this.drawTextWithTooltip(textName, format, x, y, mouseX, mouseY, 4210752);
 	}
 
+	@Override
 	protected void drawTextWithTooltip(String textName, String format, int x, int y, int mouseX, int mouseY, int color)
 	{
 		String name = TranslationHelper.getLocal("gui." + textName + ".name");
@@ -216,31 +210,10 @@ public class GuiMFFS extends GuiContainerBase
 		}
 	}
 
+	@Override
 	protected void drawTextWithTooltip(String textName, int x, int y, int mouseX, int mouseY)
 	{
 		this.drawTextWithTooltip(textName, "%1", x, y, mouseX, mouseY);
 	}
 
-	protected void drawSlot(int x, int y, SlotType type, float r, float g, float b)
-	{
-		this.mc.renderEngine.func_110577_a(Calclavia.GUI_COMPONENTS);
-		GL11.glColor4f(r, g, b, 1.0F);
-
-		this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 0, 18, 18);
-
-		if (type != SlotType.NONE)
-		{
-			this.drawTexturedModalRect(this.containerWidth + x, this.containerHeight + y, 0, 18 * type.ordinal(), 18, 18);
-		}
-	}
-
-	protected void drawSlot(int x, int y, SlotType type)
-	{
-		this.drawSlot(x, y, type, 1, 1, 1);
-	}
-
-	protected void drawSlot(int x, int y)
-	{
-		this.drawSlot(x, y, SlotType.NONE);
-	}
 }

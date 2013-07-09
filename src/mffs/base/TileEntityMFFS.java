@@ -13,14 +13,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
-import universalelectricity.prefab.implement.IRotatable;
 import universalelectricity.prefab.network.IPacketReceiver;
 import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityDisableable;
+import universalelectricity.prefab.tile.IRotatable;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 import calclavia.lib.IPlayerUsing;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -29,7 +26,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dan200.computer.api.IPeripheral;
 
-public abstract class TileEntityBase extends TileEntityDisableable implements IPacketReceiver, IPlayerUsing, IRotatable, IRedstoneReceptor, IActivatable, IPeripheral
+public abstract class TileEntityMFFS extends TileEntityAdvanced implements IPacketReceiver, IPlayerUsing, IRotatable, IActivatable, IPeripheral
 {
 	public enum TilePacketType
 	{
@@ -175,24 +172,22 @@ public abstract class TileEntityBase extends TileEntityDisableable implements IP
 	 * Direction Methods
 	 */
 	@Override
-	public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
+	public ForgeDirection getDirection()
 	{
 		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	@Override
-	public void setDirection(World world, int x, int y, int z, ForgeDirection facingDirection)
+	public void setDirection(ForgeDirection facingDirection)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
 	}
 
-	@Override
 	public void onPowerOn()
 	{
 		this.setActive(true);
 	}
 
-	@Override
 	public void onPowerOff()
 	{
 		if (!this.isRedstoneActive && !this.worldObj.isRemote)

@@ -15,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.block.BlockRotatable;
-import universalelectricity.prefab.implement.IRedstoneReceptor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -98,15 +97,15 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 		{
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-			if (tileEntity instanceof IRedstoneReceptor)
+			if (tileEntity instanceof TileEntityMFFS)
 			{
 				if (world.isBlockIndirectlyGettingPowered(x, y, z))
 				{
-					((IRedstoneReceptor) tileEntity).onPowerOn();
+					((TileEntityMFFS) tileEntity).onPowerOn();
 				}
 				else
 				{
-					((IRedstoneReceptor) tileEntity).onPowerOff();
+					((TileEntityMFFS) tileEntity).onPowerOff();
 				}
 			}
 		}

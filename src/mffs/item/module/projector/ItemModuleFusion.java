@@ -7,7 +7,7 @@ import java.util.Set;
 
 import mffs.api.IProjector;
 import mffs.api.fortron.IFortronFrequency;
-import mffs.base.TileEntityBase;
+import mffs.base.TileEntityMFFS;
 import mffs.fortron.FrequencyGrid;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +33,7 @@ public class ItemModuleFusion extends ItemModule
 			{
 				if (((TileEntity) compareProjector).worldObj == ((TileEntity) projector).worldObj)
 				{
-					if (((TileEntityBase) compareProjector).isActive() && ((IProjector) compareProjector).getMode() != null)
+					if (((TileEntityMFFS) compareProjector).isActive() && ((IProjector) compareProjector).getMode() != null)
 					{
 						Iterator<Vector3> it = fieldBlocks.iterator();
 

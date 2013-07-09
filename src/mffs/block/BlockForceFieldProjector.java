@@ -2,7 +2,6 @@ package mffs.block;
 
 import mffs.base.BlockMachine;
 import mffs.tileentity.TileEntityForceFieldProjector;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -19,19 +18,6 @@ public class BlockForceFieldProjector extends BlockMachine
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityForceFieldProjector();
-	}
-
-	@Override
-	public boolean onMachineActivated(World world, int i, int j, int k, EntityPlayer entityplayer, int par6, float par7, float par8, float par9)
-	{
-		TileEntityForceFieldProjector tileentity = (TileEntityForceFieldProjector) world.getBlockTileEntity(i, j, k);
-
-		if (tileentity.isDisabled())
-		{
-			return false;
-		}
-
-		return super.onMachineActivated(world, i, j, k, entityplayer, par6, par7, par8, par9);
 	}
 
 	@Override

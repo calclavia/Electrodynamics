@@ -1,7 +1,7 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.TileEntityBase;
+import mffs.base.TileEntityMFFS;
 import mffs.render.model.ModelFortronCapacitor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public class RenderFortronCapacitor extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		TileEntityBase tileEntity = (TileEntityBase) t;
+		TileEntityMFFS tileEntity = (TileEntityMFFS) t;
 
 		/**
 		 * Render Model

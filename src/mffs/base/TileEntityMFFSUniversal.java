@@ -4,29 +4,32 @@ import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileSourceEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 
 import java.util.EnumSet;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.compatiblity.Compatiblity;
+import universalelectricity.core.block.IElectrical;
+import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricityNetworkHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.implement.IRotatable;
+import universalelectricity.prefab.tile.ElectricityHandler;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
-import calclavia.lib.IUniversalEnergyTile;
 import cpw.mods.fml.common.Loader;
 
-public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor implements IEnergySource, IUniversalEnergyTile
+public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor implements IElectrical, IElectricalStorage, IEnergySource, IPowerReceptor, IEnergySink
 {
-	public float energyStored;
+	public ElectricityHandler electricityHandler;
 
 	private PowerHandler powerHandler = new PowerHandler(this, Type.MACHINE);
 
@@ -52,9 +55,9 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 
 		if (!this.worldObj.isRemote && this.powerHandler != null)
 		{
-			float requiredEnergy = (float) (this.getRequest(null) * Compatiblity.TO_BC_RATIO);
+			float requiredEnergy = this.getRequest(null) * Compatiblity.TO_BC_RATIO;
 			float energyReceived = this.powerHandler.useEnergy(0, requiredEnergy, true);
-			this.receiveElectricity(ElectricityPack.getFromWatts(Compatiblity.BC3_RATIO * energyReceived, this.getVoltage()), true);
+			this.electricityHandler.receiveElectricity(ElectricityPack.getFromWatts(Compatiblity.BC3_RATIO * energyReceived, this.getVoltage()), true);
 		}
 	}
 
@@ -97,26 +100,21 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		if (this instanceof IRotatable)
-		{
-			return direction.ordinal() == this.getBlockMetadata();
-		}
-
-		return true;
-	}
-
-	@Override
-	public float receiveElectricity(ElectricityPack electricityPack, boolean doReceive)
-	{
-		return 0;
-	}
-
-	@Override
 	public float getRequest(ForgeDirection direction)
 	{
 		return 0;
+	}
+
+	@Override
+	public float getProvide(ForgeDirection direction)
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return true;
 	}
 
 	@Override
@@ -125,19 +123,60 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 		return 120;
 	}
 
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
+	}
+
+	@Override
+	public void setDirection(ForgeDirection direction)
+	{
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, direction.ordinal(), 3);
+	}
+
+	@Override
+	public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
+	{
+		return this.electricityHandler.receiveElectricity(receive, doReceive);
+	}
+
+	@Override
+	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
+	{
+		return this.electricityHandler.provideElectricity(request, doProvide);
+	}
+
+	@Override
 	public void setEnergyStored(float energy)
 	{
-		this.energyStored = Math.max(Math.min(energy, this.getMaxEnergyStored()), 0);
+		this.electricityHandler.setEnergyStored(energy);
 	}
 
+	@Override
 	public float getEnergyStored()
 	{
-		return this.energyStored;
+		return this.electricityHandler.getEnergyStored();
 	}
 
+	@Override
 	public float getMaxEnergyStored()
 	{
-		return this.getRequest(ForgeDirection.UNKNOWN) * 2;
+		return this.electricityHandler.getMaxEnergyStored();
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.electricityHandler.readFromNBT(nbt);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		this.electricityHandler.writeToNBT(nbt);
 	}
 
 	/**
@@ -186,14 +225,8 @@ public abstract class TileEntityUniversalEnergy extends TileEntityModuleAcceptor
 	public int injectEnergy(Direction direction, int i)
 	{
 		float givenElectricity = i * Compatiblity.IC2_RATIO;
-		float rejects = 0;
-
-		if (givenElectricity > this.getMaxEnergyStored())
-		{
-			rejects = givenElectricity - this.getMaxEnergyStored();
-		}
-
-		this.receiveElectricity(ElectricityPack.getFromWatts(givenElectricity, this.getVoltage()), true);
+		float consumed = this.receiveElectricity(direction.toForgeDirection(), ElectricityPack.getFromWatts(givenElectricity, this.getVoltage()), true);
+		float rejects = givenElectricity - consumed;
 
 		return (int) (rejects * Compatiblity.TO_IC2_RATIO);
 	}
