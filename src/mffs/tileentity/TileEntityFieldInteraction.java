@@ -1,11 +1,14 @@
 package mffs.tileentity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
@@ -16,12 +19,15 @@ import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileEntityModuleAcceptor;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.prefab.network.PacketManager;
 import calclavia.lib.CalculationHelper;
 
 public abstract class TileEntityFieldInteraction extends TileEntityModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
@@ -33,7 +39,7 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
-	protected boolean isAbsolute = false;
+	public boolean isAbsolute = false;
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
 	private final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
 	private final List<DelayedEvent> quedDelayedEvents = new ArrayList<DelayedEvent>();
@@ -66,6 +72,17 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 				this.delayedEvents.addAll(this.quedDelayedEvents);
 			}
 			while (!this.quedDelayedEvents.isEmpty());
+		}
+	}
+
+	@Override
+	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
+	{
+		super.onReceivePacket(packetID, dataStream);
+
+		if (packetID == TilePacketType.TOGGLE_MODE_4.ordinal() && !this.worldObj.isRemote)
+		{
+			this.isAbsolute = !this.isAbsolute;
 		}
 	}
 

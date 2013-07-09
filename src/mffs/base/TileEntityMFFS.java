@@ -31,7 +31,7 @@ public abstract class TileEntityMFFS extends TileEntityAdvanced implements IPack
 	public enum TilePacketType
 	{
 		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS,
-		TOGGLE_MODE_2, TOGGLE_MODE_3;
+		TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4;
 	}
 
 	/**

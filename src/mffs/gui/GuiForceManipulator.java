@@ -38,9 +38,10 @@ public class GuiForceManipulator extends GuiMFFS
 		this.textFieldPos = new Vector2(111, 93);
 		super.initGui();
 
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 60, this.height / 2 - 22, 40, 20, "Reset"));
+		this.buttonList.add(new GuiIcon(1, this.width / 2 - 82, this.height / 2 - 16, new ItemStack(Item.pocketSundial)));
 		this.buttonList.add(new GuiIcon(2, this.width / 2 - 82, this.height / 2 - 82, null, new ItemStack(Item.redstone), new ItemStack(Block.blockRedstone)));
 		this.buttonList.add(new GuiIcon(3, this.width / 2 - 82, this.height / 2 - 60, null, new ItemStack(Block.anvil)));
+		this.buttonList.add(new GuiIcon(4, this.width / 2 - 82, this.height / 2 - 38, null, new ItemStack(Item.compass)));
 
 		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
 
@@ -67,23 +68,19 @@ public class GuiForceManipulator extends GuiMFFS
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
-
-		GL11.glPushMatrix();
-		GL11.glRotatef(-90, 0, 0, 1);
-		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), -100, 10, 4210752);
-		GL11.glPopMatrix();
-
-		this.fontRenderer.drawString("Anchor:", 30, 60, 4210752);
+		this.fontRenderer.drawString("Anchor:", 35, 60, 4210752);
 
 		if (this.tileEntity.anchor != null)
 		{
-			this.fontRenderer.drawString(this.tileEntity.anchor.intX() + ", " + this.tileEntity.anchor.intY() + ", " + this.tileEntity.anchor.intZ(), 30, 72, 4210752);
+			this.fontRenderer.drawString(this.tileEntity.anchor.intX() + ", " + this.tileEntity.anchor.intY() + ", " + this.tileEntity.anchor.intZ(), 35, 70, 4210752);
 		}
+
+		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), 35, 82, 4210752);
 
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost(), ElectricUnit.JOULES), 120, 121, 4210752);
+		this.drawTextWithTooltip("fortron", "Fortron: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 30, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost(), ElectricUnit.JOULES), 9, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
@@ -93,6 +90,7 @@ public class GuiForceManipulator extends GuiMFFS
 		super.updateScreen();
 		((GuiIcon) this.buttonList.get(2)).setIndex(this.tileEntity.displayMode);
 		((GuiIcon) this.buttonList.get(3)).setIndex(this.tileEntity.doAnchor ? 1 : 0);
+		((GuiIcon) this.buttonList.get(4)).setIndex(this.tileEntity.isAbsolute ? 1 : 0);
 	}
 
 	@Override
@@ -168,7 +166,7 @@ public class GuiForceManipulator extends GuiMFFS
 		}
 
 		// Fortron Bar
-		this.drawForce(8, 120, Math.min((float) this.tileEntity.getFortronEnergy() / (float) this.tileEntity.getFortronCapacity(), 1));
+		this.drawForce(60, 120, Math.min((float) this.tileEntity.getFortronEnergy() / (float) this.tileEntity.getFortronCapacity(), 1));
 	}
 
 	@Override
@@ -188,5 +186,10 @@ public class GuiForceManipulator extends GuiMFFS
 		{
 			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_3.ordinal()));
 		}
+		else if (guiButton.id == 4)
+		{
+			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_4.ordinal()));
+		}
 	}
+
 }

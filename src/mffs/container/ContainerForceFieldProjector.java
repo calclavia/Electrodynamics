@@ -43,7 +43,7 @@ public class ContainerForceFieldProjector extends ContainerBase
 		{
 			for (int ySlot = 0; ySlot < 2; ySlot++)
 			{
-				this.addSlotToContainer(new SlotBase(tileEntity, i, 19 + 18 * xSlot, 36 + 18 * ySlot));
+				this.addSlotToContainer(new SlotBase(tileEntity, i, 31 + 18 * xSlot, 36 + 18 * ySlot));
 				i++;
 			}
 		}
