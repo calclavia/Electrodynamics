@@ -4,8 +4,8 @@ import mffs.ModularForceFieldSystem;
 import mffs.base.TileEntityMFFS;
 import mffs.render.model.ModelCoercionDeriver;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.ResourceLocation;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 

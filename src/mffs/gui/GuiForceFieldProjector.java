@@ -14,12 +14,12 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
 import universalelectricity.prefab.network.PacketManager;
 import universalelectricity.prefab.vector.Region2;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceFieldProjector extends GuiMFFS
 {

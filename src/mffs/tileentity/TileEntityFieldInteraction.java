@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
@@ -19,16 +17,15 @@ import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileEntityModuleAcceptor;
-import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.network.PacketManager;
 import calclavia.lib.CalculationHelper;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public abstract class TileEntityFieldInteraction extends TileEntityModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
 {
