@@ -105,7 +105,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 				{
-					this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "mffs:fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+					this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 				}
 
 				this.setActive(false);

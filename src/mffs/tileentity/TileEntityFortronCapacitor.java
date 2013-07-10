@@ -13,7 +13,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
 import mffs.api.card.ICard;
 import mffs.api.card.ICardInfinite;
-import mffs.api.card.ICardLink;
+import mffs.api.card.ICoordLink;
 import mffs.api.fortron.IFortronCapacitor;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.fortron.IFortronStorage;
@@ -62,9 +62,9 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 					{
 						this.setFortronEnergy(this.getFortronCapacity());
 					}
-					else if (itemStack.getItem() instanceof ICardLink)
+					else if (itemStack.getItem() instanceof ICoordLink)
 					{
-						Vector3 linkPosition = ((ICardLink) itemStack.getItem()).getLink(itemStack);
+						Vector3 linkPosition = ((ICoordLink) itemStack.getItem()).getLink(itemStack);
 
 						if (linkPosition != null && linkPosition.getTileEntity(this.worldObj) instanceof IFortronFrequency)
 						{

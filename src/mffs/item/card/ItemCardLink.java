@@ -3,7 +3,7 @@ package mffs.item.card;
 import java.util.List;
 
 import mffs.MFFSHelper;
-import mffs.api.card.ICardLink;
+import mffs.api.card.ICoordLink;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +18,7 @@ import universalelectricity.core.vector.Vector3;
  * @author Calclavia
  * 
  */
-public class ItemCardLink extends ItemCard implements ICardLink
+public class ItemCardLink extends ItemCard implements ICoordLink
 {
 	public ItemCardLink(int id)
 	{

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
-import mffs.api.card.ICardLink;
+import mffs.api.card.ICoordLink;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
@@ -23,7 +23,7 @@ import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector3;
 
-public class ItemRemoteController extends ItemCardFrequency implements ICardLink
+public class ItemRemoteController extends ItemCardFrequency implements ICoordLink
 {
 	public ItemRemoteController(int id)
 	{

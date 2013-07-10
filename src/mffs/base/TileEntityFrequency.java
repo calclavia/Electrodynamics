@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.IBiometricIdentifierLink;
-import mffs.api.card.ICardLink;
+import mffs.api.card.ICoordLink;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
@@ -101,9 +101,9 @@ public abstract class TileEntityFrequency extends TileEntityInventory implements
 		 */
 		for (ItemStack itemStack : this.getCards())
 		{
-			if (itemStack != null && itemStack.getItem() instanceof ICardLink)
+			if (itemStack != null && itemStack.getItem() instanceof ICoordLink)
 			{
-				Vector3 linkedPosition = ((ICardLink) itemStack.getItem()).getLink(itemStack);
+				Vector3 linkedPosition = ((ICoordLink) itemStack.getItem()).getLink(itemStack);
 
 				TileEntity tileEntity = linkedPosition.getTileEntity(this.worldObj);
 

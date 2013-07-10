@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FXBeam extends EntityFX
 {
-	private static final ResourceLocation fortronTexture = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.BLOCK_DIRECTORY + "fortron.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ModularForceFieldSystem.DOMAIN, ModularForceFieldSystem.BLOCK_DIRECTORY + "fortron.png");
 
 	double movX = 0.0D;
 	double movY = 0.0D;
@@ -142,7 +142,7 @@ public class FXBeam extends EntityFX
 			op = 0.5F - (4 - (this.particleMaxAge - this.particleAge)) * 0.1F;
 		}
 
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(fortronTexture);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE);
 
 		GL11.glTexParameterf(3553, 10242, 10497.0F);
 		GL11.glTexParameterf(3553, 10243, 10497.0F);
