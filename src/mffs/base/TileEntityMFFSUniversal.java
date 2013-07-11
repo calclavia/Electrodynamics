@@ -243,10 +243,4 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	{
 		return Integer.MAX_VALUE;
 	}
-
-	@Override
-	public World getWorldObj()
-	{
-		return this.worldObj;
-	}
 }
