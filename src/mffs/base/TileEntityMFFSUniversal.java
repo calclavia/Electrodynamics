@@ -11,6 +11,7 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.compatiblity.Compatiblity;
@@ -241,5 +242,11 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	public int getMaxEnergyOutput()
 	{
 		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public World getWorldObj()
+	{
+		return this.worldObj;
 	}
 }
