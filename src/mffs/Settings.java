@@ -52,6 +52,7 @@ public class Settings
 	public static boolean CONSERVE_PACKETS = true;
 	public static boolean HIGH_GRAPHICS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
+	public static int INTERDICTION_MAX_RANGE = Integer.MAX_VALUE;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
 	public static boolean ENABLE_MANIPULATOR = true;
 
@@ -86,6 +87,10 @@ public class Settings
 		Property maxFFGenPerTick = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", MAX_FORCE_FIELDS_PER_TICK);
 		maxFFGenPerTick.comment = "How many force field blocks can be generated per tick? Less reduces lag.";
 		MAX_FORCE_FIELDS_PER_TICK = maxFFGenPerTick.getInt(MAX_FORCE_FIELDS_PER_TICK);
+
+		Property interdictionRange = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", INTERDICTION_MAX_RANGE);
+		interdictionRange.comment = "The maximum range for the interdiction matrix.";
+		INTERDICTION_MAX_RANGE = interdictionRange.getInt(INTERDICTION_MAX_RANGE);
 
 		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Require Electricity?", ENABLE_ELECTRICITY);
 		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";

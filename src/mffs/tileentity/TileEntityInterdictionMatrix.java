@@ -188,13 +188,13 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	@Override
 	public int getActionRange()
 	{
-		return this.getModuleCount(ModularForceFieldSystem.itemModuleScale);
+		return Math.min(this.getModuleCount(ModularForceFieldSystem.itemModuleScale), Settings.INTERDICTION_MAX_RANGE);
 	}
 
 	@Override
 	public int getWarningRange()
 	{
-		return this.getModuleCount(ModularForceFieldSystem.itemModuleWarn) + this.getActionRange() + 3;
+		return Math.min(this.getModuleCount(ModularForceFieldSystem.itemModuleWarn) + this.getActionRange(), Settings.INTERDICTION_MAX_RANGE) + 3;
 	}
 
 	@Override
