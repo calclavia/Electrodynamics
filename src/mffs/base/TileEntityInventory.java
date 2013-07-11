@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.network.PacketManager;
-import calclavia.lib.multiblock.TileEntityMulti;
+import calclavia.lib.multiblock.TileEntityMultiBlockPart;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -223,13 +223,13 @@ public abstract class TileEntityInventory extends TileEntityMFFS implements IInv
 		if (tileEntity != null && itemStack != null)
 		{
 			/** Try to put items into a chest. */
-			if (tileEntity instanceof TileEntityMulti)
+			if (tileEntity instanceof TileEntityMultiBlockPart)
 			{
-				Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
+				Vector3 mainBlockPosition = ((TileEntityMultiBlockPart) tileEntity).getMainBlock();
 
 				if (mainBlockPosition != null)
 				{
-					if (!(mainBlockPosition.getTileEntity(this.worldObj) instanceof TileEntityMulti))
+					if (!(mainBlockPosition.getTileEntity(this.worldObj) instanceof TileEntityMultiBlockPart))
 					{
 						return tryPlaceInPosition(itemStack, mainBlockPosition, direction);
 					}
