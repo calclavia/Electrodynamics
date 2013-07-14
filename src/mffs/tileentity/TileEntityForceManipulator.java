@@ -27,6 +27,7 @@ import universalelectricity.prefab.network.PacketManager;
 import com.google.common.io.ByteArrayDataInput;
 
 import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
 
 public class TileEntityForceManipulator extends TileEntityFieldInteraction
 {
@@ -393,7 +394,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, int method, Object[] arguments) throws Exception
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
 	{
 		switch (method)
 		{
@@ -404,6 +405,6 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			}
 		}
 
-		return super.callMethod(computer, method, arguments);
+		return super.callMethod(computer, context, method, arguments);
 	}
 }

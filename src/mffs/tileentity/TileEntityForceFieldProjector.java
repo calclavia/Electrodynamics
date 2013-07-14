@@ -227,7 +227,8 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 
-								// Sets the controlling projector of the force field block to
+								// Sets the controlling projector of the force
+								// field block to
 								// this one.
 								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 

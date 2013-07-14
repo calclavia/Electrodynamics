@@ -144,8 +144,8 @@ public class MFFSHelper
 	 * Tries to transfer Fortron to a specific machine from this capacitor. Renders an animation on
 	 * the client side.
 	 * 
-	 * @param receiver: The machine to be transfered to.
-	 * @param joules: The amount of energy to be transfered.
+	 * @param receiver : The machine to be transfered to.
+	 * @param joules : The amount of energy to be transfered.
 	 */
 	public static void doTransferFortron(IFortronFrequency transferer, IFortronFrequency receiver, int joules, int limit)
 	{

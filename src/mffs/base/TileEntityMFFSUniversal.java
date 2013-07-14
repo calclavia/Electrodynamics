@@ -11,10 +11,9 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import universalelectricity.compatiblity.Compatiblity;
+import universalelectricity.compatibility.Compatiblity;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.electricity.ElectricalEventHandler;

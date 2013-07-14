@@ -21,7 +21,8 @@ public class ModelTriangle extends ModelBase
 	{
 		this.cube = new ModelRenderer(this, 0, 0);
 		int size = 16;
-		// /this.cube.addBox(-size / 8, -size / 2, -size / 2, size / 6, size, size);
+		// /this.cube.addBox(-size / 8, -size / 2, -size / 2, size / 6, size,
+		// size);
 		this.cube.addBox(-size / 8, -size / 2, -size / 2, size / 6, size, size);
 		this.cube.setTextureSize(112, 70);
 		this.cube.mirror = true;

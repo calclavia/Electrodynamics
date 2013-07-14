@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.compatiblity.Compatiblity;
+import universalelectricity.compatibility.Compatiblity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
