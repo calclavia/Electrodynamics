@@ -1,11 +1,11 @@
 package mffs.block;
 
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.tileentity.TileEntityCoercionDeriver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockCoercionDeriver extends BlockMachine
+public class BlockCoercionDeriver extends BlockMFFS
 {
 	public BlockCoercionDeriver(int i)
 	{

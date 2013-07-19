@@ -1,12 +1,12 @@
 package mffs.block;
 
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockForceFieldProjector extends BlockMachine
+public class BlockForceFieldProjector extends BlockMFFS
 {
 	public BlockForceFieldProjector(int id)
 	{

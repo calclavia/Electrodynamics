@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import mffs.base.BlockBase;
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.base.ItemMFFS;
 import mffs.block.BlockBiometricIdentifier;
 import mffs.block.BlockCoercionDeriver;
@@ -129,7 +129,7 @@ public class ModularForceFieldSystem
 	/**
 	 * Machines
 	 */
-	public static BlockMachine blockCoercionDeriver, blockFortronCapacitor,
+	public static BlockMFFS blockCoercionDeriver, blockFortronCapacitor,
 			blockForceFieldProjector, blockBiometricIdentifier, blockInterdictionMatrix,
 			blockForceManipulator;
 
@@ -295,8 +295,16 @@ public class ModularForceFieldSystem
 		/**
 		 * Load Basic Components
 		 */
-		BasicComponents.requestAll(this);
 		BasicComponents.register(CHANNEL);
+
+		BasicComponents.requestItem("ingotSteel", 0);
+		BasicComponents.requestItem("dustSteel", 0);
+
+		BasicComponents.requestItem("ingotCopper", 0);
+		BasicComponents.requestBlock("oreCopper", 0);
+
+		BasicComponents.requestBlock("copperWire", 0);
+		BasicComponents.requestItem("wrench", 0);
 
 		/**
 		 * Load language file(s)

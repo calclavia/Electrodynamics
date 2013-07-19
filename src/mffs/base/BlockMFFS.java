@@ -18,9 +18,9 @@ import universalelectricity.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class BlockMachine extends BlockRotatable implements ICamouflageMaterial
+public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMaterial
 {
-	public BlockMachine(int id, String name)
+	public BlockMFFS(int id, String name)
 	{
 		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), UniversalElectricity.machine);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
@@ -43,7 +43,7 @@ public abstract class BlockMachine extends BlockRotatable implements ICamouflage
 					return false;
 				}
 			}
-
+			
 			entityPlayer.openGui(ModularForceFieldSystem.instance, 0, world, x, y, z);
 		}
 

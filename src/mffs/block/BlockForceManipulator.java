@@ -1,6 +1,6 @@
 package mffs.block;
 
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.tileentity.TileEntityForceManipulator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockForceManipulator extends BlockMachine
+public class BlockForceManipulator extends BlockMFFS
 {
 	public BlockForceManipulator(int i)
 	{

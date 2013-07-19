@@ -1,13 +1,13 @@
 package mffs.block;
 
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.base.TileEntityMFFS;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockMachineBlock extends BlockMachine
+public class BlockMachineBlock extends BlockMFFS
 {
 	protected Icon blockIconTop, blockIconOn, blockIconTopOn;
 

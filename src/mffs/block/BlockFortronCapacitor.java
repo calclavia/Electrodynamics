@@ -1,11 +1,11 @@
 package mffs.block;
 
-import mffs.base.BlockMachine;
+import mffs.base.BlockMFFS;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockFortronCapacitor extends BlockMachine
+public class BlockFortronCapacitor extends BlockMFFS
 {
 	public BlockFortronCapacitor(int i)
 	{
