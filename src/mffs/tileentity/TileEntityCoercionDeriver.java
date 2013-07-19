@@ -15,7 +15,6 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
-import universalelectricity.prefab.tile.ElectricityHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -45,8 +44,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 
 	public TileEntityCoercionDeriver()
 	{
-		super();
-		this.electricityHandler = new ElectricityHandler(this, WATTAGE);
+		super(WATTAGE);
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
 	}
@@ -62,26 +60,17 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 			{
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
+					float provide = this.getProvide(ForgeDirection.UNKNOWN);
+					ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), this.requestFortron((int) (provide / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO);
 					// Convert Fortron to Electricity
-					float watts = Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
-
-					ElectricityPack remainder = this.produce(watts);
-
-					double electricItemGiven = 0;
-
-					if (remainder.getWatts() > 0)
-					{
-						electricItemGiven = ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), remainder.getWatts());
-					}
-
-					this.requestFortron((int) ((watts - (remainder.getWatts() - electricItemGiven)) / FORTRON_UE_RATIO), true);
+					this.produce();
 				}
 				else
 				{
 					// Convert Electricity to Fortron
-					this.electricityHandler.receiveElectricity(ElectricItemHelper.dischargeItem(this.getStackInSlot(SLOT_BATTERY), WATTAGE), true);
+					this.discharge(this.getStackInSlot(SLOT_BATTERY));
 
-					if (this.electricityHandler.provideElectricity(WATTAGE, false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (this.provideElectricity(ForgeDirection.UNKNOWN, ElectricityPack.getFromWatts(WATTAGE, this.getVoltage()), false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
 						int production = getProductionRate();
@@ -110,7 +99,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 							this.processTime = 0;
 						}
 
-						this.electricityHandler.provideElectricity(WATTAGE, true);
+						this.provideElectricity(ForgeDirection.UNKNOWN, ElectricityPack.getFromWatts(WATTAGE, this.getVoltage()), true);
 					}
 
 				}
@@ -120,6 +109,17 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 		{
 			this.animation++;
 		}
+	}
+
+	@Override
+	public float getProvide(ForgeDirection direction)
+	{
+		if (this.isInversed)
+		{
+			return Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
+		}
+
+		return 0;
 	}
 
 	/**

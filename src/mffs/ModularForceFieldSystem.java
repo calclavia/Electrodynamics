@@ -295,16 +295,8 @@ public class ModularForceFieldSystem
 		/**
 		 * Load Basic Components
 		 */
+		BasicComponents.requestAll(this);
 		BasicComponents.register(CHANNEL);
-
-		BasicComponents.requestItem("ingotSteel", 0);
-		BasicComponents.requestItem("dustSteel", 0);
-
-		BasicComponents.requestItem("ingotCopper", 0);
-		BasicComponents.requestBlock("oreCopper", 0);
-
-		BasicComponents.requestBlock("copperWire", 0);
-		BasicComponents.requestItem("wrench", 0);
 
 		/**
 		 * Load language file(s)

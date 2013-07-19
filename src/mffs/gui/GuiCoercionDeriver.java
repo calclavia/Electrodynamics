@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.compatibility.Compatiblity;
+import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
@@ -61,8 +61,8 @@ public class GuiCoercionDeriver extends GuiMFFS
 			}
 		}
 
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatiblity.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatiblity.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatibility.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
+		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatibility.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
 		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 50, 4210752);
 		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 60, 4210752);
 
