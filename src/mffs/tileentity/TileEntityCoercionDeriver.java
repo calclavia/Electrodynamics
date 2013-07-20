@@ -1,6 +1,7 @@
 package mffs.tileentity;
 
 import java.io.IOException;
+import java.util.EnumSet;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -29,7 +30,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	/**
 	 * The amount of watts this machine uses.
 	 */
-	public static final int WATTAGE = 1000;
+	public static final int WATTAGE = 5;
 	public static final int REQUIRED_TIME = 10 * 20;
 	private static final int INITIAL_PRODUCTION = 40;
 	public static final int MULTIPLE_PRODUCTION = 4;
@@ -44,7 +45,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 
 	public TileEntityCoercionDeriver()
 	{
-		super(WATTAGE);
+		super(WATTAGE * 2);
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
 	}
@@ -70,7 +71,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 					// Convert Electricity to Fortron
 					this.discharge(this.getStackInSlot(SLOT_BATTERY));
 
-					if (this.provideElectricity(ForgeDirection.UNKNOWN, ElectricityPack.getFromWatts(WATTAGE, this.getVoltage()), false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (Math.round(this.provideElectricity(WATTAGE, false).getWatts()) >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
 						int production = getProductionRate();
@@ -86,7 +87,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 
 						if (this.processTime > 0)
 						{
-							// We are processing
+							// We are processing.
 							this.processTime--;
 
 							if (this.processTime < 1)
@@ -109,6 +110,22 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 		{
 			this.animation++;
 		}
+	}
+
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		return EnumSet.allOf(ForgeDirection.class);
+	}
+
+	@Override
+	public float getRequest(ForgeDirection direction)
+	{
+		if (this.canConsume())
+		{
+			return this.getMaxEnergyStored() - this.getEnergyStored();
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -149,17 +166,6 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public int getSizeInventory()
 	{
 		return 6;
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
-	{
-		if (this.canConsume())
-		{
-			return WATTAGE;
-		}
-
-		return 0;
 	}
 
 	public boolean canConsume()

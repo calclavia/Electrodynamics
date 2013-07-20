@@ -64,6 +64,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import universalelectricity.compatibility.Compatibility;
 import universalelectricity.prefab.CustomDamageSource;
 import universalelectricity.prefab.RecipeHelper;
 import universalelectricity.prefab.TranslationHelper;
@@ -182,6 +183,7 @@ public class ModularForceFieldSystem
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new SubscribeEventHandler());
+		Compatibility.initiate();
 
 		Settings.load();
 
