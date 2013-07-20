@@ -69,7 +69,7 @@ public abstract class TileEntityMFFS extends TileEntityAdvanced implements IPack
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		/**
 		 * Packet Update for Client only when GUI is open.
 		 */

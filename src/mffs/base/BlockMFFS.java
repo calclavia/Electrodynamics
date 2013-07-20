@@ -43,7 +43,7 @@ public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMat
 					return false;
 				}
 			}
-			
+
 			entityPlayer.openGui(ModularForceFieldSystem.instance, 0, world, x, y, z);
 		}
 

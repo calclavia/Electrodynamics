@@ -129,9 +129,8 @@ public class ModularForceFieldSystem
 	/**
 	 * Machines
 	 */
-	public static BlockMFFS blockCoercionDeriver, blockFortronCapacitor,
-			blockForceFieldProjector, blockBiometricIdentifier, blockInterdictionMatrix,
-			blockForceManipulator;
+	public static BlockMFFS blockCoercionDeriver, blockFortronCapacitor, blockForceFieldProjector,
+			blockBiometricIdentifier, blockInterdictionMatrix, blockForceManipulator;
 
 	public static BlockBase blockForceField;
 
