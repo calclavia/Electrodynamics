@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -33,7 +32,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public static final int WATTAGE = 5;
 	public static final int REQUIRED_TIME = 10 * 20;
 	private static final int INITIAL_PRODUCTION = 40;
-	public static final int MULTIPLE_PRODUCTION = 4;
+	public static final float MULTIPLE_PRODUCTION = 4;
 	public static final float FORTRON_UE_RATIO = WATTAGE / (INITIAL_PRODUCTION * MULTIPLE_PRODUCTION);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -61,10 +60,13 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 			{
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
-					float provide = this.getProvide(ForgeDirection.UNKNOWN);
-					ElectricItemHelper.chargeItem(this.getStackInSlot(SLOT_BATTERY), this.requestFortron((int) (provide / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO);
-					// Convert Fortron to Electricity
+					float withdrawnElectricity = this.requestFortron((int) (WATTAGE / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO;
+					// Inject electricity from Fortron.
+					this.receiveElectricity(withdrawnElectricity, true);
+					this.recharge(this.getStackInSlot(SLOT_BATTERY));
 					this.produce();
+					// Revert electricity back into Fortron.
+					this.provideFortron((int) (this.provideElectricity(this.getMaxEnergyStored(), true).getWatts() / FORTRON_UE_RATIO), true);
 				}
 				else
 				{
