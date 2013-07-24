@@ -1,11 +1,11 @@
 package mffs.item.card;
 
+import icbm.api.IBlockFrequency;
 import icbm.api.IItemFrequency;
 
 import java.util.List;
 
 import mffs.Settings;
-import mffs.base.TileEntityFrequency;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -68,7 +68,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 		{
 			if (player.isSneaking())
 			{
-				this.setFrequency(world.rand.nextInt(10 ^ Settings.MAX_FREQUENCY_DIGITS - 1), itemStack);
+				this.setFrequency(world.rand.nextInt((int) Math.pow(10, (Settings.MAX_FREQUENCY_DIGITS - 1))), itemStack);
 				player.addChatMessage("Generated random frequency: " + this.getFrequency(itemStack));
 			}
 		}
@@ -81,11 +81,11 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityFrequency)
+		if (tileEntity instanceof IBlockFrequency)
 		{
 			if (!world.isRemote)
 			{
-				((TileEntityFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
+				((IBlockFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
 				world.markBlockForUpdate(x, y, z);
 				player.addChatMessage("Frequency set to: " + this.getFrequency(itemStack));
 			}
