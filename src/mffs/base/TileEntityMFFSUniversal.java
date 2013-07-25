@@ -266,20 +266,18 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	@Override
 	public int injectEnergy(Direction directionFrom, int amount)
 	{
-		if (!directionFrom.toForgeDirection().equals(this.getInputDirections()))
+		if (this.getInputDirections().contains(directionFrom.toForgeDirection()))
 		{
-			return amount;
+			float convertedEnergy = amount * Compatibility.IC2_RATIO;
+			ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
+			float receive = this.receiveElectricity(directionFrom.toForgeDirection(), toSend, true);
+
+			// Return the difference, since injectEnergy returns left over energy, and
+			// receiveElectricity returns energy used.
+			return Math.round(amount - (receive * Compatibility.TO_IC2_RATIO));
 		}
 
-		float convertedEnergy = amount * Compatibility.IC2_RATIO;
-
-		ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
-
-		int receive = (int) Math.floor(this.receiveElectricity(directionFrom.toForgeDirection(), toSend, true));
-
-		// Return the difference, since injectEnergy returns left over energy, and
-		// receiveElectricity returns energy used.
-		return (int) Math.floor(amount - receive * Compatibility.TO_IC2_RATIO);
+		return amount;
 	}
 
 	@Override

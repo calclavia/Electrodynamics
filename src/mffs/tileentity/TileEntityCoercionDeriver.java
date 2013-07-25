@@ -114,6 +114,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 		}
 	}
 
+	@Override
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
 		return EnumSet.allOf(ForgeDirection.class);
