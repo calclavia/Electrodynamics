@@ -318,7 +318,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 					if (scale > 0)
 					{
-						position.multiply(scale);
+						position.scale(scale);
 					}
 
 					int[] blockInfo = new int[] { vectorTag.getInteger(NBT_FIELD_BLOCK_ID), vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA) };

@@ -25,7 +25,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.core.vector.Vector3;
-import calclavia.lib.CalculationHelper;
 
 /**
  * A class containing some general helpful functions.
@@ -398,7 +397,7 @@ public class MFFSHelper
 							{
 								Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
 								Vector3 relativePosition = position.clone().subtract(fieldCenter);
-								CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+								relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 								int[] blockInfo = fieldMap.get(relativePosition.round());
 
 								if (blockInfo != null && blockInfo[0] > 0)

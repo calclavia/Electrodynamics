@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.vector.Region3;
-import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -122,9 +121,9 @@ public class ItemModePyramid extends ItemMode
 		projectorPos.add(new Vector3(0, -negScale.intY() + 1, 0));
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 
-		Region3 region = new Region3(negScale.multiply(-1), posScale);
+		Region3 region = new Region3(negScale.scale(-1), posScale);
 
 		if (region.isIn(relativePosition) && relativePosition.y > 0)
 		{

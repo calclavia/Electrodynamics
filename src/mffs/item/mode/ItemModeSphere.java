@@ -37,7 +37,7 @@ public class ItemModeSphere extends ItemMode
 				double phi = Math.PI * 2 / steps * phi_n;
 				double theta = Math.PI / steps * theta_n;
 
-				Vector3 point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)).multiply(radius);
+				Vector3 point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)).scale(radius);
 				fieldBlocks.add(point);
 			}
 		}
@@ -96,7 +96,7 @@ public class ItemModeSphere extends ItemMode
 				double theta = Math.PI / steps * theta_n;
 
 				Vector3 vector = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi));
-				vector.multiply(radius);
+				vector.scale(radius);
 				GL11.glTranslated(vector.x, vector.y, vector.z);
 				ModelCube.INSTNACE.render();
 				GL11.glTranslated(-vector.x, -vector.y, -vector.z);

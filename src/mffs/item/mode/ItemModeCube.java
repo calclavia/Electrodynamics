@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.vector.Region3;
-import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -78,8 +77,8 @@ public class ItemModeCube extends ItemMode
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
-		Region3 region = new Region3(projector.getNegativeScale().clone().multiply(-1), projector.getPositiveScale());
+		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
+		Region3 region = new Region3(projector.getNegativeScale().clone().scale(-1), projector.getPositiveScale());
 		return region.isIn(relativePosition);
 	}
 

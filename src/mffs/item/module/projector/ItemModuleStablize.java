@@ -19,7 +19,6 @@ import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.network.PacketManager;
-import calclavia.lib.CalculationHelper;
 
 public class ItemModuleStablize extends ItemModule
 {
@@ -51,7 +50,7 @@ public class ItemModuleStablize extends ItemModule
 				HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
 				Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
 				Vector3 relativePosition = position.clone().subtract(fieldCenter);
-				CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+				relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 				blockInfo = fieldBlocks.get(relativePosition.round());
 			}
 

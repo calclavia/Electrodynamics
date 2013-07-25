@@ -7,7 +7,6 @@ import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
-import calclavia.lib.CalculationHelper;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.
@@ -67,7 +66,7 @@ public class ProjectorCalculationThread extends Thread
 				{
 					if (rotationYaw != 0 || rotationPitch != 0)
 					{
-						CalculationHelper.rotateByAngle(position, rotationYaw, rotationPitch);
+						position.rotate(rotationYaw, rotationPitch);
 					}
 
 					position.add(new Vector3((TileEntity) this.projector));

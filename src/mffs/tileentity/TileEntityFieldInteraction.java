@@ -23,7 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import calclavia.lib.CalculationHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -428,7 +427,7 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 
 			if (rotationYaw != 0 || rotationPitch != 0)
 			{
-				CalculationHelper.rotateByAngle(newPosition, rotationYaw, rotationPitch);
+				newPosition.rotate(rotationYaw, rotationPitch);
 			}
 
 			newPosition.add(new Vector3(this));

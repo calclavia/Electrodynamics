@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.vector.Vector3;
-import calclavia.lib.CalculationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -107,7 +106,7 @@ public class ItemModeCylinder extends ItemMode
 		projectorPos.add(projector.getTranslation());
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
-		CalculationHelper.rotateByAngle(relativePosition, -projector.getRotationYaw(), -projector.getRotationPitch());
+		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 
 		if (relativePosition.x * relativePosition.x + relativePosition.z * relativePosition.z + RADIUS_Expansion <= radius * radius)
 		{
