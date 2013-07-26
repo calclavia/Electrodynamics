@@ -175,7 +175,7 @@ public class GuiBiometricIdentifier extends GuiMFFS
 	}
 
 	@Override
-	protected void mouseClicked(int x, int y, int par3)
+	public void mouseClicked(int x, int y, int par3)
 	{
 		super.mouseClicked(x, y, par3);
 		this.textFieldUsername.mouseClicked(x - containerWidth, y - containerHeight, par3);

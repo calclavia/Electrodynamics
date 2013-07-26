@@ -132,7 +132,7 @@ public class GuiMFFS extends GuiContainerBase
 	}
 
 	@Override
-	protected void mouseClicked(int x, int y, int par3)
+	public void mouseClicked(int x, int y, int par3)
 	{
 		super.mouseClicked(x, y, par3);
 
