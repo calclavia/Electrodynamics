@@ -4,8 +4,10 @@
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.JarFile" 	value="MFFS_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-	<property name="file.APIFile" 	value="MFFS_API_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
+	<property name="file.mffs" value="MFFS.jar" />
+	<property name="file.api" value="MFFS_API.zip" />
+	<property name="file.JarFile" value="MFFS_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.APIFile" value="MFFS_API_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
 
 	<target name="build">
 
@@ -92,6 +94,12 @@
 			<fileset dir="APIContents" />
 		</zip>
 		
-		<copy todir="output" file="build.properties" />
+		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
+		<jar destfile="${file.mffs}">
+			<fileset dir="ModContents" />
+		</jar>
+		<zip destfile="${file.api}">
+			<fileset dir="APIContents" />
+		</zip>
 	</target>
 </project>
