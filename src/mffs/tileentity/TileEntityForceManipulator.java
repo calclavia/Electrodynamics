@@ -186,7 +186,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 			for (int i = 0; i < nbtList.tagCount(); i++)
 			{
-				Vector3 vector = Vector3.readFromNBT((NBTTagCompound) nbtList.tagAt(i)).add(0.5);
+				Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
 
 				if (type == 1)
 				{

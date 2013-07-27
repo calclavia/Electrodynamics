@@ -25,11 +25,14 @@ public class ItemModuleSponge extends ItemModule
 		{
 			World world = ((TileEntity) projector).worldObj;
 
-			for (Vector3 point : projector.getInteriorPoints())
+			if (!world.isRemote)
 			{
-				if (Block.blocksList[point.getBlockID(world)] instanceof BlockFluid)
+				for (Vector3 point : projector.getInteriorPoints())
 				{
-					point.setBlock(world, 0);
+					if (Block.blocksList[point.getBlockID(world)] instanceof BlockFluid)
+					{
+						point.setBlock(world, 0);
+					}
 				}
 			}
 		}

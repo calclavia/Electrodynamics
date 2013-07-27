@@ -22,16 +22,19 @@ public class BlockInventoryDropDelayedEvent extends BlockDropDelayedEvent
 	@Override
 	protected void onEvent()
 	{
-		if (this.position.getBlockID(this.world) == this.block.blockID)
+		if (!this.world.isRemote)
 		{
-			ArrayList<ItemStack> itemStacks = this.block.getBlockDropped(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
-
-			for (ItemStack itemStack : itemStacks)
+			if (this.position.getBlockID(this.world) == this.block.blockID)
 			{
-				this.projector.mergeIntoInventory(itemStack);
-			}
+				ArrayList<ItemStack> itemStacks = this.block.getBlockDropped(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
 
-			this.position.setBlock(this.world, 0);
+				for (ItemStack itemStack : itemStacks)
+				{
+					this.projector.mergeIntoInventory(itemStack);
+				}
+
+				this.position.setBlock(this.world, 0);
+			}
 		}
 	}
 }

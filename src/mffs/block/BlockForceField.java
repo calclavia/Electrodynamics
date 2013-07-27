@@ -331,7 +331,10 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 			((IFortronStorage) projector).provideFortron(joules, true);
 		}
 
-		world.setBlock(x, y, z, 0, 0, 3);
+		if (!world.isRemote)
+		{
+			world.setBlockToAir(x, y, z);
+		}
 	}
 
 	@Override

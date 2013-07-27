@@ -23,10 +23,13 @@ public class BlockDropDelayedEvent extends DelayedEvent
 	@Override
 	protected void onEvent()
 	{
-		if (this.position.getBlockID(this.world) == this.block.blockID)
+		if (!this.world.isRemote)
 		{
-			this.block.dropBlockAsItem(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
-			this.position.setBlock(this.world, 0);
+			if (this.position.getBlockID(this.world) == this.block.blockID)
+			{
+				this.block.dropBlockAsItem(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
+				this.position.setBlock(this.world, 0);
+			}
 		}
 	}
 }

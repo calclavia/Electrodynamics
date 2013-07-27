@@ -49,12 +49,12 @@ public class ItemModeCustom extends ItemMode implements ICache
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
 
-		list.add("Mode: " + (nbt.getBoolean(NBT_MODE) ? "Additive" : "Substraction"));
+		list.add("Mode: " + (nbt.getBoolean(NBT_MODE) ? "Subtraction" : "Additive"));
 
-		Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
+		Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
 		list.add("Point 1: " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
 
-		Vector3 point2 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_2));
+		Vector3 point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2));
 		list.add("Point 2: " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
 
 		int modeID = nbt.getInteger(NBT_ID);
@@ -96,8 +96,8 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 				if (nbt != null)
 				{
-					Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
-					Vector3 point2 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_2));
+					Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
+					Vector3 point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2));
 
 					if (nbt.hasKey(NBT_POINT_1) && nbt.hasKey(NBT_POINT_2) && !point1.equals(point2))
 					{
@@ -150,7 +150,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 										if (blockID > 0)
 										{
-											if (nbt.getBoolean(NBT_MODE))
+											if (!nbt.getBoolean(NBT_MODE))
 											{
 												NBTTagCompound vectorTag = new NBTTagCompound();
 												position.writeToNBT(vectorTag);
@@ -196,7 +196,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 				if (nbt != null)
 				{
 					nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE));
-					entityPlayer.addChatMessage("Changed selection mode to " + (nbt.getBoolean(NBT_MODE) ? "additive" : "substraction"));
+					entityPlayer.addChatMessage("Changed selection mode to " + (nbt.getBoolean(NBT_MODE) ? "subtraction" : "additive"));
 				}
 			}
 		}
