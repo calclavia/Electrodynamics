@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.common.FMLLog;
@@ -136,6 +138,11 @@ public class ResonantInduction
 	@EventHandler
 	public void preInit(FMLPostInitializationEvent evt)
 	{
+		/**
+		 * Recipes
+		 */
+		/** by Jyzarc */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', Item.redstone, 'I', Block.blockIron));
 
 	}
 
