@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
+import resonantinduction.tesla.BlockTesla;
+import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -17,6 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 /**
@@ -102,6 +105,11 @@ public class ResonantInduction
 		CONFIGURATION.load();
 		blockTesla = new BlockTesla(getNextBlockID());
 		CONFIGURATION.save();
+
+		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
+
+		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
+		this.proxy.registerRenderers();
 	}
 
 	@EventHandler
