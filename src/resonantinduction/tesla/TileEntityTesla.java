@@ -114,6 +114,25 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		return 8;
 	}
 
+	public void updatePositionStatus()
+	{
+		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileEntityTesla;
+		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileEntityTesla;
+
+		if (isTop && isBottom)
+		{
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 1, 3);
+		}
+		else if (isBottom)
+		{
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 2, 3);
+		}
+		else
+		{
+			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 3);
+		}
+	}
+
 	@Override
 	public void invalidate()
 	{

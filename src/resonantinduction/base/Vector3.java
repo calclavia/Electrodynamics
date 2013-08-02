@@ -5,6 +5,7 @@ package resonantinduction.base;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 /**
  * @author Calclavia
@@ -82,9 +83,9 @@ public class Vector3
 	 * 
 	 * @return The cross product between this vector and another.
 	 */
-	public Vector3 crossProduct(Vector3 vec2)
+	public Vector3 crossProduct(Vector3 compare)
 	{
-		return new Vector3(this.y * vec2.z - this.z * vec2.y, this.z * vec2.x - this.x * vec2.z, this.x * vec2.y - this.y * vec2.x);
+		return new Vector3(this.y * compare.z - this.z * compare.y, this.z * compare.x - this.x * compare.z, this.x * compare.y - this.y * compare.x);
 	}
 
 	public Vector3 xCrossProduct()
@@ -194,6 +195,21 @@ public class Vector3
 		rotationYaw = rotationYaw + 90;
 		rotationPitch = -rotationPitch;
 		return new Vector3(Math.cos(Math.toRadians(rotationYaw)), Math.sin(Math.toRadians(rotationPitch)), Math.sin(Math.toRadians(rotationYaw)));
+	}
+
+	public double getAngle(Vector3 vector)
+	{
+		return this.getAnglePreNorm(vector.clone().normalize());
+	}
+
+	public double getAnglePreNorm(Vector3 vector)
+	{
+		return Math.acos(this.dotProduct(vector));
+	}
+
+	public TileEntity getTileEntity(World world)
+	{
+		return world.getBlockTileEntity((int) this.x, (int) this.y, (int) this.z);
 	}
 
 	@Override
