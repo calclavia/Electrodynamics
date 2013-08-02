@@ -34,6 +34,7 @@ public class FXElectricBolt extends EntityFX
 	public static final ResourceLocation PARTICLE_RESOURCE = new ResourceLocation("textures/particle/particles.png");
 
 	private final float boltWidth = 0.05f;
+	private final float complexity = 2;
 	private BoltPoint start;
 	private BoltPoint target;
 	private double boltLength;
@@ -48,7 +49,8 @@ public class FXElectricBolt extends EntityFX
 		this.target = new BoltPoint(target);
 
 		this.boltLength = start.distance(target);
-		this.segments.add(new BoltSegment(this.start, this.target));
+
+		this.setUp();
 	}
 
 	public FXElectricBolt setColor(float r, float g, float b)
@@ -59,9 +61,33 @@ public class FXElectricBolt extends EntityFX
 		return this;
 	}
 
-	public void calculate()
+	public void setUp()
 	{
+		this.segments.add(new BoltSegment(this.start, this.target));
+		double offsetRatio = this.boltLength * this.complexity;
+		this.split(offsetRatio / 8, 0.1f, 45);
 
+	}
+
+	public void split(double offset, float length, float angle)
+	{
+		int splitAmount = 2;
+		Set<BoltSegment> oldSegments = this.segments;
+		this.segments.clear();
+
+		for (BoltSegment segment : oldSegments)
+		{
+			Vector3 subSegment = segment.getDifference().scale(1 / splitAmount);
+
+			BoltPoint[] newPoints = new BoltPoint[splitAmount + 1];
+			newPoints[0] = segment.start;
+			newPoints[splitAmount + 1] = segment.end;
+
+			for (int i = 1; i < splitAmount; i++)
+			{
+				Vector3 newOffset = segment.getDifference().getPerpendicular();
+			}
+		}
 	}
 
 	@Override
@@ -164,6 +190,11 @@ public class FXElectricBolt extends EntityFX
 		{
 			this.start = start;
 			this.end = end;
+		}
+
+		public Vector3 getDifference()
+		{
+			return this.end.difference(this.start);
 		}
 	}
 }

@@ -127,4 +127,72 @@ public class Vector3
 	{
 		return new Vector3(this.x + offset.x, this.y + offset.y, this.z + offset.z);
 	}
+
+
+	public Vector3 normalize()
+	{
+		double d = getMagnitude();
+
+		if (d != 0)
+		{
+			scale(1 / d);
+		}
+		return this;
+	}
+	
+	/**
+	 * Rotate by a this vector around an axis.
+	 * 
+	 * @return The new Vector3 rotation.
+	 */
+	public Vector3 rotate(float angle, Vector3 axis)
+	{
+		return translateMatrix(getRotationMatrix(angle, axis), this.clone());
+	}
+
+	public double[] getRotationMatrix(float angle)
+	{
+		double[] matrix = new double[16];
+		Vector3 axis = this.clone().normalize();
+		double x = axis.x;
+		double y = axis.y;
+		double z = axis.z;
+		angle *= 0.0174532925D;
+		float cos = (float) Math.cos(angle);
+		float ocos = 1.0F - cos;
+		float sin = (float) Math.sin(angle);
+		matrix[0] = (x * x * ocos + cos);
+		matrix[1] = (y * x * ocos + z * sin);
+		matrix[2] = (x * z * ocos - y * sin);
+		matrix[4] = (x * y * ocos - z * sin);
+		matrix[5] = (y * y * ocos + cos);
+		matrix[6] = (y * z * ocos + x * sin);
+		matrix[8] = (x * z * ocos + y * sin);
+		matrix[9] = (y * z * ocos - x * sin);
+		matrix[10] = (z * z * ocos + cos);
+		matrix[15] = 1.0F;
+		return matrix;
+	}
+
+	public static Vector3 translateMatrix(double[] matrix, Vector3 translation)
+	{
+		double x = translation.x * matrix[0] + translation.y * matrix[1] + translation.z * matrix[2] + matrix[3];
+		double y = translation.x * matrix[4] + translation.y * matrix[5] + translation.z * matrix[6] + matrix[7];
+		double z = translation.x * matrix[8] + translation.y * matrix[9] + translation.z * matrix[10] + matrix[11];
+		translation.x = x;
+		translation.y = y;
+		translation.z = z;
+		return translation;
+	}
+
+	public static double[] getRotationMatrix(float angle, Vector3 axis)
+	{
+		return axis.getRotationMatrix(angle);
+	}
+
+	@Override
+	public Vector3 clone()
+	{
+		return new Vector3(this.x, this.y, this.z);
+	}
 }
