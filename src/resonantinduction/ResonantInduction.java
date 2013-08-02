@@ -1,6 +1,8 @@
 package resonantinduction;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModMetadata;
 
 /**
  * @author Calclavia
@@ -18,4 +20,9 @@ public class ResonantInduction
 	public static final String BUILD_VERSION = "@BUILD@";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION;
 
+	@Instance(ID)
+	public static ResonantInduction INSTNACE;
+
+	@Mod.Metadata(ID)
+	public static ModMetadata metadata;
 }
