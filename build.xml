@@ -20,10 +20,6 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Modding-Library/src/">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
 		</copy>
 		
 		<mkdir dir="DevContents" />
