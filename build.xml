@@ -54,12 +54,6 @@
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			
-			<fileset dir="${dir.development}Modding-Library/resources/">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.java"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
 		</copy>
 		<!--
 		<copy todir="APIContents">
