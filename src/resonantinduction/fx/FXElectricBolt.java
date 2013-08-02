@@ -4,6 +4,7 @@
 package resonantinduction.fx;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,8 @@ public class FXElectricBolt extends EntityFX
 	private double boltLength;
 	private int segmentCount;
 
+	private Random random;
+
 	private Set<BoltSegment> segments = new HashSet<BoltSegment>();
 
 	public FXElectricBolt(World world, Vector3 start, Vector3 target)
@@ -47,9 +50,9 @@ public class FXElectricBolt extends EntityFX
 		super(world, start.x, start.y, start.z);
 		this.start = new BoltPoint(target);
 		this.target = new BoltPoint(target);
-
+		this.particleAge = (3 + this.rand.nextInt(3) - 1);
+		this.random = new Random();
 		this.boltLength = start.distance(target);
-
 		this.setUp();
 	}
 
@@ -85,7 +88,7 @@ public class FXElectricBolt extends EntityFX
 
 			for (int i = 1; i < splitAmount; i++)
 			{
-				Vector3 newOffset = segment.getDifference().getPerpendicular();
+				Vector3 newOffset = segment.getDifference().getPerpendicular().rotate(random.nextFloat() * 360, segment.getDifference()).scale((this.random.nextFloat() / 2) * offset);
 			}
 		}
 	}
@@ -119,7 +122,7 @@ public class FXElectricBolt extends EntityFX
 		GL11.glEnable(3042);
 
 		Vector3 playerVector = new Vector3(sinYaw * -cosPitch, -cosSinPitch / cosYaw, cosYaw * cosPitch);
-		int renderLength = (int) (this.particleAge + partialFrame + this.boltLength * 3) / (int) (this.boltLength * 3) * this.segmentCount;
+		int renderLength = (int) ((this.particleAge + partialFrame + this.boltLength * 3) / (this.boltLength * 3 * this.segmentCount));
 
 		for (BoltSegment segment : this.segments)
 		{

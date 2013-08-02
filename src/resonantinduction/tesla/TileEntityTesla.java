@@ -40,7 +40,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 
 			for (ITesla tesla : TeslaGrid.instance().get())
 			{
-				if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
+				if (tesla != this && new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
 				{
 					transferTeslaCoils.add(tesla);
 				}
@@ -53,6 +53,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				for (ITesla tesla : transferTeslaCoils)
 				{
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this), new Vector3((TileEntity) tesla));
 					this.transfer(-transferEnergy);
 				}
 			}
