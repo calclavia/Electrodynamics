@@ -5,6 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -24,7 +25,7 @@ public class ItemQuantumEntangler extends ItemBase
 	{
 		super("entangler", id);
 		setMaxStackSize(1);
-		//TODO Icon, energy
+		//TODO Handheld model, render animation, energy usage (should be easy?)
 	}
 	
 	@Override
@@ -50,18 +51,17 @@ public class ItemQuantumEntangler extends ItemBase
     {
 		if(!world.isRemote)
 		{
-			for(int yCount = y+1; yCount < 255; yCount++)
+			if(world.isAirBlock(x, y+1, z) && world.isAirBlock(x, y+2, z))
 			{
-				if(!world.isAirBlock(x, yCount, z))
-				{
-					return false;
-				}
+				int dimID = world.provider.dimensionId;
+				
+				entityplayer.addChatMessage("Bound Entangler to block [" + x + ", " + y + ", " + z + "], dimension '" + dimID + "'");
+				setBindVec(itemstack, new Vector3(x, y, z), dimID);
+				
+				return true;
 			}
 			
-			entityplayer.addChatMessage("Binded Entangler to block [" + x + ", " + y + ", " + z + "]");
-			setBindVec(itemstack, new Vector3(x, y, z), world.provider.dimensionId);
-			
-			return true;
+			entityplayer.addChatMessage("Error: invalid block for binding!");
 		}
 		
 		return false;
@@ -78,7 +78,21 @@ public class ItemQuantumEntangler extends ItemBase
 				return itemstack;
 			}
 			
-			//TODO teleport to coords, dimension
+			//TELEPORT//
+			
+			Vector3 vec = getBindVec(itemstack);
+			int dimID = getDimID(itemstack);
+			
+			//travel to dimension if different dimID
+			if(world.provider.dimensionId != dimID)
+			{
+				((EntityPlayerMP)entityplayer).travelToDimension(dimID);
+			}
+			
+			//actually teleport to new coords
+			((EntityPlayerMP)entityplayer).playerNetServerHandler.setPlayerLocation(vec.x+0.5, vec.y+1, vec.z+0.5, entityplayer.rotationYaw, entityplayer.rotationPitch);
+			
+			world.playSoundAtEntity(entityplayer, "mob.endermen.portal", 1.0F, 1.0F);
 		}
 		
 		return itemstack;
