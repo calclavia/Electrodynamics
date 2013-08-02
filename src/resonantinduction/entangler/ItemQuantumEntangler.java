@@ -2,11 +2,13 @@ package resonantinduction.entangler;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonantinduction.ResonantInduction;
 import resonantinduction.base.ItemBase;
 import resonantinduction.base.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -26,6 +28,12 @@ public class ItemQuantumEntangler extends ItemBase
 		super("entangler", id);
 		setMaxStackSize(1);
 		// TODO Handheld model, render animation, energy usage (should be easy?)
+	}
+	
+	@Override
+	public void registerIcons(IconRegister register)
+	{
+		itemIcon = register.registerIcon(ResonantInduction.PREFIX + "quantum_entangler");
 	}
 
 	@Override
@@ -79,7 +87,7 @@ public class ItemQuantumEntangler extends ItemBase
 				return itemstack;
 			}
 
-			// TELEPORT//
+			// TELEPORT //
 
 			Vector3 vec = getBindVec(itemstack);
 			int dimID = getDimID(itemstack);
