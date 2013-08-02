@@ -8,7 +8,7 @@ import resonantinduction.TabRI;
 /**
  * 
  * @author AidanBrady
- *
+ * 
  */
 public class ItemBase extends Item
 {

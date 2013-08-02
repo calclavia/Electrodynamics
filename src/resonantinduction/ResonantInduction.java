@@ -96,11 +96,11 @@ public class ResonantInduction
 	{
 		return NEXT_ITEM_ID++;
 	}
-	
-	//Items
+
+	// Items
 	public static Item itemQuantumEntangler;
 
-	//Blocks
+	// Blocks
 	public static Block blockTesla;
 
 	@EventHandler
@@ -109,21 +109,21 @@ public class ResonantInduction
 		LOGGER.setParent(FMLLog.getLogger());
 
 		CONFIGURATION.load();
-		
-		//config
+
+		// config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 
-		//items
+		// items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
-		
-		//blocks
+
+		// blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		
+
 		CONFIGURATION.save();
-		
-		//tiles
+
+		// tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
