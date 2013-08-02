@@ -3,11 +3,14 @@
  */
 package resonantinduction.fx;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
@@ -45,7 +48,7 @@ public class FXElectricBolt extends EntityFX
 
 	private Random random;
 
-	private Set<BoltSegment> segments = new HashSet<BoltSegment>();
+	private List<BoltSegment> segments = new ArrayList<BoltSegment>();
 	private int maxSplitID;
 	private final Map<Integer, Integer> parentIDMap = new HashMap<Integer, Integer>();
 
@@ -71,15 +74,38 @@ public class FXElectricBolt extends EntityFX
 	public void setUp()
 	{
 		this.segments.add(new BoltSegment(this.start, this.target));
+		this.recalculate();
 		double offsetRatio = this.boltLength * this.complexity;
 		this.split(offsetRatio / 8, 0.1f, 45);
+		this.split(offsetRatio / 12, 0.1f, 90);
+		this.split(offsetRatio / 18, 0.1f, 90);
+		this.split(offsetRatio / 18, 0.1f, 90);
 
+		/**
+		 * Finish up calculations
+		 */
+		this.recalculate();
+		Collections.sort(this.segments, new Comparator()
+		{
+			public int compare(BoltSegment o1, BoltSegment o2)
+			{
+				return Float.compare(o2.weight, o1.weight);
+			}
+
+			@Override
+			public int compare(Object obj, Object obj1)
+			{
+				return compare((BoltSegment) obj, (BoltSegment) obj1);
+			}
+		});
 	}
+
+	
 
 	public void split(double offset, float length, float angle)
 	{
 		int splitAmount = 2;
-		Set<BoltSegment> oldSegments = this.segments;
+		List<BoltSegment> oldSegments = this.segments;
 		this.segments.clear();
 
 		BoltSegment prev = null;
@@ -236,7 +262,7 @@ public class FXElectricBolt extends EntityFX
 		{
 			this.start = start;
 			this.end = end;
-			this.difference = this.end.difference(this.start);
+			this.recalculate();
 		}
 
 		public BoltSegment(BoltPoint start, BoltPoint end, float weight, int id, int splitID)
@@ -245,6 +271,11 @@ public class FXElectricBolt extends EntityFX
 			this.weight = weight;
 			this.id = id;
 			this.splitID = splitID;
+		}
+
+		public void recalculate()
+		{
+			this.difference = this.end.difference(this.start);
 		}
 
 		public Vector3 getDifference()
