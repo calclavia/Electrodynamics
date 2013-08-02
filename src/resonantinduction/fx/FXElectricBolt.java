@@ -3,7 +3,9 @@
  */
 package resonantinduction.fx;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,6 +46,8 @@ public class FXElectricBolt extends EntityFX
 	private Random random;
 
 	private Set<BoltSegment> segments = new HashSet<BoltSegment>();
+	private int maxSplitID;
+	private final Map<Integer, Integer> parentIDMap = new HashMap<Integer, Integer>();
 
 	public FXElectricBolt(World world, Vector3 start, Vector3 target)
 	{
@@ -78,6 +82,8 @@ public class FXElectricBolt extends EntityFX
 		Set<BoltSegment> oldSegments = this.segments;
 		this.segments.clear();
 
+		BoltSegment prev = null;
+
 		for (BoltSegment segment : oldSegments)
 		{
 			Vector3 subSegment = segment.getDifference().scale(1 / splitAmount);
@@ -89,6 +95,38 @@ public class FXElectricBolt extends EntityFX
 			for (int i = 1; i < splitAmount; i++)
 			{
 				Vector3 newOffset = segment.getDifference().getPerpendicular().rotate(random.nextFloat() * 360, segment.getDifference()).scale((this.random.nextFloat() / 2) * offset);
+				Vector3 basePoint = newPoints[0].clone().translate(subSegment.clone().scale(i));
+				newPoints[i] = new BoltPoint(basePoint, newOffset);
+			}
+
+			for (int i = 1; i < splitAmount; i++)
+			{
+				BoltSegment next = new BoltSegment(newPoints[i], newPoints[(i + 1)], segment.weight, segment.id * splitAmount + i, segment.splitID);
+				next.prev = prev;
+
+				if (prev != null)
+				{
+					prev.next = next;
+				}
+
+				if (i != 0)
+				{
+					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360.0F, next.difference);
+					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * angle, splitrot).scale(length);
+					this.parentIDMap.put(this.maxSplitID, next.splitID);
+					BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.weight / 2.0F, next.id, this.maxSplitID);
+					split.prev = prev;
+					this.maxSplitID++;
+					this.segments.add(split);
+				}
+
+				prev = next;
+				this.segments.add(next);
+			}
+
+			if (segment.next != null)
+			{
+				segment.next = prev;
 			}
 		}
 	}
@@ -188,16 +226,30 @@ public class FXElectricBolt extends EntityFX
 		public BoltSegment next;
 		public Vector3 prevDiff;
 		public Vector3 nextDiff;
+		public float weight;
+		public int id;
+		public int splitID;
+
+		private Vector3 difference;
 
 		public BoltSegment(BoltPoint start, BoltPoint end)
 		{
 			this.start = start;
 			this.end = end;
+			this.difference = this.end.difference(this.start);
+		}
+
+		public BoltSegment(BoltPoint start, BoltPoint end, float weight, int id, int splitID)
+		{
+			this(start, end);
+			this.weight = weight;
+			this.id = id;
+			this.splitID = splitID;
 		}
 
 		public Vector3 getDifference()
 		{
-			return this.end.difference(this.start);
+			return difference;
 		}
 	}
 }
