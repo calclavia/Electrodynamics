@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelTeslaBottom;
 import resonantinduction.model.ModelTeslaMiddle;
@@ -17,6 +19,7 @@ import resonantinduction.model.ModelTeslaMiddle;
  * @author Calclavia
  * 
  */
+@SideOnly(Side.CLIENT)
 public class RenderTesla extends TileEntitySpecialRenderer
 {
 	public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "tesla_bottom.png");

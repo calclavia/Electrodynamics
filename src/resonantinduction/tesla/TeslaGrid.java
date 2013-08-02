@@ -1,12 +1,13 @@
 /**
  * 
  */
-package resonantinduction;
+package resonantinduction.tesla;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import resonantinduction.ITesla;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -50,7 +51,12 @@ public class TeslaGrid
 		this.tileEntities.remove(iTesla);
 	}
 
-	public static TeslaGrid getInstance()
+	public Set<ITesla> get()
+	{
+		return this.tileEntities;
+	}
+
+	public static TeslaGrid instance()
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{

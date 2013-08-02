@@ -7,7 +7,11 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
+import resonantinduction.render.BlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia
@@ -18,6 +22,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	public BlockTesla(int id)
 	{
 		super("tesla", id, Material.iron);
+		this.func_111022_d(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override
@@ -26,10 +31,11 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 		return new TileEntityTesla();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return BlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override
@@ -43,4 +49,5 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	{
 		return false;
 	}
+
 }
