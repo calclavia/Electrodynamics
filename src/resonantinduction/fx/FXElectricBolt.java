@@ -236,19 +236,19 @@ public class FXElectricBolt extends EntityFX
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		tessellator.draw();
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(FADED_SPHERE);
-		GL11.glPushMatrix();
 
 		/**
 		 * Do rendering here.
 		 */
+		GL11.glPushMatrix();
 		GL11.glDepthMask(true);
 		GL11.glEnable(3042);
+
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(FADED_SPHERE);
 		tessellator.startDrawingQuads();
 		tessellator.setBrightness(15728880);
 
 		Vector3 playerVector = new Vector3(sinYaw * -cosPitch, -cosSinPitch / cosYaw, cosYaw * cosPitch);
-		int renderLength = (int) ((this.particleAge + partialFrame + this.boltLength * 3) / (this.boltLength * 3 * this.segmentCount));
 
 		for (BoltSegment segment : this.segments)
 		{
@@ -272,18 +272,6 @@ public class FXElectricBolt extends EntityFX
 			tessellator.addVertexWithUV(rx1 + prevDiff.x, ry1 + prevDiff.y, rz1 + prevDiff.z, 0.5D, 1.0D);
 			tessellator.addVertexWithUV(rx2 + nextDiff.x, ry2 + nextDiff.y, rz2 + nextDiff.z, 0.5D, 1.0D);
 
-			if (segment.next == null)
-			{
-				Vector3 roundend = segment.end.clone().translate(segment.difference.clone().normalize().scale(width));
-				float rx3 = (float) (roundend.x - interpPosX);
-				float ry3 = (float) (roundend.y - interpPosY);
-				float rz3 = (float) (roundend.z - interpPosZ);
-				tessellator.addVertexWithUV(rx3 - nextDiff.x, ry3 - nextDiff.y, rz3 - nextDiff.z, 0.0D, 0.0D);
-				tessellator.addVertexWithUV(rx2 - nextDiff.x, ry2 - nextDiff.y, rz2 - nextDiff.z, 0.5D, 0.0D);
-				tessellator.addVertexWithUV(rx2 + nextDiff.x, ry2 + nextDiff.y, rz2 + nextDiff.z, 0.5D, 1.0D);
-				tessellator.addVertexWithUV(rx3 + nextDiff.x, ry3 + nextDiff.y, rz3 + nextDiff.z, 0.0D, 1.0D);
-			}
-
 			if (segment.prev == null)
 			{
 				Vector3 roundend = segment.start.clone().difference(segment.difference.clone().normalize().scale(width));
@@ -295,13 +283,25 @@ public class FXElectricBolt extends EntityFX
 				tessellator.addVertexWithUV(rx3 + prevDiff.x, ry3 + prevDiff.y, rz3 + prevDiff.z, 0.0D, 1.0D);
 				tessellator.addVertexWithUV(rx1 + prevDiff.x, ry1 + prevDiff.y, rz1 + prevDiff.z, 0.5D, 1.0D);
 			}
+
+			if (segment.next == null)
+			{
+				Vector3 roundend = segment.end.clone().translate(segment.difference.clone().normalize().scale(width));
+				float rx3 = (float) (roundend.x - interpPosX);
+				float ry3 = (float) (roundend.y - interpPosY);
+				float rz3 = (float) (roundend.z - interpPosZ);
+				tessellator.addVertexWithUV(rx3 - nextDiff.x, ry3 - nextDiff.y, rz3 - nextDiff.z, 0.0D, 0.0D);
+				tessellator.addVertexWithUV(rx2 - nextDiff.x, ry2 - nextDiff.y, rz2 - nextDiff.z, 0.5D, 0.0D);
+				tessellator.addVertexWithUV(rx2 + nextDiff.x, ry2 + nextDiff.y, rz2 + nextDiff.z, 0.5D, 1.0D);
+				tessellator.addVertexWithUV(rx3 + nextDiff.x, ry3 + nextDiff.y, rz3 + nextDiff.z, 0.0D, 1.0D);
+			}
 		}
 
 		tessellator.draw();
 		GL11.glDisable(3042);
 		GL11.glDepthMask(false);
-
 		GL11.glPopMatrix();
+
 		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(PARTICLE_RESOURCE);
 		tessellator.startDrawingQuads();
 	}

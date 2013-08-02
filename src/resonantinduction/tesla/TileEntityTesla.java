@@ -53,7 +53,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				for (ITesla tesla : transferTeslaCoils)
 				{
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this), new Vector3((TileEntity) tesla));
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
 					this.transfer(-transferEnergy);
 				}
 			}
@@ -70,26 +70,29 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		{
 			TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
 
-			boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
-
-			if (furnaceTile.furnaceBurnTime == 0)
+			if (furnaceTile.getStackInSlot(0) == null)
 			{
-				int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
-				if (burnTime > 0)
+				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
+
+				if (furnaceTile.furnaceBurnTime == 0)
 				{
-					furnaceTile.decrStackSize(1, 1);
-					furnaceTile.furnaceBurnTime = burnTime;
+					int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
+					if (burnTime > 0)
+					{
+						furnaceTile.decrStackSize(1, 1);
+						furnaceTile.furnaceBurnTime = burnTime;
+					}
 				}
-			}
-			else
-			{
-				this.transfer(ResonantInduction.POWER_PER_COAL / 20);
-				furnaceTile.furnaceBurnTime--;
-			}
+				else
+				{
+					this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+					furnaceTile.furnaceBurnTime--;
+				}
 
-			if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
-			{
-				BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
+				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
+				{
+					BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
+				}
 			}
 		}
 	}
