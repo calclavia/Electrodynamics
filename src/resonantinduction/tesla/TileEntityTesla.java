@@ -55,34 +55,39 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 			}
 		}
 
+		/**
+		 * Draws power from furnace below it.
+		 * 
+		 * @author Calclavia
+		 */
 		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
 
 		if (tileEntity instanceof TileEntityFurnace)
 		{
 			TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
-			int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
 
-			if (burnTime > 0)
+			boolean doBlockStateUpdate = false;
+
+			if (furnaceTile.furnaceBurnTime == 0)
 			{
-				boolean doBlockStateUpdate = false;
-
-				if (furnaceTile.furnaceBurnTime == 0)
+				int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
+				if (burnTime > 0)
 				{
 					furnaceTile.decrStackSize(1, 1);
 					furnaceTile.furnaceBurnTime = burnTime;
-					doBlockStateUpdate = true;
 				}
-				else
-				{
-					furnaceTile.furnaceBurnTime--;
-				}
-
-				if (doBlockStateUpdate)
-				{
-					BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-				}
-
+				doBlockStateUpdate = true;
+			}
+			else
+			{
 				this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+				furnaceTile.furnaceBurnTime--;
+			}
+
+			if (doBlockStateUpdate)
+			{
+
+				BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 			}
 		}
 	}
