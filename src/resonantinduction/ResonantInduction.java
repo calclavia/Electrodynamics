@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.common.FMLLog;
@@ -38,7 +39,7 @@ public class ResonantInduction
 	 */
 	public static final String ID = "resonantinduction";
 	public static final String NAME = "Resonant Induction";
-	public static final String CHANNEL = "resonantinduc";
+	public static final String CHANNEL = "R_INDUC";
 
 	public static final String MAJOR_VERSION = "@MAJOR@";
 	public static final String MINOR_VERSION = "@MINOR@";
@@ -95,10 +96,11 @@ public class ResonantInduction
 	{
 		return NEXT_ITEM_ID++;
 	}
+	
+	//Items
+	public static Item itemQuantumEntangler;
 
-	/**
-	 * Blocks and Items
-	 */
+	//Blocks
 	public static Block blockTesla;
 
 	@EventHandler
@@ -107,13 +109,23 @@ public class ResonantInduction
 		LOGGER.setParent(FMLLog.getLogger());
 
 		CONFIGURATION.load();
+		
+		//config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 
+		//items
+		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
+		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
+		
+		//blocks
 		blockTesla = new BlockTesla(getNextBlockID());
-		CONFIGURATION.save();
-
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
+		
+		CONFIGURATION.save();
+		
+		//tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
+
 		ResonantInduction.proxy.registerRenderers();
 
 		TabRI.ITEMSTACK = new ItemStack(blockTesla);
