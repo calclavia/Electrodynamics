@@ -77,6 +77,8 @@ public class FXElectricBolt extends EntityFX
 		this.recalculate();
 		double offsetRatio = this.boltLength * this.complexity;
 		this.split(offsetRatio / 8, 0.1f, 45);
+		System.out.println(this.segments.size());
+
 		this.split(offsetRatio / 12, 0.1f, 90);
 		this.split(offsetRatio / 18, 0.1f, 90);
 		this.split(offsetRatio / 18, 0.1f, 90);
@@ -100,13 +102,11 @@ public class FXElectricBolt extends EntityFX
 		});
 	}
 
-	
-
 	public void split(double offset, float length, float angle)
 	{
 		int splitAmount = 2;
 		List<BoltSegment> oldSegments = this.segments;
-		this.segments.clear();
+		this.segments = new ArrayList<BoltSegment>();
 
 		BoltSegment prev = null;
 
@@ -116,7 +116,7 @@ public class FXElectricBolt extends EntityFX
 
 			BoltPoint[] newPoints = new BoltPoint[splitAmount + 1];
 			newPoints[0] = segment.start;
-			newPoints[splitAmount + 1] = segment.end;
+			newPoints[splitAmount] = segment.end;
 
 			for (int i = 1; i < splitAmount; i++)
 			{
@@ -153,6 +153,66 @@ public class FXElectricBolt extends EntityFX
 			if (segment.next != null)
 			{
 				segment.next = prev;
+			}
+		}
+	}
+
+	private void recalculate()
+	{
+		HashMap<Integer, Integer> lastActiveSegment = new HashMap<Integer, Integer>();
+
+		Collections.sort(this.segments, new Comparator()
+		{
+			public int compare(BoltSegment o1, BoltSegment o2)
+			{
+				int comp = Integer.valueOf(o1.splitID).compareTo(Integer.valueOf(o2.splitID));
+				if (comp == 0)
+				{
+					return Integer.valueOf(o1.id).compareTo(Integer.valueOf(o2.id));
+				}
+				return comp;
+			}
+
+			@Override
+			public int compare(Object obj, Object obj1)
+			{
+				return compare((BoltSegment) obj, (BoltSegment) obj1);
+			}
+		});
+
+		int lastSplitCalc = 0;
+		int lastActiveSeg = 0;
+
+		for (BoltSegment segment : this.segments)
+		{
+			if (segment.splitID > lastSplitCalc)
+			{
+				lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
+				lastSplitCalc = segment.splitID;
+				lastActiveSeg = ((Integer) lastActiveSegment.get(this.parentIDMap.get(segment.splitID))).intValue();
+			}
+
+			lastActiveSeg = segment.id;
+		}
+
+		lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
+		lastSplitCalc = 0;
+		lastActiveSeg = ((Integer) lastActiveSegment.get(0)).intValue();
+		BoltSegment segment;
+
+		for (Iterator<BoltSegment> iterator = this.segments.iterator(); iterator.hasNext(); segment.recalculate())
+		{
+			segment = iterator.next();
+
+			if (lastSplitCalc != segment.splitID)
+			{
+				lastSplitCalc = segment.splitID;
+				lastActiveSeg = lastActiveSegment.get(segment.splitID);
+			}
+
+			if (segment.id > lastActiveSeg)
+			{
+				iterator.remove();
 			}
 		}
 	}
@@ -250,13 +310,16 @@ public class FXElectricBolt extends EntityFX
 		public BoltPoint end;
 		public BoltSegment prev;
 		public BoltSegment next;
-		public Vector3 prevDiff;
-		public Vector3 nextDiff;
 		public float weight;
 		public int id;
 		public int splitID;
 
+		/**
+		 * All differences are cached.
+		 */
 		private Vector3 difference;
+		public Vector3 prevDiff;
+		public Vector3 nextDiff;
 
 		public BoltSegment(BoltPoint start, BoltPoint end)
 		{
@@ -276,6 +339,28 @@ public class FXElectricBolt extends EntityFX
 		public void recalculate()
 		{
 			this.difference = this.end.difference(this.start);
+
+			if (this.prev != null)
+			{
+				Vector3 prevdiffnorm = this.prev.difference.clone().normalize();
+				Vector3 thisdiffnorm = this.difference.clone().normalize();
+				this.prevDiff = thisdiffnorm.translate(prevdiffnorm).normalize();
+			}
+			else
+			{
+				this.prevDiff = this.difference.clone().normalize();
+			}
+
+			if (this.next != null)
+			{
+				Vector3 nextdiffnorm = this.next.difference.clone().normalize();
+				Vector3 thisdiffnorm = this.difference.clone().normalize();
+				this.nextDiff = thisdiffnorm.translate(nextdiffnorm).normalize();
+			}
+			else
+			{
+				this.nextDiff = this.difference.clone().normalize();
+			}
 		}
 
 		public Vector3 getDifference()
