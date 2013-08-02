@@ -110,20 +110,20 @@ public class ResonantInduction
 
 		CONFIGURATION.load();
 
-		// config
+		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 
-		// items
+		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 
-		// blocks
+		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 
 		CONFIGURATION.save();
 
-		// tiles
+		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();

@@ -39,17 +39,18 @@ public class FXElectricBolt extends EntityFX
 	public static final ResourceLocation FADED_SPHERE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "fadedSphere.png");
 	public static final ResourceLocation PARTICLE_RESOURCE = new ResourceLocation("textures/particle/particles.png");
 
+	/** Width of the bolt. */
 	private final float boltWidth = 0.05f;
 	private final float complexity = 2;
 	private BoltPoint start;
 	private BoltPoint target;
 	private double boltLength;
 	private int segmentCount;
-
-	private Random random;
-
-	private List<BoltSegment> segments = new ArrayList<BoltSegment>();
 	private int maxSplitID;
+	/** Random value, can use seed for the same bolt look */
+	private Random random;
+	/** An array of the segments of the bolt. */
+	private List<BoltSegment> segments = new ArrayList<BoltSegment>();
 	private final Map<Integer, Integer> parentIDMap = new HashMap<Integer, Integer>();
 
 	public FXElectricBolt(World world, Vector3 start, Vector3 target)

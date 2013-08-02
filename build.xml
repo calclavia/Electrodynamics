@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<project name="Potential Expansion" default="build">
+<project name="Resonant Induction" default="build">
 
 	<property file="build.properties" />
 	<property environment="env" />
-	<property name="file.main" value="Potential_Expansion.jar" />
-	<property name="file.api" value="Potential_Expansion_API.zip" />
-	<property name="file.mainfile" value="Potential_Expansion_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
-	<property name="file.apifile" value="Potential_Expansion_API_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
+	<property name="file.main" value="Resonant_Induction.jar" />
+	<property name="file.api" value="Resonant_Induction_API.zip" />
+	<property name="file.mainfile" value="Resonant_Induction_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<property name="file.apifile" value="Resonant_Induction_API_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.zip" />
 
 	<target name="build">
 	
