@@ -18,6 +18,7 @@ public class TabRI extends CreativeTabs
 	public TabRI(int par1, String par2Str)
 	{
 		super(par1, par2Str);
+
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class ResonantInduction
 	/**
 	 * Mod Information
 	 */
-	public static final String ID = "ResonantInduction";
+	public static final String ID = "resonantinduction";
 	public static final String NAME = "Resonant Induction";
 	public static final String CHANNEL = "resonantinduc";
 
