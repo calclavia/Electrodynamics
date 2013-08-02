@@ -128,7 +128,6 @@ public class Vector3
 		return new Vector3(this.x + offset.x, this.y + offset.y, this.z + offset.z);
 	}
 
-
 	public Vector3 normalize()
 	{
 		double d = getMagnitude();
@@ -139,7 +138,7 @@ public class Vector3
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Rotate by a this vector around an axis.
 	 * 

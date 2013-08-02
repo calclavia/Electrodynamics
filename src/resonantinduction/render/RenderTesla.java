@@ -9,11 +9,11 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelTeslaBottom;
 import resonantinduction.model.ModelTeslaMiddle;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia

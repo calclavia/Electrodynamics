@@ -114,7 +114,7 @@ public class ResonantInduction
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
-		this.proxy.registerRenderers();
+		ResonantInduction.proxy.registerRenderers();
 
 		TabRI.ITEMSTACK = new ItemStack(blockTesla);
 	}
