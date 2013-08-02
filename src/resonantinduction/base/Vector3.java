@@ -189,9 +189,22 @@ public class Vector3
 		return axis.getRotationMatrix(angle);
 	}
 
+	public static Vector3 getDeltaPositionFromRotation(float rotationYaw, float rotationPitch)
+	{
+		rotationYaw = rotationYaw + 90;
+		rotationPitch = -rotationPitch;
+		return new Vector3(Math.cos(Math.toRadians(rotationYaw)), Math.sin(Math.toRadians(rotationPitch)), Math.sin(Math.toRadians(rotationYaw)));
+	}
+
 	@Override
 	public Vector3 clone()
 	{
 		return new Vector3(this.x, this.y, this.z);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Vector3 [" + this.x + "," + this.y + "," + this.z + "]";
 	}
 }

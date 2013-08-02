@@ -89,9 +89,9 @@ public class FXElectricBolt extends EntityFX
 		this.recalculate();
 		Collections.sort(this.segments, new Comparator()
 		{
-			public int compare(BoltSegment o1, BoltSegment o2)
+			public int compare(BoltSegment bolt1, BoltSegment bolt2)
 			{
-				return Float.compare(o2.weight, o1.weight);
+				return Float.compare(bolt2.alpha, bolt1.alpha);
 			}
 
 			@Override
@@ -127,7 +127,7 @@ public class FXElectricBolt extends EntityFX
 
 			for (int i = 1; i < splitAmount; i++)
 			{
-				BoltSegment next = new BoltSegment(newPoints[i], newPoints[(i + 1)], segment.weight, segment.id * splitAmount + i, segment.splitID);
+				BoltSegment next = new BoltSegment(newPoints[i], newPoints[(i + 1)], segment.alpha, segment.id * splitAmount + i, segment.splitID);
 				next.prev = prev;
 
 				if (prev != null)
@@ -135,16 +135,14 @@ public class FXElectricBolt extends EntityFX
 					prev.next = next;
 				}
 
-				if (i != 0)
-				{
-					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360.0F, next.difference);
-					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * angle, splitrot).scale(length);
-					this.parentIDMap.put(this.maxSplitID, next.splitID);
-					BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.weight / 2.0F, next.id, this.maxSplitID);
-					split.prev = prev;
-					this.maxSplitID++;
-					this.segments.add(split);
-				}
+				Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360.0F, next.difference);
+				Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * angle, splitrot).scale(length);
+				this.parentIDMap.put(this.maxSplitID, next.splitID);
+				// Loose transparency per split.
+				BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.alpha / 2f, next.id, this.maxSplitID);
+				split.prev = prev;
+				this.maxSplitID++;
+				this.segments.add(split);
 
 				prev = next;
 				this.segments.add(next);
@@ -252,13 +250,13 @@ public class FXElectricBolt extends EntityFX
 
 		for (BoltSegment segment : this.segments)
 		{
-			double width = this.width * ((new Vector3(player).distance(segment.start) / 5 + 1) * (1.0F + segment.weight) * 0.5f);
+			double width = this.width * ((new Vector3(player).distance(segment.start) / 5 + 1) * (1.0F + segment.alpha) * 0.5f);
 			Vector3 prevDiff = playerVector.crossProduct(segment.prevDiff).scale(this.width);
 			Vector3 nextDiff = playerVector.crossProduct(segment.nextDiff).scale(this.width);
 
 			Vector3 renderStart = segment.start;
 			Vector3 renderEnd = segment.end;
-			tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
+			tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, segment.alpha);
 
 			float rx1 = (float) (renderStart.x - interpPosX);
 			float ry1 = (float) (renderStart.y - interpPosY);
@@ -336,7 +334,7 @@ public class FXElectricBolt extends EntityFX
 		public BoltPoint end;
 		public BoltSegment prev;
 		public BoltSegment next;
-		public float weight;
+		public float alpha;
 		public int id;
 		public int splitID;
 
@@ -349,17 +347,17 @@ public class FXElectricBolt extends EntityFX
 
 		public BoltSegment(BoltPoint start, BoltPoint end)
 		{
-			this.start = start;
-			this.end = end;
-			this.recalculate();
+			this(start, end, 1, 0, 0);
 		}
 
-		public BoltSegment(BoltPoint start, BoltPoint end, float weight, int id, int splitID)
+		public BoltSegment(BoltPoint start, BoltPoint end, float alpha, int id, int splitID)
 		{
-			this(start, end);
-			this.weight = weight;
+			this.start = start;
+			this.end = end;
+			this.alpha = alpha;
 			this.id = id;
 			this.splitID = splitID;
+			this.recalculate();
 		}
 
 		public void recalculate()
