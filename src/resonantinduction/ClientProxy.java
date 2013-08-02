@@ -5,6 +5,7 @@ package resonantinduction;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import resonantinduction.base.Vector3;
 import resonantinduction.render.BlockRenderingHandler;
 import resonantinduction.render.RenderTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -33,4 +34,9 @@ public class ClientProxy extends CommonProxy
 		return null;
 	}
 
+	@Override
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
+	{
+		
+	}
 }

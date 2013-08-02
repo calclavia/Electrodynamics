@@ -67,7 +67,7 @@ public class ResonantInduction
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
 
-	public static final String LANGUAGE_DIRECTORY = TEXTURE_DIRECTORY + "languages/";
+	public static final String LANGUAGE_DIRECTORY = DIRECTORY + "languages/";
 	public static final String[] LANGUAGES = new String[] { "en_US" };
 
 	/**
@@ -111,7 +111,6 @@ public class ResonantInduction
 		CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		this.proxy.registerRenderers();
 

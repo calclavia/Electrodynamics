@@ -24,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 {
 	public static final BlockRenderingHandler INSTANCE = new BlockRenderingHandler();
+	private static final int ID = RenderingRegistry.getNextAvailableRenderId();
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -54,7 +55,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public int getRenderId()
 	{
-		return RenderingRegistry.getNextAvailableRenderId();
+		return ID;
 	}
 
 }

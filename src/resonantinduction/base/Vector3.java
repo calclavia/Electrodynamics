@@ -48,6 +48,6 @@ public class Vector3
 	public double distance(Vector3 compare)
 	{
 		Vector3 difference = this.difference(compare);
-		return this.getMagnitude();
+		return difference.getMagnitude();
 	}
 }

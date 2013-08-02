@@ -46,12 +46,15 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				}
 			}
 
-			float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
-
-			for (ITesla tesla : transferTeslaCoils)
+			if (transferTeslaCoils.size() > 0)
 			{
-				tesla.transfer(transferEnergy);
-				this.transfer(-transferEnergy);
+				float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
+
+				for (ITesla tesla : transferTeslaCoils)
+				{
+					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
+					this.transfer(-transferEnergy);
+				}
 			}
 		}
 
@@ -66,7 +69,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		{
 			TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
 
-			boolean doBlockStateUpdate = false;
+			boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
 			if (furnaceTile.furnaceBurnTime == 0)
 			{
@@ -76,7 +79,6 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 					furnaceTile.decrStackSize(1, 1);
 					furnaceTile.furnaceBurnTime = burnTime;
 				}
-				doBlockStateUpdate = true;
 			}
 			else
 			{
@@ -84,9 +86,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				furnaceTile.furnaceBurnTime--;
 			}
 
-			if (doBlockStateUpdate)
+			if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 			{
-
 				BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 			}
 		}
@@ -95,7 +96,6 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 	@Override
 	public void transfer(float transferEnergy)
 	{
-		System.out.println(transferEnergy);
 		this.energy += transferEnergy;
 		this.doTransfer = true;
 	}
