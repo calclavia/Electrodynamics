@@ -3,8 +3,13 @@
  */
 package resonantinduction.base;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
@@ -216,6 +221,68 @@ public class Vector3
 	public TileEntity getTileEntity(World world)
 	{
 		return world.getBlockTileEntity((int) this.x, (int) this.y, (int) this.z);
+	}
+
+	public MovingObjectPosition rayTraceEntities(World world, float rotationYaw, float rotationPitch, boolean collisionFlag, double reachDistance)
+	{
+		MovingObjectPosition pickedEntity = null;
+		Vec3 startingPosition = this.toVec3();
+		Vec3 look = getDeltaPositionFromRotation(rotationYaw, rotationPitch).toVec3();
+		Vec3 reachPoint = Vec3.createVectorHelper(startingPosition.xCoord + look.xCoord * reachDistance, startingPosition.yCoord + look.yCoord * reachDistance, startingPosition.zCoord + look.zCoord * reachDistance);
+
+		double playerBorder = 1.1 * reachDistance;
+		AxisAlignedBB boxToScan = AxisAlignedBB.getAABBPool().getAABB(-playerBorder, -playerBorder, -playerBorder, playerBorder, playerBorder, playerBorder);
+
+		@SuppressWarnings("unchecked")
+		List<Entity> entitiesHit = world.getEntitiesWithinAABBExcludingEntity(null, boxToScan);
+		double closestEntity = reachDistance;
+
+		if (entitiesHit == null || entitiesHit.isEmpty())
+		{
+			return null;
+		}
+		for (Entity entityHit : entitiesHit)
+		{
+			if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
+			{
+				float border = entityHit.getCollisionBorderSize();
+				AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
+				MovingObjectPosition hitMOP = aabb.calculateIntercept(startingPosition, reachPoint);
+
+				if (hitMOP != null)
+				{
+					if (aabb.isVecInside(startingPosition))
+					{
+						if (0.0D < closestEntity || closestEntity == 0.0D)
+						{
+							pickedEntity = new MovingObjectPosition(entityHit);
+							if (pickedEntity != null)
+							{
+								pickedEntity.hitVec = hitMOP.hitVec;
+								closestEntity = 0.0D;
+							}
+						}
+					}
+					else
+					{
+						double distance = startingPosition.distanceTo(hitMOP.hitVec);
+
+						if (distance < closestEntity || closestEntity == 0.0D)
+						{
+							pickedEntity = new MovingObjectPosition(entityHit);
+							pickedEntity.hitVec = hitMOP.hitVec;
+							closestEntity = distance;
+						}
+					}
+				}
+			}
+		}
+		return pickedEntity;
+	}
+
+	private Vec3 toVec3()
+	{
+		return Vec3.createVectorHelper(this.x, this.y, this.z);
 	}
 
 	@Override
