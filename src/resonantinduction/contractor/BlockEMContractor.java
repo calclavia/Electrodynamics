@@ -32,11 +32,9 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
     {
 		if(par1World.isRemote)
 		{
-			//debug
 			TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
-			int toSet = contractor.facing.ordinal() < 5 ? contractor.facing.ordinal()+1 : 0;
-			contractor.facing = ForgeDirection.getOrientation(toSet);
-			System.out.println(contractor.facing.ordinal());
+			contractor.incrementFacing();
+			
 	        return true;
 		}
 		
