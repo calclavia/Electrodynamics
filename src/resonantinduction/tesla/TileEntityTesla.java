@@ -78,8 +78,10 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 				for (ITesla tesla : transferTeslaCoils)
 				{
-					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
-					this.transfer(-transferEnergy);
+					if (this.ticks % 20 == 0)
+					{
+						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 10, (float) (1 - 0.2 * (this.dyeID / 16)));
+					}
 
 					Vector3 teslaVector = new Vector3((TileEntity) tesla);
 
@@ -89,6 +91,9 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					}
 
 					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
+
+					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
+					this.transfer(-transferEnergy);
 				}
 			}
 		}

@@ -5,6 +5,7 @@ package resonantinduction;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.base.Vector3;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
@@ -28,8 +29,10 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void registerRenderers()
 	{
+		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
+
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
 	}
