@@ -14,7 +14,7 @@ import net.minecraft.inventory.Slot;
  */
 public class ContainerMultimeter extends Container
 {
-	private final int yDisplacement = 0;
+	private final int yDisplacement = 51;
 
 	public ContainerMultimeter(InventoryPlayer inventoryPlayer, TileEntityMultimeter tileEntity)
 	{

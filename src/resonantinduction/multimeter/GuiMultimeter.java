@@ -32,6 +32,7 @@ public class GuiMultimeter extends GuiContainer
 	{
 		super(new ContainerMultimeter(inventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
+		this.ySize = 217;
 	}
 
 	@Override
@@ -39,6 +40,7 @@ public class GuiMultimeter extends GuiContainer
 	{
 		String s = this.tileEntity.getBlockType().getLocalizedName();
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString("Energy: " + this.tileEntity.getDetectedEnergy(), 9, 15, 4210752);
 	}
 
 	@Override
