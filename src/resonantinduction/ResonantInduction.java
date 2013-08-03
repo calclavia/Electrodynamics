@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.contractor.BlockEMContractor;
+import resonantinduction.contractor.EntityContractorItem;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.tesla.BlockTesla;
@@ -25,6 +26,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -132,6 +134,8 @@ public class ResonantInduction
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
+		
+		EntityRegistry.registerModEntity(EntityContractorItem.class, "EntityContractorItem", 0, this, 40, 5, true);
 
 		ResonantInduction.proxy.registerRenderers();
 
@@ -155,7 +159,7 @@ public class ResonantInduction
 	}
 
 	@EventHandler
-	public void preInit(FMLPostInitializationEvent evt)
+	public void postInit(FMLPostInitializationEvent evt)
 	{
 		/**
 		 * Recipes

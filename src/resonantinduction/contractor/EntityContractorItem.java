@@ -31,6 +31,8 @@ public class EntityContractorItem extends EntityItem
     {
 		super.onUpdate();
 		
+		System.out.println(worldObj.isRemote + " " + motionX + " " + motionY + " " + motionZ);
+		
 		if(!doGravityThisTick)
 		{
 			motionY = 0;
@@ -52,6 +54,8 @@ public class EntityContractorItem extends EntityItem
     	item.motionZ = entityItem.motionZ;
     	
     	item.dataWatcher = entityItem.getDataWatcher();
+    	
+    	item.delayBeforeCanPickup = entityItem.delayBeforeCanPickup;
     	
     	return item;
     }

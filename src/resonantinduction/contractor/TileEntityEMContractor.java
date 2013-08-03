@@ -1,5 +1,6 @@
 package resonantinduction.contractor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -40,6 +41,11 @@ public class TileEntityEMContractor extends TileEntity
 					if(!(entityItem instanceof EntityContractorItem))
 					{
 						entityItem.setDead();
+						
+						if(worldObj.isRemote)
+						{
+							continue;
+						}
 						
 						EntityContractorItem newItem = EntityContractorItem.get(entityItem);
 						worldObj.spawnEntityInWorld(newItem);
