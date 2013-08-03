@@ -4,8 +4,11 @@
 package resonantinduction;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.base.Vector3;
+import resonantinduction.multimeter.ContainerMultimeter;
+import resonantinduction.multimeter.TileEntityMultimeter;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
@@ -22,6 +25,12 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileEntityMultimeter)
+		{
+			return new ContainerMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
+		}
 		return null;
 	}
 
