@@ -21,21 +21,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemQuantumEntangler extends ItemBase
 {
-	public static int WILDCARD = 1337; /* :) */
-	
 	private static boolean didBindThisTick = false;
 
 	public ItemQuantumEntangler(int id)
 	{
-		super("entangler", id);
+		super("quantumEntangler", id);
 		setMaxStackSize(1);
 		// TODO Handheld model, render animation, energy usage (should be easy?)
-	}
-	
-	@Override
-	public void registerIcons(IconRegister register)
-	{
-		itemIcon = register.registerIcon(ResonantInduction.PREFIX + "quantum_entangler");
 	}
 
 	@Override
@@ -106,7 +98,7 @@ public class ItemQuantumEntangler extends ItemBase
 
 			world.playSoundAtEntity(entityplayer, "mob.endermen.portal", 1.0F, 1.0F);
 		}
-		
+
 		didBindThisTick = false;
 
 		return itemstack;
@@ -149,7 +141,7 @@ public class ItemQuantumEntangler extends ItemBase
 	{
 		if (itemStack.stackTagCompound == null)
 		{
-			return WILDCARD;
+			return 0;
 		}
 
 		return itemStack.stackTagCompound.getInteger("dimID");

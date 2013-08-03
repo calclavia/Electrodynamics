@@ -17,5 +17,6 @@ public class ItemBase extends Item
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + name);
+		this.func_111206_d(ResonantInduction.PREFIX + name);
 	}
 }
