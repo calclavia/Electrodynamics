@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
-import resonantinduction.ITesla;
+import resonantinduction.api.ITesla;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 

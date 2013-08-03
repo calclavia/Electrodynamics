@@ -15,7 +15,7 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 	public static final ModelEMContractor MODEL = new ModelEMContractor();
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor.png");
 	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor_push.png");
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
@@ -23,8 +23,8 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
-		
-		switch(((TileEntityEMContractor)t).getFacing())
+
+		switch (((TileEntityEMContractor) t).getFacing())
 		{
 			case DOWN:
 				GL11.glRotatef(180, 0, 0, 1);
@@ -49,15 +49,16 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 				GL11.glRotatef(90, 1, 0, 0);
 				break;
 		}
-		
-		if(((TileEntityEMContractor)t).suck)
+
+		if (((TileEntityEMContractor) t).suck)
 		{
 			this.func_110628_a(TEXTURE);
 		}
-		else {
+		else
+		{
 			this.func_110628_a(TEXTURE_PUSH);
 		}
-		
+
 		MODEL.render(0.0625f);
 
 		GL11.glPopMatrix();

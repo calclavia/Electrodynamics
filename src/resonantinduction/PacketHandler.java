@@ -58,9 +58,9 @@ public class PacketHandler implements IPacketHandler
 					int x = dataStream.readInt();
 					int y = dataStream.readInt();
 					int z = dataStream.readInt();
-					
+
 					TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-					
+
 					if (tileEntity instanceof IPacketReceiver)
 					{
 						sendTileEntityPacketToClients(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()).toArray());
@@ -106,7 +106,7 @@ public class PacketHandler implements IPacketHandler
 				}
 				else if (data instanceof Object[])
 				{
-					encode((Object[])data, output);
+					encode((Object[]) data, output);
 				}
 			}
 		}
@@ -114,7 +114,7 @@ public class PacketHandler implements IPacketHandler
 		{
 		}
 	}
-	
+
 	public static void sendDataRequest(TileEntity tileEntity)
 	{
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -135,7 +135,7 @@ public class PacketHandler implements IPacketHandler
 		packet.channel = ResonantInduction.CHANNEL;
 		packet.data = bytes.toByteArray();
 		packet.length = packet.data.length;
-		
+
 		PacketDispatcher.sendPacketToServer(packet);
 	}
 
@@ -177,7 +177,6 @@ public class PacketHandler implements IPacketHandler
 
 	public static enum PacketType
 	{
-		TILE,
-		DATA_REQUEST
+		TILE, DATA_REQUEST
 	}
 }

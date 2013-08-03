@@ -13,6 +13,7 @@ import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
+import resonantinduction.multimeter.BlockMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.common.FMLLog;
@@ -106,6 +107,7 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla;
+	public static Block blockMultimeter;
 	public static Block blockEMContractor;
 
 	@EventHandler
@@ -118,15 +120,18 @@ public class ResonantInduction
 		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
-		
+
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
+		blockMultimeter = new BlockMultimeter(getNextBlockID());
+
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		
+		GameRegistry.registerBlock(blockMultimeter, blockMultimeter.getUnlocalizedName());
+
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 

@@ -17,12 +17,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.ITesla;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
+import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.TileEntityBase;
 import resonantinduction.base.Vector3;
@@ -150,7 +149,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					{
 						if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 						{
-							this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
+							this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
 						}
 
 						Vector3 targetVector = new Vector3((TileEntity) tesla);
@@ -164,8 +163,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 						double distance = topTeslaVector.distance(targetVector);
 						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
 
-						tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
-						this.transfer(-transferEnergy);
+						tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
+						this.transfer(-transferEnergy, true);
 
 						if (this.attackEntities && this.zapCounter % 5 == 0)
 						{
@@ -225,7 +224,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					}
 					else
 					{
-						this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+						this.transfer(ResonantInduction.POWER_PER_COAL / 20, true);
 						this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 					}
 
@@ -242,7 +241,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
 					furnaceTile.furnaceBurnTime += 2;
-					this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
+					this.transfer(-ResonantInduction.POWER_PER_COAL / 20, true);
 					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 
 					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
@@ -314,17 +313,22 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	}
 
 	@Override
-	public void transfer(float transferEnergy)
+	public float transfer(float transferEnergy, boolean doTransfer)
 	{
 		if (isController() || this.getControllingTelsa() == this)
 		{
-			this.energy = Math.max(this.energy + transferEnergy, 0);
+			if (doTransfer)
+			{
+				this.energy = Math.max(this.energy + transferEnergy, 0);
+			}
+
 			this.doTransfer = true;
 			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			return transferEnergy;
 		}
 		else
 		{
-			this.getControllingTelsa().transfer(transferEnergy);
+			return this.getControllingTelsa().transfer(transferEnergy, doTransfer);
 		}
 	}
 
@@ -484,6 +488,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	/**
 	 * Reads a tile entity from NBT.
 	 */
+	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
@@ -495,6 +500,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	/**
 	 * Writes a tile entity to NBT.
 	 */
+	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);

@@ -154,7 +154,7 @@ public class FXElectricBolt extends EntityFX
 			 */
 			for (int i = 1; i < splitAmount; i++)
 			{
-				Vector3 newOffset = segment.difference.getPerpendicular().rotate((float) (this.rand.nextFloat() * 180), segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
+				Vector3 newOffset = segment.difference.getPerpendicular().rotate(this.rand.nextFloat() * 180, segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
 				Vector3 basePoint = startPoint.clone().translate(subSegment.clone().scale(i));
 
 				newPoints[i] = new BoltPoint(basePoint, newOffset);
@@ -227,7 +227,7 @@ public class FXElectricBolt extends EntityFX
 			{
 				lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
 				lastSplitCalc = segment.splitID;
-				lastActiveSeg = ((Integer) lastActiveSegment.get(this.parentIDMap.get(segment.splitID))).intValue();
+				lastActiveSeg = lastActiveSegment.get(this.parentIDMap.get(segment.splitID)).intValue();
 			}
 
 			lastActiveSeg = segment.id;
@@ -235,7 +235,7 @@ public class FXElectricBolt extends EntityFX
 
 		lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
 		lastSplitCalc = 0;
-		lastActiveSeg = ((Integer) lastActiveSegment.get(0)).intValue();
+		lastActiveSeg = lastActiveSegment.get(0).intValue();
 		BoltSegment segment;
 
 		for (Iterator<BoltSegment> iterator = this.segments.iterator(); iterator.hasNext(); segment.recalculate())
