@@ -4,7 +4,10 @@
 package resonantinduction.tesla;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
@@ -35,7 +38,9 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	private float energy = 0;
 	private boolean doTransfer = false;
 
-	private Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
+	/** Prevents transfer loops */
+	public final Set<TileEntityTesla> temporarilyBlacklist = new HashSet<TileEntityTesla>();
+	private final Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
 
 	@Override
 	public void initiate()
@@ -56,16 +61,21 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		// TODO: Fix client side issue. || this.worldObj.isRemote
 		if (this.ticks % 2 == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
-			Set<ITesla> transferTeslaCoils = new HashSet<ITesla>();
+			List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
 
 			for (ITesla tesla : TeslaGrid.instance().get())
 			{
 				if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
 				{
-					if (!this.connectedTeslas.contains(tesla))
+					if (!this.connectedTeslas.contains(tesla) && !this.temporarilyBlacklist.contains(tesla))
 					{
 						if (tesla instanceof TileEntityTesla)
 						{
+							if (((TileEntityTesla) tesla).getHeight() <= 1)
+							{
+								continue;
+							}
+
 							tesla = ((TileEntityTesla) tesla).getControllingTelsa();
 						}
 
@@ -74,30 +84,69 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				}
 			}
 
+			final TileEntityTesla topTesla = this.getTopTelsa();
+
+			/**
+			 * Sort by distance.
+			 */
+			Collections.sort(transferTeslaCoils, new Comparator()
+			{
+				public int compare(ITesla o1, ITesla o2)
+				{
+					double distance1 = new Vector3(topTesla).distance(new Vector3((TileEntity) o1));
+					double distance2 = new Vector3(topTesla).distance(new Vector3((TileEntity) o2));
+
+					if (distance1 < distance2)
+					{
+						return 1;
+					}
+					else if (distance1 > distance2)
+					{
+						return -1;
+					}
+
+					return 0;
+				}
+
+				@Override
+				public int compare(Object obj, Object obj1)
+				{
+					return compare((ITesla) obj, (ITesla) obj1);
+				}
+			});
+
 			if (transferTeslaCoils.size() > 0)
 			{
 				float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
-
+				int count = 0;
 				for (ITesla tesla : transferTeslaCoils)
 				{
 					if (this.ticks % 20 == 0)
 					{
-						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 10, (float) (1 - 0.2 * (this.dyeID / 16)));
+						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 12, (float) (1 - 0.2 * (this.dyeID / 16)));
 					}
 
 					Vector3 teslaVector = new Vector3((TileEntity) tesla);
 
 					if (tesla instanceof TileEntityTesla)
 					{
-						teslaVector = new Vector3(((TileEntityTesla) tesla).getControllingTelsa());
+						((TileEntityTesla) tesla).getControllingTelsa().temporarilyBlacklist.add(this);
+						teslaVector = new Vector3(((TileEntityTesla) tesla).getTopTelsa());
 					}
 
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
 
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
 					this.transfer(-transferEnergy);
+
+					if (count++ > 2)
+					{
+						break;
+					}
 				}
 			}
+
+			this.temporarilyBlacklist.clear();
 		}
 
 		/*
@@ -179,7 +228,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	{
 		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID);
 	}
-	
+
 	@Override
 	public ArrayList getNetworkedData(ArrayList data)
 	{
@@ -235,7 +284,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 	public int getRange()
 	{
-		return 5 * (this.getHeight() - 1);
+		return Math.min(4 * (this.getHeight() - 1), 50);
 	}
 
 	public void updatePositionStatus()

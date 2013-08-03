@@ -350,7 +350,7 @@ public class FXElectricBolt extends EntityFX
 		tessellator.startDrawingQuads();
 	}
 
-	public class BoltPoint extends Vector3
+	private class BoltPoint extends Vector3
 	{
 		public Vector3 base;
 		public Vector3 offset;
@@ -368,7 +368,7 @@ public class FXElectricBolt extends EntityFX
 		}
 	}
 
-	public class BoltSegment
+	private class BoltSegment
 	{
 		public BoltPoint start;
 		public BoltPoint end;
