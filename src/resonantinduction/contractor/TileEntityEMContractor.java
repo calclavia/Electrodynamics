@@ -40,28 +40,14 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		pushDelay = Math.max(0, pushDelay-1);
 		
-		if(suck)
-		{
-			System.out.println("SUCK");
-		}
-		if(pushDelay != 0)
-		{
-			System.out.println("MAH");
-		}
-		if(!isLatched())
-		{
-			System.out.println("NOOO");
-		}
-		
 		if(!suck && pushDelay == 0 && isLatched())
 		{
-			System.out.println("Yup");
 			TileEntity inventoryTile = getLatched();
 			IInventory inventory = (IInventory)inventoryTile;
 			
 			if(!(inventoryTile instanceof ISidedInventory))
 			{
-				for(int i = inventory.getSizeInventory()-1; i > 0; i--)
+				for(int i = inventory.getSizeInventory()-1; i >= 0; i--)
 				{
 					if(inventory.getStackInSlot(i) != null)
 					{
@@ -266,10 +252,10 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord-MAX_REACH, xCoord+1, yCoord+1, zCoord);
 				break;
 			case SOUTH:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord-MAX_REACH, yCoord, zCoord, xCoord, yCoord+1, zCoord+1);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+MAX_REACH);
 				break;
 			case WEST:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+MAX_REACH);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord-MAX_REACH, yCoord, zCoord, xCoord, yCoord+1, zCoord+1);
 				break;
 			case EAST:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+MAX_REACH, yCoord+1, zCoord+1);
@@ -286,7 +272,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		ForgeDirection side = facing.getOpposite();
 		
-		TileEntity tile = worldObj.getBlockTileEntity(xCoord+facing.offsetX, yCoord+facing.offsetY, zCoord+facing.offsetZ);
+		TileEntity tile = worldObj.getBlockTileEntity(xCoord+side.offsetX, yCoord+side.offsetY, zCoord+side.offsetZ);
 		
 		if(tile instanceof IInventory)
 		{
@@ -344,6 +330,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
 			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+			updateBounds();
 		} catch(Exception e) {}
 	}
 
