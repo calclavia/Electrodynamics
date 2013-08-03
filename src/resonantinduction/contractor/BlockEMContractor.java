@@ -49,6 +49,15 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 		
 		return true;
     }
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		{
+			
+		}
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world)

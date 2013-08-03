@@ -17,6 +17,8 @@ public class TileEntityEMContractor extends TileEntity
 	
 	private ForgeDirection facing = ForgeDirection.UP;
 	
+	public int pushDelay;
+	
 	public AxisAlignedBB operationBounds;
 	
 	/**
@@ -27,6 +29,13 @@ public class TileEntityEMContractor extends TileEntity
 	@Override
 	public void updateEntity()
 	{
+		pushDelay = Math.max(0, pushDelay--);
+		
+		if(!suck && pushDelay == 0)
+		{
+			
+		}
+		
 		if(operationBounds != null)
 		{
 			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
