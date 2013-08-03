@@ -8,6 +8,8 @@ import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import resonantinduction.ITesla;
@@ -21,6 +23,9 @@ import resonantinduction.base.Vector3;
  */
 public class TileEntityTesla extends TileEntityBase implements ITesla
 {
+	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0.5, 0.5, 0), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(0.8, 0.1, 0.2), new Vector3(0.1, 0.8, 0.2), new Vector3(0, 0.8, 0.8), new Vector3(0.1, 0.1, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
+
+	private int dyeID = -1;
 	private float energy = 0;
 	private boolean doTransfer = false;
 
@@ -40,8 +45,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
-		// && this.getEnergyStored() > 0 && this.doTransfer
-		if (this.ticks % 2 == 0 && this.isController() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (this.ticks % 2 == 0 && this.isController() && this.getEnergyStored() > 0 && this.doTransfer && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
 			Set<ITesla> transferTeslaCoils = new HashSet<ITesla>();
 
@@ -69,7 +73,23 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				{
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
 					this.transfer(-transferEnergy);
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
+
+					Vector3 teslaVector = new Vector3((TileEntity) tesla);
+
+					if (tesla instanceof TileEntityTesla)
+					{
+						teslaVector = new Vector3(((TileEntityTesla) tesla).getControllingTelsa());
+					}
+
+					if (this.dyeID != -1)
+					{
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
+					}
+					else
+					{
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)));
+					}
+
 				}
 			}
 		}
@@ -131,7 +151,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
 				furnaceTile.furnaceBurnTime++;
-				this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
+				this.transfer(-ResonantInduction.POWER_PER_COAL / 22);
 
 				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 				{
@@ -139,6 +159,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				}
 			}
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return null;
 	}
 
 	private boolean isController()
@@ -167,7 +193,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 
 	public int getRange()
 	{
-		return 5 * this.getHeight();
+		return 5 * (this.getHeight() - 1);
 	}
 
 	public void updatePositionStatus()
@@ -285,4 +311,26 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		super.invalidate();
 	}
 
+	public void setDye(int id)
+	{
+		this.dyeID = id;
+	}
+
+	/**
+	 * Reads a tile entity from NBT.
+	 */
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.dyeID = nbt.getInteger("dyeID");
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("dyeID", this.dyeID);
+	}
 }

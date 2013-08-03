@@ -5,6 +5,8 @@ package resonantinduction.tesla;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
@@ -31,6 +33,21 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 		super.onBlockAdded(world, x, y, z);
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		((TileEntityTesla) tileEntity).updatePositionStatus();
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	{
+		if (entityPlayer.getCurrentEquippedItem() != null)
+		{
+			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
+			{
+				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+				((TileEntityTesla) tileEntity).setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
