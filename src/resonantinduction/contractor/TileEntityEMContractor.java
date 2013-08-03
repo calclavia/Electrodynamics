@@ -38,7 +38,20 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	@Override
 	public void updateEntity()
 	{
-		pushDelay = Math.max(0, pushDelay--);
+		pushDelay = Math.max(0, pushDelay-1);
+		
+		if(suck)
+		{
+			System.out.println("SUCK");
+		}
+		if(pushDelay != 0)
+		{
+			System.out.println("MAH");
+		}
+		if(!isLatched())
+		{
+			System.out.println("NOOO");
+		}
 		
 		if(!suck && pushDelay == 0 && isLatched())
 		{
