@@ -4,14 +4,12 @@
 package resonantinduction.tesla;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
-import net.minecraft.entity.Entity;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.ITesla;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.TileEntityBase;
@@ -26,6 +24,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 	private float energy = 0;
 	private boolean doTransfer = false;
 
+	private Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
+
 	@Override
 	public void initiate()
 	{
@@ -37,16 +37,27 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 	{
 		super.updateEntity();
 
-		if (this.ticks % 2 == 0 /* &&this.getEnergyStored() > 0 && this.doTransfer */)
+		/**
+		 * Only transfer if it is the bottom controlling Tesla tower.
+		 */
+		// && this.getEnergyStored() > 0 && this.doTransfer
+		if (this.ticks % 2 == 0 && this.isController() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
-
 			Set<ITesla> transferTeslaCoils = new HashSet<ITesla>();
 
 			for (ITesla tesla : TeslaGrid.instance().get())
 			{
-				if (tesla != this && new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
+				if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
 				{
-					transferTeslaCoils.add(tesla);
+					if (!this.connectedTeslas.contains(tesla))
+					{
+						if (tesla instanceof TileEntityTesla)
+						{
+							tesla = ((TileEntityTesla) tesla).getControllingTelsa();
+						}
+
+						transferTeslaCoils.add(tesla);
+					}
 				}
 			}
 
@@ -58,7 +69,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				{
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
 					this.transfer(-transferEnergy);
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this.getTopTelsa()).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
 				}
 			}
 		}
@@ -87,11 +98,15 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 
 			if (furnaceTile.getStackInSlot(0) == null)
 			{
+				/**
+				 * Steal power from furnace.
+				 */
 				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
 				if (furnaceTile.furnaceBurnTime == 0)
 				{
 					int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
+
 					if (burnTime > 0)
 					{
 						furnaceTile.decrStackSize(1, 1);
@@ -101,8 +116,22 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				else
 				{
 					this.transfer(ResonantInduction.POWER_PER_COAL / 20);
-					furnaceTile.furnaceBurnTime--;
 				}
+
+				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
+				{
+					BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
+				}
+			}
+			else if (this.getEnergyStored() > ResonantInduction.POWER_PER_COAL / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
+			{
+				/**
+				 * Inject power to furnace.
+				 */
+				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
+
+				furnaceTile.furnaceBurnTime++;
+				this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
 
 				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 				{
@@ -112,11 +141,23 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		}
 	}
 
+	private boolean isController()
+	{
+		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) == 0;
+	}
+
 	@Override
 	public void transfer(float transferEnergy)
 	{
-		this.energy += transferEnergy;
-		this.doTransfer = true;
+		if (isController() || this.getControllingTelsa() == this)
+		{
+			this.energy = Math.max(this.energy + transferEnergy, 0);
+			this.doTransfer = true;
+		}
+		else
+		{
+			this.getControllingTelsa().transfer(transferEnergy);
+		}
 	}
 
 	public float getEnergyStored()
@@ -126,7 +167,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 
 	public int getRange()
 	{
-		return 8;
+		return 5 * this.getHeight();
 	}
 
 	public void updatePositionStatus()
@@ -146,6 +187,95 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 		{
 			this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, 0, 3);
 		}
+	}
+
+	/**
+	 * Called only on bottom.
+	 * 
+	 * @return The highest Tesla coil in this tower.
+	 */
+	public TileEntityTesla getTopTelsa()
+	{
+		this.connectedTeslas.clear();
+		Vector3 checkPosition = new Vector3(this);
+		TileEntityTesla returnTile = this;
+
+		while (true)
+		{
+			TileEntity t = checkPosition.getTileEntity(this.worldObj);
+
+			if (t instanceof TileEntityTesla)
+			{
+				this.connectedTeslas.add((TileEntityTesla) t);
+				returnTile = (TileEntityTesla) t;
+			}
+			else
+			{
+				break;
+			}
+
+			checkPosition.y++;
+		}
+
+		return returnTile;
+	}
+
+	/**
+	 * For non-controlling Tesla to use.
+	 * 
+	 * @return
+	 */
+	public TileEntityTesla getControllingTelsa()
+	{
+		Vector3 checkPosition = new Vector3(this);
+		TileEntityTesla returnTile = this;
+
+		while (true)
+		{
+			TileEntity t = checkPosition.getTileEntity(this.worldObj);
+
+			if (t instanceof TileEntityTesla)
+			{
+				returnTile = (TileEntityTesla) t;
+			}
+			else
+			{
+				break;
+			}
+
+			checkPosition.y--;
+		}
+
+		return returnTile;
+	}
+
+	/**
+	 * Called only on bottom.
+	 * 
+	 * @return The highest Tesla coil in this tower.
+	 */
+	public int getHeight()
+	{
+		this.connectedTeslas.clear();
+		int y = 0;
+
+		while (true)
+		{
+			TileEntity t = new Vector3(this).translate(new Vector3(0, y, 0)).getTileEntity(this.worldObj);
+
+			if (t instanceof TileEntityTesla)
+			{
+				this.connectedTeslas.add((TileEntityTesla) t);
+				y++;
+			}
+			else
+			{
+				break;
+			}
+
+		}
+
+		return y;
 	}
 
 	@Override

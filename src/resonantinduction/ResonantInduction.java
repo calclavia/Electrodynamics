@@ -79,7 +79,7 @@ public class ResonantInduction
 	 * Settings
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
-	public static float POWER_PER_COAL = 5;
+	public static float POWER_PER_COAL = 8;
 
 	/** Block ID by Jyzarc */
 	private static final int BLOCK_ID_PREFIX = 3200;
