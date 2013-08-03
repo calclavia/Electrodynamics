@@ -1,6 +1,12 @@
 package resonantinduction.contractor;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import resonantinduction.PacketHandler;
+import resonantinduction.base.IPacketReceiver;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -10,7 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 
-public class TileEntityEMContractor extends TileEntity
+public class TileEntityEMContractor extends TileEntity implements IPacketReceiver
 {
 	public static int MAX_REACH = 40;
 	public static double MAX_SPEED = .1;
@@ -30,7 +36,6 @@ public class TileEntityEMContractor extends TileEntity
 	@Override
 	public void updateEntity()
 	{
-		System.out.println(facing + " " + worldObj.isRemote);
 		pushDelay = Math.max(0, pushDelay--);
 		
 		if(!suck && pushDelay == 0)
@@ -41,11 +46,6 @@ public class TileEntityEMContractor extends TileEntity
 		if(operationBounds != null)
 		{
 			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
-			
-			if(!list.isEmpty())
-			{
-				System.out.println("GOood");
-			}
 				
 			for(Entity entity : list)
 			{
@@ -175,6 +175,17 @@ public class TileEntityEMContractor extends TileEntity
 		}
 	}
 	
+	@Override
+	public void validate()
+	{
+		super.validate();
+		
+		if(worldObj.isRemote)
+		{
+			PacketHandler.sendDataRequest(this);
+		}
+	}
+	
 	public void updateBounds()
 	{
 		switch(facing)
@@ -228,6 +239,12 @@ public class TileEntityEMContractor extends TileEntity
 	public void setFacing(ForgeDirection side)
 	{
 		facing = side;
+		
+		if(!worldObj.isRemote)
+		{
+			PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
+		}
+		
 		updateBounds();
 	}
 	
@@ -248,4 +265,19 @@ public class TileEntityEMContractor extends TileEntity
     	nbtTags.setInteger("facing", facing.ordinal());
     	nbtTags.setBoolean("suck", suck);
     }
+
+	@Override
+	public void handle(ByteArrayDataInput input) 
+	{
+		try {
+			facing = ForgeDirection.getOrientation(input.readInt());
+		} catch(Exception e) {}
+	}
+
+	@Override
+	public ArrayList getNetworkedData(ArrayList data)
+	{
+		data.add(facing.ordinal());
+		return data;
+	}
 }

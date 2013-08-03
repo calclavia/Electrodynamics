@@ -5,6 +5,7 @@ package resonantinduction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -52,6 +53,19 @@ public class PacketHandler implements IPacketHandler
 						((IPacketReceiver) tileEntity).handle(dataStream);
 					}
 				}
+				else if (packetType == PacketType.DATA_REQUEST.ordinal())
+				{
+					int x = dataStream.readInt();
+					int y = dataStream.readInt();
+					int z = dataStream.readInt();
+					
+					TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+					
+					if (tileEntity instanceof IPacketReceiver)
+					{
+						sendTileEntityPacketToClients(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()));
+					}
+				}
 			}
 			catch (Exception e)
 			{
@@ -90,11 +104,39 @@ public class PacketHandler implements IPacketHandler
 				{
 					output.writeByte((Byte) data);
 				}
+				else if (data instanceof Object[])
+				{
+					encode((Object[])data, output);
+				}
 			}
 		}
 		catch (Exception e)
 		{
 		}
+	}
+	
+	public static void sendDataRequest(TileEntity tileEntity)
+	{
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		DataOutputStream data = new DataOutputStream(bytes);
+
+		try
+		{
+			data.writeInt(PacketType.DATA_REQUEST.ordinal());
+			data.writeInt(tileEntity.xCoord);
+			data.writeInt(tileEntity.yCoord);
+			data.writeInt(tileEntity.zCoord);
+		}
+		catch (Exception e)
+		{
+		}
+
+		Packet250CustomPayload packet = new Packet250CustomPayload();
+		packet.channel = ResonantInduction.CHANNEL;
+		packet.data = bytes.toByteArray();
+		packet.length = packet.data.length;
+		
+		PacketDispatcher.sendPacketToServer(packet);
 	}
 
 	public static void sendTileEntityPacketToServer(TileEntity tileEntity, Object... dataValues)
@@ -135,6 +177,7 @@ public class PacketHandler implements IPacketHandler
 
 	public static enum PacketType
 	{
-		TILE
+		TILE,
+		DATA_REQUEST
 	}
 }
