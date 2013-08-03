@@ -40,8 +40,7 @@ public class TileEntityEMContractor extends TileEntity
 					switch(facing)
 					{
 						case DOWN:
-							entityItem.posX = xCoord+0.5;
-							entityItem.posZ = zCoord+0.5;
+							entityItem.setPosition(xCoord+0.5, entityItem.posY, zCoord+0.5);
 							
 							entityItem.motionX = 0;
 							entityItem.motionZ = 0;
@@ -51,8 +50,7 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.isAirBorne = true;
 							break;
 						case UP:
-							entityItem.posX = xCoord+0.5;
-							entityItem.posZ = zCoord+0.5;
+							entityItem.setPosition(xCoord+0.5, entityItem.posY, zCoord+0.5);
 							
 							entityItem.motionX = 0;
 							entityItem.motionZ = 0;
@@ -62,46 +60,42 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.isAirBorne = true;
 							break;
 						case NORTH:
-							entityItem.posX = xCoord+0.5;
-							entityItem.posY = yCoord+0.5;
+							entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
 							
-							entityItem.motionX = 0;
 							entityItem.motionY = 0;
-								
-							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
+							entityItem.motionZ = 0;
+							
+							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
 								
 							entityItem.isAirBorne = true;
 							break;
 						case SOUTH:
-							entityItem.posX = xCoord+0.5;
-							entityItem.posY = yCoord+0.5;
+							entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
 							
-							entityItem.motionX = 0;
 							entityItem.motionY = 0;
+							entityItem.motionZ = 0;
 								
-							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
 								
 							entityItem.isAirBorne = true;
 							break;
 						case WEST:
-							entityItem.posY = yCoord+0.5;
-							entityItem.posZ = zCoord+0.5;
+							entityItem.setPosition(xCoord+0.5, yCoord+0.5, entityItem.posZ);
 							
+							entityItem.motionX = 0;
 							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
 								
-							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
+							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
 								
 							entityItem.isAirBorne = true;
 							break;
 						case EAST:
-							entityItem.posY = yCoord+0.5;
-							entityItem.posZ = zCoord+0.5;
+							entityItem.setPosition(xCoord+0.5, yCoord+0.5, entityItem.posZ);
 							
+							entityItem.motionX = 0;
 							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
 								
-							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
 								
 							entityItem.isAirBorne = true;
 							break;
