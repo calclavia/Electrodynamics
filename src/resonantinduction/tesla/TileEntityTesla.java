@@ -4,14 +4,17 @@
 package resonantinduction.tesla;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.ITesla;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
@@ -52,7 +55,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
-		if (this.ticks % 2 == 0 && this.isController() && this.getEnergyStored() > 0 && (this.doTransfer || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		// TODO: Fix client side issue. || this.worldObj.isRemote
+		if (this.ticks % 2 == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
 			Set<ITesla> transferTeslaCoils = new HashSet<ITesla>();
 
@@ -164,7 +168,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			}
 		}
 
-		if (this.getEnergyStored() > 0 != doPacketUpdate)
+		if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
 		{
 			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
@@ -173,7 +177,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, this.getEnergyStored(), this.dyeID);
+		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID);
 	}
 
 	@Override
@@ -181,8 +185,16 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	{
 		try
 		{
-			this.energy = input.readFloat();
-			this.dyeID = input.readInt();
+			switch (input.readByte())
+			{
+				case 1:
+					this.energy = input.readFloat();
+					this.dyeID = input.readInt();
+					break;
+
+			}
+
+			this.doTransfer = true;
 		}
 		catch (Exception e)
 		{
@@ -202,11 +214,14 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		{
 			this.energy = Math.max(this.energy + transferEnergy, 0);
 			this.doTransfer = true;
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 		else
 		{
 			this.getControllingTelsa().transfer(transferEnergy);
 		}
+
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	public float getEnergyStored()

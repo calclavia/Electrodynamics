@@ -38,15 +38,18 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		tileEntity = ((TileEntityTesla) tileEntity).getControllingTelsa();
+
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
 			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
 			{
-				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 				((TileEntityTesla) tileEntity).setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
 				return true;
 			}
 		}
+
 		return false;
 	}
 
