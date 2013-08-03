@@ -144,6 +144,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				else
 				{
 					this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				}
 
 				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
@@ -160,6 +161,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 				furnaceTile.furnaceBurnTime += 2;
 				this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 
 				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 				{
@@ -220,8 +222,6 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		{
 			this.getControllingTelsa().transfer(transferEnergy);
 		}
-
-		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	public float getEnergyStored()

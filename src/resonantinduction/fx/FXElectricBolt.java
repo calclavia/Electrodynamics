@@ -77,12 +77,12 @@ public class FXElectricBolt extends EntityFX
 		this.segments.add(new BoltSegment(this.start, this.end));
 		this.recalculate();
 		double offsetRatio = this.boltLength * this.complexity;
-		this.split(2, offsetRatio / 2, 0.7f, 0.1f, 20);
-		this.split(2, offsetRatio / 3, 0.5f, 0.1f, 25);
-		this.split(2, offsetRatio / 6, 0.5f, 0.1f, 28);
-		this.split(2, offsetRatio / 8, 0.5f, 0.1f, 30);
-		this.split(2, offsetRatio / 12, 0, 0, 0);
-		this.split(2, offsetRatio / 16, 0, 0, 0);
+		this.split(2, offsetRatio / 8, 0.7f, 0.1f, 20);
+		this.split(2, offsetRatio / 12, 0.5f, 0.1f, 25);
+		this.split(2, offsetRatio / 24, 0.5f, 0.1f, 28);
+		this.split(2, offsetRatio / 32, 0.5f, 0.1f, 30);
+		this.split(2, offsetRatio / 48, 0, 0, 0);
+		this.split(2, offsetRatio / 64, 0, 0, 0);
 
 		this.recalculate();
 
