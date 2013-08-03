@@ -61,7 +61,6 @@ public class FXElectricBolt extends EntityFX
 		this.end = new BoltPoint(targetVec);
 
 		/** By default, we do an electrical color */
-		this.setColor(0.5f + (this.rand.nextFloat() * 0.1f), 0.6f + (this.rand.nextFloat() * 0.1f), 1);
 		this.segmentCount = 1;
 		this.particleAge = (3 + this.rand.nextInt(3) - 1);
 		this.particleMaxAge = (3 + this.rand.nextInt(3) - 1);
@@ -105,9 +104,9 @@ public class FXElectricBolt extends EntityFX
 
 	public FXElectricBolt setColor(float r, float g, float b)
 	{
-		this.particleRed = r;
-		this.particleGreen = g;
-		this.particleBlue = b;
+		this.particleRed = r + (this.rand.nextFloat() * 0.1f) - 0.1f;
+		this.particleGreen = g + (this.rand.nextFloat() * 0.1f) - 0.1f;
+		this.particleBlue = b + (this.rand.nextFloat() * 0.1f) - 0.1f;
 		return this;
 	}
 

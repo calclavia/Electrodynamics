@@ -55,6 +55,7 @@ public class PacketHandler implements IPacketHandler
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 			}
 		}
 	}
@@ -113,6 +114,7 @@ public class PacketHandler implements IPacketHandler
 
 		try
 		{
+			data.writeInt(PacketType.TILE.ordinal());
 			data.writeInt(tileEntity.xCoord);
 			data.writeInt(tileEntity.yCoord);
 			data.writeInt(tileEntity.zCoord);
