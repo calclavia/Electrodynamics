@@ -38,16 +38,42 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		tileEntity = ((TileEntityTesla) tileEntity).getControllingTelsa();
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+		TileEntityTesla tileEntity = ((TileEntityTesla) t).getControllingTelsa();
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
 			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
 			{
-				((TileEntityTesla) tileEntity).setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+
+				if (!entityPlayer.capabilities.isCreativeMode)
+				{
+					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+				}
 				return true;
 			}
+			else if (entityPlayer.getCurrentEquippedItem().itemID == Item.redstone.itemID)
+			{
+				tileEntity.toggleEntityAttack();
+
+				if (!entityPlayer.capabilities.isCreativeMode)
+				{
+					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+				}
+				return true;
+			}
+		}
+		else
+		{
+			boolean receiveMode = tileEntity.toggleReceive();
+
+			if (world.isRemote)
+			{
+				entityPlayer.addChatMessage("Tesla receive mode is now " + receiveMode);
+			}
+			return true;
+
 		}
 
 		return false;

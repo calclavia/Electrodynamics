@@ -1,5 +1,13 @@
 package resonantinduction.fx;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SMOOTH;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glShadeModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -271,6 +279,10 @@ public class FXElectricBolt extends EntityFX
 		GL11.glDepthMask(false);
 		GL11.glEnable(3042);
 
+		glShadeModel(GL_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE);
 		/**
 		 * Render the actual bolts.
@@ -278,7 +290,6 @@ public class FXElectricBolt extends EntityFX
 		tessellator.startDrawingQuads();
 		tessellator.setBrightness(15728880);
 		Vector3 playerVector = new Vector3(sinYaw * -cosPitch, -cosSinPitch / cosYaw, cosYaw * cosPitch);
-		float voltage = this.particleAge >= 0 ? ((float) this.particleAge / (float) this.particleMaxAge) : 0.0F;
 
 		int renderlength = (int) ((this.particleAge + partialframe + (int) (this.boltLength * 3.0F)) / (int) (this.boltLength * 3.0F) * this.segmentCount);
 
@@ -302,7 +313,7 @@ public class FXElectricBolt extends EntityFX
 					float ry2 = (float) (endVec.y - interpPosY);
 					float rz2 = (float) (endVec.z - interpPosZ);
 
-					tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, (1.0F - voltage * 0.5f) * segment.alpha);
+					tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, (1.0F - (this.particleAge >= 0 ? ((float) this.particleAge / (float) this.particleMaxAge) : 0.0F) * 0.6f) * segment.alpha);
 					tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
 					tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
 					tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
@@ -350,7 +361,7 @@ public class FXElectricBolt extends EntityFX
 		tessellator.startDrawingQuads();
 	}
 
-	public class BoltPoint extends Vector3
+	private class BoltPoint extends Vector3
 	{
 		public Vector3 base;
 		public Vector3 offset;
@@ -368,7 +379,7 @@ public class FXElectricBolt extends EntityFX
 		}
 	}
 
-	public class BoltSegment
+	private class BoltSegment
 	{
 		public BoltPoint start;
 		public BoltPoint end;

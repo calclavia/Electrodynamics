@@ -3,8 +3,14 @@
  */
 package resonantinduction.base;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
@@ -129,6 +135,11 @@ public class Vector3
 		return new Vector3(this.x + offset.x, this.y + offset.y, this.z + offset.z);
 	}
 
+	public Vector3 translate(int offset)
+	{
+		return new Vector3(this.x + offset, this.y + offset, this.z + offset);
+	}
+
 	public Vector3 normalize()
 	{
 		double d = getMagnitude();
@@ -191,11 +202,20 @@ public class Vector3
 		return axis.getRotationMatrix(angle);
 	}
 
-	public static Vector3 getDeltaPositionFromRotation(float rotationYaw, float rotationPitch)
+	public static Vector3 getDeltaPositionFromRotation(double rotationYaw, double rotationPitch)
 	{
 		rotationYaw = rotationYaw + 90;
 		rotationPitch = -rotationPitch;
 		return new Vector3(Math.cos(Math.toRadians(rotationYaw)), Math.sin(Math.toRadians(rotationPitch)), Math.sin(Math.toRadians(rotationYaw)));
+	}
+
+	public double[] getDeltaRotationFromPosition()
+	{
+		double rotationPitch = Math.toDegrees(Math.asin(this.y));
+		double rotationYaw = Math.toDegrees(Math.atan2(this.z, this.x));
+		rotationYaw = rotationYaw - 90;
+		rotationPitch = -rotationPitch;
+		return new double[] { MathHelper.wrapAngleTo180_double(rotationYaw), MathHelper.wrapAngleTo180_double(rotationPitch) };
 	}
 
 	public double getAngle(Vector3 vector)
@@ -211,6 +231,67 @@ public class Vector3
 	public TileEntity getTileEntity(World world)
 	{
 		return world.getBlockTileEntity((int) this.x, (int) this.y, (int) this.z);
+	}
+
+	public MovingObjectPosition rayTraceEntities(World world, double rotationYaw, double rotationPitch, double reachDistance)
+	{
+		MovingObjectPosition pickedEntity = null;
+		Vec3 startingPosition = this.toVec3();
+		Vec3 look = getDeltaPositionFromRotation(rotationYaw, rotationPitch).toVec3();
+		Vec3 reachPoint = Vec3.createVectorHelper(startingPosition.xCoord + look.xCoord * reachDistance, startingPosition.yCoord + look.yCoord * reachDistance, startingPosition.zCoord + look.zCoord * reachDistance);
+
+		double checkBorder = 1.1 * reachDistance;
+		AxisAlignedBB boxToScan = AxisAlignedBB.getAABBPool().getAABB(-checkBorder, -checkBorder, -checkBorder, checkBorder, checkBorder, checkBorder).offset(this.x, this.y, this.z);;
+		
+		@SuppressWarnings("unchecked")
+		List<Entity> entitiesHit = world.getEntitiesWithinAABBExcludingEntity(null, boxToScan);
+		double closestEntity = reachDistance;
+		if (entitiesHit == null || entitiesHit.isEmpty())
+		{
+			return null;
+		}
+		for (Entity entityHit : entitiesHit)
+		{
+			if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
+			{
+				float border = entityHit.getCollisionBorderSize();
+				AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
+				MovingObjectPosition hitMOP = aabb.calculateIntercept(startingPosition, reachPoint);
+
+				if (hitMOP != null)
+				{
+					if (aabb.isVecInside(startingPosition))
+					{
+						if (0.0D < closestEntity || closestEntity == 0.0D)
+						{
+							pickedEntity = new MovingObjectPosition(entityHit);
+							if (pickedEntity != null)
+							{
+								pickedEntity.hitVec = hitMOP.hitVec;
+								closestEntity = 0.0D;
+							}
+						}
+					}
+					else
+					{
+						double distance = startingPosition.distanceTo(hitMOP.hitVec);
+
+						if (distance < closestEntity || closestEntity == 0.0D)
+						{
+							pickedEntity = new MovingObjectPosition(entityHit);
+							pickedEntity.hitVec = hitMOP.hitVec;
+							closestEntity = distance;
+						}
+					}
+				}
+			}
+		}
+		return pickedEntity;
+	}
+
+	private Vec3 toVec3()
+	{
+		return Vec3.createVectorHelper(this.x, this.y, this.z);
 	}
 
 	@Override
