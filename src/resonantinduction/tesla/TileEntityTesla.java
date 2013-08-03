@@ -167,11 +167,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 						tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
 						this.transfer(-transferEnergy);
 
-						if (this.attackEntities && this.zapCounter % 10 == 0)
+						if (this.attackEntities && this.zapCounter % 5 == 0)
 						{
-							double[] rotations = topTeslaVector.getDeltaRotationFromPosition();
-							MovingObjectPosition mop = topTeslaVector.rayTraceEntities(this.worldObj, (float) rotations[1], (float) rotations[0], true, distance);
-							System.out.println("HIT " + mop);
+							double[] rotations = topTeslaVector.difference(targetVector).normalize().getDeltaRotationFromPosition();
+							MovingObjectPosition mop = topTeslaVector.rayTraceEntities(this.worldObj, rotations[0], rotations[1], distance);
+							// System.out.println(Vector3.getDeltaPositionFromRotation(rotations[0],
+							// rotations[1]) + " :" + mop);
 
 							if (mop != null && mop.entityHit != null)
 							{

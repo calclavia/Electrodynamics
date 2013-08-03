@@ -8,6 +8,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -201,7 +202,7 @@ public class Vector3
 		return axis.getRotationMatrix(angle);
 	}
 
-	public static Vector3 getDeltaPositionFromRotation(float rotationYaw, float rotationPitch)
+	public static Vector3 getDeltaPositionFromRotation(double rotationYaw, double rotationPitch)
 	{
 		rotationYaw = rotationYaw + 90;
 		rotationPitch = -rotationPitch;
@@ -210,11 +211,11 @@ public class Vector3
 
 	public double[] getDeltaRotationFromPosition()
 	{
-		double rotationYaw = Math.toDegrees(Math.atan2(this.z, this.x));
 		double rotationPitch = Math.toDegrees(Math.asin(this.y));
+		double rotationYaw = Math.toDegrees(Math.atan2(this.z, this.x));
 		rotationYaw = rotationYaw - 90;
 		rotationPitch = -rotationPitch;
-		return new double[] { rotationPitch, rotationYaw };
+		return new double[] { MathHelper.wrapAngleTo180_double(rotationYaw), MathHelper.wrapAngleTo180_double(rotationPitch) };
 	}
 
 	public double getAngle(Vector3 vector)
@@ -232,20 +233,19 @@ public class Vector3
 		return world.getBlockTileEntity((int) this.x, (int) this.y, (int) this.z);
 	}
 
-	public MovingObjectPosition rayTraceEntities(World world, float rotationYaw, float rotationPitch, boolean collisionFlag, double reachDistance)
+	public MovingObjectPosition rayTraceEntities(World world, double rotationYaw, double rotationPitch, double reachDistance)
 	{
 		MovingObjectPosition pickedEntity = null;
 		Vec3 startingPosition = this.toVec3();
 		Vec3 look = getDeltaPositionFromRotation(rotationYaw, rotationPitch).toVec3();
 		Vec3 reachPoint = Vec3.createVectorHelper(startingPosition.xCoord + look.xCoord * reachDistance, startingPosition.yCoord + look.yCoord * reachDistance, startingPosition.zCoord + look.zCoord * reachDistance);
 
-		double playerBorder = 1.1 * reachDistance;
-		AxisAlignedBB boxToScan = AxisAlignedBB.getAABBPool().getAABB(-playerBorder, -playerBorder, -playerBorder, playerBorder, playerBorder, playerBorder);
-
+		double checkBorder = 1.1 * reachDistance;
+		AxisAlignedBB boxToScan = AxisAlignedBB.getAABBPool().getAABB(-checkBorder, -checkBorder, -checkBorder, checkBorder, checkBorder, checkBorder).offset(this.x, this.y, this.z);;
+		
 		@SuppressWarnings("unchecked")
 		List<Entity> entitiesHit = world.getEntitiesWithinAABBExcludingEntity(null, boxToScan);
 		double closestEntity = reachDistance;
-
 		if (entitiesHit == null || entitiesHit.isEmpty())
 		{
 			return null;
