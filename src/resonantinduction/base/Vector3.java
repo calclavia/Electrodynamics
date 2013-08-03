@@ -59,7 +59,7 @@ public class Vector3
 
 	public Vector3 difference(Vector3 compare)
 	{
-		return new Vector3(compare.x - this.x, compare.y - this.y, compare.z - this.z);
+		return new Vector3(this.x - compare.x, this.y - compare.y, this.z - compare.z);
 	}
 
 	public double getMagnitudeSquared()

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package resonantinduction.fx;
 
 import java.util.ArrayList;
@@ -36,32 +33,74 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FXElectricBolt extends EntityFX
 {
-	public static final ResourceLocation FADED_SPHERE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "fadedSphere.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "fadedSphere.png");
 	public static final ResourceLocation PARTICLE_RESOURCE = new ResourceLocation("textures/particle/particles.png");
 
-	/** Width of the bolt. */
-	private final float boltWidth = 0.05f;
-	private final float complexity = 2;
+	/** The width of the electrical bolt. */
+	private float boltWidth;
+	/** The maximum length of the bolt */
+	public double boltLength;
+	/** Electric Bolt's start and end positions; */
 	private BoltPoint start;
-	private BoltPoint target;
-	private double boltLength;
-	private int segmentCount;
-	private int maxSplitID;
-	/** Random value, can use seed for the same bolt look */
-	private Random random;
+	private BoltPoint end;
 	/** An array of the segments of the bolt. */
 	private List<BoltSegment> segments = new ArrayList<BoltSegment>();
 	private final Map<Integer, Integer> parentIDMap = new HashMap<Integer, Integer>();
+	/** Determines how complex the bolt is. */
+	public float complexity;
+	public int segmentCount;
+	private int maxSplitID;
+	private Random rand;
 
-	public FXElectricBolt(World world, Vector3 start, Vector3 target)
+	public FXElectricBolt(World world, Vector3 startVec, Vector3 targetVec)
 	{
-		super(world, start.x, start.y, start.z);
-		this.start = new BoltPoint(target);
-		this.target = new BoltPoint(target);
+		super(world, startVec.x, startVec.y, startVec.z);
+
+		this.rand = new Random();
+		this.start = new BoltPoint(startVec);
+		this.end = new BoltPoint(targetVec);
+
+		/** By default, we do an electrical color */
+		this.setColor(0.5f + (this.rand.nextFloat() * 0.1f), 0.6f + (this.rand.nextFloat() * 0.1f), 1);
+		this.segmentCount = 1;
 		this.particleAge = (3 + this.rand.nextInt(3) - 1);
-		this.random = new Random();
-		this.boltLength = start.distance(target);
+		this.particleMaxAge = (3 + this.rand.nextInt(3) - 1);
+		this.complexity = 2f;
+		this.boltWidth = 0.05f;
+		this.boltLength = this.start.distance(this.end);
 		this.setUp();
+	}
+
+	/**
+	 * Calculate all required segments of the entire bolt.
+	 */
+	private void setUp()
+	{
+		this.segments.add(new BoltSegment(this.start, this.end));
+		this.recalculate();
+		double offsetRatio = this.boltLength * this.complexity;
+		this.split(2, offsetRatio / 2, 0.7f, 0.1F, 20);
+		this.split(2, offsetRatio / 3, 0.5f, 0.1F, 25);
+		this.split(2, offsetRatio / 6, 0.5f, 0.1F, 55f / 2);
+		this.split(2, offsetRatio / 8, 0.5f, 0.1F, 60f / 2);
+		this.split(2, offsetRatio / 12, 0, 0.0F, 0.0F);
+		this.split(2, offsetRatio / 16, 0, 0.0F, 0.0F);
+
+		this.recalculate();
+
+		Collections.sort(this.segments, new Comparator()
+		{
+			public int compare(BoltSegment bolt1, BoltSegment bolt2)
+			{
+				return Float.compare(bolt2.alpha, bolt1.alpha);
+			}
+
+			@Override
+			public int compare(Object obj1, Object obj2)
+			{
+				return compare((BoltSegment) obj1, (BoltSegment) obj2);
+			}
+		});
 	}
 
 	public FXElectricBolt setColor(float r, float g, float b)
@@ -72,61 +111,50 @@ public class FXElectricBolt extends EntityFX
 		return this;
 	}
 
-	public void setUp()
+	/**
+	 * Slits a large segment into multiple smaller ones.
+	 * 
+	 * @param splitAmount - The amount of splits
+	 * @param offset - The multiplier scale for the offset.
+	 * @param splitChance - The chance of creating a split.
+	 * @param splitLength - The length of each split.
+	 * @param splitAngle - The angle of the split.
+	 */
+	public void split(int splitAmount, double offset, float splitChance, float splitLength, float splitAngle)
 	{
-		this.segments.add(new BoltSegment(this.start, this.target));
-		this.recalculate();
-		double offsetRatio = this.boltLength * this.complexity;
-		this.split(offsetRatio / 8, 0.1f, 45);
-
-		/*
-		 * this.split(offsetRatio / 12, 0.1f, 90); this.split(offsetRatio / 18, 0.1f, 90);
-		 * this.split(offsetRatio / 18, 0.1f, 90);
-		 */
-
-		/**
-		 * Finish up calculations
-		 */
-		this.recalculate();
-		Collections.sort(this.segments, new Comparator()
-		{
-			public int compare(BoltSegment bolt1, BoltSegment bolt2)
-			{
-				return Float.compare(bolt2.alpha, bolt1.alpha);
-			}
-
-			@Override
-			public int compare(Object obj, Object obj1)
-			{
-				return compare((BoltSegment) obj, (BoltSegment) obj1);
-			}
-		});
-	}
-
-	public void split(double offset, float length, float angle)
-	{
-		int splitAmount = 2;
+		/** Temporarily store old segments in a new array */
 		List<BoltSegment> oldSegments = this.segments;
-		this.segments = new ArrayList<BoltSegment>();
-
+		this.segments = new ArrayList();
+		/** Previous segment */
 		BoltSegment prev = null;
 
 		for (BoltSegment segment : oldSegments)
 		{
-			Vector3 subSegment = segment.getDifference().scale(1 / splitAmount);
+			prev = segment.prev;
+			/** Length of each subsegment */
+			Vector3 subSegment = segment.difference.clone().scale(1.0F / splitAmount);
 
+			/**
+			 * Creates an array of new bolt points. The first and last points of the bolts are the
+			 * respected start and end points of the current segment.
+			 */
 			BoltPoint[] newPoints = new BoltPoint[splitAmount + 1];
+			Vector3 startPoint = segment.start;
 			newPoints[0] = segment.start;
 			newPoints[splitAmount] = segment.end;
 
+			/**
+			 * Create bolt points.
+			 */
 			for (int i = 1; i < splitAmount; i++)
 			{
-				Vector3 newOffset = segment.getDifference().getPerpendicular().rotate(random.nextFloat() * 360, segment.getDifference()).scale((this.random.nextFloat() / 2) * offset);
-				Vector3 basePoint = newPoints[0].clone().translate(subSegment.clone().scale(i));
+				Vector3 newOffset = segment.difference.getPerpendicular().rotate((float) (this.rand.nextFloat() * 90), segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
+				Vector3 basePoint = startPoint.clone().translate(subSegment.clone().scale(i));
+
 				newPoints[i] = new BoltPoint(basePoint, newOffset);
 			}
 
-			for (int i = 1; i < splitAmount; i++)
+			for (int i = 0; i < splitAmount; i++)
 			{
 				BoltSegment next = new BoltSegment(newPoints[i], newPoints[(i + 1)], segment.alpha, segment.id * splitAmount + i, segment.splitID);
 				next.prev = prev;
@@ -136,14 +164,16 @@ public class FXElectricBolt extends EntityFX
 					prev.next = next;
 				}
 
-				Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360.0F, next.difference);
-				Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * angle, splitrot).scale(length);
-				this.parentIDMap.put(this.maxSplitID, next.splitID);
-				// Loose transparency per split.
-				BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.alpha / 2f, next.id, this.maxSplitID);
-				split.prev = prev;
-				this.maxSplitID++;
-				this.segments.add(split);
+				if ((i != 0) && (this.rand.nextFloat() < splitChance))
+				{
+					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360.0F, next.difference);
+					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * splitAngle, splitrot).scale(splitLength);
+					this.maxSplitID += 1;
+					this.parentIDMap.put(this.maxSplitID, next.splitID);
+					BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.alpha / 2f, next.id, this.maxSplitID);
+					split.prev = prev;
+					this.segments.add(split);
+				}
 
 				prev = next;
 				this.segments.add(next);
@@ -151,9 +181,12 @@ public class FXElectricBolt extends EntityFX
 
 			if (segment.next != null)
 			{
-				segment.next = prev;
+				segment.next.prev = prev;
 			}
 		}
+
+		this.segmentCount *= splitAmount;
+
 	}
 
 	private void recalculate()
@@ -188,7 +221,7 @@ public class FXElectricBolt extends EntityFX
 			{
 				lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
 				lastSplitCalc = segment.splitID;
-				lastActiveSeg = lastActiveSegment.get(this.parentIDMap.get(segment.splitID)).intValue();
+				lastActiveSeg = ((Integer) lastActiveSegment.get(this.parentIDMap.get(segment.splitID))).intValue();
 			}
 
 			lastActiveSeg = segment.id;
@@ -196,7 +229,7 @@ public class FXElectricBolt extends EntityFX
 
 		lastActiveSegment.put(lastSplitCalc, lastActiveSeg);
 		lastSplitCalc = 0;
-		lastActiveSeg = lastActiveSegment.get(0).intValue();
+		lastActiveSeg = ((Integer) lastActiveSegment.get(0)).intValue();
 		BoltSegment segment;
 
 		for (Iterator<BoltSegment> iterator = this.segments.iterator(); iterator.hasNext(); segment.recalculate())
@@ -230,97 +263,89 @@ public class FXElectricBolt extends EntityFX
 	}
 
 	@Override
-	public void renderParticle(Tessellator tessellator, float partialFrame, float cosYaw, float cosPitch, float sinYaw, float sinSinPitch, float cosSinPitch)
+	public void renderParticle(Tessellator tessellator, float partialframe, float cosYaw, float cosPitch, float sinYaw, float sinSinPitch, float cosSinPitch)
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		tessellator.draw();
-
-		/**
-		 * Do rendering here.
-		 */
 		GL11.glPushMatrix();
-		GL11.glDepthMask(true);
+
+		GL11.glDepthMask(false);
 		GL11.glEnable(3042);
 
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(FADED_SPHERE);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE);
+		/**
+		 * Render the actual bolts.
+		 */
 		tessellator.startDrawingQuads();
 		tessellator.setBrightness(15728880);
-
 		Vector3 playerVector = new Vector3(sinYaw * -cosPitch, -cosSinPitch / cosYaw, cosYaw * cosPitch);
+		float voltage = this.particleAge >= 0 ? ((float) this.particleAge / (float) this.particleMaxAge) : 0.0F;
+
+		int renderlength = (int) ((this.particleAge + partialframe + (int) (this.boltLength * 3.0F)) / (int) (this.boltLength * 3.0F) * this.segmentCount);
 
 		for (BoltSegment segment : this.segments)
 		{
-			if (segment != null)
+			if (segment != null && segment.id <= renderlength)
 			{
-				double renderWidth = this.boltWidth * ((new Vector3(player).distance(segment.start) / 5 + 1) * (1.0F + segment.alpha) * 0.5f);
-				Vector3 prevDiff = playerVector.crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
-				Vector3 nextDiff = playerVector.crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
+				double renderWidth = this.boltWidth * ((new Vector3(player).distance(segment.start) / 5f + 1f) * (1 + segment.alpha) * 0.5f);
+				renderWidth = Math.min(this.boltWidth, Math.max(renderWidth, 0));
 
-				Vector3 renderStart = segment.start;
-				Vector3 renderEnd = segment.end;
-
-				float rxStart = (float) (renderStart.x - interpPosX);
-				float ryStart = (float) (renderStart.y - interpPosY);
-				float rzStart = (float) (renderStart.z - interpPosZ);
-				float rxEnd = (float) (renderEnd.x - interpPosX);
-				float ryEnd = (float) (renderEnd.y - interpPosY);
-				float rzEnd = (float) (renderEnd.z - interpPosZ);
-
-				/*
-				 * TODO: segment . alpha
-				 */
-				tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, 1);
-
-//				System.out.println("SHOCK" + this.particleBlue);
-
-				tessellator.addVertexWithUV(rxEnd - nextDiff.x, ryEnd - nextDiff.y, rzEnd - nextDiff.z, 0.5D, 0.0D);
-				tessellator.addVertexWithUV(rxStart - prevDiff.x, ryStart - prevDiff.y, rzStart - prevDiff.z, 0.5D, 0.0D);
-				tessellator.addVertexWithUV(rxStart + prevDiff.x, ryStart + prevDiff.y, rzStart + prevDiff.z, 0.5D, 1.0D);
-				tessellator.addVertexWithUV(rxEnd + nextDiff.x, ryEnd + nextDiff.y, rzEnd + nextDiff.z, 0.5D, 1.0D);
-
-				/**
-				 * Renders the bolt "ball".
-				 */
-				if (segment.prev == null)
+				if (segment.difference.getMagnitude() > 0 && segment.difference.getMagnitude() != Double.NaN && segment.difference.getMagnitude() != Double.POSITIVE_INFINITY && renderWidth > 0 && renderWidth != Double.NaN && renderWidth != Double.POSITIVE_INFINITY)
 				{
-					Vector3 roundend = segment.start.clone().difference(segment.difference.clone().normalize().scale(renderWidth));
-					float rx3 = (float) (roundend.x - interpPosX);
-					float ry3 = (float) (roundend.y - interpPosY);
-					float rz3 = (float) (roundend.z - interpPosZ);
-					tessellator.addVertexWithUV(rxStart - prevDiff.x, ryStart - prevDiff.y, rzStart - prevDiff.z, 0.5D, 0.0D);
-					tessellator.addVertexWithUV(rx3 - prevDiff.x, ry3 - prevDiff.y, rz3 - prevDiff.z, 0.0D, 0.0D);
-					tessellator.addVertexWithUV(rx3 + prevDiff.x, ry3 + prevDiff.y, rz3 + prevDiff.z, 0.0D, 1.0D);
-					tessellator.addVertexWithUV(rxStart + prevDiff.x, ryStart + prevDiff.y, rzStart + prevDiff.z, 0.5D, 1.0D);
-				}
+					Vector3 diffPrev = playerVector.crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
+					Vector3 diffNext = playerVector.crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
+					Vector3 startVec = segment.start;
+					Vector3 endVec = segment.end;
+					float rx1 = (float) (startVec.x - interpPosX);
+					float ry1 = (float) (startVec.y - interpPosY);
+					float rz1 = (float) (startVec.z - interpPosZ);
+					float rx2 = (float) (endVec.x - interpPosX);
+					float ry2 = (float) (endVec.y - interpPosY);
+					float rz2 = (float) (endVec.z - interpPosZ);
 
-				if (segment.next == null)
-				{
-					Vector3 roundend = segment.end.clone().translate(segment.difference.clone().normalize().scale(renderWidth));
-					float rx3 = (float) (roundend.x - interpPosX);
-					float ry3 = (float) (roundend.y - interpPosY);
-					float rz3 = (float) (roundend.z - interpPosZ);
-					tessellator.addVertexWithUV(rx3 - nextDiff.x, ry3 - nextDiff.y, rz3 - nextDiff.z, 0.0D, 0.0D);
-					tessellator.addVertexWithUV(rxEnd - nextDiff.x, ryEnd - nextDiff.y, rzEnd - nextDiff.z, 0.5D, 0.0D);
-					tessellator.addVertexWithUV(rxEnd + nextDiff.x, ryEnd + nextDiff.y, rzEnd + nextDiff.z, 0.5D, 1.0D);
-					tessellator.addVertexWithUV(rx3 + nextDiff.x, ry3 + nextDiff.y, rz3 + nextDiff.z, 0.0D, 1.0D);
+					tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, (1.0F - voltage * 0.5f) * segment.alpha);
+					tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
+					tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
+					tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
+					tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
+
+					if (segment.next == null)
+					{
+						Vector3 roundEnd = segment.end.clone().translate(segment.difference.clone().normalize().scale(renderWidth));
+						float rx3 = (float) (roundEnd.x - interpPosX);
+						float ry3 = (float) (roundEnd.y - interpPosY);
+						float rz3 = (float) (roundEnd.z - interpPosZ);
+						tessellator.addVertexWithUV(rx3 - diffNext.x, ry3 - diffNext.y, rz3 - diffNext.z, 0.0D, 0.0D);
+						tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
+						tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
+						tessellator.addVertexWithUV(rx3 + diffNext.x, ry3 + diffNext.y, rz3 + diffNext.z, 0.0D, 1.0D);
+					}
+
+					if (segment.prev == null)
+					{
+						Vector3 roundEnd = segment.start.clone().difference(segment.difference.clone().normalize().scale(renderWidth));
+						float rx3 = (float) (roundEnd.x - interpPosX);
+						float ry3 = (float) (roundEnd.y - interpPosY);
+						float rz3 = (float) (roundEnd.z - interpPosZ);
+						tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
+						tessellator.addVertexWithUV(rx3 - diffPrev.x, ry3 - diffPrev.y, rz3 - diffPrev.z, 0.0D, 0.0D);
+						tessellator.addVertexWithUV(rx3 + diffPrev.x, ry3 + diffPrev.y, rz3 + diffPrev.z, 0.0D, 1.0D);
+						tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
+					}
 				}
 			}
 		}
 
 		tessellator.draw();
+
 		GL11.glDisable(3042);
-		GL11.glDepthMask(false);
+		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
 
 		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(PARTICLE_RESOURCE);
-		tessellator.startDrawingQuads();
-	}
 
-	@Override
-	public boolean shouldRenderInPass(int pass)
-	{
-		return true;//pass == 2;
+		tessellator.startDrawingQuads();
 	}
 
 	public class BoltPoint extends Vector3
@@ -354,7 +379,7 @@ public class FXElectricBolt extends EntityFX
 		/**
 		 * All differences are cached.
 		 */
-		private Vector3 difference;
+		public Vector3 difference;
 		public Vector3 prevDiff;
 		public Vector3 nextDiff;
 		public double sinPrev;
@@ -404,11 +429,6 @@ public class FXElectricBolt extends EntityFX
 				this.nextDiff = this.difference.clone().normalize();
 				this.sinNext = 1;
 			}
-		}
-
-		public Vector3 getDifference()
-		{
-			return difference;
 		}
 	}
 }

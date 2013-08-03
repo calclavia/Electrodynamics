@@ -4,11 +4,14 @@
 package resonantinduction.tesla;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.ITesla;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.TileEntityBase;
@@ -34,8 +37,9 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 	{
 		super.updateEntity();
 
-		if (this.ticks % 2 == 0 && this.getEnergyStored() > 0 && this.doTransfer)
+		if (this.ticks % 2 == 0 /* &&this.getEnergyStored() > 0 && this.doTransfer */)
 		{
+
 			Set<ITesla> transferTeslaCoils = new HashSet<ITesla>();
 
 			for (ITesla tesla : TeslaGrid.instance().get())
@@ -53,11 +57,22 @@ public class TileEntityTesla extends TileEntityBase implements ITesla
 				for (ITesla tesla : transferTeslaCoils)
 				{
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
 					this.transfer(-transferEnergy);
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(new Vector3(0.5)), new Vector3((TileEntity) tesla).translate(new Vector3(0.5)));
 				}
 			}
 		}
+
+		/*
+		 * int radius = 10; List<Entity> entities =
+		 * this.worldObj.getEntitiesWithinAABBExcludingEntity(null,
+		 * AxisAlignedBB.getAABBPool().getAABB(this.xCoord - radius, this.yCoord - radius,
+		 * this.zCoord - radius, this.xCoord + radius, this.yCoord + radius, this.zCoord + radius));
+		 * 
+		 * for (Entity entity : entities) {
+		 * ResonantInduction.proxy.renderElectricShock(this.worldObj, new
+		 * Vector3(this).translate(new Vector3(0.5)), new Vector3(entity)); }
+		 */
 
 		/**
 		 * Draws power from furnace below it.
