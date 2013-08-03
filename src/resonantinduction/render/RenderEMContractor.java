@@ -22,29 +22,34 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		
-		this.func_110628_a(TEXTURE);
-		MODEL.render(0.0625f);
-		
 		switch(((TileEntityEMContractor)t).facing)
 		{
 			case UP:
 				break;
 			case DOWN:
 				GL11.glRotatef(180, 0, 0, 1);
+				GL11.glTranslatef(0, -2, 0);
 				break;
 			case NORTH:
+				GL11.glTranslatef(-1, 1, 0);
 				GL11.glRotatef(-90, 0, 0, 1);
 				break;
 			case SOUTH:
+				GL11.glTranslatef(1, 1, 0);
 				GL11.glRotatef(90, 0, 0, 1);
 				break;
 			case WEST:
+				GL11.glTranslatef(0, 1, 1);
 				GL11.glRotatef(-90, 1, 0, 0);
 				break;
 			case EAST:
+				GL11.glTranslatef(0, 1, -1);
 				GL11.glRotatef(90, 1, 0, 0);
 				break;
 		}
+		
+		this.func_110628_a(TEXTURE);
+		MODEL.render(0.0625f);
 
 		GL11.glPopMatrix();
 	}
