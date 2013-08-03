@@ -9,7 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.contractor.BlockElectromagneticContractor;
+import resonantinduction.contractor.BlockEMContractor;
+import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -103,7 +104,7 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla;
-	public static Block blockElectromagneticContractor;
+	public static Block blockEMContractor;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -123,13 +124,14 @@ public class ResonantInduction
 		blockTesla = new BlockTesla(getNextBlockID());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		
-		blockElectromagneticContractor = new BlockElectromagneticContractor(getNextBlockID());
-		GameRegistry.registerBlock(blockElectromagneticContractor, blockElectromagneticContractor.getUnlocalizedName());
+		blockEMContractor = new BlockEMContractor(getNextBlockID());
+		GameRegistry.registerBlock(blockEMContractor, blockEMContractor.getUnlocalizedName());
 
 		CONFIGURATION.save();
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

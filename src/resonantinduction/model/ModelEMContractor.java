@@ -5,7 +5,6 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelEMContractor extends ModelBase
 {
-	// fields
 	ModelRenderer frame1;
 	ModelRenderer frame2;
 	ModelRenderer frame3;
@@ -264,5 +263,4 @@ public class ModelEMContractor extends ModelBase
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
-
 }
