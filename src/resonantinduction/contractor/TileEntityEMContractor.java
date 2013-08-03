@@ -42,6 +42,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		
 		if(!suck && pushDelay == 0 && isLatched())
 		{
+			System.out.println("Yup");
 			TileEntity inventoryTile = getLatched();
 			IInventory inventory = (IInventory)inventoryTile;
 			
@@ -59,24 +60,34 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 						switch(facing)
 						{
 							case DOWN:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord+0.5, yCoord, zCoord+0.5, toSend);
 								break;
 							case UP:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord+0.5, yCoord+1, zCoord+0.5, toSend);
 								break;
 							case NORTH:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord, toSend);
 								break;
 							case SOUTH:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+1, toSend);
 								break;
 							case WEST:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord, yCoord+0.5, zCoord+0.5, toSend);
 								break;
 							case EAST:
-								item = new EntityItem(worldObj);
+								item = new EntityItem(worldObj, xCoord+1, yCoord+0.5, zCoord+0.5, toSend);
 								break;
 						}
+						
+						if(!worldObj.isRemote)
+						{
+							worldObj.spawnEntityInWorld(item);
+						}
+
+						inventory.decrStackSize(i, 1);
+						pushDelay = PUSH_DELAY;
+						
+						break;
 					}
 				}
 			}
@@ -318,6 +329,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		try {
 			facing = ForgeDirection.getOrientation(input.readInt());
+			suck = input.readBoolean();
 			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 		} catch(Exception e) {}
 	}
@@ -326,6 +338,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	public ArrayList getNetworkedData(ArrayList data)
 	{
 		data.add(facing.ordinal());
+		data.add(suck);
 		return data;
 	}
 }
