@@ -3,22 +3,24 @@ package resonantinduction.contractor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import resonantinduction.PacketHandler;
-import resonantinduction.base.IPacketReceiver;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.PacketHandler;
+import resonantinduction.base.IPacketReceiver;
+
+import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityEMContractor extends TileEntity implements IPacketReceiver
 {
 	public static int MAX_REACH = 40;
+	public static int PUSH_DELAY = 5;
 	public static double MAX_SPEED = .1;
 	public static double ACCELERATION = .01;
 	
@@ -38,9 +40,49 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		pushDelay = Math.max(0, pushDelay--);
 		
-		if(!suck && pushDelay == 0)
+		if(!suck && pushDelay == 0 && isLatched())
 		{
+			TileEntity inventoryTile = getLatched();
+			IInventory inventory = (IInventory)inventoryTile;
 			
+			if(!(inventoryTile instanceof ISidedInventory))
+			{
+				for(int i = inventory.getSizeInventory()-1; i > 0; i--)
+				{
+					if(inventory.getStackInSlot(i) != null)
+					{
+						ItemStack toSend = inventory.getStackInSlot(i).copy();
+						toSend.stackSize = 1;
+						
+						EntityItem item = null;
+						
+						switch(facing)
+						{
+							case DOWN:
+								item = new EntityItem(worldObj);
+								break;
+							case UP:
+								item = new EntityItem(worldObj);
+								break;
+							case NORTH:
+								item = new EntityItem(worldObj);
+								break;
+							case SOUTH:
+								item = new EntityItem(worldObj);
+								break;
+							case WEST:
+								item = new EntityItem(worldObj);
+								break;
+							case EAST:
+								item = new EntityItem(worldObj);
+								break;
+						}
+					}
+				}
+			}
+			else {
+				ISidedInventory sidedInventory = (ISidedInventory)inventoryTile;
+			}
 		}
 		
 		if(operationBounds != null)
@@ -213,16 +255,21 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	
 	public boolean isLatched()
 	{
+		return getLatched() != null;
+	}
+	
+	public TileEntity getLatched()
+	{
 		ForgeDirection side = facing.getOpposite();
 		
 		TileEntity tile = worldObj.getBlockTileEntity(xCoord+facing.offsetX, yCoord+facing.offsetY, zCoord+facing.offsetZ);
 		
 		if(tile instanceof IInventory)
 		{
-			return true;
+			return tile;
 		}
 		
-		return false;
+		return null;
 	}
 	
 	public void incrementFacing()
