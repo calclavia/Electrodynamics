@@ -3,6 +3,7 @@ package resonantinduction.contractor;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,7 +20,7 @@ public class TileEntityEMContractor extends TileEntity
 	/**
 	 * true = suck, false = push
 	 */
-	public boolean suck;
+	public boolean suck = true;
 	
 	@Override
 	public void updateEntity()
@@ -28,11 +29,60 @@ public class TileEntityEMContractor extends TileEntity
 		{
 			if(operationBounds != null)
 			{
-				List list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
+				List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
 				
-				if(!list.isEmpty())
+				for(Entity entity : list)
 				{
-					System.out.println("Good!");
+					if(entity instanceof EntityItem)
+					{
+						EntityItem entityItem = (EntityItem)entity;
+						
+						double velX = 0;
+						double velY = 0;
+						double velZ = 0;
+						
+						switch(facing)
+						{
+							case DOWN:
+								entityItem.motionX = 0;
+								entityItem.motionZ = 0;
+								
+								velY = -.2;
+								break;
+							case UP:
+								entityItem.motionX = 0;
+								entityItem.motionZ = 0;
+								
+								velY = .2;
+								break;
+							case NORTH:
+								entityItem.motionX = 0;
+								entityItem.motionY = 0;
+								
+								velZ = -.2;
+								break;
+							case SOUTH:
+								entityItem.motionX = 0;
+								entityItem.motionY = 0;
+								
+								velZ = .2;
+								break;
+							case WEST:
+								entityItem.motionY = 0;
+								entityItem.motionZ = 0;
+								
+								velX = -.2;
+								break;
+							case EAST:
+								entityItem.motionY = 0;
+								entityItem.motionZ = 0;
+								
+								velX = .2;
+								break;
+						}
+						
+						entityItem.addVelocity(velX, velY, velZ);
+					}
 				}
 			}
 		}
