@@ -26,6 +26,21 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		super.onBlockAdded(world, x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		((TileEntityTesla) tileEntity).updatePositionStatus();
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		((TileEntityTesla) tileEntity).updatePositionStatus();
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityTesla();
