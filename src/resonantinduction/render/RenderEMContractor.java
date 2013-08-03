@@ -24,11 +24,11 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		
 		switch(((TileEntityEMContractor)t).facing)
 		{
-			case UP:
-				break;
 			case DOWN:
 				GL11.glRotatef(180, 0, 0, 1);
 				GL11.glTranslatef(0, -2, 0);
+				break;
+			case UP:
 				break;
 			case NORTH:
 				GL11.glTranslatef(-1, 1, 0);
