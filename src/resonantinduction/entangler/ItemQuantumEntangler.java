@@ -22,6 +22,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemQuantumEntangler extends ItemBase
 {
 	public static int WILDCARD = 1337; /* :) */
+	
+	private static boolean didBindThisTick = false;
 
 	public ItemQuantumEntangler(int id)
 	{
@@ -66,6 +68,7 @@ public class ItemQuantumEntangler extends ItemBase
 
 				entityplayer.addChatMessage("Bound Entangler to block [" + x + ", " + y + ", " + z + "], dimension '" + dimID + "'");
 				setBindVec(itemstack, new Vector3(x, y, z), dimID);
+				didBindThisTick = true;
 
 				return true;
 			}
@@ -79,7 +82,7 @@ public class ItemQuantumEntangler extends ItemBase
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
 	{
-		if (!world.isRemote)
+		if (!world.isRemote && !didBindThisTick)
 		{
 			if (!hasBind(itemstack))
 			{
@@ -103,6 +106,8 @@ public class ItemQuantumEntangler extends ItemBase
 
 			world.playSoundAtEntity(entityplayer, "mob.endermen.portal", 1.0F, 1.0F);
 		}
+		
+		didBindThisTick = false;
 
 		return itemstack;
 	}
