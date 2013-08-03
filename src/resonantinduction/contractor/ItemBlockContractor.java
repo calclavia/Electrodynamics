@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public class ItemBlockContractor extends ItemBlock
 {
@@ -20,6 +21,7 @@ public class ItemBlockContractor extends ItemBlock
     	if(place)
     	{
     		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
+    		tileContractor.setFacing(ForgeDirection.getOrientation(side));
     	}
     	
     	return place;

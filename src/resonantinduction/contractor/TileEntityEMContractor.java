@@ -30,6 +30,7 @@ public class TileEntityEMContractor extends TileEntity
 	@Override
 	public void updateEntity()
 	{
+		System.out.println(facing + " " + worldObj.isRemote);
 		pushDelay = Math.max(0, pushDelay--);
 		
 		if(!suck && pushDelay == 0)
@@ -40,6 +41,11 @@ public class TileEntityEMContractor extends TileEntity
 		if(operationBounds != null)
 		{
 			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
+			
+			if(!list.isEmpty())
+			{
+				System.out.println("GOood");
+			}
 				
 			for(Entity entity : list)
 			{
@@ -90,63 +96,6 @@ public class TileEntityEMContractor extends TileEntity
 						case NORTH:
 							if(!worldObj.isRemote)
 							{
-								entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
-							}
-								
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
-								
-							if(!suck)
-							{
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
-							}
-							else {
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
-							}
-									
-							entityItem.isAirBorne = true;
-							break;
-						case SOUTH:
-							if(!worldObj.isRemote)
-							{
-								entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
-							}
-								
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
-									
-							if(!suck)
-							{
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
-							}
-							else {
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
-							}
-									
-							entityItem.isAirBorne = true;
-							break;
-						case WEST:
-							if(!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord+0.5, yCoord+0.5, entityItem.posZ);
-							}
-								
-							entityItem.motionX = 0;
-							entityItem.motionY = 0;
-									
-							if(!suck)
-							{
-								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
-							}
-							else {
-								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
-							}
-									
-							entityItem.isAirBorne = true;
-							break;
-						case EAST:
-							if(!worldObj.isRemote)
-							{
 								entityItem.setPosition(xCoord+0.5, yCoord+0.5, entityItem.posZ);
 							}
 							
@@ -159,6 +108,63 @@ public class TileEntityEMContractor extends TileEntity
 							}
 							else {
 								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							}
+									
+							entityItem.isAirBorne = true;
+							break;
+						case SOUTH:
+							if(!worldObj.isRemote)
+							{
+								entityItem.setPosition(xCoord+0.5, yCoord+0.5, entityItem.posZ);
+							}
+								
+							entityItem.motionX = 0;
+							entityItem.motionY = 0;
+									
+							if(!suck)
+							{
+								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							}
+							else {
+								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
+							}
+									
+							entityItem.isAirBorne = true;
+							break;
+						case WEST:
+							if(!worldObj.isRemote)
+							{
+								entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
+							}
+								
+							entityItem.motionY = 0;
+							entityItem.motionZ = 0;
+									
+							if(!suck)
+							{
+								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
+							}
+							else {
+								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							}
+									
+							entityItem.isAirBorne = true;
+							break;
+						case EAST:
+							if(!worldObj.isRemote)
+							{
+								entityItem.setPosition(entityItem.posX, yCoord+0.5, zCoord+0.5);
+							}
+								
+							entityItem.motionY = 0;
+							entityItem.motionZ = 0;
+								
+							if(!suck)
+							{
+								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							}
+							else {
+								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
 							}
 									
 							entityItem.isAirBorne = true;
@@ -180,7 +186,7 @@ public class TileEntityEMContractor extends TileEntity
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, Math.min(yCoord+MAX_REACH, 255), zCoord+1);
 				break;
 			case NORTH:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+MAX_REACH, yCoord+1, zCoord+1);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord-MAX_REACH, xCoord+1, yCoord+1, zCoord);
 				break;
 			case SOUTH:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord-MAX_REACH, yCoord, zCoord, xCoord, yCoord+1, zCoord+1);
@@ -189,7 +195,7 @@ public class TileEntityEMContractor extends TileEntity
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+MAX_REACH);
 				break;
 			case EAST:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord-MAX_REACH, xCoord+1, yCoord+1, zCoord);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+MAX_REACH, yCoord+1, zCoord+1);
 				break;
 		}
 	}
@@ -212,8 +218,6 @@ public class TileEntityEMContractor extends TileEntity
 	{
 		int newOrdinal = facing.ordinal() < 5 ? facing.ordinal()+1 : 0;
 		setFacing(ForgeDirection.getOrientation(newOrdinal));
-		
-		updateBounds();
 	}
 	
 	public ForgeDirection getFacing()
@@ -224,6 +228,7 @@ public class TileEntityEMContractor extends TileEntity
 	public void setFacing(ForgeDirection side)
 	{
 		facing = side;
+		updateBounds();
 	}
 	
 	@Override

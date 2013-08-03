@@ -32,40 +32,9 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
-    {
-    	TileEntityEMContractor tileEntity = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
-        int side = MathHelper.floor_double((double)(entityliving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        int height = Math.round(entityliving.rotationPitch);
-        
-        int change = 1;
-        
-        if(height >= 65)
-        {
-        	change = 1;
-        }
-        else if(height <= -65)
-        {
-        	change = 0;
-        }
-        else {
-	        switch(side)
-	        {
-	        	case 0: change = 2; break;
-	        	case 1: change = 5; break;
-	        	case 2: change = 3; break;
-	        	case 3: change = 4; break;
-	        }
-        }
-        
-        tileEntity.setFacing(ForgeDirection.getOrientation(change));
-    }
-	
-	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
-		tileContractor.updateBounds();
 		
 		if(!tileContractor.isLatched())
 		{
