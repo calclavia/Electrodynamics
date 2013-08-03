@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.model.ModelEMContractor;
 
 public class RenderEMContractor extends TileEntitySpecialRenderer
@@ -23,6 +24,27 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		
 		this.func_110628_a(TEXTURE);
 		MODEL.render(0.0625f);
+		
+		switch(((TileEntityEMContractor)t).facing)
+		{
+			case UP:
+				break;
+			case DOWN:
+				GL11.glRotatef(180, 0, 0, 1);
+				break;
+			case NORTH:
+				GL11.glRotatef(-90, 0, 0, 1);
+				break;
+			case SOUTH:
+				GL11.glRotatef(90, 0, 0, 1);
+				break;
+			case WEST:
+				GL11.glRotatef(-90, 1, 0, 0);
+				break;
+			case EAST:
+				GL11.glRotatef(90, 1, 0, 0);
+				break;
+		}
 
 		GL11.glPopMatrix();
 	}
