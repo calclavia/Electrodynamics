@@ -37,12 +37,14 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
+		TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
+		
 		if(!par5EntityPlayer.isSneaking())
 		{
-			TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
 			contractor.incrementFacing();
-			
-	        return true;
+		}
+		else {
+			contractor.suck = !contractor.suck;
 		}
 		
 		return true;
