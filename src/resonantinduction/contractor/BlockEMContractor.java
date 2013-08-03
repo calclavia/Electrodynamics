@@ -28,6 +28,13 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		TileEntityEMContractor tileEntity = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
+		tileEntity.updateBounds();
+	}
+	
+	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
 		if(!par5EntityPlayer.isSneaking())
