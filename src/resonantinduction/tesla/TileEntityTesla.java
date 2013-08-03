@@ -148,7 +148,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					int count = 0;
 					for (ITesla tesla : transferTeslaCoils)
 					{
-						if (this.zapCounter % 5 == 0)
+						if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 						{
 							this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
 						}

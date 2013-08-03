@@ -81,6 +81,7 @@ public class ResonantInduction
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
 	public static float POWER_PER_COAL = 8;
+	public static boolean SOUND_FXS = true;
 
 	/** Block ID by Jyzarc */
 	private static final int BLOCK_ID_PREFIX = 3200;
@@ -116,7 +117,8 @@ public class ResonantInduction
 
 		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
-
+		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
+		
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
