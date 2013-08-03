@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.contractor.BlockElectromagneticContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -102,6 +103,7 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla;
+	public static Block blockElectromagneticContractor;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -120,6 +122,9 @@ public class ResonantInduction
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
+		
+		blockElectromagneticContractor = new BlockElectromagneticContractor(getNextBlockID());
+		GameRegistry.registerBlock(blockElectromagneticContractor, blockElectromagneticContractor.getUnlocalizedName());
 
 		CONFIGURATION.save();
 
