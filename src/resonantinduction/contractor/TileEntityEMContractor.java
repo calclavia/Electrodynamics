@@ -50,7 +50,7 @@ public class TileEntityEMContractor extends TileEntity
 							
 							if(!suck)
 							{
-								entityItem.motionY = Math.max(-(MAX_SPEED*4), entityItem.motionY-(ACCELERATION*5));
+								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-ACCELERATION);
 							}
 							else {
 								entityItem.motionY = Math.min((MAX_SPEED*4), entityItem.motionY+(ACCELERATION*5));
@@ -72,7 +72,7 @@ public class TileEntityEMContractor extends TileEntity
 								entityItem.motionY = Math.min((MAX_SPEED*4), entityItem.motionY+(ACCELERATION*5));
 							}
 							else {
-								entityItem.motionY = Math.max(-(MAX_SPEED*4), entityItem.motionY-(ACCELERATION*5));
+								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-ACCELERATION);
 							}
 									
 							entityItem.isAirBorne = true;
