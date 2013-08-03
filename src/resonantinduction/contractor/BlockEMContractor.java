@@ -3,6 +3,7 @@ package resonantinduction.contractor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -30,8 +31,21 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		TileEntityEMContractor tileEntity = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
-		tileEntity.updateBounds();
+		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
+		tileContractor.updateBounds();
+		
+		if(!tileContractor.isLatched())
+		{
+			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
+				
+				if(tileEntity instanceof IInventory)
+				{
+					tileContractor.setFacing(side.getOpposite());
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -53,9 +67,19 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
+		
+		if(!tileContractor.isLatched())
 		{
-			
+			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
+				
+				if(tileEntity instanceof IInventory)
+				{
+					tileContractor.setFacing(side.getOpposite());
+				}
+			}
 		}
 	}
 

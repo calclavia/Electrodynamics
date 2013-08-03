@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -193,10 +194,24 @@ public class TileEntityEMContractor extends TileEntity
 		}
 	}
 	
+	public boolean isLatched()
+	{
+		ForgeDirection side = facing.getOpposite();
+		
+		TileEntity tile = worldObj.getBlockTileEntity(xCoord+facing.offsetX, yCoord+facing.offsetY, zCoord+facing.offsetZ);
+		
+		if(tile instanceof IInventory)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void incrementFacing()
 	{
 		int newOrdinal = facing.ordinal() < 5 ? facing.ordinal()+1 : 0;
-		facing = ForgeDirection.getOrientation(newOrdinal);
+		setFacing(ForgeDirection.getOrientation(newOrdinal));
 		
 		updateBounds();
 	}
@@ -204,6 +219,11 @@ public class TileEntityEMContractor extends TileEntity
 	public ForgeDirection getFacing()
 	{
 		return facing;
+	}
+	
+	public void setFacing(ForgeDirection side)
+	{
+		facing = side;
 	}
 	
 	@Override
