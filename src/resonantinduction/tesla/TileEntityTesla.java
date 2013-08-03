@@ -26,20 +26,26 @@ import resonantinduction.base.Vector3;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
+ * The Tesla TileEntity.
+ * 
+ * - Redstone (Prevent Output Toggle) - Right click (Prevent Input Toggle)
+ * 
  * @author Calclavia
  * 
  */
 public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketReceiver
 {
-
 	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0.5, 0.5, 0), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(0.7, 0.2, 0.2), new Vector3(0.1, 0.872, 0.884), new Vector3(0, 0.8, 0.8), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
-	private int dyeID = 12;
+	private final int DEFAULT_COLOR = 12;
+	private int dyeID = DEFAULT_COLOR;
 	private float energy = 0;
 	private boolean doTransfer = false;
 
+	private boolean canReceive = true;
+
 	/** Prevents transfer loops */
-	public final Set<TileEntityTesla> temporarilyBlacklist = new HashSet<TileEntityTesla>();
+	private final Set<TileEntityTesla> outputBlacklist = new HashSet<TileEntityTesla>();
 	private final Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
 
 	/**
@@ -47,6 +53,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	 */
 	private TileEntityTesla topCache = null;
 	private TileEntityTesla controlCache = null;
+
+	/**
+	 * Client
+	 */
+	private int soundTick = 0;
 
 	@Override
 	public void initiate()
@@ -65,7 +76,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
 		// TODO: Fix client side issue. || this.worldObj.isRemote
-		if (this.ticks % 2 == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (this.ticks % (7 + this.worldObj.rand.nextInt(2)) == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
 			List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
 
@@ -73,7 +84,10 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			{
 				if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
 				{
-					if (!this.connectedTeslas.contains(tesla) && !this.temporarilyBlacklist.contains(tesla))
+					/**
+					 * Make sure Tesla is not part of this tower.
+					 */
+					if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
 					{
 						if (tesla instanceof TileEntityTesla)
 						{
@@ -127,16 +141,16 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				int count = 0;
 				for (ITesla tesla : transferTeslaCoils)
 				{
-					if (this.ticks % 20 == 0)
+					if (this.soundTick % 4 == 0)
 					{
-						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 12, (float) (1 - 0.2 * (this.dyeID / 16)));
+						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 20, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
 					}
 
 					Vector3 teslaVector = new Vector3((TileEntity) tesla);
 
 					if (tesla instanceof TileEntityTesla)
 					{
-						((TileEntityTesla) tesla).getControllingTelsa().temporarilyBlacklist.add(this);
+						((TileEntityTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
 						teslaVector = new Vector3(((TileEntityTesla) tesla).getTopTelsa());
 					}
 
@@ -152,7 +166,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				}
 			}
 
-			this.temporarilyBlacklist.clear();
+			this.soundTick++;
+			this.outputBlacklist.clear();
 		}
 
 		/*
@@ -232,9 +247,15 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	}
 
 	@Override
+	public boolean canReceive(TileEntity tileEntity)
+	{
+		return this.canReceive && !this.outputBlacklist.contains(tileEntity);
+	}
+
+	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID);
+		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID, this.canReceive);
 	}
 
 	@Override
@@ -253,6 +274,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				case 1:
 					this.energy = input.readFloat();
 					this.dyeID = input.readInt();
+					this.canReceive = input.readBoolean();
 					break;
 
 			}
@@ -434,6 +456,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
+	public boolean toggleReceive()
+	{
+		return this.canReceive = !this.canReceive;
+	}
+
 	/**
 	 * Reads a tile entity from NBT.
 	 */
@@ -441,6 +468,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	{
 		super.readFromNBT(nbt);
 		this.dyeID = nbt.getInteger("dyeID");
+		this.canReceive = nbt.getBoolean("canReceive");
 	}
 
 	/**
@@ -450,5 +478,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("dyeID", this.dyeID);
+		nbt.setBoolean("canReceive", this.canReceive);
 	}
+
 }
