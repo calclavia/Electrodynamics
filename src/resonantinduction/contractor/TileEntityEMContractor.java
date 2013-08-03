@@ -43,11 +43,11 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		
 		if(isLatched())
 		{
+			TileEntity inventoryTile = getLatched();
+			IInventory inventory = (IInventory)inventoryTile;
+			
 			if(!suck && pushDelay == 0)
 			{
-				TileEntity inventoryTile = getLatched();
-				IInventory inventory = (IInventory)inventoryTile;
-				
 				if(!(inventoryTile instanceof ISidedInventory))
 				{
 					for(int i = inventory.getSizeInventory()-1; i >= 0; i--)
@@ -113,7 +113,59 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 					
 					for(EntityItem item : list)
 					{
+						ItemStack itemStack = item.getEntityItem();
 						
+						if(!(inventoryTile instanceof ISidedInventory))
+						{
+							for(int i = 0; i < inventory.getSizeInventory()-1; i++)
+							{
+								if(inventory.isItemValidForSlot(i, itemStack))
+								{
+									ItemStack inSlot = inventory.getStackInSlot(i);
+									
+									if(inSlot == null)
+									{
+										inventory.setInventorySlotContents(i, itemStack);
+										item.setDead();
+										break;
+									}
+									else if(inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
+									{
+										if(inSlot.stackSize+itemStack.stackSize <= inSlot.getMaxStackSize())
+										{
+											ItemStack toSet = itemStack.copy();
+											toSet.stackSize+=inSlot.stackSize;
+											
+											inventory.setInventorySlotContents(i, toSet);
+											item.setDead();
+											break;
+										}
+										else {
+											int rejects = (inSlot.stackSize+itemStack.stackSize) - inSlot.getMaxStackSize();
+											
+											ItemStack toSet = itemStack.copy();
+											toSet.stackSize = inSlot.getMaxStackSize();
+											
+											ItemStack remains = itemStack.copy();
+											remains.stackSize = rejects;
+											
+											inventory.setInventorySlotContents(i, toSet);
+											item.setEntityItemStack(remains);
+										}
+									}
+								}
+							}
+						}
+						else {
+							ISidedInventory sidedInventory = (ISidedInventory)inventoryTile;
+							int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
+							
+							for(int get = 0; get < slots.length-1; get++)
+							{
+								int slotID = slots[get];
+								
+							}
+						}
 					}
 				}
 			}
