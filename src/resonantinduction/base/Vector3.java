@@ -208,6 +208,15 @@ public class Vector3
 		return new Vector3(Math.cos(Math.toRadians(rotationYaw)), Math.sin(Math.toRadians(rotationPitch)), Math.sin(Math.toRadians(rotationYaw)));
 	}
 
+	public double[] getDeltaRotationFromPosition()
+	{
+		double rotationYaw = Math.toDegrees(Math.atan2(this.z, this.x));
+		double rotationPitch = Math.toDegrees(Math.asin(this.y));
+		rotationYaw = rotationYaw - 90;
+		rotationPitch = -rotationPitch;
+		return new double[] { rotationPitch, rotationYaw };
+	}
+
 	public double getAngle(Vector3 vector)
 	{
 		return this.getAnglePreNorm(vector.clone().normalize());

@@ -53,6 +53,16 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 				}
 				return true;
 			}
+			else if (entityPlayer.getCurrentEquippedItem().itemID == Item.redstone.itemID)
+			{
+				tileEntity.toggleEntityAttack();
+
+				if (!entityPlayer.capabilities.isCreativeMode)
+				{
+					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+				}
+				return true;
+			}
 		}
 		else
 		{

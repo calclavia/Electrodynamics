@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.ITesla;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
@@ -79,173 +80,181 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
-		// TODO: Fix client side issue. || this.worldObj.isRemote
-		if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (this.isController())
 		{
-			List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
-
-			for (ITesla tesla : TeslaGrid.instance().get())
+			// TODO: Fix client side issue. || this.worldObj.isRemote
+			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
-				if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
+				List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
+
+				for (ITesla tesla : TeslaGrid.instance().get())
 				{
-					/**
-					 * Make sure Tesla is not part of this tower.
-					 */
-					if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
+					if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
 					{
-						if (tesla instanceof TileEntityTesla)
+						/**
+						 * Make sure Tesla is not part of this tower.
+						 */
+						if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
 						{
-							if (((TileEntityTesla) tesla).getHeight() <= 1)
+							if (tesla instanceof TileEntityTesla)
 							{
-								continue;
+								if (((TileEntityTesla) tesla).getHeight() <= 1)
+								{
+									continue;
+								}
+
+								tesla = ((TileEntityTesla) tesla).getControllingTelsa();
 							}
 
-							tesla = ((TileEntityTesla) tesla).getControllingTelsa();
+							transferTeslaCoils.add(tesla);
+						}
+					}
+				}
+
+				final TileEntityTesla topTesla = this.getTopTelsa();
+				final Vector3 topTeslaVector = new Vector3(topTesla);
+				/**
+				 * Sort by distance.
+				 */
+				Collections.sort(transferTeslaCoils, new Comparator()
+				{
+					public int compare(ITesla o1, ITesla o2)
+					{
+						double distance1 = new Vector3(topTesla).distance(new Vector3((TileEntity) o1));
+						double distance2 = new Vector3(topTesla).distance(new Vector3((TileEntity) o2));
+
+						if (distance1 < distance2)
+						{
+							return 1;
+						}
+						else if (distance1 > distance2)
+						{
+							return -1;
 						}
 
-						transferTeslaCoils.add(tesla);
+						return 0;
+					}
+
+					@Override
+					public int compare(Object obj, Object obj1)
+					{
+						return compare((ITesla) obj, (ITesla) obj1);
+					}
+				});
+
+				if (transferTeslaCoils.size() > 0)
+				{
+					float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
+					int count = 0;
+					for (ITesla tesla : transferTeslaCoils)
+					{
+						if (this.zapCounter % 5 == 0)
+						{
+							this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
+						}
+
+						Vector3 targetVector = new Vector3((TileEntity) tesla);
+
+						if (tesla instanceof TileEntityTesla)
+						{
+							((TileEntityTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
+							targetVector = new Vector3(((TileEntityTesla) tesla).getTopTelsa());
+						}
+
+						double distance = topTeslaVector.distance(targetVector);
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
+
+						tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
+						this.transfer(-transferEnergy);
+
+						if (this.attackEntities && this.zapCounter % 10 == 0)
+						{
+							double[] rotations = topTeslaVector.getDeltaRotationFromPosition();
+							MovingObjectPosition mop = topTeslaVector.rayTraceEntities(this.worldObj, (float) rotations[1], (float) rotations[0], true, distance);
+							System.out.println("HIT " + mop);
+
+							if (mop != null && mop.entityHit != null)
+							{
+								if (mop.entityHit instanceof EntityLivingBase)
+								{
+									mop.entityHit.attackEntityFrom(DamageSource.magic, 1);
+									ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), new Vector3(mop.entityHit));
+								}
+							}
+						}
+
+						if (count++ > 1)
+						{
+							break;
+						}
 					}
 				}
-			}
 
-			final TileEntityTesla topTesla = this.getTopTelsa();
+				this.zapCounter++;
+				this.outputBlacklist.clear();
+			}
 
 			/**
-			 * Sort by distance.
+			 * Draws power from furnace below it.
+			 * 
+			 * @author Calclavia
 			 */
-			Collections.sort(transferTeslaCoils, new Comparator()
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+
+			if (tileEntity instanceof TileEntityFurnace)
 			{
-				public int compare(ITesla o1, ITesla o2)
+				TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
+
+				if (furnaceTile.getStackInSlot(0) == null)
 				{
-					double distance1 = new Vector3(topTesla).distance(new Vector3((TileEntity) o1));
-					double distance2 = new Vector3(topTesla).distance(new Vector3((TileEntity) o2));
+					/**
+					 * Steal power from furnace.
+					 */
+					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
-					if (distance1 < distance2)
+					if (furnaceTile.furnaceBurnTime == 0)
 					{
-						return 1;
+						int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
+
+						if (burnTime > 0)
+						{
+							furnaceTile.decrStackSize(1, 1);
+							furnaceTile.furnaceBurnTime = burnTime;
+						}
 					}
-					else if (distance1 > distance2)
+					else
 					{
-						return -1;
-					}
-
-					return 0;
-				}
-
-				@Override
-				public int compare(Object obj, Object obj1)
-				{
-					return compare((ITesla) obj, (ITesla) obj1);
-				}
-			});
-
-			if (transferTeslaCoils.size() > 0)
-			{
-				float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
-				int count = 0;
-				for (ITesla tesla : transferTeslaCoils)
-				{
-					if (this.zapCounter % 5 == 0)
-					{
-						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
+						this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+						this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 					}
 
-					Vector3 teslaVector = new Vector3((TileEntity) tesla);
-
-					if (tesla instanceof TileEntityTesla)
+					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 					{
-						((TileEntityTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
-						teslaVector = new Vector3(((TileEntityTesla) tesla).getTopTelsa());
-					}
-
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), teslaVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
-
-					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
-					this.transfer(-transferEnergy);
-
-					if (count++ > 1)
-					{
-						break;
+						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 					}
 				}
-
-				if (this.attackEntities && this.zapCounter % 10 == 0)
+				else if (this.getEnergyStored() > ResonantInduction.POWER_PER_COAL / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
 				{
-					int radius = 3;
-					List<EntityLivingBase> entities = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getAABBPool().getAABB(this.xCoord - radius, this.yCoord - radius, this.zCoord - radius, this.xCoord + radius, this.yCoord + radius, this.zCoord + radius));
+					/**
+					 * Inject power to furnace.
+					 */
+					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
-					for (EntityLivingBase entity : entities)
-					{
-						entity.attackEntityFrom(DamageSource.magic, 1);
-						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), new Vector3(entity));
-					}
-				}
-			}
-
-			this.zapCounter++;
-			this.outputBlacklist.clear();
-		}
-
-		/**
-		 * Draws power from furnace below it.
-		 * 
-		 * @author Calclavia
-		 */
-		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-
-		if (tileEntity instanceof TileEntityFurnace)
-		{
-			TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
-
-			if (furnaceTile.getStackInSlot(0) == null)
-			{
-				/**
-				 * Steal power from furnace.
-				 */
-				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
-
-				if (furnaceTile.furnaceBurnTime == 0)
-				{
-					int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
-
-					if (burnTime > 0)
-					{
-						furnaceTile.decrStackSize(1, 1);
-						furnaceTile.furnaceBurnTime = burnTime;
-					}
-				}
-				else
-				{
-					this.transfer(ResonantInduction.POWER_PER_COAL / 20);
+					furnaceTile.furnaceBurnTime += 2;
+					this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
 					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-				}
 
-				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
-				{
-					BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
+					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
+					{
+						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
+					}
 				}
 			}
-			else if (this.getEnergyStored() > ResonantInduction.POWER_PER_COAL / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
+
+			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
 			{
-				/**
-				 * Inject power to furnace.
-				 */
-				boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
-
-				furnaceTile.furnaceBurnTime += 2;
-				this.transfer(-ResonantInduction.POWER_PER_COAL / 20);
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-
-				if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
-				{
-					BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
-				}
 			}
-		}
-
-		if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
-		{
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 
 		this.clearCache();
