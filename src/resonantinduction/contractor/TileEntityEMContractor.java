@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 public class TileEntityEMContractor extends TileEntity
 {
 	public static int MAX_REACH = 40;
+	public static double MAX_SPEED = .4;
 	
 	private ForgeDirection facing = ForgeDirection.UP;
 	
@@ -25,63 +26,66 @@ public class TileEntityEMContractor extends TileEntity
 	@Override
 	public void updateEntity()
 	{
-		if(!worldObj.isRemote)
+		if(operationBounds != null)
 		{
-			if(operationBounds != null)
-			{
-				List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
+			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
 				
-				for(Entity entity : list)
+			for(Entity entity : list)
+			{
+				if(entity instanceof EntityItem)
 				{
-					if(entity instanceof EntityItem)
+					EntityItem entityItem = (EntityItem)entity;
+						
+					switch(facing)
 					{
-						EntityItem entityItem = (EntityItem)entity;
-						
-						double velX = 0;
-						double velY = 0;
-						double velZ = 0;
-						
-						switch(facing)
-						{
-							case DOWN:
-								entityItem.motionX = 0;
-								entityItem.motionZ = 0;
+						case DOWN:
+							entityItem.motionX = 0;
+							entityItem.motionZ = 0;
 								
-								velY = -.2;
-								break;
-							case UP:
-								entityItem.motionX = 0;
-								entityItem.motionZ = 0;
+							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-.2);
 								
-								velY = .2;
-								break;
-							case NORTH:
-								entityItem.motionX = 0;
-								entityItem.motionY = 0;
+							entityItem.isAirBorne = true;
+							break;
+						case UP:
+							entityItem.motionX = 0;
+							entityItem.motionZ = 0;
 								
-								velZ = -.2;
-								break;
-							case SOUTH:
-								entityItem.motionX = 0;
-								entityItem.motionY = 0;
+							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY+.2);
 								
-								velZ = .2;
-								break;
-							case WEST:
-								entityItem.motionY = 0;
-								entityItem.motionZ = 0;
+							entityItem.isAirBorne = true;
+							break;
+						case NORTH:
+							entityItem.motionX = 0;
+							entityItem.motionY = 0;
 								
-								velX = -.2;
-								break;
-							case EAST:
-								entityItem.motionY = 0;
-								entityItem.motionZ = 0;
+							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-.2);
 								
-								velX = .2;
-								break;
-						}
-						
-						entityItem.addVelocity(velX, velY, velZ);
+							entityItem.isAirBorne = true;
+							break;
+						case SOUTH:
+							entityItem.motionX = 0;
+							entityItem.motionY = 0;
+								
+							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY+.2);
+								
+							entityItem.isAirBorne = true;
+							break;
+						case WEST:
+							entityItem.motionY = 0;
+							entityItem.motionZ = 0;
+								
+							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-.2);
+								
+							entityItem.isAirBorne = true;
+							break;
+						case EAST:
+							entityItem.motionY = 0;
+							entityItem.motionZ = 0;
+								
+							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY+.2);
+								
+							entityItem.isAirBorne = true;
+							break;
 					}
 				}
 			}
