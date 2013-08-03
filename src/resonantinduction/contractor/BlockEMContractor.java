@@ -2,9 +2,12 @@ package resonantinduction.contractor;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
@@ -29,26 +32,6 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
-		tileContractor.updateBounds();
-		
-		if(!tileContractor.isLatched())
-		{
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-			{
-				TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
-				
-				if(tileEntity instanceof IInventory)
-				{
-					tileContractor.setFacing(side.getOpposite());
-				}
-			}
-		}
-	}
-	
-	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
 		TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
@@ -69,7 +52,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	{
 		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
 		
-		if(!tileContractor.isLatched())
+		if(!world.isRemote && !tileContractor.isLatched())
 		{
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
@@ -78,6 +61,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 				if(tileEntity instanceof IInventory)
 				{
 					tileContractor.setFacing(side.getOpposite());
+					return;
 				}
 			}
 		}

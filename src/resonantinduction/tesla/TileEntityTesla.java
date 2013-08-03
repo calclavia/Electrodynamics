@@ -3,18 +3,16 @@
  */
 package resonantinduction.tesla;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.ITesla;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
@@ -180,6 +178,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	public Packet getDescriptionPacket()
 	{
 		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID);
+	}
+	
+	@Override
+	public ArrayList getNetworkedData(ArrayList data)
+	{
+		return null;
 	}
 
 	@Override

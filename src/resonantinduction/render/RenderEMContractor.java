@@ -22,6 +22,7 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
 		
 		switch(((TileEntityEMContractor)t).getFacing())
 		{
@@ -32,12 +33,12 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 			case UP:
 				break;
 			case NORTH:
-				GL11.glTranslatef(-1, 1, 0);
-				GL11.glRotatef(-90, 0, 0, 1);
-				break;
-			case SOUTH:
 				GL11.glTranslatef(1, 1, 0);
 				GL11.glRotatef(90, 0, 0, 1);
+				break;
+			case SOUTH:
+				GL11.glTranslatef(-1, 1, 0);
+				GL11.glRotatef(-90, 0, 0, 1);
 				break;
 			case WEST:
 				GL11.glTranslatef(0, 1, 1);
