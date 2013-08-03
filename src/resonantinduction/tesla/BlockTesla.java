@@ -46,6 +46,11 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
 			{
 				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+
+				if (!entityPlayer.capabilities.isCreativeMode)
+				{
+					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+				}
 				return true;
 			}
 		}

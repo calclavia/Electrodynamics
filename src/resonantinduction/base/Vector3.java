@@ -129,6 +129,11 @@ public class Vector3
 		return new Vector3(this.x + offset.x, this.y + offset.y, this.z + offset.z);
 	}
 
+	public Vector3 translate(int offset)
+	{
+		return new Vector3(this.x + offset, this.y + offset, this.z + offset);
+	}
+
 	public Vector3 normalize()
 	{
 		double d = getMagnitude();

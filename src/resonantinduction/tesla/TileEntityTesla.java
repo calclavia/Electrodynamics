@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import resonantinduction.ITesla;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
@@ -43,6 +46,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	private boolean doTransfer = false;
 
 	private boolean canReceive = true;
+	private boolean attackEntities = true;
 
 	/** Prevents transfer loops */
 	private final Set<TileEntityTesla> outputBlacklist = new HashSet<TileEntityTesla>();
@@ -57,7 +61,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	/**
 	 * Client
 	 */
-	private int soundTick = 0;
+	private int zapCounter = 0;
 
 	@Override
 	public void initiate()
@@ -76,7 +80,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
 		// TODO: Fix client side issue. || this.worldObj.isRemote
-		if (this.ticks % (7 + this.worldObj.rand.nextInt(2)) == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.isController() && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 		{
 			List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
 
@@ -141,9 +145,9 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				int count = 0;
 				for (ITesla tesla : transferTeslaCoils)
 				{
-					if (this.soundTick % 4 == 0)
+					if (this.zapCounter % 5 == 0)
 					{
-						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 20, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
+						this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergyStored() / 25, (float) (1.3f - 0.5f * ((float) this.dyeID / 16f)));
 					}
 
 					Vector3 teslaVector = new Vector3((TileEntity) tesla);
@@ -164,22 +168,23 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 						break;
 					}
 				}
+
+				if (this.attackEntities && this.zapCounter % 10 == 0)
+				{
+					int radius = 3;
+					List<EntityLivingBase> entities = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getAABBPool().getAABB(this.xCoord - radius, this.yCoord - radius, this.zCoord - radius, this.xCoord + radius, this.yCoord + radius, this.zCoord + radius));
+
+					for (EntityLivingBase entity : entities)
+					{
+						entity.attackEntityFrom(DamageSource.magic, 1);
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), new Vector3(entity));
+					}
+				}
 			}
 
-			this.soundTick++;
+			this.zapCounter++;
 			this.outputBlacklist.clear();
 		}
-
-		/*
-		 * int radius = 10; List<Entity> entities =
-		 * this.worldObj.getEntitiesWithinAABBExcludingEntity(null,
-		 * AxisAlignedBB.getAABBPool().getAABB(this.xCoord - radius, this.yCoord - radius,
-		 * this.zCoord - radius, this.xCoord + radius, this.yCoord + radius, this.zCoord + radius));
-		 * 
-		 * for (Entity entity : entities) {
-		 * ResonantInduction.proxy.renderElectricShock(this.worldObj, new
-		 * Vector3(this).translate(new Vector3(0.5)), new Vector3(entity)); }
-		 */
 
 		/**
 		 * Draws power from furnace below it.
@@ -461,6 +466,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		return this.canReceive = !this.canReceive;
 	}
 
+	public boolean toggleEntityAttack()
+	{
+		return this.attackEntities = !this.attackEntities;
+	}
+
 	/**
 	 * Reads a tile entity from NBT.
 	 */
@@ -469,6 +479,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		super.readFromNBT(nbt);
 		this.dyeID = nbt.getInteger("dyeID");
 		this.canReceive = nbt.getBoolean("canReceive");
+		this.attackEntities = nbt.getBoolean("attackEntities");
 	}
 
 	/**
@@ -479,6 +490,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		super.writeToNBT(nbt);
 		nbt.setInteger("dyeID", this.dyeID);
 		nbt.setBoolean("canReceive", this.canReceive);
+		nbt.setBoolean("attackEntities", this.attackEntities);
 	}
 
 }
