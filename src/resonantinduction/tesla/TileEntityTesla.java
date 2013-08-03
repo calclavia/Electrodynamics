@@ -42,6 +42,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	public final Set<TileEntityTesla> temporarilyBlacklist = new HashSet<TileEntityTesla>();
 	private final Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
 
+	/**
+	 * Caching
+	 */
+	private TileEntityTesla topCache = null;
+	private TileEntityTesla controlCache = null;
+
 	@Override
 	public void initiate()
 	{
@@ -139,7 +145,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)));
 					this.transfer(-transferEnergy);
 
-					if (count++ > 2)
+					if (count++ > 1)
 					{
 						break;
 					}
@@ -221,6 +227,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		{
 			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
+
+		this.clearCache();
 	}
 
 	@Override
@@ -262,6 +270,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) == 0;
 	}
 
+	private void clearCache()
+	{
+		this.topCache = null;
+		this.controlCache = null;
+	}
+
 	@Override
 	public void transfer(float transferEnergy)
 	{
@@ -284,7 +298,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 	public int getRange()
 	{
-		return Math.min(4 * (this.getHeight() - 1), 50);
+		return Math.min(5 * (this.getHeight() - 1), 50);
 	}
 
 	public void updatePositionStatus()
@@ -313,6 +327,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	 */
 	public TileEntityTesla getTopTelsa()
 	{
+		if (this.topCache != null)
+		{
+			return this.topCache;
+		}
+
 		this.connectedTeslas.clear();
 		Vector3 checkPosition = new Vector3(this);
 		TileEntityTesla returnTile = this;
@@ -334,6 +353,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			checkPosition.y++;
 		}
 
+		this.topCache = returnTile;
 		return returnTile;
 	}
 
@@ -344,6 +364,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	 */
 	public TileEntityTesla getControllingTelsa()
 	{
+		if (this.controlCache != null)
+		{
+			return this.controlCache;
+		}
+
 		Vector3 checkPosition = new Vector3(this);
 		TileEntityTesla returnTile = this;
 
@@ -363,6 +388,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			checkPosition.y--;
 		}
 
+		this.controlCache = returnTile;
 		return returnTile;
 	}
 
