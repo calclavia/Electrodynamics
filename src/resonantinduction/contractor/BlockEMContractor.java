@@ -30,13 +30,11 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
-		if(par1World.isRemote)
+		if(par1World.isRemote && !par5EntityPlayer.isSneaking())
 		{
-			//debug
 			TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
-			int toSet = contractor.facing.ordinal() < 5 ? contractor.facing.ordinal()+1 : 0;
-			contractor.facing = ForgeDirection.getOrientation(toSet);
-			System.out.println(contractor.facing.ordinal());
+			contractor.incrementFacing();
+			
 	        return true;
 		}
 		
