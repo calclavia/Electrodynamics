@@ -62,7 +62,7 @@ public class FXElectricBolt extends EntityFX
 
 		/** By default, we do an electrical color */
 		this.segmentCount = 1;
-		this.particleMaxAge = (3 + this.rand.nextInt(3) - 1) * 2;
+		this.particleMaxAge = (3 + this.rand.nextInt(3) - 1);
 		this.complexity = 2f;
 		this.boltWidth = 0.05f;
 		this.boltLength = this.start.distance(this.end);
@@ -311,31 +311,30 @@ public class FXElectricBolt extends EntityFX
 					/**
 					 * Render the bolts balls.
 					 */
-					/*
-					 * if (segment.next == null) { Vector3 roundEnd =
-					 * segment.end.clone().translate(segment
-					 * .difference.clone().normalize().scale(renderWidth)); float rx3 = (float)
-					 * (roundEnd.x - interpPosX); float ry3 = (float) (roundEnd.y - interpPosY);
-					 * float rz3 = (float) (roundEnd.z - interpPosZ);
-					 * tessellator.addVertexWithUV(rx3 - diffNext.x, ry3 - diffNext.y, rz3 -
-					 * diffNext.z, 0.0D, 0.0D); tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 -
-					 * diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D); tessellator.addVertexWithUV(rx2 +
-					 * diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
-					 * tessellator.addVertexWithUV(rx3 + diffNext.x, ry3 + diffNext.y, rz3 +
-					 * diffNext.z, 0.0D, 1.0D); }
-					 * 
-					 * if (segment.prev == null) { Vector3 roundEnd =
-					 * segment.start.clone().difference
-					 * (segment.difference.clone().normalize().scale(renderWidth)); float rx3 =
-					 * (float) (roundEnd.x - interpPosX); float ry3 = (float) (roundEnd.y -
-					 * interpPosY); float rz3 = (float) (roundEnd.z - interpPosZ);
-					 * tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 -
-					 * diffPrev.z, 0.5D, 0.0D); tessellator.addVertexWithUV(rx3 - diffPrev.x, ry3 -
-					 * diffPrev.y, rz3 - diffPrev.z, 0.0D, 0.0D); tessellator.addVertexWithUV(rx3 +
-					 * diffPrev.x, ry3 + diffPrev.y, rz3 + diffPrev.z, 0.0D, 1.0D);
-					 * tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 +
-					 * diffPrev.z, 0.5D, 1.0D); }
-					 */
+
+					if (segment.next == null)
+					{
+						Vector3 roundEnd = segment.end.clone().translate(segment.difference.clone().normalize().scale(renderWidth));
+						float rx3 = (float) (roundEnd.x - interpPosX);
+						float ry3 = (float) (roundEnd.y - interpPosY);
+						float rz3 = (float) (roundEnd.z - interpPosZ);
+						tessellator.addVertexWithUV(rx3 - diffNext.x, ry3 - diffNext.y, rz3 - diffNext.z, 0.0D, 0.0D);
+						tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
+						tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
+						tessellator.addVertexWithUV(rx3 + diffNext.x, ry3 + diffNext.y, rz3 + diffNext.z, 0.0D, 1.0D);
+					}
+
+					if (segment.prev == null)
+					{
+						Vector3 roundEnd = segment.start.clone().difference(segment.difference.clone().normalize().scale(renderWidth));
+						float rx3 = (float) (roundEnd.x - interpPosX);
+						float ry3 = (float) (roundEnd.y - interpPosY);
+						float rz3 = (float) (roundEnd.z - interpPosZ);
+						tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
+						tessellator.addVertexWithUV(rx3 - diffPrev.x, ry3 - diffPrev.y, rz3 - diffPrev.z, 0.0D, 0.0D);
+						tessellator.addVertexWithUV(rx3 + diffPrev.x, ry3 + diffPrev.y, rz3 + diffPrev.z, 0.0D, 1.0D);
+						tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
+					}
 				}
 			}
 		}

@@ -135,8 +135,9 @@ public class Vector3
 
 		if (d != 0)
 		{
-			scale(1 / d);
+			return scale(1 / d);
 		}
+
 		return this;
 	}
 
