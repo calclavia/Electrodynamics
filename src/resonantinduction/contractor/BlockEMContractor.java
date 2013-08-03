@@ -2,8 +2,10 @@ package resonantinduction.contractor;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
 import resonantinduction.render.BlockRenderingHandler;
@@ -24,6 +26,22 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	{
 		return BlockRenderingHandler.INSTANCE.getRenderId();
 	}
+	
+	@Override
+	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+    {
+		if(par1World.isRemote)
+		{
+			//debug
+			TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
+			int toSet = contractor.facing.ordinal() < 5 ? contractor.facing.ordinal()+1 : 0;
+			contractor.facing = ForgeDirection.getOrientation(toSet);
+			System.out.println(contractor.facing.ordinal());
+	        return true;
+		}
+		
+		return true;
+    }
 
 	@Override
 	public TileEntity createNewTileEntity(World world)
