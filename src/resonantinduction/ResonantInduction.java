@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.contractor.BlockEMContractor;
+import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.tesla.BlockTesla;
@@ -125,7 +126,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
-		GameRegistry.registerBlock(blockEMContractor, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 
 		CONFIGURATION.save();
 
