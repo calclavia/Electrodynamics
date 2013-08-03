@@ -13,20 +13,29 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
+import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityEMContractor extends TileEntity implements IPacketReceiver
+/**
+ * 
+ * @author AidanBrady
+ *
+ */
+public class TileEntityEMContractor extends TileEntity implements IPacketReceiver, ITesla
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
 	public static double MAX_SPEED = .1;
 	public static double ACCELERATION = .01;
+	public static float ENERGY_USAGE = .005F;
 
 	private ForgeDirection facing = ForgeDirection.UP;
 
 	public int pushDelay;
+	
+	public float energyStored;
 
 	public AxisAlignedBB operationBounds;
 	public AxisAlignedBB suckBounds;
@@ -460,6 +469,11 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 		updateBounds();
 	}
+	
+	public boolean canFunction()
+	{
+		return energyStored == ENERGY_USAGE && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbtTags)
@@ -500,5 +514,24 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		data.add(facing.ordinal());
 		data.add(suck);
 		return data;
+	}
+
+	@Override
+	public float transfer(float transferEnergy, boolean doTransfer) 
+	{
+		float energyToUse = Math.min(transferEnergy, energyStored-ENERGY_USAGE);
+		
+		if(doTransfer)
+		{
+			energyStored += energyToUse;
+		}
+		
+		return energyToUse;
+	}
+
+	@Override
+	public boolean canReceive(TileEntity transferTile) 
+	{
+		return true;
 	}
 }
