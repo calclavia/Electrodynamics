@@ -242,7 +242,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		
 		if(!worldObj.isRemote)
 		{
-			PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
+			PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
 		}
 		
 		updateBounds();

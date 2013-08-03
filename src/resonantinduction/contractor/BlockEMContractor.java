@@ -32,26 +32,6 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
-		
-		if(!tileContractor.isLatched())
-		{
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-			{
-				TileEntity tileEntity = world.getBlockTileEntity(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
-				
-				if(tileEntity instanceof IInventory)
-				{
-					tileContractor.setFacing(side.getOpposite());
-					return;
-				}
-			}
-		}
-	}
-	
-	@Override
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
 		TileEntityEMContractor contractor = (TileEntityEMContractor)par1World.getBlockTileEntity(par2, par3, par4);
