@@ -6,8 +6,10 @@ package resonantinduction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import resonantinduction.base.Vector3;
+import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
 import resonantinduction.render.BlockRenderingHandler;
+import resonantinduction.render.RenderEMContractor;
 import resonantinduction.render.RenderTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -27,7 +29,9 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
 	}
 
 	@Override
