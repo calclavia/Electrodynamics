@@ -223,8 +223,13 @@ public class ModelEMContractor extends ModelBase
 		setRotation(nase_depth2, 0F, 0F, 0F);
 	}
 
-	public void render(float f5)
+	public void render(float f5, boolean rotate)
 	{
+		if(rotate)
+		{
+			teslapole.rotateAngleY = (float)Math.toRadians(Math.toDegrees(teslapole.rotateAngleY)+4 < 360 ? Math.toDegrees(teslapole.rotateAngleY)+4 : 0);
+		}
+		
 		frame1.render(f5);
 		frame2.render(f5);
 		frame3.render(f5);

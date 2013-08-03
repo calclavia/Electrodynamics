@@ -10,6 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.contractor.BlockEMContractor;
+import resonantinduction.model.ModelEMContractor;
 import resonantinduction.tesla.BlockTesla;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -25,6 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 {
 	public static final BlockRenderingHandler INSTANCE = new BlockRenderingHandler();
+	public static final ModelEMContractor MODEL_CONTRACTOR = new ModelEMContractor();
 	private static final int ID = RenderingRegistry.getNextAvailableRenderId();
 
 	@Override
@@ -45,7 +47,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			GL11.glTranslated(0.5, 1.5, 0.5);
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderEMContractor.TEXTURE);
-			RenderEMContractor.MODEL.render(0.0625f);
+			MODEL_CONTRACTOR.render(0.0625f, false);
 			GL11.glPopMatrix();
 		}
 	}

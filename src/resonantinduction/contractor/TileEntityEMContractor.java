@@ -50,7 +50,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		pushDelay = Math.max(0, pushDelay - 1);
 
-		if (isLatched())
+		if (isLatched() && canFunction())
 		{
 			TileEntity inventoryTile = getLatched();
 			IInventory inventory = (IInventory) inventoryTile;
@@ -219,9 +219,11 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 			}
 		}
 
-		if (operationBounds != null)
+		if (operationBounds != null && canFunction())
 		{
 			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
+			
+			energyStored -= ENERGY_USAGE;
 
 			for (Entity entity : list)
 			{
@@ -472,7 +474,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	
 	public boolean canFunction()
 	{
-		return energyStored == ENERGY_USAGE && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
+		return worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
 	}
 
 	@Override
@@ -519,7 +521,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	@Override
 	public float transfer(float transferEnergy, boolean doTransfer) 
 	{
-		float energyToUse = Math.min(transferEnergy, energyStored-ENERGY_USAGE);
+		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE-energyStored);
 		
 		if(doTransfer)
 		{
