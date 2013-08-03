@@ -271,6 +271,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		try {
 			facing = ForgeDirection.getOrientation(input.readInt());
+			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 		} catch(Exception e) {}
 	}
 

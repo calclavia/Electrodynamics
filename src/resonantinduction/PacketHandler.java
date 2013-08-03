@@ -63,7 +63,7 @@ public class PacketHandler implements IPacketHandler
 					
 					if (tileEntity instanceof IPacketReceiver)
 					{
-						sendTileEntityPacketToClients(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()));
+						sendTileEntityPacketToClients(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()).toArray());
 					}
 				}
 			}

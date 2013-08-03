@@ -72,7 +72,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	{
 		TileEntityEMContractor tileContractor = (TileEntityEMContractor)world.getBlockTileEntity(x, y, z);
 		
-		if(!tileContractor.isLatched())
+		if(!world.isRemote && !tileContractor.isLatched())
 		{
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
