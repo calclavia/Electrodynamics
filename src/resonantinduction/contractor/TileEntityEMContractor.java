@@ -29,6 +29,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	public int pushDelay;
 	
 	public AxisAlignedBB operationBounds;
+	public AxisAlignedBB suckBounds;
 	
 	/**
 	 * true = suck, false = push
@@ -40,58 +41,81 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		pushDelay = Math.max(0, pushDelay-1);
 		
-		if(!suck && pushDelay == 0 && isLatched())
+		if(isLatched())
 		{
-			TileEntity inventoryTile = getLatched();
-			IInventory inventory = (IInventory)inventoryTile;
-			
-			if(!(inventoryTile instanceof ISidedInventory))
+			if(!suck && pushDelay == 0)
 			{
-				for(int i = inventory.getSizeInventory()-1; i >= 0; i--)
+				TileEntity inventoryTile = getLatched();
+				IInventory inventory = (IInventory)inventoryTile;
+				
+				if(!(inventoryTile instanceof ISidedInventory))
 				{
-					if(inventory.getStackInSlot(i) != null)
+					for(int i = inventory.getSizeInventory()-1; i >= 0; i--)
 					{
-						ItemStack toSend = inventory.getStackInSlot(i).copy();
-						toSend.stackSize = 1;
-						
-						EntityItem item = null;
-						
-						switch(facing)
+						if(inventory.getStackInSlot(i) != null)
 						{
-							case DOWN:
-								item = new EntityItem(worldObj, xCoord+0.5, yCoord, zCoord+0.5, toSend);
-								break;
-							case UP:
-								item = new EntityItem(worldObj, xCoord+0.5, yCoord+1, zCoord+0.5, toSend);
-								break;
-							case NORTH:
-								item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord, toSend);
-								break;
-							case SOUTH:
-								item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+1, toSend);
-								break;
-							case WEST:
-								item = new EntityItem(worldObj, xCoord, yCoord+0.5, zCoord+0.5, toSend);
-								break;
-							case EAST:
-								item = new EntityItem(worldObj, xCoord+1, yCoord+0.5, zCoord+0.5, toSend);
-								break;
+							ItemStack toSend = inventory.getStackInSlot(i).copy();
+							toSend.stackSize = 1;
+							
+							EntityItem item = getItemWithPosition(toSend);
+							
+							if(!worldObj.isRemote)
+							{
+								worldObj.spawnEntityInWorld(item);
+							}
+	
+							inventory.decrStackSize(i, 1);
+							pushDelay = PUSH_DELAY;
+							
+							break;
 						}
-						
-						if(!worldObj.isRemote)
+					}
+				}
+				else {
+					ISidedInventory sidedInventory = (ISidedInventory)inventoryTile;
+					int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
+					
+					if(slots != null)
+					{
+						for(int get = slots.length-1; get >= 0; get--)
 						{
-							worldObj.spawnEntityInWorld(item);
+							int slotID = slots[get];
+							
+							if(sidedInventory.getStackInSlot(slotID) != null)
+							{
+								ItemStack toSend = sidedInventory.getStackInSlot(slotID);
+								toSend.stackSize = 1;
+								
+								if(sidedInventory.canExtractItem(slotID, toSend, facing.ordinal()))
+								{
+									EntityItem item = getItemWithPosition(toSend);
+									
+									if(!worldObj.isRemote)
+									{
+										worldObj.spawnEntityInWorld(item);
+									}
+									
+									sidedInventory.decrStackSize(slotID, 1);
+									pushDelay = PUSH_DELAY;
+									
+									break;
+								}
+							}
 						}
-
-						inventory.decrStackSize(i, 1);
-						pushDelay = PUSH_DELAY;
-						
-						break;
 					}
 				}
 			}
-			else {
-				ISidedInventory sidedInventory = (ISidedInventory)inventoryTile;
+			else if(suck)
+			{
+				if(suckBounds != null)
+				{
+					List<EntityItem> list = worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds);
+					
+					for(EntityItem item : list)
+					{
+						
+					}
+				}
 			}
 		}
 		
@@ -227,6 +251,35 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		}
 	}
 	
+	private EntityItem getItemWithPosition(ItemStack toSend)
+	{
+		EntityItem item = null;
+		
+		switch(facing)
+		{
+			case DOWN:
+				item = new EntityItem(worldObj, xCoord+0.5, yCoord, zCoord+0.5, toSend);
+				break;
+			case UP:
+				item = new EntityItem(worldObj, xCoord+0.5, yCoord+1, zCoord+0.5, toSend);
+				break;
+			case NORTH:
+				item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord, toSend);
+				break;
+			case SOUTH:
+				item = new EntityItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+1, toSend);
+				break;
+			case WEST:
+				item = new EntityItem(worldObj, xCoord, yCoord+0.5, zCoord+0.5, toSend);
+				break;
+			case EAST:
+				item = new EntityItem(worldObj, xCoord+1, yCoord+0.5, zCoord+0.5, toSend);
+				break;
+		}
+		
+		return item;
+	}
+	
 	@Override
 	public void validate()
 	{
@@ -244,21 +297,27 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		{
 			case DOWN:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, Math.max(yCoord-MAX_REACH, 1), zCoord, xCoord+1, yCoord, zCoord+1);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord-0.1, zCoord, xCoord+1, yCoord, zCoord+1);
 				break;
 			case UP:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, Math.min(yCoord+MAX_REACH, 255), zCoord+1);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord+1, zCoord, xCoord+1, Math.min(yCoord+1+MAX_REACH, 255), zCoord+1);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord+1, zCoord, xCoord+1, yCoord+1.1, zCoord+1);
 				break;
 			case NORTH:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord-MAX_REACH, xCoord+1, yCoord+1, zCoord);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord-0.1, xCoord+1, yCoord+1, zCoord);
 				break;
 			case SOUTH:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+1, yCoord+1, zCoord+MAX_REACH);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord+1, xCoord+1, yCoord+1, zCoord+1+MAX_REACH);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord+1, xCoord+1, yCoord+1, zCoord+1.1);
 				break;
 			case WEST:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord-MAX_REACH, yCoord, zCoord, xCoord, yCoord+1, zCoord+1);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord-0.1, yCoord, zCoord, xCoord, yCoord+1, zCoord+1);
 				break;
 			case EAST:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord+MAX_REACH, yCoord+1, zCoord+1);
+				operationBounds = AxisAlignedBB.getBoundingBox(xCoord+1, yCoord, zCoord, xCoord+1+MAX_REACH, yCoord+1, zCoord+1);
+				suckBounds = AxisAlignedBB.getBoundingBox(xCoord+1, yCoord, zCoord, xCoord+1.1, yCoord+1, zCoord+1);
 				break;
 		}
 	}
