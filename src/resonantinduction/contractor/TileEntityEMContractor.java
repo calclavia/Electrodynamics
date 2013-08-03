@@ -117,7 +117,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 						
 						if(!(inventoryTile instanceof ISidedInventory))
 						{
-							for(int i = 0; i < inventory.getSizeInventory()-1; i++)
+							for(int i = 0; i <= inventory.getSizeInventory()-1; i++)
 							{
 								if(inventory.isItemValidForSlot(i, itemStack))
 								{
@@ -160,10 +160,45 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 							ISidedInventory sidedInventory = (ISidedInventory)inventoryTile;
 							int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
 							
-							for(int get = 0; get < slots.length-1; get++)
+							for(int get = 0; get <= slots.length-1; get++)
 							{
 								int slotID = slots[get];
 								
+								if(sidedInventory.isItemValidForSlot(slotID, itemStack) && sidedInventory.canInsertItem(slotID, itemStack, facing.ordinal()))
+								{
+									ItemStack inSlot = inventory.getStackInSlot(slotID);
+									
+									if(inSlot == null)
+									{
+										inventory.setInventorySlotContents(slotID, itemStack);
+										item.setDead();
+										break;
+									}
+									else if(inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
+									{
+										if(inSlot.stackSize+itemStack.stackSize <= inSlot.getMaxStackSize())
+										{
+											ItemStack toSet = itemStack.copy();
+											toSet.stackSize+=inSlot.stackSize;
+											
+											inventory.setInventorySlotContents(slotID, toSet);
+											item.setDead();
+											break;
+										}
+										else {
+											int rejects = (inSlot.stackSize+itemStack.stackSize) - inSlot.getMaxStackSize();
+											
+											ItemStack toSet = itemStack.copy();
+											toSet.stackSize = inSlot.getMaxStackSize();
+											
+											ItemStack remains = itemStack.copy();
+											remains.stackSize = rejects;
+											
+											inventory.setInventorySlotContents(slotID, toSet);
+											item.setEntityItemStack(remains);
+										}
+									}
+								}
 							}
 						}
 					}
