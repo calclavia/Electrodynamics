@@ -4,11 +4,14 @@
 package resonantinduction;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.base.Vector3;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
+import resonantinduction.multimeter.GuiMultimeter;
+import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.render.BlockRenderingHandler;
 import resonantinduction.render.RenderEMContractor;
 import resonantinduction.render.RenderTesla;
@@ -40,6 +43,12 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileEntityMultimeter)
+		{
+			return new GuiMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
+		}
 		return null;
 	}
 

@@ -14,6 +14,7 @@ import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.multimeter.BlockMultimeter;
+import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import cpw.mods.fml.common.FMLLog;
@@ -27,6 +28,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
@@ -69,7 +71,7 @@ public class ResonantInduction
 	public static final String PREFIX = DOMAIN + ":";
 	public static final String DIRECTORY = "/assets/" + DOMAIN + "/";
 	public static final String TEXTURE_DIRECTORY = "textures/";
-	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "/gui";
+	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
 	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
 	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
@@ -114,6 +116,7 @@ public class ResonantInduction
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		LOGGER.setParent(FMLLog.getLogger());
+		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
 
 		CONFIGURATION.load();
 
@@ -133,17 +136,17 @@ public class ResonantInduction
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
-
-		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMultimeter, blockMultimeter.getUnlocalizedName());
-
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
-		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 
 		CONFIGURATION.save();
 
+		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
+		GameRegistry.registerBlock(blockMultimeter, blockMultimeter.getUnlocalizedName());
+		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
+
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
