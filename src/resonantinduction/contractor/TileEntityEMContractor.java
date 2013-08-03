@@ -48,7 +48,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionX = 0;
 							entityItem.motionZ = 0;
 							
-							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-ACCELERATION);
+							if(!suck)
+							{
+								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-ACCELERATION);
+							}
+							else {
+								entityItem.motionY = Math.min((MAX_SPEED*4), entityItem.motionY+(ACCELERATION*5));
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
@@ -61,7 +67,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionX = 0;
 							entityItem.motionZ = 0;
 									
-							entityItem.motionY = Math.min((MAX_SPEED*4), entityItem.motionY+(ACCELERATION*5));
+							if(!suck)
+							{
+								entityItem.motionY = Math.min((MAX_SPEED*4), entityItem.motionY+(ACCELERATION*5));
+							}
+							else {
+								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY-ACCELERATION);
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
@@ -74,7 +86,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionY = 0;
 							entityItem.motionZ = 0;
 								
-							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							if(!suck)
+							{
+								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							}
+							else {
+								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
@@ -87,7 +105,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionY = 0;
 							entityItem.motionZ = 0;
 									
-							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
+							if(!suck)
+							{
+								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX-ACCELERATION);
+							}
+							else {
+								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX+ACCELERATION);
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
@@ -100,7 +124,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionX = 0;
 							entityItem.motionY = 0;
 									
-							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							if(!suck)
+							{
+								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							}
+							else {
+								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
@@ -113,7 +143,13 @@ public class TileEntityEMContractor extends TileEntity
 							entityItem.motionX = 0;
 							entityItem.motionY = 0;
 									
-							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
+							if(!suck)
+							{
+								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ-ACCELERATION);
+							}
+							else {
+								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ+ACCELERATION);
+							}
 									
 							entityItem.isAirBorne = true;
 							break;
