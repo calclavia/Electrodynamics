@@ -24,7 +24,6 @@ public class ItemLinker extends ItemCoordLink
 	{
 		if (!world.isRemote)
 		{
-			System.out.println("TEST");
 			int dimID = world.provider.dimensionId;
 			player.addChatMessage("Set link to block [" + x + ", " + y + ", " + z + "], dimension '" + dimID + "'");
 			this.setLink(stack, new Vector3(x, y, z), dimID);

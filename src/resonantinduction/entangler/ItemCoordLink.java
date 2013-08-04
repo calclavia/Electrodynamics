@@ -5,13 +5,13 @@ package resonantinduction.entangler;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import resonantinduction.base.ItemBase;
 import resonantinduction.base.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia
@@ -50,7 +50,7 @@ public abstract class ItemCoordLink extends ItemBase
 
 	public Vector3 getLink(ItemStack itemStack)
 	{
-		if (itemStack.stackTagCompound == null)
+		if (itemStack.stackTagCompound == null || !(itemStack.getTagCompound().hasKey("bindX") && itemStack.getTagCompound().hasKey("bindY") && itemStack.getTagCompound().hasKey("bindZ")))
 		{
 			return null;
 		}
@@ -84,5 +84,13 @@ public abstract class ItemCoordLink extends ItemBase
 		}
 
 		return itemStack.stackTagCompound.getInteger("dimID");
+	}
+
+	public void clearLink(ItemStack itemStack)
+	{
+		itemStack.getTagCompound().removeTag("bindX");
+		itemStack.getTagCompound().removeTag("bindY");
+		itemStack.getTagCompound().removeTag("bindZ");
+		itemStack.getTagCompound().removeTag("dimID");
 	}
 }

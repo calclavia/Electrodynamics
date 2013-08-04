@@ -57,12 +57,15 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 				{
 					if (linkVec.getTileEntity(world) instanceof TileEntityEMContractor)
 					{
-						contractor.setLink((TileEntityEMContractor) linkVec.getTileEntity(world));
+						contractor.setLink((TileEntityEMContractor) linkVec.getTileEntity(world), true);
 
 						if (!world.isRemote)
 						{
 							entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
 						}
+
+						link.clearLink(entityPlayer.getCurrentEquippedItem());
+
 						return true;
 					}
 				}

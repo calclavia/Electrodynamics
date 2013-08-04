@@ -57,6 +57,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	/** Color of beam */
 	private int dyeID = 13;
+	private Vector3 tempLinkVector;
 
 	@Override
 	public void updateEntity()
@@ -64,6 +65,16 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		super.updateEntity();
 
 		this.pushDelay = Math.max(0, this.pushDelay - 1);
+
+		if (this.tempLinkVector != null)
+		{
+			if (this.tempLinkVector.getTileEntity(this.worldObj) instanceof TileEntityEMContractor)
+			{
+				this.linked = (TileEntityEMContractor) this.tempLinkVector.getTileEntity(this.worldObj);
+			}
+
+			this.tempLinkVector = null;
+		}
 
 		if (canFunction())
 		{
@@ -407,6 +418,11 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		this.suck = nbt.getBoolean("suck");
 		this.energyStored = nbt.getFloat("energyStored");
 		this.dyeID = nbt.getInteger("dyeID");
+		int x = nbt.getInteger("link_x");
+		int y = nbt.getInteger("link_y");
+		int z = nbt.getInteger("link_z");
+
+		this.tempLinkVector = new Vector3(x, y, z);
 
 		updateBounds();
 	}
@@ -420,6 +436,13 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		nbt.setBoolean("suck", suck);
 		nbt.setFloat("energyStored", energyStored);
 		nbt.setInteger("dyeID", this.dyeID);
+
+		if (this.linked != null)
+		{
+			nbt.setInteger("link_x", this.linked.xCoord);
+			nbt.setInteger("link_y", this.linked.yCoord);
+			nbt.setInteger("link_z", this.linked.zCoord);
+		}
 	}
 
 	@Override
@@ -473,10 +496,20 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	/**
 	 * Link between two TileEntities, do pathfinding operation.
 	 */
-	public void setLink(TileEntityEMContractor tileEntity)
+	public void setLink(TileEntityEMContractor tileEntity, boolean setOpponent)
 	{
+		if (this.linked != null && setOpponent)
+		{
+			this.linked.setLink(null, false);
+		}
+
 		this.linked = tileEntity;
-		this.linked.linked = this;
+
+		if (setOpponent)
+		{
+			this.linked.setLink(this, false);
+		}
+
 		this.updatePath();
 	}
 
