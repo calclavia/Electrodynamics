@@ -73,9 +73,28 @@ public class Pathfinding
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
 				Vector3 neighbor = currentNode.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
-				
+
+				double tentativeG = this.gScore.get(currentNode);
+
+				if (this.closedSet.contains(neighbor))
+				{
+					if (tentativeG >= this.gScore.get(neighbor))
+					{
+						continue;
+					}
+				}
+
+				if (!this.openSet.contains(neighbor) || tentativeG < this.gScore.get(neighbor))
+				{
+					this.navMap.put(neighbor, currentNode);
+					this.gScore.put(neighbor, tentativeG);
+					this.fScore.put(neighbor, this.gScore.get(neighbor) + this.getEstimate(neighbor, this.target));
+					this.openSet.add(neighbor);
+				}
 			}
 		}
+
+		return false;
 	}
 
 	private Set<Vector3> reconstructPath(HashMap<Vector3, Vector3> naviMap, Vector3 currentNode)
