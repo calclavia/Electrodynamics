@@ -24,7 +24,7 @@ public class BatteryMultiblockManager implements ITickHandler
      * Grabs an inventory from the world's caches, and removes all the world's references to it.
      * @param world - world the cache is stored in
      * @param id - inventory ID to pull
-     * @return correct Dynamic Tank inventory cache
+     * @return correct Battery inventory cache
      */
     public static BatteryCache pullInventory(World world, int id)
     {
@@ -47,10 +47,10 @@ public class BatteryMultiblockManager implements ITickHandler
     }
     
     /**
-     * Updates a dynamic tank cache with the defined inventory ID with the parameterized values.
-     * @param inventoryID - inventory ID of the dynamic tank
-     * @param fluid - cached fluid of the dynamic tank
-     * @param inventory - inventory of the dynamic tank
+     * Updates a battery cache with the defined inventory ID with the parameterized values.
+     * @param inventoryID - inventory ID of the battery
+     * @param fluid - cached fluid of the battery
+     * @param inventory - inventory of the battery
      * @param tileEntity - dynamic tank TileEntity
      */
     public static void updateCache(int inventoryID, HashSet<ItemStack> inventory, TileEntityBattery tileEntity)
@@ -73,7 +73,7 @@ public class BatteryMultiblockManager implements ITickHandler
     }
     
     /**
-     * Grabs a unique inventory ID for a dynamic tank.
+     * Grabs a unique inventory ID for a battery.
      * @return unique inventory ID
      */
     public static int getUniqueInventoryID()

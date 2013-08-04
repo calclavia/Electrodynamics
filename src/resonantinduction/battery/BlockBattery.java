@@ -11,13 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
-import resonantinduction.multimeter.TileEntityMultimeter;
 
 /**
  * A block that detects power.
@@ -65,6 +62,31 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		}
 
 		return true;
+	}
+	
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id) 
+	{
+		if(!world.isRemote)
+		{
+			if(id == blockID)
+			{
+				TileEntityBattery battery = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
+				
+				battery.update();
+			}
+		}
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
+	{
+		if(!world.isRemote)
+		{
+			TileEntityBattery battery = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
+			
+			battery.update();
+		}
 	}
 
 	@Override

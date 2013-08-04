@@ -19,6 +19,7 @@ public class TileEntityBase extends TileEntity
 {
 	protected long ticks = 0;
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+	public boolean doPacket = true;
 
 	public void initiate()
 	{
@@ -35,9 +36,12 @@ public class TileEntityBase extends TileEntity
 			this.initiate();
 		}
 
-		for (EntityPlayer player : this.playersUsing)
+		if(doPacket && !worldObj.isRemote)
 		{
-			PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
+			for (EntityPlayer player : this.playersUsing)
+			{
+				PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
+			}
 		}
 	}
 }

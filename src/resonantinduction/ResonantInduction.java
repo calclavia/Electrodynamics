@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.battery.BatteryMultiblockManager;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -35,6 +36,8 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia
@@ -160,6 +163,8 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
+		
+		TickRegistry.registerTickHandler(new BatteryMultiblockManager(), Side.SERVER);
 
 		ResonantInduction.proxy.registerRenderers();
 
