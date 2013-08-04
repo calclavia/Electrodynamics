@@ -135,7 +135,7 @@ public class Vector3
 		return new Vector3(this.x + offset.x, this.y + offset.y, this.z + offset.z);
 	}
 
-	public Vector3 translate(int offset)
+	public Vector3 translate(double offset)
 	{
 		return new Vector3(this.x + offset, this.y + offset, this.z + offset);
 	}

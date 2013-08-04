@@ -13,17 +13,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
+import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
+import resonantinduction.base.TileEntityBase;
+import resonantinduction.base.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
 /**
  * 
  * @author AidanBrady
- *
+ * 
  */
-public class TileEntityEMContractor extends TileEntity implements IPacketReceiver, ITesla
+public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver, ITesla
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -34,7 +37,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	private ForgeDirection facing = ForgeDirection.UP;
 
 	public int pushDelay;
-	
+
 	public float energyStored;
 
 	public AxisAlignedBB operationBounds;
@@ -48,167 +51,171 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	@Override
 	public void updateEntity()
 	{
-		pushDelay = Math.max(0, pushDelay - 1);
+		super.updateEntity();
+		this.pushDelay = Math.max(0, pushDelay - 1);
 
-		if (isLatched() && canFunction())
+		if (canFunction())
 		{
-			TileEntity inventoryTile = getLatched();
-			IInventory inventory = (IInventory) inventoryTile;
-
-			if (!suck && pushDelay == 0)
+			if (isLatched())
 			{
-				if (!(inventoryTile instanceof ISidedInventory))
+				TileEntity inventoryTile = getLatched();
+				IInventory inventory = (IInventory) inventoryTile;
+
+				if (!suck && pushDelay == 0)
 				{
-					for (int i = inventory.getSizeInventory() - 1; i >= 0; i--)
+					if (!(inventoryTile instanceof ISidedInventory))
 					{
-						if (inventory.getStackInSlot(i) != null)
+						for (int i = inventory.getSizeInventory() - 1; i >= 0; i--)
 						{
-							ItemStack toSend = inventory.getStackInSlot(i).copy();
-							toSend.stackSize = 1;
-
-							EntityItem item = getItemWithPosition(toSend);
-
-							if (!worldObj.isRemote)
+							if (inventory.getStackInSlot(i) != null)
 							{
-								worldObj.spawnEntityInWorld(item);
-							}
-
-							inventory.decrStackSize(i, 1);
-							pushDelay = PUSH_DELAY;
-
-							break;
-						}
-					}
-				}
-				else
-				{
-					ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
-					int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
-
-					if (slots != null)
-					{
-						for (int get = slots.length - 1; get >= 0; get--)
-						{
-							int slotID = slots[get];
-
-							if (sidedInventory.getStackInSlot(slotID) != null)
-							{
-								ItemStack toSend = sidedInventory.getStackInSlot(slotID);
+								ItemStack toSend = inventory.getStackInSlot(i).copy();
 								toSend.stackSize = 1;
 
-								if (sidedInventory.canExtractItem(slotID, toSend, facing.ordinal()))
+								EntityItem item = getItemWithPosition(toSend);
+
+								if (!worldObj.isRemote)
 								{
-									EntityItem item = getItemWithPosition(toSend);
-
-									if (!worldObj.isRemote)
-									{
-										worldObj.spawnEntityInWorld(item);
-									}
-
-									sidedInventory.decrStackSize(slotID, 1);
-									pushDelay = PUSH_DELAY;
-
-									break;
+									worldObj.spawnEntityInWorld(item);
 								}
+
+								inventory.decrStackSize(i, 1);
+								pushDelay = PUSH_DELAY;
+
+								break;
 							}
 						}
 					}
-				}
-			}
-			else if (suck)
-			{
-				if (suckBounds != null)
-				{
-					List<EntityItem> list = worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds);
-
-					for (EntityItem item : list)
+					else
 					{
-						ItemStack itemStack = item.getEntityItem();
+						ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
+						int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
 
-						if (!(inventoryTile instanceof ISidedInventory))
+						if (slots != null)
 						{
-							for (int i = 0; i <= inventory.getSizeInventory() - 1; i++)
-							{
-								if (inventory.isItemValidForSlot(i, itemStack))
-								{
-									ItemStack inSlot = inventory.getStackInSlot(i);
-
-									if (inSlot == null)
-									{
-										inventory.setInventorySlotContents(i, itemStack);
-										item.setDead();
-										break;
-									}
-									else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
-									{
-										if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
-										{
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize += inSlot.stackSize;
-
-											inventory.setInventorySlotContents(i, toSet);
-											item.setDead();
-											break;
-										}
-										else
-										{
-											int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
-
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize = inSlot.getMaxStackSize();
-
-											ItemStack remains = itemStack.copy();
-											remains.stackSize = rejects;
-
-											inventory.setInventorySlotContents(i, toSet);
-											item.setEntityItemStack(remains);
-										}
-									}
-								}
-							}
-						}
-						else
-						{
-							ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
-							int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
-
-							for (int get = 0; get <= slots.length - 1; get++)
+							for (int get = slots.length - 1; get >= 0; get--)
 							{
 								int slotID = slots[get];
 
-								if (sidedInventory.isItemValidForSlot(slotID, itemStack) && sidedInventory.canInsertItem(slotID, itemStack, facing.ordinal()))
+								if (sidedInventory.getStackInSlot(slotID) != null)
 								{
-									ItemStack inSlot = inventory.getStackInSlot(slotID);
+									ItemStack toSend = sidedInventory.getStackInSlot(slotID);
+									toSend.stackSize = 1;
 
-									if (inSlot == null)
+									if (sidedInventory.canExtractItem(slotID, toSend, facing.ordinal()))
 									{
-										inventory.setInventorySlotContents(slotID, itemStack);
-										item.setDead();
+										EntityItem item = getItemWithPosition(toSend);
+
+										if (!worldObj.isRemote)
+										{
+											worldObj.spawnEntityInWorld(item);
+										}
+
+										sidedInventory.decrStackSize(slotID, 1);
+										pushDelay = PUSH_DELAY;
+
 										break;
 									}
-									else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
-									{
-										if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
-										{
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize += inSlot.stackSize;
+								}
+							}
+						}
+					}
+				}
+				else if (suck)
+				{
+					if (suckBounds != null)
+					{
+						List<EntityItem> list = worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds);
 
-											inventory.setInventorySlotContents(slotID, toSet);
+						for (EntityItem item : list)
+						{
+							ItemStack itemStack = item.getEntityItem();
+
+							if (!(inventoryTile instanceof ISidedInventory))
+							{
+								for (int i = 0; i <= inventory.getSizeInventory() - 1; i++)
+								{
+									if (inventory.isItemValidForSlot(i, itemStack))
+									{
+										ItemStack inSlot = inventory.getStackInSlot(i);
+
+										if (inSlot == null)
+										{
+											inventory.setInventorySlotContents(i, itemStack);
 											item.setDead();
 											break;
 										}
-										else
+										else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
 										{
-											int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
+											if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
+											{
+												ItemStack toSet = itemStack.copy();
+												toSet.stackSize += inSlot.stackSize;
 
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize = inSlot.getMaxStackSize();
+												inventory.setInventorySlotContents(i, toSet);
+												item.setDead();
+												break;
+											}
+											else
+											{
+												int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
 
-											ItemStack remains = itemStack.copy();
-											remains.stackSize = rejects;
+												ItemStack toSet = itemStack.copy();
+												toSet.stackSize = inSlot.getMaxStackSize();
 
-											inventory.setInventorySlotContents(slotID, toSet);
-											item.setEntityItemStack(remains);
+												ItemStack remains = itemStack.copy();
+												remains.stackSize = rejects;
+
+												inventory.setInventorySlotContents(i, toSet);
+												item.setEntityItemStack(remains);
+											}
+										}
+									}
+								}
+							}
+							else
+							{
+								ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
+								int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
+
+								for (int get = 0; get <= slots.length - 1; get++)
+								{
+									int slotID = slots[get];
+
+									if (sidedInventory.isItemValidForSlot(slotID, itemStack) && sidedInventory.canInsertItem(slotID, itemStack, facing.ordinal()))
+									{
+										ItemStack inSlot = inventory.getStackInSlot(slotID);
+
+										if (inSlot == null)
+										{
+											inventory.setInventorySlotContents(slotID, itemStack);
+											item.setDead();
+											break;
+										}
+										else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
+										{
+											if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
+											{
+												ItemStack toSet = itemStack.copy();
+												toSet.stackSize += inSlot.stackSize;
+
+												inventory.setInventorySlotContents(slotID, toSet);
+												item.setDead();
+												break;
+											}
+											else
+											{
+												int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
+
+												ItemStack toSet = itemStack.copy();
+												toSet.stackSize = inSlot.getMaxStackSize();
+
+												ItemStack remains = itemStack.copy();
+												remains.stackSize = rejects;
+
+												inventory.setInventorySlotContents(slotID, toSet);
+												item.setEntityItemStack(remains);
+											}
 										}
 									}
 								}
@@ -217,142 +224,147 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 					}
 				}
 			}
-		}
 
-		if (operationBounds != null && canFunction())
-		{
-			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
-			
-			energyStored -= ENERGY_USAGE;
-
-			for (Entity entity : list)
+			if (operationBounds != null)
 			{
-				if (entity instanceof EntityItem)
+				List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
+
+				energyStored -= ENERGY_USAGE;
+
+				for (Entity entity : list)
 				{
-					EntityItem entityItem = (EntityItem) entity;
-
-					switch (facing)
+					if (entity instanceof EntityItem)
 					{
-						case DOWN:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
-							}
+						EntityItem entityItem = (EntityItem) entity;
 
-							entityItem.motionX = 0;
-							entityItem.motionZ = 0;
+						if (this.worldObj.isRemote && this.ticks % 5 == 0)
+						{
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
+						}
 
-							if (!suck)
-							{
-								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
-							}
+						switch (facing)
+						{
+							case DOWN:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
-						case UP:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
-							}
+								entityItem.motionX = 0;
+								entityItem.motionZ = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionZ = 0;
+								if (!suck)
+								{
+									entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+								}
+								else
+								{
+									entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
+								}
 
-							if (!suck)
-							{
-								entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
-							}
-							else
-							{
-								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-							}
+								entityItem.isAirBorne = true;
+								break;
+							case UP:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
-						case NORTH:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-							}
+								entityItem.motionX = 0;
+								entityItem.motionZ = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionY = 0;
+								if (!suck)
+								{
+									entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
+								}
+								else
+								{
+									entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+								}
 
-							if (!suck)
-							{
-								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-							}
+								entityItem.isAirBorne = true;
+								break;
+							case NORTH:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
-						case SOUTH:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-							}
+								entityItem.motionX = 0;
+								entityItem.motionY = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionY = 0;
+								if (!suck)
+								{
+									entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+								}
+								else
+								{
+									entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+								}
 
-							if (!suck)
-							{
-								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-							}
+								entityItem.isAirBorne = true;
+								break;
+							case SOUTH:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
-						case WEST:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-							}
+								entityItem.motionX = 0;
+								entityItem.motionY = 0;
 
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
+								if (!suck)
+								{
+									entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+								}
+								else
+								{
+									entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+								}
 
-							if (!suck)
-							{
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-							}
+								entityItem.isAirBorne = true;
+								break;
+							case WEST:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
-						case EAST:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-							}
+								entityItem.motionY = 0;
+								entityItem.motionZ = 0;
 
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
+								if (!suck)
+								{
+									entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+								}
+								else
+								{
+									entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+								}
 
-							if (!suck)
-							{
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-							}
+								entityItem.isAirBorne = true;
+								break;
+							case EAST:
+								if (!worldObj.isRemote)
+								{
+									entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+								}
 
-							entityItem.isAirBorne = true;
-							break;
+								entityItem.motionY = 0;
+								entityItem.motionZ = 0;
+
+								if (!suck)
+								{
+									entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+								}
+								else
+								{
+									entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+								}
+
+								entityItem.isAirBorne = true;
+								break;
+						}
 					}
 				}
 			}
@@ -471,10 +483,10 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 		updateBounds();
 	}
-	
+
 	public boolean canFunction()
 	{
-		return worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
+		return !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
@@ -519,20 +531,20 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	}
 
 	@Override
-	public float transfer(float transferEnergy, boolean doTransfer) 
+	public float transfer(float transferEnergy, boolean doTransfer)
 	{
-		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE-energyStored);
-		
-		if(doTransfer)
+		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE - energyStored);
+
+		if (doTransfer)
 		{
 			energyStored += energyToUse;
 		}
-		
+
 		return energyToUse;
 	}
 
 	@Override
-	public boolean canReceive(TileEntity transferTile) 
+	public boolean canReceive(TileEntity transferTile)
 	{
 		return true;
 	}
