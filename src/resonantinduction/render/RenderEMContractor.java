@@ -59,7 +59,7 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 			this.func_110628_a(TEXTURE_PUSH);
 		}
 		
-		MODEL.render(0.0625f, true);
+		MODEL.render(0.0625f, ((TileEntityEMContractor)t).canFunction());
 
 		GL11.glPopMatrix();
 	}

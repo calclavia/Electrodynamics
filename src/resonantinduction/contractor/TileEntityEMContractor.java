@@ -27,8 +27,8 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
-	public static double MAX_SPEED = .1;
-	public static double ACCELERATION = .01;
+	public static double MAX_SPEED = .2;
+	public static double ACCELERATION = .02;
 	public static float ENERGY_USAGE = .005F;
 
 	private ForgeDirection facing = ForgeDirection.UP;
@@ -50,7 +50,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		pushDelay = Math.max(0, pushDelay - 1);
 
-		if (isLatched() && canFunction())
+		if (canFunction())
 		{
 			TileEntity inventoryTile = getLatched();
 			IInventory inventory = (IInventory) inventoryTile;
@@ -248,7 +248,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 							}
 							else
 							{
-								entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
+								entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
 							}
 
 							entityItem.isAirBorne = true;
@@ -264,7 +264,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 							if (!suck)
 							{
-								entityItem.motionY = Math.min((MAX_SPEED * 4), entityItem.motionY + (ACCELERATION * 5));
+								entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
 							}
 							else
 							{
@@ -366,24 +366,26 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		switch (facing)
 		{
 			case DOWN:
-				item = new EntityItem(worldObj, xCoord + 0.5, yCoord, zCoord + 0.5, toSend);
+				item = new EntityItem(worldObj, xCoord + 0.5, yCoord - 0.2, zCoord + 0.5, toSend);
 				break;
 			case UP:
-				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 1, zCoord + 0.5, toSend);
+				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 1.2, zCoord + 0.5, toSend);
 				break;
 			case NORTH:
-				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord, toSend);
+				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord - 0.2, toSend);
 				break;
 			case SOUTH:
-				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 1, toSend);
+				item = new EntityItem(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 1.2, toSend);
 				break;
 			case WEST:
-				item = new EntityItem(worldObj, xCoord, yCoord + 0.5, zCoord + 0.5, toSend);
+				item = new EntityItem(worldObj, xCoord - 0.2, yCoord + 0.5, zCoord + 0.5, toSend);
 				break;
 			case EAST:
-				item = new EntityItem(worldObj, xCoord + 1, yCoord + 0.5, zCoord + 0.5, toSend);
+				item = new EntityItem(worldObj, xCoord + 1.2, yCoord + 0.5, zCoord + 0.5, toSend);
 				break;
 		}
+		
+		item.setVelocity(0, 0, 0);
 
 		return item;
 	}
@@ -474,7 +476,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	
 	public boolean canFunction()
 	{
-		return worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
+		return isLatched() && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
 	}
 
 	@Override
@@ -484,6 +486,9 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 		facing = ForgeDirection.getOrientation(nbtTags.getInteger("facing"));
 		suck = nbtTags.getBoolean("suck");
+		energyStored = nbtTags.getFloat("energyStored");
+		
+		updateBounds();
 	}
 
 	@Override
@@ -493,6 +498,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 		nbtTags.setInteger("facing", facing.ordinal());
 		nbtTags.setBoolean("suck", suck);
+		nbtTags.setFloat("energyStored", energyStored);
 	}
 
 	@Override
@@ -502,6 +508,8 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 		{
 			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
+			energyStored = input.readFloat();
+			
 			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 			updateBounds();
 		}
@@ -515,6 +523,8 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		data.add(facing.ordinal());
 		data.add(suck);
+		data.add(energyStored);
+		
 		return data;
 	}
 
@@ -523,7 +533,7 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	{
 		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE-energyStored);
 		
-		if(doTransfer)
+		if (doTransfer)
 		{
 			energyStored += energyToUse;
 		}
