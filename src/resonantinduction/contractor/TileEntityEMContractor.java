@@ -1,7 +1,9 @@
 package resonantinduction.contractor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
 /**
  * 
  * @author AidanBrady
- *
+ * 
  */
 public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver, ITesla
 {
@@ -36,7 +38,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	private ForgeDirection facing = ForgeDirection.UP;
 
 	public int pushDelay;
-	
+
 	public float energyStored;
 
 	public AxisAlignedBB operationBounds;
@@ -47,11 +49,14 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	 */
 	public boolean suck = true;
 
+	private Pathfinding pathfinder;
+	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		pushDelay = Math.max(0, pushDelay - 1);
 
 		if (canFunction())
@@ -62,7 +67,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			if (!suck && pushDelay == 0)
 			{
 				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, facing.ordinal());
-				
+
 				if (retrieved != null)
 				{
 					EntityItem item = getItemWithPosition(retrieved);
@@ -71,7 +76,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 					{
 						worldObj.spawnEntityInWorld(item);
 					}
-					
+
 					pushDelay = PUSH_DELAY;
 				}
 			}
@@ -82,12 +87,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 					for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
 					{
 						ItemStack remains = InventoryUtil.putStackInInventory(inventory, item.getEntityItem(), facing.ordinal());
-						
+
 						if (remains == null)
 						{
 							item.setDead();
 						}
-						else 
+						else
 						{
 							item.setEntityItemStack(remains);
 						}
@@ -259,7 +264,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				item = new EntityItem(worldObj, xCoord + 1.2, yCoord + 0.5, zCoord + 0.5, toSend);
 				break;
 		}
-		
+
 		item.setVelocity(0, 0, 0);
 
 		return item;
@@ -348,7 +353,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		updateBounds();
 	}
-	
+
 	public boolean canFunction()
 	{
 		return isLatched() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
@@ -362,7 +367,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		facing = ForgeDirection.getOrientation(nbtTags.getInteger("facing"));
 		suck = nbtTags.getBoolean("suck");
 		energyStored = nbtTags.getFloat("energyStored");
-		
+
 		updateBounds();
 	}
 
@@ -384,7 +389,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
 			energyStored = input.readFloat();
-			
+
 			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 			updateBounds();
 		}
@@ -399,25 +404,25 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		data.add(facing.ordinal());
 		data.add(suck);
 		data.add(energyStored);
-		
+
 		return data;
 	}
 
 	@Override
-	public float transfer(float transferEnergy, boolean doTransfer) 
+	public float transfer(float transferEnergy, boolean doTransfer)
 	{
-		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE-energyStored);
-		
+		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE - energyStored);
+
 		if (doTransfer)
 		{
 			energyStored += energyToUse;
 		}
-		
+
 		return energyToUse;
 	}
 
 	@Override
-	public boolean canReceive(TileEntity transferTile) 
+	public boolean canReceive(TileEntity transferTile)
 	{
 		return true;
 	}

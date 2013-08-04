@@ -5,9 +5,7 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import resonantinduction.base.ItemBase;
 import resonantinduction.base.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author AidanBrady
  * 
  */
-public class ItemQuantumEntangler extends ItemBase
+public class ItemQuantumEntangler extends ItemCoordLink
 {
 	private static boolean didBindThisTick = false;
 
@@ -34,10 +32,10 @@ public class ItemQuantumEntangler extends ItemBase
 	{
 		super.addInformation(itemstack, entityplayer, list, flag);
 
-		if (hasBind(itemstack))
+		if (hasLink(itemstack))
 		{
-			Vector3 vec = getBindVec(itemstack);
-			int dimID = getDimID(itemstack);
+			Vector3 vec = getLink(itemstack);
+			int dimID = getLinkDim(itemstack);
 
 			list.add("Bound to [" + (int) vec.x + ", " + (int) vec.y + ", " + (int) vec.z + "], dimension '" + dimID + "'");
 		}
@@ -57,7 +55,7 @@ public class ItemQuantumEntangler extends ItemBase
 				int dimID = world.provider.dimensionId;
 
 				entityplayer.addChatMessage("Bound Entangler to block [" + x + ", " + y + ", " + z + "], dimension '" + dimID + "'");
-				setBindVec(itemstack, new Vector3(x, y, z), dimID);
+				setLink(itemstack, new Vector3(x, y, z), dimID);
 				didBindThisTick = true;
 
 				return true;
@@ -74,7 +72,7 @@ public class ItemQuantumEntangler extends ItemBase
 	{
 		if (!world.isRemote && !didBindThisTick)
 		{
-			if (!hasBind(itemstack))
+			if (!hasLink(itemstack))
 			{
 				entityplayer.addChatMessage("Error: no block bound to Entangler!");
 				return itemstack;
@@ -82,8 +80,8 @@ public class ItemQuantumEntangler extends ItemBase
 
 			// TELEPORT //
 
-			Vector3 vec = getBindVec(itemstack);
-			int dimID = getDimID(itemstack);
+			Vector3 vec = getLink(itemstack);
+			int dimID = getLinkDim(itemstack);
 
 			// travel to dimension if different dimID
 			if (world.provider.dimensionId != dimID)
@@ -102,46 +100,4 @@ public class ItemQuantumEntangler extends ItemBase
 		return itemstack;
 	}
 
-	public boolean hasBind(ItemStack itemStack)
-	{
-		return getBindVec(itemStack) != null;
-	}
-
-	public Vector3 getBindVec(ItemStack itemStack)
-	{
-		if (itemStack.stackTagCompound == null)
-		{
-			return null;
-		}
-
-		int x = itemStack.stackTagCompound.getInteger("bindX");
-		int y = itemStack.stackTagCompound.getInteger("bindY");
-		int z = itemStack.stackTagCompound.getInteger("bindZ");
-
-		return new Vector3(x, y, z);
-	}
-
-	public void setBindVec(ItemStack itemStack, Vector3 vec, int dimID)
-	{
-		if (itemStack.stackTagCompound == null)
-		{
-			itemStack.setTagCompound(new NBTTagCompound());
-		}
-
-		itemStack.stackTagCompound.setInteger("bindX", (int) vec.x);
-		itemStack.stackTagCompound.setInteger("bindY", (int) vec.y);
-		itemStack.stackTagCompound.setInteger("bindZ", (int) vec.z);
-
-		itemStack.stackTagCompound.setInteger("dimID", dimID);
-	}
-
-	public int getDimID(ItemStack itemStack)
-	{
-		if (itemStack.stackTagCompound == null)
-		{
-			return 0;
-		}
-
-		return itemStack.stackTagCompound.getInteger("dimID");
-	}
 }
