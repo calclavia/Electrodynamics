@@ -115,7 +115,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean canProvidePower()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

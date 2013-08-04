@@ -9,6 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
@@ -112,6 +114,7 @@ public class ResonantInduction
 	public static Block blockTesla;
 	public static Block blockMultimeter;
 	public static Block blockEMContractor;
+	public static Block blockBattery;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -138,17 +141,20 @@ public class ResonantInduction
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
+		blockBattery = new BlockBattery(getNextBlockID());
 
 		CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockMultimeter, ItemBlockMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

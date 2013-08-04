@@ -49,6 +49,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 
 		if (this.ticks % 20 == 0)
 		{
+			float prevDetectedEnergy = this.detectedEnergy;
 			this.detectedEnergy = this.doGetDetectedEnergy();
 			this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
 
@@ -80,6 +81,11 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 				this.redstoneOn = outputRedstone;
 				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ResonantInduction.blockMultimeter.blockID);
 			}
+
+			/*
+			 * if (prevDetectedEnergy != this.detectedEnergy) {
+			 * this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord); }
+			 */
 		}
 	}
 
