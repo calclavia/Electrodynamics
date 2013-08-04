@@ -9,11 +9,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.ItemCapacitor;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.multimeter.BlockMultimeter;
+import resonantinduction.multimeter.ItemBlockMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -106,24 +110,26 @@ public class ResonantInduction
 
 	// Items
 	public static Item itemQuantumEntangler;
+	public static Item itemCapacitor;
 
 	// Blocks
 	public static Block blockTesla;
 	public static Block blockMultimeter;
 	public static Block blockEMContractor;
+	public static Block blockBattery;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		LOGGER.setParent(FMLLog.getLogger());
-		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
+		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
 
 		CONFIGURATION.load();
 
 		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
-		
+
 		TileEntityEMContractor.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEntityEMContractor.ACCELERATION).getDouble(TileEntityEMContractor.ACCELERATION);
 		TileEntityEMContractor.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEntityEMContractor.MAX_REACH).getInt(TileEntityEMContractor.MAX_REACH);
 		TileEntityEMContractor.MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", TileEntityEMContractor.MAX_SPEED).getDouble(TileEntityEMContractor.MAX_SPEED);
@@ -131,23 +137,29 @@ public class ResonantInduction
 
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
+		itemCapacitor = new ItemCapacitor(getNextItemID());
+
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
+		GameRegistry.registerItem(itemCapacitor, itemCapacitor.getUnlocalizedName());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
+		blockBattery = new BlockBattery(getNextBlockID());
 
 		CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMultimeter, blockMultimeter.getUnlocalizedName());
+		GameRegistry.registerBlock(blockMultimeter, ItemBlockMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

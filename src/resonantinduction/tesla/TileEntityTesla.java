@@ -339,7 +339,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 	public int getRange()
 	{
-		return Math.min(5 * (this.getHeight() - 1), 50);
+		return Math.min(4 * (this.getHeight() - 1), 50);
 	}
 
 	public void updatePositionStatus()

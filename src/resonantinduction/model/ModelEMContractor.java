@@ -225,14 +225,14 @@ public class ModelEMContractor extends ModelBase
 
 	public void render(float f5, boolean rotate)
 	{
-		if(rotate)
+		if (rotate)
 		{
 			Coil1.rotateAngleY = (float)Math.toRadians(Math.toDegrees(Coil1.rotateAngleY)+3 < 360 ? Math.toDegrees(Coil1.rotateAngleY)+3 : 0);
 			coil2.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil2.rotateAngleY)+3 < 360 ? Math.toDegrees(coil2.rotateAngleY)+3 : 0);
 			coil3.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil3.rotateAngleY)+3 < 360 ? Math.toDegrees(coil3.rotateAngleY)+3 : 0);
 			coil4.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil4.rotateAngleY)+3 < 360 ? Math.toDegrees(coil4.rotateAngleY)+3 : 0);
 		}
-		
+
 		frame1.render(f5);
 		frame2.render(f5);
 		frame3.render(f5);

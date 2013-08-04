@@ -85,12 +85,12 @@ public class FXElectricBolt extends EntityFX
 		this.segments.add(new BoltSegment(this.start, this.end));
 		this.recalculate();
 		double offsetRatio = this.boltLength * this.complexity;
-		this.split(2, offsetRatio / 8, 0.7f, 0.1f, 20);
-		this.split(2, offsetRatio / 12, 0.5f, 0.1f, 25);
-		this.split(2, offsetRatio / 24, 0.5f, 0.1f, 28);
-		this.split(2, offsetRatio / 32, 0.5f, 0.1f, 30);
-		this.split(2, offsetRatio / 48, 0, 0, 0);
-		this.split(2, offsetRatio / 64, 0, 0, 0);
+		this.split(2, offsetRatio / 10, 0.7f, 0.1f, 20);
+		this.split(2, offsetRatio / 15, 0.5f, 0.1f, 25);
+		this.split(2, offsetRatio / 25, 0.5f, 0.1f, 28);
+		this.split(2, offsetRatio / 38, 0.5f, 0.1f, 30);
+		this.split(2, offsetRatio / 55, 0, 0, 0);
+		this.split(2, offsetRatio / 70, 0, 0, 0);
 
 		this.recalculate();
 
@@ -154,7 +154,7 @@ public class FXElectricBolt extends EntityFX
 			 */
 			for (int i = 1; i < splitAmount; i++)
 			{
-				Vector3 newOffset = segment.difference.getPerpendicular().rotate(this.rand.nextFloat() * 180, segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
+				Vector3 newOffset = segment.difference.getPerpendicular().rotate(this.rand.nextFloat() * 360, segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
 				Vector3 basePoint = startPoint.clone().translate(subSegment.clone().scale(i));
 
 				newPoints[i] = new BoltPoint(basePoint, newOffset);
@@ -172,7 +172,7 @@ public class FXElectricBolt extends EntityFX
 
 				if ((i != 0) && (this.rand.nextFloat() < splitChance))
 				{
-					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 180, next.difference);
+					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360, next.difference);
 					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * splitAngle, splitrot).scale(splitLength);
 					this.maxSplitID += 1;
 					this.parentIDMap.put(this.maxSplitID, next.splitID);
