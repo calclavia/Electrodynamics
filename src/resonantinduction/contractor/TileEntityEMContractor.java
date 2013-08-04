@@ -351,7 +351,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	
 	public boolean canFunction()
 	{
-		return isLatched() && worldObj.getBlockPowerInput(xCoord, yCoord, zCoord) > 0;
+		return isLatched() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 
 	@Override

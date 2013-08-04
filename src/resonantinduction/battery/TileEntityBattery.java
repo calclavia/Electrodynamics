@@ -19,9 +19,6 @@ public class TileEntityBattery extends TileEntityBase implements IInventory
 	private ItemStack[] inventory = new ItemStack[4 * 4];
 	private byte[] sideStatus = new byte[] { 0, 0, 0, 0, 0, 0 };
 
-	// TODO: Multiblock power storage.
-	private BatteryController controller;
-
 	@Override
 	public void updateEntity()
 	{
