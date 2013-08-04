@@ -16,6 +16,7 @@ import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
+import resonantinduction.entangler.ItemLinker;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.multimeter.BlockMultimeter;
 import resonantinduction.multimeter.ItemBlockMultimeter;
@@ -114,6 +115,7 @@ public class ResonantInduction
 	// Items
 	public static Item itemQuantumEntangler;
 	public static Item itemCapacitor;
+	public static Item itemLinker;
 
 	// Blocks
 	public static Block blockTesla;
@@ -141,9 +143,11 @@ public class ResonantInduction
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		itemCapacitor = new ItemCapacitor(getNextItemID());
+		itemLinker = new ItemLinker(getNextItemID());
 
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 		GameRegistry.registerItem(itemCapacitor, itemCapacitor.getUnlocalizedName());
+		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
@@ -163,7 +167,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
-		
+
 		TickRegistry.registerTickHandler(new BatteryManager(), Side.SERVER);
 
 		ResonantInduction.proxy.registerRenderers();

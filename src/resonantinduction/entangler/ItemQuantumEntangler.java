@@ -27,25 +27,6 @@ public class ItemQuantumEntangler extends ItemCoordLink
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
-	{
-		super.addInformation(itemstack, entityplayer, list, flag);
-
-		if (hasLink(itemstack))
-		{
-			Vector3 vec = getLink(itemstack);
-			int dimID = getLinkDim(itemstack);
-
-			list.add("Bound to [" + (int) vec.x + ", " + (int) vec.y + ", " + (int) vec.z + "], dimension '" + dimID + "'");
-		}
-		else
-		{
-			list.add("No block bound");
-		}
-	}
-
-	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int x, int y, int z, int side, float posX, float posY, float posZ)
 	{
 		if (!world.isRemote)

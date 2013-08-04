@@ -16,7 +16,7 @@ import resonantinduction.base.Vector3;
  * @author Calclavia
  * 
  */
-public class Pathfinding
+public class Pathfinder
 {
 	public Set<Vector3> openSet, closedSet;
 
@@ -28,7 +28,7 @@ public class Pathfinding
 
 	public Set<Vector3> results;
 
-	public Pathfinding(Vector3 target)
+	public Pathfinder(Vector3 target)
 	{
 		this.target = target;
 	}
