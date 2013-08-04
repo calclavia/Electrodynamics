@@ -109,10 +109,10 @@ public class Vector3
 	{
 		return this.x * vec2.x + this.y * vec2.y + this.z * vec2.z;
 	}
-	
+
 	public Vector3 getFromSide(ForgeDirection side)
 	{
-		return new Vector3(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
+		return new Vector3(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
 	}
 
 	/**
@@ -306,7 +306,7 @@ public class Vector3
 	{
 		return new Vector3(this.x, this.y, this.z);
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -316,22 +316,22 @@ public class Vector3
 		code = 31 * new Double(z).hashCode();
 		return code;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
-		if(!(obj instanceof Vector3))
+		if (!(obj instanceof Vector3))
 		{
 			return false;
 		}
-		
-		Vector3 vec = (Vector3)obj;
-		
-		if(vec.x != x || vec.y != y || vec.z != z)
+
+		Vector3 vec = (Vector3) obj;
+
+		if (vec.x != x || vec.y != y || vec.z != z)
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -339,5 +339,27 @@ public class Vector3
 	public String toString()
 	{
 		return "Vector3 [" + this.x + "," + this.y + "," + this.z + "]";
+	}
+
+	/**
+	 * @param world
+	 * @return
+	 */
+	public int getBlockID(World world)
+	{
+		return world.getBlockId((int) this.x, (int) this.y, (int) this.z);
+	}
+
+	public ForgeDirection toForgeDirection()
+	{
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (this.x == direction.offsetX && this.y == direction.offsetY && this.z == direction.offsetZ)
+			{
+				return direction;
+			}
+		}
+
+		return ForgeDirection.UNKNOWN;
 	}
 }

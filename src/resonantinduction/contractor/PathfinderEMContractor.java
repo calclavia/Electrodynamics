@@ -3,10 +3,13 @@
  */
 package resonantinduction.contractor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.Vector3;
 
@@ -16,7 +19,7 @@ import resonantinduction.base.Vector3;
  * @author Calclavia
  * 
  */
-public class Pathfinder
+public class PathfinderEMContractor
 {
 	public Set<Vector3> openSet, closedSet;
 
@@ -26,10 +29,13 @@ public class Pathfinder
 
 	public Vector3 target;
 
-	public Set<Vector3> results;
+	public List<Vector3> results;
 
-	public Pathfinder(Vector3 target)
+	private World world;
+
+	public PathfinderEMContractor(World world, Vector3 target)
 	{
+		this.world = world;
 		this.target = target;
 	}
 
@@ -43,11 +49,31 @@ public class Pathfinder
 		this.navMap = new HashMap<Vector3, Vector3>();
 		this.gScore = new HashMap<Vector3, Double>();
 		this.fScore = new HashMap<Vector3, Double>();
-		this.results = new HashSet<Vector3>();
+		this.results = new ArrayList<Vector3>();
 
 		this.openSet.add(start);
 		this.gScore.put(start, (double) 0);
 		this.fScore.put(start, this.gScore.get(start) + getEstimate(start, this.target));
+
+		int blockCount = 0;
+
+		for (int i = 0; i < 6; i++)
+		{
+			ForgeDirection direction = ForgeDirection.getOrientation(i);
+			Vector3 neighbor = this.target.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
+
+			if (!TileEntityEMContractor.canBePath(this.world, neighbor))
+			{
+				blockCount++;
+			}
+		}
+
+		if (blockCount >= 6)
+		{
+			return false;
+		}
+
+		double maxSearchDistance = start.distance(this.target) * 2;
 
 		while (!this.openSet.isEmpty())
 		{
@@ -63,12 +89,10 @@ public class Pathfinder
 				}
 			}
 
-			if (currentNode == null)
+			if (currentNode == null && start.distance(currentNode) > maxSearchDistance)
 			{
 				break;
 			}
-
-			// Break case here;
 
 			if (currentNode.equals(this.target))
 			{
@@ -82,24 +106,28 @@ public class Pathfinder
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
+
 				Vector3 neighbor = currentNode.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-				double tentativeG = this.gScore.get(currentNode);
-
-				if (this.closedSet.contains(neighbor))
+				if (TileEntityEMContractor.canBePath(this.world, neighbor))
 				{
-					if (tentativeG >= this.gScore.get(neighbor))
+					double tentativeG = this.gScore.get(currentNode) + currentNode.distance(neighbor);
+
+					if (this.closedSet.contains(neighbor))
 					{
-						continue;
+						if (tentativeG >= this.gScore.get(neighbor))
+						{
+							continue;
+						}
 					}
-				}
 
-				if (!this.openSet.contains(neighbor) || tentativeG < this.gScore.get(neighbor))
-				{
-					this.navMap.put(neighbor, currentNode);
-					this.gScore.put(neighbor, tentativeG);
-					this.fScore.put(neighbor, this.gScore.get(neighbor) + this.getEstimate(neighbor, this.target));
-					this.openSet.add(neighbor);
+					if (!this.openSet.contains(neighbor) || tentativeG < this.gScore.get(neighbor))
+					{
+						this.navMap.put(neighbor, currentNode);
+						this.gScore.put(neighbor, tentativeG);
+						this.fScore.put(neighbor, this.gScore.get(neighbor) + this.getEstimate(neighbor, this.target));
+						this.openSet.add(neighbor);
+					}
 				}
 			}
 		}
@@ -107,9 +135,9 @@ public class Pathfinder
 		return false;
 	}
 
-	private Set<Vector3> reconstructPath(HashMap<Vector3, Vector3> naviMap, Vector3 currentNode)
+	private List<Vector3> reconstructPath(HashMap<Vector3, Vector3> naviMap, Vector3 currentNode)
 	{
-		Set<Vector3> path = new HashSet<Vector3>();
+		List<Vector3> path = new ArrayList<Vector3>();
 		path.add(currentNode);
 
 		if (naviMap.containsKey(currentNode))

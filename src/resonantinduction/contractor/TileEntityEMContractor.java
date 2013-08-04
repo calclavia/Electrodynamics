@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
@@ -49,16 +50,16 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	 */
 	public boolean suck = true;
 
-	private Pathfinder pathfinder;
+	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
-	private TileEntityEMContractor linked;
+	public TileEntityEMContractor linked;
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		pushDelay = Math.max(0, pushDelay - 1);
+		this.pushDelay = Math.max(0, this.pushDelay - 1);
 
 		if (canFunction())
 		{
@@ -67,7 +68,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 			if (!suck && pushDelay == 0)
 			{
-				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, facing.ordinal());
+				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, this.facing.ordinal());
 
 				if (retrieved != null)
 				{
@@ -75,7 +76,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 					if (!worldObj.isRemote)
 					{
-						worldObj.spawnEntityInWorld(item);
+						this.worldObj.spawnEntityInWorld(item);
 					}
 
 					pushDelay = PUSH_DELAY;
@@ -100,144 +101,177 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 					}
 				}
 			}
-		}
 
-		if (operationBounds != null && canFunction())
-		{
-			energyStored -= ENERGY_USAGE;
-
-			for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
+			if (!this.suck && this.linked != null && !this.linked.isInvalid())
 			{
-				if (this.worldObj.isRemote && this.ticks % 5 == 0)
+				if (this.pathfinder != null)
 				{
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
+					for (int i = 0; i < this.pathfinder.results.size(); i++)
+					{
+						Vector3 result = this.pathfinder.results.get(i);
+
+						if (this.canBePath(this.worldObj, result))
+						{
+							if (i - 1 >= 0)
+							{
+								Vector3 prevResult = this.pathfinder.results.get(i - 1);
+								ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5));
+
+								Vector3 difference = prevResult.difference(result);
+								final ForgeDirection direction = difference.toForgeDirection();
+								System.out.println(direction);
+								AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
+								List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
+
+								for (EntityItem entityItem : entities)
+								{
+									this.moveEntity(entityItem, direction);
+								}
+							}
+						}
+						else
+						{
+							this.updatePath();
+							break;
+						}
+					}
 				}
+			}
+			else
+			{
+				this.pathfinder = null;
 
-				switch (facing)
+				if (operationBounds != null)
 				{
-					case DOWN:
-						if (!worldObj.isRemote)
+					energyStored -= ENERGY_USAGE;
+
+					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
+					{
+						if (this.worldObj.isRemote && this.ticks % 5 == 0)
 						{
-							entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
 						}
 
-						entityItem.motionX = 0;
-						entityItem.motionZ = 0;
-
-						if (!suck)
-						{
-							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
-					case UP:
-						if (!worldObj.isRemote)
-						{
-							entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
-						}
-
-						entityItem.motionX = 0;
-						entityItem.motionZ = 0;
-
-						if (!suck)
-						{
-							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
-					case NORTH:
-						if (!worldObj.isRemote)
-						{
-							entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-						}
-
-						entityItem.motionX = 0;
-						entityItem.motionY = 0;
-
-						if (!suck)
-						{
-							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
-					case SOUTH:
-						if (!worldObj.isRemote)
-						{
-							entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-						}
-
-						entityItem.motionX = 0;
-						entityItem.motionY = 0;
-
-						if (!suck)
-						{
-							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
-					case WEST:
-						if (!worldObj.isRemote)
-						{
-							entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-						}
-
-						entityItem.motionY = 0;
-						entityItem.motionZ = 0;
-
-						if (!suck)
-						{
-							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
-					case EAST:
-						if (!worldObj.isRemote)
-						{
-							entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-						}
-
-						entityItem.motionY = 0;
-						entityItem.motionZ = 0;
-
-						if (!suck)
-						{
-							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-						}
-						else
-						{
-							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-						}
-
-						entityItem.isAirBorne = true;
-						break;
+						this.moveEntity(entityItem, this.getFacing());
+					}
 				}
 			}
 		}
+	}
+
+	public static boolean canBePath(World world, Vector3 position)
+	{
+		return position.getBlockID(world) == 0 || position.getTileEntity(world) instanceof TileEntityEMContractor;
+	}
+
+	private void moveEntity(EntityItem entityItem, ForgeDirection direction)
+	{
+		switch (direction)
+		{
+			case DOWN:
+				entityItem.setPosition(Math.floor(entityItem.posX) + 0.5, entityItem.posY, Math.floor(entityItem.posZ) + 0.5);
+
+				entityItem.motionX = 0;
+				entityItem.motionZ = 0;
+
+				if (!suck)
+				{
+					entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
+				}
+
+				break;
+			case UP:
+
+				entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+
+				entityItem.motionX = 0;
+				entityItem.motionZ = 0;
+
+				if (!suck)
+				{
+					entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+				}
+
+				break;
+			case NORTH:
+
+				entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+
+				entityItem.motionX = 0;
+				entityItem.motionY = 0;
+
+				if (!suck)
+				{
+					entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+				}
+
+				break;
+			case SOUTH:
+
+				entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+
+				entityItem.motionX = 0;
+				entityItem.motionY = 0;
+
+				if (!suck)
+				{
+					entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+				}
+
+				break;
+			case WEST:
+
+				entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+
+				entityItem.motionY = 0;
+				entityItem.motionZ = 0;
+
+				if (!suck)
+				{
+					entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+				}
+
+				break;
+			case EAST:
+				entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+
+				entityItem.motionY = 0;
+				entityItem.motionZ = 0;
+
+				if (!suck)
+				{
+					entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+				}
+				else
+				{
+					entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+				}
+
+				break;
+		}
+
+		entityItem.isAirBorne = true;
+		entityItem.delayBeforeCanPickup = 1;
 	}
 
 	private EntityItem getItemWithPosition(ItemStack toSend)
@@ -357,7 +391,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public boolean canFunction()
 	{
-		return isLatched() && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return isLatched() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -434,6 +468,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	public void setLink(TileEntityEMContractor tileEntity)
 	{
 		this.linked = tileEntity;
+		this.linked.linked = this;
 		this.updatePath();
 	}
 
@@ -443,8 +478,8 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		if (this.linked != null)
 		{
-			this.pathfinder = new Pathfinder(new Vector3(this));
-			this.pathfinder.find(new Vector3(this.linked));
+			this.pathfinder = new PathfinderEMContractor(this.worldObj, new Vector3(this.linked));
+			this.pathfinder.find(new Vector3(this));
 		}
 	}
 }
