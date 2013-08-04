@@ -12,7 +12,8 @@ import resonantinduction.model.ModelEMContractor;
 
 public class RenderEMContractor extends TileEntitySpecialRenderer
 {
-	public ModelEMContractor MODEL = new ModelEMContractor();
+	public static final ModelEMContractor MODEL = new ModelEMContractor(false);
+	public static final ModelEMContractor MODEL_SPIN = new ModelEMContractor(true);
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor.png");
 	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor_push.png");
 
@@ -59,7 +60,13 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 			this.func_110628_a(TEXTURE_PUSH);
 		}
 		
-		MODEL.render(0.0625f, ((TileEntityEMContractor)t).canFunction() && ResonantInduction.proxy.isPaused());
+		if(((TileEntityEMContractor)t).canFunction() && !ResonantInduction.proxy.isPaused())
+		{
+			MODEL_SPIN.render(0.0625f);
+		}
+		else {
+			MODEL.render(0.0625f);
+		}
 
 		GL11.glPopMatrix();
 	}
