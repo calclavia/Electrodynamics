@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
+import resonantinduction.base.InventoryUtil;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -57,162 +58,35 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 			if (!suck && pushDelay == 0)
 			{
-				if (!(inventoryTile instanceof ISidedInventory))
+				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, facing.ordinal());
+				
+				if (retrieved != null)
 				{
-					for (int i = inventory.getSizeInventory() - 1; i >= 0; i--)
+					EntityItem item = getItemWithPosition(retrieved);
+
+					if (!worldObj.isRemote)
 					{
-						if (inventory.getStackInSlot(i) != null)
-						{
-							ItemStack toSend = inventory.getStackInSlot(i).copy();
-							toSend.stackSize = 1;
-
-							EntityItem item = getItemWithPosition(toSend);
-
-							if (!worldObj.isRemote)
-							{
-								worldObj.spawnEntityInWorld(item);
-							}
-
-							inventory.decrStackSize(i, 1);
-							pushDelay = PUSH_DELAY;
-
-							break;
-						}
+						worldObj.spawnEntityInWorld(item);
 					}
-				}
-				else
-				{
-					ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
-					int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
-
-					if (slots != null)
-					{
-						for (int get = slots.length - 1; get >= 0; get--)
-						{
-							int slotID = slots[get];
-
-							if (sidedInventory.getStackInSlot(slotID) != null)
-							{
-								ItemStack toSend = sidedInventory.getStackInSlot(slotID);
-								toSend.stackSize = 1;
-
-								if (sidedInventory.canExtractItem(slotID, toSend, facing.ordinal()))
-								{
-									EntityItem item = getItemWithPosition(toSend);
-
-									if (!worldObj.isRemote)
-									{
-										worldObj.spawnEntityInWorld(item);
-									}
-
-									sidedInventory.decrStackSize(slotID, 1);
-									pushDelay = PUSH_DELAY;
-
-									break;
-								}
-							}
-						}
-					}
+					
+					pushDelay = PUSH_DELAY;
 				}
 			}
 			else if (suck)
 			{
 				if (suckBounds != null)
 				{
-					List<EntityItem> list = worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds);
-
-					for (EntityItem item : list)
+					for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
 					{
-						ItemStack itemStack = item.getEntityItem();
-
-						if (!(inventoryTile instanceof ISidedInventory))
+						ItemStack remains = InventoryUtil.putStackInInventory(inventory, item.getEntityItem(), facing.ordinal());
+						
+						if (remains == null)
 						{
-							for (int i = 0; i <= inventory.getSizeInventory() - 1; i++)
-							{
-								if (inventory.isItemValidForSlot(i, itemStack))
-								{
-									ItemStack inSlot = inventory.getStackInSlot(i);
-
-									if (inSlot == null)
-									{
-										inventory.setInventorySlotContents(i, itemStack);
-										item.setDead();
-										break;
-									}
-									else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
-									{
-										if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
-										{
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize += inSlot.stackSize;
-
-											inventory.setInventorySlotContents(i, toSet);
-											item.setDead();
-											break;
-										}
-										else
-										{
-											int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
-
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize = inSlot.getMaxStackSize();
-
-											ItemStack remains = itemStack.copy();
-											remains.stackSize = rejects;
-
-											inventory.setInventorySlotContents(i, toSet);
-											item.setEntityItemStack(remains);
-										}
-									}
-								}
-							}
+							item.setDead();
 						}
-						else
+						else 
 						{
-							ISidedInventory sidedInventory = (ISidedInventory) inventoryTile;
-							int[] slots = sidedInventory.getAccessibleSlotsFromSide(facing.ordinal());
-
-							for (int get = 0; get <= slots.length - 1; get++)
-							{
-								int slotID = slots[get];
-
-								if (sidedInventory.isItemValidForSlot(slotID, itemStack) && sidedInventory.canInsertItem(slotID, itemStack, facing.ordinal()))
-								{
-									ItemStack inSlot = inventory.getStackInSlot(slotID);
-
-									if (inSlot == null)
-									{
-										inventory.setInventorySlotContents(slotID, itemStack);
-										item.setDead();
-										break;
-									}
-									else if (inSlot.isItemEqual(itemStack) && inSlot.stackSize < inSlot.getMaxStackSize())
-									{
-										if (inSlot.stackSize + itemStack.stackSize <= inSlot.getMaxStackSize())
-										{
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize += inSlot.stackSize;
-
-											inventory.setInventorySlotContents(slotID, toSet);
-											item.setDead();
-											break;
-										}
-										else
-										{
-											int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
-
-											ItemStack toSet = itemStack.copy();
-											toSet.stackSize = inSlot.getMaxStackSize();
-
-											ItemStack remains = itemStack.copy();
-											remains.stackSize = rejects;
-
-											inventory.setInventorySlotContents(slotID, toSet);
-											item.setEntityItemStack(remains);
-										}
-									}
-								}
-							}
+							item.setEntityItemStack(remains);
 						}
 					}
 				}
@@ -221,139 +95,132 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 		if (operationBounds != null && canFunction())
 		{
-			List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, operationBounds);
-			
 			energyStored -= ENERGY_USAGE;
 
-			for (Entity entity : list)
+			for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
 			{
-				if (entity instanceof EntityItem)
+				switch (facing)
 				{
-					EntityItem entityItem = (EntityItem) entity;
+					case DOWN:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+						}
 
-					switch (facing)
-					{
-						case DOWN:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
-							}
+						entityItem.motionX = 0;
+						entityItem.motionZ = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionZ = 0;
+						if (!suck)
+						{
+							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
-							}
+						entityItem.isAirBorne = true;
+						break;
+					case UP:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+						}
 
-							entityItem.isAirBorne = true;
-							break;
-						case UP:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
-							}
+						entityItem.motionX = 0;
+						entityItem.motionZ = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionZ = 0;
+						if (!suck)
+						{
+							entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionY = Math.min(MAX_SPEED, entityItem.motionY + .04 + ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionY = Math.max(-MAX_SPEED, entityItem.motionY - ACCELERATION);
-							}
+						entityItem.isAirBorne = true;
+						break;
+					case NORTH:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+						}
 
-							entityItem.isAirBorne = true;
-							break;
-						case NORTH:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-							}
+						entityItem.motionX = 0;
+						entityItem.motionY = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionY = 0;
+						if (!suck)
+						{
+							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-							}
+						entityItem.isAirBorne = true;
+						break;
+					case SOUTH:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+						}
 
-							entityItem.isAirBorne = true;
-							break;
-						case SOUTH:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
-							}
+						entityItem.motionX = 0;
+						entityItem.motionY = 0;
 
-							entityItem.motionX = 0;
-							entityItem.motionY = 0;
+						if (!suck)
+						{
+							entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionZ = Math.min(MAX_SPEED, entityItem.motionZ + ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionZ = Math.max(-MAX_SPEED, entityItem.motionZ - ACCELERATION);
-							}
+						entityItem.isAirBorne = true;
+						break;
+					case WEST:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+						}
 
-							entityItem.isAirBorne = true;
-							break;
-						case WEST:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-							}
+						entityItem.motionY = 0;
+						entityItem.motionZ = 0;
 
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
+						if (!suck)
+						{
+							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-							}
+						entityItem.isAirBorne = true;
+						break;
+					case EAST:
+						if (!worldObj.isRemote)
+						{
+							entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+						}
 
-							entityItem.isAirBorne = true;
-							break;
-						case EAST:
-							if (!worldObj.isRemote)
-							{
-								entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
-							}
+						entityItem.motionY = 0;
+						entityItem.motionZ = 0;
 
-							entityItem.motionY = 0;
-							entityItem.motionZ = 0;
+						if (!suck)
+						{
+							entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
+						}
+						else
+						{
+							entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
+						}
 
-							if (!suck)
-							{
-								entityItem.motionX = Math.min(MAX_SPEED, entityItem.motionX + ACCELERATION);
-							}
-							else
-							{
-								entityItem.motionX = Math.max(-MAX_SPEED, entityItem.motionX - ACCELERATION);
-							}
-
-							entityItem.isAirBorne = true;
-							break;
-					}
+						entityItem.isAirBorne = true;
+						break;
 				}
 			}
 		}
