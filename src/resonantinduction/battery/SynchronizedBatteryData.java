@@ -20,6 +20,11 @@ public class SynchronizedBatteryData
 	
 	public boolean didTick;
 	
+	public int getVolume()
+	{
+		return length*width*height;
+	}
+	
 	@Override
 	public int hashCode()
 	{

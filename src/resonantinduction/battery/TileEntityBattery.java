@@ -3,6 +3,7 @@
  */
 package resonantinduction.battery;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,19 +11,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonantinduction.PacketHandler;
 import resonantinduction.api.IBattery;
+import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.TileEntityBase;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * A modular battery with no GUI.
  * 
- * @author Calclavia
+ * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityBase
+public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 {
 	public Set<ItemStack> inventory = new HashSet<ItemStack>();
-	
-	private byte[] sideStatus = new byte[] { 0, 0, 0, 0, 0, 0 };
 	
 	public SynchronizedBatteryData structure;
 	
@@ -30,13 +33,14 @@ public class TileEntityBattery extends TileEntityBase
 	
 	public boolean clientHasStructure;
 	
-	public int inventoryID;
+	public int inventoryID = BatteryManager.WILDCARD;
 
 	@Override
 	public void updateEntity()
 	{
+		//DO NOT SUPER, CALCLAVIA!
+		
 		ticks++;
-		//DO NOT SUPER
 		
 		if(worldObj.isRemote)
 		{
@@ -70,7 +74,7 @@ public class TileEntityBattery extends TileEntityBase
 			
 			if(prevStructure != (structure != null))
 			{
-				//packet
+				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
 			}
 			
 			prevStructure = structure != null;
@@ -164,5 +168,40 @@ public class TileEntityBattery extends TileEntityBase
 		}
 
 		return max;
+	}
+
+	@Override
+	public void handle(ByteArrayDataInput input) 
+	{
+		try {
+			if(structure == null)
+			{
+				structure = new SynchronizedBatteryData();
+			}
+			
+			clientHasStructure = input.readBoolean();
+			
+			if(clientHasStructure)
+			{
+				structure.height = input.readInt();
+				structure.length = input.readInt();
+				structure.width = input.readInt();
+			}
+		} catch(Exception e) {}
+	}
+
+	@Override
+	public ArrayList getNetworkedData(ArrayList data)
+	{
+		data.add(structure != null);
+		
+		if(structure != null)
+		{
+			data.add(structure.height);
+			data.add(structure.length);
+			data.add(structure.width);
+		}
+		
+		return data;
 	}
 }
