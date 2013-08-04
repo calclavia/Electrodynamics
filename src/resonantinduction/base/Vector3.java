@@ -54,6 +54,11 @@ public class Vector3
 		this(entity.posX, entity.posY, entity.posZ);
 	}
 
+	public Vector3(ForgeDirection direction)
+	{
+		this(direction.offsetX, direction.offsetY, direction.offsetZ);
+	}
+
 	public Vector3 scale(double amount)
 	{
 		return this.scale(new Vector3(amount));
