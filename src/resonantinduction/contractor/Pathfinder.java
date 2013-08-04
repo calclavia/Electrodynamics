@@ -114,7 +114,7 @@ public class Pathfinder
 
 		if (naviMap.containsKey(currentNode))
 		{
-			path.addAll(this.reconstructPath(naviMap, currentNode));
+			path.addAll(this.reconstructPath(naviMap, naviMap.get(currentNode)));
 		}
 
 		return path;
