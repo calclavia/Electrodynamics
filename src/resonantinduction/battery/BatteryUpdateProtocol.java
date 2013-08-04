@@ -2,6 +2,7 @@ package resonantinduction.battery;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
@@ -217,7 +218,7 @@ public class BatteryUpdateProtocol
 		if(oldStructure != null)
 		{
 			ArrayList<Set<ItemStack>> inventories = SetUtil.split(oldStructure.inventory, iteratedNodes.size());
-			ArrayList<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
+			List<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
 			
 			for(int i = 0; i < iterList.size(); i++)
 			{

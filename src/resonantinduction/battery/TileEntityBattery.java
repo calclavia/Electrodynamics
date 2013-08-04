@@ -39,17 +39,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		
 		ticks++;
 		
-		if(worldObj.isRemote)
-		{
-			if(structure == null)
-			{
-				structure = new SynchronizedBatteryData();
-			}
-		}
-		
 		if(!worldObj.isRemote)
 		{
-			if(ticks == 5)
+			if(ticks == 5 && !structure.isMultiblock)
 			{
 				update();
 			}

@@ -70,7 +70,12 @@ public class SetUtil
 		int remain = set.size()%divide;
 		int size = (set.size()/divide)-remain;
 		
-		ArrayList<Set<V>> toReturn = new ArrayList<Set<V>>(divide);
+		ArrayList<Set<V>> toReturn = new ArrayList<Set<V>>();
+		
+		for(int i = 0; i < divide; i++)
+		{
+			toReturn.add(i, new HashSet<V>());
+		}
 		
 		for(Set<V> iterSet : toReturn)
 		{
@@ -105,8 +110,8 @@ public class SetUtil
 		return toReturn;
 	}
 	
-	public static <V> ArrayList<V> asList(Set<V> set)
+	public static <V> List<V> asList(Set<V> set)
 	{
-		return (ArrayList<V>)Arrays.asList(set.toArray());
+		return (List<V>)Arrays.asList(set.toArray());
 	}
 }
