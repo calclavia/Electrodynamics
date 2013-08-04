@@ -532,8 +532,14 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		if (this.linked != null)
 		{
-			this.pathfinder = new PathfinderEMContractor(this.worldObj, new Vector3(this.linked).translate(new Vector3(this.linked.getDirection())));
-			this.pathfinder.find(new Vector3(this).translate(new Vector3(this.getDirection())));
+			Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
+			Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
+
+			if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
+			{
+				this.pathfinder = new PathfinderEMContractor(this.worldObj, target);
+				this.pathfinder.find(start);
+			}
 		}
 	}
 
