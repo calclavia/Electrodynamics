@@ -6,6 +6,7 @@ package resonantinduction.battery;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,17 +26,67 @@ public class TileEntityBattery extends TileEntityBase
 	
 	public SynchronizedBatteryData structure;
 	
-	public int inventoryID;
+	public boolean prevStructure;
 	
-	public TileEntityBattery()
-	{
-		doPacket = false;
-	}
+	public boolean clientHasStructure;
+	
+	public int inventoryID;
 
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
+		ticks++;
+		//DO NOT SUPER
+		
+		if(worldObj.isRemote)
+		{
+			if(structure == null)
+			{
+				structure = new SynchronizedBatteryData();
+			}
+			
+			prevStructure = clientHasStructure;
+		}
+		
+		if(playersUsing.size() > 0 && ((worldObj.isRemote && !clientHasStructure) || (!worldObj.isRemote && structure == null)))
+		{
+			for(EntityPlayer player : playersUsing)
+			{
+				player.closeScreen();
+			}
+		}
+		
+		if(!worldObj.isRemote)
+		{
+			if(inventoryID != -1 && structure == null)
+			{
+				BatteryManager.updateCache(inventoryID, inventory, this);
+			}
+			
+			if(structure == null && ticks == 5)
+			{
+				update();
+			}
+			
+			if(prevStructure != (structure != null))
+			{
+				//packet
+			}
+			
+			prevStructure = structure != null;
+			
+			if(structure != null)
+			{
+				structure.didTick = false;
+				
+				if(inventoryID != -1)
+				{
+					BatteryManager.updateCache(inventoryID, structure.inventory, this);
+					
+					inventory = structure.inventory;
+				}
+			}
+		}
 	}
 	
 	@Override

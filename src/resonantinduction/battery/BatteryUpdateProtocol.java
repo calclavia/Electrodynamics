@@ -156,8 +156,14 @@ public class BatteryUpdateProtocol
 				structure.height = Math.abs(ymax-ymin)+1;
 				structure.width = Math.abs(zmax-zmin)+1;
 	
-				if(structure.locations.contains(new Vector3(pointer)))
+				if(structure.locations.contains(new Vector3(pointer)) && structure.height > 1 && structure.length > 1 && structure.width > 1)
 				{
+					System.out.println("Bingo");
+					System.out.println("Height: " + structure.height);
+					System.out.println("Length: " + structure.length);
+					System.out.println("Width: " + structure.width);
+					System.out.println("Volume: " + structure.locations.size());
+					
 					structureFound = structure;
 					return;
 				}

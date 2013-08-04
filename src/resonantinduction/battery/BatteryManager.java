@@ -53,7 +53,7 @@ public class BatteryManager implements ITickHandler
      * @param inventory - inventory of the battery
      * @param tileEntity - battery TileEntity
      */
-    public static void updateCache(int inventoryID, HashSet<ItemStack> inventory, TileEntityBattery tileEntity)
+    public static void updateCache(int inventoryID, Set<ItemStack> inventory, TileEntityBattery tileEntity)
     {
     	if(!dynamicInventories.containsKey(inventoryID))
     	{
