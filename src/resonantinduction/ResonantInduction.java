@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
@@ -109,6 +110,7 @@ public class ResonantInduction
 
 	// Items
 	public static Item itemQuantumEntangler;
+	public static Item itemCapacitor;
 
 	// Blocks
 	public static Block blockTesla;
@@ -135,7 +137,10 @@ public class ResonantInduction
 
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
+		itemCapacitor = new ItemCapacitor(getNextItemID());
+
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
+		GameRegistry.registerItem(itemCapacitor, itemCapacitor.getUnlocalizedName());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());

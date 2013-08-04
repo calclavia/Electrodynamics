@@ -6,6 +6,7 @@ package resonantinduction.battery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import resonantinduction.api.IBattery;
 import resonantinduction.base.TileEntityBase;
 
 /**
@@ -18,7 +19,7 @@ public class TileEntityBattery extends TileEntityBase implements IInventory
 	private ItemStack[] inventory = new ItemStack[4 * 4];
 	private byte[] sideStatus = new byte[] { 0, 0, 0, 0, 0, 0 };
 
-	//TODO: Multiblock power storage.
+	// TODO: Multiblock power storage.
 	private BatteryController controller;
 
 	@Override
@@ -29,10 +30,22 @@ public class TileEntityBattery extends TileEntityBase implements IInventory
 
 	public float getMaxEnergyStored()
 	{
-		
-		
-		
-		return 0;
+		float max = 0;
+
+		for (int i = 0; i < this.getSizeInventory(); i++)
+		{
+			ItemStack itemStack = this.getStackInSlot(i);
+
+			if (itemStack != null)
+			{
+				if (itemStack.getItem() instanceof IBattery)
+				{
+					max += ((IBattery) itemStack.getItem()).getMaxEnergyStored();
+				}
+			}
+		}
+
+		return max;
 	}
 
 	/**
