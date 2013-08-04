@@ -48,4 +48,44 @@ public class SetUtil
 		
 		return toReturn;
 	}
+	
+	public static <V> Set<V>[] split(Set<V> set, int divide)
+	{
+		int remain = set.size()%divide;
+		int size = (set.size()/divide)-remain;
+		
+		Set<V>[] toReturn = new HashSet[divide]; 
+		
+		for(Set<V> iterSet : toReturn)
+		{
+			Set<V> removed = new HashSet<V>();
+			
+			int toAdd = size;
+			
+			if(remain > 0)
+			{
+				remain--;
+				toAdd++;
+			}
+			
+			for(V obj : set)
+			{
+				if(toAdd == 0)
+				{
+					break;
+				}
+				
+				iterSet.add(obj);
+				removed.add(obj);
+				toAdd--;
+			}
+			
+			for(V obj : removed)
+			{
+				set.remove(obj);
+			}
+		}
+		
+		return toReturn;
+	}
 }
