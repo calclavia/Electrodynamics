@@ -5,7 +5,8 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelEMContractor extends ModelBase
 {
-	// fields
+	public boolean doSpin;
+	
 	ModelRenderer frame1;
 	ModelRenderer frame2;
 	ModelRenderer frame3;
@@ -37,8 +38,10 @@ public class ModelEMContractor extends ModelBase
 	ModelRenderer poletop4;
 	ModelRenderer nase_depth2;
 
-	public ModelEMContractor()
+	public ModelEMContractor(boolean spin)
 	{
+		doSpin = spin;
+		
 		textureWidth = 128;
 		textureHeight = 128;
 
@@ -224,9 +227,9 @@ public class ModelEMContractor extends ModelBase
 		setRotation(nase_depth2, 0F, 0F, 0F);
 	}
 
-	public void render(float f5, boolean rotate)
+	public void render(float f5)
 	{
-		if (rotate)
+		if (doSpin)
 		{
 			Coil1.rotateAngleY = (float) Math.toRadians(Math.toDegrees(Coil1.rotateAngleY) + 3 < 360 ? Math.toDegrees(Coil1.rotateAngleY) + 3 : 0);
 			coil2.rotateAngleY = (float) Math.toRadians(Math.toDegrees(coil2.rotateAngleY) + 3 < 360 ? Math.toDegrees(coil2.rotateAngleY) + 3 : 0);
