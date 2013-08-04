@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
+import resonantinduction.base.Vector3;
 import resonantinduction.entangler.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -30,7 +31,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
 		TileEntityEMContractor contractor = (TileEntityEMContractor) par1World.getBlockTileEntity(par2, par3, par4);
 
@@ -39,10 +40,14 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 			if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
 			{
 				ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
-
-				if (link.getLink(entityPlayer.getCurrentEquippedItem()) != null)
+				Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
+				
+				if (linkVec != null)
 				{
-
+					if(linkVec.getTileEntity(world) instanceof TileEntityEMContractor)
+					{
+						contractor.setLink((TileEntityEMContractor)linkVec.getTileEntity(world));
+					}
 				}
 
 				return false;
