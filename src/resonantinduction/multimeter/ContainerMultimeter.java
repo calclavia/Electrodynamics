@@ -15,9 +15,11 @@ import net.minecraft.inventory.Slot;
 public class ContainerMultimeter extends Container
 {
 	private final int yDisplacement = 51;
+	private TileEntityMultimeter tileEntity;
 
 	public ContainerMultimeter(InventoryPlayer inventoryPlayer, TileEntityMultimeter tileEntity)
 	{
+		this.tileEntity = tileEntity;
 		int i;
 
 		for (i = 0; i < 3; ++i)
@@ -32,6 +34,15 @@ public class ContainerMultimeter extends Container
 		{
 			this.addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + yDisplacement));
 		}
+
+		this.tileEntity.playersUsing.add(inventoryPlayer.player);
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer entityPlayer)
+	{
+		this.tileEntity.playersUsing.remove(entityPlayer);
+		super.onContainerClosed(entityPlayer);
 	}
 
 	@Override

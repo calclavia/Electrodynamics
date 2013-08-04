@@ -3,7 +3,13 @@
  */
 package resonantinduction.base;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 /**
  * @author Calclavia
@@ -12,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityBase extends TileEntity
 {
 	protected long ticks = 0;
+	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	public void initiate()
 	{
@@ -28,5 +35,9 @@ public class TileEntityBase extends TileEntity
 			this.initiate();
 		}
 
+		for (EntityPlayer player : this.playersUsing)
+		{
+			PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
+		}
 	}
 }
