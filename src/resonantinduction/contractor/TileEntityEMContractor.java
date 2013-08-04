@@ -71,8 +71,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			if (this.tempLinkVector.getTileEntity(this.worldObj) instanceof TileEntityEMContractor)
 			{
 				this.setLink((TileEntityEMContractor) this.tempLinkVector.getTileEntity(this.worldObj), true);
-				System.out.println("TEST"+this.linked);
-
+				System.out.println("TEST" + this.linked);
 			}
 
 			this.tempLinkVector = null;
@@ -452,7 +451,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			energyStored = input.readFloat();
 			this.dyeID = input.readInt();
 
-			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+			if (input.readBoolean())
+			{
+				this.tempLinkVector = new Vector3(input.readInt(), input.readInt(), input.readInt());
+			}
+
+			this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 			updateBounds();
 		}
 		catch (Exception e)
@@ -467,6 +471,18 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		data.add(suck);
 		data.add(energyStored);
 		data.add(this.dyeID);
+
+		if (this.linked != null)
+		{
+			data.add(true);
+			data.add(this.linked.xCoord);
+			data.add(this.linked.yCoord);
+			data.add(this.linked.zCoord);
+		}
+		else
+		{
+			data.add(false);
+		}
 
 		return data;
 	}
