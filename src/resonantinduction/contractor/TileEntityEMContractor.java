@@ -49,8 +49,9 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	 */
 	public boolean suck = true;
 
-	private Pathfinding pathfinder;
+	private Pathfinder pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
+	private TileEntityEMContractor linked;
 
 	@Override
 	public void updateEntity()
@@ -425,5 +426,25 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	public boolean canReceive(TileEntity transferTile)
 	{
 		return true;
+	}
+
+	/**
+	 * Link between two TileEntities, do pathfinding operation.
+	 */
+	public void setLink(TileEntityEMContractor tileEntity)
+	{
+		this.linked = tileEntity;
+		this.updatePath();
+	}
+
+	public void updatePath()
+	{
+		this.pathfinder = null;
+
+		if (this.linked != null)
+		{
+			this.pathfinder = new Pathfinder(new Vector3(this.linked));
+			this.pathfinder.find(new Vector3(this));
+		}
 	}
 }
