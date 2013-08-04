@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.base.SetUtil;
 import resonantinduction.base.Vector3;
 import resonantinduction.battery.BatteryManager.BatteryCache;
 
@@ -249,27 +250,7 @@ public class BatteryUpdateProtocol
 				idFound = BatteryManager.getUniqueInventoryID();
 			}
 			
-			Set<ItemStack> newInventory = new HashSet<ItemStack>();
-			
-			if(cache.inventory.size() <= structureFound.getMaxCells())
-			{
-				newInventory = cache.inventory;
-			}
-			else {
-				int count = 0;
-				
-				for(ItemStack itemStack : cache.inventory)
-				{
-					count++;
-					
-					newInventory.add(itemStack);
-					
-					if(count == structureFound.getMaxCells())
-					{
-						break;
-					}
-				}
-			}
+			Set<ItemStack> newInventory = SetUtil.cap(cache.inventory, structureFound.getMaxCells());
 			
 			structureFound.inventory = newInventory;
 			
