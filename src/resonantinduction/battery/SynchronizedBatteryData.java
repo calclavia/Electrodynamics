@@ -25,6 +25,11 @@ public class SynchronizedBatteryData
 		return length*width*height;
 	}
 	
+	public int getMaxCells()
+	{
+		return getVolume()*BatteryManager.CELLS_PER_BATTERY;
+	}
+	
 	@Override
 	public int hashCode()
 	{

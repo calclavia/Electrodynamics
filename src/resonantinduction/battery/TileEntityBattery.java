@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.IBattery;
 import resonantinduction.base.IPacketReceiver;
+import resonantinduction.base.SetUtil;
 import resonantinduction.base.TileEntityBase;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -25,11 +26,11 @@ import com.google.common.io.ByteArrayDataInput;
  */
 public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 {
-	public Set<ItemStack> inventory = new HashSet<ItemStack>();
+	public Set<ItemStack> cachedInventory = new HashSet<ItemStack>();
 	
 	public SynchronizedBatteryData structure;
 	
-	public boolean prevStructure;
+	public SynchronizedBatteryData prevStructure;
 	
 	public boolean clientHasStructure;
 	
@@ -48,8 +49,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			{
 				structure = new SynchronizedBatteryData();
 			}
-			
-			prevStructure = clientHasStructure;
 		}
 		
 		if(playersUsing.size() > 0 && ((worldObj.isRemote && !clientHasStructure) || (!worldObj.isRemote && structure == null)))
@@ -64,7 +63,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		{
 			if(inventoryID != -1 && structure == null)
 			{
-				BatteryManager.updateCache(inventoryID, inventory, this);
+				BatteryManager.updateCache(inventoryID, cachedInventory, this);
 			}
 			
 			if(structure == null && ticks == 5)
@@ -72,12 +71,12 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				update();
 			}
 			
-			if(prevStructure != (structure != null))
+			if(prevStructure != structure)
 			{
 				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
 			}
 			
-			prevStructure = structure != null;
+			prevStructure = structure;
 			
 			if(structure != null)
 			{
@@ -87,7 +86,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				{
 					BatteryManager.updateCache(inventoryID, structure.inventory, this);
 					
-					inventory = structure.inventory;
+					cachedInventory = structure.inventory;
 				}
 			}
 		}
@@ -105,13 +104,13 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	        if(inventoryID != BatteryManager.WILDCARD)
 	        {
 	            NBTTagList tagList = nbtTags.getTagList("Items");
-	            inventory = new HashSet<ItemStack>();
+	            cachedInventory = new HashSet<ItemStack>();
 
 	            for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
 	            {
 	                NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
 
-                    inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
+                    cachedInventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
 	            }
 	        }
         }
@@ -126,7 +125,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         
         NBTTagList tagList = new NBTTagList();
 
-        for(ItemStack itemStack : inventory)
+        for(ItemStack itemStack : cachedInventory)
         {
             if(itemStack != null)
             {
@@ -151,12 +150,31 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			}
 		}
 	}
+	
+	/**
+	 * @return added energy
+	 */
+	public float addEnergy(float amount)
+	{
+		//go from top to bottom
+		return 0;
+	}
+	
+	/**
+	 * @return removed energy
+	 */
+	public float removeEnergy(float amount)
+	{
+		Set inverse = SetUtil.inverse(structure.inventory);
+		//go from bottom to top
+		return 0;
+	}
 
 	public float getMaxEnergyStored()
 	{
 		float max = 0;
 
-		for (ItemStack itemStack : inventory)
+		for (ItemStack itemStack : cachedInventory)
 		{
 			if (itemStack != null)
 			{
@@ -168,6 +186,24 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		}
 
 		return max;
+	}
+	
+	public float getEnergyStored()
+	{
+		float energy = 0;
+		
+		for (ItemStack itemStack : cachedInventory)
+		{
+			if (itemStack != null)
+			{
+				if (itemStack.getItem() instanceof IBattery)
+				{
+					energy += ((IBattery) itemStack.getItem()).getEnergyStored(itemStack);
+				}
+			}
+		}
+		
+		return energy;
 	}
 
 	@Override

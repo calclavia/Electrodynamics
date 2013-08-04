@@ -17,6 +17,7 @@ import cpw.mods.fml.common.TickType;
 public class BatteryManager implements ITickHandler
 {
 	public static final int WILDCARD = -1;
+	public static final int CELLS_PER_BATTERY = 16;
 	
 	public static Map<Integer, BatteryCache> dynamicInventories = new HashMap<Integer, BatteryCache>();
 	
@@ -36,7 +37,7 @@ public class BatteryManager implements ITickHandler
     		
     		if(tileEntity != null)
     		{
-    			tileEntity.inventory = new HashSet<ItemStack>();
+    			tileEntity.cachedInventory = new HashSet<ItemStack>();
     			tileEntity.inventoryID = WILDCARD;
     		}
     	}
@@ -157,7 +158,7 @@ public class BatteryManager implements ITickHandler
 						
 						if(battery != null)
 						{
-							battery.inventory = new HashSet<ItemStack>();
+							battery.cachedInventory = new HashSet<ItemStack>();
 							battery.inventoryID = WILDCARD;
 						}
 					}

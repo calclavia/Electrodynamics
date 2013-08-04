@@ -3,6 +3,7 @@ package resonantinduction.battery;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -248,7 +249,29 @@ public class BatteryUpdateProtocol
 				idFound = BatteryManager.getUniqueInventoryID();
 			}
 			
-			structureFound.inventory = cache.inventory;
+			Set<ItemStack> newInventory = new HashSet<ItemStack>();
+			
+			if(cache.inventory.size() <= structureFound.getMaxCells())
+			{
+				newInventory = cache.inventory;
+			}
+			else {
+				int count = 0;
+				
+				for(ItemStack itemStack : cache.inventory)
+				{
+					count++;
+					
+					newInventory.add(itemStack);
+					
+					if(count == structureFound.getMaxCells())
+					{
+						break;
+					}
+				}
+			}
+			
+			structureFound.inventory = newInventory;
 			
 			for(Vector3 obj : structureFound.locations)
 			{
@@ -256,7 +279,7 @@ public class BatteryUpdateProtocol
 				
 				tileEntity.inventoryID = idFound;
 				tileEntity.structure = structureFound;
-				tileEntity.inventory = cache.inventory;
+				tileEntity.cachedInventory = newInventory;
 			}
 		}
 		else {
