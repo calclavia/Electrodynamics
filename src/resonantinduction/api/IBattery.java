@@ -3,13 +3,23 @@
  */
 package resonantinduction.api;
 
+import net.minecraft.item.ItemStack;
+
 /**
+ * TODO: Use UE interface after ModJAm
+ * 
  * @author Calclavia
  * 
  */
 public interface IBattery
 {
-	public float getEnergyStored();
+	public float getEnergyStored(ItemStack itemStack);
 
 	public float getMaxEnergyStored();
+
+	/**
+	 * @param itemStack
+	 * @param amount
+	 */
+	public void setEnergyStored(ItemStack itemStack, float amount);
 }
