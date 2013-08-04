@@ -134,11 +134,13 @@ public class BatteryUpdateProtocol
 	                        locations.add(new Vector3(tile).translate(new Vector3(x, y, z)));
 	                    }
 		            }
+		            
 		            if(!rightBlocks)
 		            {
 		                break;
 		            }
 		        }
+		        
 		        if(!rightBlocks)
 		        {
 		        	break;
@@ -156,14 +158,8 @@ public class BatteryUpdateProtocol
 				structure.height = Math.abs(ymax-ymin)+1;
 				structure.width = Math.abs(zmax-zmin)+1;
 	
-				if(structure.locations.contains(new Vector3(pointer)) && structure.height > 1 && structure.length > 1 && structure.width > 1)
+				if(structure.locations.contains(new Vector3(pointer)))
 				{
-					System.out.println("Bingo");
-					System.out.println("Height: " + structure.height);
-					System.out.println("Length: " + structure.length);
-					System.out.println("Width: " + structure.width);
-					System.out.println("Volume: " + structure.locations.size());
-					
 					structureFound = structure;
 					return;
 				}
@@ -186,25 +182,6 @@ public class BatteryUpdateProtocol
 		}
 	}
 	
-	/**
-	 * Whether or not the block at the specified location is an air block.
-	 * @param x - x coordinate
-	 * @param y - y coordinate
-	 * @param z - z coordinate
-	 * @return
-	 */
-	private boolean isAir(int x, int y, int z)
-	{
-		return pointer.worldObj.isAirBlock(x, y, z);
-	}
-	
-	/**
-	 * Whether or not the block at the specified location is a battery.
-	 * @param x - x coordinate
-	 * @param y - y coordinate
-	 * @param z - z coordinate
-	 * @return
-	 */
 	private boolean isViableNode(int x, int y, int z)
 	{
 		if(pointer.worldObj.getBlockTileEntity(x, y, z) instanceof TileEntityBattery)
@@ -236,6 +213,12 @@ public class BatteryUpdateProtocol
 					return;
 				}
 			}
+			
+			System.out.println("Bingo");
+			System.out.println("Height: " + structureFound.height);
+			System.out.println("Length: " + structureFound.length);
+			System.out.println("Width: " + structureFound.width);
+			System.out.println("Volume: " + structureFound.locations.size());
 			
 			int idFound = BatteryManager.WILDCARD;
 			
