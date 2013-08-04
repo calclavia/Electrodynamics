@@ -20,6 +20,7 @@ import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.InventoryUtil;
 import resonantinduction.base.TileEntityBase;
 import resonantinduction.base.Vector3;
+import resonantinduction.tesla.TileEntityTesla;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -53,6 +54,9 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
 	public TileEntityEMContractor linked;
+
+	/** Color of beam */
+	private int dyeID = 13;
 
 	@Override
 	public void updateEntity()
@@ -115,7 +119,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 							if (i - 1 >= 0)
 							{
 								Vector3 prevResult = this.pathfinder.results.get(i - 1);
-								ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5));
+								ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 
 								Vector3 difference = prevResult.difference(result);
 								final ForgeDirection direction = difference.toForgeDirection();
@@ -149,7 +153,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 					{
 						if (this.worldObj.isRemote && this.ticks % 5 == 0)
 						{
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID]);
 						}
 
 						this.moveEntity(entityItem, this.getFacing(), new Vector3(this));
@@ -395,25 +399,27 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbtTags)
+	public void readFromNBT(NBTTagCompound nbt)
 	{
-		super.readFromNBT(nbtTags);
+		super.readFromNBT(nbt);
 
-		facing = ForgeDirection.getOrientation(nbtTags.getInteger("facing"));
-		suck = nbtTags.getBoolean("suck");
-		energyStored = nbtTags.getFloat("energyStored");
+		this.facing = ForgeDirection.getOrientation(nbt.getInteger("facing"));
+		this.suck = nbt.getBoolean("suck");
+		this.energyStored = nbt.getFloat("energyStored");
+		this.dyeID = nbt.getInteger("dyeID");
 
 		updateBounds();
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbtTags)
+	public void writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbtTags);
+		super.writeToNBT(nbt);
 
-		nbtTags.setInteger("facing", facing.ordinal());
-		nbtTags.setBoolean("suck", suck);
-		nbtTags.setFloat("energyStored", energyStored);
+		nbt.setInteger("facing", facing.ordinal());
+		nbt.setBoolean("suck", suck);
+		nbt.setFloat("energyStored", energyStored);
+		nbt.setInteger("dyeID", this.dyeID);
 	}
 
 	@Override
@@ -424,6 +430,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
 			energyStored = input.readFloat();
+			this.dyeID = input.readInt();
 
 			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 			updateBounds();
@@ -439,6 +446,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		data.add(facing.ordinal());
 		data.add(suck);
 		data.add(energyStored);
+		data.add(this.dyeID);
 
 		return data;
 	}
@@ -481,5 +489,14 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			this.pathfinder = new PathfinderEMContractor(this.worldObj, new Vector3(this.linked));
 			this.pathfinder.find(new Vector3(this));
 		}
+	}
+
+	/**
+	 * @param itemDamage
+	 */
+	public void setDye(int dyeID)
+	{
+		this.dyeID = dyeID;
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 }

@@ -4,6 +4,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -37,7 +38,17 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
-			if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
+			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
+			{
+				contractor.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+
+				if (!entityPlayer.capabilities.isCreativeMode)
+				{
+					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
+				}
+				return true;
+			}
+			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
 			{
 				ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
 				Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());

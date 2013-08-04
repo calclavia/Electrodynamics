@@ -39,7 +39,7 @@ public class CommonProxy implements IGuiHandler
 	{
 		return null;
 	}
-	
+
 	public boolean isPaused()
 	{
 		return false;
@@ -48,6 +48,11 @@ public class CommonProxy implements IGuiHandler
 	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
 	{
 
+	}
+
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, Vector3 color)
+	{
+		this.renderElectricShock(world, start, target, (float) color.x, (float) color.y, (float) color.z);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target)
