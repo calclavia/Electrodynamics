@@ -443,8 +443,8 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		if (this.linked != null)
 		{
-			this.pathfinder = new Pathfinder(new Vector3(this.linked));
-			this.pathfinder.find(new Vector3(this));
+			this.pathfinder = new Pathfinder(new Vector3(this));
+			this.pathfinder.find(new Vector3(this.linked));
 		}
 	}
 }

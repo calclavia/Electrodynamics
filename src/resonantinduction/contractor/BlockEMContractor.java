@@ -33,7 +33,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		TileEntityEMContractor contractor = (TileEntityEMContractor) par1World.getBlockTileEntity(par2, par3, par4);
+		TileEntityEMContractor contractor = (TileEntityEMContractor) world.getBlockTileEntity(par2, par3, par4);
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
@@ -41,12 +41,12 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 			{
 				ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
 				Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
-				
+
 				if (linkVec != null)
 				{
-					if(linkVec.getTileEntity(world) instanceof TileEntityEMContractor)
+					if (linkVec.getTileEntity(world) instanceof TileEntityEMContractor)
 					{
-						contractor.setLink((TileEntityEMContractor)linkVec.getTileEntity(world));
+						contractor.setLink((TileEntityEMContractor) linkVec.getTileEntity(world));
 					}
 				}
 

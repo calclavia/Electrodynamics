@@ -5,6 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 
 public class ModelEMContractor extends ModelBase
 {
+	// fields
 	ModelRenderer frame1;
 	ModelRenderer frame2;
 	ModelRenderer frame3;
@@ -114,8 +115,8 @@ public class ModelEMContractor extends ModelBase
 		right_frame_connector.mirror = true;
 		setRotation(right_frame_connector, 0F, 0F, 0F);
 		teslapole = new ModelRenderer(this, 0, 0);
-		teslapole.addBox(0F, 0F, 0F, 2, 15, 2);
-		teslapole.setRotationPoint(-1F, 8F, -1F);
+		teslapole.addBox(-1F, -1F, -1F, 2, 15, 2);
+		teslapole.setRotationPoint(0F, 9F, 0F);
 		teslapole.setTextureSize(128, 128);
 		teslapole.mirror = true;
 		setRotation(teslapole, 0F, 0F, 0F);
@@ -168,26 +169,26 @@ public class ModelEMContractor extends ModelBase
 		base4.mirror = true;
 		setRotation(base4, 0F, 0F, 0F);
 		pole1 = new ModelRenderer(this, 5, 26);
-		pole1.addBox(0F, 0F, 0F, 1, 6, 1);
-		pole1.setRotationPoint(-0.5F, 17F, 6F);
+		pole1.addBox(-0.5F, -1F, -0.5F, 1, 6, 1);
+		pole1.setRotationPoint(0F, 18F, 6.5F);
 		pole1.setTextureSize(128, 128);
 		pole1.mirror = true;
 		setRotation(pole1, 0F, 0F, 0F);
 		pole2 = new ModelRenderer(this, 5, 26);
-		pole2.addBox(0F, 0F, 0F, 1, 6, 1);
-		pole2.setRotationPoint(-0.5F, 17F, -7F);
+		pole2.addBox(-0.5F, -1F, -0.5F, 1, 6, 1);
+		pole2.setRotationPoint(0F, 18F, -6.5F);
 		pole2.setTextureSize(128, 128);
 		pole2.mirror = true;
 		setRotation(pole2, 0F, 0F, 0F);
 		pole3 = new ModelRenderer(this, 5, 26);
-		pole3.addBox(0F, 0F, 0F, 1, 6, 1);
-		pole3.setRotationPoint(-7F, 17F, -0.5F);
+		pole3.addBox(-0.5F, -1F, -0.5F, 1, 6, 1);
+		pole3.setRotationPoint(-6.5F, 18F, 0F);
 		pole3.setTextureSize(128, 128);
 		pole3.mirror = true;
 		setRotation(pole3, 0F, 0F, 0F);
 		pole4 = new ModelRenderer(this, 5, 26);
-		pole4.addBox(0F, 0F, 0F, 1, 6, 1);
-		pole4.setRotationPoint(6F, 17F, -0.5F);
+		pole4.addBox(-0.5F, -1F, -0.5F, 1, 6, 1);
+		pole4.setRotationPoint(6.5F, 18F, 0F);
 		pole4.setTextureSize(128, 128);
 		pole4.mirror = true;
 		setRotation(pole4, 0F, 0F, 0F);
@@ -227,10 +228,10 @@ public class ModelEMContractor extends ModelBase
 	{
 		if (rotate)
 		{
-			Coil1.rotateAngleY = (float)Math.toRadians(Math.toDegrees(Coil1.rotateAngleY)+3 < 360 ? Math.toDegrees(Coil1.rotateAngleY)+3 : 0);
-			coil2.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil2.rotateAngleY)+3 < 360 ? Math.toDegrees(coil2.rotateAngleY)+3 : 0);
-			coil3.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil3.rotateAngleY)+3 < 360 ? Math.toDegrees(coil3.rotateAngleY)+3 : 0);
-			coil4.rotateAngleY = (float)Math.toRadians(Math.toDegrees(coil4.rotateAngleY)+3 < 360 ? Math.toDegrees(coil4.rotateAngleY)+3 : 0);
+			Coil1.rotateAngleY = (float) Math.toRadians(Math.toDegrees(Coil1.rotateAngleY) + 3 < 360 ? Math.toDegrees(Coil1.rotateAngleY) + 3 : 0);
+			coil2.rotateAngleY = (float) Math.toRadians(Math.toDegrees(coil2.rotateAngleY) + 3 < 360 ? Math.toDegrees(coil2.rotateAngleY) + 3 : 0);
+			coil3.rotateAngleY = (float) Math.toRadians(Math.toDegrees(coil3.rotateAngleY) + 3 < 360 ? Math.toDegrees(coil3.rotateAngleY) + 3 : 0);
+			coil4.rotateAngleY = (float) Math.toRadians(Math.toDegrees(coil4.rotateAngleY) + 3 < 360 ? Math.toDegrees(coil4.rotateAngleY) + 3 : 0);
 		}
 
 		frame1.render(f5);

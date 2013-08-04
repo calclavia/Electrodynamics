@@ -35,6 +35,16 @@ public class Pathfinder
 
 	public boolean find(Vector3 start)
 	{
+		/**
+		 * Instantiate Variables
+		 */
+		this.openSet = new HashSet<Vector3>();
+		this.closedSet = new HashSet<Vector3>();
+		this.navMap = new HashMap<Vector3, Vector3>();
+		this.gScore = new HashMap<Vector3, Double>();
+		this.fScore = new HashMap<Vector3, Double>();
+		this.results = new HashSet<Vector3>();
+
 		this.openSet.add(start);
 		this.gScore.put(start, (double) 0);
 		this.fScore.put(start, this.gScore.get(start) + getEstimate(start, this.target));
