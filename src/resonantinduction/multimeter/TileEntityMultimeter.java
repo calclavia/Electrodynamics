@@ -126,11 +126,17 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 		ForgeDirection opp = direction.getOpposite();
 		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + opp.offsetX, this.yCoord + opp.offsetY, this.zCoord + opp.offsetZ);
 
+		return getDetectedEnergy(tileEntity);
+	}
+
+	public static float getDetectedEnergy(TileEntity tileEntity)
+	{
 		// TODO: Universal Compatiblity in the future.
 		if (tileEntity instanceof TileEntityTesla)
 		{
 			return ((TileEntityTesla) tileEntity).getEnergyStored();
 		}
+
 		return 0;
 	}
 

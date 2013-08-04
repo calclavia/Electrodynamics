@@ -14,6 +14,7 @@ import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.multimeter.BlockMultimeter;
+import resonantinduction.multimeter.ItemBlockMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -141,7 +142,7 @@ public class ResonantInduction
 		CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMultimeter, blockMultimeter.getUnlocalizedName());
+		GameRegistry.registerBlock(blockMultimeter, ItemBlockMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 
 		// Tiles
