@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.Vector3;
-import resonantinduction.battery.BatteryMultiblockManager.BatteryCache;
+import resonantinduction.battery.BatteryManager.BatteryCache;
 
 public class BatteryUpdateProtocol
 {
@@ -193,7 +193,7 @@ public class BatteryUpdateProtocol
 	}
 	
 	/**
-	 * Whether or not the block at the specified location is a viable node for a dynamic tank.
+	 * Whether or not the block at the specified location is a battery.
 	 * @param x - x coordinate
 	 * @param y - y coordinate
 	 * @param z - z coordinate
@@ -210,9 +210,9 @@ public class BatteryUpdateProtocol
 	}
 	
 	/**
-	 * Runs the protocol and updates all tanks that make a part of the dynamic tank.
+	 * Runs the protocol and updates all batteries that make a part of the multiblock battery.
 	 */
-	public void updateTanks()
+	public void updateBatteries()
 	{
 		loopThrough(pointer);
 		
@@ -231,13 +231,13 @@ public class BatteryUpdateProtocol
 				}
 			}
 			
-			int idFound = -1;
+			int idFound = BatteryManager.WILDCARD;
 			
 			for(Vector3 obj : structureFound.locations)
 			{
 				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
 				
-				if(tileEntity.inventoryID != -1)
+				if(tileEntity.inventoryID != BatteryManager.WILDCARD)
 				{
 					idFound = tileEntity.inventoryID;
 					break;
@@ -246,15 +246,15 @@ public class BatteryUpdateProtocol
 			
 			BatteryCache cache = new BatteryCache();
 			
-			if(idFound != -1)
+			if(idFound != BatteryManager.WILDCARD)
 			{
-				if(BatteryMultiblockManager.dynamicInventories.get(idFound) != null)
+				if(BatteryManager.dynamicInventories.get(idFound) != null)
 				{
-					cache = BatteryMultiblockManager.pullInventory(pointer.worldObj, idFound);
+					cache = BatteryManager.pullInventory(pointer.worldObj, idFound);
 				}
 			}
 			else {
-				idFound = BatteryMultiblockManager.getUniqueInventoryID();
+				idFound = BatteryManager.getUniqueInventoryID();
 			}
 			
 			structureFound.inventory = cache.inventory;

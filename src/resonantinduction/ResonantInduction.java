@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.battery.BatteryMultiblockManager;
+import resonantinduction.battery.BatteryManager;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -164,7 +164,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 		
-		TickRegistry.registerTickHandler(new BatteryMultiblockManager(), Side.SERVER);
+		TickRegistry.registerTickHandler(new BatteryManager(), Side.SERVER);
 
 		ResonantInduction.proxy.registerRenderers();
 

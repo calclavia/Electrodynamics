@@ -14,7 +14,7 @@ import resonantinduction.base.Vector3;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
-public class BatteryMultiblockManager implements ITickHandler
+public class BatteryManager implements ITickHandler
 {
 	public static final int WILDCARD = -1;
 	
@@ -37,7 +37,7 @@ public class BatteryMultiblockManager implements ITickHandler
     		if(tileEntity != null)
     		{
     			tileEntity.inventory = new HashSet<ItemStack>();
-    			tileEntity.inventoryID = -1;
+    			tileEntity.inventoryID = WILDCARD;
     		}
     	}
     	
@@ -51,7 +51,7 @@ public class BatteryMultiblockManager implements ITickHandler
      * @param inventoryID - inventory ID of the battery
      * @param fluid - cached fluid of the battery
      * @param inventory - inventory of the battery
-     * @param tileEntity - dynamic tank TileEntity
+     * @param tileEntity - battery TileEntity
      */
     public static void updateCache(int inventoryID, HashSet<ItemStack> inventory, TileEntityBattery tileEntity)
     {
@@ -153,12 +153,12 @@ public class BatteryMultiblockManager implements ITickHandler
 				{	
 					for(Vector3 obj : dynamicInventories.get(inventoryID).locations)
 					{
-						TileEntityBattery dynamicTank = (TileEntityBattery)obj.getTileEntity(world);
+						TileEntityBattery battery = (TileEntityBattery)obj.getTileEntity(world);
 						
-						if(dynamicTank != null)
+						if(battery != null)
 						{
-							dynamicTank.inventory = new HashSet<ItemStack>();
-							dynamicTank.inventoryID = -1;
+							battery.inventory = new HashSet<ItemStack>();
+							battery.inventoryID = WILDCARD;
 						}
 					}
 					
