@@ -12,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 /**
  * @author Calclavia
@@ -107,6 +108,11 @@ public class Vector3
 	public double dotProduct(Vector3 vec2)
 	{
 		return this.x * vec2.x + this.y * vec2.y + this.z * vec2.z;
+	}
+	
+	public Vector3 getFromSide(ForgeDirection side)
+	{
+		return new Vector3(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
 	}
 
 	/**
@@ -299,6 +305,34 @@ public class Vector3
 	public Vector3 clone()
 	{
 		return new Vector3(this.x, this.y, this.z);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		int code = 1;
+		code = 31 * new Double(x).hashCode();
+		code = 31 * new Double(y).hashCode();
+		code = 31 * new Double(z).hashCode();
+		return code;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(!(obj instanceof Vector3))
+		{
+			return false;
+		}
+		
+		Vector3 vec = (Vector3)obj;
+		
+		if(vec.x != x || vec.y != y || vec.z != z)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override
