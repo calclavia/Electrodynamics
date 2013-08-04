@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
-import resonantinduction.multimeter.TileEntityMultimeter.DetectMode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,7 +57,7 @@ public class GuiMultimeter extends GuiContainer
 
 		try
 		{
-			PacketHandler.sendTileEntityPacketToServer(this.tileEntity, (byte) 3, (float) Float.parseFloat(this.textFieldLimit.getText()));
+			PacketHandler.sendTileEntityPacketToServer(this.tileEntity, (byte) 3, Float.parseFloat(this.textFieldLimit.getText()));
 		}
 		catch (Exception e)
 		{
@@ -96,11 +95,12 @@ public class GuiMultimeter extends GuiContainer
 		GL11.glColor4f(1, 1, 1, 1);
 		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
 
-		/*if (this.tileEntity.getMode() != DetectMode.NONE)
-		{
-			int length = (int) (Math.abs(this.tileEntity.getDetectedEnergy() - this.tileEntity.getLimit()) / this.tileEntity.getLimit()) * 110;
-			this.drawTexturedModalRect(this.containerWidth + 13, this.containerHeight + 128 - length, 176, 0, 30, length);
-		}*/
+		/*
+		 * if (this.tileEntity.getMode() != DetectMode.NONE) { int length = (int)
+		 * (Math.abs(this.tileEntity.getDetectedEnergy() - this.tileEntity.getLimit()) /
+		 * this.tileEntity.getLimit()) * 110; this.drawTexturedModalRect(this.containerWidth + 13,
+		 * this.containerHeight + 128 - length, 176, 0, 30, length); }
+		 */
 	}
 
 	@Override

@@ -116,14 +116,14 @@ public class ResonantInduction
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		LOGGER.setParent(FMLLog.getLogger());
-		NetworkRegistry.instance().registerGuiHandler(this, this.proxy);
+		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
 
 		CONFIGURATION.load();
 
 		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
-		
+
 		TileEntityEMContractor.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEntityEMContractor.ACCELERATION).getDouble(TileEntityEMContractor.ACCELERATION);
 		TileEntityEMContractor.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEntityEMContractor.MAX_REACH).getInt(TileEntityEMContractor.MAX_REACH);
 		TileEntityEMContractor.MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", TileEntityEMContractor.MAX_SPEED).getDouble(TileEntityEMContractor.MAX_SPEED);

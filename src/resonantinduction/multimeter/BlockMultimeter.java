@@ -35,22 +35,22 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 
 	public static int determineOrientation(World par0World, int par1, int par2, int par3, EntityLivingBase par4EntityLivingBase)
 	{
-		if (MathHelper.abs((float) par4EntityLivingBase.posX - (float) par1) < 2.0F && MathHelper.abs((float) par4EntityLivingBase.posZ - (float) par3) < 2.0F)
+		if (MathHelper.abs((float) par4EntityLivingBase.posX - par1) < 2.0F && MathHelper.abs((float) par4EntityLivingBase.posZ - par3) < 2.0F)
 		{
-			double d0 = par4EntityLivingBase.posY + 1.82D - (double) par4EntityLivingBase.yOffset;
+			double d0 = par4EntityLivingBase.posY + 1.82D - par4EntityLivingBase.yOffset;
 
-			if (d0 - (double) par2 > 2.0D)
+			if (d0 - par2 > 2.0D)
 			{
 				return 1;
 			}
 
-			if ((double) par2 - d0 > 0.0D)
+			if (par2 - d0 > 0.0D)
 			{
 				return 0;
 			}
 		}
 
-		int l = MathHelper.floor_double((double) (par4EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor_double(par4EntityLivingBase.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
 	}
 
@@ -61,6 +61,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 		world.setBlockMetadataWithNotify(x, y, z, l, 2);
 	}
 
+	@Override
 	public Icon getIcon(int side, int metadata)
 	{
 		if (side == metadata)

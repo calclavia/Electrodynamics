@@ -225,11 +225,11 @@ public class ModelEMContractor extends ModelBase
 
 	public void render(float f5, boolean rotate)
 	{
-		if(rotate)
+		if (rotate)
 		{
-			teslapole.rotateAngleY = (float)Math.toRadians(Math.toDegrees(teslapole.rotateAngleY)+4 < 360 ? Math.toDegrees(teslapole.rotateAngleY)+4 : 0);
+			teslapole.rotateAngleY = (float) Math.toRadians(Math.toDegrees(teslapole.rotateAngleY) + 4 < 360 ? Math.toDegrees(teslapole.rotateAngleY) + 4 : 0);
 		}
-		
+
 		frame1.render(f5);
 		frame2.render(f5);
 		frame3.render(f5);
