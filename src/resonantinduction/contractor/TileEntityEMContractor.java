@@ -3,19 +3,20 @@ package resonantinduction.contractor;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
+import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.InventoryUtil;
+import resonantinduction.base.TileEntityBase;
+import resonantinduction.base.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -24,7 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author AidanBrady
  *
  */
-public class TileEntityEMContractor extends TileEntity implements IPacketReceiver, ITesla
+public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver, ITesla
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -49,6 +50,8 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
+		
 		pushDelay = Math.max(0, pushDelay - 1);
 
 		if (canFunction())
@@ -99,6 +102,11 @@ public class TileEntityEMContractor extends TileEntity implements IPacketReceive
 
 			for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
 			{
+				if (this.worldObj.isRemote && this.ticks % 5 == 0)
+				{
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
+				}
+
 				switch (facing)
 				{
 					case DOWN:
