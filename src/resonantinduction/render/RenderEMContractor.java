@@ -25,7 +25,7 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
 
-		switch (((TileEntityEMContractor) t).getFacing())
+		switch (((TileEntityEMContractor) t).getDirection())
 		{
 			case DOWN:
 				GL11.glRotatef(180, 0, 0, 1);

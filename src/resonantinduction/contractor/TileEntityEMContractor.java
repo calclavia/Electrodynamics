@@ -39,12 +39,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	private ForgeDirection facing = ForgeDirection.UP;
 
-	public int pushDelay;
+	private int pushDelay;
 
-	public float energyStored;
+	private float energyStored;
 
-	public AxisAlignedBB operationBounds;
-	public AxisAlignedBB suckBounds;
+	private AxisAlignedBB operationBounds;
+	private AxisAlignedBB suckBounds;
 
 	/**
 	 * true = suck, false = push
@@ -53,10 +53,11 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
-	public TileEntityEMContractor linked;
+	private TileEntityEMContractor linked;
 
 	/** Color of beam */
 	private int dyeID = 13;
+	private Vector3 tempLinkVector;
 
 	@Override
 	public void updateEntity()
@@ -64,6 +65,17 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		super.updateEntity();
 
 		this.pushDelay = Math.max(0, this.pushDelay - 1);
+
+		if (this.tempLinkVector != null)
+		{
+			if (this.tempLinkVector.getTileEntity(this.worldObj) instanceof TileEntityEMContractor)
+			{
+				this.setLink((TileEntityEMContractor) this.tempLinkVector.getTileEntity(this.worldObj), true);
+				System.out.println("TEST" + this.linked);
+			}
+
+			this.tempLinkVector = null;
+		}
 
 		if (canFunction())
 		{
@@ -156,7 +168,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID]);
 						}
 
-						this.moveEntity(entityItem, this.getFacing(), new Vector3(this));
+						this.moveEntity(entityItem, this.getDirection(), new Vector3(this));
 					}
 				}
 			}
@@ -376,7 +388,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		setFacing(ForgeDirection.getOrientation(newOrdinal));
 	}
 
-	public ForgeDirection getFacing()
+	public ForgeDirection getDirection()
 	{
 		return facing;
 	}
@@ -407,7 +419,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		this.suck = nbt.getBoolean("suck");
 		this.energyStored = nbt.getFloat("energyStored");
 		this.dyeID = nbt.getInteger("dyeID");
-
+		this.tempLinkVector = new Vector3(nbt.getInteger("link_x"), nbt.getInteger("link_y"), nbt.getInteger("link_z"));
 		updateBounds();
 	}
 
@@ -420,6 +432,13 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		nbt.setBoolean("suck", suck);
 		nbt.setFloat("energyStored", energyStored);
 		nbt.setInteger("dyeID", this.dyeID);
+
+		if (this.linked != null)
+		{
+			nbt.setInteger("link_x", this.linked.xCoord);
+			nbt.setInteger("link_y", this.linked.yCoord);
+			nbt.setInteger("link_z", this.linked.zCoord);
+		}
 	}
 
 	@Override
@@ -432,7 +451,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			energyStored = input.readFloat();
 			this.dyeID = input.readInt();
 
-			worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+			if (input.readBoolean())
+			{
+				this.tempLinkVector = new Vector3(input.readInt(), input.readInt(), input.readInt());
+			}
+
+			this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 			updateBounds();
 		}
 		catch (Exception e)
@@ -447,6 +471,18 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		data.add(suck);
 		data.add(energyStored);
 		data.add(this.dyeID);
+
+		if (this.linked != null)
+		{
+			data.add(true);
+			data.add(this.linked.xCoord);
+			data.add(this.linked.yCoord);
+			data.add(this.linked.zCoord);
+		}
+		else
+		{
+			data.add(false);
+		}
 
 		return data;
 	}
@@ -473,10 +509,20 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	/**
 	 * Link between two TileEntities, do pathfinding operation.
 	 */
-	public void setLink(TileEntityEMContractor tileEntity)
+	public void setLink(TileEntityEMContractor tileEntity, boolean setOpponent)
 	{
+		if (this.linked != null && setOpponent)
+		{
+			this.linked.setLink(null, false);
+		}
+
 		this.linked = tileEntity;
-		this.linked.linked = this;
+
+		if (setOpponent)
+		{
+			this.linked.setLink(this, false);
+		}
+
 		this.updatePath();
 	}
 
@@ -486,8 +532,14 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		if (this.linked != null)
 		{
-			this.pathfinder = new PathfinderEMContractor(this.worldObj, new Vector3(this.linked));
-			this.pathfinder.find(new Vector3(this));
+			Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
+			Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
+
+			if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
+			{
+				this.pathfinder = new PathfinderEMContractor(this.worldObj, target);
+				this.pathfinder.find(start);
+			}
 		}
 	}
 
