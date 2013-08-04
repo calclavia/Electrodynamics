@@ -1,11 +1,10 @@
 package resonantinduction.base;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import net.minecraft.item.ItemStack;
 
 public class SetUtil 
 {
@@ -49,12 +48,29 @@ public class SetUtil
 		return toReturn;
 	}
 	
-	public static <V> Set<V>[] split(Set<V> set, int divide)
+	public static <V> Set<V> merge(Set<V> setOne, Set<V> setTwo)
+	{
+		Set<V> newSet = new HashSet<V>();
+		
+		for(V obj : setOne)
+		{
+			newSet.add(obj);
+		}
+		
+		for(V obj : setTwo)
+		{
+			newSet.add(obj);
+		}
+		
+		return newSet;
+	}
+	
+	public static <V> ArrayList<Set<V>> split(Set<V> set, int divide)
 	{
 		int remain = set.size()%divide;
 		int size = (set.size()/divide)-remain;
 		
-		Set<V>[] toReturn = new HashSet[divide]; 
+		ArrayList<Set<V>> toReturn = new ArrayList<Set<V>>(divide);
 		
 		for(Set<V> iterSet : toReturn)
 		{
@@ -87,5 +103,10 @@ public class SetUtil
 		}
 		
 		return toReturn;
+	}
+	
+	public static <V> ArrayList<V> asList(Set<V> set)
+	{
+		return (ArrayList<V>)Arrays.asList(set.toArray());
 	}
 }

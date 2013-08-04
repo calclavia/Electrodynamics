@@ -18,6 +18,8 @@ public class SynchronizedBatteryData
 	
 	public int height;
 	
+	public boolean isMultiblock;
+	
 	public boolean didTick;
 	
 	public int getVolume()
@@ -28,6 +30,25 @@ public class SynchronizedBatteryData
 	public int getMaxCells()
 	{
 		return getVolume()*BatteryManager.CELLS_PER_BATTERY;
+	}
+	
+	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, Set<ItemStack> inventory)
+	{
+		SynchronizedBatteryData structure = getBase(tileEntity);
+		structure.inventory = inventory;
+		
+		return structure;
+	}
+	
+	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity)
+	{
+		SynchronizedBatteryData structure = new SynchronizedBatteryData();
+		structure.length = 1;
+		structure.width = 1;
+		structure.height = 1;
+		structure.locations.add(new Vector3(tileEntity));
+		
+		return structure;
 	}
 	
 	@Override

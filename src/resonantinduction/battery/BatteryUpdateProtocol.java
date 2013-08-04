@@ -1,5 +1,6 @@
 package resonantinduction.battery;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.SetUtil;
 import resonantinduction.base.Vector3;
-import resonantinduction.battery.BatteryManager.BatteryCache;
 
 public class BatteryUpdateProtocol
 {
@@ -161,6 +161,11 @@ public class BatteryUpdateProtocol
 					structure.length = Math.abs(xmax-xmin)+1;
 					structure.height = Math.abs(ymax-ymin)+1;
 					structure.width = Math.abs(zmax-zmin)+1;
+					
+					if(structure.getVolume() > 1)
+					{
+						structure.isMultiblock = true;
+					}
 		
 					if(structure.locations.contains(new Vector3(pointer)))
 					{
@@ -196,6 +201,32 @@ public class BatteryUpdateProtocol
 		return false;
 	}
 	
+	public void disperseCells()
+	{
+		SynchronizedBatteryData oldStructure = null;
+		
+		for(TileEntityBattery tile : iteratedNodes)
+		{
+			if(tile.structure.isMultiblock)
+			{
+				oldStructure = tile.structure;
+				break;
+			}
+		}
+		
+		if(oldStructure != null)
+		{
+			ArrayList<Set<ItemStack>> inventories = SetUtil.split(oldStructure.inventory, iteratedNodes.size());
+			ArrayList<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
+			
+			for(int i = 0; i < iterList.size(); i++)
+			{
+				TileEntityBattery tile = iterList.get(i);
+				tile.structure = SynchronizedBatteryData.getBase(tile, inventories.get(i));
+			}
+		}
+	}
+	
 	/**
 	 * Runs the protocol and updates all batteries that make a part of the multiblock battery.
 	 */
@@ -209,10 +240,7 @@ public class BatteryUpdateProtocol
 			{
 				if(!structureFound.locations.contains(new Vector3(tileEntity)))
 				{
-					for(TileEntity tile : iteratedNodes)
-					{
-						((TileEntityBattery)tileEntity).structure = null;
-					}
+					disperseCells();
 					
 					return;
 				}
@@ -224,50 +252,18 @@ public class BatteryUpdateProtocol
 			System.out.println("Width: " + structureFound.width);
 			System.out.println("Volume: " + structureFound.locations.size());
 			
-			int idFound = BatteryManager.WILDCARD;
-			
 			for(Vector3 obj : structureFound.locations)
 			{
 				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
 				
-				if(tileEntity.inventoryID != BatteryManager.WILDCARD)
-				{
-					idFound = tileEntity.inventoryID;
-					break;
-				}
-			}
-			
-			BatteryCache cache = new BatteryCache();
-			
-			if(idFound != BatteryManager.WILDCARD)
-			{
-				if(BatteryManager.dynamicInventories.get(idFound) != null)
-				{
-					cache = BatteryManager.pullInventory(pointer.worldObj, idFound);
-				}
-			}
-			else {
-				idFound = BatteryManager.getUniqueInventoryID();
-			}
-			
-			Set<ItemStack> newInventory = SetUtil.cap(cache.inventory, structureFound.getMaxCells());
-			
-			structureFound.inventory = newInventory;
-			
-			for(Vector3 obj : structureFound.locations)
-			{
-				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
-				
-				tileEntity.inventoryID = idFound;
+				structureFound.inventory = SetUtil.merge(structureFound.inventory, tileEntity.structure.inventory);
 				tileEntity.structure = structureFound;
-				tileEntity.cachedInventory = newInventory;
 			}
+			
+			structureFound.inventory = SetUtil.cap(structureFound.inventory, structureFound.getMaxCells());
 		}
 		else {
-			for(TileEntity tileEntity : iteratedNodes)
-			{
-				((TileEntityBattery)tileEntity).structure = null;
-			}
+			disperseCells();
 		}
 	}
 }

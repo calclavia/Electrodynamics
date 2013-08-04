@@ -28,13 +28,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 {
 	public Set<ItemStack> cachedInventory = new HashSet<ItemStack>();
 	
-	public SynchronizedBatteryData structure;
+	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
 	
 	public SynchronizedBatteryData prevStructure;
-	
-	public boolean clientHasStructure;
-	
-	public int inventoryID = BatteryManager.WILDCARD;
 
 	@Override
 	public void updateEntity()
@@ -51,28 +47,20 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			}
 		}
 		
-		if(playersUsing.size() > 0 && ((worldObj.isRemote && !clientHasStructure) || (!worldObj.isRemote && structure == null)))
-		{
-			for(EntityPlayer player : playersUsing)
-			{
-				player.closeScreen();
-			}
-		}
-		
 		if(!worldObj.isRemote)
 		{
-			if(inventoryID != -1 && structure == null)
-			{
-				BatteryManager.updateCache(inventoryID, cachedInventory, this);
-			}
-			
-			if(structure == null && ticks == 5)
+			if(ticks == 5)
 			{
 				update();
 			}
 			
 			if(prevStructure != structure)
 			{
+				for(EntityPlayer player : playersUsing)
+				{
+					player.closeScreen();
+				}
+				
 				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
 			}
 			
@@ -81,13 +69,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			if(structure != null)
 			{
 				structure.didTick = false;
-				
-				if(inventoryID != -1)
-				{
-					BatteryManager.updateCache(inventoryID, structure.inventory, this);
-					
-					cachedInventory = structure.inventory;
-				}
 			}
 		}
 	}
@@ -97,22 +78,14 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
     {
         super.readFromNBT(nbtTags);
         
-        if(structure == null)
+        NBTTagList tagList = nbtTags.getTagList("Items");
+        cachedInventory = new HashSet<ItemStack>();
+
+        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
         {
-	        inventoryID = nbtTags.getInteger("inventoryID");
-	
-	        if(inventoryID != BatteryManager.WILDCARD)
-	        {
-	            NBTTagList tagList = nbtTags.getTagList("Items");
-	            cachedInventory = new HashSet<ItemStack>();
+            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
 
-	            for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
-	            {
-	                NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
-
-                    cachedInventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
-	            }
-	        }
+            cachedInventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
         }
     }
 
@@ -120,8 +93,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
     public void writeToNBT(NBTTagCompound nbtTags)
     {
         super.writeToNBT(nbtTags);
-        
-        nbtTags.setInteger("inventoryID", inventoryID);
         
         NBTTagList tagList = new NBTTagList();
 
@@ -210,14 +181,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	public void handle(ByteArrayDataInput input) 
 	{
 		try {
-			if(structure == null)
-			{
-				structure = new SynchronizedBatteryData();
-			}
+			structure.isMultiblock = input.readBoolean();
 			
-			clientHasStructure = input.readBoolean();
-			
-			if(clientHasStructure)
+			if(structure.isMultiblock)
 			{
 				structure.height = input.readInt();
 				structure.length = input.readInt();
