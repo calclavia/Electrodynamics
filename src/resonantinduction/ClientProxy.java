@@ -1,5 +1,6 @@
 package resonantinduction;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -49,6 +50,25 @@ public class ClientProxy extends CommonProxy
 			return new GuiMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean isPaused()
+	{
+		if(FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
+		{
+			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
+			
+			if(screen != null)
+			{
+				if(screen.doesGuiPauseGame())
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
