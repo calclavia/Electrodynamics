@@ -119,13 +119,13 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 								Vector3 difference = prevResult.difference(result);
 								final ForgeDirection direction = difference.toForgeDirection();
-								System.out.println(direction);
+
 								AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
 								List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
 
 								for (EntityItem entityItem : entities)
 								{
-									this.moveEntity(entityItem, direction);
+									this.moveEntity(entityItem, direction, result);
 								}
 							}
 						}
@@ -152,7 +152,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem));
 						}
 
-						this.moveEntity(entityItem, this.getFacing());
+						this.moveEntity(entityItem, this.getFacing(), new Vector3(this));
 					}
 				}
 			}
@@ -164,12 +164,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		return position.getBlockID(world) == 0 || position.getTileEntity(world) instanceof TileEntityEMContractor;
 	}
 
-	private void moveEntity(EntityItem entityItem, ForgeDirection direction)
+	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
 	{
 		switch (direction)
 		{
 			case DOWN:
-				entityItem.setPosition(Math.floor(entityItem.posX) + 0.5, entityItem.posY, Math.floor(entityItem.posZ) + 0.5);
+				entityItem.setPosition(lockVector.x + 0.5, entityItem.posY, lockVector.z + 0.5);
 
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
@@ -186,7 +186,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				break;
 			case UP:
 
-				entityItem.setPosition(xCoord + 0.5, entityItem.posY, zCoord + 0.5);
+				entityItem.setPosition(lockVector.x + 0.5, entityItem.posY, lockVector.z + 0.5);
 
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
@@ -203,7 +203,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				break;
 			case NORTH:
 
-				entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+				entityItem.setPosition(lockVector.x + 0.5, lockVector.y + 0.5, entityItem.posZ);
 
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
@@ -220,7 +220,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				break;
 			case SOUTH:
 
-				entityItem.setPosition(xCoord + 0.5, yCoord + 0.5, entityItem.posZ);
+				entityItem.setPosition(lockVector.x + 0.5, lockVector.y + 0.5, entityItem.posZ);
 
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
@@ -237,7 +237,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				break;
 			case WEST:
 
-				entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+				entityItem.setPosition(entityItem.posX, lockVector.y + 0.5, lockVector.z + 0.5);
 
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
@@ -253,7 +253,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 				break;
 			case EAST:
-				entityItem.setPosition(entityItem.posX, yCoord + 0.5, zCoord + 0.5);
+				entityItem.setPosition(entityItem.posX, lockVector.y + 0.5, lockVector.z + 0.5);
 
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
