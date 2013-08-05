@@ -5,6 +5,7 @@ package resonantinduction.render;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -22,6 +23,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.base.Vector3;
 import resonantinduction.model.ModelBattery;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -66,62 +68,65 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		for (int i = 2; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
-
-			for (int slot = 0; slot < 4; slot++)
+			Block block = Block.blocksList[new Vector3(t).translate(new Vector3(direction)).getBlockID(t.worldObj)];
+			if (block == null || (block != null && block.isOpaqueCube()))
 			{
-				GL11.glPushMatrix();
-				GL11.glTranslatef((float) x + 0.5f, (float) y + 0.7f, (float) z + 0.5f);
-
-				float translateX = 0;
-				float translateY = 0;
-
-				switch (slot)
+				for (int slot = 0; slot < 4; slot++)
 				{
-					case 0:
-						translateX = 0.25f;
-						break;
-					case 1:
-						translateX = 0.25f;
-						translateY = -0.5f;
-						break;
-					case 2:
-						translateX = -0.25f;
-						translateY = -0.5f;
-						break;
-					case 3:
-						translateX = -0.25f;
-						break;
-				}
+					GL11.glPushMatrix();
+					GL11.glTranslatef((float) x + 0.5f, (float) y + 0.7f, (float) z + 0.5f);
 
-				switch (direction)
-				{
-					case NORTH:
-						GL11.glTranslatef(-0.5f, 0, 0);
-						GL11.glTranslatef(0, translateY, translateX);
-						GL11.glRotatef(90, 0, 1, 0);
-						break;
-					case SOUTH:
-						GL11.glTranslatef(0, 0, -0.5f);
-						GL11.glTranslatef(translateX, translateY, 0);
-						break;
-					case WEST:
-						GL11.glTranslatef(0.5f, 0, 0);
-						GL11.glTranslatef(0, translateY, translateX);
-						GL11.glRotatef(90, 0, 1, 0);
-						break;
-					case EAST:
-						GL11.glTranslatef(0, 0, 0.5f);
-						GL11.glTranslatef(translateX, translateY, 0);
-						break;
-				}
+					float translateX = 0;
+					float translateY = 0;
 
-				GL11.glScalef(0.5f, 0.5f, 0.5f);
-				this.renderItemSimple(this.fakeBattery);
-				GL11.glPopMatrix();
+					switch (slot)
+					{
+						case 0:
+							translateX = 0.25f;
+							break;
+						case 1:
+							translateX = 0.25f;
+							translateY = -0.5f;
+							break;
+						case 2:
+							translateX = -0.25f;
+							translateY = -0.5f;
+							break;
+						case 3:
+							translateX = -0.25f;
+							break;
+					}
 
-				if (renderAmount-- <= 0)
-				{
-					break itemRender;
+					switch (direction)
+					{
+						case NORTH:
+							GL11.glTranslatef(-0.5f, 0, 0);
+							GL11.glTranslatef(0, translateY, translateX);
+							GL11.glRotatef(90, 0, 1, 0);
+							break;
+						case SOUTH:
+							GL11.glTranslatef(0, 0, -0.5f);
+							GL11.glTranslatef(translateX, translateY, 0);
+							break;
+						case WEST:
+							GL11.glTranslatef(0.5f, 0, 0);
+							GL11.glTranslatef(0, translateY, translateX);
+							GL11.glRotatef(90, 0, 1, 0);
+							break;
+						case EAST:
+							GL11.glTranslatef(0, 0, 0.5f);
+							GL11.glTranslatef(translateX, translateY, 0);
+							break;
+					}
+
+					GL11.glScalef(0.5f, 0.5f, 0.5f);
+					this.renderItemSimple(this.fakeBattery);
+					GL11.glPopMatrix();
+
+					if (renderAmount-- <= 0)
+					{
+						break itemRender;
+					}
 				}
 			}
 		}
