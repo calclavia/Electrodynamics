@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.api.IBattery;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -192,26 +193,29 @@ public class ResonantInduction
 		/**
 		 * Recipes
 		 */
+		ItemStack emptyCapacitor = new ItemStack(itemCapacitor);
+		((IBattery) itemCapacitor).setEnergyStored(emptyCapacitor, 0);
+
 		/** Capacitor **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', Item.ingotIron));
 
 		/** Linker **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', itemCapacitor, 'G', Item.ingotGold));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'G', Item.ingotGold));
 
 		/** Quantum Entangler **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', Item.ingotIron));
 
 		/** Tesla - by Jyzarc */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', itemCapacitor, 'I', Block.blockIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'I', Block.blockIron));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "RRR", "ICI", "III", 'R', Item.redstone, 'C', itemCapacitor, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "RRR", "ICI", "III", 'R', Item.redstone, 'C', emptyCapacitor, 'I', Item.ingotIron));
 
 		/** Multimeter */
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', Item.ingotIron));
 
 		/** EM Contractor */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', Block.wood, 'C', itemCapacitor, 'G', Item.ingotGold, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', Block.wood, 'C', emptyCapacitor, 'G', Item.ingotGold, 'I', Item.ingotIron));
 	}
 
 	public static int loadLanguages(String languagePath, String[] languageSupported)

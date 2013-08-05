@@ -22,6 +22,7 @@ public abstract class ItemCoordLink extends ItemBase
 	public ItemCoordLink(String name, int id)
 	{
 		super(name, id);
+		this.setMaxStackSize(1);
 	}
 
 	@Override

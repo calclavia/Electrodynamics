@@ -58,7 +58,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 					{
 						contractor.setLink((TileEntityEMContractor) linkVec.getTileEntity(world), true);
 
-						if (!world.isRemote)
+						if (world.isRemote)
 						{
 							entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
 						}

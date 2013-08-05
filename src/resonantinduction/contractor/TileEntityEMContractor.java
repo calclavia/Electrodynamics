@@ -124,12 +124,12 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				}
 			}
 
-			if (this.linked != null && !this.linked.isInvalid())
+			if (!this.suck)
 			{
-				ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
-
-				if (!this.suck)
+				if (this.linked != null && !this.linked.isInvalid())
 				{
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+
 					if (this.pathfinder != null)
 					{
 						for (int i = 0; i < this.pathfinder.results.size(); i++)
@@ -167,6 +167,11 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			}
 			else
 			{
+				if (this.linked != null && !this.linked.isInvalid())
+				{
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+				}
+
 				this.pathfinder = null;
 
 				if (operationBounds != null)
