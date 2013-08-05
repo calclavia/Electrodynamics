@@ -81,7 +81,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			if (this.tempLinkVector.getTileEntity(this.worldObj) instanceof TileEntityEMContractor)
 			{
 				this.setLink((TileEntityEMContractor) this.tempLinkVector.getTileEntity(this.worldObj), true);
-				System.out.println("TEST" + this.linked);
 			}
 
 			this.tempLinkVector = null;
