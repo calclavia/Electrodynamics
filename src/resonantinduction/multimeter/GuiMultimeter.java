@@ -75,10 +75,10 @@ public class GuiMultimeter extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		String s = this.tileEntity.getBlockType().getLocalizedName();
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRenderer.drawString("Energy: " + Math.round(this.tileEntity.getDetectedEnergy()) + " J", 35, 32, 4210752);
-		this.fontRenderer.drawString("Average Energy: " + Math.round(this.tileEntity.getAverageDetectedEnergy()) + " J", 35, 20, 4210752);
-		this.fontRenderer.drawString("Output Redstone If... ", 35, 46, 4210752);
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
+		this.fontRenderer.drawString("Average Energy: " + Math.round(this.tileEntity.getAverageDetectedEnergy()) + " J", 35, 25, 4210752);
+		this.fontRenderer.drawString("Energy: " + Math.round(this.tileEntity.getDetectedEnergy()) + " J", 35, 35, 4210752);
+		this.fontRenderer.drawString("Output Redstone If... ", 35, 54, 4210752);
 		this.fontRenderer.drawString(this.tileEntity.getMode().display, 35, 65, 4210752);
 		this.fontRenderer.drawString("KiloJoules", 35, 100, 4210752);
 
@@ -95,12 +95,9 @@ public class GuiMultimeter extends GuiContainer
 		GL11.glColor4f(1, 1, 1, 1);
 		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
 
-		/*
-		 * if (this.tileEntity.getMode() != DetectMode.NONE) { int length = (int)
-		 * (Math.abs(this.tileEntity.getDetectedEnergy() - this.tileEntity.getLimit()) /
-		 * this.tileEntity.getLimit()) * 110; this.drawTexturedModalRect(this.containerWidth + 13,
-		 * this.containerHeight + 128 - length, 176, 0, 30, length); }
-		 */
+		int length = (int) (this.tileEntity.getDetectedEnergy() / this.tileEntity.getPeak()) * 117;
+		// length = 177;
+		this.drawTexturedModalRect(this.containerWidth + 13, this.containerHeight + 133 - length, 176, 117 - length, 30, length);
 	}
 
 	@Override

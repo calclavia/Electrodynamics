@@ -37,6 +37,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 	}
 
 	private DetectMode detectMode = DetectMode.NONE;
+	private float peakDetection;
 	private float energyLimit;
 	private float detectedEnergy;
 	private float detectedAverageEnergy;
@@ -52,6 +53,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 			float prevDetectedEnergy = this.detectedEnergy;
 			this.detectedEnergy = this.doGetDetectedEnergy();
 			this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
+			this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
 
 			boolean outputRedstone = false;
 
@@ -191,6 +193,14 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 	public float getLimit()
 	{
 		return this.energyLimit;
+	}
+
+	/**
+	 * @return
+	 */
+	public float getPeak()
+	{
+		return this.peakDetection;
 	}
 
 }
