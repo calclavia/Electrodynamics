@@ -18,5 +18,8 @@ In order to compile the source code into binary form, you must have a working Mi
 4. Zip up everything in the output folder ("reobf") into a jar file.
 5. Install it into Minecraft just like any other Forge mod.
 
+### Jenkins
+http://calclavia.com:8080/job/Resonant%20Induction/
+
 ### License
 "Resonant Induction" is under the Educational Public License (http://calclavia.com/license/rpl).

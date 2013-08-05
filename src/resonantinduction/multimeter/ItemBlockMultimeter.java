@@ -29,6 +29,7 @@ public class ItemBlockMultimeter extends ItemBlock
 			{
 				par2EntityPlayer.addChatMessage("Energy: " + TileEntityMultimeter.getDetectedEnergy(world.getBlockTileEntity(x, y, z)) + " J");
 			}
+			
 			return true;
 		}
 
