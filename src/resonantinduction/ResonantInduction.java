@@ -197,9 +197,26 @@ public class ResonantInduction
 		/**
 		 * Recipes
 		 */
-		/** by Jyzarc */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', Item.redstone, 'I', Block.blockIron));
+		/** Capacitor **/
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', Item.ingotIron));
 
+		/** Linker **/
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', itemCapacitor, 'G', Item.ingotGold));
+
+		/** Quantum Entangler **/
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', Item.ingotIron));
+
+		/** Tesla - by Jyzarc */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', itemCapacitor, 'I', Block.blockIron));
+
+		/** Multimeter */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "RRR", "ICI", "III", 'R', Item.redstone, 'C', itemCapacitor, 'I', Item.ingotIron));
+
+		/** Multimeter */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', Item.ingotIron));
+
+		/** EM Contractor */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', Block.wood, 'C', itemCapacitor, 'G', Item.ingotGold, 'I', Item.ingotIron));
 	}
 
 	public static int loadLanguages(String languagePath, String[] languageSupported)
