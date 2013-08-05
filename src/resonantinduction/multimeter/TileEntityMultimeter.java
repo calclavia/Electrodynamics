@@ -114,6 +114,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 					this.toggleMode();
 					break;
 				case 3:
+					System.out.println(this.energyLimit);
 					this.energyLimit = input.readFloat();
 					break;
 			}
