@@ -45,7 +45,14 @@ public class SynchronizedBatteryData
 	
 	public void sortInventory()
 	{
-		ItemStack[] toSort = (ItemStack[])SetUtil.copy(inventory).toArray();
+		Object[] array = SetUtil.copy(inventory).toArray();
+		
+		ItemStack[] toSort = new ItemStack[array.length];
+		
+		for(int i = 0; i < array.length-1; i++)
+		{
+			toSort[i] = (ItemStack)array[i];
+		}
 		
 		boolean cont = true;
 		ItemStack temp;

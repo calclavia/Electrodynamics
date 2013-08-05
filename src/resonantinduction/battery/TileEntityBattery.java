@@ -33,6 +33,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	
 	public float clientEnergy;
 	public int clientCells;
+	public float clientMaxEnergy;
 
 	@Override
 	public void updateEntity()
@@ -43,6 +44,11 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		
 		if(!worldObj.isRemote)
 		{
+			if(playersUsing.size() > 0)
+			{
+				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+			}
+			
 			if(ticks == 5 && !structure.isMultiblock)
 			{
 				update();
@@ -65,7 +71,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 					player.closeScreen();
 				}
 				
-				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()));
+				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
 			}
 			
 			prevStructure = structure;
@@ -187,20 +193,26 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 	public float getMaxEnergyStored()
 	{
-		float max = 0;
-
-		for (ItemStack itemStack : structure.inventory)
+		if(!worldObj.isRemote)
 		{
-			if (itemStack != null)
+			float max = 0;
+	
+			for (ItemStack itemStack : structure.inventory)
 			{
-				if (itemStack.getItem() instanceof IBattery)
+				if (itemStack != null)
 				{
-					max += ((IBattery) itemStack.getItem()).getMaxEnergyStored();
+					if (itemStack.getItem() instanceof IBattery)
+					{
+						max += ((IBattery) itemStack.getItem()).getMaxEnergyStored();
+					}
 				}
 			}
+	
+			return max;
 		}
-
-		return max;
+		else {
+			return clientMaxEnergy;
+		}
 	}
 	
 	public float getEnergyStored()
@@ -235,13 +247,11 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			
 			clientEnergy = input.readFloat();
 			clientCells = input.readInt();
+			clientMaxEnergy = input.readFloat();
 			
-			if(structure.isMultiblock)
-			{
-				structure.height = input.readInt();
-				structure.length = input.readInt();
-				structure.width = input.readInt();
-			}
+			structure.height = input.readInt();
+			structure.length = input.readInt();
+			structure.width = input.readInt();
 		} catch(Exception e) {}
 	}
 
@@ -252,13 +262,11 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		
 		data.add(getEnergyStored());
 		data.add(structure.inventory.size());
+		data.add(getMaxEnergyStored());
 		
-		if(structure.isMultiblock)
-		{
-			data.add(structure.height);
-			data.add(structure.length);
-			data.add(structure.width);
-		}
+		data.add(structure.height);
+		data.add(structure.length);
+		data.add(structure.width);
 		
 		return data;
 	}
