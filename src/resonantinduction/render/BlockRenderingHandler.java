@@ -52,7 +52,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		else if (block instanceof BlockBattery)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslated(0.5, 1.5, 0.5);
+			GL11.glTranslated(0.5, 1.42, 0.5);
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderBattery.TEXTURE);
 			RenderBattery.MODEL.render(0.0625f);

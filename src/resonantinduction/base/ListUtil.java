@@ -108,7 +108,7 @@ public class ListUtil
 	public static <V> ArrayList<List<V>> split(List<V> list, int divide)
 	{
 		int remain = list.size()%divide;
-		int size = (list.size()/divide)-remain;
+		int size = (list.size()-remain)/divide;
 		
 		ArrayList<List<V>> toReturn = new ArrayList<List<V>>();
 		
