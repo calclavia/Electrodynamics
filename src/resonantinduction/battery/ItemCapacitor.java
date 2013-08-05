@@ -58,7 +58,7 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	@Override
 	public float getMaxEnergyStored()
 	{
-		return 100;
+		return 10;
 	}
 
 	@Override

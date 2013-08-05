@@ -260,12 +260,6 @@ public class BatteryUpdateProtocol
 				}
 			}
 			
-			System.out.println("Bingo");
-			System.out.println("Height: " + structureFound.height);
-			System.out.println("Length: " + structureFound.length);
-			System.out.println("Width: " + structureFound.width);
-			System.out.println("Volume: " + structureFound.locations.size());
-			
 			for(Vector3 obj : structureFound.locations)
 			{
 				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
