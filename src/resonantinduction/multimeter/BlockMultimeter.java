@@ -58,17 +58,15 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 		}
 		else if (metadata == 3)
 		{
-			this.setBlockBounds(1-thickness, 0, 1-thickness, 1, 1, 1-thickness);
-
-		//	this.setBlockBounds(0.5F - thickness, 0.2F, 1.0F - thickness * 2.0F, 0.5F + thickness, 0.8F, 1.0F);
+			this.setBlockBounds(0, 0, 1 - thickness, 1, 1, 1);
 		}
 		else if (metadata == 4)
 		{
-			this.setBlockBounds(0.0F, 0.2F, 0.5F - thickness, thickness * 2.0F, 0.8F, 0.5F + thickness);
+			this.setBlockBounds(0, 0, 0, thickness, 1, 1);
 		}
 		else if (metadata == 5)
 		{
-			this.setBlockBounds(1.0F - thickness * 2.0F, 0.2F, 0.5F - thickness, 1.0F, 0.8F, 0.5F + thickness);
+			this.setBlockBounds(1 - thickness, 0, 0, 1, 1, 1);
 		}
 
 		return super.collisionRayTrace(par1World, par2, par3, par4, par5Vec3, par6Vec3);
