@@ -6,6 +6,7 @@ package resonantinduction.tesla;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
@@ -66,32 +67,34 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 			}
 			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
 			{
-				if (tileEntity.linkCoord == null)
+				if (tileEntity.linked == null)
 				{
 					ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
 					Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
 
 					if (linkVec != null)
 					{
-						if (linkVec.getTileEntity(world) instanceof TileEntityTesla)
+						if (!world.isRemote)
 						{
-							tileEntity.linkCoord = new Vector3(((TileEntityTesla) linkVec.getTileEntity(world)).getTopTelsa());
-							tileEntity.dimID = link.getLinkDim(entityPlayer.getCurrentEquippedItem());
+							int dimID = link.getLinkDim(entityPlayer.getCurrentEquippedItem());
+							World otherWorld = MinecraftServer.getServer().worldServerForDimension(dimID);
 
-							if (!world.isRemote)
+							if (linkVec.getTileEntity(otherWorld) instanceof TileEntityTesla)
 							{
-								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
-							}
+								tileEntity.setLink(new Vector3(((TileEntityTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID);
 
-							link.clearLink(entityPlayer.getCurrentEquippedItem());
-							world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
-							return true;
+								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
+
+								link.clearLink(entityPlayer.getCurrentEquippedItem());
+								world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
+								return true;
+							}
 						}
 					}
 				}
 				else
 				{
-					tileEntity.linkCoord = null;
+					tileEntity.linked = null;
 
 					if (!world.isRemote)
 					{
