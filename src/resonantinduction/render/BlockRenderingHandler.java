@@ -62,10 +62,8 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 		else if (block instanceof BlockMultimeter)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslated(-0.5, 1, -1);
-			// GL11.glTranslated(1.5, 1.5, -0.5);
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(-180, 0.0F, 1, 1.0F);
+			GL11.glRotatef(180, 0, 1, 0);
+			GL11.glTranslated(0, -1, -0.7);
 			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderMultimeter.TEXTURE);
 			RenderMultimeter.MODEL.render(0.0625f);
 			GL11.glPopMatrix();

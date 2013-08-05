@@ -3,28 +3,17 @@
  */
 package resonantinduction.multimeter;
 
-import static net.minecraftforge.common.ForgeDirection.EAST;
-import static net.minecraftforge.common.ForgeDirection.NORTH;
-import static net.minecraftforge.common.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.ForgeDirection.WEST;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
 import resonantinduction.render.BlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A block that detects power.
@@ -34,11 +23,10 @@ import resonantinduction.render.BlockRenderingHandler;
  */
 public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 {
-	private Icon machineIcon;
-
 	public BlockMultimeter(int id)
 	{
 		super("multimeter", id);
+		this.func_111022_d(ResonantInduction.PREFIX + "machine");
 	}
 
 	/**
@@ -48,24 +36,6 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
 		return ForgeDirection.getOrientation(side).ordinal();
-	}
-
-	@Override
-	public Icon getIcon(int side, int metadata)
-	{
-		if (side == metadata)
-		{
-			return this.blockIcon;
-		}
-
-		return this.machineIcon;
-	}
-
-	@Override
-	public void registerIcons(IconRegister iconRegister)
-	{
-		super.registerIcons(iconRegister);
-		this.machineIcon = iconRegister.registerIcon(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override
@@ -106,6 +76,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	{
 		return true;
 	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()

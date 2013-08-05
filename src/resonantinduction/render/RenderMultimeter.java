@@ -34,9 +34,11 @@ public class RenderMultimeter extends TileEntitySpecialRenderer
 		ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
 
 		GL11.glPushMatrix();
+	/	GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
+		//GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(90F, 0, 0, 1);
+		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 /*
 		switch (direction)
 		{
