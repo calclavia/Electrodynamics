@@ -91,7 +91,7 @@ public class ResonantInduction
 	 * Settings
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
-	public static float POWER_PER_COAL = 8;
+	public static float POWER_PER_COAL = 5;
 	public static boolean SOUND_FXS = true;
 
 	/** Block ID by Jyzarc */

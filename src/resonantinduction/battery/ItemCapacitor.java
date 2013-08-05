@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import resonantinduction.api.IBattery;
 import resonantinduction.base.ItemBase;
 
@@ -31,7 +32,13 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
 		double energyStored = this.getEnergyStored(itemStack);
-		par3List.add("Energy: " + (int)energyStored + " KJ");
+		par3List.add("Energy: " + (int) energyStored + "/" + (int) this.getMaxEnergyStored(itemStack) + " KJ");
+	}
+
+	@Override
+	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+	{
+		this.setEnergyStored(par1ItemStack, 0);
 	}
 
 	@Override
@@ -41,9 +48,9 @@ public class ItemCapacitor extends ItemBase implements IBattery
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
-		
+
 		itemStack.getTagCompound().setFloat("energyStored", amount);
-		itemStack.setItemDamage((int)(100 - (amount / getMaxEnergyStored(itemStack)) * 100));
+		itemStack.setItemDamage((int) (100 - (amount / getMaxEnergyStored(itemStack)) * 100));
 	}
 
 	@Override
@@ -53,10 +60,10 @@ public class ItemCapacitor extends ItemBase implements IBattery
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
-		
+
 		float amount = itemStack.getTagCompound().getFloat("energyStored");
-		itemStack.setItemDamage((int)(100 - (amount / getMaxEnergyStored(itemStack)) * 100));
-		
+		itemStack.setItemDamage((int) (100 - (amount / getMaxEnergyStored(itemStack)) * 100));
+
 		return amount;
 	}
 	
@@ -69,7 +76,7 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	@Override
 	public float getMaxEnergyStored(ItemStack itemStack)
 	{
-		return 10;
+		return 20;
 	}
 
 	@Override

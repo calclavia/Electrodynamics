@@ -6,6 +6,9 @@ package resonantinduction.multimeter;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -29,9 +32,49 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 		this.func_111022_d(ResonantInduction.PREFIX + "machine");
 	}
 
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+	{
+		return null;
+	}
+
+	@Override
+	public MovingObjectPosition collisionRayTrace(World par1World, int par2, int par3, int par4, Vec3 par5Vec3, Vec3 par6Vec3)
+	{
+		int metadata = par1World.getBlockMetadata(par2, par3, par4) & 7;
+		float thickness = 0.15f;
+		System.out.println(metadata);
+		if (metadata == 0)
+		{
+			this.setBlockBounds(0, 0, 0, 1, thickness, 1);
+		}
+		else if (metadata == 1)
+		{
+			this.setBlockBounds(0, 1 - thickness, 0, 1, 1, 1);
+		}
+		else if (metadata == 2)
+		{
+			this.setBlockBounds(0, 0, 0, 1, 1, thickness);
+		}
+		else if (metadata == 3)
+		{
+			this.setBlockBounds(0, 0, 1 - thickness, 1, 1, 1);
+		}
+		else if (metadata == 4)
+		{
+			this.setBlockBounds(0, 0, 0, thickness, 1, 1);
+		}
+		else if (metadata == 5)
+		{
+			this.setBlockBounds(1 - thickness, 0, 0, 1, 1, 1);
+		}
+
+		return super.collisionRayTrace(par1World, par2, par3, par4, par5Vec3, par6Vec3);
+	}
+
 	/**
 	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY,
-	 * hitZ, block metadata
+	 * hi@OverridetZ, block metadata
 	 */
 	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
