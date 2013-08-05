@@ -44,11 +44,11 @@ public class ItemBlockMultimeter extends ItemBlock
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+	public boolean onItemUseFirst(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
 	{
 		if (!par2EntityPlayer.isSneaking())
 		{
-			if (!world.isRemote)
+			//if (!world.isRemote)
 			{
 				par2EntityPlayer.addChatMessage("Energy: " + TileEntityMultimeter.getDetectedEnergy(world.getBlockTileEntity(x, y, z)) + " J");
 			}
@@ -56,7 +56,7 @@ public class ItemBlockMultimeter extends ItemBlock
 			return true;
 		}
 
-		return super.onItemUse(par1ItemStack, par2EntityPlayer, world, x, y, z, par7, par8, par9, par10);
+		return super.onItemUseFirst(par1ItemStack, par2EntityPlayer, world, x, y, z, par7, par8, par9, par10);
 	}
 
 	public float getDetection(ItemStack itemStack)

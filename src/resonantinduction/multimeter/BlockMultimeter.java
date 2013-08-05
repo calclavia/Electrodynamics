@@ -7,6 +7,8 @@ import static net.minecraftforge.common.ForgeDirection.EAST;
 import static net.minecraftforge.common.ForgeDirection.NORTH;
 import static net.minecraftforge.common.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.ForgeDirection.WEST;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
+import resonantinduction.render.BlockRenderingHandler;
 
 /**
  * A block that detects power.
@@ -103,9 +106,21 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	{
 		return true;
 	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return BlockRenderingHandler.INSTANCE.getRenderId();
+	}
 
 	@Override
 	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
 	{
 		return false;
 	}
