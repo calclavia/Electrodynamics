@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +31,7 @@ public class PacketHandler implements IPacketHandler
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
 	{
-		if (packet.channel == ResonantInduction.CHANNEL)
+		if (packet.channel.equals(ResonantInduction.CHANNEL))
 		{
 			ByteArrayDataInput dataStream = ByteStreams.newDataInput(packet.data);
 			EntityPlayer entityplayer = (EntityPlayer) player;
@@ -147,6 +148,11 @@ public class PacketHandler implements IPacketHandler
 	public static void sendTileEntityPacketToClients(TileEntity tileEntity, Object... dataValues)
 	{
 		PacketDispatcher.sendPacketToAllPlayers(getTileEntityPacket(tileEntity, dataValues));
+	}
+	
+	public static void sendTileEntityPacketToPlayer(TileEntity tileEntity, EntityPlayer player, Object... dataValues)
+	{
+		((EntityPlayerMP)player).playerNetServerHandler.sendPacketToPlayer(getTileEntityPacket(tileEntity, dataValues));
 	}
 
 	public static Packet250CustomPayload getTileEntityPacket(TileEntity tileEntity, Object... dataValues)
