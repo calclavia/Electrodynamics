@@ -25,14 +25,14 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	{
 		super("capacitor", id);
 		this.setMaxStackSize(1);
-		this.setMaxDamage(1000);
+		this.setMaxDamage(100);
 	}
 
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
 		double energyStored = this.getEnergyStored(itemStack);
-		par3List.add("Energy: " + (int) energyStored + " KJ");
+		par3List.add("Energy: " + (int) energyStored + "/" + (int) this.getMaxEnergyStored(itemStack) + " KJ");
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	@Override
 	public float getMaxEnergyStored(ItemStack itemStack)
 	{
-		return 10;
+		return 20;
 	}
 
 	@Override
