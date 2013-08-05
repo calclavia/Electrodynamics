@@ -95,7 +95,7 @@ public class GuiMultimeter extends GuiContainer
 		GL11.glColor4f(1, 1, 1, 1);
 		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
 
-		int length = (int) (this.tileEntity.getDetectedEnergy() / this.tileEntity.getPeak()) * 115;
+		int length = Math.min((int) (this.tileEntity.getDetectedEnergy() / this.tileEntity.getPeak()) * 115, 115);
 		this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length, 176, 115 - length, 6, length);
 	}
 

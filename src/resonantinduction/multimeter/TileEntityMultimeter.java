@@ -85,17 +85,17 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ResonantInduction.blockMultimeter.blockID);
 			}
 
-			/*
-			 * if (prevDetectedEnergy != this.detectedEnergy) {
-			 * this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord); }
-			 */
+			if (prevDetectedEnergy != this.detectedEnergy)
+			{
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			}
 		}
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 1, (byte) this.detectMode.ordinal(), this.energyLimit);
+		return PacketHandler.getTileEntityPacket(this, (byte) 1, (byte) this.detectMode.ordinal(), this.detectedEnergy, this.energyLimit);
 	}
 
 	@Override
@@ -107,6 +107,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 			{
 				default:
 					this.detectMode = DetectMode.values()[input.readByte()];
+					this.detectedEnergy = input.readFloat();
 					this.energyLimit = input.readFloat();
 					break;
 				case 2:
@@ -132,9 +133,7 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 	public float doGetDetectedEnergy()
 	{
 		ForgeDirection direction = ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-		ForgeDirection opp = direction.getOpposite();
-		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + opp.offsetX, this.yCoord + opp.offsetY, this.zCoord + opp.offsetZ);
-
+		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
 		return getDetectedEnergy(tileEntity);
 	}
 
