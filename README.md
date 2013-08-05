@@ -19,4 +19,4 @@ In order to compile the source code into binary form, you must have a working Mi
 5. Install it into Minecraft just like any other Forge mod.
 
 ### License
-"Resonant Induction" is under the Calclavia Mod License (http://calclavia.com/license/cl).
+"Resonant Induction" is under the Educational Public License (http://calclavia.com/license/rpl).

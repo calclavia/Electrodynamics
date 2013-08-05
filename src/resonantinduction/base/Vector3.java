@@ -248,7 +248,7 @@ public class Vector3
 	{
 		MovingObjectPosition pickedEntity = null;
 		Vec3 startingPosition = this.toVec3();
-		Vec3 look = target.normalize().toVec3();
+		Vec3 look = target.clone().difference(this).normalize().toVec3();
 		double reachDistance = this.distance(target);
 		Vec3 reachPoint = Vec3.createVectorHelper(startingPosition.xCoord + look.xCoord * reachDistance, startingPosition.yCoord + look.yCoord * reachDistance, startingPosition.zCoord + look.zCoord * reachDistance);
 
