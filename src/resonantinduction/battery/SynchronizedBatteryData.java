@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
+import resonantinduction.api.IBattery;
+import resonantinduction.base.SetUtil;
 import resonantinduction.base.Vector3;
 
 public class SynchronizedBatteryData 
@@ -11,6 +13,8 @@ public class SynchronizedBatteryData
 	public Set<Vector3> locations = new HashSet<Vector3>();
 	
 	public Set<ItemStack> inventory = new HashSet<ItemStack>();
+	
+	public ItemStack[] visibleInventory = new ItemStack[3];
 	
 	public int length;
 	
@@ -30,6 +34,37 @@ public class SynchronizedBatteryData
 	public int getMaxCells()
 	{
 		return getVolume()*BatteryManager.CELLS_PER_BATTERY;
+	}
+	
+	public void sortInventory()
+	{
+		ItemStack[] toSort = (ItemStack[])SetUtil.copy(inventory).toArray();
+		
+		boolean cont = true;
+		ItemStack temp;
+		
+		while(cont)
+		{
+			cont = false;
+			
+			for(int j = 0; j < toSort.length-1; j++)
+			{
+				if(((IBattery)toSort[j].getItem()).getEnergyStored(toSort[j]) < ((IBattery)toSort[j+1].getItem()).getEnergyStored(toSort[j+1]))
+                {
+					temp = toSort[j];
+					toSort[j] = toSort[j+1];
+					toSort[j+1] = temp;
+					cont = true;
+                } 
+			}
+		}
+		
+		inventory = new HashSet<ItemStack>();
+		
+		for(ItemStack itemStack : toSort)
+		{
+			inventory.add(itemStack);
+		}
 	}
 	
 	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, Set<ItemStack> inventory)

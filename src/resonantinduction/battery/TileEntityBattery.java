@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -24,13 +25,14 @@ import com.google.common.io.ByteArrayDataInput;
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
+public class TileEntityBattery extends TileEntityBase implements IPacketReceiver, IInventory
 {
-	public Set<ItemStack> cachedInventory = new HashSet<ItemStack>();
-	
 	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
 	
 	public SynchronizedBatteryData prevStructure;
+	
+	public float clientEnergy;
+	public int clientCells;
 
 	@Override
 	public void updateEntity()
@@ -44,6 +46,15 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			if(ticks == 5 && !structure.isMultiblock)
 			{
 				update();
+			}
+			
+			if(structure.visibleInventory[0] != null)
+			{
+				if(structure.inventory.size() < structure.getMaxCells())
+				{
+					structure.inventory.add(structure.visibleInventory[0]);
+					structure.sortInventory();
+				}
 			}
 			
 			if(prevStructure != structure)
@@ -71,13 +82,13 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         super.readFromNBT(nbtTags);
         
         NBTTagList tagList = nbtTags.getTagList("Items");
-        cachedInventory = new HashSet<ItemStack>();
+        structure.inventory = new HashSet<ItemStack>();
 
         for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
         {
             NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
 
-            cachedInventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
+            structure.inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
         }
     }
 
@@ -88,7 +99,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         
         NBTTagList tagList = new NBTTagList();
 
-        for(ItemStack itemStack : cachedInventory)
+        for(ItemStack itemStack : structure.inventory)
         {
             if(itemStack != null)
             {
@@ -137,7 +148,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	{
 		float max = 0;
 
-		for (ItemStack itemStack : cachedInventory)
+		for (ItemStack itemStack : structure.inventory)
 		{
 			if (itemStack != null)
 			{
@@ -155,7 +166,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	{
 		float energy = 0;
 		
-		for (ItemStack itemStack : cachedInventory)
+		for (ItemStack itemStack : structure.inventory)
 		{
 			if (itemStack != null)
 			{
@@ -197,5 +208,71 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		}
 		
 		return data;
+	}
+
+	@Override
+	public int getSizeInventory() 
+	{
+		return 4;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j) 
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i) 
+	{
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack) 
+	{
+		
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return "Battery";
+	}
+
+	@Override
+	public boolean isInvNameLocalized() 
+	{
+		return false;
+	}
+
+	@Override
+	public int getInventoryStackLimit() 
+	{
+		return 64;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) 
+	{
+		return true;
+	}
+
+	@Override
+	public void openChest() {}
+
+	@Override
+	public void closeChest() {}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) 
+	{
+		return false;
 	}
 }
