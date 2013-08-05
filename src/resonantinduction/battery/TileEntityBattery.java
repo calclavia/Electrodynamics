@@ -114,6 +114,17 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	{
 		PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
 	}
+	
+	@Override
+	public void validate()
+	{
+		super.validate();
+		
+		if(worldObj.isRemote)
+		{
+			PacketHandler.sendDataRequest(this);
+		}
+	}
 
 	@Override
 	public void invalidate()
