@@ -50,7 +50,7 @@ public class ResonantInduction
 	 */
 	public static final String ID = "resonantinduction";
 	public static final String NAME = "Resonant Induction";
-	public static final String CHANNEL = "R_INDUC";
+	public static final String CHANNEL = "RESIND";
 
 	public static final String MAJOR_VERSION = "@MAJOR@";
 	public static final String MINOR_VERSION = "@MINOR@";
