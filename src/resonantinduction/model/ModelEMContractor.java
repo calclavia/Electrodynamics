@@ -7,6 +7,7 @@ public class ModelEMContractor extends ModelBase
 {
 	public boolean doSpin;
 
+	// fields
 	ModelRenderer frame1;
 	ModelRenderer frame2;
 	ModelRenderer frame3;
@@ -15,8 +16,6 @@ public class ModelEMContractor extends ModelBase
 	ModelRenderer frame6;
 	ModelRenderer frame7;
 	ModelRenderer frame8;
-	ModelRenderer base_width;
-	ModelRenderer nase_depth;
 	ModelRenderer left_frame_connector;
 	ModelRenderer right_frame_connector;
 	ModelRenderer teslapole;
@@ -24,10 +23,6 @@ public class ModelEMContractor extends ModelBase
 	ModelRenderer coil2;
 	ModelRenderer coil3;
 	ModelRenderer coil4;
-	ModelRenderer base1;
-	ModelRenderer base2;
-	ModelRenderer base3;
-	ModelRenderer base4;
 	ModelRenderer pole1;
 	ModelRenderer pole2;
 	ModelRenderer pole3;
@@ -36,12 +31,13 @@ public class ModelEMContractor extends ModelBase
 	ModelRenderer poletop2;
 	ModelRenderer poletop3;
 	ModelRenderer poletop4;
-	ModelRenderer nase_depth2;
+	ModelRenderer base1;
+	ModelRenderer base2;
+	ModelRenderer base3;
 
 	public ModelEMContractor(boolean spin)
 	{
 		doSpin = spin;
-
 		textureWidth = 128;
 		textureHeight = 128;
 
@@ -93,18 +89,6 @@ public class ModelEMContractor extends ModelBase
 		frame8.setTextureSize(128, 128);
 		frame8.mirror = true;
 		setRotation(frame8, 0F, 0F, 0F);
-		base_width = new ModelRenderer(this, 0, 35);
-		base_width.addBox(0F, 0F, 0F, 6, 1, 4);
-		base_width.setRotationPoint(-3F, 23F, -2F);
-		base_width.setTextureSize(128, 128);
-		base_width.mirror = true;
-		setRotation(base_width, 0F, 0F, 0F);
-		nase_depth = new ModelRenderer(this, 0, 42);
-		nase_depth.addBox(0F, 0F, 0F, 4, 1, 1);
-		nase_depth.setRotationPoint(-2F, 23F, 2F);
-		nase_depth.setTextureSize(128, 128);
-		nase_depth.mirror = true;
-		setRotation(nase_depth, 0F, 0F, 0F);
 		left_frame_connector = new ModelRenderer(this, 0, 20);
 		left_frame_connector.addBox(0F, 0F, 0F, 1, 1, 2);
 		left_frame_connector.setRotationPoint(-3F, 15F, -1F);
@@ -147,30 +131,6 @@ public class ModelEMContractor extends ModelBase
 		coil4.setTextureSize(128, 128);
 		coil4.mirror = true;
 		setRotation(coil4, 0F, 0F, 0F);
-		base1 = new ModelRenderer(this, 17, 5);
-		base1.addBox(0F, 0F, 0F, 3, 1, 3);
-		base1.setRotationPoint(-8F, 23F, -1.5F);
-		base1.setTextureSize(128, 128);
-		base1.mirror = true;
-		setRotation(base1, 0F, 0F, 0F);
-		base2 = new ModelRenderer(this, 17, 5);
-		base2.addBox(0F, 0F, 0F, 3, 1, 3);
-		base2.setRotationPoint(-1.5F, 23F, 5F);
-		base2.setTextureSize(128, 128);
-		base2.mirror = true;
-		setRotation(base2, 0F, 0F, 0F);
-		base3 = new ModelRenderer(this, 17, 5);
-		base3.addBox(0F, 0F, 0F, 3, 1, 3);
-		base3.setRotationPoint(-1.5F, 23F, -8F);
-		base3.setTextureSize(128, 128);
-		base3.mirror = true;
-		setRotation(base3, 0F, 0F, 0F);
-		base4 = new ModelRenderer(this, 17, 5);
-		base4.addBox(0F, 0F, 0F, 3, 1, 3);
-		base4.setRotationPoint(5F, 23F, -1.5F);
-		base4.setTextureSize(128, 128);
-		base4.mirror = true;
-		setRotation(base4, 0F, 0F, 0F);
 		pole1 = new ModelRenderer(this, 5, 26);
 		pole1.addBox(-0.5F, -1F, -0.5F, 1, 6, 1);
 		pole1.setRotationPoint(0F, 18F, 6.5F);
@@ -219,12 +179,24 @@ public class ModelEMContractor extends ModelBase
 		poletop4.setTextureSize(128, 128);
 		poletop4.mirror = true;
 		setRotation(poletop4, 0F, 0F, 0F);
-		nase_depth2 = new ModelRenderer(this, 0, 42);
-		nase_depth2.addBox(0F, 0F, 0F, 4, 1, 1);
-		nase_depth2.setRotationPoint(-2F, 23F, -3F);
-		nase_depth2.setTextureSize(128, 128);
-		nase_depth2.mirror = true;
-		setRotation(nase_depth2, 0F, 0F, 0F);
+		base1 = new ModelRenderer(this, 0, 55);
+		base1.addBox(0F, 0F, 0F, 16, 1, 8);
+		base1.setRotationPoint(-8F, 23F, -4F);
+		base1.setTextureSize(128, 128);
+		base1.mirror = true;
+		setRotation(base1, 0F, 0F, 0F);
+		base2 = new ModelRenderer(this, 0, 68);
+		base2.addBox(0F, 0F, 0F, 8, 1, 5);
+		base2.setRotationPoint(-4F, 23F, 3F);
+		base2.setTextureSize(128, 128);
+		base2.mirror = true;
+		setRotation(base2, 0F, 0F, 0F);
+		base3 = new ModelRenderer(this, 0, 79);
+		base3.addBox(0F, 0F, 0F, 8, 1, 5);
+		base3.setRotationPoint(-4F, 23F, -8F);
+		base3.setTextureSize(128, 128);
+		base3.mirror = true;
+		setRotation(base3, 0F, 0F, 0F);
 	}
 
 	public void render(float f5)
@@ -245,8 +217,6 @@ public class ModelEMContractor extends ModelBase
 		frame6.render(f5);
 		frame7.render(f5);
 		frame8.render(f5);
-		base_width.render(f5);
-		nase_depth.render(f5);
 		left_frame_connector.render(f5);
 		right_frame_connector.render(f5);
 		teslapole.render(f5);
@@ -254,10 +224,6 @@ public class ModelEMContractor extends ModelBase
 		coil2.render(f5);
 		coil3.render(f5);
 		coil4.render(f5);
-		base1.render(f5);
-		base2.render(f5);
-		base3.render(f5);
-		base4.render(f5);
 		pole1.render(f5);
 		pole2.render(f5);
 		pole3.render(f5);
@@ -266,7 +232,9 @@ public class ModelEMContractor extends ModelBase
 		poletop2.render(f5);
 		poletop3.render(f5);
 		poletop4.render(f5);
-		nase_depth2.render(f5);
+		base1.render(f5);
+		base2.render(f5);
+		base3.render(f5);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
