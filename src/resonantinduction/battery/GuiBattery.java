@@ -18,6 +18,7 @@ public class GuiBattery extends GuiContainer
 	{
 		super(new ContainerBattery(inventory, tentity));
 		tileEntity = tentity;
+		ySize+=41;
 	}
 	
 	@Override
@@ -27,7 +28,10 @@ public class GuiBattery extends GuiContainer
 		int yAxis = (mouseY - (height - ySize) / 2);
 		
 		fontRenderer.drawString("Battery", 43, 6, 0x404040);
-		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x00CD00);
+		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x404040);
+		fontRenderer.drawString("Cells: " + tileEntity.clientCells + " / " + tileEntity.structure.getMaxCells(), 62, 23, 0x404040);
+		fontRenderer.drawString("Energy: " + tileEntity.getEnergyStored() + " / " + tileEntity.getMaxEnergyStored(), 62, 32, 0x404040);
+		fontRenderer.drawString("Volume: " + tileEntity.structure.getVolume(), 62, 41, 0x404040);
 	}
 	
 	@Override
@@ -41,5 +45,8 @@ public class GuiBattery extends GuiContainer
         
         int xAxis = (mouseX - (width - xSize) / 2);
  		int yAxis = (mouseY - (height - ySize) / 2);
+ 		
+ 		int scale = (int)((tileEntity.getEnergyStored() / tileEntity.getMaxEnergyStored()) * 105);
+ 		drawTexturedModalRect(guiWidth + 61, guiHeight + 102, 0, 207, scale, 12);
     }
 }
