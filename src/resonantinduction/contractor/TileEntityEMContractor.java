@@ -321,7 +321,9 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				break;
 		}
 
-		item.setVelocity(0, 0, 0);
+		item.motionX = 0;
+		item.motionY = 0;
+		item.motionZ = 0;
 
 		return item;
 	}
