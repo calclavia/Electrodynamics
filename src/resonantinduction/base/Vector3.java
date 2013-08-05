@@ -244,20 +244,21 @@ public class Vector3
 		return world.getBlockTileEntity((int) this.x, (int) this.y, (int) this.z);
 	}
 
-	public MovingObjectPosition rayTraceEntities(World world, double rotationYaw, double rotationPitch, double reachDistance)
+	public MovingObjectPosition rayTraceEntities(World world, Vector3 target)
 	{
 		MovingObjectPosition pickedEntity = null;
 		Vec3 startingPosition = this.toVec3();
-		Vec3 look = getDeltaPositionFromRotation(rotationYaw, rotationPitch).toVec3();
+		Vec3 look = target.normalize().toVec3();
+		double reachDistance = this.distance(target);
 		Vec3 reachPoint = Vec3.createVectorHelper(startingPosition.xCoord + look.xCoord * reachDistance, startingPosition.yCoord + look.yCoord * reachDistance, startingPosition.zCoord + look.zCoord * reachDistance);
 
 		double checkBorder = 1.1 * reachDistance;
 		AxisAlignedBB boxToScan = AxisAlignedBB.getAABBPool().getAABB(-checkBorder, -checkBorder, -checkBorder, checkBorder, checkBorder, checkBorder).offset(this.x, this.y, this.z);
-		;
 
 		@SuppressWarnings("unchecked")
 		List<Entity> entitiesHit = world.getEntitiesWithinAABBExcludingEntity(null, boxToScan);
 		double closestEntity = reachDistance;
+
 		if (entitiesHit == null || entitiesHit.isEmpty())
 		{
 			return null;

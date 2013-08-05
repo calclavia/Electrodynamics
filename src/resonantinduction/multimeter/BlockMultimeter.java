@@ -30,7 +30,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 
 	public BlockMultimeter(int id)
 	{
-		super("multimeter", id, Material.iron);
+		super("multimeter", id);
 	}
 
 	public static int determineOrientation(World par0World, int par1, int par2, int par3, EntityLivingBase par4EntityLivingBase)

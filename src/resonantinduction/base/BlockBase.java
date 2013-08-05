@@ -15,11 +15,12 @@ import resonantinduction.TabRI;
  */
 public class BlockBase extends Block
 {
-	public BlockBase(String name, int id, Material material)
+	public BlockBase(String name, int id)
 	{
-		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), material);
+		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + name);
 		this.func_111022_d(ResonantInduction.PREFIX + name);
+		this.setHardness(1f);
 	}
 }
