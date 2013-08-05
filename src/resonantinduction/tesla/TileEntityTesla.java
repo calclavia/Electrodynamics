@@ -198,7 +198,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 								{
 									if (mop.entityHit instanceof EntityLivingBase)
 									{
-										mop.entityHit.attackEntityFrom(DamageSource.magic, 3);
+										mop.entityHit.attackEntityFrom(DamageSource.magic, 4);
 										ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 									}
 								}
