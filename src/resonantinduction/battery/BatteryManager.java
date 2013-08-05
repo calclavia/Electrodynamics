@@ -1,16 +1,11 @@
 package resonantinduction.battery;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.base.Vector3;
+import resonantinduction.api.IBattery;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -40,5 +35,33 @@ public class BatteryManager implements ITickHandler
 	public String getLabel()
 	{
 		return "BatteryMultiblockManager";
+	}
+	
+	public static class SlotOut extends Slot
+	{
+		public SlotOut(IInventory inventory, int index, int x, int y)
+		{
+			super(inventory, index, x, y);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack itemstack)
+		{
+			return false;
+		}
+	}
+	
+	public static class SlotBattery extends Slot
+	{
+		public SlotBattery(IInventory inventory, int index, int x, int y)
+		{
+			super(inventory, index, x, y);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack itemstack)
+		{
+			return itemstack.getItem() instanceof IBattery;
+		}
 	}
 }

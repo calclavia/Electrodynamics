@@ -145,6 +145,16 @@ public class SetUtil
 		return toReturn;
 	}
 	
+	public static <V> V getTop(Set<V> set)
+	{
+		for(V obj : set)
+		{
+			return obj;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Returns a List of a Set, while maintaining all it's objects.
 	 * @param set - set to turn into a list

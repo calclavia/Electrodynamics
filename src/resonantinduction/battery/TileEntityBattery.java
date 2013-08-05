@@ -53,6 +53,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				if(structure.inventory.size() < structure.getMaxCells())
 				{
 					structure.inventory.add(structure.visibleInventory[0]);
+					structure.visibleInventory[0] = null;
 					structure.sortInventory();
 				}
 			}
@@ -164,20 +165,26 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	
 	public float getEnergyStored()
 	{
-		float energy = 0;
-		
-		for (ItemStack itemStack : structure.inventory)
+		if(!worldObj.isRemote)
 		{
-			if (itemStack != null)
+			float energy = 0;
+			
+			for (ItemStack itemStack : structure.inventory)
 			{
-				if (itemStack.getItem() instanceof IBattery)
+				if (itemStack != null)
 				{
-					energy += ((IBattery) itemStack.getItem()).getEnergyStored(itemStack);
+					if (itemStack.getItem() instanceof IBattery)
+					{
+						energy += ((IBattery) itemStack.getItem()).getEnergyStored(itemStack);
+					}
 				}
 			}
+			
+			return energy;
 		}
-		
-		return energy;
+		else {
+			return clientEnergy;
+		}
 	}
 
 	@Override
@@ -185,6 +192,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	{
 		try {
 			structure.isMultiblock = input.readBoolean();
+			
+			clientEnergy = input.readFloat();
+			clientCells = input.readInt();
 			
 			if(structure.isMultiblock)
 			{
@@ -198,9 +208,12 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	@Override
 	public ArrayList getNetworkedData(ArrayList data)
 	{
-		data.add(structure != null);
+		data.add(structure.isMultiblock);
 		
-		if(structure != null)
+		data.add(getEnergyStored());
+		data.add(structure.inventory.size());
+		
+		if(structure.isMultiblock)
 		{
 			data.add(structure.height);
 			data.add(structure.length);
@@ -219,7 +232,17 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return null;
+		if(i == 0)
+		{
+			return structure.visibleInventory[0];
+		}
+		else if(i == 1)
+		{
+			return SetUtil.getTop(structure.inventory);
+		}
+		else {
+			return structure.visibleInventory[i-1];
+		}
 	}
 
 	@Override
@@ -231,13 +254,26 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) 
 	{
-		return null;
+		return getStackInSlot(i);
 	}
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) 
 	{
-		
+		if(i == 0)
+		{
+			structure.visibleInventory[0] = itemstack;
+		}
+		else if(i == 1)
+		{
+			if(itemstack == null)
+			{
+				structure.inventory.remove(SetUtil.getTop(structure.inventory));
+			}
+		}
+		else {
+			structure.visibleInventory[i-1] = itemstack;
+		}
 	}
 
 	@Override
