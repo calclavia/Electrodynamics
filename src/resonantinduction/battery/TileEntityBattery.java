@@ -49,11 +49,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 		if (!worldObj.isRemote)
 		{
-			if (playersUsing.size() > 0)
-			{
-				this.updateInventory();
-			}
-
 			if (ticks == 5 && !structure.isMultiblock)
 			{
 				update();
@@ -100,13 +95,18 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 					player.closeScreen();
 				}
 
-				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+				updateInventory();
 			}
 
 			prevStructure = structure;
 
 			structure.wroteInventory = false;
 			structure.didTick = false;
+			
+			if(playersUsing.size() > 0)
+			{
+				updateInventory();
+			}
 		}
 	}
 
