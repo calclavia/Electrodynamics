@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.DamageSource;
@@ -59,6 +60,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	private TileEntityTesla controlCache = null;
 
 	/**
+	 * Quantum Tesla
+	 */
+	public Vector3 linkCoord;
+	public int dimID;
+
+	/**
 	 * Client
 	 */
 	private int zapCounter = 0;
@@ -82,8 +89,27 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		if (this.isController())
 		{
 			// TODO: Fix client side issue. || this.worldObj.isRemote
-			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.getEnergyStored() > 0 && this.doTransfer) || this.worldObj.isRemote) && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+			if (((this.doTransfer) || this.worldObj.isRemote) && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
+				/**
+				 * Quantum transportation.
+				 */
+				if (this.linkCoord != null)
+				{
+					if (!this.worldObj.isRemote)
+					{
+						TileEntity tileEntity = MinecraftServer.getServer().worldServerForDimension(this.dimID).getBlockTileEntity((int) this.linkCoord.x, (int) this.linkCoord.y, (int) this.linkCoord.z);
+
+						if (tileEntity instanceof TileEntityTesla && !tileEntity.isInvalid())
+						{
+							this.transfer(((TileEntityTesla) tileEntity), this.getEnergyStored());
+						}
+					}
+
+					final TileEntityTesla topTesla = this.getTopTelsa();
+					final Vector3 topTeslaVector = new Vector3(topTesla);
+				}
+
 				List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
 
 				for (ITesla tesla : TeslaGrid.instance().get())
@@ -163,8 +189,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 						double distance = topTeslaVector.distance(targetVector);
 						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
 
-						tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
-						this.transfer(-transferEnergy, true);
+						this.transfer(tesla, transferEnergy);
 
 						if (this.attackEntities && this.zapCounter % 5 == 0)
 						{
@@ -255,6 +280,12 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		}
 
 		this.clearCache();
+	}
+
+	private void transfer(ITesla tesla, float transferEnergy)
+	{
+		tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
+		this.transfer(-transferEnergy, true);
 	}
 
 	@Override

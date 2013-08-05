@@ -4,13 +4,14 @@
 package resonantinduction.tesla;
 
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
+import resonantinduction.base.Vector3;
+import resonantinduction.entangler.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -62,6 +63,43 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
 				}
 				return true;
+			}
+			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
+			{
+				if (tileEntity.linkCoord == null)
+				{
+					ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
+					Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
+
+					if (linkVec != null)
+					{
+						if (linkVec.getTileEntity(world) instanceof TileEntityTesla)
+						{
+							tileEntity.linkCoord = new Vector3(((TileEntityTesla) linkVec.getTileEntity(world)).getTopTelsa());
+							tileEntity.dimID = link.getLinkDim(entityPlayer.getCurrentEquippedItem());
+
+							if (!world.isRemote)
+							{
+								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
+							}
+
+							link.clearLink(entityPlayer.getCurrentEquippedItem());
+							world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
+							return true;
+						}
+					}
+				}
+				else
+				{
+					tileEntity.linkCoord = null;
+
+					if (!world.isRemote)
+					{
+						entityPlayer.addChatMessage("Unlinked Tesla.");
+					}
+
+					return true;
+				}
 			}
 		}
 		else

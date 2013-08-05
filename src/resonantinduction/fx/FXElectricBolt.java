@@ -68,6 +68,11 @@ public class FXElectricBolt extends EntityFX
 		this.start = new BoltPoint(startVec);
 		this.end = new BoltPoint(targetVec);
 
+		if (this.end.y == Double.POSITIVE_INFINITY)
+		{
+			this.end.y = Minecraft.getMinecraft().thePlayer.posY + 30;
+		}
+
 		/** By default, we do an electrical color */
 		this.segmentCount = 1;
 		this.particleMaxAge = (3 + this.rand.nextInt(3) - 1);
