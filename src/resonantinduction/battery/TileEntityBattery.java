@@ -194,20 +194,69 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	/**
 	 * @return added energy
 	 */
-	public float addEnergy(float amount)
+	public float addEnergy(float amount, boolean doAdd)
 	{
-		//go from top to bottom
-		return 0;
+		float added = 0;
+		
+		for(ItemStack itemStack : structure.inventory)
+		{
+			if(itemStack.getItem() instanceof IBattery)
+			{
+				IBattery battery = (IBattery)itemStack.getItem();
+				
+				float needed = amount-added;
+				float itemAdd = Math.min(battery.getMaxEnergyStored()-battery.getEnergyStored(itemStack), needed);
+				
+				if(doAdd)
+				{
+					battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) + itemAdd);
+				}
+				
+				added += itemAdd;
+				
+				if(amount == added)
+				{
+					break;
+				}
+			}
+		}
+		
+		return added;
 	}
 	
 	/**
 	 * @return removed energy
 	 */
-	public float removeEnergy(float amount)
+	public float removeEnergy(float amount, boolean doRemove)
 	{
-		List inverse = ListUtil.inverse(structure.inventory);
-		//go from bottom to top
-		return 0;
+		List<ItemStack> inverse = ListUtil.inverse(structure.inventory);
+		
+		float removed = 0;
+		
+		for(ItemStack itemStack : inverse)
+		{
+			if(itemStack.getItem() instanceof IBattery)
+			{
+				IBattery battery = (IBattery)itemStack.getItem();
+				
+				float needed = amount-removed;
+				float itemRemove = Math.min(battery.getEnergyStored(itemStack), needed);
+				
+				if(doRemove)
+				{
+					battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) - itemRemove);
+				}
+				
+				removed += itemRemove;
+				
+				if(amount == removed)
+				{
+					break;
+				}
+			}
+		}
+		
+		return removed;
 	}
 
 	public float getMaxEnergyStored()
