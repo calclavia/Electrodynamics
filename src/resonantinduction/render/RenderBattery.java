@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.model.ModelBattery;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,6 +35,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderBattery extends TileEntitySpecialRenderer
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "battery.png");
+	public static final ResourceLocation TEXTURE_MULTI = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "battery_multi.png");
+	
 	public static final ModelBattery MODEL = new ModelBattery();
 	private EntityItem fakeBattery;
 	private Random random = new Random();
@@ -56,7 +59,15 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		this.func_110628_a(TEXTURE);
+		
+		if(((TileEntityBattery)t).structure.isMultiblock)
+		{
+			this.func_110628_a(TEXTURE_MULTI);
+		}
+		else {
+			this.func_110628_a(TEXTURE);
+		}
+		
 		MODEL.render(0.0625f);
 		GL11.glPopMatrix();
 

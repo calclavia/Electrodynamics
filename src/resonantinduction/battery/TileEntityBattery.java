@@ -18,6 +18,7 @@ import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import resonantinduction.base.TileEntityBase;
+import resonantinduction.tesla.TeslaGrid;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -40,6 +41,11 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	public void updateEntity()
 	{
 		ticks++;
+		
+		if(ticks == 1)
+		{
+			TeslaGrid.instance().register(this);
+		}
 		
 		if(!worldObj.isRemote)
 		{
@@ -75,11 +81,16 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			
 			prevStructure = structure;
 			
-			if(structure != null)
-			{
-				structure.didTick = false;
-			}
+			structure.wroteInventory = false;
+			structure.didTick = false;
 		}
+	}
+	
+	@Override
+	public void invalidate()
+	{
+		TeslaGrid.instance().unregister(this);
+		super.invalidate();
 	}
 	
 	@Override
@@ -207,7 +218,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				IBattery battery = (IBattery)itemStack.getItem();
 				
 				float needed = amount-added;
-				float itemAdd = Math.min(battery.getMaxEnergyStored()-battery.getEnergyStored(itemStack), needed);
+				float itemAdd = Math.min(battery.getMaxEnergyStored(itemStack)-battery.getEnergyStored(itemStack), needed);
 				
 				if(doAdd)
 				{
@@ -273,7 +284,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				{
 					if (itemStack.getItem() instanceof IBattery)
 					{
-						max += ((IBattery) itemStack.getItem()).getMaxEnergyStored();
+						max += ((IBattery) itemStack.getItem()).getMaxEnergyStored(itemStack);
 					}
 				}
 			}

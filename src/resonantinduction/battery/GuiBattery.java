@@ -30,7 +30,7 @@ public class GuiBattery extends GuiContainer
 		fontRenderer.drawString("Battery", 43, 6, 0x404040);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x404040);
 		fontRenderer.drawString("Cells: " + tileEntity.clientCells + " / " + tileEntity.structure.getMaxCells(), 62, 23, 0x404040);
-		fontRenderer.drawString("Energy: " + tileEntity.getEnergyStored() + " / " + tileEntity.getMaxEnergyStored(), 62, 32, 0x404040);
+		fontRenderer.drawString("Energy: " + (int)tileEntity.getEnergyStored() + " / " + (int)tileEntity.getMaxEnergyStored(), 62, 32, 0x404040);
 		fontRenderer.drawString("Volume: " + tileEntity.structure.getVolume(), 62, 41, 0x404040);
 	}
 	
