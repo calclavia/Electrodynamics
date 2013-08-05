@@ -100,7 +100,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		
 		if(!world.isRemote)
 		{
-			entityPlayer.openGui(ResonantInduction.INSTNACE, 0, world, x, y, z);
+			entityPlayer.openGui(ResonantInduction.INSTANCE, 0, world, x, y, z);
 		}
 
 		return true;

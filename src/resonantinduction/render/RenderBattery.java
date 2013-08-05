@@ -71,9 +71,13 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		MODEL.render(0.0625f);
 		GL11.glPopMatrix();
 
-		int renderAmount = 16;
-
-		itemRender:
+		int renderAmount = Math.min(((TileEntityBattery)t).clientCells, 16);
+		
+		if(renderAmount == 0)
+		{
+			return;
+		}
+		
 		for (int i = 2; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
@@ -130,9 +134,9 @@ public class RenderBattery extends TileEntitySpecialRenderer
 				this.renderItemSimple(this.fakeBattery);
 				GL11.glPopMatrix();
 
-				if (renderAmount-- <= 0)
+				if (--renderAmount == 0)
 				{
-					break itemRender;
+					return;
 				}
 			}
 		}

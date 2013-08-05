@@ -47,7 +47,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 		}
 		else
 		{
-			entityPlayer.openGui(ResonantInduction.INSTNACE, 0, world, x, y, z);
+			entityPlayer.openGui(ResonantInduction.INSTANCE, 0, world, x, y, z);
 		}
 
 		return true;
