@@ -11,8 +11,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.IBattery;
+import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import resonantinduction.base.TileEntityBase;
@@ -24,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityBase implements IPacketReceiver, IInventory
+public class TileEntityBattery extends TileEntityBase implements IPacketReceiver, IInventory, ITesla
 {
 	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
 	
@@ -93,6 +95,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	
 	        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
 	        {
+	        	System.out.println("Read");
 	            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
 	            int slotID = tagCompound.getInteger("Slot");
 	            structure.inventory.add(slotID, ItemStack.loadItemStackFromNBT(tagCompound));
@@ -140,6 +143,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		        {
 		            if(structure.inventory.get(slotCount) != null)
 		            {
+		            	System.out.println("Save");
 		                NBTTagCompound tagCompound = new NBTTagCompound();
 		                tagCompound.setInteger("Slot", slotCount);
 		                structure.inventory.get(slotCount).writeToNBT(tagCompound);
@@ -467,5 +471,17 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) 
 	{
 		return false;
+	}
+
+	@Override
+	public float transfer(float transferEnergy, boolean doTransfer) 
+	{
+		return addEnergy(transferEnergy, doTransfer);
+	}
+
+	@Override
+	public boolean canReceive(TileEntity transferTile)
+	{
+		return true;
 	}
 }

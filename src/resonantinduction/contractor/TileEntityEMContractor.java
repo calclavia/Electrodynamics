@@ -29,7 +29,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author AidanBrady
  * 
  */
-public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver, ITesla
+public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -40,8 +40,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	private ForgeDirection facing = ForgeDirection.UP;
 
 	private int pushDelay;
-
-	private float energyStored;
 
 	private AxisAlignedBB operationBounds;
 	private AxisAlignedBB suckBounds;
@@ -159,8 +157,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 				if (operationBounds != null)
 				{
-					energyStored -= ENERGY_USAGE;
-
 					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
 					{
 						if (this.worldObj.isRemote && this.ticks % 5 == 0)
@@ -417,7 +413,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		this.facing = ForgeDirection.getOrientation(nbt.getInteger("facing"));
 		this.suck = nbt.getBoolean("suck");
-		this.energyStored = nbt.getFloat("energyStored");
 		this.dyeID = nbt.getInteger("dyeID");
 		this.tempLinkVector = new Vector3(nbt.getInteger("link_x"), nbt.getInteger("link_y"), nbt.getInteger("link_z"));
 		updateBounds();
@@ -430,7 +425,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 		nbt.setInteger("facing", facing.ordinal());
 		nbt.setBoolean("suck", suck);
-		nbt.setFloat("energyStored", energyStored);
 		nbt.setInteger("dyeID", this.dyeID);
 
 		if (this.linked != null)
@@ -448,7 +442,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		{
 			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
-			energyStored = input.readFloat();
 			this.dyeID = input.readInt();
 
 			if (input.readBoolean())
@@ -469,7 +462,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	{
 		data.add(facing.ordinal());
 		data.add(suck);
-		data.add(energyStored);
 		data.add(this.dyeID);
 
 		if (this.linked != null)
@@ -485,25 +477,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		}
 
 		return data;
-	}
-
-	@Override
-	public float transfer(float transferEnergy, boolean doTransfer)
-	{
-		float energyToUse = Math.min(transferEnergy, ENERGY_USAGE - energyStored);
-
-		if (doTransfer)
-		{
-			energyStored += energyToUse;
-		}
-
-		return energyToUse;
-	}
-
-	@Override
-	public boolean canReceive(TileEntity transferTile)
-	{
-		return true;
 	}
 
 	/**
