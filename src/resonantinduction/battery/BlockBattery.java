@@ -4,7 +4,6 @@
 package resonantinduction.battery;
 
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
+import resonantinduction.api.IBattery;
 import resonantinduction.base.BlockBase;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -32,7 +32,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float par7, float par8, float par9)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float xClick, float yClick, float zClick)
 	{
 		if (entityPlayer.isSneaking())
 		{
@@ -40,7 +40,61 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		}
 		else
 		{
+			if (entityPlayer.getCurrentEquippedItem() != null)
+			{
+				if (entityPlayer.getCurrentEquippedItem().getItem() instanceof IBattery)
+				{
+					if (side != 0 && side != 1)
+					{
+						/**
+						 * Place cells into block. 2 Dimensional Click Zone
+						 */
+						float xHit = 0;
+						float yHit = yClick;
 
+						if (side == 2 || side == 3)
+						{
+							xHit = xClick;
+
+							if (side == 2)
+							{
+								xHit = 1 - xHit;
+							}
+						}
+						else if (side == 4 || side == 5)
+						{
+							xHit = zClick;
+
+							if (side == 5)
+							{
+								xHit = 1 - xHit;
+							}
+						}
+
+						// Convert to quadrant coords.
+						xHit -= 0.5f;
+						yHit -= 0.5f;
+
+						// Quadrant 1
+						if (xHit > 0 && yHit > 0)
+						{
+
+						}// Quadrant 2
+						if (xHit > 0 && yHit < 0)
+						{
+
+						}// Quadrant 3
+						if (xHit < 0 && yHit < 0)
+						{
+
+						}// Quadrant 4
+						if (xHit < 0 && yHit > 0)
+						{
+
+						}
+					}
+				}
+			}
 		}
 
 		return true;
