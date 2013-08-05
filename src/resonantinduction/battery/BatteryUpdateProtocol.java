@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -27,12 +28,8 @@ public class BatteryUpdateProtocol
 	{
 		pointer = tileEntity;
 	}
-	
-	/**
-	 * Recursively loops through each node connected to the given TileEntity.
-	 * @param tile - the TileEntity to loop over
-	 */
-	public void loopThrough(TileEntity tile)
+
+	private void loopThrough(TileEntity tile)
 	{
 		if(structureFound == null)
 		{
@@ -202,7 +199,7 @@ public class BatteryUpdateProtocol
 		return false;
 	}
 	
-	public void disperseCells()
+	private void disperseCells()
 	{
 		SynchronizedBatteryData oldStructure = null;
 		
@@ -219,8 +216,8 @@ public class BatteryUpdateProtocol
 		{
 			int maxCells = iteratedNodes.size()*BatteryManager.CELLS_PER_BATTERY;
 			
-			//TODO eject these
 			List<ItemStack> rejected = ListUtil.capRemains(oldStructure.inventory, maxCells);
+			ejectItems(rejected, new Vector3(pointer));
 			
 			ArrayList<List<ItemStack>> inventories = ListUtil.split(ListUtil.cap(oldStructure.inventory, maxCells), iteratedNodes.size());
 			List<TileEntityBattery> iterList = ListUtil.asList(iteratedNodes);
@@ -241,9 +238,21 @@ public class BatteryUpdateProtocol
 		}
 	}
 	
-	/**
-	 * Runs the protocol and updates all batteries that make a part of the multiblock battery.
-	 */
+	private void ejectItems(List<ItemStack> items, Vector3 vec)
+	{
+		for(ItemStack itemStack : items)
+    	{
+            float motion = 0.7F;
+            double motionX = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+            double motionY = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+            double motionZ = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+            
+            EntityItem entityItem = new EntityItem(pointer.worldObj, vec.x + motionX, vec.y + motionY, vec.z + motionZ, itemStack);
+	        
+	        pointer.worldObj.spawnEntityInWorld(entityItem);
+    	}
+	}
+
 	public void updateBatteries()
 	{
 		loopThrough(pointer);
@@ -273,6 +282,9 @@ public class BatteryUpdateProtocol
 				
 				tileEntity.structure = structureFound;
 			}
+			
+			List<ItemStack> rejected = ListUtil.capRemains(structureFound.inventory, structureFound.getMaxCells());
+			ejectItems(rejected, new Vector3(pointer));
 			
 			structureFound.inventory = ListUtil.cap(structureFound.inventory, structureFound.getMaxCells());
 		}

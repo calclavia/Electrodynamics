@@ -5,6 +5,7 @@ package resonantinduction.battery;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -141,6 +142,32 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		return false;
 	}
+	
+    @Override
+    public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
+    {
+    	if(!world.isRemote && canHarvestBlock(player, world.getBlockMetadata(x, y, z)))
+    	{
+	    	TileEntityBattery tileEntity = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
+	    	
+	    	if(!tileEntity.structure.isMultiblock)
+	    	{
+		    	for(ItemStack itemStack : tileEntity.structure.inventory)
+		    	{
+		            float motion = 0.7F;
+		            double motionX = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+		            double motionY = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+		            double motionZ = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+		            
+		            EntityItem entityItem = new EntityItem(world, x + motionX, y + motionY, z + motionZ, itemStack);
+			        
+			        world.spawnEntityInWorld(entityItem);
+		    	}
+	    	}
+    	}
+    	
+        return super.removeBlockByPlayer(world, player, x, y, z);
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
