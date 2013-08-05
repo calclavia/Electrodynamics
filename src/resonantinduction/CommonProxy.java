@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.base.Vector3;
+import resonantinduction.battery.ContainerBattery;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -31,6 +33,11 @@ public class CommonProxy implements IGuiHandler
 		{
 			return new ContainerMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
+		else if (tileEntity instanceof TileEntityBattery)
+		{
+			return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
+		}
+		
 		return null;
 	}
 

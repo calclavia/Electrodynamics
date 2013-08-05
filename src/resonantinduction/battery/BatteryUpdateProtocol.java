@@ -217,7 +217,12 @@ public class BatteryUpdateProtocol
 		
 		if(oldStructure != null)
 		{
-			ArrayList<Set<ItemStack>> inventories = SetUtil.split(oldStructure.inventory, iteratedNodes.size());
+			int maxCells = iteratedNodes.size()*BatteryManager.CELLS_PER_BATTERY;
+			
+			//TODO eject these
+			Set<ItemStack> rejected = SetUtil.capRemains(oldStructure.inventory, maxCells);
+			
+			ArrayList<Set<ItemStack>> inventories = SetUtil.split(SetUtil.cap(oldStructure.inventory, maxCells), iteratedNodes.size());
 			List<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
 			
 			boolean didVisibleInventory = false;

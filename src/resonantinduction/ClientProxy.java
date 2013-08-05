@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.base.Vector3;
+import resonantinduction.battery.GuiBattery;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
@@ -52,6 +53,11 @@ public class ClientProxy extends CommonProxy
 		{
 			return new GuiMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
+		else if (tileEntity instanceof TileEntityBattery)
+		{
+			return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));
+		}
+		
 		return null;
 	}
 	
