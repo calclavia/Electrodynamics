@@ -86,6 +86,13 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 			for (int slot = 0; slot < 4; slot++)
 			{
+				Vector3 sideVec = new Vector3(t).getFromSide(correctSide(direction));
+				
+				if(!t.worldObj.isAirBlock((int)sideVec.x, (int)sideVec.y, (int)sideVec.z))
+				{
+					continue;
+				}
+				
 				GL11.glPushMatrix();
 				GL11.glTranslatef((float) x + 0.5f, (float) y + 0.7f, (float) z + 0.5f);
 
@@ -134,21 +141,31 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
 				
-				Vector3 sideVec = new Vector3(t).getFromSide(direction);
-				
-				if(t.worldObj.isAirBlock((int)sideVec.x, (int)sideVec.y, (int)sideVec.z))
-				{
-					this.renderItemSimple(this.fakeBattery);
-					
-					if (--renderAmount <= 0)
-					{
-						GL11.glPopMatrix();
-						return;
-					}
-				}
-				
+				this.renderItemSimple(this.fakeBattery);
 				GL11.glPopMatrix();
+					
+				if (--renderAmount <= 0)
+				{
+					return;
+				}
 			}
+		}
+	}
+	
+	private ForgeDirection correctSide(ForgeDirection side)
+	{
+		switch(side)
+		{
+			case NORTH:
+				return ForgeDirection.WEST;
+			case SOUTH:
+				return ForgeDirection.NORTH;
+			case EAST:
+				return ForgeDirection.SOUTH;
+			case WEST:
+				return ForgeDirection.EAST;
+			default:
+				return null;
 		}
 	}
 
