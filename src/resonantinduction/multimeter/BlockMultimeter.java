@@ -42,77 +42,9 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY,
 	 * hitZ, block metadata
 	 */
-	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int par5, float side, float hitX, float hitY, int hitZ)
+	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		int metadata = hitZ;
-
-		if (par5 == 1 && this.canPlaceOn(par1World, par2, par3 - 1, par4))
-		{
-			metadata = 5;
-		}
-
-		if (par5 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, NORTH, true))
-		{
-			metadata = 4;
-		}
-
-		if (par5 == 3 && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, SOUTH, true))
-		{
-			metadata = 3;
-		}
-
-		if (par5 == 4 && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, WEST, true))
-		{
-			metadata = 2;
-		}
-
-		if (par5 == 5 && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, EAST, true))
-		{
-			metadata = 1;
-		}
-
-		return metadata;
-	}
-
-	private boolean canPlaceOn(World par1World, int par2, int par3, int par4)
-	{
-		if (par1World.doesBlockHaveSolidTopSurface(par2, par3, par4))
-		{
-			return true;
-		}
-		else
-		{
-			int l = par1World.getBlockId(par2, par3, par4);
-			return (Block.blocksList[l] != null && Block.blocksList[l].canPlaceTorchOnTop(par1World, par2, par3, par4));
-		}
-	}
-
-	public static int determineOrientation(World par0World, int par1, int par2, int par3, EntityLivingBase par4EntityLivingBase)
-	{
-		if (MathHelper.abs((float) par4EntityLivingBase.posX - par1) < 2.0F && MathHelper.abs((float) par4EntityLivingBase.posZ - par3) < 2.0F)
-		{
-			double d0 = par4EntityLivingBase.posY + 1.82D - par4EntityLivingBase.yOffset;
-
-			if (d0 - par2 > 2.0D)
-			{
-				return 1;
-			}
-
-			if (par2 - d0 > 0.0D)
-			{
-				return 0;
-			}
-		}
-
-		int l = MathHelper.floor_double(par4EntityLivingBase.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack)
-	{
-		int l = determineOrientation(world, x, y, z, par5EntityLivingBase);
-		world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		return ForgeDirection.getOrientation(side).ordinal();
 	}
 
 	@Override
