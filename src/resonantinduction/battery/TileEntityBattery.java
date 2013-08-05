@@ -82,6 +82,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
     {
         super.readFromNBT(nbtTags);
         
+        //Main inventory
         NBTTagList tagList = nbtTags.getTagList("Items");
         structure.inventory = new HashSet<ItemStack>();
 
@@ -91,6 +92,24 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
             structure.inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
         }
+        
+        //Visible inventory
+        if(nbtTags.hasKey("VisibleItems"))
+        {
+	        NBTTagList tagList1 = nbtTags.getTagList("VisibleItems");
+	        structure.visibleInventory = new ItemStack[3];
+	
+	        for(int tagCount = 0; tagCount < tagList1.tagCount(); tagCount++)
+	        {
+	            NBTTagCompound tagCompound = (NBTTagCompound)tagList1.tagAt(tagCount);
+	            byte slotID = tagCompound.getByte("Slot");
+	
+	            if(slotID >= 0 && slotID < structure.visibleInventory.length)
+	            {
+	                setInventorySlotContents(slotID, ItemStack.loadItemStackFromNBT(tagCompound));
+	            }
+	        }
+        }
     }
 
 	@Override
@@ -98,6 +117,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
     {
         super.writeToNBT(nbtTags);
         
+        //Inventory
         NBTTagList tagList = new NBTTagList();
 
         for(ItemStack itemStack : structure.inventory)
@@ -111,6 +131,26 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         }
 
         nbtTags.setTag("Items", tagList);
+        
+        //Visible inventory
+        if(!structure.wroteVisibleInventory)
+        {
+	        NBTTagList tagList1 = new NBTTagList();
+	
+	        for(int slotCount = 0; slotCount < structure.visibleInventory.length; slotCount++)
+	        {
+	            if(getStackInSlot(slotCount) != null)
+	            {
+	                NBTTagCompound tagCompound = new NBTTagCompound();
+	                tagCompound.setByte("Slot", (byte)slotCount);
+	                getStackInSlot(slotCount).writeToNBT(tagCompound);
+	                tagList1.appendTag(tagCompound);
+	            }
+	        }
+	
+	        nbtTags.setTag("VisibleItems", tagList1);
+	        structure.wroteVisibleInventory = true;
+        }
     }
 	
 	public void update()
@@ -246,9 +286,32 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	}
 
 	@Override
-	public ItemStack decrStackSize(int i, int j) 
+	public ItemStack decrStackSize(int slotID, int amount) 
 	{
-		return null;
+        if(getStackInSlot(slotID) != null)
+        {
+            ItemStack tempStack;
+
+            if(getStackInSlot(slotID).stackSize <= amount)
+            {
+                tempStack = getStackInSlot(slotID);
+                setInventorySlotContents(slotID, null);
+                return tempStack;
+            }
+            else {
+                tempStack = getStackInSlot(slotID).splitStack(amount);
+
+                if(getStackInSlot(slotID).stackSize == 0)
+                {
+                	setInventorySlotContents(slotID, null);
+                }
+
+                return tempStack;
+            }
+        }
+        else {
+            return null;
+        }
 	}
 
 	@Override

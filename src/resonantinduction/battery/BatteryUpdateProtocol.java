@@ -219,11 +219,17 @@ public class BatteryUpdateProtocol
 		{
 			ArrayList<Set<ItemStack>> inventories = SetUtil.split(oldStructure.inventory, iteratedNodes.size());
 			List<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
+			boolean didVisibleInventory = false;
 			
 			for(int i = 0; i < iterList.size(); i++)
 			{
 				TileEntityBattery tile = iterList.get(i);
 				tile.structure = SynchronizedBatteryData.getBase(tile, inventories.get(i));
+				
+				if(!didVisibleInventory)
+				{
+					tile.structure.visibleInventory = oldStructure.visibleInventory;
+				}
 			}
 		}
 	}
@@ -258,6 +264,12 @@ public class BatteryUpdateProtocol
 				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
 				
 				structureFound.inventory = SetUtil.merge(structureFound.inventory, tileEntity.structure.inventory);
+				
+				if(tileEntity.structure.hasVisibleInventory())
+				{
+					structureFound.visibleInventory = tileEntity.structure.visibleInventory;
+				}
+				
 				tileEntity.structure = structureFound;
 			}
 			

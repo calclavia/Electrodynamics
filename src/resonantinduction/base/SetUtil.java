@@ -59,6 +59,11 @@ public class SetUtil
 		return toReturn;
 	}
 	
+	/**
+	 * Copies a set.
+	 * @param set - set to copy
+	 * @return copied set
+	 */
 	public static <V> Set<V> copy(Set<V> set)
 	{
 		Set<V> toReturn = new HashSet<V>();
@@ -145,6 +150,11 @@ public class SetUtil
 		return toReturn;
 	}
 	
+	/**
+	 * Gets the top object in a set.
+	 * @param set - set to get the object from
+	 * @return top object in the set
+	 */
 	public static <V> V getTop(Set<V> set)
 	{
 		for(V obj : set)
