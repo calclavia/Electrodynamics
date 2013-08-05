@@ -26,6 +26,7 @@ import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.TileEntityBase;
 import resonantinduction.base.Vector3;
+import resonantinduction.battery.TileEntityBattery;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -41,7 +42,8 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 {
 	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0.5, 0.5, 0), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(0.7, 0.2, 0.2), new Vector3(0.1, 0.872, 0.884), new Vector3(0, 0.8, 0.8), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
-	public final int DEFAULT_COLOR = 12;
+	public final static int DEFAULT_COLOR = 12;
+	public final float TRANSFER_CAP = 1;
 	private int dyeID = DEFAULT_COLOR;
 	private float energy = 0;
 	private boolean doTransfer = false;
@@ -82,6 +84,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		super.updateEntity();
 
 		boolean doPacketUpdate = this.getEnergyStored() > 0;
+		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
 
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
@@ -98,11 +101,11 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 				{
 					if (!this.worldObj.isRemote)
 					{
-						TileEntity tileEntity = MinecraftServer.getServer().worldServerForDimension(this.linkDim).getBlockTileEntity((int) this.linked.x, (int) this.linked.y, (int) this.linked.z);
+						TileEntity transferTile = MinecraftServer.getServer().worldServerForDimension(this.linkDim).getBlockTileEntity((int) this.linked.x, (int) this.linked.y, (int) this.linked.z);
 
-						if (tileEntity instanceof TileEntityTesla && !tileEntity.isInvalid())
+						if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
 						{
-							this.transfer(((TileEntityTesla) tileEntity), this.getEnergyStored());
+							this.transfer(((TileEntityTesla) transferTile), Math.min(this.getEnergyStored(), TRANSFER_CAP));
 						}
 					}
 				}
@@ -118,7 +121,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
+							if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this) && tileEntity != tesla && !(tileEntity instanceof TileEntityBattery && ((TileEntityBattery) tileEntity).structure.locations.contains(new Vector3((TileEntity) tesla))))
 							{
 								if (tesla instanceof TileEntityTesla)
 								{
@@ -188,7 +191,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 							double distance = topTeslaVector.distance(targetVector);
 							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
 
-							this.transfer(tesla, transferEnergy);
+							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 
 							if (this.attackEntities && this.zapCounter % 5 == 0)
 							{
@@ -217,12 +220,10 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			}
 
 			/**
-			 * Draws power from furnace below it.
+			 * Draws power from furnace below it. TODO: MAKE UNIVERSAL
 			 * 
 			 * @author Calclavia
 			 */
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-
 			if (tileEntity instanceof TileEntityFurnace)
 			{
 				TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
@@ -271,6 +272,10 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 					}
 				}
+			}
+			else if (tileEntity instanceof TileEntityBattery && this.canReceive)
+			{
+				this.transfer(((TileEntityBattery) tileEntity).removeEnergy(TRANSFER_CAP, true), true);
 			}
 
 			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)

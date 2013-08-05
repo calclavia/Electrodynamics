@@ -324,21 +324,15 @@ public class Vector3
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (!(obj instanceof Vector3))
+		if (o instanceof Vector3)
 		{
-			return false;
+			Vector3 vector3 = (Vector3) o;
+			return this.x == vector3.x && this.y == vector3.y && this.z == vector3.z;
 		}
 
-		Vector3 vec = (Vector3) obj;
-
-		if (vec.x != x || vec.y != y || vec.z != z)
-		{
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	@Override
