@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.base.Vector3;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.model.ModelBattery;
 import cpw.mods.fml.relauncher.Side;
@@ -132,13 +133,21 @@ public class RenderBattery extends TileEntitySpecialRenderer
 				}
 
 				GL11.glScalef(0.5f, 0.5f, 0.5f);
-				this.renderItemSimple(this.fakeBattery);
-				GL11.glPopMatrix();
-
-				if (--renderAmount == 0)
+				
+				Vector3 sideVec = new Vector3(t).getFromSide(direction);
+				
+				if(t.worldObj.isAirBlock((int)sideVec.x, (int)sideVec.y, (int)sideVec.z))
 				{
-					return;
+					this.renderItemSimple(this.fakeBattery);
+					
+					if (--renderAmount <= 0)
+					{
+						GL11.glPopMatrix();
+						return;
+					}
 				}
+				
+				GL11.glPopMatrix();
 			}
 		}
 	}

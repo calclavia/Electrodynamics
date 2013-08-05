@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.multimeter;
+package resonantinduction.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -13,6 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
+import resonantinduction.multimeter.ContainerMultimeter;
+import resonantinduction.multimeter.TileEntityMultimeter;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

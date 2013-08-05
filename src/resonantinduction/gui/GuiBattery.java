@@ -1,4 +1,4 @@
-package resonantinduction.battery;
+package resonantinduction.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -8,6 +8,8 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.battery.ContainerBattery;
+import resonantinduction.battery.TileEntityBattery;
 
 public class GuiBattery extends GuiContainer
 {
