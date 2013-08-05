@@ -13,6 +13,7 @@ import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.TileEntityBase;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.tesla.TileEntityTesla;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -143,6 +144,10 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 		if (tileEntity instanceof TileEntityTesla)
 		{
 			return ((TileEntityTesla) tileEntity).getEnergyStored();
+		}
+		else if (tileEntity instanceof TileEntityBattery)
+		{
+			return ((TileEntityBattery) tileEntity).getEnergyStored();
 		}
 
 		return 0;

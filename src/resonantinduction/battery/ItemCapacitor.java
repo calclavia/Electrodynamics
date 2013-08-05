@@ -31,7 +31,7 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
 		double energyStored = this.getEnergyStored(itemStack);
-		par3List.add("Energy: " + energyStored + " J");
+		par3List.add("Energy: " + energyStored + " KJ");
 	}
 
 	@Override

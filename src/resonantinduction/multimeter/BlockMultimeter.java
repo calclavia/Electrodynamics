@@ -3,6 +3,11 @@
  */
 package resonantinduction.multimeter;
 
+import static net.minecraftforge.common.ForgeDirection.EAST;
+import static net.minecraftforge.common.ForgeDirection.NORTH;
+import static net.minecraftforge.common.ForgeDirection.SOUTH;
+import static net.minecraftforge.common.ForgeDirection.WEST;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -31,6 +36,55 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	public BlockMultimeter(int id)
 	{
 		super("multimeter", id);
+	}
+
+	/**
+	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY,
+	 * hitZ, block metadata
+	 */
+	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int par5, float side, float hitX, float hitY, int hitZ)
+	{
+		int metadata = hitZ;
+
+		if (par5 == 1 && this.canPlaceOn(par1World, par2, par3 - 1, par4))
+		{
+			metadata = 5;
+		}
+
+		if (par5 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, NORTH, true))
+		{
+			metadata = 4;
+		}
+
+		if (par5 == 3 && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, SOUTH, true))
+		{
+			metadata = 3;
+		}
+
+		if (par5 == 4 && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, WEST, true))
+		{
+			metadata = 2;
+		}
+
+		if (par5 == 5 && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, EAST, true))
+		{
+			metadata = 1;
+		}
+
+		return metadata;
+	}
+
+	private boolean canPlaceOn(World par1World, int par2, int par3, int par4)
+	{
+		if (par1World.doesBlockHaveSolidTopSurface(par2, par3, par4))
+		{
+			return true;
+		}
+		else
+		{
+			int l = par1World.getBlockId(par2, par3, par4);
+			return (Block.blocksList[l] != null && Block.blocksList[l].canPlaceTorchOnTop(par1World, par2, par3, par4));
+		}
 	}
 
 	public static int determineOrientation(World par0World, int par1, int par2, int par3, EntityLivingBase par4EntityLivingBase)
