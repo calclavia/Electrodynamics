@@ -4,8 +4,7 @@
 package resonantinduction.battery;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,7 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.IBattery;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.base.SetUtil;
+import resonantinduction.base.ListUtil;
 import resonantinduction.base.TileEntityBase;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -38,8 +37,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	@Override
 	public void updateEntity()
 	{
-		//DO NOT SUPER, CALCLAVIA!
-		
 		ticks++;
 		
 		if(!worldObj.isRemote)
@@ -47,6 +44,18 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			if(playersUsing.size() > 0)
 			{
 				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+			}
+			
+			if(ListUtil.getTop(structure.inventory) != null)
+			{
+				System.out.println("-----");
+				
+				for(ItemStack stack : structure.inventory)
+				{
+					System.out.println(((IBattery)stack.getItem()).getEnergyStored(stack));
+				}
+				
+				System.out.println("----");
 			}
 			
 			if(ticks == 5 && !structure.isMultiblock)
@@ -92,12 +101,12 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         if(nbtTags.hasKey("Items"))
         {
 	        NBTTagList tagList = nbtTags.getTagList("Items");
-	        structure.inventory = new HashSet<ItemStack>();
+	        structure.inventory = new ArrayList<ItemStack>();
 	
 	        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
 	        {
 	            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
-	
+	            System.out.println("Yup!");
 	            structure.inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
 	        }
         }
@@ -135,6 +144,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	        {
 	            if(itemStack != null)
 	            {
+	            	System.out.println("YESTYSET");
 	                NBTTagCompound tagCompound = new NBTTagCompound();
 	                itemStack.writeToNBT(tagCompound);
 	                tagList.appendTag(tagCompound);
@@ -190,7 +200,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	 */
 	public float removeEnergy(float amount)
 	{
-		Set inverse = SetUtil.inverse(structure.inventory);
+		List inverse = ListUtil.inverse(structure.inventory);
 		//go from bottom to top
 		return 0;
 	}
@@ -292,7 +302,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		{
 			if(!worldObj.isRemote)
 			{
-				return SetUtil.getTop(structure.inventory);
+				return ListUtil.getTop(structure.inventory);
 			}
 			else {
 				return structure.tempStack;
@@ -351,7 +361,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			{
 				if(!worldObj.isRemote)
 				{
-					structure.inventory.remove(SetUtil.getTop(structure.inventory));
+					structure.inventory.remove(ListUtil.getTop(structure.inventory));
 				}
 				else {
 					structure.tempStack = null;

@@ -1,18 +1,20 @@
 package resonantinduction.battery;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import resonantinduction.api.IBattery;
-import resonantinduction.base.SetUtil;
+import resonantinduction.base.ListUtil;
 import resonantinduction.base.Vector3;
 
 public class SynchronizedBatteryData 
 {
 	public Set<Vector3> locations = new HashSet<Vector3>();
 	
-	public Set<ItemStack> inventory = new HashSet<ItemStack>();
+	public List<ItemStack> inventory = new ArrayList<ItemStack>();
 	
 	/**
 	 * Slot 0: Cell input slot
@@ -47,7 +49,7 @@ public class SynchronizedBatteryData
 	
 	public void sortInventory()
 	{
-		Object[] array = SetUtil.copy(inventory).toArray();
+		Object[] array = ListUtil.copy(inventory).toArray();
 		
 		ItemStack[] toSort = new ItemStack[array.length];
 		
@@ -63,19 +65,19 @@ public class SynchronizedBatteryData
 		{
 			cont = false;
 			
-			for(int j = 0; j < toSort.length-1; j++)
+			for(int i = 0; i < toSort.length-1; i++)
 			{
-				if(((IBattery)toSort[j].getItem()).getEnergyStored(toSort[j]) < ((IBattery)toSort[j+1].getItem()).getEnergyStored(toSort[j+1]))
+				if(((IBattery)toSort[i].getItem()).getEnergyStored(toSort[i]) < ((IBattery)toSort[i+1].getItem()).getEnergyStored(toSort[i+1]))
                 {
-					temp = toSort[j];
-					toSort[j] = toSort[j+1];
-					toSort[j+1] = temp;
+					temp = toSort[i];
+					toSort[i] = toSort[i+1];
+					toSort[i+1] = temp;
 					cont = true;
                 } 
 			}
 		}
 		
-		inventory = new HashSet<ItemStack>();
+		inventory = new ArrayList<ItemStack>();
 		
 		for(ItemStack itemStack : toSort)
 		{
@@ -96,7 +98,7 @@ public class SynchronizedBatteryData
 		return false;
 	}
 	
-	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, Set<ItemStack> inventory)
+	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, List<ItemStack> inventory)
 	{
 		SynchronizedBatteryData structure = getBase(tileEntity);
 		structure.inventory = inventory;

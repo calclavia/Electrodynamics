@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.base.SetUtil;
+import resonantinduction.base.ListUtil;
 import resonantinduction.base.Vector3;
 
 public class BatteryUpdateProtocol
@@ -220,10 +220,10 @@ public class BatteryUpdateProtocol
 			int maxCells = iteratedNodes.size()*BatteryManager.CELLS_PER_BATTERY;
 			
 			//TODO eject these
-			Set<ItemStack> rejected = SetUtil.capRemains(oldStructure.inventory, maxCells);
+			List<ItemStack> rejected = ListUtil.capRemains(oldStructure.inventory, maxCells);
 			
-			ArrayList<Set<ItemStack>> inventories = SetUtil.split(SetUtil.cap(oldStructure.inventory, maxCells), iteratedNodes.size());
-			List<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
+			ArrayList<List<ItemStack>> inventories = ListUtil.split(ListUtil.cap(oldStructure.inventory, maxCells), iteratedNodes.size());
+			List<TileEntityBattery> iterList = ListUtil.asList(iteratedNodes);
 			
 			boolean didVisibleInventory = false;
 			
@@ -270,7 +270,7 @@ public class BatteryUpdateProtocol
 			{
 				TileEntityBattery tileEntity = (TileEntityBattery)obj.getTileEntity(pointer.worldObj);
 				
-				structureFound.inventory = SetUtil.merge(structureFound.inventory, tileEntity.structure.inventory);
+				structureFound.inventory = ListUtil.merge(structureFound.inventory, tileEntity.structure.inventory);
 				
 				if(tileEntity.structure.hasVisibleInventory())
 				{
@@ -280,7 +280,7 @@ public class BatteryUpdateProtocol
 				tileEntity.structure = structureFound;
 			}
 			
-			structureFound.inventory = SetUtil.cap(structureFound.inventory, structureFound.getMaxCells());
+			structureFound.inventory = ListUtil.cap(structureFound.inventory, structureFound.getMaxCells());
 		}
 		else {
 			disperseCells();
