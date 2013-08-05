@@ -62,7 +62,7 @@ public class ResonantInduction
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION;
 
 	@Instance(ID)
-	public static ResonantInduction INSTNACE;
+	public static ResonantInduction INSTANCE;
 
 	@SidedProxy(clientSide = ID + ".ClientProxy", serverSide = ID + ".CommonProxy")
 	public static CommonProxy proxy;
@@ -167,8 +167,6 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
-
-		TickRegistry.registerTickHandler(new BatteryManager(), Side.SERVER);
 
 		ResonantInduction.proxy.registerRenderers();
 
