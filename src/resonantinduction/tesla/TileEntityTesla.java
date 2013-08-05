@@ -40,7 +40,7 @@ import com.google.common.io.ByteArrayDataInput;
  */
 public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketReceiver
 {
-	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0.9, 0.8, 0.8), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(0.7, 0.2, 0.2), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
+	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0.9, 0.8, 0.8), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.872, 0.884), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
