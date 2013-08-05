@@ -13,6 +13,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -39,8 +40,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	public static double MAX_SPEED = .2;
 	public static double ACCELERATION = .02;
 
-	private ForgeDirection facing = ForgeDirection.UP;
-
 	private int pushDelay;
 
 	private AxisAlignedBB operationBounds;
@@ -58,6 +57,13 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	/** Color of beam */
 	private int dyeID = TileEntityTesla.DEFAULT_COLOR;
 	private Vector3 tempLinkVector;
+
+	@Override
+	public void initiate()
+	{
+		super.initiate();
+		this.updateBounds();
+	}
 
 	@Override
 	public void updateEntity()
@@ -84,7 +90,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 			if (!suck && pushDelay == 0)
 			{
-				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, this.facing.ordinal());
+				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, this.getDirection().ordinal());
 
 				if (retrieved != null)
 				{
@@ -104,7 +110,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				{
 					for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
 					{
-						ItemStack remains = InventoryUtil.putStackInInventory(inventory, item.getEntityItem(), facing.ordinal());
+						ItemStack remains = InventoryUtil.putStackInInventory(inventory, item.getEntityItem(), this.getDirection().ordinal());
 
 						if (remains == null)
 						{
@@ -299,7 +305,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	{
 		EntityItem item = null;
 
-		switch (facing)
+		switch (this.getDirection())
 		{
 			case DOWN:
 				item = new EntityItem(worldObj, xCoord + 0.5, yCoord - 0.2, zCoord + 0.5, toSend);
@@ -341,7 +347,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public void updateBounds()
 	{
-		switch (facing)
+		switch (this.getDirection())
 		{
 			case DOWN:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, Math.max(yCoord - MAX_REACH, 1), zCoord, xCoord + 1, yCoord, zCoord + 1);
@@ -377,7 +383,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public TileEntity getLatched()
 	{
-		ForgeDirection side = facing.getOpposite();
+		ForgeDirection side = this.getDirection().getOpposite();
 
 		TileEntity tile = worldObj.getBlockTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ);
 
@@ -391,22 +397,22 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public void incrementFacing()
 	{
-		int newOrdinal = facing.ordinal() < 5 ? facing.ordinal() + 1 : 0;
-		setFacing(ForgeDirection.getOrientation(newOrdinal));
+		int newOrdinal = this.getDirection().ordinal() < 5 ? this.getDirection().ordinal() + 1 : 0;
+		this.setFacing(ForgeDirection.getOrientation(newOrdinal));
 	}
 
 	public ForgeDirection getDirection()
 	{
-		return facing;
+		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 	}
 
 	public void setFacing(ForgeDirection side)
 	{
-		facing = side;
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, side.ordinal(), 3);
 
 		if (!worldObj.isRemote)
 		{
-			PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 		}
 
 		updateBounds();
@@ -421,20 +427,15 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-
-		this.facing = ForgeDirection.getOrientation(nbt.getInteger("facing"));
 		this.suck = nbt.getBoolean("suck");
 		this.dyeID = nbt.getInteger("dyeID");
 		this.tempLinkVector = new Vector3(nbt.getInteger("link_x"), nbt.getInteger("link_y"), nbt.getInteger("link_z"));
-		updateBounds();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		nbt.setInteger("facing", facing.ordinal());
 		nbt.setBoolean("suck", suck);
 		nbt.setInteger("dyeID", this.dyeID);
 
@@ -451,7 +452,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	{
 		try
 		{
-			facing = ForgeDirection.getOrientation(input.readInt());
 			suck = input.readBoolean();
 			this.dyeID = input.readInt();
 
@@ -471,23 +471,20 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	@Override
 	public ArrayList getNetworkedData(ArrayList data)
 	{
-		data.add(facing.ordinal());
-		data.add(suck);
-		data.add(this.dyeID);
 
+		return data;
+	}
+
+	public Packet getDescriptionPacket()
+	{
 		if (this.linked != null)
 		{
-			data.add(true);
-			data.add(this.linked.xCoord);
-			data.add(this.linked.yCoord);
-			data.add(this.linked.zCoord);
+			return PacketHandler.getTileEntityPacket(this, this.suck, this.dyeID, true, this.linked.xCoord, this.linked.yCoord, this.linked.zCoord);
 		}
 		else
 		{
-			data.add(false);
+			return PacketHandler.getTileEntityPacket(this, this.suck, this.dyeID, false);
 		}
-
-		return data;
 	}
 
 	/**
