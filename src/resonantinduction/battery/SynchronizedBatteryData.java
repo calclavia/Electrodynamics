@@ -14,6 +14,11 @@ public class SynchronizedBatteryData
 	
 	public Set<ItemStack> inventory = new HashSet<ItemStack>();
 	
+	/**
+	 * Slot 0: Cell input slot
+	 * Slot 1: Battery charge slot
+	 * Slot 2: Battery discharge slot
+	 */
 	public ItemStack[] visibleInventory = new ItemStack[3];
 	
 	public int length;
@@ -25,6 +30,8 @@ public class SynchronizedBatteryData
 	public boolean isMultiblock;
 	
 	public boolean didTick;
+	
+	public boolean wroteVisibleInventory;
 	
 	public int getVolume()
 	{
@@ -65,6 +72,19 @@ public class SynchronizedBatteryData
 		{
 			inventory.add(itemStack);
 		}
+	}
+	
+	public boolean hasVisibleInventory()
+	{
+		for(ItemStack itemStack : visibleInventory)
+		{
+			if(itemStack != null)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, Set<ItemStack> inventory)
