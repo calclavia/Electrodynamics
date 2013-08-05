@@ -4,6 +4,7 @@
 package resonantinduction.contractor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -62,7 +63,7 @@ public class PathfinderEMContractor
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			Vector3 neighbor = this.target.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-			if (!TileEntityEMContractor.canBePath(this.world, neighbor))
+			if (!TileEntityEMContractor.canBePath(this.world, neighbor, this.target))
 			{
 				blockCount++;
 			}
@@ -109,7 +110,7 @@ public class PathfinderEMContractor
 
 				Vector3 neighbor = currentNode.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-				if (TileEntityEMContractor.canBePath(this.world, neighbor))
+				if (TileEntityEMContractor.canBePath(this.world, neighbor, this.target))
 				{
 					double tentativeG = this.gScore.get(currentNode) + currentNode.distance(neighbor);
 

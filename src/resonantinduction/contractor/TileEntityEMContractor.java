@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLadder;
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.BlockVine;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -53,7 +56,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	private TileEntityEMContractor linked;
 
 	/** Color of beam */
-	private int dyeID = 13;
+	private int dyeID = TileEntityTesla.DEFAULT_COLOR;
 	private Vector3 tempLinkVector;
 
 	@Override
@@ -115,37 +118,43 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 				}
 			}
 
-			if (!this.suck && this.linked != null && !this.linked.isInvalid())
+			if (this.linked != null && !this.linked.isInvalid())
 			{
-				if (this.pathfinder != null)
+				ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+
+				if (!this.suck)
 				{
-					for (int i = 0; i < this.pathfinder.results.size(); i++)
+					if (this.pathfinder != null)
 					{
-						Vector3 result = this.pathfinder.results.get(i);
-
-						if (TileEntityEMContractor.canBePath(this.worldObj, result))
+						for (int i = 0; i < this.pathfinder.results.size(); i++)
 						{
-							if (i - 1 >= 0)
+							Vector3 result = this.pathfinder.results.get(i);
+
+							if (TileEntityEMContractor.canBePath(this.worldObj, result, new Vector3(this.linked)))
 							{
-								Vector3 prevResult = this.pathfinder.results.get(i - 1);
-								ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5), TileEntityTesla.dyeColors[dyeID]);
-
-								Vector3 difference = prevResult.difference(result);
-								final ForgeDirection direction = difference.toForgeDirection();
-
-								AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
-								List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
-
-								for (EntityItem entityItem : entities)
+								if (i - 1 >= 0)
 								{
-									this.moveEntity(entityItem, direction, result);
+									Vector3 prevResult = this.pathfinder.results.get(i - 1);
+									ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+
+									Vector3 difference = prevResult.difference(result);
+									final ForgeDirection direction = difference.toForgeDirection();
+
+									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
+									List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
+
+									for (EntityItem entityItem : entities)
+									{
+										this.moveEntity(entityItem, direction, result);
+									}
 								}
+
 							}
-						}
-						else
-						{
-							this.updatePath();
-							break;
+							else
+							{
+								this.updatePath();
+								break;
+							}
 						}
 					}
 				}
@@ -170,10 +179,10 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 		}
 	}
 
-	public static boolean canBePath(World world, Vector3 position)
+	public static boolean canBePath(World world, Vector3 position, Vector3 target)
 	{
 		Block block = Block.blocksList[position.getBlockID(world)];
-		return block == null || position.getTileEntity(world) instanceof TileEntityEMContractor || (block != null && !block.isBlockNormalCube(world, (int) position.x, (int) position.y, (int) position.z));
+		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder);
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
@@ -508,7 +517,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 			Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
 			Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
 
-			if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
+			if (TileEntityEMContractor.canBePath(this.worldObj, start, new Vector3(this.linked)) && TileEntityEMContractor.canBePath(this.worldObj, target, new Vector3(this.linked)))
 			{
 				this.pathfinder = new PathfinderEMContractor(this.worldObj, target);
 				this.pathfinder.find(start);
