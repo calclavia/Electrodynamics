@@ -46,7 +46,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 				if (tileEntity.structure.inventory.remove(itemStack))
 				{
 					entityPlayer.dropPlayerItem(itemStack);
-					tileEntity.updateInventory();
+					tileEntity.updateAllClients();
 				}
 			}
 		}
@@ -73,7 +73,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 							tileEntity.structure.inventory.add(entityPlayer.getCurrentEquippedItem());
 							tileEntity.structure.sortInventory();
 							entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
-							tileEntity.updateInventory();
+							tileEntity.updateAllClients();
 						}
 
 						/**

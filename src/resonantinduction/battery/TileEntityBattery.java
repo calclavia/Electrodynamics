@@ -18,6 +18,7 @@ import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import resonantinduction.base.TileEntityBase;
+import resonantinduction.base.Vector3;
 import resonantinduction.tesla.TeslaGrid;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -61,6 +62,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 					structure.inventory.add(structure.visibleInventory[0]);
 					structure.visibleInventory[0] = null;
 					structure.sortInventory();
+					updateAllClients();
 				}
 			}
 
@@ -95,7 +97,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 					player.closeScreen();
 				}
 
-				updateInventory();
+				updateClient();
 			}
 
 			prevStructure = structure;
@@ -105,14 +107,23 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			
 			if(playersUsing.size() > 0)
 			{
-				updateInventory();
+				updateClient();
 			}
 		}
 	}
-
-	public void updateInventory()
+	
+	public void updateClient()
 	{
 		PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+	}
+
+	public void updateAllClients()
+	{
+		for(Vector3 vec : structure.locations)
+		{
+			TileEntityBattery battery = (TileEntityBattery)vec.getTileEntity(worldObj);
+			PacketHandler.sendTileEntityPacketToClients(battery, battery.getNetworkedData(new ArrayList()).toArray());
+		}
 	}
 	
 	@Override
