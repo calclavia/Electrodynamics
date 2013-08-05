@@ -18,7 +18,7 @@ public class SetUtil
 		Set<V> toReturn = new HashSet<V>();
 		List list = Arrays.asList(set.toArray());
 		
-		for(int i = list.size()-1; i >= 0; i--)
+		for(int i = list.size(); i >= 0; i--)
 		{
 			toReturn.add((V)list.get(i));
 		}
@@ -189,7 +189,10 @@ public class SetUtil
 	{
 		for(V obj : set)
 		{
-			return obj;
+			if(obj != null)
+			{
+				return obj;
+			}
 		}
 		
 		return null;

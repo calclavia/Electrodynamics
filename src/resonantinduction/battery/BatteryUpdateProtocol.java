@@ -235,6 +235,7 @@ public class BatteryUpdateProtocol
 				if(!didVisibleInventory)
 				{
 					tile.structure.visibleInventory = oldStructure.visibleInventory;
+					didVisibleInventory = true;
 				}
 			}
 		}

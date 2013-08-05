@@ -3,7 +3,9 @@ package resonantinduction.battery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import resonantinduction.battery.BatteryManager.SlotBattery;
 import resonantinduction.battery.BatteryManager.SlotOut;
 
@@ -36,6 +38,26 @@ public class ContainerBattery extends Container
         
         tileEntity.openChest();
         tileEntity.playersUsing.add(inventory.player);
+    }
+	
+	@Override
+	public ItemStack slotClick(int slotID, int par2, int par3, EntityPlayer par4EntityPlayer)
+    {
+		ItemStack stack = super.slotClick(slotID, par2, par3, par4EntityPlayer);
+		
+		if(slotID == 1)
+		{
+			ItemStack itemstack = ((Slot)inventorySlots.get(slotID)).getStack();
+			ItemStack itemstack1 = itemstack == null ? null : itemstack.copy();
+			inventoryItemStacks.set(slotID, itemstack1);
+
+			for (int j = 0; j < this.crafters.size(); ++j)
+			{
+				((ICrafting)this.crafters.get(j)).sendSlotContents(this, slotID, itemstack1);
+			}
+		}
+		
+		return stack;
     }
     
 	@Override

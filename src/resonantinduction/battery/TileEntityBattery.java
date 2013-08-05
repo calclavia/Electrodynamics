@@ -89,14 +89,17 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
         super.readFromNBT(nbtTags);
         
         //Main inventory
-        NBTTagList tagList = nbtTags.getTagList("Items");
-        structure.inventory = new HashSet<ItemStack>();
-
-        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
+        if(nbtTags.hasKey("Items"))
         {
-            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
-
-            structure.inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
+	        NBTTagList tagList = nbtTags.getTagList("Items");
+	        structure.inventory = new HashSet<ItemStack>();
+	
+	        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
+	        {
+	            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
+	
+	            structure.inventory.add(ItemStack.loadItemStackFromNBT(tagCompound));
+	        }
         }
         
         //Visible inventory
@@ -123,24 +126,24 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
     {
         super.writeToNBT(nbtTags);
         
-        //Inventory
-        NBTTagList tagList = new NBTTagList();
-
-        for(ItemStack itemStack : structure.inventory)
+        if(!structure.wroteInventory)
         {
-            if(itemStack != null)
-            {
-                NBTTagCompound tagCompound = new NBTTagCompound();
-                itemStack.writeToNBT(tagCompound);
-                tagList.appendTag(tagCompound);
-            }
-        }
-
-        nbtTags.setTag("Items", tagList);
-        
-        //Visible inventory
-        if(!structure.wroteVisibleInventory)
-        {
+	        //Inventory
+	        NBTTagList tagList = new NBTTagList();
+	
+	        for(ItemStack itemStack : structure.inventory)
+	        {
+	            if(itemStack != null)
+	            {
+	                NBTTagCompound tagCompound = new NBTTagCompound();
+	                itemStack.writeToNBT(tagCompound);
+	                tagList.appendTag(tagCompound);
+	            }
+	        }
+	
+	        nbtTags.setTag("Items", tagList);
+	        
+	        //Visible inventory
 	        NBTTagList tagList1 = new NBTTagList();
 	
 	        for(int slotCount = 0; slotCount < structure.visibleInventory.length; slotCount++)
@@ -155,7 +158,8 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	        }
 	
 	        nbtTags.setTag("VisibleItems", tagList1);
-	        structure.wroteVisibleInventory = true;
+	        
+	        structure.wroteInventory = true;
         }
     }
 	
@@ -286,7 +290,13 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		}
 		else if(i == 1)
 		{
-			return SetUtil.getTop(structure.inventory);
+			if(!worldObj.isRemote)
+			{
+				return SetUtil.getTop(structure.inventory);
+			}
+			else {
+				return structure.tempStack;
+			}
 		}
 		else {
 			return structure.visibleInventory[i-1];
@@ -339,7 +349,19 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		{
 			if(itemstack == null)
 			{
-				structure.inventory.remove(SetUtil.getTop(structure.inventory));
+				if(!worldObj.isRemote)
+				{
+					structure.inventory.remove(SetUtil.getTop(structure.inventory));
+				}
+				else {
+					structure.tempStack = null;
+				}
+			}
+			else {
+				if(worldObj.isRemote)
+				{
+					structure.tempStack = itemstack;
+				}
 			}
 		}
 		else {

@@ -27,11 +27,13 @@ public class SynchronizedBatteryData
 	
 	public int height;
 	
+	public ItemStack tempStack;
+	
 	public boolean isMultiblock;
 	
 	public boolean didTick;
 	
-	public boolean wroteVisibleInventory;
+	public boolean wroteInventory;
 	
 	public int getVolume()
 	{
@@ -49,7 +51,7 @@ public class SynchronizedBatteryData
 		
 		ItemStack[] toSort = new ItemStack[array.length];
 		
-		for(int i = 0; i < array.length-1; i++)
+		for(int i = 0; i < array.length; i++)
 		{
 			toSort[i] = (ItemStack)array[i];
 		}
