@@ -95,7 +95,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	
 	        for(int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
 	        {
-	        	System.out.println("Read");
 	            NBTTagCompound tagCompound = (NBTTagCompound)tagList.tagAt(tagCount);
 	            int slotID = tagCompound.getInteger("Slot");
 	            structure.inventory.add(slotID, ItemStack.loadItemStackFromNBT(tagCompound));
@@ -143,7 +142,6 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		        {
 		            if(structure.inventory.get(slotCount) != null)
 		            {
-		            	System.out.println("Save");
 		                NBTTagCompound tagCompound = new NBTTagCompound();
 		                tagCompound.setInteger("Slot", slotCount);
 		                structure.inventory.get(slotCount).writeToNBT(tagCompound);

@@ -35,7 +35,6 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	public static int PUSH_DELAY = 5;
 	public static double MAX_SPEED = .2;
 	public static double ACCELERATION = .02;
-	public static float ENERGY_USAGE = .005F;
 
 	private ForgeDirection facing = ForgeDirection.UP;
 
