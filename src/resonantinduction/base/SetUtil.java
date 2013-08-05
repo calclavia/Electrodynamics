@@ -98,6 +98,36 @@ public class SetUtil
 		
 		return newSet;
 	}
+
+	public static <V> Set<V> capRemains(Set<V> set, int cap)
+	{
+		Set<V> toReturn = new HashSet<V>();
+		
+		if(set.size() <= cap)
+		{
+			return toReturn;
+		}
+		else {
+			Set<V> inverse = inverse(set);
+			
+			int iterNeeded = set.size()-cap;
+			int count = 0;
+			
+			for(V obj : set)
+			{
+				count++;
+				
+				toReturn.add(obj);
+				
+				if(count == iterNeeded)
+				{
+					break;
+				}
+			}
+			
+			return toReturn;
+		}
+	}
 	
 	/**
 	 * Splits a set into the defined amount of new sets, and returns them in an ArrayList.

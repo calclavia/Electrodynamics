@@ -219,6 +219,7 @@ public class BatteryUpdateProtocol
 		{
 			ArrayList<Set<ItemStack>> inventories = SetUtil.split(oldStructure.inventory, iteratedNodes.size());
 			List<TileEntityBattery> iterList = SetUtil.asList(iteratedNodes);
+			
 			boolean didVisibleInventory = false;
 			
 			for(int i = 0; i < iterList.size(); i++)
