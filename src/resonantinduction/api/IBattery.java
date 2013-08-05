@@ -16,6 +16,8 @@ public interface IBattery
 	public float getEnergyStored(ItemStack itemStack);
 
 	public float getMaxEnergyStored(ItemStack itemStack);
+	
+	public float getTransfer(ItemStack itemStack);
 
 	/**
 	 * @param itemStack

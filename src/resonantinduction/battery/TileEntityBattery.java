@@ -69,6 +69,30 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 				}
 			}
 
+			if (structure.visibleInventory[1] != null)
+			{
+				ItemStack itemStack = structure.visibleInventory[1];
+				IBattery battery = (IBattery) itemStack.getItem();
+
+				float energyStored = getMaxEnergyStored();
+				float batteryNeeded = battery.getMaxEnergyStored(itemStack) - battery.getEnergyStored(itemStack);
+				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
+
+				battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) + removeEnergy(toGive, true));
+			}
+
+			if (structure.visibleInventory[2] != null)
+			{
+				ItemStack itemStack = structure.visibleInventory[2];
+				IBattery battery = (IBattery) itemStack.getItem();
+
+				float energyNeeded = getMaxEnergyStored() - getEnergyStored();
+				float batteryStored = battery.getEnergyStored(itemStack);
+				float toReceive = Math.min(energyNeeded, Math.min(battery.getTransfer(itemStack), batteryStored));
+
+				battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) - addEnergy(toReceive, true));
+			}
+
 			if (prevStructure != structure)
 			{
 				for (EntityPlayer player : playersUsing)
