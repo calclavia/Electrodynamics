@@ -43,7 +43,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	{
 		int metadata = par1World.getBlockMetadata(par2, par3, par4) & 7;
 		float thickness = 0.15f;
-		System.out.println(metadata);
+
 		if (metadata == 0)
 		{
 			this.setBlockBounds(0, 0, 0, 1, thickness, 1);

@@ -14,6 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.IBattery;
 import resonantinduction.base.BlockBase;
+import resonantinduction.base.ListUtil;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,6 +34,21 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer entityPlayer)
+	{
+		if (!entityPlayer.capabilities.isCreativeMode)
+		{
+			TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+			ItemStack itemStack = ListUtil.getTop(tileEntity.structure.inventory);
+
+			if (tileEntity.structure.inventory.remove(itemStack))
+			{
+				entityPlayer.dropPlayerItem(itemStack);
+			}
+		}
+	}
+
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float xClick, float yClick, float zClick)
 	{
 		if (entityPlayer.isSneaking())
@@ -47,8 +63,18 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 				{
 					if (side != 0 && side != 1)
 					{
+						if (!world.isRemote)
+						{
+							TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+							tileEntity.structure.inventory.add(entityPlayer.getCurrentEquippedItem());
+							tileEntity.structure.sortInventory();
+							entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
+						}
+
 						/**
-						 * Place cells into block. 2 Dimensional Click Zone
+						 * Place cells into block. 2 Dimensional Click Zone.
+						 * 
+						 * TODO: In the future.
 						 */
 						float xHit = 0;
 						float yHit = yClick;
@@ -93,12 +119,13 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 						{
 
 						}
+						return true;
 					}
 				}
 			}
 		}
-		
-		if(!world.isRemote)
+
+		if (!world.isRemote)
 		{
 			entityPlayer.openGui(ResonantInduction.INSTNACE, 0, world, x, y, z);
 		}
@@ -142,32 +169,32 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		return false;
 	}
-	
-    @Override
-    public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
-    {
-    	if(!world.isRemote && canHarvestBlock(player, world.getBlockMetadata(x, y, z)))
-    	{
-	    	TileEntityBattery tileEntity = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
-	    	
-	    	if(!tileEntity.structure.isMultiblock)
-	    	{
-		    	for(ItemStack itemStack : tileEntity.structure.inventory)
-		    	{
-		            float motion = 0.7F;
-		            double motionX = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-		            double motionY = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-		            double motionZ = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-		            
-		            EntityItem entityItem = new EntityItem(world, x + motionX, y + motionY, z + motionZ, itemStack);
-			        
-			        world.spawnEntityInWorld(entityItem);
-		    	}
-	    	}
-    	}
-    	
-        return super.removeBlockByPlayer(world, player, x, y, z);
-    }
+
+	@Override
+	public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (!world.isRemote && canHarvestBlock(player, world.getBlockMetadata(x, y, z)))
+		{
+			TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+
+			if (!tileEntity.structure.isMultiblock)
+			{
+				for (ItemStack itemStack : tileEntity.structure.inventory)
+				{
+					float motion = 0.7F;
+					double motionX = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+					double motionY = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+					double motionZ = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
+
+					EntityItem entityItem = new EntityItem(world, x + motionX, y + motionY, z + motionZ, itemStack);
+
+					world.spawnEntityInWorld(entityItem);
+				}
+			}
+		}
+
+		return super.removeBlockByPlayer(world, player, x, y, z);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
