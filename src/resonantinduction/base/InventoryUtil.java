@@ -1,13 +1,10 @@
 package resonantinduction.base;
 
-import java.util.List;
-
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 
-public final class InventoryUtil 
+public final class InventoryUtil
 {
 	public static ItemStack putStackInInventory(IInventory inventory, ItemStack itemStack, int side)
 	{
@@ -55,15 +52,15 @@ public final class InventoryUtil
 		{
 			ISidedInventory sidedInventory = (ISidedInventory) inventory;
 			int[] slots = sidedInventory.getAccessibleSlotsFromSide(side);
-	
+
 			for (int get = 0; get <= slots.length - 1; get++)
 			{
 				int slotID = slots[get];
-	
+
 				if (sidedInventory.isItemValidForSlot(slotID, itemStack) && sidedInventory.canInsertItem(slotID, itemStack, side))
 				{
 					ItemStack inSlot = inventory.getStackInSlot(slotID);
-	
+
 					if (inSlot == null)
 					{
 						inventory.setInventorySlotContents(slotID, itemStack);
@@ -75,20 +72,20 @@ public final class InventoryUtil
 						{
 							ItemStack toSet = itemStack.copy();
 							toSet.stackSize += inSlot.stackSize;
-	
+
 							inventory.setInventorySlotContents(slotID, toSet);
 							return null;
 						}
 						else
 						{
 							int rejects = (inSlot.stackSize + itemStack.stackSize) - inSlot.getMaxStackSize();
-	
+
 							ItemStack toSet = itemStack.copy();
 							toSet.stackSize = inSlot.getMaxStackSize();
-	
+
 							ItemStack remains = itemStack.copy();
 							remains.stackSize = rejects;
-	
+
 							inventory.setInventorySlotContents(slotID, toSet);
 							return remains;
 						}
@@ -96,10 +93,10 @@ public final class InventoryUtil
 				}
 			}
 		}
-		
+
 		return itemStack;
 	}
-	
+
 	public static ItemStack takeTopItemFromInventory(IInventory inventory, int side)
 	{
 		if (!(inventory instanceof ISidedInventory))
@@ -143,7 +140,7 @@ public final class InventoryUtil
 				}
 			}
 		}
-		
+
 		return null;
 	}
 }

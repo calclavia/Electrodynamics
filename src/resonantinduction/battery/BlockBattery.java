@@ -36,14 +36,18 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer entityPlayer)
 	{
-		if (!entityPlayer.capabilities.isCreativeMode)
+		if (!world.isRemote)
 		{
-			TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
-			ItemStack itemStack = ListUtil.getTop(tileEntity.structure.inventory);
-
-			if (tileEntity.structure.inventory.remove(itemStack))
+			if (!entityPlayer.capabilities.isCreativeMode)
 			{
-				entityPlayer.dropPlayerItem(itemStack);
+				TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+				ItemStack itemStack = ListUtil.getTop(tileEntity.structure.inventory);
+
+				if (tileEntity.structure.inventory.remove(itemStack))
+				{
+					entityPlayer.dropPlayerItem(itemStack);
+					tileEntity.updateInventory();
+				}
 			}
 		}
 	}
@@ -69,6 +73,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 							tileEntity.structure.inventory.add(entityPlayer.getCurrentEquippedItem());
 							tileEntity.structure.sortInventory();
 							entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
+							tileEntity.updateInventory();
 						}
 
 						/**

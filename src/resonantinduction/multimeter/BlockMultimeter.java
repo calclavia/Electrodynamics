@@ -76,6 +76,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	 * Called when a block is placed using its ItemBlock. Args: World, X, Y, Z, side, hitX, hitY,
 	 * hi@OverridetZ, block metadata
 	 */
+	@Override
 	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
 		return ForgeDirection.getOrientation(side).getOpposite().ordinal();

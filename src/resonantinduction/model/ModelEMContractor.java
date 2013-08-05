@@ -6,7 +6,7 @@ import net.minecraft.client.model.ModelRenderer;
 public class ModelEMContractor extends ModelBase
 {
 	public boolean doSpin;
-	
+
 	ModelRenderer frame1;
 	ModelRenderer frame2;
 	ModelRenderer frame3;
@@ -41,7 +41,7 @@ public class ModelEMContractor extends ModelBase
 	public ModelEMContractor(boolean spin)
 	{
 		doSpin = spin;
-		
+
 		textureWidth = 128;
 		textureHeight = 128;
 

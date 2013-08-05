@@ -9,7 +9,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.model.ModelMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import cpw.mods.fml.relauncher.Side;

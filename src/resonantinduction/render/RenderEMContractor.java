@@ -59,12 +59,13 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 		{
 			this.func_110628_a(TEXTURE_PUSH);
 		}
-		
-		if(((TileEntityEMContractor)t).canFunction() && !ResonantInduction.proxy.isPaused())
+
+		if (((TileEntityEMContractor) t).canFunction() && !ResonantInduction.proxy.isPaused())
 		{
 			MODEL_SPIN.render(0.0625f);
 		}
-		else {
+		else
+		{
 			MODEL.render(0.0625f);
 		}
 

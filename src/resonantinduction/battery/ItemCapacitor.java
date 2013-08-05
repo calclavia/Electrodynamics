@@ -66,11 +66,11 @@ public class ItemCapacitor extends ItemBase implements IBattery
 
 		return amount;
 	}
-	
+
 	@Override
 	public float getTransfer(ItemStack itemStack)
 	{
-		return getMaxEnergyStored(itemStack)*0.05F;
+		return getMaxEnergyStored(itemStack) * 0.05F;
 	}
 
 	@Override

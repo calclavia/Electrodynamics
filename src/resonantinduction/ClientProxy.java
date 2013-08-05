@@ -57,26 +57,26 @@ public class ClientProxy extends CommonProxy
 		{
 			return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public boolean isPaused()
 	{
-		if(FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
+		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
 		{
 			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
-			
-			if(screen != null)
+
+			if (screen != null)
 			{
-				if(screen.doesGuiPauseGame())
+				if (screen.doesGuiPauseGame())
 				{
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 

@@ -37,7 +37,7 @@ public class CommonProxy implements IGuiHandler
 		{
 			return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
 		}
-		
+
 		return null;
 	}
 

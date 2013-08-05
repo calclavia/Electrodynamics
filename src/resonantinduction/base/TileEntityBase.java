@@ -36,7 +36,7 @@ public class TileEntityBase extends TileEntity
 			this.initiate();
 		}
 
-		if(doPacket && !worldObj.isRemote)
+		if (doPacket && !worldObj.isRemote)
 		{
 			for (EntityPlayer player : this.playersUsing)
 			{

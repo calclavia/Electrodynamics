@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.battery.BatteryManager;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -37,8 +36,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia
@@ -170,7 +167,7 @@ public class ResonantInduction
 
 		ResonantInduction.proxy.registerRenderers();
 
-		TabRI.ITEMSTACK = new ItemStack(blockTesla);
+		TabRI.ITEMSTACK = new ItemStack(blockBattery);
 	}
 
 	@EventHandler

@@ -5,7 +5,6 @@ package resonantinduction.multimeter;
 
 import java.util.List;
 
-import resonantinduction.base.Vector3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -48,7 +47,7 @@ public class ItemBlockMultimeter extends ItemBlock
 	{
 		if (!par2EntityPlayer.isSneaking())
 		{
-			//if (!world.isRemote)
+			// if (!world.isRemote)
 			{
 				par2EntityPlayer.addChatMessage("Energy: " + TileEntityMultimeter.getDetectedEnergy(world.getBlockTileEntity(x, y, z)) + " J");
 			}

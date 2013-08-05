@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
-import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.InventoryUtil;
 import resonantinduction.base.TileEntityBase;
@@ -123,7 +123,7 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 					{
 						Vector3 result = this.pathfinder.results.get(i);
 
-						if (this.canBePath(this.worldObj, result))
+						if (TileEntityEMContractor.canBePath(this.worldObj, result))
 						{
 							if (i - 1 >= 0)
 							{
@@ -172,7 +172,8 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public static boolean canBePath(World world, Vector3 position)
 	{
-		return position.getBlockID(world) == 0 || position.getTileEntity(world) instanceof TileEntityEMContractor;
+		Block block = Block.blocksList[position.getBlockID(world)];
+		return block == null || position.getTileEntity(world) instanceof TileEntityEMContractor || (block != null && !block.isBlockNormalCube(world, (int) position.x, (int) position.y, (int) position.z));
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)

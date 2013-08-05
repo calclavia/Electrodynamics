@@ -36,7 +36,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "battery.png");
 	public static final ResourceLocation TEXTURE_MULTI = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "battery_multi.png");
-	
+
 	public static final ModelBattery MODEL = new ModelBattery();
 	private EntityItem fakeBattery;
 	private Random random = new Random();
@@ -59,25 +59,26 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		
-		if(((TileEntityBattery)t).structure.isMultiblock)
+
+		if (((TileEntityBattery) t).structure.isMultiblock)
 		{
 			this.func_110628_a(TEXTURE_MULTI);
 		}
-		else {
+		else
+		{
 			this.func_110628_a(TEXTURE);
 		}
-		
+
 		MODEL.render(0.0625f);
 		GL11.glPopMatrix();
 
-		int renderAmount = Math.min(((TileEntityBattery)t).clientCells, 16);
-		
-		if(renderAmount == 0)
+		int renderAmount = Math.min(((TileEntityBattery) t).clientCells, 16);
+
+		if (renderAmount == 0)
 		{
 			return;
 		}
-		
+
 		for (int i = 2; i < 6; i++)
 		{
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
@@ -158,10 +159,10 @@ public class RenderBattery extends TileEntitySpecialRenderer
 				icon = ((TextureMap) texturemanager.func_110581_b(resourcelocation)).func_110572_b("missingno");
 			}
 
-			float f4 = ((Icon) icon).getMinU();
-			float f5 = ((Icon) icon).getMaxU();
-			float f6 = ((Icon) icon).getMinV();
-			float f7 = ((Icon) icon).getMaxV();
+			float f4 = icon.getMinU();
+			float f5 = icon.getMaxU();
+			float f6 = icon.getMinV();
+			float f7 = icon.getMaxV();
 			float f8 = 1.0F;
 			float f9 = 0.5F;
 			float f10 = 0.25F;
@@ -175,7 +176,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 			int j = itemstack.stackSize;
 			byte b0 = getMiniItemCount(itemstack);
 
-			GL11.glTranslatef(-f9, -f10, -((f12 + f11) * (float) b0 / 2.0F));
+			GL11.glTranslatef(-f9, -f10, -((f12 + f11) * b0 / 2.0F));
 
 			for (int kj = 0; kj < b0; ++kj)
 			{
@@ -203,7 +204,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 				}
 
 				GL11.glColor4f(1, 1, 1, 1.0F);
-				ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, ((Icon) icon).getOriginX(), ((Icon) icon).getOriginY(), f12);
+				ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, icon.getOriginX(), icon.getOriginY(), f12);
 			}
 
 			GL11.glPopMatrix();

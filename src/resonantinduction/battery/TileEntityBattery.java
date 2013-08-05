@@ -51,7 +51,7 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 		{
 			if (playersUsing.size() > 0)
 			{
-				PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+				this.updateInventory();
 			}
 
 			if (ticks == 5 && !structure.isMultiblock)
@@ -108,6 +108,11 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			structure.wroteInventory = false;
 			structure.didTick = false;
 		}
+	}
+
+	public void updateInventory()
+	{
+		PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
 	}
 
 	@Override
