@@ -96,6 +96,7 @@ public class ResonantInduction
 	private static final int BLOCK_ID_PREFIX = 3200;
 	/** Item ID by Horfius */
 	private static final int ITEM_ID_PREFIX = 20150;
+	public static int MAX_CONTRACTOR_DISTANCE = 200;
 
 	private static int NEXT_BLOCK_ID = BLOCK_ID_PREFIX;
 	private static int NEXT_ITEM_ID = ITEM_ID_PREFIX;
@@ -132,6 +133,7 @@ public class ResonantInduction
 		// Config
 		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
+		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 
 		TileEntityEMContractor.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEntityEMContractor.ACCELERATION).getDouble(TileEntityEMContractor.ACCELERATION);
 		TileEntityEMContractor.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEntityEMContractor.MAX_REACH).getInt(TileEntityEMContractor.MAX_REACH);

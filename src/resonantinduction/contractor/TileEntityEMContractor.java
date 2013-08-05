@@ -50,6 +50,10 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 	 */
 	public boolean suck = true;
 
+	/**
+	 * Pathfinding
+	 */
+	private ThreadPathfinding thread;
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
 	private TileEntityEMContractor linked;
@@ -121,6 +125,17 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 							item.setEntityItemStack(remains);
 						}
 					}
+				}
+			}
+
+			if (this.thread != null)
+			{
+				PathfinderEMContractor newPath = this.thread.getPath();
+
+				if (newPath != null)
+				{
+					this.pathfinder = newPath;
+					this.thread = null;
 				}
 			}
 
@@ -514,17 +529,21 @@ public class TileEntityEMContractor extends TileEntityBase implements IPacketRec
 
 	public void updatePath()
 	{
-		this.pathfinder = null;
-
-		if (this.linked != null)
+		if (this.thread == null)
 		{
-			Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
-			Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
-
-			if (TileEntityEMContractor.canBePath(this.worldObj, start, new Vector3(this.linked)) && TileEntityEMContractor.canBePath(this.worldObj, target, new Vector3(this.linked)))
+			if (this.linked != null)
 			{
-				this.pathfinder = new PathfinderEMContractor(this.worldObj, target);
-				this.pathfinder.find(start);
+				Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
+				Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
+
+				if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
+				{
+					if (TileEntityEMContractor.canBePath(this.worldObj, start, new Vector3(this.linked)) && TileEntityEMContractor.canBePath(this.worldObj, target, new Vector3(this.linked)))
+					{
+						this.thread = new ThreadPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
+						this.thread.start();
+					}
+				}
 			}
 		}
 	}
