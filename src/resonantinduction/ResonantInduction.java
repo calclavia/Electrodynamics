@@ -168,8 +168,6 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
-		TickRegistry.registerTickHandler(new BatteryManager(), Side.SERVER);
-
 		ResonantInduction.proxy.registerRenderers();
 
 		TabRI.ITEMSTACK = new ItemStack(blockTesla);
