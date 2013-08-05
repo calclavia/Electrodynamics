@@ -20,7 +20,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 {
 	public BlockEMContractor(int id)
 	{
-		super("contractor", id, Material.iron);
+		super("contractor", id);
 		this.func_111022_d(ResonantInduction.PREFIX + "machine");
 	}
 

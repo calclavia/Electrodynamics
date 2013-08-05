@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -26,7 +27,8 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 {
 	public BlockBattery(int id)
 	{
-		super("battery", id, Material.iron);
+		super("battery", id);
+		this.func_111022_d(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override
@@ -43,28 +45,28 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 
 		return true;
 	}
-	
+
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int id) 
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
-			if(id == blockID)
+			if (id == blockID)
 			{
-				TileEntityBattery battery = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
-				
+				TileEntityBattery battery = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+
 				battery.update();
 			}
 		}
 	}
-	
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
-			TileEntityBattery battery = (TileEntityBattery)world.getBlockTileEntity(x, y, z);
-			
+			TileEntityBattery battery = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+
 			battery.update();
 		}
 	}
@@ -74,13 +76,13 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()

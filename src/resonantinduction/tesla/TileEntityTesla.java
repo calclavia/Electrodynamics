@@ -168,17 +168,14 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 
 						if (this.attackEntities && this.zapCounter % 5 == 0)
 						{
-							double[] rotations = topTeslaVector.difference(targetVector).normalize().getDeltaRotationFromPosition();
-							MovingObjectPosition mop = topTeslaVector.rayTraceEntities(this.worldObj, rotations[0], rotations[1], distance);
-							// System.out.println(Vector3.getDeltaPositionFromRotation(rotations[0],
-							// rotations[1]) + " :" + mop);
+							MovingObjectPosition mop = topTeslaVector.clone().translate(0.5).rayTraceEntities(this.worldObj, targetVector.clone().translate(0.5));
 
 							if (mop != null && mop.entityHit != null)
 							{
 								if (mop.entityHit instanceof EntityLivingBase)
 								{
-									mop.entityHit.attackEntityFrom(DamageSource.magic, 1);
-									ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), new Vector3(mop.entityHit));
+									mop.entityHit.attackEntityFrom(DamageSource.magic, 3);
+									ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 								}
 							}
 						}
@@ -269,7 +266,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID, this.canReceive);
+		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID, this.canReceive, this.attackEntities);
 	}
 
 	@Override
@@ -289,6 +286,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 					this.energy = input.readFloat();
 					this.dyeID = input.readInt();
 					this.canReceive = input.readBoolean();
+					this.attackEntities = input.readBoolean();
 					break;
 
 			}
