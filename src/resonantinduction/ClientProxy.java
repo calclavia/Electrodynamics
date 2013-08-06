@@ -16,7 +16,9 @@ import resonantinduction.render.RenderBattery;
 import resonantinduction.render.RenderEMContractor;
 import resonantinduction.render.RenderMultimeter;
 import resonantinduction.render.RenderTesla;
+import resonantinduction.render.RenderWire;
 import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -37,11 +39,12 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultimeter.class, new RenderMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBattery.class, new RenderBattery());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWire.class, new RenderWire());
 	}
 
 	@Override

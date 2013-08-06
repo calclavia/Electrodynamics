@@ -21,13 +21,13 @@ import universalelectricity.core.vector.Vector3;
  */
 public class PathfinderEMContractor
 {
-	public Set<Vector3> openSet, closedSet;
+	public final Set<Vector3> openSet, closedSet;
 
-	public HashMap<Vector3, Vector3> navMap;
+	public final HashMap<Vector3, Vector3> navMap;
 
-	public HashMap<Vector3, Double> gScore, fScore;
+	public final HashMap<Vector3, Double> gScore, fScore;
 
-	public Vector3 target;
+	public final Vector3 target;
 
 	public List<Vector3> results;
 
@@ -37,10 +37,7 @@ public class PathfinderEMContractor
 	{
 		this.world = world;
 		this.target = target;
-	}
 
-	public boolean find(Vector3 start)
-	{
 		/**
 		 * Instantiate Variables
 		 */
@@ -50,9 +47,12 @@ public class PathfinderEMContractor
 		this.gScore = new HashMap<Vector3, Double>();
 		this.fScore = new HashMap<Vector3, Double>();
 		this.results = new ArrayList<Vector3>();
+	}
 
+	public boolean find(Vector3 start)
+	{
 		this.openSet.add(start);
-		this.gScore.put(start, (double) 0);
+		this.gScore.put(start, 0d);
 		this.fScore.put(start, this.gScore.get(start) + getEstimate(start, this.target));
 
 		int blockCount = 0;

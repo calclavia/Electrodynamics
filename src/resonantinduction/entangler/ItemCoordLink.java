@@ -51,28 +51,21 @@ public abstract class ItemCoordLink extends ItemBase
 
 	public Vector3 getLink(ItemStack itemStack)
 	{
-		if (itemStack.stackTagCompound == null || !(itemStack.getTagCompound().hasKey("bindX") && itemStack.getTagCompound().hasKey("bindY") && itemStack.getTagCompound().hasKey("bindZ")))
+		if (itemStack.stackTagCompound == null || !itemStack.getTagCompound().hasKey("position"))
 		{
 			return null;
 		}
-
-		int x = itemStack.stackTagCompound.getInteger("bindX");
-		int y = itemStack.stackTagCompound.getInteger("bindY");
-		int z = itemStack.stackTagCompound.getInteger("bindZ");
-
-		return new Vector3(x, y, z);
+		return new Vector3(itemStack.getTagCompound().getCompoundTag("position"));
 	}
 
 	public void setLink(ItemStack itemStack, Vector3 vec, int dimID)
 	{
-		if (itemStack.stackTagCompound == null)
+		if (itemStack.getTagCompound() == null)
 		{
 			itemStack.setTagCompound(new NBTTagCompound());
 		}
 
-		itemStack.stackTagCompound.setInteger("bindX", (int) vec.x);
-		itemStack.stackTagCompound.setInteger("bindY", (int) vec.y);
-		itemStack.stackTagCompound.setInteger("bindZ", (int) vec.z);
+		itemStack.getTagCompound().setCompoundTag("position", vec.writeToNBT(new NBTTagCompound()));
 
 		itemStack.stackTagCompound.setInteger("dimID", dimID);
 	}

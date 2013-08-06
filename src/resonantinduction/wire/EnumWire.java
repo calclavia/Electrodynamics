@@ -1,7 +1,8 @@
 package resonantinduction.wire;
 
 /**
- * An enumerator for different wire materials.
+ * An enumerator for different wire materials. The metadata of the wire determines the type of the
+ * wire.
  * 
  * @author Calclavia
  * 

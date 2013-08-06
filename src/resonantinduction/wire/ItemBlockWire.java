@@ -47,9 +47,9 @@ public class ItemBlockWire extends ItemBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
-		for (int i = 0; i < EnumWire.values().length - 1; i++)
+		for (int i = 0; i < EnumWire.values().length; i++)
 		{
-			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ResonantInduction.PREFIX));
+			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ""));
 		}
 	}
 

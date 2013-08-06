@@ -28,6 +28,7 @@ import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.BlockWire;
 import resonantinduction.wire.ItemBlockWire;
+import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.item.IItemElectric;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -154,7 +155,6 @@ public class ResonantInduction
 		itemCapacitor = new ItemCapacitor(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
 
-
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
@@ -167,7 +167,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 		GameRegistry.registerItem(itemCapacitor, itemCapacitor.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
-		
+
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockMultimeter, ItemBlockMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
@@ -179,6 +179,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityWire.class, blockWire.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

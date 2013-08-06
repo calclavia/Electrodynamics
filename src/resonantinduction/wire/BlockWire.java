@@ -1,11 +1,15 @@
 package resonantinduction.wire;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
+import resonantinduction.TabRI;
 import universalelectricity.prefab.block.BlockConductor;
 
 /**
@@ -26,6 +30,7 @@ public class BlockWire extends BlockConductor
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 		Block.setBurnProperties(this.blockID, 30, 60);
 		this.func_111022_d(ResonantInduction.PREFIX + "wire");
+		this.setCreativeTab(TabRI.INSTANCE);
 	}
 
 	/**
@@ -63,4 +68,14 @@ public class BlockWire extends BlockConductor
 	{
 		return new TileEntityWire();
 	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (int i = 0; i < EnumWire.values().length - 1; i++)
+		{
+			par3List.add(new ItemStack(par1, 1, i));
+		}
+	}
+
 }
