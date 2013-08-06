@@ -4,7 +4,9 @@
 package resonantinduction.battery;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -12,12 +14,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
-import resonantinduction.base.TileEntityBase;
 import resonantinduction.tesla.TeslaGrid;
+import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 
@@ -28,8 +31,10 @@ import com.google.common.io.ByteArrayDataInput;
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityBase implements IPacketReceiver, IInventory, ITesla
+public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketReceiver, IInventory, ITesla
 {
+	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+
 	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
 
 	public SynchronizedBatteryData prevStructure;
@@ -104,14 +109,14 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 			structure.wroteInventory = false;
 			structure.didTick = false;
-			
-			if(playersUsing.size() > 0)
+
+			if (playersUsing.size() > 0)
 			{
 				updateClient();
 			}
 		}
 	}
-	
+
 	public void updateClient()
 	{
 		PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
@@ -119,19 +124,19 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 	public void updateAllClients()
 	{
-		for(Vector3 vec : structure.locations)
+		for (Vector3 vec : structure.locations)
 		{
-			TileEntityBattery battery = (TileEntityBattery)vec.getTileEntity(worldObj);
+			TileEntityBattery battery = (TileEntityBattery) vec.getTileEntity(worldObj);
 			PacketHandler.sendTileEntityPacketToClients(battery, battery.getNetworkedData(new ArrayList()).toArray());
 		}
 	}
-	
+
 	@Override
 	public void validate()
 	{
 		super.validate();
-		
-		if(worldObj.isRemote)
+
+		if (worldObj.isRemote)
 		{
 			PacketHandler.sendDataRequest(this);
 		}
@@ -561,5 +566,17 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 	public boolean canReceive(TileEntity transferTile)
 	{
 		return this.getMaxEnergyStored() - this.getEnergyStored() > 0;
+	}
+
+	@Override
+	public float getRequest(ForgeDirection direction)
+	{
+		return 0;
+	}
+
+	@Override
+	public float getProvide(ForgeDirection direction)
+	{
+		return 0;
 	}
 }

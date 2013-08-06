@@ -20,12 +20,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.base.TileEntityBase;
 import resonantinduction.battery.TileEntityBattery;
+import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -38,14 +39,13 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketReceiver
+public class TileEntityTesla extends TileEntityUniversalElectrical implements ITesla, IPacketReceiver
 {
 	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 0.608, 0.232), new Vector3(0.9, 0.8, 0.8), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.768, 0.812), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
 	private int dyeID = DEFAULT_COLOR;
-	private float energy = 0;
 	private boolean doTransfer = false;
 
 	private boolean canReceive = true;
@@ -319,7 +319,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 			switch (input.readByte())
 			{
 				case 1:
-					this.energy = input.readFloat();
+					this.setEnergyStored(input.readFloat());
 					this.dyeID = input.readInt();
 					this.canReceive = input.readBoolean();
 					this.attackEntities = input.readBoolean();
@@ -353,7 +353,7 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		{
 			if (doTransfer)
 			{
-				this.energy = Math.max(this.energy + transferEnergy, 0);
+				this.receiveElectricity(transferEnergy, true);
 			}
 
 			this.doTransfer = true;
@@ -364,11 +364,6 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 		{
 			return this.getControllingTelsa().transfer(transferEnergy, doTransfer);
 		}
-	}
-
-	public float getEnergyStored()
-	{
-		return this.energy;
 	}
 
 	public int getRange()
@@ -561,6 +556,24 @@ public class TileEntityTesla extends TileEntityBase implements ITesla, IPacketRe
 	{
 		this.linked = vector3;
 		this.linkDim = dimID;
+	}
+
+	@Override
+	public float getRequest(ForgeDirection direction)
+	{
+		return 0;
+	}
+
+	@Override
+	public float getProvide(ForgeDirection direction)
+	{
+		return this.getEnergyStored();
+	}
+
+	@Override
+	public float getMaxEnergyStored()
+	{
+		return 20;
 	}
 
 }

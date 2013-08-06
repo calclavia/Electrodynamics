@@ -22,9 +22,9 @@ import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.InventoryUtil;
-import resonantinduction.base.TileEntityBase;
 import resonantinduction.tesla.TileEntityTesla;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -33,7 +33,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author AidanBrady
  * 
  */
-public class TileEntityEMContractor extends TileEntityBase implements IPacketReceiver
+public class TileEntityEMContractor extends TileEntityAdvanced implements IPacketReceiver
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;

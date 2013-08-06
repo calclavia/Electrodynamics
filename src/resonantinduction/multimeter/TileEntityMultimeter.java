@@ -4,7 +4,10 @@
 package resonantinduction.multimeter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -12,18 +15,23 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.base.TileEntityBase;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.tesla.TileEntityTesla;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 /**
  * @author Calclavia
  * 
  */
-public class TileEntityMultimeter extends TileEntityBase implements IPacketReceiver
+public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketReceiver
 {
+	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+
 	public enum DetectMode
 	{
 		NONE("None"), LESS_THAN("Less Than"), LESS_THAN_EQUAL("Less Than or Equal"),
@@ -88,6 +96,14 @@ public class TileEntityMultimeter extends TileEntityBase implements IPacketRecei
 			if (prevDetectedEnergy != this.detectedEnergy)
 			{
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			}
+		}
+
+		if (!this.worldObj.isRemote)
+		{
+			for (EntityPlayer player : this.playersUsing)
+			{
+				PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
 			}
 		}
 	}
