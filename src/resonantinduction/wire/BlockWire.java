@@ -17,7 +17,7 @@ public class BlockWire extends BlockConductor
 {
 	public BlockWire(int id)
 	{
-		super(ResonantInduction.CONFIGURATION.getItem("wire", id).getInt(id), Material.cloth);
+		super(ResonantInduction.CONFIGURATION.getBlock("wire", id).getInt(id), Material.cloth);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
 		this.setStepSound(soundClothFootstep);
 		this.setResistance(0.2F);

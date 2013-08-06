@@ -1,6 +1,5 @@
 package resonantinduction.wire;
 
-import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -14,9 +13,9 @@ import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class ItemBlockWire extends ItemBlock
+public class ItemBlockWire extends ItemBlock
 {
-	protected HashMap<String, Icon> icons = new HashMap<String, Icon>();
+	private Icon[] icons = new Icon[EnumWire.values().length];
 
 	public ItemBlockWire(int id)
 	{
@@ -46,11 +45,11 @@ public abstract class ItemBlockWire extends ItemBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
 		for (int i = 0; i < EnumWire.values().length - 1; i++)
 		{
-			this.icons.put(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)), par1IconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ResonantInduction.PREFIX)));
+			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ResonantInduction.PREFIX));
 		}
 	}
 
@@ -58,6 +57,6 @@ public abstract class ItemBlockWire extends ItemBlock
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int meta)
 	{
-		return this.icons.get(this.getUnlocalizedName(new ItemStack(this.itemID, 1, meta)));
+		return this.icons[meta];
 	}
 }
