@@ -22,9 +22,6 @@
 			</fileset>
 		</copy>
 		
-		<mkdir dir="DevContents" />
-		<mkdir dir="UeContents" />
-		<mkdir dir="BcContents" />
 		<mkdir dir="output" />
 		
 		<replace dir="${dir.mcp}/src/minecraft" token="@MAJOR@" value="${version.mod.major}" />
@@ -55,26 +52,26 @@
 				<exclude name="**/*.xml"/>
 			</fileset>
 		</copy>
-		<!--
+		
 		<copy todir="APIContents">
-			<fileset dir="${dir.development}src/powerexpansion/api" excludes=".git/**" />	
-		</copy>-->
+			<fileset dir="${dir.development}src/resonantinduction/api" excludes=".git/**" />	
+		</copy>
 		
 		<jar destfile="output/${file.mainfile}">
 			<fileset dir="JarContents" />
-		</jar><!--
+		</jar>
 		<zip destfile="output/${file.apifile}">
 			<fileset dir="APIContents" />
-		</zip>-->
+		</zip>
 		
 		<copy todir="output" file="build.properties" />
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
 		<jar destfile="${file.main}">
 			<fileset dir="JarContents" />
-		</jar><!--
+		</jar><
 		<zip destfile="${file.api}">
 			<fileset dir="APIContents" />
-		</zip>-->
+		</zip>
 	</target>
 </project>
