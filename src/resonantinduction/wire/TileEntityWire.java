@@ -1,24 +1,43 @@
 package resonantinduction.wire;
 
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
+import universalelectricity.core.vector.Vector3;
 
 public class TileEntityWire extends TileEntityUniversalConductor
 {
-	/**
-	 * Changed this if your mod wants to nerf Basic Component's copper wire.
-	 */
-	public static float RESISTANCE = 0.05F;
-	public static float MAX_AMPS = 200;
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		Vector3 connectPos = new Vector3(this).modifyPositionFromSide(direction);
+
+		if (connectPos.getTileEntity(this.worldObj) instanceof TileEntityWire && connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
+		{
+			return false;
+		}
+
+		return true;
+	}
 
 	@Override
 	public float getResistance()
 	{
-		return RESISTANCE;
+		return getMaterial().resistance;
 	}
 
 	@Override
 	public float getCurrentCapacity()
 	{
-		return MAX_AMPS;
+		return getMaterial().maxAmps;
+	}
+
+	public EnumWire getMaterial()
+	{
+		return EnumWire.values()[this.getTypeID()];
+	}
+
+	public int getTypeID()
+	{
+		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 	}
 }
