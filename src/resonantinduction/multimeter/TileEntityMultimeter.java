@@ -15,9 +15,9 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.battery.TileEntityBattery;
-import resonantinduction.tesla.TileEntityTesla;
+import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import universalelectricity.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,6 +25,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 /**
+ * Block that detects power.
+ * 
  * @author Calclavia
  * 
  */
@@ -155,14 +157,13 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 
 	public static float getDetectedEnergy(TileEntity tileEntity)
 	{
-		// TODO: Universal Compatiblity in the future.
-		if (tileEntity instanceof TileEntityTesla)
+		if (tileEntity instanceof TileEntityElectrical)
 		{
-			return ((TileEntityTesla) tileEntity).getEnergyStored();
+			return ((TileEntityElectrical) tileEntity).getEnergyStored();
 		}
-		else if (tileEntity instanceof TileEntityBattery)
+		else if (tileEntity instanceof IElectricalStorage)
 		{
-			return ((TileEntityBattery) tileEntity).getEnergyStored();
+			return ((IElectricalStorage) tileEntity).getEnergyStored();
 		}
 
 		return 0;

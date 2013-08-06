@@ -26,6 +26,7 @@ import resonantinduction.multimeter.ItemBlockMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.wire.BlockWire;
 import universalelectricity.core.item.IItemElectric;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -126,6 +127,7 @@ public class ResonantInduction
 	public static Block blockMultimeter;
 	public static Block blockEMContractor;
 	public static Block blockBattery;
+	public static Block blockWire;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -160,6 +162,7 @@ public class ResonantInduction
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
 		blockBattery = new BlockBattery(getNextBlockID());
+		blockWire = new BlockWire(getNextBlockID());
 
 		CONFIGURATION.save();
 
