@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,6 +47,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  */
 @Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = ResonantInduction.VERSION)
 @NetworkMod(channels = ResonantInduction.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+@ModstatInfo(prefix = "resonantin")
 public class ResonantInduction
 {
 	/**
@@ -127,6 +131,7 @@ public class ResonantInduction
 	{
 		LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
+		Modstats.instance().getReporter().registerMod(this);
 
 		CONFIGURATION.load();
 
