@@ -6,11 +6,11 @@ package resonantinduction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.base.Vector3;
 import resonantinduction.battery.ContainerBattery;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**

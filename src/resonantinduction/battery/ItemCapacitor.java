@@ -3,15 +3,13 @@
  */
 package resonantinduction.battery;
 
-import java.util.List;
-
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import resonantinduction.api.IBattery;
-import resonantinduction.base.ItemBase;
+import net.minecraftforge.common.Configuration;
+import resonantinduction.ResonantInduction;
+import resonantinduction.TabRI;
+import universalelectricity.compatibility.ItemUniversalElectric;
 
 /**
  * Stores power.
@@ -19,52 +17,22 @@ import resonantinduction.base.ItemBase;
  * @author Calclavia
  * 
  */
-public class ItemCapacitor extends ItemBase implements IBattery
+public class ItemCapacitor extends ItemUniversalElectric
 {
 	public ItemCapacitor(int id)
 	{
-		super("capacitor", id);
+		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "capacitor", id).getInt(id));
+		this.setCreativeTab(TabRI.INSTANCE);
+		this.setUnlocalizedName(ResonantInduction.PREFIX + "capacitor");
+		this.func_111206_d(ResonantInduction.PREFIX + "capacitor");
 		this.setMaxStackSize(1);
 		this.setMaxDamage(100);
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
-	{
-		double energyStored = this.getEnergyStored(itemStack);
-		par3List.add("Energy: " + (int) energyStored + "/" + (int) this.getMaxEnergyStored(itemStack) + " KJ");
-	}
-
-	@Override
 	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
-		this.setEnergyStored(par1ItemStack, 0);
-	}
-
-	@Override
-	public void setEnergyStored(ItemStack itemStack, float amount)
-	{
-		if (itemStack.getTagCompound() == null)
-		{
-			itemStack.setTagCompound(new NBTTagCompound());
-		}
-
-		itemStack.getTagCompound().setFloat("energyStored", amount);
-		itemStack.setItemDamage((int) (100 - (amount / getMaxEnergyStored(itemStack)) * 100));
-	}
-
-	@Override
-	public float getEnergyStored(ItemStack itemStack)
-	{
-		if (itemStack.getTagCompound() == null)
-		{
-			itemStack.setTagCompound(new NBTTagCompound());
-		}
-
-		float amount = itemStack.getTagCompound().getFloat("energyStored");
-		itemStack.setItemDamage((int) (100 - (amount / getMaxEnergyStored(itemStack)) * 100));
-
-		return amount;
+		this.setElectricity(par1ItemStack, 0);
 	}
 
 	@Override
@@ -74,20 +42,9 @@ public class ItemCapacitor extends ItemBase implements IBattery
 	}
 
 	@Override
-	public float getMaxEnergyStored(ItemStack itemStack)
+	public float getMaxElectricityStored(ItemStack theItem)
 	{
-		return 20;
-	}
-
-	@Override
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		ItemStack chargedStack = new ItemStack(par1, 1, 0);
-		this.setEnergyStored(chargedStack, this.getMaxEnergyStored(chargedStack));
-		par3List.add(chargedStack);
-		ItemStack unchargedStack = new ItemStack(par1, 1, 0);
-		this.setEnergyStored(unchargedStack, 0);
-		par3List.add(unchargedStack);
+		return 25;
 	}
 
 }

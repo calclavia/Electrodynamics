@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.Vector3;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -425,7 +425,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 prevDiffNorm = this.prev.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.prevDiff = diffNorm.translate(prevDiffNorm).normalize();
-				this.sinPrev = Math.sin(diffNorm.getAnglePreNorm(prevDiffNorm.scale(-1)) / 2);
+				this.sinPrev = Math.sin(diffNorm.anglePreNorm(prevDiffNorm.scale(-1)) / 2);
 			}
 			else
 			{
@@ -438,7 +438,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 nextDiffNorm = this.next.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.nextDiff = diffNorm.translate(nextDiffNorm).normalize();
-				this.sinNext = Math.sin(diffNorm.getAnglePreNorm(nextDiffNorm.scale(-1)) / 2);
+				this.sinNext = Math.sin(diffNorm.anglePreNorm(nextDiffNorm.scale(-1)) / 2);
 			}
 			else
 			{

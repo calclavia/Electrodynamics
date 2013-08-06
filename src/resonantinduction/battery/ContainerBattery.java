@@ -6,9 +6,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import resonantinduction.api.IBattery;
 import resonantinduction.battery.BatteryManager.SlotBattery;
 import resonantinduction.battery.BatteryManager.SlotOut;
+import universalelectricity.core.item.IItemElectric;
 
 public class ContainerBattery extends Container
 {
@@ -100,7 +100,7 @@ public class ContainerBattery extends Container
 					return null;
 				}
 			}
-			else if (slotStack.getItem() instanceof IBattery)
+			else if (slotStack.getItem() instanceof IItemElectric)
 			{
 				if (!mergeItemStack(slotStack, 0, 1, false))
 				{

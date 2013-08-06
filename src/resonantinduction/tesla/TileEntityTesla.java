@@ -25,8 +25,8 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.TileEntityBase;
-import resonantinduction.base.Vector3;
 import resonantinduction.battery.TileEntityBattery;
+import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
-import resonantinduction.api.IBattery;
 import resonantinduction.base.ListUtil;
-import resonantinduction.base.Vector3;
+import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.vector.Vector3;
 
 public class SynchronizedBatteryData
 {
@@ -65,7 +65,7 @@ public class SynchronizedBatteryData
 
 			for (int i = 0; i < toSort.length - 1; i++)
 			{
-				if (((IBattery) toSort[i].getItem()).getEnergyStored(toSort[i]) < ((IBattery) toSort[i + 1].getItem()).getEnergyStored(toSort[i + 1]))
+				if (((IItemElectric) toSort[i].getItem()).getElectricityStored(toSort[i]) < ((IItemElectric) toSort[i + 1].getItem()).getElectricityStored(toSort[i + 1]))
 				{
 					temp = toSort[i];
 					toSort[i] = toSort[i + 1];

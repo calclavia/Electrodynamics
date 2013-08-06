@@ -12,10 +12,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import resonantinduction.api.IBattery;
 import resonantinduction.base.BlockBase;
 import resonantinduction.base.ListUtil;
 import resonantinduction.render.BlockRenderingHandler;
+import universalelectricity.core.item.IItemElectric;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -63,7 +63,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		{
 			if (entityPlayer.getCurrentEquippedItem() != null)
 			{
-				if (entityPlayer.getCurrentEquippedItem().getItem() instanceof IBattery)
+				if (entityPlayer.getCurrentEquippedItem().getItem() instanceof IItemElectric)
 				{
 					if (side != 0 && side != 1)
 					{

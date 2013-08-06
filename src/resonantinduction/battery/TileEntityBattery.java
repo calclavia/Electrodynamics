@@ -13,13 +13,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.PacketHandler;
-import resonantinduction.api.IBattery;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import resonantinduction.base.TileEntityBase;
-import resonantinduction.base.Vector3;
 import resonantinduction.tesla.TeslaGrid;
+import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -69,25 +69,25 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			if (structure.visibleInventory[1] != null)
 			{
 				ItemStack itemStack = structure.visibleInventory[1];
-				IBattery battery = (IBattery) itemStack.getItem();
+				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
-				float batteryNeeded = battery.getMaxEnergyStored(itemStack) - battery.getEnergyStored(itemStack);
+				float batteryNeeded = battery.getMaxElectricityStored(itemStack) - battery.getElectricityStored(itemStack);
 				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
 
-				battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) + removeEnergy(toGive, true));
+				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + removeEnergy(toGive, true));
 			}
 
 			if (structure.visibleInventory[2] != null)
 			{
 				ItemStack itemStack = structure.visibleInventory[2];
-				IBattery battery = (IBattery) itemStack.getItem();
+				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float energyNeeded = getMaxEnergyStored() - getEnergyStored();
-				float batteryStored = battery.getEnergyStored(itemStack);
+				float batteryStored = battery.getElectricityStored(itemStack);
 				float toReceive = Math.min(energyNeeded, Math.min(battery.getTransfer(itemStack), batteryStored));
 
-				battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) - addEnergy(toReceive, true));
+				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - addEnergy(toReceive, true));
 			}
 
 			if (prevStructure != structure)
@@ -265,16 +265,16 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 		for (ItemStack itemStack : structure.inventory)
 		{
-			if (itemStack.getItem() instanceof IBattery)
+			if (itemStack.getItem() instanceof IItemElectric)
 			{
-				IBattery battery = (IBattery) itemStack.getItem();
+				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float needed = amount - added;
-				float itemAdd = Math.min(battery.getMaxEnergyStored(itemStack) - battery.getEnergyStored(itemStack), needed);
+				float itemAdd = Math.min(battery.getMaxElectricityStored(itemStack) - battery.getElectricityStored(itemStack), needed);
 
 				if (doAdd)
 				{
-					battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) + itemAdd);
+					battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + itemAdd);
 				}
 
 				added += itemAdd;
@@ -300,16 +300,16 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 
 		for (ItemStack itemStack : inverse)
 		{
-			if (itemStack.getItem() instanceof IBattery)
+			if (itemStack.getItem() instanceof IItemElectric)
 			{
-				IBattery battery = (IBattery) itemStack.getItem();
+				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float needed = amount - removed;
-				float itemRemove = Math.min(battery.getEnergyStored(itemStack), needed);
+				float itemRemove = Math.min(battery.getElectricityStored(itemStack), needed);
 
 				if (doRemove)
 				{
-					battery.setEnergyStored(itemStack, battery.getEnergyStored(itemStack) - itemRemove);
+					battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - itemRemove);
 				}
 
 				removed += itemRemove;
@@ -334,9 +334,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			{
 				if (itemStack != null)
 				{
-					if (itemStack.getItem() instanceof IBattery)
+					if (itemStack.getItem() instanceof IItemElectric)
 					{
-						max += ((IBattery) itemStack.getItem()).getMaxEnergyStored(itemStack);
+						max += ((IItemElectric) itemStack.getItem()).getMaxElectricityStored(itemStack);
 					}
 				}
 			}
@@ -359,9 +359,9 @@ public class TileEntityBattery extends TileEntityBase implements IPacketReceiver
 			{
 				if (itemStack != null)
 				{
-					if (itemStack.getItem() instanceof IBattery)
+					if (itemStack.getItem() instanceof IItemElectric)
 					{
-						energy += ((IBattery) itemStack.getItem()).getEnergyStored(itemStack);
+						energy += ((IItemElectric) itemStack.getItem()).getElectricityStored(itemStack);
 					}
 				}
 			}

@@ -4,15 +4,15 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import org.modstats.ModstatInfo;
-import org.modstats.Modstats;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.api.IBattery;
+
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -26,6 +26,7 @@ import resonantinduction.multimeter.ItemBlockMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
+import universalelectricity.core.item.IItemElectric;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -201,7 +202,7 @@ public class ResonantInduction
 		 * Recipes
 		 */
 		ItemStack emptyCapacitor = new ItemStack(itemCapacitor);
-		((IBattery) itemCapacitor).setEnergyStored(emptyCapacitor, 0);
+		((IItemElectric) itemCapacitor).setElectricity(emptyCapacitor, 0);
 
 		/** Capacitor **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', Item.ingotIron));

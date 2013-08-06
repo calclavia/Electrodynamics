@@ -37,28 +37,28 @@ import cpw.mods.fml.common.FMLLog;
 @Cancelable
 public class ModsUpdateEvent extends Event
 {
-	private List<ModVersionData> updatedMods;
-
-	public ModsUpdateEvent()
-	{
-		updatedMods = new LinkedList<ModVersionData>();
-	}
-
-	public void add(ModVersionData data)
-	{
-		if (!updatedMods.contains(data))
-		{
-			updatedMods.add(data);
-		}
-		else
-		{
-			FMLLog.info("ModsUpdateEvent shouldn't have same mods data", data);
-		}
-	}
-
-	public List<ModVersionData> getUpdatedMods()
-	{
-		return updatedMods;
-	}
-
+    private List<ModVersionData> updatedMods;
+    
+    public ModsUpdateEvent()
+    {
+        updatedMods = new LinkedList<ModVersionData>();
+    }
+    
+    public void add(ModVersionData data)
+    {
+        if(!updatedMods.contains(data))
+        {
+            updatedMods.add(data);
+        }
+        else
+        {
+            FMLLog.info("ModsUpdateEvent shouldn't have same mods data", data);
+        }
+    }
+    
+    public List<ModVersionData> getUpdatedMods()
+    {
+        return updatedMods;
+    }
+    
 }

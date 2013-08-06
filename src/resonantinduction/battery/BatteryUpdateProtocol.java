@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.ListUtil;
-import resonantinduction.base.Vector3;
+import universalelectricity.core.vector.Vector3;
 
 public class BatteryUpdateProtocol
 {
@@ -179,7 +179,7 @@ public class BatteryUpdateProtocol
 
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
-			TileEntity tileEntity = new Vector3(tile).getFromSide(side).getTileEntity(tile.worldObj);
+			TileEntity tileEntity = new Vector3(tile).modifyPositionFromSide(side).getTileEntity(tile.worldObj);
 
 			if (tileEntity instanceof TileEntityBattery)
 			{
