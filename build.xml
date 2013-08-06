@@ -69,7 +69,7 @@
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
 		<jar destfile="${file.main}">
 			<fileset dir="JarContents" />
-		</jar><
+		</jar>
 		<zip destfile="${file.api}">
 			<fileset dir="APIContents" />
 		</zip>
