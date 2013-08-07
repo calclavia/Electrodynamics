@@ -1,14 +1,22 @@
 package resonantinduction.wire;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
+import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 
 public class TileEntityWire extends TileEntityUniversalConductor
 {
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
+		if (this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+		{
+			return false;
+		}
+
 		Vector3 connectPos = new Vector3(this).modifyPositionFromSide(direction);
 
 		if (connectPos.getTileEntity(this.worldObj) instanceof TileEntityWire && connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
@@ -17,6 +25,33 @@ public class TileEntityWire extends TileEntityUniversalConductor
 		}
 
 		return true;
+	}
+
+	@Override
+	public void refresh()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			this.adjacentConnections = null;
+
+			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (this.canConnect(side.getOpposite()))
+				{
+					TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), side);
+
+					if (tileEntity != null)
+					{
+						if (tileEntity.getClass() == this.getClass() && tileEntity instanceof INetworkProvider)
+						{
+							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
+						}
+					}
+				}
+			}
+
+			this.getNetwork().refresh();
+		}
 	}
 
 	@Override
