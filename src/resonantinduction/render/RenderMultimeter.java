@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
+import universalelectricity.core.electricity.ElectricityDisplay;
+import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -121,7 +123,7 @@ public class RenderMultimeter extends TileEntitySpecialRenderer
 
 		FontRenderer fontRenderer = this.getFontRenderer();
 
-		String joules = Math.round(tileEntity.getDetectedEnergy()) + " J";
+		String joules = ElectricityDisplay.getDisplayShort(tileEntity.getDetectedEnergy(), ElectricUnit.JOULES);
 
 		int stringWidth = Math.max(fontRenderer.getStringWidth(joules), 0);
 		// maxWidth += 8;

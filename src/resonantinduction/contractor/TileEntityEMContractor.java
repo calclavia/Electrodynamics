@@ -157,7 +157,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 							if (TileEntityEMContractor.canBePath(this.worldObj, result))
 							{
-
+								// TODO: RENDER BEAMS ONLY ON CHANGE. SAVE CALCULATIONS!
 								if (i - 1 >= 0)
 								{
 									Vector3 prevResult = this.pathfinder.results.get(i - 1).clone();

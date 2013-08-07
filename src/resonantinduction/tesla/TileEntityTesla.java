@@ -6,6 +6,7 @@ package resonantinduction.tesla;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -224,7 +225,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 			 * @author Calclavia
 			 */
 			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-			
+
 			if (tileEntity instanceof TileEntityFurnace && this.getRequest(ForgeDirection.DOWN) > 0)
 			{
 				TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
@@ -573,14 +574,20 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		{
 			return this.getEnergyStored();
 		}
-		
+
 		return 0;
 	}
 
 	@Override
 	public float getMaxEnergyStored()
 	{
-		return 20;
+		return TRANSFER_CAP;
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		return EnumSet.allOf(ForgeDirection.class);
 	}
 
 }
