@@ -5,6 +5,7 @@ package resonantinduction.render;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -87,8 +88,9 @@ public class RenderBattery extends TileEntitySpecialRenderer
 			for (int slot = 0; slot < 4; slot++)
 			{
 				Vector3 sideVec = new Vector3(t).modifyPositionFromSide(correctSide(direction));
+				Block block = Block.blocksList[sideVec.getBlockID(t.worldObj)];
 
-				if (!t.worldObj.isAirBlock((int) sideVec.x, (int) sideVec.y, (int) sideVec.z))
+				if (block != null && block.isOpaqueCube())
 				{
 					continue;
 				}

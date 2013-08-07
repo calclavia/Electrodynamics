@@ -9,13 +9,13 @@ import universalelectricity.core.vector.Vector3;
  * @author Calclavia
  * 
  */
-public class ThreadPathfinding extends Thread
+public class ThreadEMPathfinding extends Thread
 {
 	private boolean isCompleted = false;
 	private PathfinderEMContractor pathfinder;
 	private Vector3 start;
 
-	public ThreadPathfinding(PathfinderEMContractor pathfinder, Vector3 start)
+	public ThreadEMPathfinding(PathfinderEMContractor pathfinder, Vector3 start)
 	{
 		this.pathfinder = pathfinder;
 		this.start = start;

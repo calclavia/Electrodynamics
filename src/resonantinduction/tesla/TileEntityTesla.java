@@ -84,7 +84,6 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		super.updateEntity();
 
 		boolean doPacketUpdate = this.getEnergyStored() > 0;
-		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
 
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
@@ -121,7 +120,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this) && tileEntity != tesla && !(tileEntity instanceof TileEntityBattery && ((TileEntityBattery) tileEntity).structure.locations.contains(new Vector3((TileEntity) tesla))))
+							if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
 							{
 								if (tesla instanceof TileEntityTesla)
 								{
@@ -220,11 +219,13 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 			}
 
 			/**
-			 * Draws power from furnace below it. TODO: MAKE UNIVERSAL
+			 * Draws power from furnace below it.
 			 * 
 			 * @author Calclavia
 			 */
-			if (tileEntity instanceof TileEntityFurnace)
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+			
+			if (tileEntity instanceof TileEntityFurnace && this.getRequest(ForgeDirection.DOWN) > 0)
 			{
 				TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
 
@@ -272,10 +273,11 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 					}
 				}
-			}
-			else if (tileEntity instanceof TileEntityBattery && this.canReceive)
-			{
-				this.transfer(((TileEntityBattery) tileEntity).removeEnergy(TRANSFER_CAP, true), true);
+
+				if (this.ticks % 20 == 0)
+				{
+					this.produce();
+				}
 			}
 
 			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
@@ -561,13 +563,18 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return 0;
+		return this.getMaxEnergyStored() - this.getEnergyStored();
 	}
 
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		return this.getEnergyStored();
+		if (direction != ForgeDirection.UP && direction != ForgeDirection.DOWN)
+		{
+			return this.getEnergyStored();
+		}
+		
+		return 0;
 	}
 
 	@Override

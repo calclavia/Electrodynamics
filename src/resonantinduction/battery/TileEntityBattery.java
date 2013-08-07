@@ -4,6 +4,7 @@
 package resonantinduction.battery;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,25 +14,26 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
-import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
-import resonantinduction.tesla.TeslaGrid;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 /**
  * A modular battery with no GUI.
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketReceiver, IInventory, ITesla
+public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketReceiver, IInventory
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -46,18 +48,13 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public void updateEntity()
 	{
-		ticks++;
+		super.updateEntity();
 
-		if (ticks == 1)
+		if (!this.worldObj.isRemote)
 		{
-			TeslaGrid.instance().register(this);
-		}
-
-		if (!worldObj.isRemote)
-		{
-			if (ticks == 5 && !structure.isMultiblock)
+			if (this.ticks == 5 && !structure.isMultiblock)
 			{
-				update();
+				this.update();
 			}
 
 			if (structure.visibleInventory[0] != null)
@@ -80,7 +77,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				float batteryNeeded = battery.getMaxElectricityStored(itemStack) - battery.getElectricityStored(itemStack);
 				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
 
-				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + removeEnergy(toGive, true));
+				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + provideElectricity(toGive, true).getWatts());
 			}
 
 			if (structure.visibleInventory[2] != null)
@@ -92,7 +89,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				float batteryStored = battery.getElectricityStored(itemStack);
 				float toReceive = Math.min(energyNeeded, Math.min(battery.getTransfer(itemStack), batteryStored));
 
-				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - addEnergy(toReceive, true));
+				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - receiveElectricity(toReceive, true));
 			}
 
 			if (prevStructure != structure)
@@ -114,6 +111,13 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				updateClient();
 			}
+
+			for (EntityPlayer player : this.playersUsing)
+			{
+				PacketDispatcher.sendPacketToPlayer(PacketHandler.getTileEntityPacket(this, this.getNetworkedData(new ArrayList()).toArray()), (Player) player);
+			}
+
+			this.produce();
 		}
 	}
 
@@ -140,13 +144,6 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		{
 			PacketHandler.sendDataRequest(this);
 		}
-	}
-
-	@Override
-	public void invalidate()
-	{
-		TeslaGrid.instance().unregister(this);
-		super.invalidate();
 	}
 
 	@Override
@@ -261,11 +258,10 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		}
 	}
 
-	/**
-	 * @return added energy
-	 */
-	public float addEnergy(float amount, boolean doAdd)
+	@Override
+	public float receiveElectricity(ElectricityPack receive, boolean doAdd)
 	{
+		float amount = receive.getWatts();
 		float added = 0;
 
 		for (ItemStack itemStack : structure.inventory)
@@ -294,15 +290,14 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		return added;
 	}
 
-	/**
-	 * @return removed energy
-	 */
-	public float removeEnergy(float amount, boolean doRemove)
+	@Override
+	public ElectricityPack provideElectricity(ElectricityPack pack, boolean doRemove)
 	{
+		float amount = pack.getWatts();
+
 		List<ItemStack> inverse = ListUtil.inverse(structure.inventory);
 
 		float removed = 0;
-
 		for (ItemStack itemStack : inverse)
 		{
 			if (itemStack.getItem() instanceof IItemElectric)
@@ -326,7 +321,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			}
 		}
 
-		return removed;
+		return ElectricityPack.getFromWatts(removed, this.getVoltage());
 	}
 
 	@Override
@@ -559,26 +554,20 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	}
 
 	@Override
-	public float transfer(float transferEnergy, boolean doTransfer)
-	{
-		return addEnergy(transferEnergy, doTransfer);
-	}
-
-	@Override
-	public boolean canReceive(TileEntity transferTile)
-	{
-		return this.getMaxEnergyStored() - this.getEnergyStored() > 0;
-	}
-
-	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return 0;
+		return this.getMaxEnergyStored() - this.getEnergyStored();
 	}
 
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		return 0;
+		return this.getEnergyStored();
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		return EnumSet.allOf(ForgeDirection.class);
 	}
 }

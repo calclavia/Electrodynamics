@@ -53,7 +53,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	/**
 	 * Pathfinding
 	 */
-	private ThreadPathfinding thread;
+	private ThreadEMPathfinding thread;
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
 	private TileEntityEMContractor linked;
@@ -142,23 +142,39 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			{
 				if (this.linked != null && !this.linked.isInvalid())
 				{
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
-
+					if (this.ticks % (2 + this.worldObj.rand.nextInt(2)) == 0)
+					{
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+					}
 					if (this.pathfinder != null)
 					{
+						Vector3 lastTurn = null;
+						ForgeDirection lastDirection = null;
+
 						for (int i = 0; i < this.pathfinder.results.size(); i++)
 						{
 							Vector3 result = this.pathfinder.results.get(i).clone();
 
 							if (TileEntityEMContractor.canBePath(this.worldObj, result))
 							{
+
 								if (i - 1 >= 0)
 								{
 									Vector3 prevResult = this.pathfinder.results.get(i - 1).clone();
-									ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 
 									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();
+
+									if (this.ticks % (2 + this.worldObj.rand.nextInt(2)) == 0)
+									{
+										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+									}
+
+									if (lastTurn == null || direction != lastDirection)
+									{
+										lastTurn = result;
+										lastDirection = direction;
+									}
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
 									List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
@@ -538,7 +554,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				{
 					if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
 					{
-						this.thread = new ThreadPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
+						this.thread = new ThreadEMPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
 						this.thread.start();
 					}
 				}

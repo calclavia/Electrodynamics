@@ -159,7 +159,7 @@ public class FXElectricBolt extends EntityFX
 			 */
 			for (int i = 1; i < splitAmount; i++)
 			{
-				Vector3 newOffset = segment.difference.getPerpendicular().rotate(this.rand.nextFloat() * 360, segment.difference).scale((this.rand.nextFloat() - 0.5F) * offset);
+				Vector3 newOffset = segment.difference.getPerpendicular().rotate(this.rand.nextFloat() * 360, segment.difference).clone().scale((this.rand.nextFloat() - 0.5F) * offset);
 				Vector3 basePoint = startPoint.clone().translate(subSegment.clone().scale(i));
 
 				newPoints[i] = new BoltPoint(basePoint, newOffset);
@@ -178,7 +178,7 @@ public class FXElectricBolt extends EntityFX
 				if ((i != 0) && (this.rand.nextFloat() < splitChance))
 				{
 					Vector3 splitrot = next.difference.xCrossProduct().rotate(this.rand.nextFloat() * 360, next.difference);
-					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * splitAngle, splitrot).scale(splitLength);
+					Vector3 diff = next.difference.clone().rotate((this.rand.nextFloat() * 0.66F + 0.33F) * splitAngle, splitrot).clone().scale(splitLength);
 					this.maxSplitID += 1;
 					this.parentIDMap.put(this.maxSplitID, next.splitID);
 					BoltSegment split = new BoltSegment(newPoints[i], new BoltPoint(newPoints[(i + 1)].base, newPoints[(i + 1)].offset.clone().translate(diff)), segment.alpha / 2f, next.id, this.maxSplitID);
@@ -303,54 +303,49 @@ public class FXElectricBolt extends EntityFX
 			if (segment != null && segment.id <= renderlength)
 			{
 				double renderWidth = this.boltWidth * ((new Vector3(player).distance(segment.start) / 5f + 1f) * (1 + segment.alpha) * 0.5f);
-				renderWidth = Math.min(this.boltWidth, Math.max(renderWidth, 0));
 
-				if (segment.difference.getMagnitude() > 0 && segment.difference.getMagnitude() != Double.NaN && segment.difference.getMagnitude() != Double.POSITIVE_INFINITY && renderWidth > 0 && renderWidth != Double.NaN && renderWidth != Double.POSITIVE_INFINITY)
+				Vector3 diffPrev = playerVector.crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
+				Vector3 diffNext = playerVector.crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
+				Vector3 startVec = segment.start;
+				Vector3 endVec = segment.end;
+				float rx1 = (float) (startVec.x - interpPosX);
+				float ry1 = (float) (startVec.y - interpPosY);
+				float rz1 = (float) (startVec.z - interpPosZ);
+				float rx2 = (float) (endVec.x - interpPosX);
+				float ry2 = (float) (endVec.y - interpPosY);
+				float rz2 = (float) (endVec.z - interpPosZ);
+
+				tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, (1.0F - (this.particleAge >= 0 ? ((float) this.particleAge / (float) this.particleMaxAge) : 0.0F) * 0.6f) * segment.alpha);
+				tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
+				tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
+				tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
+				tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
+
+				/**
+				 * Render the bolts balls.
+				 */
+				if (segment.next == null)
 				{
-					Vector3 diffPrev = playerVector.crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
-					Vector3 diffNext = playerVector.crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
-					Vector3 startVec = segment.start;
-					Vector3 endVec = segment.end;
-					float rx1 = (float) (startVec.x - interpPosX);
-					float ry1 = (float) (startVec.y - interpPosY);
-					float rz1 = (float) (startVec.z - interpPosZ);
-					float rx2 = (float) (endVec.x - interpPosX);
-					float ry2 = (float) (endVec.y - interpPosY);
-					float rz2 = (float) (endVec.z - interpPosZ);
-
-					tessellator.setColorRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, (1.0F - (this.particleAge >= 0 ? ((float) this.particleAge / (float) this.particleMaxAge) : 0.0F) * 0.6f) * segment.alpha);
+					Vector3 roundEnd = segment.end.clone().translate(segment.difference.clone().normalize().scale(renderWidth));
+					float rx3 = (float) (roundEnd.x - interpPosX);
+					float ry3 = (float) (roundEnd.y - interpPosY);
+					float rz3 = (float) (roundEnd.z - interpPosZ);
+					tessellator.addVertexWithUV(rx3 - diffNext.x, ry3 - diffNext.y, rz3 - diffNext.z, 0.0D, 0.0D);
 					tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
-					tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
-					tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
 					tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
+					tessellator.addVertexWithUV(rx3 + diffNext.x, ry3 + diffNext.y, rz3 + diffNext.z, 0.0D, 1.0D);
+				}
 
-					/**
-					 * Render the bolts balls.
-					 */
-
-					if (segment.next == null)
-					{
-						Vector3 roundEnd = segment.end.clone().translate(segment.difference.clone().normalize().scale(renderWidth));
-						float rx3 = (float) (roundEnd.x - interpPosX);
-						float ry3 = (float) (roundEnd.y - interpPosY);
-						float rz3 = (float) (roundEnd.z - interpPosZ);
-						tessellator.addVertexWithUV(rx3 - diffNext.x, ry3 - diffNext.y, rz3 - diffNext.z, 0.0D, 0.0D);
-						tessellator.addVertexWithUV(rx2 - diffNext.x, ry2 - diffNext.y, rz2 - diffNext.z, 0.5D, 0.0D);
-						tessellator.addVertexWithUV(rx2 + diffNext.x, ry2 + diffNext.y, rz2 + diffNext.z, 0.5D, 1.0D);
-						tessellator.addVertexWithUV(rx3 + diffNext.x, ry3 + diffNext.y, rz3 + diffNext.z, 0.0D, 1.0D);
-					}
-
-					if (segment.prev == null)
-					{
-						Vector3 roundEnd = segment.start.clone().difference(segment.difference.clone().normalize().scale(renderWidth));
-						float rx3 = (float) (roundEnd.x - interpPosX);
-						float ry3 = (float) (roundEnd.y - interpPosY);
-						float rz3 = (float) (roundEnd.z - interpPosZ);
-						tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
-						tessellator.addVertexWithUV(rx3 - diffPrev.x, ry3 - diffPrev.y, rz3 - diffPrev.z, 0.0D, 0.0D);
-						tessellator.addVertexWithUV(rx3 + diffPrev.x, ry3 + diffPrev.y, rz3 + diffPrev.z, 0.0D, 1.0D);
-						tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
-					}
+				if (segment.prev == null)
+				{
+					Vector3 roundEnd = segment.start.clone().difference(segment.difference.clone().normalize().scale(renderWidth));
+					float rx3 = (float) (roundEnd.x - interpPosX);
+					float ry3 = (float) (roundEnd.y - interpPosY);
+					float rz3 = (float) (roundEnd.z - interpPosZ);
+					tessellator.addVertexWithUV(rx1 - diffPrev.x, ry1 - diffPrev.y, rz1 - diffPrev.z, 0.5D, 0.0D);
+					tessellator.addVertexWithUV(rx3 - diffPrev.x, ry3 - diffPrev.y, rz3 - diffPrev.z, 0.0D, 0.0D);
+					tessellator.addVertexWithUV(rx3 + diffPrev.x, ry3 + diffPrev.y, rz3 + diffPrev.z, 0.0D, 1.0D);
+					tessellator.addVertexWithUV(rx1 + diffPrev.x, ry1 + diffPrev.y, rz1 + diffPrev.z, 0.5D, 1.0D);
 				}
 			}
 		}
@@ -425,7 +420,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 prevDiffNorm = this.prev.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.prevDiff = diffNorm.clone().translate(prevDiffNorm).normalize();
-				this.sinPrev = Math.sin(diffNorm.anglePreNorm(prevDiffNorm.scale(-1)) / 2);
+				this.sinPrev = Math.sin(diffNorm.anglePreNorm(prevDiffNorm.clone().scale(-1)) / 2);
 			}
 			else
 			{
@@ -438,7 +433,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 nextDiffNorm = this.next.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.nextDiff = diffNorm.clone().translate(nextDiffNorm).normalize();
-				this.sinNext = Math.sin(diffNorm.anglePreNorm(nextDiffNorm.scale(-1)) / 2);
+				this.sinNext = Math.sin(diffNorm.anglePreNorm(nextDiffNorm.clone().scale(-1)) / 2);
 			}
 			else
 			{
