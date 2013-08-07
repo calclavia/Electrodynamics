@@ -18,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -44,24 +46,16 @@ public class RenderBattery extends TileEntitySpecialRenderer
 	private Random random = new Random();
 	protected RenderManager renderManager;
 
+	// IModelCustom batteryModel = AdvancedModelLoader.loadModel(ResonantInduction.MODEL_DIRECTORY +
+	// "modularBattery.tcn");
+
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		if (this.fakeBattery == null)
-		{
-			this.fakeBattery = new EntityItem(t.worldObj, 0, 0, 0, new ItemStack(ResonantInduction.itemCapacitor));
-			this.fakeBattery.age = 10;
-		}
-
-		if (this.renderManager == null)
-		{
-			this.renderManager = RenderManager.instance;
-		}
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-
 		if (((TileEntityBattery) t).structure.isMultiblock)
 		{
 			this.func_110628_a(TEXTURE_MULTI);
@@ -72,83 +66,98 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		}
 
 		MODEL.render(0.0625f);
+		// batteryModel.renderAll();
 		GL11.glPopMatrix();
 
-		int renderAmount = Math.min(((TileEntityBattery) t).clientCells, 16);
-
-		if (renderAmount == 0)
+		if (Minecraft.getMinecraft().gameSettings.fancyGraphics)
 		{
-			return;
-		}
-
-		for (int i = 2; i < 6; i++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(i);
-
-			for (int slot = 0; slot < 4; slot++)
+			if (this.fakeBattery == null)
 			{
-				Vector3 sideVec = new Vector3(t).modifyPositionFromSide(correctSide(direction));
-				Block block = Block.blocksList[sideVec.getBlockID(t.worldObj)];
+				this.fakeBattery = new EntityItem(t.worldObj, 0, 0, 0, new ItemStack(ResonantInduction.itemCapacitor));
+				this.fakeBattery.age = 10;
+			}
 
-				if (block != null && block.isOpaqueCube())
+			if (this.renderManager == null)
+			{
+				this.renderManager = RenderManager.instance;
+			}
+
+			int renderAmount = Math.min(((TileEntityBattery) t).clientCells, 16);
+
+			if (renderAmount == 0)
+			{
+				return;
+			}
+
+			for (int i = 2; i < 6; i++)
+			{
+				ForgeDirection direction = ForgeDirection.getOrientation(i);
+
+				for (int slot = 0; slot < 4; slot++)
 				{
-					continue;
-				}
+					Vector3 sideVec = new Vector3(t).modifyPositionFromSide(correctSide(direction));
+					Block block = Block.blocksList[sideVec.getBlockID(t.worldObj)];
 
-				GL11.glPushMatrix();
-				GL11.glTranslatef((float) x + 0.5f, (float) y + 0.7f, (float) z + 0.5f);
+					if (block != null && block.isOpaqueCube())
+					{
+						continue;
+					}
 
-				float translateX = 0;
-				float translateY = 0;
+					GL11.glPushMatrix();
+					GL11.glTranslatef((float) x + 0.5f, (float) y + 0.7f, (float) z + 0.5f);
 
-				switch (slot)
-				{
-					case 0:
-						translateX = 0.25f;
-						break;
-					case 1:
-						translateX = 0.25f;
-						translateY = -0.5f;
-						break;
-					case 2:
-						translateX = -0.25f;
-						translateY = -0.5f;
-						break;
-					case 3:
-						translateX = -0.25f;
-						break;
-				}
+					float translateX = 0;
+					float translateY = 0;
 
-				switch (direction)
-				{
-					case NORTH:
-						GL11.glTranslatef(-0.5f, 0, 0);
-						GL11.glTranslatef(0, translateY, translateX);
-						GL11.glRotatef(90, 0, 1, 0);
-						break;
-					case SOUTH:
-						GL11.glTranslatef(0, 0, -0.5f);
-						GL11.glTranslatef(translateX, translateY, 0);
-						break;
-					case WEST:
-						GL11.glTranslatef(0.5f, 0, 0);
-						GL11.glTranslatef(0, translateY, translateX);
-						GL11.glRotatef(90, 0, 1, 0);
-						break;
-					case EAST:
-						GL11.glTranslatef(0, 0, 0.5f);
-						GL11.glTranslatef(translateX, translateY, 0);
-						break;
-				}
+					switch (slot)
+					{
+						case 0:
+							translateX = 0.25f;
+							break;
+						case 1:
+							translateX = 0.25f;
+							translateY = -0.5f;
+							break;
+						case 2:
+							translateX = -0.25f;
+							translateY = -0.5f;
+							break;
+						case 3:
+							translateX = -0.25f;
+							break;
+					}
 
-				GL11.glScalef(0.5f, 0.5f, 0.5f);
+					switch (direction)
+					{
+						case NORTH:
+							GL11.glTranslatef(-0.5f, 0, 0);
+							GL11.glTranslatef(0, translateY, translateX);
+							GL11.glRotatef(90, 0, 1, 0);
+							break;
+						case SOUTH:
+							GL11.glTranslatef(0, 0, -0.5f);
+							GL11.glTranslatef(translateX, translateY, 0);
+							break;
+						case WEST:
+							GL11.glTranslatef(0.5f, 0, 0);
+							GL11.glTranslatef(0, translateY, translateX);
+							GL11.glRotatef(90, 0, 1, 0);
+							break;
+						case EAST:
+							GL11.glTranslatef(0, 0, 0.5f);
+							GL11.glTranslatef(translateX, translateY, 0);
+							break;
+					}
 
-				this.renderItemSimple(this.fakeBattery);
-				GL11.glPopMatrix();
+					GL11.glScalef(0.5f, 0.5f, 0.5f);
 
-				if (--renderAmount <= 0)
-				{
-					return;
+					this.renderItemSimple(this.fakeBattery);
+					GL11.glPopMatrix();
+
+					if (--renderAmount <= 0)
+					{
+						return;
+					}
 				}
 			}
 		}

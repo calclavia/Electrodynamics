@@ -303,9 +303,8 @@ public class FXElectricBolt extends EntityFX
 			if (segment != null && segment.id <= renderlength)
 			{
 				double renderWidth = this.boltWidth * ((new Vector3(player).distance(segment.start) / 5f + 1f) * (1 + segment.alpha) * 0.5f);
-
-				Vector3 diffPrev = playerVector.crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
-				Vector3 diffNext = playerVector.crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
+				Vector3 diffPrev = playerVector.clone().crossProduct(segment.prevDiff).scale(renderWidth / segment.sinPrev);
+				Vector3 diffNext = playerVector.clone().crossProduct(segment.nextDiff).scale(renderWidth / segment.sinNext);
 				Vector3 startVec = segment.start;
 				Vector3 endVec = segment.end;
 				float rx1 = (float) (startVec.x - interpPosX);
@@ -420,7 +419,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 prevDiffNorm = this.prev.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.prevDiff = diffNorm.clone().translate(prevDiffNorm).normalize();
-				this.sinPrev = Math.sin(diffNorm.anglePreNorm(prevDiffNorm.clone().scale(-1)) / 2);
+				this.sinPrev = Math.sin(diffNorm.clone().anglePreNorm(prevDiffNorm.clone().scale(-1)) / 2);
 			}
 			else
 			{
@@ -433,7 +432,7 @@ public class FXElectricBolt extends EntityFX
 				Vector3 nextDiffNorm = this.next.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
 				this.nextDiff = diffNorm.clone().translate(nextDiffNorm).normalize();
-				this.sinNext = Math.sin(diffNorm.anglePreNorm(nextDiffNorm.clone().scale(-1)) / 2);
+				this.sinNext = Math.sin(diffNorm.clone().anglePreNorm(nextDiffNorm.clone().scale(-1)) / 2);
 			}
 			else
 			{

@@ -299,7 +299,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	@Override
 	public boolean canReceive(TileEntity tileEntity)
 	{
-		return this.canReceive && !this.outputBlacklist.contains(tileEntity);
+		return this.canReceive && !this.outputBlacklist.contains(tileEntity) && this.getRequest(ForgeDirection.UNKNOWN) > 0;
 	}
 
 	@Override
