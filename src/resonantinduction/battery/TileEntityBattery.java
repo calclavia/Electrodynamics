@@ -329,6 +329,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		return removed;
 	}
 
+	@Override
 	public float getMaxEnergyStored()
 	{
 		if (!worldObj.isRemote)
@@ -354,6 +355,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		}
 	}
 
+	@Override
 	public float getEnergyStored()
 	{
 		if (!worldObj.isRemote)

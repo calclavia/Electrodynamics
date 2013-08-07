@@ -148,16 +148,16 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 					{
 						for (int i = 0; i < this.pathfinder.results.size(); i++)
 						{
-							Vector3 result = this.pathfinder.results.get(i);
+							Vector3 result = this.pathfinder.results.get(i).clone();
 
-							if (TileEntityEMContractor.canBePath(this.worldObj, result, new Vector3(this.linked)))
+							if (TileEntityEMContractor.canBePath(this.worldObj, result))
 							{
 								if (i - 1 >= 0)
 								{
-									Vector3 prevResult = this.pathfinder.results.get(i - 1);
-									ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.translate(0.5), result.translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+									Vector3 prevResult = this.pathfinder.results.get(i - 1).clone();
+									ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 
-									Vector3 difference = prevResult.difference(result);
+									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
@@ -204,7 +204,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 		}
 	}
 
-	public static boolean canBePath(World world, Vector3 position, Vector3 target)
+	public static boolean canBePath(World world, Vector3 position)
 	{
 		Block block = Block.blocksList[position.getBlockID(world)];
 		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder);
@@ -448,7 +448,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 		super.readFromNBT(nbt);
 		this.suck = nbt.getBoolean("suck");
 		this.dyeID = nbt.getInteger("dyeID");
-		this.tempLinkVector = new Vector3(nbt.getInteger("link_x"), nbt.getInteger("link_y"), nbt.getInteger("link_z"));
+		this.tempLinkVector = new Vector3(nbt.getCompoundTag("link"));
 	}
 
 	@Override
@@ -460,9 +460,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 		if (this.linked != null)
 		{
-			nbt.setInteger("link_x", this.linked.xCoord);
-			nbt.setInteger("link_y", this.linked.yCoord);
-			nbt.setInteger("link_z", this.linked.zCoord);
+			nbt.setCompoundTag("link", new Vector3(this.linked).writeToNBT(new NBTTagCompound()));
 		}
 	}
 
@@ -494,6 +492,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 		return data;
 	}
 
+	@Override
 	public Packet getDescriptionPacket()
 	{
 		if (this.linked != null)
@@ -532,12 +531,12 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 		{
 			if (this.linked != null)
 			{
-				Vector3 start = new Vector3(this).translate(new Vector3(this.getDirection()));
-				Vector3 target = new Vector3(this.linked).translate(new Vector3(this.linked.getDirection()));
+				Vector3 start = new Vector3(this).modifyPositionFromSide(this.getDirection());
+				Vector3 target = new Vector3(this.linked).modifyPositionFromSide(this.linked.getDirection());
 
 				if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
 				{
-					if (TileEntityEMContractor.canBePath(this.worldObj, start, new Vector3(this.linked)) && TileEntityEMContractor.canBePath(this.worldObj, target, new Vector3(this.linked)))
+					if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
 					{
 						this.thread = new ThreadPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
 						this.thread.start();

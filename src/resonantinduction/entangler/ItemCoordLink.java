@@ -82,9 +82,7 @@ public abstract class ItemCoordLink extends ItemBase
 
 	public void clearLink(ItemStack itemStack)
 	{
-		itemStack.getTagCompound().removeTag("bindX");
-		itemStack.getTagCompound().removeTag("bindY");
-		itemStack.getTagCompound().removeTag("bindZ");
+		itemStack.getTagCompound().removeTag("position");
 		itemStack.getTagCompound().removeTag("dimID");
 	}
 }

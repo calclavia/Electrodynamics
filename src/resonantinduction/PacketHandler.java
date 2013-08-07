@@ -149,10 +149,10 @@ public class PacketHandler implements IPacketHandler
 	{
 		PacketDispatcher.sendPacketToAllPlayers(getTileEntityPacket(tileEntity, dataValues));
 	}
-	
+
 	public static void sendTileEntityPacketToPlayer(TileEntity tileEntity, EntityPlayer player, Object... dataValues)
 	{
-		((EntityPlayerMP)player).playerNetServerHandler.sendPacketToPlayer(getTileEntityPacket(tileEntity, dataValues));
+		((EntityPlayerMP) player).playerNetServerHandler.sendPacketToPlayer(getTileEntityPacket(tileEntity, dataValues));
 	}
 
 	public static Packet250CustomPayload getTileEntityPacket(TileEntity tileEntity, Object... dataValues)

@@ -22,12 +22,6 @@ public class ThreadPathfinding extends Thread
 		this.setPriority(Thread.MIN_PRIORITY);
 	}
 
-	public ThreadPathfinding find()
-	{
-		this.run();
-		return this;
-	}
-
 	@Override
 	public void run()
 	{

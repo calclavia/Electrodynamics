@@ -373,7 +373,7 @@ public class FXElectricBolt extends EntityFX
 
 		public BoltPoint(Vector3 base, Vector3 offset)
 		{
-			super(base.translate(offset));
+			super(base.clone().translate(offset));
 			this.base = base;
 			this.offset = offset;
 		}
@@ -415,7 +415,7 @@ public class FXElectricBolt extends EntityFX
 			this.alpha = alpha;
 			this.id = id;
 			this.splitID = splitID;
-			this.difference = this.end.difference(this.start);
+			this.difference = this.end.clone().difference(this.start);
 		}
 
 		public void recalculate()
@@ -424,7 +424,7 @@ public class FXElectricBolt extends EntityFX
 			{
 				Vector3 prevDiffNorm = this.prev.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
-				this.prevDiff = diffNorm.translate(prevDiffNorm).normalize();
+				this.prevDiff = diffNorm.clone().translate(prevDiffNorm).normalize();
 				this.sinPrev = Math.sin(diffNorm.anglePreNorm(prevDiffNorm.scale(-1)) / 2);
 			}
 			else
@@ -437,7 +437,7 @@ public class FXElectricBolt extends EntityFX
 			{
 				Vector3 nextDiffNorm = this.next.difference.clone().normalize();
 				Vector3 diffNorm = this.difference.clone().normalize();
-				this.nextDiff = diffNorm.translate(nextDiffNorm).normalize();
+				this.nextDiff = diffNorm.clone().translate(nextDiffNorm).normalize();
 				this.sinNext = Math.sin(diffNorm.anglePreNorm(nextDiffNorm.scale(-1)) / 2);
 			}
 			else

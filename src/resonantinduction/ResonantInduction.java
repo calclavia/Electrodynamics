@@ -27,6 +27,7 @@ import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.BlockWire;
+import resonantinduction.wire.EnumWire;
 import resonantinduction.wire.ItemBlockWire;
 import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.item.IItemElectric;
@@ -231,6 +232,15 @@ public class ResonantInduction
 
 		/** EM Contractor */
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', Block.wood, 'C', emptyCapacitor, 'G', Item.ingotGold, 'I', Item.ingotIron));
+
+		/** Wires **/
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.TIN.ordinal()), "MMM", 'M', "ingotTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.IRON.ordinal()), "MMM", 'M', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.ALUMINUM.ordinal()), "MMM", 'M', "ingotAluminum"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
+
 	}
 
 	public static int loadLanguages(String languagePath, String[] languageSupported)

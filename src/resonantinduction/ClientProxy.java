@@ -39,7 +39,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultimeter.class, new RenderMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());

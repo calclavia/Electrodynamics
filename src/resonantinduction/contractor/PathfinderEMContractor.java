@@ -49,7 +49,7 @@ public class PathfinderEMContractor
 		this.results = new ArrayList<Vector3>();
 	}
 
-	public boolean find(Vector3 start)
+	public boolean find(final Vector3 start)
 	{
 		this.openSet.add(start);
 		this.gScore.put(start, 0d);
@@ -62,7 +62,7 @@ public class PathfinderEMContractor
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			Vector3 neighbor = this.target.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-			if (!TileEntityEMContractor.canBePath(this.world, neighbor, this.target))
+			if (!TileEntityEMContractor.canBePath(this.world, neighbor))
 			{
 				blockCount++;
 			}
@@ -106,10 +106,9 @@ public class PathfinderEMContractor
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
+				Vector3 neighbor = currentNode.clone().modifyPositionFromSide(direction);
 
-				Vector3 neighbor = currentNode.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
-
-				if (TileEntityEMContractor.canBePath(this.world, neighbor, this.target))
+				if (TileEntityEMContractor.canBePath(this.world, neighbor))
 				{
 					double tentativeG = this.gScore.get(currentNode) + currentNode.distance(neighbor);
 
