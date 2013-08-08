@@ -6,6 +6,7 @@ package resonantinduction.battery;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +47,6 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	public float clientMaxEnergy;
 
 	private EnumSet inputSides = EnumSet.allOf(ForgeDirection.class);
-	private EnumSet outputSides = EnumSet.noneOf(ForgeDirection.class);
 
 	@Override
 	public void updateEntity()
@@ -192,12 +192,28 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				}
 			}
 		}
+
+		if (nbtTags.hasKey("inputSides"))
+		{
+			this.inputSides = EnumSet.noneOf(ForgeDirection.class);
+
+			NBTTagList tagList = nbtTags.getTagList("inputSides");
+
+			for (int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
+			{
+				NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(tagCount);
+				byte side = tagCompound.getByte("side");
+				this.inputSides.add(ForgeDirection.getOrientation(side));
+			}
+
+			this.inputSides.remove(ForgeDirection.UNKNOWN);
+		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbtTags)
+	public void writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbtTags);
+		super.writeToNBT(nbt);
 
 		if (!structure.wroteInventory)
 		{
@@ -217,7 +233,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 					}
 				}
 
-				nbtTags.setTag("Items", tagList);
+				nbt.setTag("Items", tagList);
 			}
 
 			// Visible inventory
@@ -241,10 +257,29 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 					}
 				}
 
-				nbtTags.setTag("VisibleItems", tagList);
+				nbt.setTag("VisibleItems", tagList);
 			}
 
 			structure.wroteInventory = true;
+
+			/**
+			 * Save the input sides.
+			 */
+			NBTTagList tagList = new NBTTagList();
+			Iterator<ForgeDirection> it = this.inputSides.iterator();
+
+			while (it.hasNext())
+			{
+				ForgeDirection dir = it.next();
+				if (this.inputSides.contains(dir) && dir != ForgeDirection.UNKNOWN)
+				{
+					NBTTagCompound tagCompound = new NBTTagCompound();
+					tagCompound.setByte("side", (byte) dir.ordinal());
+					tagList.appendTag(tagCompound);
+				}
+			}
+
+			nbt.setTag("inputSides", tagList);
 		}
 	}
 
@@ -577,7 +612,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
-		return this.outputSides;
+		return EnumSet.complementOf(this.inputSides);
 	}
 
 	/**
@@ -588,12 +623,10 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		if (this.inputSides.contains(orientation))
 		{
 			this.inputSides.remove(orientation);
-			this.outputSides.add(orientation);
 			return false;
 		}
 		else
 		{
-			this.outputSides.remove(orientation);
 			this.inputSides.add(orientation);
 			return true;
 		}
