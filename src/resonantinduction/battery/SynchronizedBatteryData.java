@@ -45,6 +45,18 @@ public class SynchronizedBatteryData
 		return getVolume() * BatteryManager.CELLS_PER_BATTERY;
 	}
 
+	public boolean addCell(ItemStack cell)
+	{
+		if (this.inventory.size() < this.getMaxCells())
+		{
+			this.inventory.add(cell);
+			this.sortInventory();
+			return true;
+		}
+
+		return false;
+	}
+
 	public void sortInventory()
 	{
 		Object[] array = ListUtil.copy(inventory).toArray();

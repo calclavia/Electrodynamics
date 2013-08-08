@@ -70,10 +70,12 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 						if (!world.isRemote)
 						{
 							TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
-							tileEntity.structure.inventory.add(entityPlayer.getCurrentEquippedItem());
-							tileEntity.structure.sortInventory();
-							entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
-							tileEntity.updateAllClients();
+
+							if (tileEntity.structure.addCell(entityPlayer.getCurrentEquippedItem()))
+							{
+								entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
+								tileEntity.updateAllClients();
+							}
 						}
 
 						/**
