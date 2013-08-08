@@ -69,6 +69,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 				{
 					entityPlayer.addChatMessage("Toggled entity attack to: " + status);
 				}
+
 				return true;
 			}
 			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
@@ -87,12 +88,13 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 
 							if (linkVec.getTileEntity(otherWorld) instanceof TileEntityTesla)
 							{
-								tileEntity.setLink(new Vector3(((TileEntityTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID);
+								tileEntity.setLink(new Vector3(((TileEntityTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID, true);
 
 								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
 
 								link.clearLink(entityPlayer.getCurrentEquippedItem());
 								world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
+
 								return true;
 							}
 						}
@@ -100,7 +102,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 				}
 				else
 				{
-					tileEntity.linked = null;
+					tileEntity.setLink(null, world.provider.dimensionId, true);
 
 					if (!world.isRemote)
 					{
