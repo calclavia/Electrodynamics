@@ -31,6 +31,7 @@ import resonantinduction.wire.EnumWire;
 import resonantinduction.wire.ItemBlockWire;
 import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.item.IItemElectric;
+import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -93,7 +94,7 @@ public class ResonantInduction
 	public static final String MODEL_DIRECTORY = DIRECTORY + "models/";
 
 	public static final String LANGUAGE_DIRECTORY = DIRECTORY + "languages/";
-	public static final String[] LANGUAGES = new String[] { "en_US" };
+	public static final String[] LANGUAGES = new String[] { "en_US", "de_DE" };
 
 	/**
 	 * Settings
@@ -191,7 +192,7 @@ public class ResonantInduction
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		LOGGER.fine("Languages Loaded:" + loadLanguages(LANGUAGE_DIRECTORY, LANGUAGES));
+		LOGGER.fine("Languages Loaded:" + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, LANGUAGES));
 
 		metadata.modId = ID;
 		metadata.name = NAME;
@@ -242,18 +243,5 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
 
-	}
-
-	public static int loadLanguages(String languagePath, String[] languageSupported)
-	{
-		int loaded = 0;
-
-		for (String language : languageSupported)
-		{
-			LanguageRegistry.instance().loadLocalization(languagePath + language + ".properties", language, false);
-			loaded++;
-		}
-
-		return loaded;
 	}
 }
