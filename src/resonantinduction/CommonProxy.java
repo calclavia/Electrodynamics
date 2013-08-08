@@ -52,14 +52,24 @@ public class CommonProxy implements IGuiHandler
 		return false;
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
 	{
 
+	}
+
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
+	{
+		this.renderElectricShock(world, start, target, r, g, b, true);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target, Vector3 color)
 	{
 		this.renderElectricShock(world, start, target, (float) color.x, (float) color.y, (float) color.z);
+	}
+
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, Vector3 color, boolean split)
+	{
+		this.renderElectricShock(world, start, target, (float) color.x, (float) color.y, (float) color.z, split);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target)
@@ -71,4 +81,5 @@ public class CommonProxy implements IGuiHandler
 	{
 		return false;
 	}
+
 }

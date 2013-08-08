@@ -60,7 +60,7 @@ public class FXElectricBolt extends EntityFX
 	private int maxSplitID;
 	private Random rand;
 
-	public FXElectricBolt(World world, Vector3 startVec, Vector3 targetVec)
+	public FXElectricBolt(World world, Vector3 startVec, Vector3 targetVec, boolean doSplits)
 	{
 		super(world, startVec.x, startVec.y, startVec.z);
 
@@ -79,39 +79,47 @@ public class FXElectricBolt extends EntityFX
 		this.complexity = 2f;
 		this.boltWidth = 0.05f;
 		this.boltLength = this.start.distance(this.end);
-		this.setUp();
+		this.setUp(doSplits);
+	}
+
+	public FXElectricBolt(World world, Vector3 startVec, Vector3 targetVec)
+	{
+		this(world, startVec, targetVec, true);
 	}
 
 	/**
 	 * Calculate all required segments of the entire bolt.
 	 */
-	private void setUp()
+	private void setUp(boolean doSplits)
 	{
 		this.segments.add(new BoltSegment(this.start, this.end));
 		this.recalculate();
-		double offsetRatio = this.boltLength * this.complexity;
-		this.split(2, offsetRatio / 10, 0.7f, 0.1f, 20 / 2);
-		this.split(2, offsetRatio / 15, 0.5f, 0.1f, 25 / 2);
-		this.split(2, offsetRatio / 25, 0.5f, 0.1f, 28 / 2);
-		this.split(2, offsetRatio / 38, 0.5f, 0.1f, 30 / 2);
-		this.split(2, offsetRatio / 55, 0, 0, 0);
-		this.split(2, offsetRatio / 70, 0, 0, 0);
 
-		this.recalculate();
-
-		Collections.sort(this.segments, new Comparator()
+		if (doSplits)
 		{
-			public int compare(BoltSegment bolt1, BoltSegment bolt2)
-			{
-				return Float.compare(bolt2.alpha, bolt1.alpha);
-			}
+			double offsetRatio = this.boltLength * this.complexity;
+			this.split(2, offsetRatio / 10, 0.7f, 0.1f, 20 / 2);
+			this.split(2, offsetRatio / 15, 0.5f, 0.1f, 25 / 2);
+			this.split(2, offsetRatio / 25, 0.5f, 0.1f, 28 / 2);
+			this.split(2, offsetRatio / 38, 0.5f, 0.1f, 30 / 2);
+			this.split(2, offsetRatio / 55, 0, 0, 0);
+			this.split(2, offsetRatio / 70, 0, 0, 0);
+			this.recalculate();
 
-			@Override
-			public int compare(Object obj1, Object obj2)
+			Collections.sort(this.segments, new Comparator()
 			{
-				return compare((BoltSegment) obj1, (BoltSegment) obj2);
-			}
-		});
+				public int compare(BoltSegment bolt1, BoltSegment bolt2)
+				{
+					return Float.compare(bolt2.alpha, bolt1.alpha);
+				}
+
+				@Override
+				public int compare(Object obj1, Object obj2)
+				{
+					return compare((BoltSegment) obj1, (BoltSegment) obj2);
+				}
+			});
+		}
 	}
 
 	public FXElectricBolt setColor(float r, float g, float b)

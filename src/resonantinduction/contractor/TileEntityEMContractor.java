@@ -138,8 +138,8 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				}
 			}
 
-			int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + this.worldObj.rand.nextInt(2) : 10 + this.worldObj.rand.nextInt(2);
-			boolean renderBeam = this.ticks % renderFrequency == 0 && this.linked != null && !this.linked.isInvalid() && this.linked.suck != this.suck;
+			final int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + this.worldObj.rand.nextInt(2) : 10 + this.worldObj.rand.nextInt(2);
+			final boolean renderBeam = this.ticks % renderFrequency == 0 && this.linked != null && !this.linked.isInvalid() && this.linked.suck != this.suck;
 
 			if (!this.suck)
 			{
@@ -147,21 +147,17 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				{
 					if (renderBeam)
 					{
-						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
 					}
 
 					if (this.pathfinder != null)
 					{
-						Vector3 lastTurn = null;
-						ForgeDirection lastDirection = null;
-
 						for (int i = 0; i < this.pathfinder.results.size(); i++)
 						{
 							Vector3 result = this.pathfinder.results.get(i).clone();
 
 							if (TileEntityEMContractor.canBePath(this.worldObj, result))
 							{
-								// TODO: RENDER BEAMS ONLY ON CHANGE. SAVE CALCULATIONS!
 								if (i - 1 >= 0)
 								{
 									Vector3 prevResult = this.pathfinder.results.get(i - 1).clone();
@@ -171,13 +167,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 									if (renderBeam)
 									{
-										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
-									}
-
-									if (lastTurn == null || direction != lastDirection)
-									{
-										lastTurn = result;
-										lastDirection = direction;
+										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
 									}
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
@@ -203,7 +193,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			{
 				if (renderBeam)
 				{
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
 				}
 
 				this.pathfinder = null;
@@ -214,7 +204,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 					{
 						if (renderBeam)
 						{
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID]);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID], false);
 						}
 
 						this.moveEntity(entityItem, this.getDirection(), new Vector3(this));

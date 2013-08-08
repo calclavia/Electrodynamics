@@ -90,11 +90,11 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
 	{
 		if (world.isRemote)
 		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXElectricBolt(world, start, target).setColor(r, g, b));
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b));
 		}
 	}
 }
