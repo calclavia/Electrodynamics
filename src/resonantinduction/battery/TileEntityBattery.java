@@ -45,6 +45,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	public int clientCells;
 	public float clientMaxEnergy;
 
+	private EnumSet inputSides = EnumSet.allOf(ForgeDirection.class);
+	private EnumSet outputSides = EnumSet.noneOf(ForgeDirection.class);
+
 	@Override
 	public void updateEntity()
 	{
@@ -327,11 +330,11 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public float getMaxEnergyStored()
 	{
-		if (!worldObj.isRemote)
+		if (!this.worldObj.isRemote)
 		{
 			float max = 0;
 
-			for (ItemStack itemStack : structure.inventory)
+			for (ItemStack itemStack : this.structure.inventory)
 			{
 				if (itemStack != null)
 				{
@@ -346,18 +349,18 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		}
 		else
 		{
-			return clientMaxEnergy;
+			return this.clientMaxEnergy;
 		}
 	}
 
 	@Override
 	public float getEnergyStored()
 	{
-		if (!worldObj.isRemote)
+		if (!this.worldObj.isRemote)
 		{
 			float energy = 0;
 
-			for (ItemStack itemStack : structure.inventory)
+			for (ItemStack itemStack : this.structure.inventory)
 			{
 				if (itemStack != null)
 				{
@@ -548,9 +551,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	public boolean isItemValidForSlot(int i, ItemStack itemsSack)
 	{
-		return false;
+		return itemsSack.getItem() instanceof IItemElectric;
 	}
 
 	@Override
@@ -566,8 +569,33 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	}
 
 	@Override
+	public EnumSet<ForgeDirection> getInputDirections()
+	{
+		return this.inputSides;
+	}
+
+	@Override
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
-		return EnumSet.allOf(ForgeDirection.class);
+		return this.outputSides;
+	}
+
+	/**
+	 * Toggles the input/output sides of the battery.
+	 */
+	public boolean toggleSide(ForgeDirection orientation)
+	{
+		if (this.inputSides.contains(orientation))
+		{
+			this.inputSides.remove(orientation);
+			this.outputSides.add(orientation);
+			return false;
+		}
+		else
+		{
+			this.outputSides.remove(orientation);
+			this.inputSides.add(orientation);
+			return true;
+		}
 	}
 }

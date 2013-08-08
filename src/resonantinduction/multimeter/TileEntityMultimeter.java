@@ -59,45 +59,48 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 	{
 		super.updateEntity();
 
-		if (this.ticks % 20 == 0)
+		if (!this.worldObj.isRemote)
 		{
-			float prevDetectedEnergy = this.detectedEnergy;
-			this.detectedEnergy = this.doGetDetectedEnergy();
-			this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
-			this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
-
-			boolean outputRedstone = false;
-
-			switch (detectMode)
+			if (this.ticks % 20 == 0)
 			{
-				default:
-					break;
-				case EQUAL:
-					outputRedstone = this.detectedEnergy == this.energyLimit;
-					break;
-				case GREATER_THAN:
-					outputRedstone = this.detectedEnergy > this.energyLimit;
-					break;
-				case GREATER_THAN_EQUAL:
-					outputRedstone = this.detectedEnergy >= this.energyLimit;
-					break;
-				case LESS_THAN:
-					outputRedstone = this.detectedEnergy < this.energyLimit;
-					break;
-				case LESS_THAN_EQUAL:
-					outputRedstone = this.detectedEnergy <= this.energyLimit;
-					break;
-			}
+				float prevDetectedEnergy = this.detectedEnergy;
+				this.detectedEnergy = this.doGetDetectedEnergy();
+				this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
+				this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
 
-			if (outputRedstone != this.redstoneOn)
-			{
-				this.redstoneOn = outputRedstone;
-				this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ResonantInduction.blockMultimeter.blockID);
-			}
+				boolean outputRedstone = false;
 
-			if (prevDetectedEnergy != this.detectedEnergy)
-			{
-				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				switch (detectMode)
+				{
+					default:
+						break;
+					case EQUAL:
+						outputRedstone = this.detectedEnergy == this.energyLimit;
+						break;
+					case GREATER_THAN:
+						outputRedstone = this.detectedEnergy > this.energyLimit;
+						break;
+					case GREATER_THAN_EQUAL:
+						outputRedstone = this.detectedEnergy >= this.energyLimit;
+						break;
+					case LESS_THAN:
+						outputRedstone = this.detectedEnergy < this.energyLimit;
+						break;
+					case LESS_THAN_EQUAL:
+						outputRedstone = this.detectedEnergy <= this.energyLimit;
+						break;
+				}
+
+				if (outputRedstone != this.redstoneOn)
+				{
+					this.redstoneOn = outputRedstone;
+					this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ResonantInduction.blockMultimeter.blockID);
+				}
+
+				if (prevDetectedEnergy != this.detectedEnergy)
+				{
+					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				}
 			}
 		}
 

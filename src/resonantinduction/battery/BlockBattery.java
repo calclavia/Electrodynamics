@@ -55,9 +55,18 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float xClick, float yClick, float zClick)
 	{
+		TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+
 		if (entityPlayer.isSneaking())
 		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.ROTATION_MATRIX[world.getBlockMetadata(x, y, z)][side], 3);
+			boolean result = tileEntity.toggleSide(ForgeDirection.getOrientation(side));
+
+			if (!world.isRemote)
+			{
+				entityPlayer.addChatMessage("Toggled side to: " + (result ? "input" : "output"));
+			}
+
+			return true;
 		}
 		else
 		{
@@ -69,8 +78,6 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 					{
 						if (!world.isRemote)
 						{
-							TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
-
 							if (tileEntity.structure.addCell(entityPlayer.getCurrentEquippedItem()))
 							{
 								entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);

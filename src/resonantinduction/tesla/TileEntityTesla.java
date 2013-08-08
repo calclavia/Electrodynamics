@@ -173,7 +173,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 					{
 						float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
 						int count = 0;
-						
+
 						for (ITesla tesla : transferTeslaCoils)
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
@@ -275,12 +275,9 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 					}
 				}
-
-				if (this.ticks % 20 == 0)
-				{
-					this.produce();
-				}
 			}
+
+			this.produce();
 
 			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
 			{
@@ -301,6 +298,12 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	public boolean canReceive(TileEntity tileEntity)
 	{
 		return this.canReceive && !this.outputBlacklist.contains(tileEntity) && this.getRequest(ForgeDirection.UNKNOWN) > 0;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return this.isController();
 	}
 
 	@Override
