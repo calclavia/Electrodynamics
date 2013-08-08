@@ -80,6 +80,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 		else
 		{
 			contractor.suck = !contractor.suck;
+			contractor.updatePath();
 		}
 
 		return true;

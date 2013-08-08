@@ -84,6 +84,12 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
+	public boolean isFancy()
+	{
+		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
+	}
+
+	@Override
 	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b)
 	{
 		if (world.isRemote)

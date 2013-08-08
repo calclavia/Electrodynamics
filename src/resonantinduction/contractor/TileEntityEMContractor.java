@@ -138,14 +138,18 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				}
 			}
 
+			int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + this.worldObj.rand.nextInt(2) : 10 + this.worldObj.rand.nextInt(2);
+			boolean renderBeam = this.ticks % renderFrequency == 0 && this.linked != null && !this.linked.isInvalid() && this.linked.suck != this.suck;
+
 			if (!this.suck)
 			{
 				if (this.linked != null && !this.linked.isInvalid())
 				{
-					if (this.ticks % (1 + this.worldObj.rand.nextInt(2)) == 0)
+					if (renderBeam)
 					{
 						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 					}
+
 					if (this.pathfinder != null)
 					{
 						Vector3 lastTurn = null;
@@ -165,7 +169,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();
 
-									if (this.ticks % (1 + this.worldObj.rand.nextInt(2)) == 0)
+									if (renderBeam)
 									{
 										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 									}
@@ -197,7 +201,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			}
 			else
 			{
-				if (this.linked != null && !this.linked.isInvalid())
+				if (renderBeam)
 				{
 					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 				}
@@ -208,7 +212,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				{
 					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
 					{
-						if (this.worldObj.isRemote && this.ticks % 5 == 0)
+						if (renderBeam)
 						{
 							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID]);
 						}
@@ -330,6 +334,8 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				}
 
 				break;
+			default:
+				break;
 		}
 
 		entityItem.isAirBorne = true;
@@ -359,6 +365,8 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				break;
 			case EAST:
 				item = new EntityItem(worldObj, xCoord + 1.2, yCoord + 0.5, zCoord + 0.5, toSend);
+				break;
+			default:
 				break;
 		}
 
@@ -407,6 +415,8 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			case EAST:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord + 1, yCoord, zCoord, xCoord + 1 + MAX_REACH, yCoord + 1, zCoord + 1);
 				suckBounds = AxisAlignedBB.getBoundingBox(xCoord + 1, yCoord, zCoord, xCoord + 1.1, yCoord + 1, zCoord + 1);
+				break;
+			default:
 				break;
 		}
 	}

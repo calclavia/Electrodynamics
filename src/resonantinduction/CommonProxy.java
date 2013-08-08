@@ -66,4 +66,9 @@ public class CommonProxy implements IGuiHandler
 	{
 		renderElectricShock(world, start, target, 0.55f, 0.7f, 1f);
 	}
+
+	public boolean isFancy()
+	{
+		return false;
+	}
 }
