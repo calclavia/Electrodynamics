@@ -21,12 +21,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.battery.TileEntityBattery;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.vector.Vector3;
 
@@ -101,11 +101,16 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				{
 					if (!this.worldObj.isRemote)
 					{
-						TileEntity transferTile = MinecraftServer.getServer().worldServerForDimension(this.linkDim).getBlockTileEntity((int) this.linked.x, (int) this.linked.y, (int) this.linked.z);
+						World dimWorld = MinecraftServer.getServer().worldServerForDimension(this.linkDim);
 
-						if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
+						if (dimWorld != null)
 						{
-							this.transfer(((TileEntityTesla) transferTile), Math.min(this.getEnergyStored(), TRANSFER_CAP));
+							TileEntity transferTile = dimWorld.getBlockTileEntity((int) this.linked.x, (int) this.linked.y, (int) this.linked.z);
+
+							if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
+							{
+								this.transfer(((TileEntityTesla) transferTile), Math.min(this.getEnergyStored(), TRANSFER_CAP));
+							}
 						}
 					}
 				}

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.BlockVine;
@@ -18,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
@@ -57,6 +59,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
 	private TileEntityEMContractor linked;
+	private int lastCalcTime = 0;
 
 	/** Color of beam */
 	private int dyeID = TileEntityTesla.DEFAULT_COLOR;
@@ -150,6 +153,9 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
 					}
 
+					/**
+					 * Push entity along path.
+					 */
 					if (this.pathfinder != null)
 					{
 						for (int i = 0; i < this.pathfinder.results.size(); i++)
@@ -187,20 +193,32 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 							}
 						}
 					}
+					else
+					{
+						this.updatePath();
+					}
 				}
 			}
 			else
 			{
-				if (renderBeam)
+				if (renderBeam && this.linked != null && this.linked.pathfinder != null)
 				{
 					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
 				}
 
 				this.pathfinder = null;
 
-				if (operationBounds != null)
+				AxisAlignedBB searchBounds = this.operationBounds;
+
+				if (this.linked != null)
 				{
-					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
+					Vector3 searchVec = new Vector3(this).modifyPositionFromSide(this.getDirection());
+					searchBounds = AxisAlignedBB.getAABBPool().getAABB(searchVec.x, searchVec.y, searchVec.z, searchVec.x + 1, searchVec.y + 1, searchVec.z + 1);
+				}
+
+				if (searchBounds != null)
+				{
+					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, searchBounds))
 					{
 						if (renderBeam)
 						{
@@ -212,12 +230,14 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				}
 			}
 		}
+
+		this.lastCalcTime--;
 	}
 
 	public static boolean canBePath(World world, Vector3 position)
 	{
 		Block block = Block.blocksList[position.getBlockID(world)];
-		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder);
+		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || block instanceof BlockFluid || block instanceof IFluidBlock);
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
@@ -543,20 +563,19 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 	public void updatePath()
 	{
-		if (this.thread == null)
+		if (this.thread == null && this.linked != null && this.lastCalcTime <= 0)
 		{
-			if (this.linked != null)
-			{
-				Vector3 start = new Vector3(this).modifyPositionFromSide(this.getDirection());
-				Vector3 target = new Vector3(this.linked).modifyPositionFromSide(this.linked.getDirection());
+			this.pathfinder = null;
+			Vector3 start = new Vector3(this).modifyPositionFromSide(this.getDirection());
+			Vector3 target = new Vector3(this.linked).modifyPositionFromSide(this.linked.getDirection());
 
-				if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
+			if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
+			{
+				if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
 				{
-					if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
-					{
-						this.thread = new ThreadEMPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
-						this.thread.start();
-					}
+					this.thread = new ThreadEMPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
+					this.thread.start();
+					this.lastCalcTime = 40;
 				}
 			}
 		}
