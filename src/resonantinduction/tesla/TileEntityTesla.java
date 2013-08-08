@@ -173,6 +173,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 					{
 						float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
 						int count = 0;
+						
 						for (ITesla tesla : transferTeslaCoils)
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
