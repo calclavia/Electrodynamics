@@ -55,11 +55,6 @@
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			
-			<fileset dir="${dir.development}Universal-Electricity/src">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
 		</copy>
 		
 		<copy todir="APIContents">
