@@ -142,7 +142,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			{
 				if (this.linked != null && !this.linked.isInvalid())
 				{
-					if (this.ticks % (2 + this.worldObj.rand.nextInt(2)) == 0)
+					if (this.ticks % (1 + this.worldObj.rand.nextInt(2)) == 0)
 					{
 						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 					}
@@ -165,7 +165,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();
 
-									if (this.ticks % (2 + this.worldObj.rand.nextInt(2)) == 0)
+									if (this.ticks % (1 + this.worldObj.rand.nextInt(2)) == 0)
 									{
 										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID]);
 									}
