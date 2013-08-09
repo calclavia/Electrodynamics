@@ -69,7 +69,7 @@ import universalelectricity.prefab.CustomDamageSource;
 import universalelectricity.prefab.RecipeHelper;
 import universalelectricity.prefab.TranslationHelper;
 import universalelectricity.prefab.network.PacketManager;
-import basiccomponents.common.BasicComponents;
+import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipes;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -296,16 +296,11 @@ public class ModularForceFieldSystem
 		/**
 		 * Load Basic Components
 		 */
-		BasicComponents.register(CHANNEL);
-
-		BasicComponents.requestItem("ingotSteel", 0);
-		BasicComponents.requestItem("dustSteel", 0);
-
-		BasicComponents.requestItem("ingotCopper", 0);
-		BasicComponents.requestBlock("oreCopper", 0);
-
-		BasicComponents.requestBlock("copperWire", 0);
-		BasicComponents.requestItem("wrench", 0);
+		BasicRegistry.register("itemIngotSteel");
+		BasicRegistry.register("itemDustSteel");
+		BasicRegistry.register("itemIngotCopper");
+		BasicRegistry.register("blockOreCopper");
+		BasicRegistry.register("itemWrench");
 
 		/**
 		 * Load language file(s)
