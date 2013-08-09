@@ -13,7 +13,8 @@ but instead is the official successor of MFFS 2.0 and basing some ideas off the 
 The mod can be found and downloaded at: http://universalelectricity.com/mffs/
 
 ### Developement
-**Project Leader** - Calclavia
+**Developer** - Calclavia
+**Co-Developer** - Kovu
 
 **Original Developer** - ThunderDark
 
