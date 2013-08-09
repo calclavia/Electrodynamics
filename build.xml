@@ -30,10 +30,6 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Basic-Components/src/">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
 		</copy>
 		
 		<mkdir dir="DevContents" />
@@ -64,12 +60,6 @@
 			<fileset dir="${dir.mcp}/reobf/minecraft" excludes=".git/**" />
 		
 			<fileset dir="${dir.development}resources">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.java"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-			
-			<fileset dir="${dir.development}Basic-Components/resources/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>
