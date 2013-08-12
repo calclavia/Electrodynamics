@@ -2,20 +2,21 @@ package resonantinduction.battery;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import resonantinduction.battery.BatteryManager.SlotBattery;
 import resonantinduction.battery.BatteryManager.SlotOut;
 import universalelectricity.core.item.IItemElectric;
+import calclavia.lib.gui.ContainerBase;
 
-public class ContainerBattery extends Container
+public class ContainerBattery extends ContainerBase
 {
 	private TileEntityBattery tileEntity;
 
 	public ContainerBattery(InventoryPlayer inventory, TileEntityBattery unit)
 	{
+		super(unit);
 		tileEntity = unit;
 		addSlotToContainer(new SlotBattery(unit, 0, 8, 22));
 		addSlotToContainer(new SlotOut(unit, 1, 8, 58));
@@ -73,82 +74,5 @@ public class ContainerBattery extends Container
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
 		return tileEntity.isUseableByPlayer(entityplayer);
-	}
-
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
-	{
-		ItemStack stack = null;
-		Slot currentSlot = (Slot) inventorySlots.get(slotID);
-
-		if (currentSlot != null && currentSlot.getHasStack())
-		{
-			ItemStack slotStack = currentSlot.getStack();
-			stack = slotStack.copy();
-
-			if (slotID == 0 || slotID == 1)
-			{
-				if (!mergeItemStack(slotStack, 4, inventorySlots.size(), true))
-				{
-					return null;
-				}
-			}
-			else if (slotID == 2 || slotID == 3)
-			{
-				if (!mergeItemStack(slotStack, 4, inventorySlots.size(), true))
-				{
-					return null;
-				}
-			}
-			else if (slotStack.getItem() instanceof IItemElectric)
-			{
-				if (!mergeItemStack(slotStack, 0, 1, false))
-				{
-					return null;
-				}
-			}
-			else
-			{
-				if (slotID >= 4 && slotID <= 30)
-				{
-					if (!mergeItemStack(slotStack, 31, inventorySlots.size(), false))
-					{
-						return null;
-					}
-				}
-				else if (slotID > 30)
-				{
-					if (!mergeItemStack(slotStack, 4, 30, false))
-					{
-						return null;
-					}
-				}
-				else
-				{
-					if (!mergeItemStack(slotStack, 4, inventorySlots.size(), true))
-					{
-						return null;
-					}
-				}
-			}
-
-			if (slotStack.stackSize == 0)
-			{
-				currentSlot.putStack((ItemStack) null);
-			}
-			else
-			{
-				currentSlot.onSlotChanged();
-			}
-
-			if (slotStack.stackSize == stack.stackSize)
-			{
-				return null;
-			}
-
-			currentSlot.onPickupFromSlot(player, slotStack);
-		}
-
-		return stack;
 	}
 }

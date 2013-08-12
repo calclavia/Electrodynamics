@@ -102,7 +102,7 @@ public class ResonantInduction
 	 * Settings
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
-	public static float FURNACE_WATTAGE = 4;
+	public static float FURNACE_WATTAGE = 1;
 	public static boolean SOUND_FXS = true;
 
 	/** Block ID by Jyzarc */
@@ -146,7 +146,7 @@ public class ResonantInduction
 		CONFIGURATION.load();
 
 		// Config
-		FURNACE_WATTAGE = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage", FURNACE_WATTAGE).getDouble(FURNACE_WATTAGE);
+		FURNACE_WATTAGE = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage Per Tick", FURNACE_WATTAGE).getDouble(FURNACE_WATTAGE);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 
