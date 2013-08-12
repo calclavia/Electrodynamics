@@ -1,8 +1,16 @@
 package resonantinduction.wire;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.ResonantInduction;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
+import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;

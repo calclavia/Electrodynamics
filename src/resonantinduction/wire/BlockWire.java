@@ -66,7 +66,7 @@ public class BlockWire extends BlockConductor
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEntityWire();
+		return new TileEntityTickWire();
 	}
 
 	@Override

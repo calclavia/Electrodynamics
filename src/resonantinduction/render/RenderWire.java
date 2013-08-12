@@ -1,31 +1,24 @@
 package resonantinduction.render;
 
-import ic2.api.Direction;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyTile;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelCopperWire;
 import resonantinduction.wire.TileEntityWire;
-import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
-import buildcraft.api.power.IPowerReceptor;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * TODO: Use ISBRH.
+ * 
+ * @author Calclavia
+ * 
+ */
 @SideOnly(Side.CLIENT)
 public class RenderWire extends TileEntitySpecialRenderer
 {
@@ -40,78 +33,35 @@ public class RenderWire extends TileEntitySpecialRenderer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 
-		List<TileEntity> adjecentConnections = new ArrayList<TileEntity>();
+		tileEntity.adjacentConnections = null;
+		TileEntity[] adjacentConnections = tileEntity.getAdjacentConnections();
 
-		for (byte i = 0; i < 6; i++)
-		{
-			ForgeDirection side = ForgeDirection.getOrientation(i);
-			TileEntity adjacentTile = VectorHelper.getTileEntityFromSide(tileEntity.worldObj, new Vector3(tileEntity), side);
-
-			if (adjacentTile instanceof IConnector)
-			{
-				if (((IConnector) adjacentTile).canConnect(side.getOpposite()))
-				{
-					adjecentConnections.add(adjacentTile);
-				}
-				else
-				{
-					adjecentConnections.add(null);
-				}
-			}
-			else if (Compatibility.isIndustrialCraft2Loaded() && adjacentTile instanceof IEnergyTile)
-			{
-				if (adjacentTile instanceof IEnergyAcceptor)
-				{
-					if (((IEnergyAcceptor) adjacentTile).acceptsEnergyFrom(tileEntity, Direction.values()[(i + 2) % 6].getInverse()))
-					{
-						adjecentConnections.add(adjacentTile);
-					}
-					else
-					{
-						adjecentConnections.add(null);
-					}
-				}
-				else
-				{
-					adjecentConnections.add(adjacentTile);
-				}
-			}
-			else if (Compatibility.isBuildcraftLoaded() && adjacentTile instanceof IPowerReceptor)
-			{
-				adjecentConnections.add(adjacentTile);
-			}
-			else
-			{
-				adjecentConnections.add(null);
-			}
-		}
-
-		if (adjecentConnections.toArray()[0] != null)
+		if (adjacentConnections[0] != null)
 		{
 			WIRE_MODEL.renderBottom();
 		}
 
-		if (adjecentConnections.toArray()[1] != null)
+		if (adjacentConnections[1] != null)
 		{
 			WIRE_MODEL.renderTop();
 		}
 
-		if (adjecentConnections.toArray()[2] != null)
+		if (adjacentConnections[2] != null)
 		{
 			WIRE_MODEL.renderBack();
 		}
 
-		if (adjecentConnections.toArray()[3] != null)
+		if (adjacentConnections[3] != null)
 		{
 			WIRE_MODEL.renderFront();
 		}
 
-		if (adjecentConnections.toArray()[4] != null)
+		if (adjacentConnections[4] != null)
 		{
 			WIRE_MODEL.renderLeft();
 		}
 
-		if (adjecentConnections.toArray()[5] != null)
+		if (adjacentConnections[5] != null)
 		{
 			WIRE_MODEL.renderRight();
 		}

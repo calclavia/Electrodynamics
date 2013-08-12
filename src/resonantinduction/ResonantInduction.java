@@ -13,8 +13,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import basiccomponents.api.BasicRegistry;
-import calclavia.lib.UniversalRecipes;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -31,9 +29,12 @@ import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.BlockWire;
 import resonantinduction.wire.EnumWire;
 import resonantinduction.wire.ItemBlockWire;
+import resonantinduction.wire.TileEntityTickWire;
 import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.item.IItemElectric;
 import universalelectricity.prefab.TranslationHelper;
+import basiccomponents.api.BasicRegistry;
+import calclavia.lib.UniversalRecipes;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -47,7 +48,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 /**
  * @author Calclavia
@@ -185,6 +185,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityWire.class, blockWire.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityTickWire.class, blockWire.getUnlocalizedName() + "2");
 
 		ResonantInduction.proxy.registerRenderers();
 

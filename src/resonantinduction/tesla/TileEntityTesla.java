@@ -587,13 +587,18 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return this.getMaxEnergyStored() - this.getEnergyStored();
+		if (direction != ForgeDirection.DOWN)
+		{
+			return this.getMaxEnergyStored() - this.getEnergyStored();
+		}
+
+		return 0;
 	}
 
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		if (direction != ForgeDirection.UP && direction != ForgeDirection.DOWN)
+		if (this.isController() && direction == ForgeDirection.DOWN)
 		{
 			return this.getEnergyStored();
 		}
