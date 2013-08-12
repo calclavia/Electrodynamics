@@ -30,15 +30,9 @@ public class ItemCapacitor extends ItemUniversalElectric
 	}
 
 	@Override
-	public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
-		this.setElectricity(par1ItemStack, 0);
-	}
-
-	@Override
 	public float getTransfer(ItemStack itemStack)
 	{
-		return getMaxEnergyStored(itemStack) * 0.05F;
+		return this.getMaxEnergyStored(itemStack) * 0.05F;
 	}
 
 	@Override

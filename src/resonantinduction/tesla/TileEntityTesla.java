@@ -94,6 +94,8 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		 */
 		if (this.isController())
 		{
+			this.produce();
+
 			// TODO: Fix client side issue. || this.worldObj.isRemote
 			if (((this.doTransfer) || this.worldObj.isRemote) && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
@@ -112,7 +114,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 						if (dimWorld != null)
 						{
 							TileEntity transferTile = this.linked.getTileEntity(dimWorld);
-							
+
 							if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
 							{
 								this.transfer(((TileEntityTesla) transferTile), Math.min(this.getProvide(ForgeDirection.UNKNOWN), TRANSFER_CAP));
@@ -238,63 +240,6 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				this.outputBlacklist.clear();
 			}
 
-			/**
-			 * Draws power from furnace below it.
-			 * 
-			 * @author Calclavia
-			 */
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
-
-			if (tileEntity instanceof TileEntityFurnace && this.getRequest(ForgeDirection.DOWN) > 0)
-			{
-				TileEntityFurnace furnaceTile = (TileEntityFurnace) tileEntity;
-
-				if (furnaceTile.getStackInSlot(0) == null)
-				{
-					/**
-					 * Steal power from furnace.
-					 */
-					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
-
-					if (furnaceTile.furnaceBurnTime == 0)
-					{
-						int burnTime = TileEntityFurnace.getItemBurnTime(furnaceTile.getStackInSlot(1));
-
-						if (burnTime > 0)
-						{
-							furnaceTile.decrStackSize(1, 1);
-							furnaceTile.furnaceBurnTime = burnTime;
-						}
-					}
-					else
-					{
-						this.transfer(ResonantInduction.FURNACE_WATTAGE / 20, true);
-					}
-
-					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
-					{
-						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
-					}
-				}
-				else if (this.getEnergyStored() > ResonantInduction.FURNACE_WATTAGE / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
-				{
-					/**
-					 * Inject power to furnace.
-					 */
-					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
-
-					furnaceTile.furnaceBurnTime += 2;
-					this.transfer(-ResonantInduction.FURNACE_WATTAGE / 20, true);
-
-					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
-					{
-						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
-					}
-				}
-			}
-
-			this.produce();
-
 			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
 			{
 				this.setPacket(2);
@@ -407,6 +352,12 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		}
 		else
 		{
+			if (this.getEnergyStored() > 0)
+			{
+				transferEnergy += this.getEnergyStored();
+				this.setEnergyStored(0);
+			}
+
 			return this.getControllingTelsa().transfer(transferEnergy, doTransfer);
 		}
 	}
