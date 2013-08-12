@@ -268,7 +268,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 					}
 					else
 					{
-						this.transfer(ResonantInduction.POWER_PER_COAL / 20, true);
+						this.transfer(ResonantInduction.FURNACE_WATTAGE / 20, true);
 					}
 
 					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
@@ -276,7 +276,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 						BlockFurnace.updateFurnaceBlockState(furnaceTile.furnaceBurnTime > 0, furnaceTile.worldObj, furnaceTile.xCoord, furnaceTile.yCoord, furnaceTile.zCoord);
 					}
 				}
-				else if (this.getEnergyStored() > ResonantInduction.POWER_PER_COAL / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
+				else if (this.getEnergyStored() > ResonantInduction.FURNACE_WATTAGE / 20 && furnaceTile.getStackInSlot(1) == null && FurnaceRecipes.smelting().getSmeltingResult(furnaceTile.getStackInSlot(0)) != null)
 				{
 					/**
 					 * Inject power to furnace.
@@ -284,7 +284,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 					boolean doBlockStateUpdate = furnaceTile.furnaceBurnTime > 0;
 
 					furnaceTile.furnaceBurnTime += 2;
-					this.transfer(-ResonantInduction.POWER_PER_COAL / 20, true);
+					this.transfer(-ResonantInduction.FURNACE_WATTAGE / 20, true);
 
 					if (doBlockStateUpdate != furnaceTile.furnaceBurnTime > 0)
 					{

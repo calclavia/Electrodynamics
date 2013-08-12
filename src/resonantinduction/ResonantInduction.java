@@ -13,6 +13,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import basiccomponents.api.BasicRegistry;
+import calclavia.lib.UniversalRecipes;
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
 import resonantinduction.battery.TileEntityBattery;
@@ -100,7 +102,7 @@ public class ResonantInduction
 	 * Settings
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
-	public static float POWER_PER_COAL = 5;
+	public static float FURNACE_WATTAGE = 4;
 	public static boolean SOUND_FXS = true;
 
 	/** Block ID by Jyzarc */
@@ -144,7 +146,7 @@ public class ResonantInduction
 		CONFIGURATION.load();
 
 		// Config
-		POWER_PER_COAL = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Coal Wattage", POWER_PER_COAL).getDouble(POWER_PER_COAL);
+		FURNACE_WATTAGE = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage", FURNACE_WATTAGE).getDouble(FURNACE_WATTAGE);
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 
@@ -187,6 +189,11 @@ public class ResonantInduction
 		ResonantInduction.proxy.registerRenderers();
 
 		TabRI.ITEMSTACK = new ItemStack(blockBattery);
+
+		// Basic Components
+		BasicRegistry.register("itemIngotSteel");
+		BasicRegistry.register("itemPlateSteel");
+		BasicRegistry.register("itemIngotBronze");
 	}
 
 	@EventHandler
@@ -214,26 +221,28 @@ public class ResonantInduction
 		ItemStack emptyCapacitor = new ItemStack(itemCapacitor);
 		((IItemElectric) itemCapacitor).setElectricity(emptyCapacitor, 0);
 
+		final ItemStack defaultWire = new ItemStack(blockWire, 1, EnumWire.IRON.ordinal());
+
 		/** Capacitor **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Linker **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'G', Item.ingotGold));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL));
 
 		/** Quantum Entangler **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Tesla - by Jyzarc */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "EEE", " C ", " I ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'I', Block.blockIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'I', UniversalRecipes.PRIMARY_PLATE));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "RRR", "ICI", "III", 'R', Item.redstone, 'C', emptyCapacitor, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', emptyCapacitor, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** EM Contractor */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', Block.wood, 'C', emptyCapacitor, 'G', Item.ingotGold, 'I', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipes.PRIMARY_METAL, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Wires **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
