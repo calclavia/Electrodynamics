@@ -121,6 +121,8 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 					this.furnaces.put(direction, (TileEntityFurnace) tileEntity);
 				}
 			}
+			System.out.println("TEST " + this.furnaces.size());
+
 		}
 	}
 

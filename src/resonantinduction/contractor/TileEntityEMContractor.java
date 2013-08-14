@@ -237,7 +237,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	public static boolean canBePath(World world, Vector3 position)
 	{
 		Block block = Block.blocksList[position.getBlockID(world)];
-		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || block instanceof BlockFluid || block instanceof IFluidBlock);
+		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
@@ -350,6 +350,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 		entityItem.isAirBorne = true;
 		entityItem.delayBeforeCanPickup = 1;
+		entityItem.age = Math.max(entityItem.age - 1, 0);
 	}
 
 	private EntityItem getItemWithPosition(ItemStack toSend)
