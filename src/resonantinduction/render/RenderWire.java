@@ -31,39 +31,42 @@ public class RenderWire extends TileEntitySpecialRenderer
 		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(COPPER_TEXTURE);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
+		GL11.glScalef(1, -1, -1);
 
 		tileEntity.adjacentConnections = null;
 		TileEntity[] adjacentConnections = tileEntity.getAdjacentConnections();
 
-		if (adjacentConnections[0] != null)
+		if (adjacentConnections != null)
 		{
-			WIRE_MODEL.renderBottom();
-		}
+			if (adjacentConnections[0] != null)
+			{
+				WIRE_MODEL.renderBottom();
+			}
 
-		if (adjacentConnections[1] != null)
-		{
-			WIRE_MODEL.renderTop();
-		}
+			if (adjacentConnections[1] != null)
+			{
+				WIRE_MODEL.renderTop();
+			}
 
-		if (adjacentConnections[2] != null)
-		{
-			WIRE_MODEL.renderBack();
-		}
+			if (adjacentConnections[2] != null)
+			{
+				WIRE_MODEL.renderBack();
+			}
 
-		if (adjacentConnections[3] != null)
-		{
-			WIRE_MODEL.renderFront();
-		}
+			if (adjacentConnections[3] != null)
+			{
+				WIRE_MODEL.renderFront();
+			}
 
-		if (adjacentConnections[4] != null)
-		{
-			WIRE_MODEL.renderLeft();
-		}
+			if (adjacentConnections[4] != null)
+			{
+				WIRE_MODEL.renderLeft();
+			}
 
-		if (adjacentConnections[5] != null)
-		{
-			WIRE_MODEL.renderRight();
+			if (adjacentConnections[5] != null)
+			{
+				WIRE_MODEL.renderRight();
+			}
 		}
 
 		WIRE_MODEL.renderMiddle();
