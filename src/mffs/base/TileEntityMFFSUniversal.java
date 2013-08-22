@@ -1,8 +1,6 @@
 package mffs.base;
 
-import ic2.api.Direction;
 import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileSourceEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
@@ -103,7 +101,6 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 			for (ForgeDirection outputDirection : this.getOutputDirections())
 			{
 				this.produceUE(outputDirection);
-				this.produceIC2(outputDirection);
 				this.produceBuildCraft(outputDirection);
 			}
 		}
@@ -115,27 +112,6 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 			 */
 			this.receiveElectricity(this.bcPowerHandler.getEnergyStored(), true);
 			this.bcPowerHandler.setEnergy(0);
-		}
-	}
-
-	public void produceIC2(ForgeDirection outputDirection)
-	{
-		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
-		{
-			float provide = this.getProvide(outputDirection);
-
-			if (this.getEnergyStored() >= provide && provide > 0)
-			{
-				if (Compatibility.isIndustrialCraft2Loaded())
-				{
-					int ic2Provide = (int) Math.ceil(provide * Compatibility.TO_IC2_RATIO);
-
-					EnergyTileSourceEvent event = new EnergyTileSourceEvent(this, ic2Provide);
-					MinecraftForge.EVENT_BUS.post(event);
-					this.setEnergyStored(this.getEnergyStored() - ((ic2Provide * Compatibility.IC2_RATIO) - (event.amount * Compatibility.IC2_RATIO)));
-
-				}
-			}
 		}
 	}
 
@@ -219,15 +195,9 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	 * IC2 Methods
 	 */
 	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, Direction direction)
+	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
 	{
-		return this.canConnect(direction.toForgeDirection());
-	}
-
-	@Override
-	public boolean isAddedToEnergyNet()
-	{
-		return this.isAddedToEnergyNet;
+		return this.canConnect(direction);
 	}
 
 	@Override
@@ -258,19 +228,19 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	}
 
 	@Override
-	public int demandsEnergy()
+	public double demandedEnergyUnits()
 	{
-		return (int) Math.ceil(this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.TO_IC2_RATIO);
+		return Math.ceil(this.getRequest(ForgeDirection.UNKNOWN) * Compatibility.TO_IC2_RATIO);
 	}
 
 	@Override
-	public int injectEnergy(Direction directionFrom, int amount)
+	public double injectEnergyUnits(ForgeDirection direction, double amount)
 	{
-		if (this.getInputDirections().contains(directionFrom.toForgeDirection()))
+		if (this.getInputDirections().contains(direction))
 		{
-			float convertedEnergy = amount * Compatibility.IC2_RATIO;
+			float convertedEnergy = (float) (amount * Compatibility.IC2_RATIO);
 			ElectricityPack toSend = ElectricityPack.getFromWatts(convertedEnergy, this.getVoltage());
-			float receive = this.receiveElectricity(directionFrom.toForgeDirection(), toSend, true);
+			float receive = this.receiveElectricity(direction, toSend, true);
 
 			// Return the difference, since injectEnergy returns left over energy, and
 			// receiveElectricity returns energy used.
@@ -281,21 +251,27 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	}
 
 	@Override
-	public int getMaxEnergyOutput()
+	public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction)
 	{
-		return (int) Math.ceil(this.getProvide(ForgeDirection.UNKNOWN));
-	}
-
-	@Override
-	public boolean emitsEnergyTo(TileEntity receiver, Direction direction)
-	{
-		return receiver instanceof IEnergyTile && direction.toForgeDirection().equals(this.getOutputDirections());
+		return receiver instanceof IEnergyTile && direction.equals(this.getOutputDirections());
 	}
 
 	@Override
 	public int getMaxSafeInput()
 	{
 		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public double getOfferedEnergy()
+	{
+		return this.getProvide(ForgeDirection.UNKNOWN) * Compatibility.TO_IC2_RATIO;
+	}
+
+	@Override
+	public void drawEnergy(double amount)
+	{
+		this.provideElectricity((float) amount * Compatibility.IC2_RATIO, true);
 	}
 
 	@Override
