@@ -75,4 +75,14 @@ public class ContainerBattery extends ContainerBase
 	{
 		return tileEntity.isUseableByPlayer(entityplayer);
 	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotID)
+	{
+		if (slotID != 1)
+		{
+			return super.transferStackInSlot(par1EntityPlayer, slotID);
+		}
+		return null;
+	}
 }
