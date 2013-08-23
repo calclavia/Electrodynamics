@@ -1,5 +1,6 @@
 package resonantinduction.wire;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -8,10 +9,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.prefab.block.BlockConductor;
 
 /**
@@ -47,6 +50,32 @@ public class BlockWire extends BlockConductor
 			{
 				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
 				return true;
+			}
+		}
+
+		if (!world.isRemote)
+		{
+			if (entityPlayer.isSneaking())
+			{
+				/**
+				 * Change the TileEntity type.
+				 */
+				NBTTagCompound nbt = new NBTTagCompound();
+				tileEntity.writeToNBT(nbt);
+
+				if (tileEntity instanceof TileEntityTickWire)
+				{
+					nbt.setString("id", this.getUnlocalizedName());
+					entityPlayer.addChatMessage("Wire will now stop ticking and withdrawing energy.");
+				}
+				else
+				{
+					nbt.setString("id", this.getUnlocalizedName() + "2");
+					entityPlayer.addChatMessage("Wire will now tick and withdraw energy.");
+				}
+
+				world.setBlockTileEntity(x, y, z, TileEntity.createAndLoadEntity(nbt));
+				((IConductor) world.getBlockTileEntity(x, y, z)).refresh();
 			}
 		}
 
@@ -86,7 +115,7 @@ public class BlockWire extends BlockConductor
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEntityTickWire();
+		return new TileEntityWire();
 	}
 
 	@Override
@@ -104,4 +133,36 @@ public class BlockWire extends BlockConductor
 		}
 	}
 
+	/**
+	 * This returns a complete list of items dropped from this block.
+	 * 
+	 * @param world The current world
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param metadata Current metadata
+	 * @param fortune Breakers fortune level
+	 * @return A ArrayList containing all items this block drops
+	 */
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		ArrayList<ItemStack> ret = super.getBlockDropped(world, x, y, z, metadata, fortune);
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		/**
+		 * Drop wool insulation if the wire is insulated.
+		 */
+		if (t instanceof TileEntityWire)
+		{
+			TileEntityWire tileEntity = (TileEntityWire) t;
+
+			if (tileEntity.isInsulated)
+			{
+				ret.add(new ItemStack(Block.cloth));
+			}
+		}
+
+		return ret;
+	}
 }

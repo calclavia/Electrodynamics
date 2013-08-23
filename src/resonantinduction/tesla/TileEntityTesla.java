@@ -11,14 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;

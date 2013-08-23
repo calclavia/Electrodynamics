@@ -7,7 +7,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import resonantinduction.battery.BatteryManager.SlotBattery;
 import resonantinduction.battery.BatteryManager.SlotOut;
-import universalelectricity.core.item.IItemElectric;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerBattery extends ContainerBase

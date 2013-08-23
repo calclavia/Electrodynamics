@@ -98,6 +98,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	public void setDye(int dyeID)
 	{
 		this.dyeID = dyeID;
+		this.refresh();
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 

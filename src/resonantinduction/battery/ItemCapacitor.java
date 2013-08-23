@@ -3,9 +3,7 @@
  */
 package resonantinduction.battery;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;

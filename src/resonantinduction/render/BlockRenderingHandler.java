@@ -3,23 +3,13 @@
  */
 package resonantinduction.render;
 
-import java.net.URL;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.client.model.IModelCustomLoader;
-import net.minecraftforge.client.model.ModelFormatException;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.ResonantInduction;
 import resonantinduction.battery.BlockBattery;
-import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.multimeter.BlockMultimeter;
 import resonantinduction.tesla.BlockTesla;
