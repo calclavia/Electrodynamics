@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWire extends TileEntitySpecialRenderer
 {
-	private static final ResourceLocation COPPER_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wireCopper.png");
+	private static final ResourceLocation COPPER_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
 	public static final ModelCopperWire WIRE_MODEL = new ModelCopperWire();
 
 	public void renderModelAt(TileEntityWire tileEntity, double x, double y, double z, float f)
