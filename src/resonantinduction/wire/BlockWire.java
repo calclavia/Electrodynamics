@@ -72,7 +72,7 @@ public class BlockWire extends BlockConductor
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int i = 0; i < EnumWire.values().length - 1; i++)
+		for (int i = 0; i < EnumWireMaterial.values().length; i++)
 		{
 			par3List.add(new ItemStack(par1, 1, i));
 		}

@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelCopperWire extends ModelBase
+public class ModelWire extends ModelBase
 {
 	// fields
 	ModelRenderer Middle;
@@ -18,7 +18,7 @@ public class ModelCopperWire extends ModelBase
 	ModelRenderer Top;
 	ModelRenderer Bottom;
 
-	public ModelCopperWire()
+	public ModelWire()
 	{
 		textureWidth = 64;
 		textureHeight = 32;

@@ -44,8 +44,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  */
 public class TileEntityTesla extends TileEntityUniversalElectrical implements ITesla, IPacketReceiver
 {
-	public static final Vector3[] dyeColors = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 0.608, 0.232), new Vector3(0.9, 0.8, 0.8), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.768, 0.812), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
-
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
 	private int dyeID = DEFAULT_COLOR;
@@ -210,7 +208,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) dyeColors[this.dyeID].x, (float) dyeColors[this.dyeID].y, (float) dyeColors[this.dyeID].z);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) ResonantInduction.DYE_COLORS[this.dyeID].x, (float) ResonantInduction.DYE_COLORS[this.dyeID].y, (float) ResonantInduction.DYE_COLORS[this.dyeID].z);
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 

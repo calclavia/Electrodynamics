@@ -150,7 +150,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				{
 					if (renderBeam)
 					{
-						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
+						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
 					}
 
 					/**
@@ -173,7 +173,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 									if (renderBeam)
 									{
-										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
+										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
 									}
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
@@ -203,7 +203,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			{
 				if (renderBeam && this.linked != null && this.linked.pathfinder != null)
 				{
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), TileEntityTesla.dyeColors[dyeID], false);
+					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
 				}
 
 				this.pathfinder = null;
@@ -222,7 +222,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 					{
 						if (renderBeam)
 						{
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), TileEntityTesla.dyeColors[dyeID], false);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), ResonantInduction.DYE_COLORS[dyeID], false);
 						}
 
 						this.moveEntity(entityItem, this.getDirection(), new Vector3(this));

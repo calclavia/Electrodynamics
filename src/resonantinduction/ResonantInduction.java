@@ -27,11 +27,12 @@ import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.BlockWire;
-import resonantinduction.wire.EnumWire;
+import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemBlockWire;
 import resonantinduction.wire.TileEntityTickWire;
 import resonantinduction.wire.TileEntityWire;
 import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipes;
@@ -135,6 +136,7 @@ public class ResonantInduction
 	public static Block blockEMContractor;
 	public static Block blockBattery;
 	public static Block blockWire;
+	public static final Vector3[] DYE_COLORS = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 0.608, 0.232), new Vector3(0.9, 0.8, 0.8), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 0.3, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.768, 0.812), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -222,7 +224,7 @@ public class ResonantInduction
 		ItemStack emptyCapacitor = new ItemStack(itemCapacitor);
 		((IItemElectric) itemCapacitor).setElectricity(emptyCapacitor, 0);
 
-		final ItemStack defaultWire = new ItemStack(blockWire, 1, EnumWire.IRON.ordinal());
+		final ItemStack defaultWire = new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal());
 
 		/** Capacitor **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', UniversalRecipes.PRIMARY_METAL));
@@ -246,12 +248,12 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipes.PRIMARY_METAL, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Wires **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.TIN.ordinal()), "MMM", 'M', "ingotTin"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.IRON.ordinal()), "MMM", 'M', Item.ingotIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.ALUMINUM.ordinal()), "MMM", 'M', "ingotAluminum"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWire.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.TIN.ordinal()), "MMM", 'M', "ingotTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal()), "MMM", 'M', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.ALUMINUM.ordinal()), "MMM", 'M', "ingotAluminum"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
 
 	}
 }

@@ -74,9 +74,9 @@ public class TileEntityWire extends TileEntityUniversalConductor
 		return getMaterial().maxAmps;
 	}
 
-	public EnumWire getMaterial()
+	public EnumWireMaterial getMaterial()
 	{
-		return EnumWire.values()[this.getTypeID()];
+		return EnumWireMaterial.values()[this.getTypeID()];
 	}
 
 	public int getTypeID()

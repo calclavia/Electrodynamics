@@ -7,7 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.model.ModelCopperWire;
+import resonantinduction.model.ModelWire;
+import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.TileEntityWire;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -22,16 +23,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWire extends TileEntitySpecialRenderer
 {
-	private static final ResourceLocation COPPER_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
-	public static final ModelCopperWire WIRE_MODEL = new ModelCopperWire();
+	private static final ResourceLocation WIRE_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
+	public static final ModelWire WIRE_MODEL = new ModelWire();
 
 	public void renderModelAt(TileEntityWire tileEntity, double x, double y, double z, float f)
 	{
 		// Texture file
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(COPPER_TEXTURE);
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1, -1, -1);
+
+		EnumWireMaterial material = tileEntity.getMaterial();
+		GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
 
 		tileEntity.adjacentConnections = null;
 		TileEntity[] adjacentConnections = tileEntity.getAdjacentConnections();

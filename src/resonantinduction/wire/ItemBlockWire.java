@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBlockWire extends ItemBlock
 {
-	private Icon[] icons = new Icon[EnumWire.values().length];
+	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
 	public ItemBlockWire(int id)
 	{
@@ -32,21 +32,21 @@ public class ItemBlockWire extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return this.getUnlocalizedName() + "." + EnumWire.values()[itemStack.getItemDamage()].name().toLowerCase();
+		return this.getUnlocalizedName() + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].name().toLowerCase();
 	}
 
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List par3List, boolean par4)
 	{
-		par3List.add("Resistance: " + ElectricityDisplay.getDisplay(EnumWire.values()[itemstack.getItemDamage()].resistance, ElectricUnit.RESISTANCE));
-		par3List.add("Max Amperage: " + ElectricityDisplay.getDisplay(EnumWire.values()[itemstack.getItemDamage()].maxAmps, ElectricUnit.AMPERE));
+		par3List.add("Resistance: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, ElectricUnit.RESISTANCE));
+		par3List.add("Max Amperage: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, ElectricUnit.AMPERE));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
-		for (int i = 0; i < EnumWire.values().length; i++)
+		for (int i = 0; i < EnumWireMaterial.values().length; i++)
 		{
 			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ""));
 		}
