@@ -5,6 +5,8 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -31,6 +33,24 @@ public class BlockWire extends BlockConductor
 		Block.setBurnProperties(this.blockID, 30, 60);
 		this.func_111022_d(ResonantInduction.PREFIX + "wire");
 		this.setCreativeTab(TabRI.INSTANCE);
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+		TileEntityWire tileEntity = (TileEntityWire) t;
+
+		if (entityPlayer.getCurrentEquippedItem() != null)
+		{
+			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
+			{
+				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -67,6 +87,12 @@ public class BlockWire extends BlockConductor
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileEntityTickWire();
+	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return par1;
 	}
 
 	@Override

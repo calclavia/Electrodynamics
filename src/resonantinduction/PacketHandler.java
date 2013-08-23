@@ -64,7 +64,7 @@ public class PacketHandler implements IPacketHandler
 
 					if (tileEntity instanceof IPacketReceiver)
 					{
-						sendTileEntityPacketToClients(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()).toArray());
+						sendPacketToAllPlayers(tileEntity, ((IPacketReceiver) tileEntity).getNetworkedData(new ArrayList()).toArray());
 					}
 				}
 			}
@@ -140,12 +140,12 @@ public class PacketHandler implements IPacketHandler
 		PacketDispatcher.sendPacketToServer(packet);
 	}
 
-	public static void sendTileEntityPacketToServer(TileEntity tileEntity, Object... dataValues)
+	public static void sendPacketToServer(TileEntity tileEntity, Object... dataValues)
 	{
 		PacketDispatcher.sendPacketToServer(getTileEntityPacket(tileEntity, dataValues));
 	}
 
-	public static void sendTileEntityPacketToClients(TileEntity tileEntity, Object... dataValues)
+	public static void sendPacketToAllPlayers(TileEntity tileEntity, Object... dataValues)
 	{
 		PacketDispatcher.sendPacketToAllPlayers(getTileEntityPacket(tileEntity, dataValues));
 	}

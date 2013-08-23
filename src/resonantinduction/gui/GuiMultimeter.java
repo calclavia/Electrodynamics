@@ -59,7 +59,7 @@ public class GuiMultimeter extends GuiContainer
 
 		try
 		{
-			PacketHandler.sendTileEntityPacketToServer(this.tileEntity, (byte) 3, Float.parseFloat(this.textFieldLimit.getText()));
+			PacketHandler.sendPacketToServer(this.tileEntity, (byte) 3, Float.parseFloat(this.textFieldLimit.getText()));
 		}
 		catch (Exception e)
 		{
@@ -104,7 +104,7 @@ public class GuiMultimeter extends GuiContainer
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		PacketHandler.sendTileEntityPacketToServer(this.tileEntity, (byte) 2);
+		PacketHandler.sendPacketToServer(this.tileEntity, (byte) 2);
 	}
 
 }

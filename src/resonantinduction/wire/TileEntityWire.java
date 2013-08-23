@@ -1,22 +1,25 @@
 package resonantinduction.wire;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.ResonantInduction;
+import resonantinduction.PacketHandler;
+import resonantinduction.base.IPacketReceiver;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
-import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 
-public class TileEntityWire extends TileEntityUniversalConductor
+import com.google.common.io.ByteArrayDataInput;
+
+public class TileEntityWire extends TileEntityUniversalConductor implements IPacketReceiver
 {
+	public int dyeID = -1;
+	public boolean isInsulated = false;
+
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
@@ -27,9 +30,14 @@ public class TileEntityWire extends TileEntityUniversalConductor
 
 		Vector3 connectPos = new Vector3(this).modifyPositionFromSide(direction);
 
-		if (connectPos.getTileEntity(this.worldObj) instanceof TileEntityWire && connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
+		if (connectPos.getTileEntity(this.worldObj) instanceof TileEntityWire)
 		{
-			return false;
+			TileEntityWire tileWire = (TileEntityWire) connectPos.getTileEntity(this.worldObj);
+
+			if ((tileWire.isInsulated && this.isInsulated && tileWire.dyeID != this.dyeID && this.dyeID != -1) || connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -83,4 +91,59 @@ public class TileEntityWire extends TileEntityUniversalConductor
 	{
 		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
 	}
+
+	/**
+	 * @param dyeID
+	 */
+	public void setDye(int dyeID)
+	{
+		this.dyeID = dyeID;
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return PacketHandler.getTileEntityPacket(this, this.dyeID);
+	}
+
+	@Override
+	public void handle(ByteArrayDataInput input)
+	{
+		try
+		{
+			this.dyeID = input.readInt();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Reads a tile entity from NBT.
+	 */
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.dyeID = nbt.getInteger("dyeID");
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("dyeID", this.dyeID);
+	}
+
+	@Override
+	public ArrayList getNetworkedData(ArrayList data)
+	{
+		return null;
+	}
+
 }

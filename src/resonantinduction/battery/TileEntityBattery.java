@@ -126,7 +126,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 	public void updateClient()
 	{
-		PacketHandler.sendTileEntityPacketToClients(this, getNetworkedData(new ArrayList()).toArray());
+		PacketHandler.sendPacketToAllPlayers(this, getNetworkedData(new ArrayList()).toArray());
 	}
 
 	public void updateAllClients()
@@ -134,7 +134,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		for (Vector3 vec : structure.locations)
 		{
 			TileEntityBattery battery = (TileEntityBattery) vec.getTileEntity(worldObj);
-			PacketHandler.sendTileEntityPacketToClients(battery, battery.getNetworkedData(new ArrayList()).toArray());
+			PacketHandler.sendPacketToAllPlayers(battery, battery.getNetworkedData(new ArrayList()).toArray());
 		}
 	}
 
