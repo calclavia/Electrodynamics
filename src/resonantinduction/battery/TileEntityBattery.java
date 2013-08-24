@@ -48,6 +48,8 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 	private EnumSet inputSides = EnumSet.allOf(ForgeDirection.class);
 
+	private float transferThreshold = 50;
+
 	@Override
 	public void updateEntity()
 	{
@@ -600,7 +602,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		return this.getEnergyStored();
+		return Math.max(this.getEnergyStored(), this.transferThreshold);
 	}
 
 	@Override
