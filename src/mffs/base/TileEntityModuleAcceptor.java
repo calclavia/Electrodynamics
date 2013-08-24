@@ -273,9 +273,11 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 		{
 			if (this.cache.containsKey(cacheID))
 			{
-				if (this.cache.get(cacheID) instanceof Integer)
+				Object obj = this.cache.get(cacheID);
+
+				if (obj != null && obj instanceof Integer)
 				{
-					return (Integer) this.cache.get(cacheID);
+					return (Integer) obj;
 				}
 			}
 		}
