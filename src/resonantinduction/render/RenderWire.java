@@ -10,6 +10,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.TileEntityWire;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -24,17 +25,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderWire extends TileEntitySpecialRenderer
 {
 	private static final ResourceLocation WIRE_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
+	private static final ResourceLocation INSULATION_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "insulation.png");
 	public static final ModelWire WIRE_MODEL = new ModelWire();
+	public static final ModelWire INSULATION_MODEL = new ModelWire();
 
 	public void renderModelAt(TileEntityWire tileEntity, double x, double y, double z, float f)
 	{
-		// Texture file
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1, -1, -1);
 
 		EnumWireMaterial material = tileEntity.getMaterial();
+		// Texture file
+		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
 		GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
 
 		tileEntity.adjacentConnections = null;
@@ -74,6 +77,50 @@ public class RenderWire extends TileEntitySpecialRenderer
 		}
 
 		WIRE_MODEL.renderMiddle();
+
+		if (tileEntity.isInsulated)
+		{
+			// Texture file
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(INSULATION_TEXTURE);
+			Vector3 insulationColor = ResonantInduction.DYE_COLORS[tileEntity.dyeID];
+			GL11.glColor4d(insulationColor.x, insulationColor.y, insulationColor.z, 1);
+
+			if (adjacentConnections != null)
+			{
+				if (adjacentConnections[0] != null)
+				{
+					INSULATION_MODEL.renderBottom();
+				}
+
+				if (adjacentConnections[1] != null)
+				{
+					INSULATION_MODEL.renderTop();
+				}
+
+				if (adjacentConnections[2] != null)
+				{
+					INSULATION_MODEL.renderBack();
+				}
+
+				if (adjacentConnections[3] != null)
+				{
+					INSULATION_MODEL.renderFront();
+				}
+
+				if (adjacentConnections[4] != null)
+				{
+					INSULATION_MODEL.renderLeft();
+				}
+
+				if (adjacentConnections[5] != null)
+				{
+					INSULATION_MODEL.renderRight();
+				}
+			}
+
+			INSULATION_MODEL.renderMiddle();
+		}
+
 		GL11.glPopMatrix();
 	}
 
