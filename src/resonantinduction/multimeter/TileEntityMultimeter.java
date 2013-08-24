@@ -15,7 +15,11 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
+import universalelectricity.core.block.IConductor;
+import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IElectricalStorage;
+import universalelectricity.core.grid.IElectricityNetwork;
+import universalelectricity.prefab.tile.IRotatable;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 
@@ -30,7 +34,7 @@ import cpw.mods.fml.common.network.Player;
  * @author Calclavia
  * 
  */
-public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketReceiver
+public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketReceiver, IConnector, IRotatable
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -64,9 +68,7 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 			if (this.ticks % 20 == 0)
 			{
 				float prevDetectedEnergy = this.detectedEnergy;
-				this.detectedEnergy = this.doGetDetectedEnergy();
-				this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
-				this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
+				this.updateDetection(this.doGetDetectedEnergy());
 
 				boolean outputRedstone = false;
 
@@ -153,7 +155,7 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 
 	public float doGetDetectedEnergy()
 	{
-		ForgeDirection direction = ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+		ForgeDirection direction = this.getDirection();
 		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
 		return getDetectedEnergy(tileEntity);
 	}
@@ -168,8 +170,24 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 		{
 			return ((IElectricalStorage) tileEntity).getEnergyStored();
 		}
+		else if (tileEntity instanceof IConductor)
+		{
+			IElectricityNetwork network = ((IConductor) tileEntity).getNetwork();
+
+			if (MultimeterEventHandler.getCache(tileEntity.worldObj).containsKey(network) && MultimeterEventHandler.getCache(tileEntity.worldObj).get(network) instanceof Float)
+			{
+				return MultimeterEventHandler.getCache(tileEntity.worldObj).get(network);
+			}
+		}
 
 		return 0;
+	}
+
+	public void updateDetection(float detected)
+	{
+		this.detectedEnergy = detected;
+		this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
+		this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
 	}
 
 	public float getDetectedEnergy()
@@ -225,6 +243,24 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 	public float getPeak()
 	{
 		return this.peakDetection;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return direction == this.getDirection();
+	}
+
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+	}
+
+	@Override
+	public void setDirection(ForgeDirection direction)
+	{
+		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, direction.ordinal(), 3);
 	}
 
 }

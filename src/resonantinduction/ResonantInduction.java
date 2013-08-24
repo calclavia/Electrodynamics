@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.modstats.ModstatInfo;
@@ -23,6 +24,7 @@ import resonantinduction.entangler.ItemLinker;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.multimeter.BlockMultimeter;
 import resonantinduction.multimeter.ItemBlockMultimeter;
+import resonantinduction.multimeter.MultimeterEventHandler;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -144,7 +146,7 @@ public class ResonantInduction
 		LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
 		Modstats.instance().getReporter().registerMod(this);
-
+		MinecraftForge.EVENT_BUS.register(new MultimeterEventHandler());
 		CONFIGURATION.load();
 
 		// Config
