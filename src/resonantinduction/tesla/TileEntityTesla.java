@@ -25,6 +25,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import resonantinduction.base.IPacketReceiver;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
+import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -44,7 +45,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
 	private int dyeID = DEFAULT_COLOR;
-	private boolean doTransfer = false;
+	private boolean doTransfer = true;
 
 	private boolean canReceive = true;
 	private boolean attackEntities = true;
@@ -74,6 +75,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	@Override
 	public void initiate()
 	{
+		super.initiate();
 		TeslaGrid.instance().register(this);
 	}
 
@@ -91,9 +93,9 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		{
 			this.produce();
 
-			// TODO: Fix client side issue. || this.worldObj.isRemote
-			if (((this.doTransfer) || this.worldObj.isRemote) && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+			if ((this.doTransfer || this.worldObj.isRemote) && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
+
 				final TileEntityTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
 
@@ -246,8 +248,18 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 
 	private void transfer(ITesla tesla, float transferEnergy)
 	{
-		tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
-		this.transfer(-transferEnergy, true);
+		if (transferEnergy > 0)
+		{
+			tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
+			this.transfer(-transferEnergy, true);
+		}
+	}
+
+	@Override
+	public float receiveElectricity(ElectricityPack receive, boolean doReceive)
+	{
+		this.doTransfer = true;
+		return super.receiveElectricity(receive, doReceive);
 	}
 
 	@Override

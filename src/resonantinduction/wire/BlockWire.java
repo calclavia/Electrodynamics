@@ -55,6 +55,7 @@ public class BlockWire extends BlockConductor
 			{
 				tileEntity.setInsulated();
 				tileEntity.setDye(BlockColored.getDyeFromBlock(entityPlayer.getCurrentEquippedItem().getItemDamage()));
+				entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
 				return true;
 			}
 		}
