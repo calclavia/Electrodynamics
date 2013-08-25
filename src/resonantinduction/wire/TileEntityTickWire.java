@@ -50,14 +50,11 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 					if (tileEntity.furnaceBurnTime == 0)
 					{
 						int burnTime = TileEntityFurnace.getItemBurnTime(tileEntity.getStackInSlot(1));
-
-						if (burnTime > 0)
-						{
-							tileEntity.decrStackSize(1, 1);
-							tileEntity.furnaceBurnTime = burnTime;
-						}
+						tileEntity.decrStackSize(1, 1);
+						tileEntity.furnaceBurnTime = burnTime;
 					}
-					else
+
+					if (tileEntity.furnaceBurnTime > 0)
 					{
 						this.getNetwork().produce(ElectricityPack.getFromWatts(ResonantInduction.FURNACE_WATTAGE, FURNACE_VOLTAGE));
 					}
