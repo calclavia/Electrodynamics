@@ -32,97 +32,100 @@ public class RenderWire extends TileEntitySpecialRenderer
 
 	public void renderModelAt(TileEntityWire tileEntity, double x, double y, double z, float f)
 	{
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1, -1, -1);
-
-		EnumWireMaterial material = tileEntity.getMaterial();
-		// Texture file
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
-		GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
-
-		tileEntity.adjacentConnections = null;
-		TileEntity[] adjacentConnections = tileEntity.getAdjacentConnections();
-
-		if (adjacentConnections != null)
+		if (tileEntity != null)
 		{
-			if (adjacentConnections[0] != null)
-			{
-				WIRE_MODEL.renderBottom();
-			}
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+			GL11.glScalef(1, -1, -1);
 
-			if (adjacentConnections[1] != null)
-			{
-				WIRE_MODEL.renderTop();
-			}
-
-			if (adjacentConnections[2] != null)
-			{
-				WIRE_MODEL.renderBack();
-			}
-
-			if (adjacentConnections[3] != null)
-			{
-				WIRE_MODEL.renderFront();
-			}
-
-			if (adjacentConnections[4] != null)
-			{
-				WIRE_MODEL.renderLeft();
-			}
-
-			if (adjacentConnections[5] != null)
-			{
-				WIRE_MODEL.renderRight();
-			}
-		}
-
-		WIRE_MODEL.renderMiddle();
-
-		if (tileEntity.isInsulated)
-		{
+			EnumWireMaterial material = tileEntity.getMaterial();
 			// Texture file
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(INSULATION_TEXTURE);
-			Vector3 insulationColor = ResonantInduction.DYE_COLORS[tileEntity.dyeID];
-			GL11.glColor4d(insulationColor.x, insulationColor.y, insulationColor.z, 1);
+			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
+			GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
+
+			tileEntity.adjacentConnections = null;
+			TileEntity[] adjacentConnections = tileEntity.getAdjacentConnections();
 
 			if (adjacentConnections != null)
 			{
 				if (adjacentConnections[0] != null)
 				{
-					INSULATION_MODEL.renderBottom(0.0625f);
+					WIRE_MODEL.renderBottom();
 				}
 
 				if (adjacentConnections[1] != null)
 				{
-					INSULATION_MODEL.renderTop(0.0625f);
+					WIRE_MODEL.renderTop();
 				}
 
 				if (adjacentConnections[2] != null)
 				{
-					INSULATION_MODEL.renderBack(0.0625f);
+					WIRE_MODEL.renderBack();
 				}
 
 				if (adjacentConnections[3] != null)
 				{
-					INSULATION_MODEL.renderFront(0.0625f);
+					WIRE_MODEL.renderFront();
 				}
 
 				if (adjacentConnections[4] != null)
 				{
-					INSULATION_MODEL.renderLeft(0.0625f);
+					WIRE_MODEL.renderLeft();
 				}
 
 				if (adjacentConnections[5] != null)
 				{
-					INSULATION_MODEL.renderRight(0.0625f);
+					WIRE_MODEL.renderRight();
 				}
 			}
 
-			INSULATION_MODEL.renderMiddle(0.0625f);
-		}
+			WIRE_MODEL.renderMiddle();
 
-		GL11.glPopMatrix();
+			if (tileEntity.isInsulated)
+			{
+				// Texture file
+				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(INSULATION_TEXTURE);
+				Vector3 insulationColor = ResonantInduction.DYE_COLORS[tileEntity.dyeID];
+				GL11.glColor4d(insulationColor.x, insulationColor.y, insulationColor.z, 1);
+
+				if (adjacentConnections != null)
+				{
+					if (adjacentConnections[0] != null)
+					{
+						INSULATION_MODEL.renderBottom(0.0625f);
+					}
+
+					if (adjacentConnections[1] != null)
+					{
+						INSULATION_MODEL.renderTop(0.0625f);
+					}
+
+					if (adjacentConnections[2] != null)
+					{
+						INSULATION_MODEL.renderBack(0.0625f);
+					}
+
+					if (adjacentConnections[3] != null)
+					{
+						INSULATION_MODEL.renderFront(0.0625f);
+					}
+
+					if (adjacentConnections[4] != null)
+					{
+						INSULATION_MODEL.renderLeft(0.0625f);
+					}
+
+					if (adjacentConnections[5] != null)
+					{
+						INSULATION_MODEL.renderRight(0.0625f);
+					}
+				}
+
+				INSULATION_MODEL.renderMiddle(0.0625f);
+			}
+
+			GL11.glPopMatrix();
+		}
 	}
 
 	@Override
