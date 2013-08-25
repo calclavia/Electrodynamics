@@ -21,7 +21,7 @@ import universalelectricity.core.vector.VectorHelper;
  */
 public class TileEntityTickWire extends TileEntityWire implements IElectrical
 {
-	private HashMap<ForgeDirection, TileEntityFurnace> furnaces = new HashMap<ForgeDirection, TileEntityFurnace>();
+	private final HashMap<ForgeDirection, TileEntityFurnace> furnaces = new HashMap<ForgeDirection, TileEntityFurnace>();
 	private float energyBuffer;
 	private static final float FURNACE_VOLTAGE = 120;
 
