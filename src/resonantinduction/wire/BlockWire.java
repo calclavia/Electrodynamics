@@ -83,6 +83,7 @@ public class BlockWire extends BlockConductor
 
 				world.setBlockTileEntity(x, y, z, TileEntity.createAndLoadEntity(nbt));
 				((IConductor) world.getBlockTileEntity(x, y, z)).refresh();
+				world.markBlockForUpdate(x, y, z);
 			}
 		}
 

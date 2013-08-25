@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.base.IPacketReceiver;
@@ -20,6 +21,9 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
+
+	/** Client Side Connection Check */
+	public boolean isTick = false;
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
@@ -59,7 +63,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 
 					if (tileEntity != null)
 					{
-						if (tileEntity.getClass() == this.getClass() && tileEntity instanceof INetworkProvider)
+						if (tileEntity.getClass().isInstance(this) && tileEntity instanceof INetworkProvider)
 						{
 							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
 						}
@@ -113,7 +117,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, this.isInsulated, this.dyeID);
+		return PacketHandler.getTileEntityPacket(this, this.isInsulated, this.dyeID, this instanceof TileEntityTickWire);
 	}
 
 	@Override
@@ -123,6 +127,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		{
 			this.isInsulated = input.readBoolean();
 			this.dyeID = input.readInt();
+			this.isTick = input.readBoolean();
 		}
 		catch (Exception e)
 		{
@@ -139,6 +144,30 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		super.readFromNBT(nbt);
 		this.dyeID = nbt.getInteger("dyeID");
 		this.isInsulated = nbt.getBoolean("isInsulated");
+	}
+
+	/**
+	 * Furnace connection for tick wires
+	 */
+	@Override
+	public TileEntity[] getAdjacentConnections()
+	{
+		super.getAdjacentConnections();
+
+		if (this.isTick)
+		{
+			for (byte i = 0; i < 6; i++)
+			{
+				ForgeDirection side = ForgeDirection.getOrientation(i);
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), side);
+
+				if (tileEntity instanceof TileEntityFurnace)
+				{
+					this.adjacentConnections[i] = tileEntity;
+				}
+			}
+		}
+		return this.adjacentConnections;
 	}
 
 	/**

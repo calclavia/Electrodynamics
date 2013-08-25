@@ -19,7 +19,7 @@ import universalelectricity.core.vector.VectorHelper;
  * 
  * @author Calclavia
  */
-public class TileEntityTickWire extends TileEntityWire implements IElectrical
+public class TileEntityTickWire extends TileEntityWire
 {
 	private final HashMap<ForgeDirection, TileEntityFurnace> furnaces = new HashMap<ForgeDirection, TileEntityFurnace>();
 	private float energyBuffer;
@@ -40,7 +40,7 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 				ForgeDirection direction = entry.getKey();
 				TileEntityFurnace tileEntity = entry.getValue();
 
-				if (tileEntity.getStackInSlot(0) == null)
+				if (!tileEntity.isInvalid() && tileEntity.getStackInSlot(0) == null)
 				{
 					/**
 					 * Steal power from furnace.
@@ -56,7 +56,7 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 
 					if (tileEntity.furnaceBurnTime > 0)
 					{
-						this.getNetwork().produce(ElectricityPack.getFromWatts(ResonantInduction.FURNACE_WATTAGE, FURNACE_VOLTAGE));
+						this.getNetwork().produce(ElectricityPack.getFromWatts(ResonantInduction.FURNACE_WATTAGE / 20, FURNACE_VOLTAGE));
 					}
 
 					if (doBlockStateUpdate != tileEntity.furnaceBurnTime > 0)
@@ -68,7 +68,7 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 		}
 	}
 
-	@Override
+	// @Override
 	public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
 	{
 		this.energyBuffer += receive.getWatts();
@@ -121,53 +121,31 @@ public class TileEntityTickWire extends TileEntityWire implements IElectrical
 		}
 	}
 
-	/**
-	 * Furnace Connection
-	 */
-	@Override
-	public TileEntity[] getAdjacentConnections()
-	{
-		super.getAdjacentConnections();
-
-		for (byte i = 0; i < 6; i++)
-		{
-			ForgeDirection side = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), side);
-
-			if (tileEntity instanceof TileEntityFurnace)
-			{
-				this.adjacentConnections[i] = tileEntity;
-			}
-		}
-
-		return this.adjacentConnections;
-	}
-
 	@Override
 	public boolean canUpdate()
 	{
 		return true;
 	}
 
-	@Override
+	// @Override
 	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
 	{
 		return new ElectricityPack();
 	}
 
-	@Override
+	// @Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return this.furnaces.size() > 0 ? ResonantInduction.FURNACE_WATTAGE : 0;
+		return this.furnaces.size() > 0 ? ResonantInduction.FURNACE_WATTAGE / 20 : 0;
 	}
 
-	@Override
+	// @Override
 	public float getProvide(ForgeDirection direction)
 	{
 		return 0;
 	}
 
-	@Override
+	// @Override
 	public float getVoltage()
 	{
 		return FURNACE_VOLTAGE;
