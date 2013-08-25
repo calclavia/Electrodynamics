@@ -1,5 +1,7 @@
 package resonantinduction;
 
+import ic2.api.item.Items;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -10,12 +12,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemCapacitor;
+import resonantinduction.battery.ItemInfiniteCapacitor;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
@@ -130,6 +134,7 @@ public class ResonantInduction
 	// Items
 	public static Item itemQuantumEntangler;
 	public static Item itemCapacitor;
+	public static Item itemInfiniteCapacitor;
 	public static Item itemLinker;
 
 	// Blocks
@@ -163,6 +168,7 @@ public class ResonantInduction
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		itemCapacitor = new ItemCapacitor(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
+		itemInfiniteCapacitor = new ItemInfiniteCapacitor(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
@@ -175,6 +181,7 @@ public class ResonantInduction
 
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 		GameRegistry.registerItem(itemCapacitor, itemCapacitor.getUnlocalizedName());
+		GameRegistry.registerItem(itemInfiniteCapacitor, itemInfiniteCapacitor.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
@@ -257,5 +264,13 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
 
+		/** Wire Compatiblity **/
+		if (Loader.isModLoaded("IC2"))
+		{
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.COPPER.ordinal()), Items.getItem("copperCableItem")));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.TIN.ordinal()), Items.getItem("tinCableItem")));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal()), Items.getItem("ironCableItem")));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 2, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), Items.getItem("glassFiberCableItem")));
+		}
 	}
 }
