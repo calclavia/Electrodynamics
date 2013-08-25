@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
+import resonantinduction.api.ICapacitor;
 import universalelectricity.compatibility.ItemUniversalElectric;
 
 /**
@@ -15,7 +16,7 @@ import universalelectricity.compatibility.ItemUniversalElectric;
  * @author Calclavia
  * 
  */
-public class ItemCapacitor extends ItemUniversalElectric
+public class ItemCapacitor extends ItemUniversalElectric implements ICapacitor
 {
 	public ItemCapacitor(int id)
 	{

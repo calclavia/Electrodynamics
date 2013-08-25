@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
+import resonantinduction.api.ICapacitor;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
@@ -66,10 +67,13 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				if (structure.inventory.size() < structure.getMaxCells())
 				{
-					structure.inventory.add(structure.visibleInventory[0]);
-					structure.visibleInventory[0] = null;
-					structure.sortInventory();
-					updateAllClients();
+					if (structure.visibleInventory[0].getItem() instanceof ICapacitor)
+					{
+						structure.inventory.add(structure.visibleInventory[0]);
+						structure.visibleInventory[0] = null;
+						structure.sortInventory();
+						updateAllClients();
+					}
 				}
 			}
 
@@ -79,10 +83,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
-				float batteryNeeded = battery.getMaxElectricityStored(itemStack) - battery.getElectricityStored(itemStack);
+				float batteryNeeded = battery.recharge(itemStack, provideElectricity(this.transferThreshold, false).getWatts(), false);
 				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
-
-				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + provideElectricity(toGive, true).getWatts());
+				battery.recharge(itemStack, provideElectricity(toGive, true).getWatts(), true);
 			}
 
 			if (structure.visibleInventory[2] != null)
@@ -92,9 +95,8 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 				float energyNeeded = getMaxEnergyStored() - getEnergyStored();
 				float batteryStored = battery.getElectricityStored(itemStack);
-				float toReceive = Math.min(energyNeeded, Math.min(battery.getTransfer(itemStack), batteryStored));
-
-				battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - receiveElectricity(toReceive, true));
+				float toReceive = Math.min(energyNeeded, Math.min(this.transferThreshold, Math.min(battery.getTransfer(itemStack), batteryStored)));
+				battery.discharge(itemStack, receiveElectricity(toReceive, true), true);
 			}
 
 			if (prevStructure != structure)

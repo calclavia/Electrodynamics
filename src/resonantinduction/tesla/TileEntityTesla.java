@@ -608,9 +608,16 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	}
 
 	@Override
-	public EnumSet<ForgeDirection> getOutputDirections()
+	public EnumSet<ForgeDirection> getInputDirections()
 	{
-		return EnumSet.allOf(ForgeDirection.class);
+		EnumSet input = EnumSet.allOf(ForgeDirection.class);
+		input.remove(ForgeDirection.DOWN);
+		return input;
 	}
 
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		return EnumSet.of(ForgeDirection.DOWN);
+	}
 }

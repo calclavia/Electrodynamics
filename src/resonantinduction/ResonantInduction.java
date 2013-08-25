@@ -257,12 +257,12 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipes.PRIMARY_METAL, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL, 'I', UniversalRecipes.PRIMARY_METAL));
 
 		/** Wires **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.TIN.ordinal()), "MMM", 'M', "ingotTin"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal()), "MMM", 'M', Item.ingotIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.ALUMINUM.ordinal()), "MMM", 'M', "ingotAluminum"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.COPPER.ordinal()), "MMM", 'M', "ingotCopper"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.TIN.ordinal()), "MMM", 'M', "ingotTin"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.IRON.ordinal()), "MMM", 'M', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.ALUMINUM.ordinal()), "MMM", 'M', "ingotAluminum"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.SILVER.ordinal()), "MMM", 'M', "ingotSilver"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWire, 3, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), "MMM", 'M', "ingotSuperconductor"));
 
 		/** Wire Compatiblity **/
 		if (Loader.isModLoaded("IC2"))
