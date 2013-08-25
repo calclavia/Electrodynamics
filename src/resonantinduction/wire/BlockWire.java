@@ -1,9 +1,9 @@
 package resonantinduction.wire;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,6 +49,12 @@ public class BlockWire extends BlockConductor
 			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
 			{
 				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				return true;
+			}
+			else if (entityPlayer.getCurrentEquippedItem().itemID == Block.cloth.blockID)
+			{
+				tileEntity.setInsulated();
+				tileEntity.setDye(BlockColored.getDyeFromBlock(entityPlayer.getCurrentEquippedItem().getItemDamage()));
 				return true;
 			}
 		}
@@ -133,21 +139,9 @@ public class BlockWire extends BlockConductor
 		}
 	}
 
-	/**
-	 * This returns a complete list of items dropped from this block.
-	 * 
-	 * @param world The current world
-	 * @param x X Position
-	 * @param y Y Position
-	 * @param z Z Position
-	 * @param metadata Current metadata
-	 * @param fortune Breakers fortune level
-	 * @return A ArrayList containing all items this block drops
-	 */
 	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
 	{
-		ArrayList<ItemStack> ret = super.getBlockDropped(world, x, y, z, metadata, fortune);
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 
 		/**
@@ -159,10 +153,10 @@ public class BlockWire extends BlockConductor
 
 			if (tileEntity.isInsulated)
 			{
-				ret.add(new ItemStack(Block.cloth));
+				this.dropBlockAsItem_do(world, x, y, z, new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(tileEntity.dyeID)));
 			}
 		}
 
-		return ret;
+		super.breakBlock(world, x, y, z, par5, par6);
 	}
 }

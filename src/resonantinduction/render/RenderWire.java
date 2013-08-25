@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.model.ModelInsulation;
 import resonantinduction.model.ModelWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.TileEntityWire;
@@ -27,7 +28,7 @@ public class RenderWire extends TileEntitySpecialRenderer
 	private static final ResourceLocation WIRE_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
 	private static final ResourceLocation INSULATION_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "insulation.png");
 	public static final ModelWire WIRE_MODEL = new ModelWire();
-	public static final ModelWire INSULATION_MODEL = new ModelWire();
+	public static final ModelInsulation INSULATION_MODEL = new ModelInsulation();
 
 	public void renderModelAt(TileEntityWire tileEntity, double x, double y, double z, float f)
 	{
@@ -89,36 +90,36 @@ public class RenderWire extends TileEntitySpecialRenderer
 			{
 				if (adjacentConnections[0] != null)
 				{
-					INSULATION_MODEL.renderBottom();
+					INSULATION_MODEL.renderBottom(0.0625f);
 				}
 
 				if (adjacentConnections[1] != null)
 				{
-					INSULATION_MODEL.renderTop();
+					INSULATION_MODEL.renderTop(0.0625f);
 				}
 
 				if (adjacentConnections[2] != null)
 				{
-					INSULATION_MODEL.renderBack();
+					INSULATION_MODEL.renderBack(0.0625f);
 				}
 
 				if (adjacentConnections[3] != null)
 				{
-					INSULATION_MODEL.renderFront();
+					INSULATION_MODEL.renderFront(0.0625f);
 				}
 
 				if (adjacentConnections[4] != null)
 				{
-					INSULATION_MODEL.renderLeft();
+					INSULATION_MODEL.renderLeft(0.0625f);
 				}
 
 				if (adjacentConnections[5] != null)
 				{
-					INSULATION_MODEL.renderRight();
+					INSULATION_MODEL.renderRight(0.0625f);
 				}
 			}
 
-			INSULATION_MODEL.renderMiddle();
+			INSULATION_MODEL.renderMiddle(0.0625f);
 		}
 
 		GL11.glPopMatrix();

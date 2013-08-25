@@ -17,7 +17,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TileEntityWire extends TileEntityUniversalConductor implements IPacketReceiver
 {
-	public int dyeID = -1;
+	public static final int DEFAULT_COLOR = 16;
+	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
 
 	@Override
@@ -34,7 +35,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		{
 			TileEntityWire tileWire = (TileEntityWire) connectPos.getTileEntity(this.worldObj);
 
-			if ((tileWire.isInsulated && this.isInsulated && tileWire.dyeID != this.dyeID && this.dyeID != -1) || connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
+			if ((tileWire.isInsulated && this.isInsulated && tileWire.dyeID != this.dyeID && this.dyeID != DEFAULT_COLOR && tileWire.dyeID != DEFAULT_COLOR) || connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
 			{
 				return false;
 			}
@@ -102,10 +103,17 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
+	public void setInsulated()
+	{
+		this.isInsulated = true;
+		this.refresh();
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, this.dyeID);
+		return PacketHandler.getTileEntityPacket(this, this.isInsulated, this.dyeID);
 	}
 
 	@Override
@@ -113,6 +121,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	{
 		try
 		{
+			this.isInsulated = input.readBoolean();
 			this.dyeID = input.readInt();
 		}
 		catch (Exception e)
@@ -129,6 +138,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	{
 		super.readFromNBT(nbt);
 		this.dyeID = nbt.getInteger("dyeID");
+		this.isInsulated = nbt.getBoolean("isInsulated");
 	}
 
 	/**
@@ -139,6 +149,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("dyeID", this.dyeID);
+		nbt.setBoolean("isInsulated", this.isInsulated);
 	}
 
 	@Override
