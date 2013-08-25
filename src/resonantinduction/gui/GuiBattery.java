@@ -34,10 +34,11 @@ public class GuiBattery extends GuiContainer
 		fontRenderer.drawString("Battery", 43, 6, 0x404040);
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x404040);
 		fontRenderer.drawString("Cells: " + tileEntity.clientCells + " / " + tileEntity.structure.getMaxCells(), 62, 23, 0x404040);
-		fontRenderer.drawString("Energy: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getEnergyStored(), ElectricUnit.JOULES), 62, 33, 0x404040);
-		fontRenderer.drawString("Max: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getMaxEnergyStored(), ElectricUnit.JOULES), 62, 43, 0x404040);
-		fontRenderer.drawString("Percentage: " + (int) (this.tileEntity.getEnergyStored() / this.tileEntity.getMaxEnergyStored() * 100) + "%", 62, 53, 0x404040);
-		fontRenderer.drawString("Volume: " + tileEntity.structure.getVolume(), 62, 63, 0x404040);
+		fontRenderer.drawString("Energy: ", 62, 33, 0x404040);
+		fontRenderer.drawString(ElectricityDisplay.getDisplay(this.tileEntity.getEnergyStored(), ElectricUnit.JOULES, 4, true), 62, 43, 0x404040);
+		fontRenderer.drawString("Max: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getMaxEnergyStored(), ElectricUnit.JOULES), 62, 53, 0x404040);
+		fontRenderer.drawString("Percentage: " + (int) (this.tileEntity.getEnergyStored() / this.tileEntity.getMaxEnergyStored() * 100) + "%", 62, 63, 0x404040);
+		fontRenderer.drawString("Volume: " + tileEntity.structure.getVolume(), 62, 73, 0x404040);
 	}
 
 	@Override

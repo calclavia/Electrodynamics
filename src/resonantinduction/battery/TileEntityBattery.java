@@ -197,21 +197,18 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			}
 		}
 
-		if (nbtTags.hasKey("inputSides"))
+		this.inputSides = EnumSet.noneOf(ForgeDirection.class);
+
+		NBTTagList tagList = nbtTags.getTagList("inputSides");
+
+		for (int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
 		{
-			this.inputSides = EnumSet.noneOf(ForgeDirection.class);
-
-			NBTTagList tagList = nbtTags.getTagList("inputSides");
-
-			for (int tagCount = 0; tagCount < tagList.tagCount(); tagCount++)
-			{
-				NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(tagCount);
-				byte side = tagCompound.getByte("side");
-				this.inputSides.add(ForgeDirection.getOrientation(side));
-			}
-
-			this.inputSides.remove(ForgeDirection.UNKNOWN);
+			NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(tagCount);
+			byte side = tagCompound.getByte("side");
+			this.inputSides.add(ForgeDirection.getOrientation(side));
 		}
+
+		this.inputSides.remove(ForgeDirection.UNKNOWN);
 	}
 
 	@Override
@@ -275,7 +272,8 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			while (it.hasNext())
 			{
 				ForgeDirection dir = it.next();
-				if (this.inputSides.contains(dir) && dir != ForgeDirection.UNKNOWN)
+
+				if (dir != ForgeDirection.UNKNOWN)
 				{
 					NBTTagCompound tagCompound = new NBTTagCompound();
 					tagCompound.setByte("side", (byte) dir.ordinal());
