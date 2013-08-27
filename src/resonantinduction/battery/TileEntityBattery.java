@@ -596,7 +596,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return this.getMaxEnergyStored() - this.getEnergyStored();
+		return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.transferThreshold);
 	}
 
 	@Override

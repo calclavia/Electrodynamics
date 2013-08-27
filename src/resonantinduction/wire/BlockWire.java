@@ -51,7 +51,7 @@ public class BlockWire extends BlockConductor
 				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
 				return true;
 			}
-			else if (entityPlayer.getCurrentEquippedItem().itemID == Block.cloth.blockID)
+			else if (entityPlayer.getCurrentEquippedItem().itemID == Block.cloth.blockID && !tileEntity.isInsulated)
 			{
 				tileEntity.setInsulated();
 				tileEntity.setDye(BlockColored.getDyeFromBlock(entityPlayer.getCurrentEquippedItem().getItemDamage()));

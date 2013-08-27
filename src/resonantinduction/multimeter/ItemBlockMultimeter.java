@@ -10,6 +10,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 /**
  * ItemBlock for the Multimeter
@@ -49,7 +50,7 @@ public class ItemBlockMultimeter extends ItemBlock
 		{
 			// if (!world.isRemote)
 			{
-				par2EntityPlayer.addChatMessage("Energy: " + TileEntityMultimeter.getDetectedEnergy(world.getBlockTileEntity(x, y, z)) + " J");
+				par2EntityPlayer.addChatMessage("Energy: " + TileEntityMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z)) + " J");
 			}
 
 			return true;
