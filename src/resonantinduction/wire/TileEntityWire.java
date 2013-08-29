@@ -9,10 +9,12 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.base.IPacketReceiver;
+import universalelectricity.compatibility.Compatibility;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
 import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+import buildcraft.api.power.PowerHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -187,4 +189,11 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		return null;
 	}
 
+	@Override
+	public void doWork(PowerHandler workProvider)
+	{
+		this.buildcraftBuffer = Compatibility.BC3_RATIO * 25 * this.getMaterial().maxAmps;
+		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
+		super.doWork(workProvider);
+	}
 }
