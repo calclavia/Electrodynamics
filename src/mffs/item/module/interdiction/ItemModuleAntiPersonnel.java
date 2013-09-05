@@ -32,7 +32,7 @@ public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 						player.inventory.setInventorySlotContents(i, null);
 					}
 				}
-				player.setHealth(1);
+				player.setEntityHealth(1);
 				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100);
 				interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
 
