@@ -201,8 +201,8 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 						if (!hasPermission)
 						{
-
-							entity.attackEntityFrom(CustomDamageSource.electrocution, Integer.MAX_VALUE);
+							entity.setEntityHealth(1);
+							entity.attackEntityFrom(CustomDamageSource.electrocution, 100);
 						}
 					}
 				}

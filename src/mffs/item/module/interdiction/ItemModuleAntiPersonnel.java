@@ -32,8 +32,8 @@ public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 						player.inventory.setInventorySlotContents(i, null);
 					}
 				}
-
-				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, Integer.MAX_VALUE);
+				player.setEntityHealth(1);
+				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100);
 				interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
 
 				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] Fairwell.");

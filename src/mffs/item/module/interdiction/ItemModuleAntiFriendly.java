@@ -18,7 +18,8 @@ public class ItemModuleAntiFriendly extends ItemModuleInterdictionMatrix
 	{
 		if (!(entityLiving instanceof IMob && !(entityLiving instanceof INpc)))
 		{
-			entityLiving.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, Integer.MAX_VALUE);
+			entityLiving.setEntityHealth(1);
+			entityLiving.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100);
 		}
 
 		return false;
