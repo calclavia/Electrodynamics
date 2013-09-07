@@ -34,7 +34,7 @@ public class BlockWire extends BlockConductor
 		this.setBlockBounds(0.3f, 0.3f, 0.3f, 0.7f, 0.7f, 0.7f);
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 		Block.setBurnProperties(this.blockID, 30, 60);
-		this.func_111022_d(ResonantInduction.PREFIX + "wire");
+		this.setTextureName(ResonantInduction.PREFIX + "wire");
 		this.setCreativeTab(TabRI.INSTANCE);
 	}
 

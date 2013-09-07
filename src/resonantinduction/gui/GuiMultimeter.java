@@ -93,7 +93,7 @@ public class GuiMultimeter extends GuiContainer
 		this.containerWidth = (this.width - this.xSize) / 2;
 		this.containerHeight = (this.height - this.ySize) / 2;
 
-		this.mc.renderEngine.func_110577_a(TEXTURE);
+		this.mc.renderEngine.bindTexture(TEXTURE);
 		GL11.glColor4f(1, 1, 1, 1);
 		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
 

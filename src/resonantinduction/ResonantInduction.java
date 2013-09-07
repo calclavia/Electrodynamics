@@ -272,5 +272,10 @@ public class ResonantInduction
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal()), Items.getItem("ironCableItem")));
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 2, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), Items.getItem("glassFiberCableItem")));
 		}
+		
+		if (Loader.isModLoaded("Mekanism"))
+		{
+			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.COPPER.ordinal()), "universalCable"));
+		}
 	}
 }

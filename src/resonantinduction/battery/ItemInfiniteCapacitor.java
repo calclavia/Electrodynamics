@@ -12,9 +12,6 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import universalelectricity.compatibility.ItemUniversalElectric;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.item.ElectricItemHelper;
 
 /**
  * Stores power.
@@ -29,7 +26,7 @@ public class ItemInfiniteCapacitor extends ItemUniversalElectric
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "infiniteCapacitor", id).getInt(id));
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + "infiniteCapacitor");
-		this.func_111206_d(ResonantInduction.PREFIX + "capacitor");
+		this.setTextureName(ResonantInduction.PREFIX + "capacitor");
 		this.setMaxStackSize(1);
 		this.setMaxDamage(100);
 	}

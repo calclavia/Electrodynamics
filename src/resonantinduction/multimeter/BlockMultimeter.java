@@ -29,7 +29,7 @@ public class BlockMultimeter extends BlockBase implements ITileEntityProvider
 	public BlockMultimeter(int id)
 	{
 		super("multimeter", id);
-		this.func_111022_d(ResonantInduction.PREFIX + "machine");
+		this.setTextureName(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override

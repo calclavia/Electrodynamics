@@ -40,15 +40,15 @@ public class RenderTesla extends TileEntitySpecialRenderer
 		switch (t.getBlockMetadata())
 		{
 			default:
-				this.func_110628_a(TEXTURE_BOTTOM);
+				this.bindTexture(TEXTURE_BOTTOM);
 				MODEL_BOTTOM.render(0.0625f);
 				break;
 			case 1:
-				this.func_110628_a(TEXTURE_MIDDLE);
+				this.bindTexture(TEXTURE_MIDDLE);
 				MODEL_MIDDLE.render(0.0625f);
 				break;
 			case 2:
-				this.func_110628_a(TEXTURE_TOP);
+				this.bindTexture(TEXTURE_TOP);
 				MODEL_TOP.render(0.0625f);
 				break;
 		}

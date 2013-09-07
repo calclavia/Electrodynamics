@@ -23,7 +23,7 @@ public class ItemCapacitor extends ItemUniversalElectric implements ICapacitor
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "capacitor", id).getInt(id));
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + "capacitor");
-		this.func_111206_d(ResonantInduction.PREFIX + "capacitor");
+		this.setTextureName(ResonantInduction.PREFIX + "capacitor");
 		this.setMaxStackSize(1);
 		this.setMaxDamage(100);
 	}

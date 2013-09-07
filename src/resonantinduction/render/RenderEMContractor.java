@@ -53,11 +53,11 @@ public class RenderEMContractor extends TileEntitySpecialRenderer
 
 		if (((TileEntityEMContractor) t).suck)
 		{
-			this.func_110628_a(TEXTURE);
+			this.bindTexture(TEXTURE);
 		}
 		else
 		{
-			this.func_110628_a(TEXTURE_PUSH);
+			this.bindTexture(TEXTURE_PUSH);
 		}
 
 		if (((TileEntityEMContractor) t).canFunction() && !ResonantInduction.proxy.isPaused())

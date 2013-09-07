@@ -40,7 +40,7 @@ public class RenderWire extends TileEntitySpecialRenderer
 
 			EnumWireMaterial material = tileEntity.getMaterial();
 			// Texture file
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(WIRE_TEXTURE);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(WIRE_TEXTURE);
 			GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
 
 			tileEntity.adjacentConnections = null;
@@ -84,7 +84,7 @@ public class RenderWire extends TileEntitySpecialRenderer
 			if (tileEntity.isInsulated)
 			{
 				// Texture file
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(INSULATION_TEXTURE);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(INSULATION_TEXTURE);
 				Vector3 insulationColor = ResonantInduction.DYE_COLORS[tileEntity.dyeID];
 				GL11.glColor4d(insulationColor.x, insulationColor.y, insulationColor.z, 1);
 

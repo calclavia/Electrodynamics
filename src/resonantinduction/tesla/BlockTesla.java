@@ -26,7 +26,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	public BlockTesla(int id)
 	{
 		super("tesla", id);
-		this.func_111022_d(ResonantInduction.PREFIX + "machine");
+		this.setTextureName(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override

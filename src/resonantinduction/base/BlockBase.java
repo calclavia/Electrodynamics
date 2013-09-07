@@ -20,7 +20,7 @@ public class BlockBase extends Block
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setUnlocalizedName(ResonantInduction.PREFIX + name);
-		this.func_111022_d(ResonantInduction.PREFIX + name);
+		this.setTextureName(ResonantInduction.PREFIX + name);
 		this.setHardness(1f);
 	}
 }

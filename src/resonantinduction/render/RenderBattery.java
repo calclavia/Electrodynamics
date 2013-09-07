@@ -56,11 +56,11 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		if (((TileEntityBattery) t).structure.isMultiblock)
 		{
-			this.func_110628_a(TEXTURE_MULTI);
+			this.bindTexture(TEXTURE_MULTI);
 		}
 		else
 		{
-			this.func_110628_a(TEXTURE);
+			this.bindTexture(TEXTURE);
 		}
 
 		MODEL.render(0.0625f);
@@ -189,9 +189,9 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 			if (icon == null)
 			{
-				TextureManager texturemanager = Minecraft.getMinecraft().func_110434_K();
-				ResourceLocation resourcelocation = texturemanager.func_130087_a(entityItem.getEntityItem().getItemSpriteNumber());
-				icon = ((TextureMap) texturemanager.func_110581_b(resourcelocation)).func_110572_b("missingno");
+				TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+				ResourceLocation resourcelocation = texturemanager.getResourceLocation(entityItem.getEntityItem().getItemSpriteNumber());
+				icon = ((TextureMap) texturemanager.getTexture(resourcelocation)).getAtlasSprite("missingno");
 			}
 
 			float f4 = icon.getMinU();
@@ -231,15 +231,15 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 				if (itemstack.getItemSpriteNumber() == 0)
 				{
-					this.func_110776_a(TextureMap.field_110575_b);
+					this.bindTexture(TextureMap.locationBlocksTexture);
 				}
 				else
 				{
-					this.func_110776_a(TextureMap.field_110576_c);
+					this.bindTexture(TextureMap.locationItemsTexture);
 				}
 
 				GL11.glColor4f(1, 1, 1, 1.0F);
-				ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, icon.getOriginX(), icon.getOriginY(), f12);
+				ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, icon.getIconWidth(), icon.getIconHeight(), f12);
 			}
 
 			GL11.glPopMatrix();
@@ -247,9 +247,10 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 	}
 
-	protected void func_110776_a(ResourceLocation par1ResourceLocation)
+	@Override
+	protected void bindTexture(ResourceLocation par1ResourceLocation)
 	{
-		this.renderManager.renderEngine.func_110577_a(par1ResourceLocation);
+		this.renderManager.renderEngine.bindTexture(par1ResourceLocation);
 	}
 
 	public byte getMiniItemCount(ItemStack stack)

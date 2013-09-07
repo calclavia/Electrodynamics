@@ -30,7 +30,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	public BlockBattery(int id)
 	{
 		super("battery", id);
-		this.func_111022_d(ResonantInduction.PREFIX + "machine");
+		this.setTextureName(ResonantInduction.PREFIX + "machine");
 	}
 
 	@Override

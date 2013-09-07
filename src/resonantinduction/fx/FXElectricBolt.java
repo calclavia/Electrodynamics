@@ -296,7 +296,7 @@ public class FXElectricBolt extends EntityFX
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		/**
 		 * Render the actual bolts.
 		 */
@@ -369,7 +369,7 @@ public class FXElectricBolt extends EntityFX
 		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
 
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(PARTICLE_RESOURCE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(PARTICLE_RESOURCE);
 
 		tessellator.startDrawingQuads();
 	}

@@ -64,7 +64,7 @@ public class RenderMultimeter extends TileEntitySpecialRenderer
 				break;
 		}
 
-		this.func_110628_a(TEXTURE);
+		this.bindTexture(TEXTURE);
 		MODEL.render(0.0625f);
 
 		GL11.glPopMatrix();
