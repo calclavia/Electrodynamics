@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 
 /**
@@ -367,7 +368,7 @@ public class MFFSHelper
 				{
 					Block block = Block.blocksList[((ItemBlock) itemStack.getItem()).getBlockID()];
 
-					if (block.renderAsNormalBlock())
+					if (block.renderAsNormalBlock() && !(block instanceof IFluidBlock))
 					{
 						return block;
 					}
