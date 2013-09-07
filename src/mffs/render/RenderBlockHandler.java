@@ -31,7 +31,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 
 			if (block instanceof BlockFortronCapacitor)
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderFortronCapacitor.TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderFortronCapacitor.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
@@ -39,14 +39,14 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			}
 			else if (block instanceof BlockForceFieldProjector)
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderForceFieldProjector.TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderForceFieldProjector.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.5, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				RenderForceFieldProjector.MODEL.render(0, 0.0625F);
 			}
 			else if (block instanceof BlockCoercionDeriver)
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderCoercionDeriver.TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderCoercionDeriver.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.9, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				GL11.glScalef(1.3f, 1.3f, 1.3f);
@@ -54,7 +54,7 @@ public class RenderBlockHandler implements ISimpleBlockRenderingHandler
 			}
 			else if (block instanceof BlockForceManipulator)
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(RenderForceManipulator.TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderForceManipulator.TEXTURE_ON);
 				GL11.glTranslated(0.5, 1.4, 0.5);
 				GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 				RenderForceManipulator.MODEL.render(0.0625F);

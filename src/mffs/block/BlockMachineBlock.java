@@ -45,10 +45,10 @@ public class BlockMachineBlock extends BlockMFFS
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(this.func_111023_E());
-		this.blockIconTop = par1IconRegister.registerIcon(this.func_111023_E() + "_top");
-		this.blockIconOn = par1IconRegister.registerIcon(this.func_111023_E() + "_on");
-		this.blockIconTopOn = par1IconRegister.registerIcon(this.func_111023_E() + "_top_on");
+		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName());
+		this.blockIconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
+		this.blockIconOn = par1IconRegister.registerIcon(this.getTextureName() + "_on");
+		this.blockIconTopOn = par1IconRegister.registerIcon(this.getTextureName() + "_top_on");
 	}
 
 	@Override

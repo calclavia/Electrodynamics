@@ -28,7 +28,7 @@ public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMat
 		this.setResistance(100.0F);
 		this.setStepSound(soundMetalFootstep);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
-		this.func_111022_d(ModularForceFieldSystem.PREFIX + name);
+		this.setTextureName(ModularForceFieldSystem.PREFIX + name);
 	}
 
 	@Override

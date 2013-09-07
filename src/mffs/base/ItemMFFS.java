@@ -18,7 +18,7 @@ public class ItemMFFS extends Item
 		super(Settings.CONFIGURATION.getItem(name, id).getInt(id));
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
-		this.func_111206_d(ModularForceFieldSystem.PREFIX + name);
+		this.setTextureName(ModularForceFieldSystem.PREFIX + name);
 		this.setNoRepair();
 	}
 

@@ -13,7 +13,6 @@ import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
 import mffs.event.BlockPreMoveDelayedEvent;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFluid;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

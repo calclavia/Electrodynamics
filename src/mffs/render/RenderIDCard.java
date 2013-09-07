@@ -96,12 +96,12 @@ public class RenderIDCard implements IItemRenderer
 	{
 		try
 		{
-			ResourceLocation resourcelocation = AbstractClientPlayer.field_110314_b;
+			ResourceLocation resourcelocation = Minecraft.getMinecraft().thePlayer.getLocationSkin();
 
 			if (name != null && !name.isEmpty())
 			{
-				resourcelocation = AbstractClientPlayer.func_110305_h(name);
-				AbstractClientPlayer.func_110304_a(resourcelocation, name);
+				resourcelocation = AbstractClientPlayer.getLocationSkin(name);
+				AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name);
 				return resourcelocation;
 			}
 		}
@@ -131,7 +131,7 @@ public class RenderIDCard implements IItemRenderer
 			int botLY = translation.intY() + ySize;
 			int botRY = translation.intY() + ySize;
 
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(resourcelocation);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(resourcelocation);
 			// glBindTexture(GL_TEXTURE_2D, texID);
 
 			glColor4f(1, 1, 1, 1);
@@ -213,7 +213,7 @@ public class RenderIDCard implements IItemRenderer
 		GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getOriginX(), icon.getOriginY(), 0.0625F);
+		ItemRenderer.renderItemIn2D(tessellator, f1, f2, f, f3, icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 	}
 

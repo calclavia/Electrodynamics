@@ -48,7 +48,7 @@ public class GuiButtonPress extends GuiButton
 	{
 		if (this.drawButton)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(ModularForceFieldSystem.GUI_BUTTON);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(ModularForceFieldSystem.GUI_BUTTON);
 
 			if (this.stuck)
 			{

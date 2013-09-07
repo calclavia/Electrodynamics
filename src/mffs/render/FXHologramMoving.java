@@ -72,6 +72,6 @@ public class FXHologramMoving extends EntityFX
 		GL11.glPopMatrix();
 
 		tessellator.startDrawingQuads();
-		FMLClientHandler.instance().getClient().renderEngine.func_110577_a(CalclaviaRenderHelper.PARTICLE_RESOURCE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(CalclaviaRenderHelper.PARTICLE_RESOURCE);
 	}
 }

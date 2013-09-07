@@ -42,11 +42,11 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 
 			if (tileEntity.isActive())
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_ON);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_ON);
 			}
 			else
 			{
-				FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_OFF);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_OFF);
 			}
 
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
@@ -109,7 +109,7 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 					 */
 					GL11.glPushMatrix();
 					GL11.glTranslated(x + 0.5, y + 1.35, z + 0.5);
-					FMLClientHandler.instance().getClient().renderEngine.func_110577_a(FORCE_CUBE);
+					FMLClientHandler.instance().getClient().renderEngine.bindTexture(FORCE_CUBE);
 
 					// Enable Blending
 					CalclaviaRenderHelper.enableBlending();

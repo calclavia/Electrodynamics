@@ -31,7 +31,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	 * A set containing all positions of all force field blocks.
 	 */
 	protected final Set<Vector3> forceFields = new HashSet<Vector3>();
-	
+
 	private Block block;
 
 	public TileEntityForceFieldProjector()
@@ -206,11 +206,11 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 					{
 						block = Block.blocksList[vector.getBlockID(this.worldObj)];
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0);
 					}
-					
+
 					if (block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()))
 					{
 						/**

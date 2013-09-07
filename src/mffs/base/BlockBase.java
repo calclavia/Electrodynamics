@@ -13,6 +13,6 @@ public class BlockBase extends BlockTile
 		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), material);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
-		this.func_111022_d(ModularForceFieldSystem.PREFIX + name);
+		this.setTextureName(ModularForceFieldSystem.PREFIX + name);
 	}
 }

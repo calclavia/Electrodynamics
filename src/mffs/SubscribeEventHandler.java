@@ -2,7 +2,6 @@ package mffs;
 
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -62,7 +61,7 @@ public class SubscribeEventHandler
 
 				if (!hasPermission)
 				{
-					evt.entityPlayer.sendChatToPlayer(ChatMessageComponent.func_111066_d("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!"));
+					evt.entityPlayer.addChatMessage("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!");
 					evt.setCanceled(true);
 				}
 			}

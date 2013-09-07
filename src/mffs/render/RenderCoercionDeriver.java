@@ -31,11 +31,11 @@ public class RenderCoercionDeriver extends TileEntitySpecialRenderer
 		 */
 		if (tileEntity.isActive())
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_ON);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_ON);
 		}
 		else
 		{
-			FMLClientHandler.instance().getClient().renderEngine.func_110577_a(TEXTURE_OFF);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_OFF);
 		}
 
 		GL11.glPushMatrix();
