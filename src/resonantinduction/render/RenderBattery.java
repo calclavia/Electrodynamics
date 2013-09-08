@@ -44,8 +44,8 @@ public class RenderBattery extends TileEntitySpecialRenderer
 	private Random random = new Random();
 	protected RenderManager renderManager;
 
-	// IModelCustom batteryModel = AdvancedModelLoader.loadModel(ResonantInduction.MODEL_DIRECTORY +
-	// "modularBattery.tcn");
+	// public static final IModelCustom batteryModel =
+	// AdvancedModelLoader.loadModel(ResonantInduction.MODEL_DIRECTORY + "battery.tcn");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -54,6 +54,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+
 		if (((TileEntityBattery) t).structure.isMultiblock)
 		{
 			this.bindTexture(TEXTURE_MULTI);
@@ -64,7 +65,9 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		}
 
 		MODEL.render(0.0625f);
-		// batteryModel.renderAll();
+		/*
+		 * GL11.glScalef(0.0625f, 0.0625f, 0.0625f); batteryModel.renderAll();
+		 */
 		GL11.glPopMatrix();
 
 		if (Minecraft.getMinecraft().gameSettings.fancyGraphics)
@@ -180,77 +183,75 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 	public void renderItemSimple(EntityItem entityItem)
 	{
-		Tessellator tessellator = Tessellator.instance;
-		ItemStack itemStack = entityItem.getEntityItem();
-
-		for (int k = 0; k < itemStack.getItem().getRenderPasses(itemStack.getItemDamage()); ++k)
+		if (entityItem != null)
 		{
-			Icon icon = itemStack.getItem().getIcon(itemStack, k);
+			Tessellator tessellator = Tessellator.instance;
+			ItemStack itemStack = entityItem.getEntityItem();
 
-			if (icon == null)
+			for (int k = 0; k < itemStack.getItem().getRenderPasses(itemStack.getItemDamage()); ++k)
 			{
-				TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-				ResourceLocation resourcelocation = texturemanager.getResourceLocation(entityItem.getEntityItem().getItemSpriteNumber());
-				icon = ((TextureMap) texturemanager.getTexture(resourcelocation)).getAtlasSprite("missingno");
+				Icon icon = itemStack.getItem().getIcon(itemStack, k);
+
+				if (icon == null)
+				{
+					TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+					ResourceLocation resourcelocation = texturemanager.getResourceLocation(entityItem.getEntityItem().getItemSpriteNumber());
+					icon = ((TextureMap) texturemanager.getTexture(resourcelocation)).getAtlasSprite("missingno");
+				}
+
+				float f4 = icon.getMinU();
+				float f5 = icon.getMaxU();
+				float f6 = icon.getMinV();
+				float f7 = icon.getMaxV();
+				float f8 = 1.0F;
+				float f9 = 0.5F;
+				float f10 = 0.25F;
+				float f11;
+
+				GL11.glPushMatrix();
+
+				float f12 = 0.0625F;
+				f11 = 0.021875F;
+				ItemStack itemstack = entityItem.getEntityItem();
+				int j = itemstack.stackSize;
+				byte b0 = getMiniItemCount(itemstack);
+
+				GL11.glTranslatef(-f9, -f10, -((f12 + f11) * b0 / 2.0F));
+
+				for (int kj = 0; kj < b0; ++kj)
+				{
+					// Makes items offset when in 3D, like when in 2D, looks much better. Considered
+					// a
+					// vanilla bug...
+					if (kj > 0)
+					{
+						float x = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+						float y = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+						float z = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+						GL11.glTranslatef(x, y, f12 + f11);
+					}
+					else
+					{
+						GL11.glTranslatef(0f, 0f, f12 + f11);
+					}
+
+					if (itemstack.getItemSpriteNumber() == 0)
+					{
+						this.bindTexture(TextureMap.locationBlocksTexture);
+					}
+					else
+					{
+						this.bindTexture(TextureMap.locationItemsTexture);
+					}
+
+					GL11.glColor4f(1, 1, 1, 1.0F);
+					ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, icon.getIconWidth(), icon.getIconHeight(), f12);
+				}
+
+				GL11.glPopMatrix();
 			}
-
-			float f4 = icon.getMinU();
-			float f5 = icon.getMaxU();
-			float f6 = icon.getMinV();
-			float f7 = icon.getMaxV();
-			float f8 = 1.0F;
-			float f9 = 0.5F;
-			float f10 = 0.25F;
-			float f11;
-
-			GL11.glPushMatrix();
-
-			float f12 = 0.0625F;
-			f11 = 0.021875F;
-			ItemStack itemstack = entityItem.getEntityItem();
-			int j = itemstack.stackSize;
-			byte b0 = getMiniItemCount(itemstack);
-
-			GL11.glTranslatef(-f9, -f10, -((f12 + f11) * b0 / 2.0F));
-
-			for (int kj = 0; kj < b0; ++kj)
-			{
-				// Makes items offset when in 3D, like when in 2D, looks much better. Considered a
-				// vanilla bug...
-				if (kj > 0)
-				{
-					float x = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
-					float y = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
-					float z = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
-					GL11.glTranslatef(x, y, f12 + f11);
-				}
-				else
-				{
-					GL11.glTranslatef(0f, 0f, f12 + f11);
-				}
-
-				if (itemstack.getItemSpriteNumber() == 0)
-				{
-					this.bindTexture(TextureMap.locationBlocksTexture);
-				}
-				else
-				{
-					this.bindTexture(TextureMap.locationItemsTexture);
-				}
-
-				GL11.glColor4f(1, 1, 1, 1.0F);
-				ItemRenderer.renderItemIn2D(tessellator, f5, f6, f4, f7, icon.getIconWidth(), icon.getIconHeight(), f12);
-			}
-
-			GL11.glPopMatrix();
 		}
 
-	}
-
-	@Override
-	protected void bindTexture(ResourceLocation par1ResourceLocation)
-	{
-		this.renderManager.renderEngine.bindTexture(par1ResourceLocation);
 	}
 
 	public byte getMiniItemCount(ItemStack stack)
