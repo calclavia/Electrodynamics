@@ -45,10 +45,12 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
 	private int dyeID = DEFAULT_COLOR;
-	private boolean doTransfer = true;
 
 	private boolean canReceive = true;
 	private boolean attackEntities = true;
+
+	/** Client side to do sparks */
+	private boolean doTransfer = true;
 
 	/** Prevents transfer loops */
 	private final Set<TileEntityTesla> outputBlacklist = new HashSet<TileEntityTesla>();
@@ -93,7 +95,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		{
 			this.produce();
 
-			if (this.doTransfer && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
 				final TileEntityTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
@@ -189,7 +191,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 					{
 						float transferEnergy = this.getEnergyStored() / transferTeslaCoils.size();
 						int count = 0;
-
+						boolean sentPacket = false;
 						for (ITesla tesla : transferTeslaCoils)
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
@@ -209,6 +211,11 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) ResonantInduction.DYE_COLORS[this.dyeID].x, (float) ResonantInduction.DYE_COLORS[this.dyeID].y, (float) ResonantInduction.DYE_COLORS[this.dyeID].z);
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
+
+							if (!sentPacket)
+							{
+								this.sendPacket(3);
+							}
 
 							if (this.attackEntities && this.zapCounter % 5 == 0)
 							{
@@ -234,11 +241,13 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 
 				this.zapCounter++;
 				this.outputBlacklist.clear();
+
+				this.doTransfer = false;
 			}
 
 			if (!this.worldObj.isRemote && this.getEnergyStored() > 0 != doPacketUpdate)
 			{
-				this.setPacket(2);
+				this.sendPacket(2);
 			}
 		}
 
@@ -257,7 +266,6 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	@Override
 	public float receiveElectricity(ElectricityPack receive, boolean doReceive)
 	{
-		this.doTransfer = true;
 		return super.receiveElectricity(receive, doReceive);
 	}
 
@@ -284,7 +292,15 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		return PacketHandler.getTileEntityPacket(this, (byte) 2, this.getEnergyStored());
 	}
 
-	public void setPacket(int id)
+	/**
+	 * Do Tesla Beam.
+	 */
+	public Packet getDescriptionPacket3()
+	{
+		return PacketHandler.getTileEntityPacket(this, (byte) 3);
+	}
+
+	public void sendPacket(int id)
 	{
 		switch (id)
 		{
@@ -293,6 +309,9 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				break;
 			case 2:
 				PacketDispatcher.sendPacketToAllInDimension(this.getDescriptionPacket2(), this.worldObj.provider.dimensionId);
+				break;
+			case 3:
+				PacketDispatcher.sendPacketToAllInDimension(this.getDescriptionPacket3(), this.worldObj.provider.dimensionId);
 				break;
 		}
 	}
@@ -320,10 +339,9 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				case 2:
 					this.setEnergyStored(input.readFloat());
 					break;
-
+				case 3:
+					this.doTransfer = true;
 			}
-
-			this.doTransfer = true;
 		}
 		catch (Exception e)
 		{
@@ -352,8 +370,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				this.receiveElectricity(transferEnergy, true);
 			}
 
-			this.doTransfer = true;
-			this.setPacket(2);
+			this.sendPacket(2);
 			return transferEnergy;
 		}
 		else
