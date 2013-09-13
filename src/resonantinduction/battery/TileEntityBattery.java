@@ -123,7 +123,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				PacketDispatcher.sendPacketToPlayer(PacketHandler.getTileEntityPacket(this, this.getNetworkedData(new ArrayList()).toArray()), (Player) player);
 			}
-
+			
 			this.produce();
 		}
 	}
@@ -596,13 +596,22 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.transferThreshold);
+		if (this.getInputDirections().contains(direction))
+		{
+			return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.transferThreshold);
+		}
+		return 0;
 	}
 
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		return Math.min(this.getEnergyStored(), this.transferThreshold);
+		if (this.getOutputDirections().contains(direction))
+		{
+			return Math.min(this.getEnergyStored(), this.transferThreshold);
+		}
+
+		return 0;
 	}
 
 	@Override

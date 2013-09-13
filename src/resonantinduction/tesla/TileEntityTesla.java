@@ -93,9 +93,8 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		{
 			this.produce();
 
-			if ((this.doTransfer || this.worldObj.isRemote) && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
+			if (this.doTransfer && this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && this.getEnergyStored() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
-
 				final TileEntityTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
 
