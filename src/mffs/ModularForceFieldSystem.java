@@ -358,7 +358,7 @@ public class ModularForceFieldSystem
 		// Frequency
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardFrequency), "WBW", 'B', itemCardBlank, 'W', UniversalRecipes.WIRE));
 		// ID
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardID), "RBR", 'B', itemCardBlank, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardID), "R R", " B ", "R R", 'B', itemCardBlank, 'R', Item.redstone));
 
 		// -- Modes --
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeSphere), " F ", "FFF", " F ", 'F', itemFocusMatix));
