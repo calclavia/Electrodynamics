@@ -65,7 +65,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 
 					if (tileEntity != null)
 					{
-						if (tileEntity.getClass().isInstance(this) && tileEntity instanceof INetworkProvider)
+						if (/*tileEntity.getClass().isInstance(this) && */tileEntity instanceof INetworkProvider)
 						{
 							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
 						}
