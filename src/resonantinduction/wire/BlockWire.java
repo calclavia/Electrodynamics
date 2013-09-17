@@ -85,6 +85,10 @@ public class BlockWire extends BlockConductor
 				((IConductor) world.getBlockTileEntity(x, y, z)).refresh();
 				world.markBlockForUpdate(x, y, z);
 			}
+			else
+			{
+				entityPlayer.addChatMessage(tileEntity.getNetwork().toString());
+			}
 		}
 
 		return false;
