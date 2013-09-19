@@ -18,7 +18,7 @@ import buildcraft.api.power.PowerHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityWire extends TileEntityUniversalConductor implements IPacketReceiver
+public class TileEntityWire extends TileEntityUniversalConductor implements IPacketReceiver, IInsulatedMaterial
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -36,12 +36,22 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		}
 
 		Vector3 connectPos = new Vector3(this).modifyPositionFromSide(direction);
-
-		if (connectPos.getTileEntity(this.worldObj) instanceof TileEntityWire)
+		TileEntity connectTile = connectPos.getTileEntity(this.worldObj);
+		if (connectTile instanceof IWireMaterial)
 		{
-			TileEntityWire tileWire = (TileEntityWire) connectPos.getTileEntity(this.worldObj);
+			IWireMaterial wireTile = (IWireMaterial) connectTile;
+			
+			if (wireTile.getMaterial() != this.getMaterial())
+			{
+				return false;
+			}
+		}
 
-			if ((tileWire.isInsulated && this.isInsulated && tileWire.dyeID != this.dyeID && this.dyeID != DEFAULT_COLOR && tileWire.dyeID != DEFAULT_COLOR) || connectPos.getBlockMetadata(this.worldObj) != this.getTypeID())
+		if (this.isInsulated() && connectTile instanceof IInsulation)
+		{
+			IInsulation insulatedTile = (IInsulation) connectTile;
+
+			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
 			{
 				return false;
 			}
@@ -195,5 +205,31 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		this.buildcraftBuffer = Compatibility.BC3_RATIO * 25 * this.getMaterial().maxAmps;
 		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
 		super.doWork(workProvider);
+	}
+
+	@Override
+	public boolean isInsulated()
+	{
+		return isInsulated;
+	}
+
+	@Override
+	public void setInsulated(boolean insulated)
+	{
+		if (insulated && !isInsulated())
+			setInsulated();
+		
+	}
+
+	@Override
+	public int getInsulationColor()
+	{
+		return dyeID;
+	}
+
+	@Override
+	public void setInsulationColor(int dyeID)
+	{
+		setDye(dyeID);		
 	}
 }
