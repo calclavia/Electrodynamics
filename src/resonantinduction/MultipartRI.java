@@ -24,7 +24,7 @@ public class MultipartRI implements IPartFactory
 		//MultipartGenerator.registerPassThroughInterface("ic2.api.energy.tile.IEnergySink");
 		MultipartGenerator.registerPassThroughInterface("buildcraft.api.power.IPowerReceptor");
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.base.IPacketReceiver");
-		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.IInsulation");
+		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.IInsulatedMaterial");
 	}
 
 }
