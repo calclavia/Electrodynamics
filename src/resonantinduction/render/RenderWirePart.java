@@ -127,9 +127,4 @@ public class RenderWirePart
 			GL11.glPopMatrix();
 		}
 	}
-	
-	public void renderWirePartAt(TMultiPart part, double var2, double var4, double var6, float var8)
-	{
-		this.renderModelAt((PartWire) part, var2, var4, var6, var8);
-	}
 }

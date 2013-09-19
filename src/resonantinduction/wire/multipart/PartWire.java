@@ -1,23 +1,30 @@
 package resonantinduction.wire.multipart;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import resonantinduction.PacketHandler;
+import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.render.RenderWirePart;
 import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IInsulation;
 import resonantinduction.wire.TileEntityWire;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -28,8 +35,14 @@ import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.PowerHandler;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.IconTransformation;
+import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
@@ -38,16 +51,18 @@ import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
+import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements IPacketReceiver, TSlottedPart, JNormalOcclusion, IHollowConnect
+public class PartWire extends PartUniversalConductor implements IPacketReceiver, TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulation
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
 	public static RenderWirePart renderer = new RenderWirePart();
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
+	public int typeID = 0;
 
 	/** Client Side Connection Check */
 	public boolean isTick = false;
@@ -62,6 +77,12 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
 	}
 	
+	public PartWire(int typeID)
+	{
+		super();
+		this.typeID = typeID;
+	}
+	
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
@@ -72,11 +93,11 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 
 		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
 
-		if (connectPos.getTileEntity(this.world()) instanceof TileEntityWire)
+		if (this.isInsulated() && connectPos.getTileEntity(this.world()) instanceof IInsulation)
 		{
-			TileEntityWire tileWire = (TileEntityWire) connectPos.getTileEntity(this.world());
+			IInsulation insulatedTile = (IInsulation) connectPos.getTileEntity(this.world());
 
-			if ((tileWire.isInsulated && this.isInsulated && tileWire.dyeID != this.dyeID && this.dyeID != DEFAULT_COLOR && tileWire.dyeID != DEFAULT_COLOR) || connectPos.getBlockMetadata(this.world()) != this.getTypeID())
+			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR) )//|| connectPos.getBlockMetadata(this.world()) != this.getTypeID())
 			{
 				return false;
 			}
@@ -131,7 +152,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 
 	public int getTypeID()
 	{
-		return this.world().getBlockMetadata(this.x(), this.y(), this.z());
+		return this.typeID;
 	}
 
 	/**
@@ -144,20 +165,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
 	}
 
-	public void setInsulated()
-	{
-		this.isInsulated = true;
-		this.refresh();
-		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart)this.getTile()).notifyPartChange(this);
-	}
-/*
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return PacketHandler.getTileEntityPacket(tile(), this.isInsulated, this.dyeID, this instanceof TileEntityTickWire);
-	}
-*/
 	@Override
 	public void handle(ByteArrayDataInput input)
 	{
@@ -171,17 +178,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		{
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Reads a tile entity from NBT.
-	 */
-	@Override
-	public void load(NBTTagCompound nbt)
-	{
-		super.load(nbt);
-		this.dyeID = nbt.getInteger("dyeID");
-		this.isInsulated = nbt.getBoolean("isInsulated");
 	}
 
 	/**
@@ -208,17 +204,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		return this.adjacentConnections;
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
-	@Override
-	public void save(NBTTagCompound nbt)
-	{
-		super.save(nbt);
-		nbt.setInteger("dyeID", this.dyeID);
-		nbt.setBoolean("isInsulated", this.isInsulated);
-	}
-
 	@Override
 	public ArrayList getNetworkedData(ArrayList data)
 	{
@@ -233,6 +218,18 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		super.doWork(workProvider);
 	}
 	
+	@Override
+	public String getType()
+	{
+		return "resonant_induction_wire";
+	}
+	
+	@Override
+	public boolean occlusionTest(TMultiPart other)
+	{
+		return NormalOcclusionTest.apply(this, other);
+	}
+
 	@Override
 	public Iterable<IndexedCuboid6> getSubParts()
 	{
@@ -259,46 +256,88 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	}
 
 	@Override
-	public String getType()
+	public Iterable<ItemStack> getDrops()
 	{
-		return "resonant_induction_wire";
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(pickItem(null));
+		if(isInsulated)
+			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID)));
+		return drops;
 	}
 	
 	@Override
-	public Iterable<ItemStack> getDrops()
+	public float getStrength(MovingObjectPosition hit, EntityPlayer player)
 	{
-		return null;
+		return 10F;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
-		renderer.renderWirePartAt(this, pos.x, pos.y, pos.z, frame);
-	}
-
-	@Override
-	public Iterable<Cuboid6> getOcclusionBoxes()
-	{
-		return getCollisionBoxes();
+		renderer.renderModelAt(this, pos.x, pos.y, pos.z, frame);
 	}
 	
 	@Override
-	public boolean occlusionTest(TMultiPart other)
+	public void drawBreaking(RenderBlocks renderBlocks)
 	{
-		return NormalOcclusionTest.apply(this, other);
+        CCRenderState.reset();
+        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(renderBlocks.overrideBlockTexture), null);
 	}
 
 	@Override
-	public int getSlotMask()
+	public void readDesc(MCDataInput packet) 
 	{
-		return PartMap.CENTER.mask;
+		typeID =packet.readInt();
+		dyeID = packet.readInt();
+		isInsulated = packet.readBoolean();
+		isTick = packet.readBoolean();
+		
+	}
+	
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		packet.writeInt(typeID);
+		packet.writeInt(dyeID);
+		packet.writeBoolean(isInsulated);
+		packet.writeBoolean(isTick);
+	}
+	
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setInteger("typeID", this.typeID);
+		nbt.setInteger("dyeID", this.dyeID);
+		nbt.setBoolean("isInsulated", this.isInsulated);
+	}
+	
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		this.typeID = nbt.getInteger("typeID");
+		this.dyeID = nbt.getInteger("dyeID");
+		this.isInsulated = nbt.getBoolean("isInsulated");
+	}
+	
+	@Override
+	public void onAdded()
+	{
+		getWorld().notifyBlocksOfNeighborChange(x(), y(), z(), ((Block)MultipartProxy.block()).blockID);
 	}
 
 	@Override
-	public int getHollowSize()
+	public boolean doesTick()
 	{
-		return this.isInsulated ? 8 : 6;
+		return isTick;
+	}
+	
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		return new ItemStack(ResonantInduction.itemPartWire, 1, getTypeID());
 	}
 	
 	@Override
@@ -319,6 +358,60 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 				return true;
 			}
 		}
+		player.sendChatToPlayer(ChatMessageComponent.createFromText("updating block"));
+		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
 		return false;
+	}
+	
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		return getCollisionBoxes();
+	}
+	
+	@Override
+	public int getSlotMask()
+	{
+		return PartMap.CENTER.mask;
+	}
+
+	@Override
+	public int getHollowSize()
+	{
+		return this.isInsulated ? 8 : 6;
+	}
+
+	@Override
+	public boolean isInsulated()
+	{
+		return isInsulated;
+	}
+
+	@Override
+	public int getInsulationColor()
+	{
+		return isInsulated ? dyeID : -1;
+	}
+
+	@Override
+	public void setInsulationColor(int dyeID)
+	{
+		this.dyeID = dyeID;
+		this.refresh();
+		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
+	}
+
+	@Override
+	public void setInsulated(boolean insulated)
+	{
+		this.isInsulated = insulated;
+		this.refresh();
+		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
+		((TileMultipart)this.getTile()).notifyPartChange(this);
+	}
+
+	public void setInsulated()
+	{
+		setInsulated(true);
 	}
 }

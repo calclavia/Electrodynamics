@@ -1,5 +1,6 @@
 package resonantinduction;
 
+import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.multipart.PartWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
@@ -12,7 +13,7 @@ public class MultipartRI implements IPartFactory
 	public TMultiPart createPart(String name, boolean client)
 	{
 		if (name == "resonant_induction_wire")
-			return new PartWire();
+			return new PartWire(EnumWireMaterial.COPPER.ordinal());
 		return null;
 	}
 	
@@ -23,6 +24,7 @@ public class MultipartRI implements IPartFactory
 		//MultipartGenerator.registerPassThroughInterface("ic2.api.energy.tile.IEnergySink");
 		MultipartGenerator.registerPassThroughInterface("buildcraft.api.power.IPowerReceptor");
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.base.IPacketReceiver");
+		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.IInsulation");
 	}
 
 }
