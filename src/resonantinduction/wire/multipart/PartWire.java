@@ -13,7 +13,9 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
 import resonantinduction.render.RenderWirePart;
 import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IInsulatedMaterial;
 import resonantinduction.wire.IInsulation;
+import resonantinduction.wire.IWireMaterial;
 import resonantinduction.wire.TileEntityWire;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
@@ -55,14 +57,14 @@ import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements IPacketReceiver, TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulation
+public class PartWire extends PartUniversalConductor implements IPacketReceiver, TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulatedMaterial
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
 	public static RenderWirePart renderer = new RenderWirePart();
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
-	public int typeID = 0;
+	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 
 	/** Client Side Connection Check */
 	public boolean isTick = false;
@@ -79,8 +81,13 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	
 	public PartWire(int typeID)
 	{
+		this(EnumWireMaterial.values()[typeID]);
+	}
+	
+	public PartWire(EnumWireMaterial type)
+	{
 		super();
-		this.typeID = typeID;
+		this.material = type;
 	}
 	
 	@Override
@@ -92,12 +99,22 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		}
 
 		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
-
-		if (this.isInsulated() && connectPos.getTileEntity(this.world()) instanceof IInsulation)
+		TileEntity connectTile = connectPos.getTileEntity(this.world());
+		if (connectTile instanceof IWireMaterial)
 		{
-			IInsulation insulatedTile = (IInsulation) connectPos.getTileEntity(this.world());
+			IWireMaterial wireTile = (IWireMaterial) connectTile;
+			
+			if (wireTile.getMaterial() != this.getMaterial())
+			{
+				return false;
+			}
+		}
 
-			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR) )//|| connectPos.getBlockMetadata(this.world()) != this.getTypeID())
+		if (this.isInsulated() && connectTile instanceof IInsulation)
+		{
+			IInsulation insulatedTile = (IInsulation) connectTile;
+
+			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
 			{
 				return false;
 			}
@@ -147,22 +164,24 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 
 	public EnumWireMaterial getMaterial()
 	{
-		return EnumWireMaterial.values()[this.getTypeID()];
+		return material;
 	}
-
+	
 	public int getTypeID()
 	{
-		return this.typeID;
+		return material.ordinal();
 	}
 
-	/**
-	 * @param dyeID
-	 */
 	public void setDye(int dyeID)
 	{
 		this.dyeID = dyeID;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
+	}
+	
+	public void setMaterialFromID(int id)
+	{
+		this.material = EnumWireMaterial.values()[id];
 	}
 
 	@Override
@@ -288,27 +307,27 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	@Override
 	public void readDesc(MCDataInput packet) 
 	{
-		typeID =packet.readInt();
-		dyeID = packet.readInt();
-		isInsulated = packet.readBoolean();
-		isTick = packet.readBoolean();
+		this.setMaterialFromID(packet.readInt());
+		this.dyeID = packet.readInt();
+		this.isInsulated = packet.readBoolean();
+		this.isTick = packet.readBoolean();
 		
 	}
 	
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		packet.writeInt(typeID);
-		packet.writeInt(dyeID);
-		packet.writeBoolean(isInsulated);
-		packet.writeBoolean(isTick);
+		packet.writeInt(this.getTypeID());
+		packet.writeInt(this.dyeID);
+		packet.writeBoolean(this.isInsulated);
+		packet.writeBoolean(this.isTick);
 	}
 	
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setInteger("typeID", this.typeID);
+		nbt.setInteger("typeID", this.getTypeID());
 		nbt.setInteger("dyeID", this.dyeID);
 		nbt.setBoolean("isInsulated", this.isInsulated);
 	}
@@ -317,7 +336,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		this.typeID = nbt.getInteger("typeID");
+		this.setMaterialFromID(nbt.getInteger("typeID"));
 		this.dyeID = nbt.getInteger("dyeID");
 		this.isInsulated = nbt.getBoolean("isInsulated");
 	}
@@ -331,13 +350,13 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	@Override
 	public boolean doesTick()
 	{
-		return isTick;
+		return this.isTick;
 	}
 	
 	@Override
 	public ItemStack pickItem(MovingObjectPosition hit)
 	{
-		return new ItemStack(ResonantInduction.itemPartWire, 1, getTypeID());
+		return new ItemStack(ResonantInduction.itemPartWire, 1, this.getTypeID());
 	}
 	
 	@Override
@@ -358,8 +377,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 				return true;
 			}
 		}
-		player.sendChatToPlayer(ChatMessageComponent.createFromText("updating block"));
-		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
 		return false;
 	}
 	
