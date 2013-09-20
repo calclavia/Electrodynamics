@@ -22,6 +22,7 @@ import net.minecraft.block.BlockColored;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -376,6 +377,13 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 				setDye(BlockColored.getDyeFromBlock(item.getItemDamage()));
 				player.inventory.decrStackSize(player.inventory.currentItem, 1);
 				return true;
+			}
+			else if (item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears)
+			{
+				if (!world().isRemote)
+					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
+				setInsulated(false);
+				setDye(DEFAULT_COLOR);
 			}
 		}
 		return false;
