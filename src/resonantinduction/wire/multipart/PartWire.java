@@ -419,6 +419,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 				setDye(DEFAULT_COLOR);
 			}
 		}
+		if (!world().isRemote)player.addChatMessage(getNetwork().toString());
 		return false;
 	}
 	
