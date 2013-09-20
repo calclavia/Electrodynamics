@@ -34,6 +34,7 @@ import net.minecraftforge.common.ForgeDirection;
 import com.google.common.io.ByteArrayDataInput;
 
 import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -66,6 +67,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	public static RenderWirePart renderer = new RenderWirePart();
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
+	public byte currentConnections;
 
 	/** Client Side Connection Check */
 	public boolean isTick = false;
@@ -124,24 +126,55 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		return true;
 	}
 
+	public byte getPreventedConnections()
+	{
+		byte map = 0x00;
+		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
+			if (tileEntity instanceof INetworkProvider && !canConnect(side))
+				map |= 1 << side.ordinal();
+		}
+		return map;
+		
+	}
+	
 	@Override
 	public void refresh()
 	{
 		if (!this.world().isRemote)
 		{
+			if (isInsulated() || this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
+			{
+				byte preventedConnections = getPreventedConnections();
+				for (int i = 0; i < 6; i++)
+				{
+					int sideConnected = currentConnections & (1 << i);
+					int sidePrevented = preventedConnections & (1 << i);
+					if (sideConnected == 1 << i && sidePrevented == 1 << i)
+					{
+						currentConnections = 0x00;
+						getNetwork().split((IConductor) tile());
+						setNetwork(null);
+						break;
+					}
+				}
+			}
+			
 			this.adjacentConnections = null;
-
+			
 			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
-				if (this.canConnect(side.getOpposite()))
+				if (this.canConnect(side))
 				{
 					TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
 
 					if (tileEntity != null)
 					{
-						if (tileEntity.getClass().isInstance(this) && tileEntity instanceof INetworkProvider)
+						if (tileEntity instanceof INetworkProvider)
 						{
 							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
+							currentConnections |= (1 << side.ordinal());
 						}
 					}
 				}
