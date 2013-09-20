@@ -344,7 +344,8 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	@Override
 	public void onAdded()
 	{
-		getWorld().notifyBlocksOfNeighborChange(x(), y(), z(), ((Block)MultipartProxy.block()).blockID);
+		super.onAdded();
+		refresh();
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package resonantinduction.wire.multipart;
 
+import net.minecraft.block.Block;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.handler.MultipartProxy;
 
 public abstract class PartAdvanced extends TMultiPart
 {	
@@ -20,6 +22,12 @@ public abstract class PartAdvanced extends TMultiPart
 		}
 
 		this.ticks++;
+	}
+	
+	@Override
+	public void onAdded()
+	{
+		world().notifyBlocksOfNeighborChange(x(), y(), z(), ((Block)MultipartProxy.block()).blockID);
 	}
 
 	/**
