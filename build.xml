@@ -14,6 +14,13 @@
 		<copy todir="${dir.development}">
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
+		
+		<get src="http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.3/CodeChickenCore-dev%200.9.0.6.jar"
+			dest="${dir.mcp}/lib/CCC-dev.jar"/>
+		<get src="http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.3/NotEnoughItems-dev%201.6.1.5.jar"
+			dest="${dir.mcp}/lib/NEI-dev.jar"/>
+		<get src="httphttp://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.2-1.0.0.173.jar"
+			dest="${dir.mcp}/lib/FMP-dev.jar"/>
 
 		<copy todir="${dir.mcp}/src/minecraft">
 			<fileset dir="${dir.development}src">
