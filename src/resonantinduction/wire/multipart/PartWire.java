@@ -376,13 +376,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	}
 	
 	@Override
-	public void onAdded()
-	{
-		super.onAdded();
-		refresh();
-	}
-
-	@Override
 	public boolean doesTick()
 	{
 		return this.isTick;
