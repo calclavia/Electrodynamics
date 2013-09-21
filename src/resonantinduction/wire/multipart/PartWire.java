@@ -406,7 +406,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 			}
 			else if (item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears)
 			{
-				if (!world().isRemote)
+				if (!world().isRemote && this.isInsulated())
 					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
 				setInsulated(false);
 				setDye(DEFAULT_COLOR);
