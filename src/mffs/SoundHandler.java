@@ -14,7 +14,7 @@ public class SoundHandler
 	{
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
-			event.manager.soundPoolSounds.addSound(ModularForceFieldSystem.PREFIX + SOUND_FILES[i]);
+			event.manager.addSound(ModularForceFieldSystem.PREFIX + SOUND_FILES[i]);
 		}
 	}
 }
