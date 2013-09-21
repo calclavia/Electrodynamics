@@ -4,11 +4,14 @@ import ic2.api.item.Items;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -48,6 +51,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -272,10 +276,40 @@ public class ResonantInduction
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.IRON.ordinal()), Items.getItem("ironCableItem")));
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 2, EnumWireMaterial.SUPERCONDUCTOR.ordinal()), Items.getItem("glassFiberCableItem")));
 		}
-		
+
 		if (Loader.isModLoaded("Mekanism"))
 		{
 			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockWire, 1, EnumWireMaterial.COPPER.ordinal()), "universalCable"));
+		}
+
+		/** Inject new furnace tile class */
+		replaceTileEntity(TileEntityFurnace.class, TileEntityAdvancedFurnace.class);
+	}
+
+	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)
+	{
+		try
+		{
+			Map<String, Class> nameToClassMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_a", "nameToClassMap", "a");
+			Map<Class, String> classToNameMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_b", "classToNameMap", "b");
+
+			String findTileID = classToNameMap.get(findTile);
+
+			if (findTileID != null)
+			{
+				nameToClassMap.put(findTileID, replaceTile);
+				classToNameMap.put(replaceTile, findTileID);
+				classToNameMap.remove(findTile);
+			}
+			else
+			{
+				LOGGER.severe("Failed to replace TileEntity: " + findTile);
+			}
+		}
+		catch (Exception e)
+		{
+			LOGGER.severe("Failed to replace TileEntity: " + findTile);
+			e.printStackTrace();
 		}
 	}
 }
