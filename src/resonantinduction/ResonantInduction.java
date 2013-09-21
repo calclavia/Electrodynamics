@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -210,6 +211,7 @@ public class ResonantInduction
 		ResonantInduction.proxy.registerRenderers();
 
 		TabRI.ITEMSTACK = new ItemStack(blockBattery);
+		OreDictionary.registerOre("copperWire", new ItemStack(blockWire));
 
 		// Basic Components
 		BasicRegistry.register("itemIngotSteel");
