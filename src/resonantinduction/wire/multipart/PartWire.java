@@ -11,7 +11,7 @@ import java.util.Set;
 import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.IPacketReceiver;
-import resonantinduction.render.RenderWirePart;
+import resonantinduction.render.RenderPartWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IInsulatedMaterial;
 import resonantinduction.wire.IInsulation;
@@ -41,6 +41,7 @@ import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.PowerHandler;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
@@ -64,7 +65,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
-	public static RenderWirePart renderer = new RenderWirePart();
+	public static RenderPartWire renderer = new RenderPartWire();
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 	public byte currentConnections;
@@ -142,6 +143,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	@Override
 	public void refresh()
 	{
+		this.adjacentConnections = null;
 		if (!this.world().isRemote)
 		{
 			if (isInsulated() || this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
@@ -160,9 +162,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 					}
 				}
 			}
-			
-			this.adjacentConnections = null;
-			
+						
 			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				if (this.canConnect(side))
@@ -182,6 +182,7 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 
 			this.getNetwork().refresh();
 		}
+		tile().markRender();
 	}
 
 	@Override
@@ -326,11 +327,19 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	
 	@Override
 	@SideOnly(Side.CLIENT)
+	public void renderStatic(codechicken.lib.vec.Vector3 pos, LazyLightMatrix olm, int pass)
+	{
+		if (pass ==0)
+			renderer.renderStatic(this);
+	}
+	
+/*	@Override
+	@SideOnly(Side.CLIENT)
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
 		renderer.renderModelAt(this, pos.x, pos.y, pos.z, frame);
 	}
-	
+	*/
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)
 	{
@@ -466,5 +475,11 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	public void setInsulated()
 	{
 		setInsulated(true);
+	}
+	
+	@Override
+	public void onNeighborChanged()
+	{
+		refresh();
 	}
 }

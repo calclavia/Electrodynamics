@@ -4,6 +4,7 @@ import java.util.List;
 
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
+import resonantinduction.render.RenderPartWire;
 import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
@@ -65,8 +66,10 @@ public class ItemPartWire extends JItemMultiPart
 	{
 		for (int i = 0; i < EnumWireMaterial.values().length; i++)
 		{
-			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("item.", ""));
+			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("item.", "").replaceAll("multi",""));
 		}
+		
+		RenderPartWire.registerIcons(iconRegister);
 	}
 
 	@Override
@@ -81,6 +84,13 @@ public class ItemPartWire extends JItemMultiPart
         for (EnumWireMaterial mat : EnumWireMaterial.values()) {
             listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
         }
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getSpriteNumber()
+    {
+    	return 0;
     }
 
 }
