@@ -60,7 +60,7 @@ import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements IPacketReceiver, TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulatedMaterial
+public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulatedMaterial
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -219,21 +219,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 		this.material = EnumWireMaterial.values()[id];
 	}
 
-	@Override
-	public void handle(ByteArrayDataInput input)
-	{
-		try
-		{
-			this.isInsulated = input.readBoolean();
-			this.dyeID = input.readInt();
-			this.isTick = input.readBoolean();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Furnace connection for tick wires
 	 */
@@ -256,12 +241,6 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 			}
 		}
 		return this.adjacentConnections;
-	}
-
-	@Override
-	public ArrayList getNetworkedData(ArrayList data)
-	{
-		return null;
 	}
 
 	@Override
