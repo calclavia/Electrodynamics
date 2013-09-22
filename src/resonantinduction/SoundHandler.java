@@ -24,7 +24,7 @@ public class SoundHandler
 	{
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
-			event.manager.soundPoolSounds.addSound(ResonantInduction.PREFIX + SOUND_FILES[i]);
+			event.manager.addSound(ResonantInduction.PREFIX + SOUND_FILES[i]);
 		}
 
 		ResonantInduction.LOGGER.fine("Loaded sound fxs");
