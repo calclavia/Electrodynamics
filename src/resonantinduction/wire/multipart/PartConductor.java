@@ -124,4 +124,11 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		super.onChunkLoad();
 		refresh();
 	}
+	
+	@Override
+	public void onNeighborChanged()
+	{
+		super.onNeighborChanged();
+		refresh();
+	}
 }

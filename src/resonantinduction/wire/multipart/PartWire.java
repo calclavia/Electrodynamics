@@ -476,10 +476,4 @@ public class PartWire extends PartUniversalConductor implements IPacketReceiver,
 	{
 		setInsulated(true);
 	}
-	
-	@Override
-	public void onNeighborChanged()
-	{
-		refresh();
-	}
 }
