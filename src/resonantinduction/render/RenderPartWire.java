@@ -159,7 +159,7 @@ public class RenderPartWire
 	public static void registerIcons(IconRegister iconReg)
 	{
 		wireIcon = iconReg.registerIcon("resonantinduction:models/wire");
-		insulationIcon = iconReg.registerIcon("resonantinduction:models/insulation");
+		insulationIcon = iconReg.registerIcon("resonantinduction:models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
 	}
 	
 	public void renderStatic(PartWire wire)
