@@ -46,6 +46,7 @@ public class RenderPartWire
 	public static final Map<String, CCModel> models;
 	public static Icon wireIcon;
 	public static Icon insulationIcon;
+	public static Icon breakIcon;
 
     static
     {
@@ -160,6 +161,7 @@ public class RenderPartWire
 	{
 		wireIcon = iconReg.registerIcon("resonantinduction:models/wire");
 		insulationIcon = iconReg.registerIcon("resonantinduction:models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
+		breakIcon = iconReg.registerIcon("resonantinduction:wire");
 	}
 	
 	public void renderStatic(PartWire wire)

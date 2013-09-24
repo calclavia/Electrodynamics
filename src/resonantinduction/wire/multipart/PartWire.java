@@ -19,6 +19,7 @@ import resonantinduction.wire.IWireMaterial;
 import resonantinduction.wire.TileEntityWire;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -28,6 +29,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -49,6 +51,8 @@ import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
+import codechicken.multipart.IconHitEffects;
+import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
@@ -60,7 +64,7 @@ import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, IInsulatedMaterial
+public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -455,4 +459,36 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		setInsulated(true);
 	}
+
+	@Override
+	public Cuboid6 getBounds()
+	{
+		return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625);
+	}
+
+	@Override
+	public Icon getBreakingIcon(Object subPart, int side)
+	{
+		return RenderPartWire.breakIcon;
+	}
+
+	@Override
+	public Icon getBrokenIcon(int side)
+	{
+		return RenderPartWire.breakIcon;
+	}
+	
+    @Override
+    public void addHitEffects(MovingObjectPosition hit, EffectRenderer effectRenderer)
+    {
+        IconHitEffects.addHitEffects(this, hit, effectRenderer);
+    }
+    
+    @Override
+    public void addDestroyEffects(EffectRenderer effectRenderer)
+    {
+        IconHitEffects.addDestroyEffects(this, effectRenderer, false);
+    }
+    
+
 }
