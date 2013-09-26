@@ -408,19 +408,22 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 				setDye(item.getItemDamage());
 				return true;
 			}
-			else if (item.itemID == Block.cloth.blockID && !isInsulated())
+			else if (item.itemID == Block.cloth.blockID)
 			{
-				setInsulated();
-				setDye(BlockColored.getDyeFromBlock(item.getItemDamage()));
+				if (isInsulated() && !world().isRemote)
+				{
+					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
+				}
+				setInsulated(BlockColored.getDyeFromBlock(item.getItemDamage()));
 				player.inventory.decrStackSize(player.inventory.currentItem, 1);
 				return true;
 			}
-			else if (item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears)
+			else if ((item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears) && this.isInsulated())
 			{
-				if (!world().isRemote && this.isInsulated())
+				if (!world().isRemote)
 					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
 				setInsulated(false);
-				setDye(DEFAULT_COLOR);
+				return true;
 			}
 		}
 		if (!world().isRemote)player.addChatMessage(getNetwork().toString());
@@ -469,6 +472,16 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public void setInsulated(boolean insulated)
 	{
 		this.isInsulated = insulated;
+		this.dyeID = DEFAULT_COLOR;
+		this.refresh();
+		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
+		((TileMultipart)this.tile()).notifyPartChange(this);
+	}
+
+	public void setInsulated(int dyeColour)
+	{
+		this.isInsulated = true;
+		this.dyeID = dyeColour;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
 		((TileMultipart)this.tile()).notifyPartChange(this);
