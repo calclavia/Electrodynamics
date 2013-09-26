@@ -99,6 +99,21 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	}
 	
 	@Override
+	public void bind(TileMultipart t)
+	{
+		if (tile() != null)
+		{
+			this.getNetwork().getConductors().remove(tile());
+			super.bind(t);
+			this.getNetwork().getConductors().add((IConductor) tile());
+		}
+		else
+		{
+			super.bind(t);
+		}
+	}
+	
+	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
