@@ -51,7 +51,7 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 
 				if (tileEntity instanceof IConnector)
 				{
-					if (((IConnector) tileEntity).canConnect(side.getOpposite()))
+					if (this.canConnect(side) && ((IConnector) tileEntity).canConnect(side.getOpposite()))
 					{
 						this.adjacentConnections[i] = tileEntity;
 					}

@@ -64,27 +64,36 @@ import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial
+public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial, IBlockableConnection
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
 	public static RenderPartWire renderer = new RenderPartWire();
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
+	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
-	public byte currentConnections;
+	public byte currentConnections = 0x00;
 
 	/** Client Side Connection Check */
 	public boolean isTick = false;
+	private ForgeDirection testingSide;
 
 	static {
-		sides[0] = new IndexedCuboid6(0, new Cuboid6(0.3, 0.0, 0.3, 0.7, 0.3, 0.7));
-		sides[1] = new IndexedCuboid6(1, new Cuboid6(0.3, 0.7, 0.3, 0.7, 1.0, 0.7));
-		sides[2] = new IndexedCuboid6(2, new Cuboid6(0.3, 0.3, 0.0, 0.7, 0.7, 0.3));
-		sides[3] = new IndexedCuboid6(3, new Cuboid6(0.3, 0.3, 0.7, 0.7, 0.7, 1.0));
-		sides[4] = new IndexedCuboid6(4, new Cuboid6(0.0, 0.3, 0.3, 0.3, 0.7, 0.7));
-		sides[5] = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7));
-		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
+		sides[0] = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64));
+		sides[1] = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64));
+		sides[2] = new IndexedCuboid6(2, new Cuboid6(0.36, 0.36, 0.000, 0.64, 0.64, 0.36));
+		sides[3] = new IndexedCuboid6(3, new Cuboid6(0.36, 0.36, 0.64, 0.64, 0.64, 1.000));
+		sides[4] = new IndexedCuboid6(4, new Cuboid6(0.000, 0.36, 0.36, 0.36, 0.64, 0.64));
+		sides[5] = new IndexedCuboid6(5, new Cuboid6(0.64, 0.36, 0.36, 1.000, 0.64, 0.64));
+		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64));
+		insulatedSides[0] = new IndexedCuboid6(0, new Cuboid6(0.3, 0.0, 0.3, 0.7, 0.3, 0.7));
+		insulatedSides[1] = new IndexedCuboid6(1, new Cuboid6(0.3, 0.7, 0.3, 0.7, 1.0, 0.7));
+		insulatedSides[2] = new IndexedCuboid6(2, new Cuboid6(0.3, 0.3, 0.0, 0.7, 0.7, 0.3));
+		insulatedSides[3] = new IndexedCuboid6(3, new Cuboid6(0.3, 0.3, 0.7, 0.7, 0.7, 1.0));
+		insulatedSides[4] = new IndexedCuboid6(4, new Cuboid6(0.0, 0.3, 0.3, 0.3, 0.7, 0.7));
+		insulatedSides[5] = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7));
+		insulatedSides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
 	}
 	
 	public PartWire(int typeID)
@@ -108,83 +117,83 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 
 		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
 		TileEntity connectTile = connectPos.getTileEntity(this.world());
-		if (connectTile instanceof IWireMaterial)
+		return !connectionPrevented(connectTile, direction);
+	}
+	
+	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
+	{
+		if (tile instanceof IWireMaterial)
 		{
-			IWireMaterial wireTile = (IWireMaterial) connectTile;
+			IWireMaterial wireTile = (IWireMaterial) tile;
 			
 			if (wireTile.getMaterial() != this.getMaterial())
-			{
-				return false;
-			}
+				return true;
 		}
 
-		if (this.isInsulated() && connectTile instanceof IInsulation)
+		if (this.isInsulated() && tile instanceof IInsulation)
 		{
-			IInsulation insulatedTile = (IInsulation) connectTile;
+			IInsulation insulatedTile = (IInsulation) tile;
 
 			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
-			{
-				return false;
-			}
+				return true;
 		}
-
-		return true;
+		
+		return (this.isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection)tile).isBlockedOnSide(side.getOpposite()));
 	}
-
-	public byte getPreventedConnections()
+	
+	public byte getPossibleConnections()
 	{
-		byte map = 0x00;
+		byte connections = 0x00;
+		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
+		{
+			return connections;
+		}
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
-			if (tileEntity instanceof INetworkProvider && !canConnect(side))
-				map |= 1 << side.ordinal();
+			if (tileEntity instanceof INetworkProvider && !this.connectionPrevented(tileEntity, side))
+				connections |= 1 << side.ordinal();
 		}
-		return map;
-		
+		return connections;
 	}
-	
+
 	@Override
 	public void refresh()
 	{
-		this.adjacentConnections = null;
+//		this.adjacentConnections = null;
 		if (!this.world().isRemote)
 		{
-			if (isInsulated() || this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
+			this.adjacentConnections = null;
+			byte possibleConnections = getPossibleConnections();
+			if (possibleConnections != currentConnections)
 			{
-				byte preventedConnections = getPreventedConnections();
-				for (int i = 0; i < 6; i++)
+				byte or = (byte) (possibleConnections | currentConnections);
+				if (or != possibleConnections) //Connections have been removed
 				{
-					int sideConnected = currentConnections & (1 << i);
-					int sidePrevented = preventedConnections & (1 << i);
-					if (sideConnected == 1 << i && sidePrevented == 1 << i)
-					{
-						currentConnections = 0x00;
-						getNetwork().split((IConductor) tile());
-						setNetwork(null);
-						break;
-					}
+					this.getNetwork().split((IConductor) tile());
+					this.setNetwork(null);
 				}
-			}
-						
-			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-			{
-				if (this.canConnect(side))
+				
+				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 				{
-					TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
-
-					if (tileEntity != null)
+					byte tester = (byte) (1 << side.ordinal());
+					if ((possibleConnections & tester) > 0)
 					{
+						TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
+
 						if (tileEntity instanceof INetworkProvider)
 						{
 							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
-							currentConnections |= (1 << side.ordinal());
 						}
 					}
 				}
-			}
 
-			this.getNetwork().refresh();
+				currentConnections = possibleConnections;
+				
+			}
+			this.sendDescUpdate();
+			this.getNetwork().refresh();		
+						
 		}
 		tile().markRender();
 	}
@@ -271,16 +280,17 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public Iterable<IndexedCuboid6> getSubParts()
 	{
 		Set<IndexedCuboid6> subParts = new HashSet<IndexedCuboid6>();
-		if(getTile() != null)
+		IndexedCuboid6[] currentSides = this.isInsulated() ? insulatedSides : sides;
+		if(tile() != null)
 		{
 			TileEntity[] connections = getAdjacentConnections();
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				int ord = side.ordinal();
-				if(connections[ord] != null) subParts.add(sides[ord]);
+				if(connections[ord] != null || side == this.testingSide) subParts.add(currentSides[ord]);
 			}
 		}
-		subParts.add(sides[6]);
+		subParts.add(currentSides[6]);
 		return subParts;
 	}
 	
@@ -312,7 +322,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	@SideOnly(Side.CLIENT)
 	public void renderStatic(codechicken.lib.vec.Vector3 pos, LazyLightMatrix olm, int pass)
 	{
-		if (pass ==0)
+		if (pass == 0)
 			renderer.renderStatic(this);
 	}
 	
@@ -338,7 +348,8 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = packet.readInt();
 		this.isInsulated = packet.readBoolean();
 		this.isTick = packet.readBoolean();
-		
+		this.currentConnections = packet.readByte();
+		if (tile() != null) tile().markRender();		
 	}
 	
 	@Override
@@ -348,6 +359,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		packet.writeInt(this.dyeID);
 		packet.writeBoolean(this.isInsulated);
 		packet.writeBoolean(this.isTick);
+		packet.writeByte(this.currentConnections);
 	}
 	
 	@Override
@@ -385,12 +397,12 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		if (item != null)
 		{
-			if (item.itemID == Item.dyePowder.itemID)
+			if (item.itemID == Item.dyePowder.itemID && isInsulated())
 			{
 				setDye(item.getItemDamage());
 				return true;
 			}
-			else if (item.itemID == Block.cloth.blockID && !isInsulated)
+			else if (item.itemID == Block.cloth.blockID && !isInsulated())
 			{
 				setInsulated();
 				setDye(BlockColored.getDyeFromBlock(item.getItemDamage()));
@@ -490,6 +502,22 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
     {
         IconHitEffects.addDestroyEffects(this, effectRenderer, false);
     }
+
+	@Override
+	public boolean isBlockedOnSide(ForgeDirection side)
+	{
+		TMultiPart blocker = tile().partMap(side.ordinal());
+		this.testingSide = side;
+		boolean expandable = NormalOcclusionTest.apply(this, blocker);
+		this.testingSide = null;
+		return !expandable;
+	}
+	
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		refresh();
+	}
     
 
 }
