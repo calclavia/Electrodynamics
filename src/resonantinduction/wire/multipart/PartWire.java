@@ -64,10 +64,8 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
-	public byte currentConnections = 0x00;
 
 	/** Client Side Connection Check */
-	public boolean isTick = false;
 	private ForgeDirection testingSide;
 
 	static {
@@ -98,19 +96,9 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.material = type;
 	}
 	
-	@Override
-	public void bind(TileMultipart t)
+	public PartWire()
 	{
-		if (tile() != null)
-		{
-			this.getNetwork().getConductors().remove(tile());
-			super.bind(t);
-			this.getNetwork().getConductors().add((IConductor) tile());
-		}
-		else
-		{
-			super.bind(t);
-		}
+		super();
 	}
 	
 	@Override
@@ -121,9 +109,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 			return false;
 		}
 
-		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
-		TileEntity connectTile = connectPos.getTileEntity(this.world());
-		return !connectionPrevented(connectTile, direction);
+		return super.canConnect(direction);
 	}
 	
 	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
@@ -149,24 +135,16 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	
 	public byte getPossibleConnections()
 	{
-		byte connections = 0x00;
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
 		{
-			return connections;
+			return 0x00;
 		}
-		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
-			if (tileEntity instanceof INetworkProvider && !this.connectionPrevented(tileEntity, side))
-				connections |= 1 << side.ordinal();
-		}
-		return connections;
+		return super.getPossibleConnections();
 	}
 
 	@Override
 	public void refresh()
 	{
-//		this.adjacentConnections = null;
 		if (!this.world().isRemote)
 		{
 			this.adjacentConnections = null;
@@ -238,30 +216,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.material = EnumWireMaterial.values()[id];
 	}
 
-	/**
-	 * Furnace connection for tick wires
-	 */
-	@Override
-	public TileEntity[] getAdjacentConnections()
-	{
-		super.getAdjacentConnections();
-
-		if (this.isTick)
-		{
-			for (byte i = 0; i < 6; i++)
-			{
-				ForgeDirection side = ForgeDirection.getOrientation(i);
-				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
-
-				if (tileEntity instanceof TileEntityFurnace)
-				{
-					this.adjacentConnections[i] = tileEntity;
-				}
-			}
-		}
-		return this.adjacentConnections;
-	}
-
 	@Override
 	public void doWork(PowerHandler workProvider)
 	{
@@ -289,15 +243,20 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		IndexedCuboid6[] currentSides = this.isInsulated() ? insulatedSides : sides;
 		if(tile() != null)
 		{
-			TileEntity[] connections = getAdjacentConnections();
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				int ord = side.ordinal();
-				if(connections[ord] != null || side == this.testingSide) subParts.add(currentSides[ord]);
+				if(connectionMapContainsSide(currentConnections, side) || side == this.testingSide) subParts.add(currentSides[ord]);
 			}
 		}
 		subParts.add(currentSides[6]);
 		return subParts;
+	}
+	
+	public boolean connectionMapContainsSide(byte connections, ForgeDirection side)
+	{
+		byte tester = (byte) (1 << side.ordinal());
+		return ((connections & tester) > 0);
 	}
 	
 	@Override
@@ -353,7 +312,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.setMaterialFromID(packet.readInt());
 		this.dyeID = packet.readInt();
 		this.isInsulated = packet.readBoolean();
-		this.isTick = packet.readBoolean();
 		this.currentConnections = packet.readByte();
 		if (tile() != null) tile().markRender();		
 	}
@@ -364,7 +322,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		packet.writeInt(this.getTypeID());
 		packet.writeInt(this.dyeID);
 		packet.writeBoolean(this.isInsulated);
-		packet.writeBoolean(this.isTick);
 		packet.writeByte(this.currentConnections);
 	}
 	
@@ -384,12 +341,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.setMaterialFromID(nbt.getInteger("typeID"));
 		this.dyeID = nbt.getInteger("dyeID");
 		this.isInsulated = nbt.getBoolean("isInsulated");
-	}
-	
-	@Override
-	public boolean doesTick()
-	{
-		return this.isTick;
 	}
 	
 	@Override

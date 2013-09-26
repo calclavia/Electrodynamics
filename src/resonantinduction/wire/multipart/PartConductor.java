@@ -1,5 +1,6 @@
 package resonantinduction.wire.multipart;
 
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.tileentity.TileEntity;
@@ -18,6 +19,23 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	private IElectricityNetwork network;
 
 	public TileEntity[] adjacentConnections = null;
+	public byte currentConnections = 0x00;
+
+	
+	@Override
+	public void bind(TileMultipart t)
+	{
+		if (tile() != null && network != null)
+		{
+			this.getNetwork().getConductors().remove(tile());
+			super.bind(t);
+			this.getNetwork().getConductors().add((IConductor) tile());
+		}
+		else
+		{
+			super.bind(t);
+		}
+	}
 
 	@Override
 	public void preRemove()
@@ -53,62 +71,111 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		this.network = network;
 	}
 
+	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
+	{
+		return false;
+	}
+
+	public byte getPossibleConnections()
+	{
+		byte connections = 0x00;
+		
+		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
+			if (tileEntity instanceof INetworkProvider && !this.connectionPrevented(tileEntity, side))
+				connections |= 1 << side.ordinal();
+		}
+		return connections;
+	}
+
 	@Override
 	public void refresh()
 	{
 		if (!this.world().isRemote)
 		{
 			this.adjacentConnections = null;
-
-			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			byte possibleConnections = getPossibleConnections();
+			if (possibleConnections != currentConnections)
 			{
-				TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
-
-				if (tileEntity != null)
+				byte or = (byte) (possibleConnections | currentConnections);
+				if (or != possibleConnections) //Connections have been removed
 				{
-					if (tileEntity.getClass() == tile().getClass() && tileEntity instanceof INetworkProvider)
+					this.getNetwork().split((IConductor) tile());
+					this.setNetwork(null);
+				}
+				
+				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+				{
+					byte tester = (byte) (1 << side.ordinal());
+					if ((possibleConnections & tester) > 0)
 					{
-						this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
+						TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
+
+						if (tileEntity instanceof INetworkProvider)
+						{
+							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
+						}
 					}
 				}
-			}
 
-			this.getNetwork().refresh();
+				currentConnections = possibleConnections;
+				
+			}
+			this.sendDescUpdate();
+			this.getNetwork().refresh();		
+						
 		}
+		tile().markRender();
 	}
 
 	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
-		/**
-		 * Cache the adjacentConnections.
-		 */
 		if (this.adjacentConnections == null)
 		{
 			this.adjacentConnections = new TileEntity[6];
-
+	
 			for (byte i = 0; i < 6; i++)
 			{
 				ForgeDirection side = ForgeDirection.getOrientation(i);
-				TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
-
-				if (tileEntity instanceof IConnector)
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
+	
+				if (isCurrentlyConnected(tileEntity, side))
 				{
-					if (((IConnector) tileEntity).canConnect(side.getOpposite()))
-					{
-						this.adjacentConnections[i] = tileEntity;
-					}
+					adjacentConnections[i] = tileEntity;
 				}
 			}
 		}
-
 		return this.adjacentConnections;
+	}
+	
+	public boolean isCurrentlyConnected(TileEntity tileEntity, ForgeDirection side)
+	{
+		if ((this.currentConnections & 1 << side.ordinal()) > 0)
+		{
+			return true;
+		}
+		
+		if (!this.canConnect(side))
+		{
+			return false;
+		}
+		
+		if (tileEntity instanceof IConnector && ((IConnector)tileEntity).canConnect(side.getOpposite()))
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return true;
+		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
+		TileEntity connectTile = connectPos.getTileEntity(this.world());
+		return !connectionPrevented(connectTile, direction);
 	}
 	
 	@Override
