@@ -1,22 +1,18 @@
 package resonantinduction.wire.multipart;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.IPacketReceiver;
 import resonantinduction.render.RenderPartWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IInsulatedMaterial;
 import resonantinduction.wire.IInsulation;
 import resonantinduction.wire.IWireMaterial;
-import resonantinduction.wire.TileEntityWire;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.client.particle.EffectRenderer;
@@ -28,12 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-
-import com.google.common.io.ByteArrayDataInput;
 
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.block.IConductor;
@@ -57,10 +50,8 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
-import codechicken.multipart.handler.MultipartProxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
