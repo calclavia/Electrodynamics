@@ -465,7 +465,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.isInsulated = insulated;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart)this.getTile()).notifyPartChange(this);
+		((TileMultipart)this.tile()).notifyPartChange(this);
 	}
 
 	public void setInsulated()

@@ -22,9 +22,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public void preRemove()
 	{
-		if (!this.world().isRemote && this.getTile() instanceof IConductor)
+		if (!this.world().isRemote && this.tile() instanceof IConductor)
 		{
-			this.getNetwork().split((IConductor)this.getTile());
+			this.getNetwork().split((IConductor)this.tile());
 		}
 
 		super.preRemove();
@@ -39,9 +39,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public IElectricityNetwork getNetwork()
 	{
-		if (this.network == null && this.getTile() instanceof IConductor)
+		if (this.network == null && this.tile() instanceof IConductor)
 		{
-			this.setNetwork(NetworkLoader.getNewNetwork((IConductor)this.getTile()));
+			this.setNetwork(NetworkLoader.getNewNetwork((IConductor)this.tile()));
 		}
 
 		return this.network;
