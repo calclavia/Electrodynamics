@@ -1,13 +1,16 @@
 package resonantinduction.render;
 
+import java.nio.FloatBuffer;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.colour.Colour;
@@ -39,14 +42,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPartWire
 {
-	private static final ResourceLocation WIRE_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "wire.png");
-	private static final ResourceLocation INSULATION_TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "insulation.png");
+	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "white.png");
 	public static final ModelWire WIRE_MODEL = new ModelWire();
 	public static final ModelInsulation INSULATION_MODEL = new ModelInsulation();
 	public static final Map<String, CCModel> models;
 	public static Icon wireIcon;
 	public static Icon insulationIcon;
 	public static Icon breakIcon;
+	public static FloatBuffer location = BufferUtils.createFloatBuffer(4);
+	public static FloatBuffer specular = BufferUtils.createFloatBuffer(4);
+	public static FloatBuffer zero = BufferUtils.createFloatBuffer(4);
 
     static
     {
@@ -56,21 +61,47 @@ public class RenderPartWire
             c.computeLighting(LightModel.standardLightModel);
             c.shrinkUVs(0.0005);
         }
+        
+		loadBuffer(location, 0,0,0,1);
+		loadBuffer(specular, 2,2,2,1);
+		loadBuffer(zero, 0,0,0,0);
+		
+		GL11.glLight(GL11.GL_LIGHT3, GL11.GL_SPECULAR, specular);
+		
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_SPECULAR, specular);
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT, zero);
+		GL11.glMaterial(GL11.GL_FRONT, GL11.GL_DIFFUSE, zero);
+		GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 128f);
+
     }
 
+    public static void loadBuffer(FloatBuffer buffer, float... src)
+    {
+    	buffer.clear();
+    	buffer.put(src);
+    	buffer.flip();
+    }
 
-    public void renderModelAt(PartWire part, double x, double y, double z, float f)
+    public void renderShine(PartWire part, double x, double y, double z, float f)
 	{
 		if (part != null)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-			GL11.glScalef(1, -1, -1);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_LIGHT0);
+			GL11.glDisable(GL11.GL_LIGHT1);
+			GL11.glEnable(GL11.GL_LIGHT3);
+			
+			GL11.glLight(GL11.GL_LIGHT3, GL11.GL_POSITION, location);
+			
+			GL11.glTranslatef((float) x+0.5F, (float) y+1.5F, (float) z+0.5F);
+			GL11.glScalef(1.01F, -1.01F, -1.01F);
+			GL11.glTranslatef((float) 0.F, (float) -0.01F, (float) 0.F);
 
-			EnumWireMaterial material = part.getMaterial();
 			// Texture file
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(WIRE_TEXTURE);
-			GL11.glColor4d(material.color.x, material.color.y, material.color.z, 1);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(WIRE_SHINE);
 
 			part.adjacentConnections = null;
 			TileEntity[] adjacentConnections = part.getAdjacentConnections();
@@ -110,48 +141,10 @@ public class RenderPartWire
 
 			WIRE_MODEL.renderMiddle();
 
-			if (part.isInsulated)
-			{
-				// Texture file
-				FMLClientHandler.instance().getClient().renderEngine.bindTexture(INSULATION_TEXTURE);
-				Vector3 insulationColor = ResonantInduction.DYE_COLORS[part.dyeID];
-				GL11.glColor4d(insulationColor.x, insulationColor.y, insulationColor.z, 1);
-
-				if (adjacentConnections != null)
-				{
-					if (adjacentConnections[0] != null)
-					{
-						INSULATION_MODEL.renderBottom(0.0625f);
-					}
-
-					if (adjacentConnections[1] != null)
-					{
-						INSULATION_MODEL.renderTop(0.0625f);
-					}
-
-					if (adjacentConnections[2] != null)
-					{
-						INSULATION_MODEL.renderBack(0.0625f);
-					}
-
-					if (adjacentConnections[3] != null)
-					{
-						INSULATION_MODEL.renderFront(0.0625f);
-					}
-
-					if (adjacentConnections[4] != null)
-					{
-						INSULATION_MODEL.renderLeft(0.0625f);
-					}
-
-					if (adjacentConnections[5] != null)
-					{
-						INSULATION_MODEL.renderRight(0.0625f);
-					}
-				}
-
-				INSULATION_MODEL.renderMiddle(0.0625f);
-			}
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_LIGHT0);
+			GL11.glEnable(GL11.GL_LIGHT1);
+			GL11.glEnable(GL11.GL_LIGHT3);
 
 			GL11.glPopMatrix();
 		}

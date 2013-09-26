@@ -316,13 +316,14 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 			renderer.renderStatic(this);
 	}
 	
-/*	@Override
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
-		renderer.renderModelAt(this, pos.x, pos.y, pos.z, frame);
+		if (ResonantInduction.SHINY_SILVER && this.getMaterial() == EnumWireMaterial.SILVER)
+		renderer.renderShine(this, pos.x, pos.y, pos.z, frame);
 	}
-	*/
+
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)
 	{
