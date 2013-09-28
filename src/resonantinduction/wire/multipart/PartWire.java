@@ -133,53 +133,22 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		return (this.isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection)tile).isBlockedOnSide(side.getOpposite()));
 	}
 	
-	public byte getPossibleConnections()
+	public byte getPossibleWireConnections()
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
 		{
 			return 0x00;
 		}
-		return super.getPossibleConnections();
+		return super.getPossibleWireConnections();
 	}
 
-	@Override
-	public void refresh()
+	public byte getPossibleAcceptorConnections()
 	{
-		if (!this.world().isRemote)
+		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
 		{
-			this.adjacentConnections = null;
-			byte possibleConnections = getPossibleConnections();
-			if (possibleConnections != currentConnections)
-			{
-				byte or = (byte) (possibleConnections | currentConnections);
-				if (or != possibleConnections) //Connections have been removed
-				{
-					this.getNetwork().split((IConductor) tile());
-					this.setNetwork(null);
-				}
-				
-				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-				{
-					byte tester = (byte) (1 << side.ordinal());
-					if ((possibleConnections & tester) > 0)
-					{
-						TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
-
-						if (tileEntity instanceof INetworkProvider)
-						{
-							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
-						}
-					}
-				}
-
-				currentConnections = possibleConnections;
-				
-			}
-			this.sendDescUpdate();
-			this.getNetwork().refresh();		
-						
+			return 0x00;
 		}
-		tile().markRender();
+		return super.getPossibleAcceptorConnections();
 	}
 
 	@Override
@@ -246,17 +215,11 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				int ord = side.ordinal();
-				if(connectionMapContainsSide(currentConnections, side) || side == this.testingSide) subParts.add(currentSides[ord]);
+				if(connectionMapContainsSide(getAllCurrentConnections(), side) || side == this.testingSide) subParts.add(currentSides[ord]);
 			}
 		}
 		subParts.add(currentSides[6]);
 		return subParts;
-	}
-	
-	public boolean connectionMapContainsSide(byte connections, ForgeDirection side)
-	{
-		byte tester = (byte) (1 << side.ordinal());
-		return ((connections & tester) > 0);
 	}
 	
 	@Override
@@ -312,8 +275,9 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.setMaterialFromID(packet.readInt());
 		this.dyeID = packet.readInt();
 		this.isInsulated = packet.readBoolean();
-		this.currentConnections = packet.readByte();
-		if (tile() != null) tile().markRender();		
+		this.currentWireConnections = packet.readByte();
+		this.currentAcceptorConnections = packet.readByte();
+		if (tile() != null) tile().markRender();
 	}
 	
 	@Override
@@ -322,7 +286,8 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		packet.writeInt(this.getTypeID());
 		packet.writeInt(this.dyeID);
 		packet.writeBoolean(this.isInsulated);
-		packet.writeByte(this.currentConnections);
+		packet.writeByte(this.currentWireConnections);
+		packet.writeByte(this.currentAcceptorConnections);
 	}
 	
 	@Override

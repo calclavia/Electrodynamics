@@ -19,8 +19,19 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	private IElectricityNetwork network;
 
 	public TileEntity[] adjacentConnections = null;
-	public byte currentConnections = 0x00;
+	public byte currentWireConnections = 0x00;
+	public byte currentAcceptorConnections = 0x00;
+	
+	public byte getAllCurrentConnections()
+	{
+		return (byte) (currentWireConnections | currentAcceptorConnections);
+	}
 
+	public static boolean connectionMapContainsSide(byte connections, ForgeDirection side)
+	{
+		byte tester = (byte) (1 << side.ordinal());
+		return ((connections & tester) > 0);
+	}
 	
 	@Override
 	public void bind(TileMultipart t)
@@ -64,6 +75,17 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 
 		return this.network;
 	}
+	
+	public boolean canConnectBothSides(TileEntity tile, ForgeDirection side)
+	{
+		boolean notPrevented = !connectionPrevented(tile, side);
+		
+		if (tile instanceof IConnector)
+		{
+			notPrevented &= ((IConnector)tile).canConnect(side.getOpposite());
+		}
+		return notPrevented;
+	}
 
 	@Override
 	public void setNetwork(IElectricityNetwork network)
@@ -71,22 +93,49 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		this.network = network;
 	}
 
+	/**
+	 * Override if there are ways of preventing a connection
+	 * @param tile The TileEntity on the given side
+	 * @param side The side we're checking
+	 * @return Whether we're preventing connections on given side or to given tileEntity  
+	 */
 	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
 	{
 		return false;
 	}
 
-	public byte getPossibleConnections()
+	public byte getPossibleWireConnections()
 	{
 		byte connections = 0x00;
 		
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
-			if (tileEntity instanceof INetworkProvider && !this.connectionPrevented(tileEntity, side))
+			if (tileEntity instanceof INetworkProvider && this.canConnectBothSides(tileEntity, side))
 				connections |= 1 << side.ordinal();
 		}
 		return connections;
+	}
+	
+	public byte getPossibleAcceptorConnections()
+	{
+		byte connections = 0x00;
+		
+		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
+			if (this.isValidAcceptor(tileEntity) && this.canConnectBothSides(tileEntity, side))
+				connections |= 1 << side.ordinal();
+		}
+		return connections;
+	}
+	
+	/**
+	 * Override if there are different kinds of acceptor possible
+	 */
+	public boolean isValidAcceptor(TileEntity tile)
+	{
+		return tile instanceof IConnector;
 	}
 
 	@Override
@@ -95,11 +144,13 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		if (!this.world().isRemote)
 		{
 			this.adjacentConnections = null;
-			byte possibleConnections = getPossibleConnections();
-			if (possibleConnections != currentConnections)
+			byte possibleWireConnections = getPossibleWireConnections();
+			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
+			
+			if (possibleWireConnections != currentWireConnections)
 			{
-				byte or = (byte) (possibleConnections | currentConnections);
-				if (or != possibleConnections) //Connections have been removed
+				byte or = (byte) (possibleWireConnections | currentWireConnections);
+				if (or != possibleWireConnections) //Connections have been removed
 				{
 					this.getNetwork().split((IConductor) tile());
 					this.setNetwork(null);
@@ -107,8 +158,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 				
 				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 				{
-					byte tester = (byte) (1 << side.ordinal());
-					if ((possibleConnections & tester) > 0)
+					if (connectionMapContainsSide(possibleWireConnections, side))
 					{
 						TileEntity tileEntity = VectorHelper.getConnectorFromSide(this.world(), new Vector3(tile()), side);
 
@@ -119,16 +169,21 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 					}
 				}
 
-				currentConnections = possibleConnections;
-				
+				currentWireConnections = possibleWireConnections;				
 			}
-			this.sendDescUpdate();
+			
+			currentAcceptorConnections = possibleAcceptorConnections;
 			this.getNetwork().refresh();		
-						
+			this.sendDescUpdate();						
 		}
 		tile().markRender();
 	}
 
+	/**
+	 * Should include connections that are in the current connection maps
+	 * even if those connections aren't allowed any more. This is so that
+	 * networks split correctly.
+	 */
 	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
@@ -141,7 +196,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 				ForgeDirection side = ForgeDirection.getOrientation(i);
 				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(this.world(), new Vector3(tile()), side);
 	
-				if (isCurrentlyConnected(tileEntity, side))
+				if (isCurrentlyConnected(side))
 				{
 					adjacentConnections[i] = tileEntity;
 				}
@@ -150,26 +205,14 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		return this.adjacentConnections;
 	}
 	
-	public boolean isCurrentlyConnected(TileEntity tileEntity, ForgeDirection side)
+	public boolean isCurrentlyConnected(ForgeDirection side)
 	{
-		if ((this.currentConnections & 1 << side.ordinal()) > 0)
-		{
-			return true;
-		}
-		
-		if (!this.canConnect(side))
-		{
-			return false;
-		}
-		
-		if (tileEntity instanceof IConnector && ((IConnector)tileEntity).canConnect(side.getOpposite()))
-		{
-			return true;
-		}
-		
-		return false;
+		return connectionMapContainsSide(this.getAllCurrentConnections(), side);
 	}
 
+	/**
+	 * Shouldn't need to be overridden. Override connectionPrevented instead
+	 */
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{

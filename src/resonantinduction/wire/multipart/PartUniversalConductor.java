@@ -38,32 +38,18 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		this.powerHandler.configurePowerPerdition(0, 0);
 	}
 	
-	public boolean isCurrentlyConnected(TileEntity tileEntity, ForgeDirection side)
+	@Override
+	public boolean isValidAcceptor(TileEntity tile)
 	{
-		if ((this.currentConnections & 1 << side.ordinal()) > 0)
+		if (Compatibility.isIndustrialCraft2Loaded() && tile instanceof IEnergyTile)
 		{
 			return true;
 		}
-		
-		if (!this.canConnect(side))
-		{
-			return false;
-		}
-		
-		if (tileEntity instanceof IConnector && ((IConnector)tileEntity).canConnect(side.getOpposite()))
+		else if (Compatibility.isBuildcraftLoaded() && tile instanceof IPowerReceptor)
 		{
 			return true;
-		}
-		else if (Compatibility.isIndustrialCraft2Loaded() && tileEntity instanceof IEnergyTile)
-		{
-			return true;
-		}
-		else if (Compatibility.isBuildcraftLoaded() && tileEntity instanceof IPowerReceptor)
-		{
-			return true;
-		}
-		
-		return false;
+		}		
+		return super.isValidAcceptor(tile);
 	}
 
 	/*
