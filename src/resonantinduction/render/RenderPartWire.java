@@ -3,9 +3,7 @@ package resonantinduction.render;
 import java.nio.FloatBuffer;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -24,28 +22,22 @@ import codechicken.lib.render.TextureUtils;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Translation;
 import resonantinduction.ResonantInduction;
-import resonantinduction.model.ModelInsulation;
-import resonantinduction.model.ModelWire;
-import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.multipart.PartWire;
 import universalelectricity.core.vector.Vector3;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * TODO: Use ISBRH.
  * 
- * @author Calclavia
+ * @author unpairedbracket
  * 
  */
 @SideOnly(Side.CLIENT)
 public class RenderPartWire
 {
 	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "white.png");
-	public static final ModelWire WIRE_MODEL = new ModelWire();
-	public static final ModelInsulation INSULATION_MODEL = new ModelInsulation();
 	public static final Map<String, CCModel> models;
+	public static final Map<String, CCModel> shinyModels;
 	public static Icon wireIcon;
 	public static Icon insulationIcon;
 	public static Icon breakIcon;
@@ -62,8 +54,15 @@ public class RenderPartWire
             c.shrinkUVs(0.0005);
         }
         
+        shinyModels = CCModel.parseObjModels(new ResourceLocation("resonantinduction", "models/wireShine.obj"), 7, new InvertX());
+        for (CCModel c : shinyModels.values()) {
+            c.apply(new Translation(.5, 0, .5));
+            c.computeLighting(LightModel.standardLightModel);
+            c.shrinkUVs(0.0005);
+        }
+        
 		loadBuffer(location, 0,0,0,1);
-		loadBuffer(specular, 2,2,2,1);
+		loadBuffer(specular, 1,1,1,1);
 		loadBuffer(zero, 0,0,0,0);
 		
 		GL11.glLight(GL11.GL_LIGHT3, GL11.GL_SPECULAR, specular);
@@ -82,9 +81,9 @@ public class RenderPartWire
     	buffer.flip();
     }
 
-    public void renderShine(PartWire part, double x, double y, double z, float f)
+    public void renderShine(PartWire wire, double x, double y, double z, float f)
 	{
-		if (part != null)
+		if (wire != null)
 		{
 			GL11.glPushMatrix();
 			GL11.glEnable(GL11.GL_BLEND);
@@ -93,53 +92,22 @@ public class RenderPartWire
 			GL11.glDisable(GL11.GL_LIGHT0);
 			GL11.glDisable(GL11.GL_LIGHT1);
 			GL11.glEnable(GL11.GL_LIGHT3);
-			
 			GL11.glLight(GL11.GL_LIGHT3, GL11.GL_POSITION, location);
 			
-			GL11.glTranslatef((float) x+0.5F, (float) y+1.5F, (float) z+0.5F);
-			GL11.glScalef(1.01F, -1.01F, -1.01F);
-			GL11.glTranslatef((float) 0.F, (float) -0.01F, (float) 0.F);
+			GL11.glTranslatef((float) x, (float) y, (float) z);
 
 			// Texture file
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(WIRE_SHINE);
+			CCRenderState.changeTexture(WIRE_SHINE);
 
-			part.adjacentConnections = null;
-			TileEntity[] adjacentConnections = part.getAdjacentConnections();
-
-			if (adjacentConnections != null)
+			CCRenderState.startDrawing(7);
+			renderSideShine(ForgeDirection.UNKNOWN, wire);
+			byte renderSides = wire.getAllCurrentConnections();
+			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
-				if (adjacentConnections[0] != null)
-				{
-					WIRE_MODEL.renderBottom();
-				}
-
-				if (adjacentConnections[1] != null)
-				{
-					WIRE_MODEL.renderTop();
-				}
-
-				if (adjacentConnections[2] != null)
-				{
-					WIRE_MODEL.renderBack();
-				}
-
-				if (adjacentConnections[3] != null)
-				{
-					WIRE_MODEL.renderFront();
-				}
-
-				if (adjacentConnections[4] != null)
-				{
-					WIRE_MODEL.renderLeft();
-				}
-
-				if (adjacentConnections[5] != null)
-				{
-					WIRE_MODEL.renderRight();
-				}
+				if (PartWire.connectionMapContainsSide(renderSides, side))
+					renderSideShine(side, wire);
 			}
-
-			WIRE_MODEL.renderMiddle();
+			CCRenderState.draw();
 
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_LIGHT0);
@@ -164,11 +132,10 @@ public class RenderPartWire
 		CCRenderState.useModelColours(true);
 		CCRenderState.setBrightness(wire.world(), wire.x(), wire.y(), wire.z());
 		renderSide(ForgeDirection.UNKNOWN, wire);
-		wire.adjacentConnections = null;
-		TileEntity[] adjacentTiles = wire.getAdjacentConnections();
+		byte renderSides = wire.getAllCurrentConnections();
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (adjacentTiles[side.ordinal()] != null)
+			if (PartWire.connectionMapContainsSide(renderSides, side))
 				renderSide(side, wire);			
 		}
 	}
@@ -188,11 +155,21 @@ public class RenderPartWire
 		}
 	}
 	
+	public void renderSideShine(ForgeDirection side, PartWire wire)
+	{
+		String name = side.name().toLowerCase();
+		name = name.equals("unknown") ? "center" : name;
+		Vector3 materialColour = wire.getMaterial().color;
+		renderPartShine(shinyModels.get(name));
+	}
+	
     public void renderPart(Icon icon, CCModel cc, double x, double y, double z, Colour colour) {
         cc.render(0, cc.verts.length,
                 Rotation.sideOrientation(0, Rotation.rotationTo(0, 2)).at(codechicken.lib.vec.Vector3.center)
                 .with(new Translation(x, y, z)), new IconTransformation(icon), new ColourMultiplier(colour));
     }
 
-
+    public void renderPartShine(CCModel cc) {
+        cc.render(null, 0, 0);
+    }
 }
