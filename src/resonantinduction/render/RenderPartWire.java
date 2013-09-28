@@ -44,6 +44,7 @@ public class RenderPartWire
 	public static FloatBuffer location = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer specular = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer zero = BufferUtils.createFloatBuffer(4);
+	public static FloatBuffer defaultAmbient = BufferUtils.createFloatBuffer(4);
 
     static
     {
@@ -64,6 +65,9 @@ public class RenderPartWire
 		loadBuffer(location, 0,0,0,1);
 		loadBuffer(specular, 1,1,1,1);
 		loadBuffer(zero, 0,0,0,0);
+		loadBuffer(defaultAmbient, 0.4F,0.4F,0.4F,1);
+		
+		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, zero);
 		
 		GL11.glLight(GL11.GL_LIGHT3, GL11.GL_SPECULAR, specular);
 		
@@ -95,10 +99,11 @@ public class RenderPartWire
 			GL11.glLight(GL11.GL_LIGHT3, GL11.GL_POSITION, location);
 			
 			GL11.glTranslatef((float) x, (float) y, (float) z);
+			GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, zero);
 
-			// Texture file
+			CCRenderState.reset();
+			CCRenderState.useNormals(true);
 			CCRenderState.changeTexture(WIRE_SHINE);
-
 			CCRenderState.startDrawing(7);
 			renderSideShine(ForgeDirection.UNKNOWN, wire);
 			byte renderSides = wire.getAllCurrentConnections();
@@ -112,7 +117,11 @@ public class RenderPartWire
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_LIGHT0);
 			GL11.glEnable(GL11.GL_LIGHT1);
-			GL11.glEnable(GL11.GL_LIGHT3);
+			GL11.glDisable(GL11.GL_LIGHT3);
+
+	        GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, defaultAmbient);
+
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			GL11.glPopMatrix();
 		}
