@@ -188,7 +188,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	@Override
 	public void doWork(PowerHandler workProvider)
 	{
-		this.buildcraftBuffer = Compatibility.BC3_RATIO * 25 * this.getMaterial().maxAmps;
+		this.buildcraftBuffer = Compatibility.BC3_RATIO * 25 * Math.min(this.getMaterial().maxAmps, 100);
 		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
 		super.doWork(workProvider);
 	}
