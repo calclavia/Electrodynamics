@@ -57,8 +57,35 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 	 */
 
 	@Override
-	public void update()
+	public void onWorldJoin()
 	{
+		super.onWorldJoin();
+		if (!this.world().isRemote)
+		{
+			if (!this.isAddedToEnergyNet)
+			{
+				this.initIC();
+			}
+		}
+	}
+
+	@Override
+	public void onAdded()
+	{
+		super.onAdded();
+		if (!this.world().isRemote)
+		{
+			if (!this.isAddedToEnergyNet)
+			{
+				this.initIC();
+			}
+		}
+	}
+
+	@Override
+	public void onChunkLoad()
+	{
+		super.onChunkLoad();
 		if (!this.world().isRemote)
 		{
 			if (!this.isAddedToEnergyNet)
@@ -81,12 +108,22 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		this.unloadTileIC2();
 		super.onChunkUnload();
 	}
+	
+	@Override
+	public void onRemoved() {}
+
+	@Override
+	public void preRemove()
+	{
+		this.unloadTileIC2();
+		super.preRemove();
+	}
 
 	protected void initIC()
 	{
 		if (Compatibility.isIndustrialCraft2Loaded())
 		{
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
 		}
 
 		this.isAddedToEnergyNet = true;
@@ -98,7 +135,7 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		{
 			if (Compatibility.isIndustrialCraft2Loaded())
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
 			}
 
 			this.isAddedToEnergyNet = false;
