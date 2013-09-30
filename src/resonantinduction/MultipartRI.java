@@ -21,10 +21,10 @@ public class MultipartRI implements IPartFactory
 	{
 		MultiPartRegistry.registerParts(this, new String[]{"resonant_induction_wire"});
 		MultipartGenerator.registerPassThroughInterface("universalelectricity.core.block.IConductor");
-		MultipartGenerator.registerPassThroughInterface("ic2.api.energy.tile.IEnergySink");
 		MultipartGenerator.registerPassThroughInterface("buildcraft.api.power.IPowerReceptor");
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.IInsulatedMaterial");
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.multipart.IBlockableConnection");
+		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.multipart.javatraits.TEnergySink");
 	}
 
 }
