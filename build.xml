@@ -17,9 +17,9 @@
 		
 		<get src="http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/NotEnoughItems-dev%201.6.1.5.jar"
 			dest="${dir.mcp}/lib/NEI-dev.jar"/>
-		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.35.jar"
+		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.39.jar"
 			dest="${dir.mcp}/lib/CCL-dev.jar"/>
-		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.190.jar"
+		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.192.jar"
 			dest="${dir.mcp}/lib/FMP-dev.jar"/>
 
 		<copy todir="${dir.mcp}/src/minecraft">
