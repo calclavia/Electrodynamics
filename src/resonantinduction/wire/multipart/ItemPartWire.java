@@ -24,10 +24,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPartWire extends JItemMultiPart
 {
+	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
+
 	public ItemPartWire(int id)
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wireMultipart", id).getInt(id));
-		this.setUnlocalizedName(ResonantInduction.PREFIX + "multiwire");
+		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
 		this.setCreativeTab(TabRI.INSTANCE);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -38,8 +40,12 @@ public class ItemPartWire extends JItemMultiPart
 	{
 		return new PartWire(this.getDamage(arg0));
 	}
-	
-	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
+
+	@Override
+	public String getUnlocalizedName()
+	{
+		return super.getUnlocalizedName().replace("item", "tile");
+	}
 
 	@Override
 	public int getMetadata(int damage)
@@ -66,9 +72,9 @@ public class ItemPartWire extends JItemMultiPart
 	{
 		for (int i = 0; i < EnumWireMaterial.values().length; i++)
 		{
-			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("item.", "").replaceAll("multi",""));
+			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ""));
 		}
-		
+
 		RenderPartWire.registerIcons(iconRegister);
 	}
 
@@ -79,18 +85,20 @@ public class ItemPartWire extends JItemMultiPart
 		return this.icons[meta];
 	}
 
-    @Override
-    public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo) {
-        for (EnumWireMaterial mat : EnumWireMaterial.values()) {
-            listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
-        }
-    }
-    
-    @Override
-    @SideOnly(Side.CLIENT)
-    public int getSpriteNumber()
-    {
-    	return 0;
-    }
+	@Override
+	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	{
+		for (EnumWireMaterial mat : EnumWireMaterial.values())
+		{
+			listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getSpriteNumber()
+	{
+		return 0;
+	}
 
 }

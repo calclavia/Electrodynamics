@@ -68,7 +68,8 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	/** Client Side Connection Check */
 	private ForgeDirection testingSide;
 
-	static {
+	static
+	{
 		sides[0] = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64));
 		sides[1] = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64));
 		sides[2] = new IndexedCuboid6(2, new Cuboid6(0.36, 0.36, 0.000, 0.64, 0.64, 0.36));
@@ -84,23 +85,23 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		insulatedSides[5] = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7));
 		insulatedSides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
 	}
-	
+
 	public PartWire(int typeID)
 	{
 		this(EnumWireMaterial.values()[typeID]);
 	}
-	
+
 	public PartWire(EnumWireMaterial type)
 	{
 		super();
 		this.material = type;
 	}
-	
+
 	public PartWire()
 	{
 		super();
 	}
-	
+
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
@@ -111,13 +112,13 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 
 		return super.canConnect(direction);
 	}
-	
+
 	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
 	{
 		if (tile instanceof IWireMaterial)
 		{
 			IWireMaterial wireTile = (IWireMaterial) tile;
-			
+
 			if (wireTile.getMaterial() != this.getMaterial())
 				return true;
 		}
@@ -129,10 +130,10 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != this.getInsulationColor() && this.getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
 				return true;
 		}
-		
-		return (this.isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection)tile).isBlockedOnSide(side.getOpposite()));
+
+		return (this.isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection) tile).isBlockedOnSide(side.getOpposite()));
 	}
-	
+
 	public byte getPossibleWireConnections()
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
@@ -167,7 +168,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		return material;
 	}
-	
+
 	public int getTypeID()
 	{
 		return material.ordinal();
@@ -179,7 +180,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
 	}
-	
+
 	public void setMaterialFromID(int id)
 	{
 		this.material = EnumWireMaterial.values()[id];
@@ -192,13 +193,13 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
 		super.doWork(workProvider);
 	}
-	
+
 	@Override
 	public String getType()
 	{
 		return "resonant_induction_wire";
 	}
-	
+
 	@Override
 	public boolean occlusionTest(TMultiPart other)
 	{
@@ -210,18 +211,19 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		Set<IndexedCuboid6> subParts = new HashSet<IndexedCuboid6>();
 		IndexedCuboid6[] currentSides = this.isInsulated() ? insulatedSides : sides;
-		if(tile() != null)
+		if (tile() != null)
 		{
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				int ord = side.ordinal();
-				if(connectionMapContainsSide(getAllCurrentConnections(), side) || side == this.testingSide) subParts.add(currentSides[ord]);
+				if (connectionMapContainsSide(getAllCurrentConnections(), side) || side == this.testingSide)
+					subParts.add(currentSides[ord]);
 			}
 		}
 		subParts.add(currentSides[6]);
 		return subParts;
 	}
-	
+
 	@Override
 	public Iterable<Cuboid6> getCollisionBoxes()
 	{
@@ -235,17 +237,17 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		drops.add(pickItem(null));
-		if(isInsulated)
+		if (isInsulated)
 			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID)));
 		return drops;
 	}
-	
+
 	@Override
 	public float getStrength(MovingObjectPosition hit, EntityPlayer player)
 	{
 		return 10F;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderStatic(codechicken.lib.vec.Vector3 pos, LazyLightMatrix olm, int pass)
@@ -253,33 +255,34 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		if (pass == 0)
 			renderer.renderStatic(this);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
 		if (ResonantInduction.SHINY_SILVER && this.getMaterial() == EnumWireMaterial.SILVER)
-		renderer.renderShine(this, pos.x, pos.y, pos.z, frame);
+			renderer.renderShine(this, pos.x, pos.y, pos.z, frame);
 	}
 
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)
 	{
-        CCRenderState.reset();
-        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(renderBlocks.overrideBlockTexture), null);
+		CCRenderState.reset();
+		RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(renderBlocks.overrideBlockTexture), null);
 	}
 
 	@Override
-	public void readDesc(MCDataInput packet) 
+	public void readDesc(MCDataInput packet)
 	{
 		this.setMaterialFromID(packet.readInt());
 		this.dyeID = packet.readInt();
 		this.isInsulated = packet.readBoolean();
 		this.currentWireConnections = packet.readByte();
 		this.currentAcceptorConnections = packet.readByte();
-		if (tile() != null) tile().markRender();
+		if (tile() != null)
+			tile().markRender();
 	}
-	
+
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
@@ -289,7 +292,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		packet.writeByte(this.currentWireConnections);
 		packet.writeByte(this.currentAcceptorConnections);
 	}
-	
+
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
@@ -298,7 +301,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		nbt.setInteger("dyeID", this.dyeID);
 		nbt.setBoolean("isInsulated", this.isInsulated);
 	}
-	
+
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
@@ -307,13 +310,13 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = nbt.getInteger("dyeID");
 		this.isInsulated = nbt.getBoolean("isInsulated");
 	}
-	
+
 	@Override
 	public ItemStack pickItem(MovingObjectPosition hit)
 	{
 		return new ItemStack(ResonantInduction.itemPartWire, 1, this.getTypeID());
 	}
-	
+
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
@@ -342,16 +345,17 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 				return true;
 			}
 		}
-		if (!world().isRemote)player.addChatMessage(getNetwork().toString());
+		if (!world().isRemote)
+			player.addChatMessage(getNetwork().toString());
 		return false;
 	}
-	
+
 	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
 		return getCollisionBoxes();
 	}
-	
+
 	@Override
 	public int getSlotMask()
 	{
@@ -391,7 +395,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = DEFAULT_COLOR;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart)this.tile()).notifyPartChange(this);
+		((TileMultipart) this.tile()).notifyPartChange(this);
 	}
 
 	public void setInsulated(int dyeColour)
@@ -400,7 +404,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = dyeColour;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart)this.tile()).notifyPartChange(this);
+		((TileMultipart) this.tile()).notifyPartChange(this);
 	}
 
 	public void setInsulated()
@@ -425,18 +429,18 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	{
 		return RenderPartWire.breakIcon;
 	}
-	
-    @Override
-    public void addHitEffects(MovingObjectPosition hit, EffectRenderer effectRenderer)
-    {
-        IconHitEffects.addHitEffects(this, hit, effectRenderer);
-    }
-    
-    @Override
-    public void addDestroyEffects(EffectRenderer effectRenderer)
-    {
-        IconHitEffects.addDestroyEffects(this, effectRenderer, false);
-    }
+
+	@Override
+	public void addHitEffects(MovingObjectPosition hit, EffectRenderer effectRenderer)
+	{
+		IconHitEffects.addHitEffects(this, hit, effectRenderer);
+	}
+
+	@Override
+	public void addDestroyEffects(EffectRenderer effectRenderer)
+	{
+		IconHitEffects.addDestroyEffects(this, effectRenderer, false);
+	}
 
 	@Override
 	public boolean isBlockedOnSide(ForgeDirection side)
@@ -447,12 +451,11 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.testingSide = null;
 		return !expandable;
 	}
-	
+
 	@Override
 	public void onPartChanged(TMultiPart part)
 	{
 		refresh();
 	}
-    
 
 }
