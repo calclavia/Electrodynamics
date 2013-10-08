@@ -29,10 +29,11 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	/**
 	 * The amount of watts this machine uses.
 	 */
-	public static final int WATTAGE = 5;
+	public static final int WATTAGE = 6;
 	public static final int REQUIRED_TIME = 10 * 20;
-	private static final int INITIAL_PRODUCTION = 40;
+	private static final float INITIAL_PRODUCTION = 40 * Settings.FORTRON_PRODUCTION_MULTIPLIER;
 	public static final float MULTIPLE_PRODUCTION = 4;
+	/** Ration from Fortron to UE */
 	public static final float FORTRON_UE_RATIO = WATTAGE / (INITIAL_PRODUCTION * MULTIPLE_PRODUCTION);
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -76,7 +77,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 					if (Math.round(this.provideElectricity(WATTAGE, false).getWatts()) >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 					{
 						// Fill Fortron
-						int production = getProductionRate();
+						int production = (int) getProductionRate();
 
 						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
@@ -145,13 +146,13 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	/**
 	 * @return Rate is per tick!
 	 */
-	public int getProductionRate()
+	public float getProductionRate()
 	{
 		if (this.isActive())
 		{
 			if (!this.isInversed)
 			{
-				int production = INITIAL_PRODUCTION;
+				float production = INITIAL_PRODUCTION;
 
 				if (this.processTime > 0)
 				{
