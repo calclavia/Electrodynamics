@@ -3,6 +3,7 @@ package resonantinduction;
 import ic2.api.item.Items;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -62,6 +63,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * @author Calclavia
@@ -120,6 +122,7 @@ public class ResonantInduction
 	public static boolean SOUND_FXS = true;
 	public static boolean LO_FI_INSULATION = false;
 	public static boolean SHINY_SILVER = true;
+	public static boolean REPLACE_FURNACE = true;
 
 	/** Block ID by Jyzarc */
 	private static final int BLOCK_ID_PREFIX = 3200;
@@ -155,7 +158,6 @@ public class ResonantInduction
 	public static Block blockBattery;
 	/** Without Forge Multipart **/
 	private static Block blockWire;
-
 	public static Block blockAdvancedFurnaceIdle, blockAdvancedFurnaceBurning;
 
 	public static final Vector3[] DYE_COLORS = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 0.608, 0.232), new Vector3(0.588, 0.294, 0), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 1, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.412, 0.706), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
@@ -175,6 +177,7 @@ public class ResonantInduction
 		LO_FI_INSULATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use lo-fi insulation texture", LO_FI_INSULATION).getBoolean(LO_FI_INSULATION);
 		SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
+		REPLACE_FURNACE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Replace vanilla furnace", REPLACE_FURNACE).getBoolean(REPLACE_FURNACE);
 
 		TileEntityEMContractor.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEntityEMContractor.ACCELERATION).getDouble(TileEntityEMContractor.ACCELERATION);
 		TileEntityEMContractor.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEntityEMContractor.MAX_REACH).getInt(TileEntityEMContractor.MAX_REACH);
@@ -191,7 +194,7 @@ public class ResonantInduction
 		{
 			try
 			{
-				itemPartWire = (Item) Class.forName("resonantinduction.wire.multipart.ItemPartWire").getConstructor(Int.class).newInstance(getNextItemID());
+				itemPartWire = (Item) Class.forName("resonantinduction.wire.multipart.ItemPartWire").getConstructor(Integer.TYPE).newInstance(getNextItemID());
 			}
 			catch (Exception e)
 			{
@@ -210,8 +213,14 @@ public class ResonantInduction
 			blockWire = new BlockWire(getNextBlockID());
 		}
 
-		blockAdvancedFurnaceIdle = new BlockAdvancedFurnace(getNextBlockID(), false);
-		blockAdvancedFurnaceBurning = new BlockAdvancedFurnace(getNextBlockID(), true);
+		if (REPLACE_FURNACE)
+		{
+			blockAdvancedFurnaceIdle = BlockAdvancedFurnace.createNew(false);
+			blockAdvancedFurnaceBurning = BlockAdvancedFurnace.createNew(true);
+			GameRegistry.registerBlock(blockAdvancedFurnaceIdle, "ri_" + blockAdvancedFurnaceIdle.getUnlocalizedName());
+			GameRegistry.registerBlock(blockAdvancedFurnaceBurning, "ri_" + blockAdvancedFurnaceBurning.getUnlocalizedName() + "2");
+			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, blockAdvancedFurnaceIdle.getUnlocalizedName());
+		}
 
 		CONFIGURATION.save();
 

@@ -1,6 +1,9 @@
 package resonantinduction;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -10,9 +13,35 @@ import net.minecraft.world.World;
  */
 public class BlockAdvancedFurnace extends BlockFurnace
 {
-	protected BlockAdvancedFurnace(int par1, boolean par2)
+	protected BlockAdvancedFurnace(int id, boolean isBurning)
 	{
-		super(par1, par2);
+		super(id, isBurning);
+		this.setHardness(3.5F);
+		this.setStepSound(soundStoneFootstep);
+		this.setUnlocalizedName("furnace");
+
+		if (isBurning)
+		{
+			this.setLightValue(0.875F);
+		}
+		else
+		{
+			this.setCreativeTab(CreativeTabs.tabDecorations);
+		}
+	}
+
+	public static BlockAdvancedFurnace createNew(boolean isBurning)
+	{
+		int id = Block.furnaceIdle.blockID;
+
+		if (isBurning)
+		{
+			id = Block.furnaceBurning.blockID;
+		}
+
+		Block.blocksList[id] = null;
+		Item.itemsList[id] = null;
+		return new BlockAdvancedFurnace(id, isBurning);
 	}
 
 	@Override

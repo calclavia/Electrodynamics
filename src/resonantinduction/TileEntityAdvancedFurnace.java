@@ -14,6 +14,5 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace
 	public void updateEntity()
 	{
 		super.updateEntity();
-		System.out.println("WOR");
 	}
 }
