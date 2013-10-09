@@ -45,6 +45,13 @@ public class BlockAdvancedFurnace extends BlockFurnace
 	}
 
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int newID)
+	{
+		super.onNeighborBlockChange(world, x, y, z, newID);
+		((TileEntityAdvancedFurnace)world.getBlockTileEntity(x, y, z)).checkProduce();
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World par1World)
 	{
 		return new TileEntityAdvancedFurnace();
