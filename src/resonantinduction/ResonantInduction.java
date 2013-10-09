@@ -3,7 +3,6 @@ package resonantinduction;
 import ic2.api.item.Items;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -15,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -40,9 +38,7 @@ import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.BlockWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemBlockWire;
-import resonantinduction.wire.TileEntityTickWire;
 import resonantinduction.wire.TileEntityWire;
-import scala.collection.generic.BitOperations.Int;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
@@ -63,7 +59,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * @author Calclavia
@@ -248,7 +243,6 @@ public class ResonantInduction
 		if (blockWire != null)
 		{
 			GameRegistry.registerTileEntity(TileEntityWire.class, blockWire.getUnlocalizedName());
-			GameRegistry.registerTileEntity(TileEntityTickWire.class, blockWire.getUnlocalizedName() + "2");
 		}
 
 		ResonantInduction.proxy.registerRenderers();

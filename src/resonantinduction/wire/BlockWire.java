@@ -60,37 +60,6 @@ public class BlockWire extends BlockConductor
 			}
 		}
 
-		if (!world.isRemote)
-		{
-			if (entityPlayer.isSneaking())
-			{
-				/**
-				 * Change the TileEntity type.
-				 */
-				NBTTagCompound nbt = new NBTTagCompound();
-				tileEntity.writeToNBT(nbt);
-
-				if (tileEntity instanceof TileEntityTickWire)
-				{
-					nbt.setString("id", this.getUnlocalizedName());
-					entityPlayer.addChatMessage("Wire will now stop ticking and withdrawing energy.");
-				}
-				else
-				{
-					nbt.setString("id", this.getUnlocalizedName() + "2");
-					entityPlayer.addChatMessage("Wire will now tick and withdraw energy.");
-				}
-
-				world.setBlockTileEntity(x, y, z, TileEntity.createAndLoadEntity(nbt));
-				((IConductor) world.getBlockTileEntity(x, y, z)).refresh();
-				world.markBlockForUpdate(x, y, z);
-			}
-			else
-			{
-				entityPlayer.addChatMessage(tileEntity.getNetwork().toString());
-			}
-		}
-
 		return false;
 	}
 
