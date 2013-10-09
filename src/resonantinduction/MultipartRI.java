@@ -9,6 +9,12 @@ import codechicken.multipart.TMultiPart;
 
 public class MultipartRI implements IPartFactory
 {
+
+	public MultipartRI()
+	{
+		this.init();
+	}
+
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
