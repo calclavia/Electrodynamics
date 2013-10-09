@@ -15,6 +15,7 @@ public class BlockAdvancedFurnace extends BlockFurnace
 		super(par1, par2);
 	}
 
+	@Override
 	public TileEntity createNewTileEntity(World par1World)
 	{
 		return new TileEntityAdvancedFurnace();

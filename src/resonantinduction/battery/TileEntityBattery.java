@@ -123,7 +123,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				PacketDispatcher.sendPacketToPlayer(PacketHandler.getTileEntityPacket(this, this.getNetworkedData(new ArrayList()).toArray()), (Player) player);
 			}
-			
+
 			this.produce();
 		}
 	}

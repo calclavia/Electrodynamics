@@ -16,10 +16,10 @@ public class MultipartRI implements IPartFactory
 			return new PartWire(EnumWireMaterial.COPPER.ordinal());
 		return null;
 	}
-	
+
 	public void init()
 	{
-		MultiPartRegistry.registerParts(this, new String[]{"resonant_induction_wire"});
+		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_wire" });
 		MultipartGenerator.registerPassThroughInterface("universalelectricity.core.block.IConductor");
 		MultipartGenerator.registerPassThroughInterface("buildcraft.api.power.IPowerReceptor");
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.wire.IInsulatedMaterial");

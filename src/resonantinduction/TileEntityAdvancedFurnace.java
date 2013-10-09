@@ -10,9 +10,10 @@ import net.minecraft.tileentity.TileEntityFurnace;
  */
 public class TileEntityAdvancedFurnace extends TileEntityFurnace
 {
-    public void updateEntity()
-    {
-    	super.updateEntity();
-    	System.out.println("WOR");
-    }
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+		System.out.println("WOR");
+	}
 }

@@ -7,12 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.ResonantInduction;
-import resonantinduction.render.RenderPartWire;
-import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.IInsulatedMaterial;
-import resonantinduction.wire.IInsulation;
-import resonantinduction.wire.IWireMaterial;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.client.particle.EffectRenderer;
@@ -23,16 +17,16 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-
+import resonantinduction.ResonantInduction;
+import resonantinduction.render.RenderPartWire;
+import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IInsulatedMaterial;
+import resonantinduction.wire.IInsulation;
+import resonantinduction.wire.IWireMaterial;
 import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.INetworkProvider;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.PowerHandler;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -113,6 +107,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		return super.canConnect(direction);
 	}
 
+	@Override
 	public boolean connectionPrevented(TileEntity tile, ForgeDirection side)
 	{
 		if (tile instanceof IWireMaterial)
@@ -134,6 +129,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		return (this.isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection) tile).isBlockedOnSide(side.getOpposite()));
 	}
 
+	@Override
 	public byte getPossibleWireConnections()
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
@@ -143,6 +139,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		return super.getPossibleWireConnections();
 	}
 
+	@Override
 	public byte getPossibleAcceptorConnections()
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(this.x(), this.y(), this.z()))
@@ -164,6 +161,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		return getMaterial().maxAmps;
 	}
 
+	@Override
 	public EnumWireMaterial getMaterial()
 	{
 		return material;
@@ -314,7 +312,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	@Override
 	public ItemStack pickItem(MovingObjectPosition hit)
 	{
-		return new ItemStack(ResonantInduction.itemPartWire, 1, this.getTypeID());
+		return EnumWireMaterial.values()[this.getTypeID()].getWire();
 	}
 
 	@Override
@@ -345,8 +343,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 				return true;
 			}
 		}
-		if (!world().isRemote)
-			player.addChatMessage(getNetwork().toString());
 		return false;
 	}
 
@@ -395,7 +391,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = DEFAULT_COLOR;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart) this.tile()).notifyPartChange(this);
+		this.tile().notifyPartChange(this);
 	}
 
 	public void setInsulated(int dyeColour)
@@ -404,7 +400,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 		this.dyeID = dyeColour;
 		this.refresh();
 		this.world().markBlockForUpdate(this.x(), this.y(), this.z());
-		((TileMultipart) this.tile()).notifyPartChange(this);
+		this.tile().notifyPartChange(this);
 	}
 
 	public void setInsulated()

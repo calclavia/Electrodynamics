@@ -1,24 +1,21 @@
 package resonantinduction.wire.multipart;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergySink;
+import ic2.api.energy.tile.IEnergyTile;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.block.INetworkProvider;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergyEmitter;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergyTile;
+import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.electricity.ElectricityPack;
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
@@ -37,7 +34,7 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		this.powerHandler.configure(0, this.buildcraftBuffer, this.buildcraftBuffer, this.buildcraftBuffer * 2);
 		this.powerHandler.configurePowerPerdition(0, 0);
 	}
-	
+
 	@Override
 	public boolean isValidAcceptor(TileEntity tile)
 	{
@@ -48,13 +45,9 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		else if (Compatibility.isBuildcraftLoaded() && tile instanceof IPowerReceptor)
 		{
 			return true;
-		}		
+		}
 		return super.isValidAcceptor(tile);
 	}
-
-	/*
-	 * @Override public boolean canUpdate() { return !this.isAddedToEnergyNet; }
-	 */
 
 	@Override
 	public void onWorldJoin()
@@ -108,9 +101,11 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		this.unloadTileIC2();
 		super.onChunkUnload();
 	}
-	
+
 	@Override
-	public void onRemoved() {}
+	public void onRemoved()
+	{
+	}
 
 	@Override
 	public void preRemove()
@@ -197,7 +192,7 @@ public abstract class PartUniversalConductor extends PartConductor implements IE
 		ElectricityPack pack = ElectricityPack.getFromWatts(workProvider.useEnergy(0, this.getNetwork().getRequest(tile()).getWatts() * Compatibility.TO_BC_RATIO, true) * Compatibility.BC3_RATIO, 120);
 		this.getNetwork().produce(pack, ignoreTiles.toArray(new TileEntity[0]));
 	}
-	
+
 	@Override
 	public World getWorld()
 	{

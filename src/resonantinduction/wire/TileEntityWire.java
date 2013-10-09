@@ -40,7 +40,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		if (connectTile instanceof IWireMaterial)
 		{
 			IWireMaterial wireTile = (IWireMaterial) connectTile;
-			
+
 			if (wireTile.getMaterial() != this.getMaterial())
 			{
 				return false;
@@ -75,7 +75,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 
 					if (tileEntity != null)
 					{
-						if (/*tileEntity.getClass().isInstance(this) && */tileEntity instanceof INetworkProvider)
+						if (/* tileEntity.getClass().isInstance(this) && */tileEntity instanceof INetworkProvider)
 						{
 							this.getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
 						}
@@ -99,6 +99,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		return getMaterial().maxAmps;
 	}
 
+	@Override
 	public EnumWireMaterial getMaterial()
 	{
 		return EnumWireMaterial.values()[this.getTypeID()];
@@ -218,7 +219,7 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	{
 		if (insulated && !isInsulated())
 			setInsulated();
-		
+
 	}
 
 	@Override
@@ -230,6 +231,6 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	@Override
 	public void setInsulationColor(int dyeID)
 	{
-		setDye(dyeID);		
+		setDye(dyeID);
 	}
 }

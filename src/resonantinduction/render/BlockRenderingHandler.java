@@ -75,11 +75,11 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	{
 		if (block instanceof BlockBattery)
 		{
-//			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
-			
+			// FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
