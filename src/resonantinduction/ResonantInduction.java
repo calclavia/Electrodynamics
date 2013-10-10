@@ -295,7 +295,7 @@ public class ResonantInduction
 			{
 				Class.forName("resonantinduction.MultipartRI").newInstance();
 			}
-			catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
+			catch (Exception e)
 			{
 				e.printStackTrace();
 				LOGGER.severe("Failed to initiate Resonant Induction multipart module.");
