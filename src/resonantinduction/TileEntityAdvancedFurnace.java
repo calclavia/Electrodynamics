@@ -52,34 +52,50 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 		else
 		{
 			super.updateEntity();
+
 			if (this.doProduce)
 			{
 				if (this.getStackInSlot(0) == null)
 				{
-					/**
-					 * Steal power from furnace.
-					 */
-					boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
-					this.furnaceCookTime = 0;
+					boolean hasRequest = false;
 
-					if (this.furnaceBurnTime == 0)
+					for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 					{
-						int burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1));
-						this.decrStackSize(1, 1);
-						this.furnaceBurnTime = burnTime;
-					}
+						TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
 
-					if (this.furnaceBurnTime > 0)
-					{
-						for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+						if (tileEntity instanceof IConductor)
 						{
-							this.produceUE(direction);
+							if (((IConductor) tileEntity).getNetwork().getRequest(this).getWatts() > 0)
+							{
+								if (this.furnaceBurnTime > 0)
+								{
+									this.produceUE(direction);
+								}
+								
+								hasRequest = true;
+								break;
+							}
 						}
 					}
-
-					if (doBlockStateUpdate != this.furnaceBurnTime > 0)
+					
+					if (hasRequest)
 					{
-						BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+						/**
+						 * Steal power from furnace.
+						 */
+						boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
+
+						if (this.furnaceBurnTime == 0)
+						{
+							int burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1));
+							this.decrStackSize(1, 1);
+							this.furnaceBurnTime = burnTime;
+						}
+
+						if (doBlockStateUpdate != this.furnaceBurnTime > 0)
+						{
+							BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+						}
 					}
 				}
 			}
@@ -93,7 +109,9 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	{
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj) instanceof IConductor)
+			TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+
+			if (tileEntity instanceof IConductor)
 			{
 				this.doProduce = true;
 				return;
