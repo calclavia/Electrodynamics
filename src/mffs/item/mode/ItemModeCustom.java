@@ -1,4 +1,4 @@
-package mffs.item.module.projector;
+package mffs.item.mode;
 
 import java.io.File;
 import java.util.HashMap;
@@ -12,7 +12,6 @@ import mffs.api.ICache;
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
-import mffs.item.mode.ItemMode;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

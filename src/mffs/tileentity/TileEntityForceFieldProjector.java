@@ -279,6 +279,14 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 			copiedSet.addAll(this.calculatedField);
 			Iterator<Vector3> it = copiedSet.iterator();
 
+			for (IModule module : this.getModules(this.getModuleSlots()))
+			{
+				if (module.onDestroy(this, this.getCalculatedField()))
+				{
+					break;
+				}
+			}
+
 			while (it.hasNext())
 			{
 				Vector3 vector = it.next();

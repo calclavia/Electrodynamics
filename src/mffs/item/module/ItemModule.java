@@ -70,4 +70,10 @@ public class ItemModule extends ItemMFFS implements IModule
 	{
 		return this.fortronCost * amplifier;
 	}
+
+	@Override
+	public boolean onDestroy(IProjector projector, Set<Vector3> field)
+	{
+		return false;
+	}
 }

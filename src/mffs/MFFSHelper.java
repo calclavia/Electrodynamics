@@ -13,7 +13,7 @@ import mffs.api.modules.IModuleAcceptor;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FrequencyGrid;
-import mffs.item.module.projector.ItemModeCustom;
+import mffs.item.mode.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

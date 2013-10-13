@@ -8,6 +8,7 @@ import mffs.api.Blacklist;
 import mffs.api.EventStabilize;
 import mffs.api.IProjector;
 import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.item.mode.ItemModeCustom;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;

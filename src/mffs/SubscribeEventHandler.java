@@ -3,15 +3,17 @@ package mffs;
 import mffs.api.EventStabilize;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
+import mffs.item.module.projector.ItemModuleRepulsion;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.EntityEvent.CanUpdate;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
@@ -28,6 +30,7 @@ public class SubscribeEventHandler
 	{
 		FluidRegistry.getFluid("fortron").setIcons(ModularForceFieldSystem.itemFortron.getIconFromDamage(0));
 	}
+
 
 	/**
 	 * Special stabilization cases.

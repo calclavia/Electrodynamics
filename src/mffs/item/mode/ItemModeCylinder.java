@@ -1,11 +1,10 @@
-package mffs.item.module.projector;
+package mffs.item.mode;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
-import mffs.item.mode.ItemMode;
 import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
 

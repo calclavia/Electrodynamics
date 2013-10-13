@@ -23,6 +23,9 @@ import mffs.item.card.ItemCardInfinite;
 import mffs.item.card.ItemCardLink;
 import mffs.item.mode.ItemMode;
 import mffs.item.mode.ItemModeCube;
+import mffs.item.mode.ItemModeCustom;
+import mffs.item.mode.ItemModeCylinder;
+import mffs.item.mode.ItemModePyramid;
 import mffs.item.mode.ItemModeSphere;
 import mffs.item.mode.ItemModeTube;
 import mffs.item.module.ItemModule;
@@ -32,12 +35,10 @@ import mffs.item.module.interdiction.ItemModuleAntiPersonnel;
 import mffs.item.module.interdiction.ItemModuleConfiscate;
 import mffs.item.module.interdiction.ItemModuleInterdictionMatrix;
 import mffs.item.module.interdiction.ItemModuleWarn;
-import mffs.item.module.projector.ItemModeCustom;
-import mffs.item.module.projector.ItemModeCylinder;
-import mffs.item.module.projector.ItemModePyramid;
 import mffs.item.module.projector.ItemModuleDisintegration;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
+import mffs.item.module.projector.ItemModuleRepulsion;
 import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
 import mffs.item.module.projector.ItemModuleStablize;
@@ -164,7 +165,7 @@ public class ModularForceFieldSystem
 	// Projector Modules
 	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
 			itemModuleDisintegration, itemModuleShock, itemModuleGlow, itemModuleSponge,
-			itemModuleStablize;
+			itemModuleStablize, itemModuleRepulsion;
 
 	// Interdiction Matrix Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
@@ -268,6 +269,8 @@ public class ModularForceFieldSystem
 		itemFortron = new ItemMFFS(Settings.getNextItemID(), "fortron").setCreativeTab(null);
 		FluidRegistry.registerFluid(new Fluid("fortron"));
 		FortronHelper.FLUID_FORTRON = new FluidStack(FluidRegistry.getFluidID("fortron"), 0);
+
+		itemModuleRepulsion = new ItemModuleRepulsion(Settings.getNextItemID());
 
 		Settings.CONFIGURATION.save();
 
