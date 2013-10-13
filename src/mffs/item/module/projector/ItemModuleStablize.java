@@ -5,6 +5,7 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.api.Blacklist;
+import mffs.api.EventStabilize;
 import mffs.api.IProjector;
 import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.item.module.ItemModule;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
@@ -70,42 +72,52 @@ public class ItemModuleStablize extends ItemModule
 
 						if (checkStack != null)
 						{
-							if (checkStack.getItem() instanceof ItemBlock)
+							EventStabilize evt = new EventStabilize(((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), checkStack);
+							MinecraftForge.EVENT_BUS.post(evt);
+
+							if (!evt.isCanceled())
 							{
-								if (blockInfo == null || (blockInfo[0] == ((ItemBlock) checkStack.getItem()).getBlockID()))
+								if (checkStack.getItem() instanceof ItemBlock)
 								{
-									try
+									if (blockInfo == null || (blockInfo[0] == ((ItemBlock) checkStack.getItem()).getBlockID()))
 									{
-										if (((TileEntity) projector).worldObj.canPlaceEntityOnSide(((ItemBlock) checkStack.getItem()).getBlockID(), position.intX(), position.intY(), position.intZ(), false, 0, null, checkStack))
+										try
 										{
-											int metadata = blockInfo != null ? blockInfo[1] : (checkStack.getHasSubtypes() ? checkStack.getItemDamage() : 0);
-
-											Block block = blockInfo != null ? Block.blocksList[blockInfo[0]] : null;
-
-											if (Blacklist.stabilizationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof IFluidBlock)
+											if (((TileEntity) projector).worldObj.canPlaceEntityOnSide(((ItemBlock) checkStack.getItem()).getBlockID(), position.intX(), position.intY(), position.intZ(), false, 0, null, checkStack))
 											{
-												return 1;
-											}
+												int metadata = blockInfo != null ? blockInfo[1] : (checkStack.getHasSubtypes() ? checkStack.getItemDamage() : 0);
 
-											((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
-											inventory.decrStackSize(i, 1);
-											PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+												Block block = blockInfo != null ? Block.blocksList[blockInfo[0]] : null;
 
-											if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
-											{
-												return 2;
-											}
-											else
-											{
-												return 1;
+												if (Blacklist.stabilizationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof IFluidBlock)
+												{
+													return 1;
+												}
+
+												((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
+												inventory.decrStackSize(i, 1);
+												PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+
+												if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
+												{
+													return 2;
+												}
+												else
+												{
+													return 1;
+												}
 											}
 										}
-									}
-									catch (Exception e)
-									{
-										e.printStackTrace();
+										catch (Exception e)
+										{
+											e.printStackTrace();
+										}
 									}
 								}
+							}
+							else
+							{
+								return 1;
 							}
 						}
 					}

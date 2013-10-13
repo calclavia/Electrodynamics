@@ -1,7 +1,14 @@
 package mffs;
 
+import mffs.api.EventStabilize;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSkull;
+import net.minecraft.item.ItemSkull;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -20,6 +27,38 @@ public class SubscribeEventHandler
 	public void textureHook(TextureStitchEvent.Post event)
 	{
 		FluidRegistry.getFluid("fortron").setIcons(ModularForceFieldSystem.itemFortron.getIconFromDamage(0));
+	}
+
+	/**
+	 * Special stabilization cases.
+	 * 
+	 * @param evt
+	 */
+	@ForgeSubscribe
+	public void eventStabilize(EventStabilize evt)
+	{
+		if (evt.itemStack.getItem() instanceof ItemSkull)
+		{
+			evt.world.setBlock(evt.x, evt.y, evt.z, Block.skull.blockID, evt.itemStack.getItemDamage(), 2);
+
+			TileEntity tileentity = evt.world.getBlockTileEntity(evt.x, evt.y, evt.z);
+
+			if (tileentity instanceof TileEntitySkull)
+			{
+				String s = "";
+
+				if (evt.itemStack.hasTagCompound() && evt.itemStack.getTagCompound().hasKey("SkullOwner"))
+				{
+					s = evt.itemStack.getTagCompound().getString("SkullOwner");
+				}
+
+				((TileEntitySkull) tileentity).setSkullType(evt.itemStack.getItemDamage(), s);
+				((BlockSkull) Block.skull).makeWither(evt.world, evt.x, evt.y, evt.z, (TileEntitySkull) tileentity);
+			}
+
+			--evt.itemStack.stackSize;
+			evt.setCanceled(true);
+		}
 	}
 
 	@ForgeSubscribe
