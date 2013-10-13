@@ -95,6 +95,8 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 						if (doBlockStateUpdate != this.furnaceBurnTime > 0)
 						{
 							BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+							if (this.isInvalid())
+								this.refreshConductors();
 						}
 					}
 				}
@@ -119,6 +121,19 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 		}
 
 		this.doProduce = false;
+	}
+
+	public void refreshConductors()
+	{
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+
+			if (tileEntity instanceof IConductor)
+			{
+				((IConductor)tileEntity).refresh();
+			}
+		}
 	}
 
 	/**
