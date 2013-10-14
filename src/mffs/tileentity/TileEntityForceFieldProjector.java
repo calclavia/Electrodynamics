@@ -48,7 +48,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	public void initiate()
 	{
 		super.initiate();
-		this.calculateForceField();
+		this.calculateForceField(this);
 	}
 
 	@Override
@@ -126,7 +126,16 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@Override
 	public void onThreadComplete()
 	{
-		this.sendFieldToClient();
+		//TODO: Send packet on start-up?
+		if (this.clientSideSimulationRequired())
+		{
+			this.sendFieldToClient();
+		}
+	}
+
+	private boolean clientSideSimulationRequired()
+	{
+		return this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0;
 	}
 
 	@Override
@@ -195,7 +204,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@Override
 	public void projectField()
 	{
-		if ((!this.worldObj.isRemote || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0) && this.isCalculated && !this.isCalculating)
+		if (this.isCalculated && !this.isCalculating)
 		{
 			if (this.forceFields.size() <= 0)
 			{
@@ -265,8 +274,11 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 									}
 								}
 
-								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-
+								if (!this.worldObj.isRemote)
+								{
+									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
+								}
+								
 								// Sets the controlling projector of the force
 								// field block to
 								// this one.
@@ -286,13 +298,16 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 				}
 				else
 				{
-					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
-
-					if (block == ModularForceFieldSystem.blockForceField)
+					if (!this.worldObj.isRemote)
 					{
-						if (((BlockForceField) block).getProjector(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) == this)
+						Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+						if (block == ModularForceFieldSystem.blockForceField)
 						{
-							this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0);
+							if (((BlockForceField) block).getProjector(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) == this)
+							{
+								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0);
+							}
 						}
 					}
 				}

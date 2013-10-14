@@ -111,7 +111,14 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void renderHologram(World world, Vector3 position, float red, float green, float blue, int age, Vector3 targetPosition)
 	{
-		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age).setTarget(targetPosition));
+		if (targetPosition != null)
+		{
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age).setTarget(targetPosition));
+		}
+		else
+		{
+			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age));
+		}
 	}
 
 	@Override

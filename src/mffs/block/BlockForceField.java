@@ -116,7 +116,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		if (this.getProjector(world, x, y, z) != null)
 		{
-			IBiometricIdentifier BiometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier();
+			IBiometricIdentifier biometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier();
 
 			List<EntityPlayer> entities = world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 0.9, z + 1));
 
@@ -130,9 +130,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 						{
 							return null;
 						}
-						else if (BiometricIdentifier != null)
+						else if (biometricIdentifier != null)
 						{
-							if (BiometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+							if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
 							{
 								return null;
 							}

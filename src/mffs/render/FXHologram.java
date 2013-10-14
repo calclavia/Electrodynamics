@@ -27,6 +27,11 @@ public class FXHologram extends EntityFX
 		this.noClip = true;
 	}
 
+	/**
+	 * The target the hologram is going to translate to.
+	 * @param targetPosition
+	 * @return
+	 */
 	public FXHologram setTarget(Vector3 targetPosition)
 	{
 		this.targetPosition = targetPosition;
