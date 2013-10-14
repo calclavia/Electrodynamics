@@ -16,12 +16,16 @@ import mffs.card.ItemCard;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -55,23 +59,54 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		/**
 		 * Stablizer Module Construction FXs
 		 */
-		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		if (this.worldObj.isRemote)
 		{
-			int type = dataStream.readInt();
-			Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()).add(0.5);
-			Vector3 root = new Vector3(this).add(0.5);
+			if (packetID == TilePacketType.FXS.ordinal())
+			{
+				int type = dataStream.readInt();
+				Vector3 vector = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()).translate(0.5);
+				Vector3 root = new Vector3(this).translate(0.5);
 
-			if (type == 1)
-			{
-				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, 0.6f, 0.6f, 1, 40);
-				ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 1, 1, 50);
+				if (type == 1)
+				{
+					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, 0.6f, 0.6f, 1, 40);
+					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 1, 1, 50);
+				}
+				else if (type == 2)
+				{
+					ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, 1f, 0f, 0f, 40);
+					ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 0, 0, 50);
+				}
 			}
-			else if (type == 2)
+			else if (packetID == TilePacketType.FIELD.ordinal())
 			{
-				ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, 1f, 0f, 0f, 40);
-				ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 0, 0, 50);
+				this.getCalculatedField().clear();
+				NBTTagCompound nbt = PacketManager.readNBTTagCompound(dataStream);
+				NBTTagList nbtList = nbt.getTagList("blockList");
+
+				for (int i = 0; i < nbtList.tagCount(); i++)
+				{
+					NBTTagCompound tagAt = (NBTTagCompound) nbtList.tagAt(i);
+					this.getCalculatedField().add(new Vector3(tagAt));
+				}
+
+				this.isCalculated = true;
 			}
 		}
+	}
+
+	public void sendFieldToClient()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagList nbtList = new NBTTagList();
+
+		for (Vector3 vector : this.getCalculatedField())
+		{
+			nbtList.appendTag(vector.writeToNBT(new NBTTagCompound()));
+		}
+
+		nbt.setTag("blockList", nbtList);
+		PacketDispatcher.sendPacketToAllPlayers(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FIELD.ordinal(), nbt));
 	}
 
 	@Override
@@ -91,7 +126,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@Override
 	public void onThreadComplete()
 	{
-		this.destroyField();
+		this.sendFieldToClient();
 	}
 
 	@Override
@@ -103,26 +138,22 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		{
 			this.consumeCost();
 
-			if (!this.worldObj.isRemote)
+			if (this.ticks % 10 == 0 || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0)
 			{
-				if (this.ticks % 10 == 0)
+				if (!this.isCalculated)
 				{
-					if (!this.isCalculated)
-					{
-						this.calculateForceField();
-					}
-					else
-					{
-						this.projectField();
-					}
+					this.calculateForceField(this);
 				}
+				else
+				{
+					this.projectField();
+				}
+
 			}
-			else
+
+			if (this.isActive())
 			{
-				if (this.isActive())
-				{
-					this.animation += this.getFortronCost() / 3;
-				}
+				this.animation += this.getFortronCost() / 3;
 			}
 
 			if (this.ticks % (2 * 20) == 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
@@ -164,7 +195,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@Override
 	public void projectField()
 	{
-		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
+		if ((!this.worldObj.isRemote || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0) && this.isCalculated && !this.isCalculating)
 		{
 			if (this.forceFields.size() <= 0)
 			{

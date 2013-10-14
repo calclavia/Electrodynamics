@@ -69,8 +69,8 @@ public class ProjectorCalculationThread extends Thread
 						position.rotate(rotationYaw, rotationPitch);
 					}
 
-					position.add(new Vector3((TileEntity) this.projector));
-					position.add(translation);
+					position.translate(new Vector3((TileEntity) this.projector));
+					position.translate(translation);
 
 					if (position.intY() <= ((TileEntity) this.projector).worldObj.getHeight())
 					{
