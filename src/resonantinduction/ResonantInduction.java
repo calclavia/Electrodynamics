@@ -113,7 +113,7 @@ public class ResonantInduction
 	 * Settings
 	 */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), NAME + ".cfg"));
-	public static float FURNACE_WATTAGE = 2;
+	public static float FURNACE_WATTAGE = 10;
 	public static boolean SOUND_FXS = true;
 	public static boolean LO_FI_INSULATION = false;
 	public static boolean SHINY_SILVER = true;
