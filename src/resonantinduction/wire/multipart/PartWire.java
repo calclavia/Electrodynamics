@@ -54,7 +54,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public boolean isInsulated = false;
-	public static RenderPartWire renderer = new RenderPartWire();
+
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
@@ -251,7 +251,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public void renderStatic(codechicken.lib.vec.Vector3 pos, LazyLightMatrix olm, int pass)
 	{
 		if (pass == 0)
-			renderer.renderStatic(this);
+			RenderPartWire.INSTANCE.renderStatic(this);
 	}
 
 	@Override
@@ -259,7 +259,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
 		if (ResonantInduction.SHINY_SILVER && this.getMaterial() == EnumWireMaterial.SILVER)
-			renderer.renderShine(this, pos.x, pos.y, pos.z, frame);
+			RenderPartWire.INSTANCE.renderShine(this, pos.x, pos.y, pos.z, frame);
 	}
 
 	@Override

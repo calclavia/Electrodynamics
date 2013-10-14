@@ -46,6 +46,7 @@ public class RenderPartWire
 	public static FloatBuffer specular = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer zero = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer defaultAmbient = BufferUtils.createFloatBuffer(4);
+	public static final RenderPartWire INSTANCE = new RenderPartWire();
 
 	static
 	{
