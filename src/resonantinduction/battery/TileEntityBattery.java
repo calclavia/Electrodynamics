@@ -58,7 +58,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.ticks == 5 && !structure.isMultiblock)
+			if (this.ticks == 5 && !this.structure.isMultiblock)
 			{
 				this.update();
 			}
@@ -109,12 +109,12 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				updateClient();
 			}
 
-			prevStructure = structure;
+			this.prevStructure = structure;
 
-			structure.wroteInventory = false;
-			structure.didTick = false;
+			this.structure.wroteInventory = false;
+			this.structure.didTick = false;
 
-			if (playersUsing.size() > 0)
+			if (this.playersUsing.size() > 0)
 			{
 				updateClient();
 			}
