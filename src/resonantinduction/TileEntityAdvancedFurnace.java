@@ -71,13 +71,13 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 								{
 									this.produceUE(direction);
 								}
-								
+
 								hasRequest = true;
 								break;
 							}
 						}
 					}
-					
+
 					if (hasRequest)
 					{
 						/**
@@ -94,9 +94,8 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 
 						if (doBlockStateUpdate != this.furnaceBurnTime > 0)
 						{
-							BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-							if (this.isInvalid())
-								this.refreshConductors();
+							//BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+							this.refreshConductors();
 						}
 					}
 				}
@@ -131,7 +130,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 
 			if (tileEntity instanceof IConductor)
 			{
-				((IConductor)tileEntity).refresh();
+				((IConductor) tileEntity).refresh();
 			}
 		}
 	}

@@ -329,17 +329,20 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 			{
 				if (isInsulated() && !world().isRemote)
 				{
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
+					this.tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
 				}
-				setInsulated(BlockColored.getDyeFromBlock(item.getItemDamage()));
+				this.setInsulated(BlockColored.getDyeFromBlock(item.getItemDamage()));
 				player.inventory.decrStackSize(player.inventory.currentItem, 1);
 				return true;
 			}
 			else if ((item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears) && this.isInsulated())
 			{
-				if (!world().isRemote)
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
-				setInsulated(false);
+				if (!this.world().isRemote)
+				{
+					this.tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
+				}
+
+				this.setInsulated(false);
 				return true;
 			}
 		}
@@ -451,7 +454,7 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	@Override
 	public void onPartChanged(TMultiPart part)
 	{
-		refresh();
+		this.refresh();
 	}
 
 }

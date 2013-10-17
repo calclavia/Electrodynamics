@@ -167,14 +167,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 					}
 				}
 
-				currentWireConnections = possibleWireConnections;
+				this.currentWireConnections = possibleWireConnections;
 			}
 
-			currentAcceptorConnections = possibleAcceptorConnections;
+			this.currentAcceptorConnections = possibleAcceptorConnections;
+			
 			this.getNetwork().refresh();
 			this.sendDescUpdate();
 		}
-		tile().markRender();
+		
+		this.tile().markRender();
 	}
 
 	/**
@@ -222,20 +224,20 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	public void onAdded()
 	{
 		super.onAdded();
-		refresh();
+		this.refresh();
 	}
 
 	@Override
 	public void onChunkLoad()
 	{
 		super.onChunkLoad();
-		refresh();
+		this.refresh();
 	}
 
 	@Override
 	public void onNeighborChanged()
 	{
 		super.onNeighborChanged();
-		refresh();
+		this.refresh();
 	}
 }
