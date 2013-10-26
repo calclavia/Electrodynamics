@@ -217,7 +217,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	@Override
 	public float getRequest(ForgeDirection direction)
 	{
-		if (this.canSmelt() && this.getStackInSlot(1) == null)
+		if (this.canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0)
 		{
 			return ResonantInduction.FURNACE_WATTAGE / 20;
 		}

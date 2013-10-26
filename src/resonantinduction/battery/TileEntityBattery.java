@@ -49,8 +49,6 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 	private EnumSet inputSides = EnumSet.allOf(ForgeDirection.class);
 
-	private float transferThreshold = 50;
-
 	@Override
 	public void updateEntity()
 	{
@@ -83,7 +81,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
-				float batteryNeeded = battery.recharge(itemStack, provideElectricity(this.transferThreshold, false).getWatts(), false);
+				float batteryNeeded = battery.recharge(itemStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false);
 				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
 				battery.recharge(itemStack, provideElectricity(toGive, true).getWatts(), true);
 			}
@@ -95,7 +93,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 				float energyNeeded = getMaxEnergyStored() - getEnergyStored();
 				float batteryStored = battery.getElectricityStored(itemStack);
-				float toReceive = Math.min(energyNeeded, Math.min(this.transferThreshold, Math.min(battery.getTransfer(itemStack), batteryStored)));
+				float toReceive = Math.min(energyNeeded, Math.min(this.getTransferThreshhold(), Math.min(battery.getTransfer(itemStack), batteryStored)));
 				battery.discharge(itemStack, receiveElectricity(toReceive, true), true);
 			}
 
@@ -126,6 +124,11 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 			this.produce();
 		}
+	}
+	
+	public float getTransferThreshhold()
+	{
+		return this.structure.getVolume() * 50;		
 	}
 
 	public void updateClient()
@@ -598,7 +601,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	{
 		if (this.getInputDirections().contains(direction))
 		{
-			return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.transferThreshold);
+			return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.getTransferThreshhold());
 		}
 		return 0;
 	}
@@ -608,7 +611,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	{
 		if (this.getOutputDirections().contains(direction))
 		{
-			return Math.min(this.getEnergyStored(), this.transferThreshold);
+			return Math.min(this.getEnergyStored(), this.getTransferThreshhold());
 		}
 
 		return 0;
