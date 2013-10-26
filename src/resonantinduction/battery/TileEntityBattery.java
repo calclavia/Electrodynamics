@@ -10,11 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.PacketHandler;
 import resonantinduction.api.ICapacitor;
@@ -61,7 +64,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				this.update();
 			}
 
-			if (structure.visibleInventory[0] != null)
+			if (this.structure.visibleInventory[0] != null)
 			{
 				if (structure.inventory.size() < structure.getMaxCells())
 				{
@@ -75,9 +78,65 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 				}
 			}
 
-			if (structure.visibleInventory[1] != null)
+			/**
+			 * Attempt to charge entities above it.
+			 */
+			ItemStack chargeItem = null;
+
+			if (this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
 			{
-				ItemStack itemStack = structure.visibleInventory[1];
+				List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord + 1, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1));
+
+				electricItemLoop:
+				for (Entity entity : entities)
+				{
+					if (entity instanceof EntityPlayer)
+					{
+						IInventory inventory = ((EntityPlayer) entity).inventory;
+						for (int i = 0; i < inventory.getSizeInventory(); i++)
+						{
+							ItemStack checkStack = inventory.getStackInSlot(i);
+
+							if (checkStack != null)
+							{
+								if (checkStack.getItem() instanceof IItemElectric)
+								{
+									if (((IItemElectric) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+									{
+										chargeItem = checkStack;
+										break electricItemLoop;
+									}
+								}
+							}
+						}
+					}
+					else if (entity instanceof EntityItem)
+					{
+						ItemStack checkStack = ((EntityItem) entity).getEntityItem();
+
+						if (checkStack != null)
+						{
+							if (checkStack.getItem() instanceof IItemElectric)
+							{
+								if (((IItemElectric) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+								{
+									chargeItem = checkStack;
+									break electricItemLoop;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (chargeItem == null)
+			{
+				chargeItem = this.structure.visibleInventory[1];
+			}
+
+			if (chargeItem != null)
+			{
+				ItemStack itemStack = chargeItem;
 				IItemElectric battery = (IItemElectric) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
@@ -125,10 +184,10 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			this.produce();
 		}
 	}
-	
+
 	public float getTransferThreshhold()
 	{
-		return this.structure.getVolume() * 50;		
+		return this.structure.getVolume() * 50;
 	}
 
 	public void updateClient()
