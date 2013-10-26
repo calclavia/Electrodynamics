@@ -103,7 +103,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 							this.processTime = 0;
 						}
 
-						this.provideElectricity(ForgeDirection.UNKNOWN, ElectricityPack.getFromWatts(WATTAGE, this.getVoltage()), true);
+						this.provideElectricity(WATTAGE, true);
 					}
 
 				}
@@ -135,7 +135,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	@Override
 	public float getProvide(ForgeDirection direction)
 	{
-		if (this.isInversed)
+		if (this.isInversed && this.isActive())
 		{
 			return Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
 		}

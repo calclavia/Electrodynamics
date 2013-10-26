@@ -183,7 +183,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	/**
 	 * The electrical output direction.
 	 * 
-	 * @return The direction that electricity is output from the tile. Return null for no output. By
+	 * @return The direction that electricity will output from the tile. Return null for no output. By
 	 * default it will return an empty EnumSet.
 	 */
 	public EnumSet<ForgeDirection> getOutputDirections()
@@ -197,7 +197,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	@Override
 	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction)
 	{
-		return this.canConnect(direction);
+		return this.getInputDirections().contains(direction);
 	}
 
 	@Override
@@ -253,7 +253,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	@Override
 	public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction)
 	{
-		return receiver instanceof IEnergyTile && direction.equals(this.getOutputDirections());
+		return receiver instanceof IEnergyTile && this.getOutputDirections().contains(direction);
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	@Override
 	public void drawEnergy(double amount)
 	{
-		this.provideElectricity((float) amount * Compatibility.IC2_RATIO, true);
+		this.provideElectricity((float) amount * Compatibility.TO_IC2_RATIO, true);
 	}
 
 	@Override
