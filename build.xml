@@ -85,6 +85,8 @@
 		</zip>
 		
 		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
+		<copy todir="output" file="build.properties" />
+
 		<jar destfile="${file.mffs}">
 			<fileset dir="ModContents" />
 		</jar>
