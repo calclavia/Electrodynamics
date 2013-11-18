@@ -8,6 +8,7 @@ import ic2.api.energy.tile.IEnergyTile;
 
 import java.util.EnumSet;
 
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +38,7 @@ import buildcraft.api.power.PowerHandler.Type;
  * @author micdoodle8, Calclavia
  * 
  */
-public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor implements IElectrical, IElectricalStorage, IEnergySink, IEnergySource, IPowerReceptor
+public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor implements IElectrical, IElectricalStorage, IEnergySink, IEnergySource, IPowerReceptor, IEnergyHandler
 {
 	protected boolean isAddedToEnergyNet;
 	public PowerHandler bcPowerHandler;
@@ -183,8 +184,8 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	/**
 	 * The electrical output direction.
 	 * 
-	 * @return The direction that electricity will output from the tile. Return null for no output. By
-	 * default it will return an empty EnumSet.
+	 * @return The direction that electricity will output from the tile. Return null for no output.
+	 * By default it will return an empty EnumSet.
 	 */
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
@@ -422,5 +423,39 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	public World getWorld()
 	{
 		return this.getWorldObj();
+	}
+
+	/**
+	 * TE Methods
+	 */
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+	{
+		return (int) (this.receiveElectricity(from, ElectricityPack.getFromWatts(maxReceive * Compatibility.TE_RATIO, this.getVoltage()), !simulate) * Compatibility.TO_TE_RATIO);
+	}
+
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
+	{
+		return (int) (this.provideElectricity(from, ElectricityPack.getFromWatts(maxExtract * Compatibility.TE_RATIO, this.getVoltage()), !simulate).getWatts() * Compatibility.TO_TE_RATIO);
+	}
+
+	public boolean canInterface(ForgeDirection from)
+	{
+		return this.canConnect(from);
+	}
+
+	/**
+	 * Returns the amount of energy currently stored.
+	 */
+	public int getEnergyStored(ForgeDirection from)
+	{
+		return (int) (this.getEnergyStored() * Compatibility.TO_TE_RATIO);
+	}
+
+	/**
+	 * Returns the maximum amount of energy that can be stored.
+	 */
+	public int getMaxEnergyStored(ForgeDirection from)
+	{
+		return (int) (this.getMaxEnergyStored() * Compatibility.TO_TE_RATIO);
 	}
 }
