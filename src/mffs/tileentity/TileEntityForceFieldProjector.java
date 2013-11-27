@@ -36,6 +36,9 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	 */
 	protected final Set<Vector3> forceFields = new HashSet<Vector3>();
 
+	/** True if the field is done constructing and the projector is simply maintaining the field **/
+	private boolean isCompleteConstructing = false;
+
 	public TileEntityForceFieldProjector()
 	{
 		this.capacityBase = 50;
@@ -119,6 +122,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		}
 
 		super.calculateForceField(callBack);
+		this.isCompleteConstructing = false;
 	}
 
 	@Override
@@ -158,9 +162,9 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 			}
 
-			if (this.isActive())
+			if (this.isActive() && this.worldObj.isRemote)
 			{
-				this.animation += this.getFortronCost() / 3;
+				this.animation += this.getFortronCost() / 10;
 			}
 
 			if (this.ticks % (2 * 20) == 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
@@ -204,87 +208,99 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	{
 		if (this.isCalculated && !this.isCalculating)
 		{
-			if (this.forceFields.size() <= 0)
+			if (!this.isCompleteConstructing || this.ticks % 60 == 0)
 			{
-				if (this.getModeStack().getItem() instanceof ICache)
+				if (this.forceFields.size() <= 0)
 				{
-					((ICache) this.getModeStack().getItem()).clearCache();
-				}
-			}
-
-			int constructionCount = 0;
-			int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
-
-			HashSet<Vector3> fieldToBeProjected = new HashSet<Vector3>();
-			fieldToBeProjected.addAll(this.calculatedField);
-
-			for (IModule module : this.getModules(this.getModuleSlots()))
-			{
-				if (module.onProject(this, fieldToBeProjected))
-				{
-					return;
-				}
-			}
-
-			Iterator<Vector3> it = fieldToBeProjected.iterator();
-
-			fieldLoop:
-			while (it.hasNext())
-			{
-				Vector3 vector = it.next();
-
-				Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
-
-				if (block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ()))
-				{
-					/**
-					 * Prevents the force field projector from disintegrating itself.
-					 */
-					if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
+					if (this.getModeStack().getItem() instanceof ICache)
 					{
-						if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
+						((ICache) this.getModeStack().getItem()).clearCache();
+					}
+				}
+
+				int constructionCount = 0;
+				int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
+
+				HashSet<Vector3> fieldToBeProjected = new HashSet<Vector3>();
+				fieldToBeProjected.addAll(this.calculatedField);
+
+				for (IModule module : this.getModules(this.getModuleSlots()))
+				{
+					if (module.onProject(this, fieldToBeProjected))
+					{
+						return;
+					}
+				}
+
+				Iterator<Vector3> it = fieldToBeProjected.iterator();
+
+				fieldLoop:
+				while (it.hasNext())
+				{
+					Vector3 vector = it.next();
+
+					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+					if (this.canReplaceBlock(vector, block))
+					{
+						/**
+						 * Prevents the force field projector from disintegrating itself.
+						 */
+						if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
 						{
-							for (IModule module : this.getModules(this.getModuleSlots()))
+							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
-								int flag = module.onProject(this, vector.clone());
-
-								if (flag == 1)
+								for (IModule module : this.getModules(this.getModuleSlots()))
 								{
-									continue fieldLoop;
+									int flag = module.onProject(this, vector.clone());
+
+									if (flag == 1)
+									{
+										continue fieldLoop;
+									}
+									else if (flag == 2)
+									{
+										break fieldLoop;
+									}
 								}
-								else if (flag == 2)
+
+								if (!this.worldObj.isRemote)
 								{
-									break fieldLoop;
+									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 								}
-							}
 
-							if (!this.worldObj.isRemote)
-							{
-								this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-							}
+								// Sets the controlling projector of the force field block to this
+								// one.
+								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
-							// Sets the controlling projector of the force field block to this
-							// one.
-							TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
+								if (tileEntity instanceof TileEntityForceField)
+								{
+									((TileEntityForceField) tileEntity).setProjector(new Vector3(this));
+								}
 
-							if (tileEntity instanceof TileEntityForceField)
-							{
-								((TileEntityForceField) tileEntity).setProjector(new Vector3(this));
-							}
+								this.requestFortron(1, true);
+								this.forceFields.add(vector);
 
-							this.requestFortron(1, true);
-							this.forceFields.add(vector);
-
-							if (constructionCount++ > constructionSpeed)
-							{
-								break;
+								if (constructionCount++ > constructionSpeed)
+								{
+									break;
+								}
 							}
 						}
 					}
 				}
-			}
 
+				/**
+				 * Change the field to tick every second when construction completes.
+				 */
+				this.isCompleteConstructing = constructionCount == 0;
+			}
 		}
+	}
+
+	private boolean canReplaceBlock(Vector3 vector, Block block)
+	{
+		return block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ());
 	}
 
 	@Override
@@ -319,6 +335,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		this.forceFields.clear();
 		this.calculatedField.clear();
 		this.isCalculated = false;
+		this.isCompleteConstructing = false;
 	}
 
 	@Override
