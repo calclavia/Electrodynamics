@@ -1,4 +1,4 @@
-package mffs.fortron;
+package mffs.api.fortron;
 
 import icbm.api.IBlockFrequency;
 
@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import mffs.api.fortron.IFortronFrequency;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;

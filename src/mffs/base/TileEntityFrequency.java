@@ -8,8 +8,8 @@ import java.util.Set;
 
 import mffs.api.IBiometricIdentifierLink;
 import mffs.api.card.ICoordLink;
+import mffs.api.fortron.FrequencyGrid;
 import mffs.api.security.IBiometricIdentifier;
-import mffs.fortron.FrequencyGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;

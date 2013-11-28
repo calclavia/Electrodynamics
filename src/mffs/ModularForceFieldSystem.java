@@ -3,6 +3,7 @@ package mffs;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import mffs.api.fortron.FrequencyGrid;
 import mffs.base.BlockBase;
 import mffs.base.BlockMFFS;
 import mffs.base.ItemMFFS;
@@ -15,7 +16,6 @@ import mffs.block.BlockFortronCapacitor;
 import mffs.block.BlockInterdictionMatrix;
 import mffs.card.ItemCard;
 import mffs.fortron.FortronHelper;
-import mffs.fortron.FrequencyGrid;
 import mffs.item.ItemRemoteController;
 import mffs.item.card.ItemCardFrequency;
 import mffs.item.card.ItemCardID;
