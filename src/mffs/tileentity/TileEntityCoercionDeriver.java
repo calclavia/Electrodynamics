@@ -18,7 +18,7 @@ import universalelectricity.core.item.IItemElectric;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
- * A TileEntity that extract forcillium into fortrons.
+ * A TileEntity that extract energy into Fortron.
  * 
  * @author Calclavia
  * 
@@ -26,14 +26,13 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 {
 	/**
-	 * The amount of watts this machine uses.
+	 * The amount of KiloWatts this machine uses.
 	 */
-	public static final int WATTAGE = 6;
+	public static final int WATTAGE = 20;
 	public static final int REQUIRED_TIME = 10 * 20;
-	private static final float INITIAL_PRODUCTION = 40 * Settings.FORTRON_PRODUCTION_MULTIPLIER;
 	public static final float MULTIPLE_PRODUCTION = 4;
-	/** Ration from Fortron to UE */
-	public static final float FORTRON_UE_RATIO = WATTAGE / (INITIAL_PRODUCTION * MULTIPLE_PRODUCTION);
+	/** Ration from UE to Fortron. Multiply KJ by this value to convert to Fortron. */
+	public static final float FORTRON_UE_RATIO = 0.5f;
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
@@ -44,7 +43,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 
 	public TileEntityCoercionDeriver()
 	{
-		super(WATTAGE * 2);
+		super();
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
 	}
@@ -60,51 +59,55 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 			{
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
-					float withdrawnElectricity = this.requestFortron((int) (WATTAGE / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO;
-					// Inject electricity from Fortron.
-					this.receiveElectricity(withdrawnElectricity, true);
+					if (this.getEnergyStored() < this.getMaxEnergyStored())
+					{
+						float withdrawnElectricity = this.requestFortron((int) ((this.getMaxEnergyStored() - this.getEnergyStored()) / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO;
+						// Inject electricity from Fortron.
+						this.receiveElectricity(withdrawnElectricity * 0.1f, true);
+					}
+					
 					this.recharge(this.getStackInSlot(SLOT_BATTERY));
 					this.produce();
-					// Revert electricity back into Fortron.
-					this.provideFortron((int) (this.provideElectricity(this.getMaxEnergyStored(), true).getWatts() / FORTRON_UE_RATIO), true);
 				}
 				else
 				{
-					// Convert Electricity to Fortron
-					this.discharge(this.getStackInSlot(SLOT_BATTERY));
-
-					if (Math.round(this.provideElectricity(WATTAGE, false).getWatts()) >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+					if (this.fortronTank.getFluidAmount() < this.fortronTank.getCapacity())
 					{
-						// Fill Fortron
-						int production = (int) getProductionRate();
+						// Convert Electricity to Fortron
+						this.discharge(this.getStackInSlot(SLOT_BATTERY));
 
-						this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
-
-						// Use fuel
-						if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
+						if (this.provideElectricity(WATTAGE, false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
-							this.decrStackSize(SLOT_FUEL, 1);
-							this.processTime = REQUIRED_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 20, 1);
-						}
+							// Fill Fortron
+							int production = getProductionRate();
 
-						if (this.processTime > 0)
-						{
-							// We are processing.
-							this.processTime--;
+							this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
 
-							if (this.processTime < 1)
+							// Use fuel
+							if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
+							{
+								this.decrStackSize(SLOT_FUEL, 1);
+								this.processTime = REQUIRED_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 20, 1);
+							}
+
+							if (this.processTime > 0)
+							{
+								// We are processing.
+								this.processTime--;
+
+								if (this.processTime < 1)
+								{
+									this.processTime = 0;
+								}
+							}
+							else
 							{
 								this.processTime = 0;
 							}
-						}
-						else
-						{
-							this.processTime = 0;
-						}
 
-						this.provideElectricity(WATTAGE, true);
+							this.provideElectricity(WATTAGE, true);
+						}
 					}
-
 				}
 			}
 		}
@@ -145,13 +148,13 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	/**
 	 * @return Rate is per tick!
 	 */
-	public float getProductionRate()
+	public int getProductionRate()
 	{
 		if (this.isActive())
 		{
 			if (!this.isInversed)
 			{
-				float production = INITIAL_PRODUCTION;
+				int production = (int) (WATTAGE * FORTRON_UE_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
 
 				if (this.processTime > 0)
 				{
@@ -236,6 +239,12 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
+	}
+
+	@Override
+	public float getMaxEnergyStored()
+	{
+		return WATTAGE * 2;
 	}
 
 }

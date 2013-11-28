@@ -61,10 +61,8 @@ public class GuiCoercionDeriver extends GuiMFFS
 			}
 		}
 
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatibility.TO_BC_RATIO + " MJ/s", 85, 30, 4210752);
-		this.fontRenderer.drawString(TileEntityCoercionDeriver.WATTAGE * Compatibility.TO_IC2_RATIO + " EU/s", 85, 40, 4210752);
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(TileEntityCoercionDeriver.WATTAGE, ElectricUnit.WATT), 85, 50, 4210752);
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 60, 4210752);
+		this.renderUniversalDisplay(85, 40, TileEntityCoercionDeriver.WATTAGE, x, y);
+		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 50, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES), 8, 105, x, y);
