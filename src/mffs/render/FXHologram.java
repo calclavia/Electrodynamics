@@ -29,6 +29,7 @@ public class FXHologram extends EntityFX
 
 	/**
 	 * The target the hologram is going to translate to.
+	 * 
 	 * @param targetPosition
 	 * @return
 	 */

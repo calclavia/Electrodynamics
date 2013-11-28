@@ -1,36 +1,52 @@
 package mffs;
 
+import java.util.HashMap;
+
 import mffs.api.EventStabilize;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import mffs.item.module.projector.ItemModuleRepulsion;
+import mffs.fortron.FortronHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
-import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.entity.EntityEvent.CanUpdate;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.fluids.FluidRegistry;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class SubscribeEventHandler
 {
+	public static final HashMap<String, Icon> fluidIconMap = new HashMap<String, Icon>();
+
+	public void registerIcon(String name, TextureStitchEvent.Pre event)
+	{
+		fluidIconMap.put(name, event.map.registerIcon(name));
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void preTextureHook(TextureStitchEvent.Pre event)
+	{
+		if (event.map.textureType == 0)
+		{
+			registerIcon(ModularForceFieldSystem.PREFIX + "fortron", event);
+		}
+	}
+
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Post event)
 	{
-		FluidRegistry.getFluid("fortron").setIcons(ModularForceFieldSystem.itemFortron.getIconFromDamage(0));
+		FortronHelper.FLUID_FORTRON.setIcons(fluidIconMap.get(ModularForceFieldSystem.PREFIX + "fortron"));
 	}
-
 
 	/**
 	 * Special stabilization cases.

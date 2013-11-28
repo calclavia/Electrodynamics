@@ -67,23 +67,17 @@ public class ItemModuleRepulsion extends ItemModule
 				entity.posX = entity.lastTickPosX;
 				entity.posY = entity.lastTickPosY;
 				entity.posZ = entity.lastTickPosZ;
-			/*
-				if (differenceFromCenter.getMagnitude() > 0.49)
-				{
-					entity.motionX *= -repulsionVelocity;
-					entity.motionY *= -repulsionVelocity;
-					entity.motionZ *= -repulsionVelocity;
-				}
-				else
-				{
-					System.out.println("TEST");
-					entity.motionX = differenceFromCenter.x;
-					entity.motionY = differenceFromCenter.y;
-					entity.motionZ = differenceFromCenter.z;
-				}
-				entity.moveEntity(entity.motionX, entity.motionY, entity.motionZ);*/
+				/*
+				 * if (differenceFromCenter.getMagnitude() > 0.49) { entity.motionX *=
+				 * -repulsionVelocity; entity.motionY *= -repulsionVelocity; entity.motionZ *=
+				 * -repulsionVelocity; } else { System.out.println("TEST"); entity.motionX =
+				 * differenceFromCenter.x; entity.motionY = differenceFromCenter.y; entity.motionZ =
+				 * differenceFromCenter.z; } entity.moveEntity(entity.motionX, entity.motionY,
+				 * entity.motionZ);
+				 */
 
-				//entity.moveEntity( differenceFromCenter.x, differenceFromCenter.y, differenceFromCenter.z);
+				// entity.moveEntity( differenceFromCenter.x, differenceFromCenter.y,
+				// differenceFromCenter.z);
 				entity.motionX = 0;
 				entity.motionY = 0;
 				entity.motionZ = 0;

@@ -8,7 +8,6 @@ import ic2.api.energy.tile.IEnergyTile;
 
 import java.util.EnumSet;
 
-import cofh.api.energy.IEnergyHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,6 +27,7 @@ import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
+import cofh.api.energy.IEnergyHandler;
 
 /**
  * A universal electricity tile used for tiles that consume or produce electricity.
@@ -428,16 +428,19 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	/**
 	 * TE Methods
 	 */
+	@Override
 	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
 	{
 		return (int) (this.receiveElectricity(from, ElectricityPack.getFromWatts(maxReceive * Compatibility.TE_RATIO, this.getVoltage()), !simulate) * Compatibility.TO_TE_RATIO);
 	}
 
+	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
 	{
 		return (int) (this.provideElectricity(from, ElectricityPack.getFromWatts(maxExtract * Compatibility.TE_RATIO, this.getVoltage()), !simulate).getWatts() * Compatibility.TO_TE_RATIO);
 	}
 
+	@Override
 	public boolean canInterface(ForgeDirection from)
 	{
 		return this.canConnect(from);
@@ -446,6 +449,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	/**
 	 * Returns the amount of energy currently stored.
 	 */
+	@Override
 	public int getEnergyStored(ForgeDirection from)
 	{
 		return (int) (this.getEnergyStored() * Compatibility.TO_TE_RATIO);
@@ -454,6 +458,7 @@ public abstract class TileEntityMFFSUniversal extends TileEntityModuleAcceptor i
 	/**
 	 * Returns the maximum amount of energy that can be stored.
 	 */
+	@Override
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return (int) (this.getMaxEnergyStored() * Compatibility.TO_TE_RATIO);

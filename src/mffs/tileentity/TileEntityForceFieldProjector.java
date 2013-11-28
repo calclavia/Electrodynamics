@@ -11,7 +11,6 @@ import mffs.api.ICache;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
-import mffs.block.BlockForceField;
 import mffs.card.ItemCard;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
