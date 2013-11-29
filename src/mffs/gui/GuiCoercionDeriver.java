@@ -67,7 +67,7 @@ public class GuiCoercionDeriver extends GuiMFFS
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES), 8, 105, x, y);
 
-		this.fontRenderer.drawString("\u00a72+" + ElectricityDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, ElectricUnit.JOULES), 120, 117, 4210752);
+		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + ElectricityDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, ElectricUnit.JOULES), 120, 117, 4210752);
 
 		super.drawGuiContainerForegroundLayer(x, y);
 	}

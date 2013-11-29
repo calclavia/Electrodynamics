@@ -32,7 +32,8 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public static final int REQUIRED_TIME = 10 * 20;
 	public static final float MULTIPLE_PRODUCTION = 4;
 	/** Ration from UE to Fortron. Multiply KJ by this value to convert to Fortron. */
-	public static final float FORTRON_UE_RATIO = 0.5f;
+	public static final float UE_FORTRON_RATIO = 1;
+	public static final float ENERGY_LOSS = 1f;
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
@@ -61,11 +62,11 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 				{
 					if (this.getEnergyStored() < this.getMaxEnergyStored())
 					{
-						float withdrawnElectricity = this.requestFortron((int) ((this.getMaxEnergyStored() - this.getEnergyStored()) / FORTRON_UE_RATIO), true) * FORTRON_UE_RATIO;
+						float withdrawnElectricity = this.requestFortron(this.getProductionRate(), true) / UE_FORTRON_RATIO;
 						// Inject electricity from Fortron.
-						this.receiveElectricity(withdrawnElectricity * 0.1f, true);
+						this.receiveElectricity(withdrawnElectricity * ENERGY_LOSS, true);
 					}
-					
+
 					this.recharge(this.getStackInSlot(SLOT_BATTERY));
 					this.produce();
 				}
@@ -79,9 +80,8 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 						if (this.provideElectricity(WATTAGE, false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
 							// Fill Fortron
-							int production = getProductionRate();
-
-							this.fortronTank.fill(FortronHelper.getFortron(production + this.worldObj.rand.nextInt(production)), true);
+							this.fortronTank.fill(FortronHelper.getFortron(this.getProductionRate()), true);
+							this.provideElectricity(WATTAGE, true);
 
 							// Use fuel
 							if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
@@ -104,8 +104,6 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 							{
 								this.processTime = 0;
 							}
-
-							this.provideElectricity(WATTAGE, true);
 						}
 					}
 				}
@@ -139,30 +137,27 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	{
 		if (this.isInversed && this.isActive())
 		{
-			return Math.min(this.getFortronEnergy() * FORTRON_UE_RATIO, WATTAGE);
+			return this.getEnergyStored();
 		}
 
 		return 0;
 	}
 
 	/**
-	 * @return Rate is per tick!
+	 * @return The Fortron production rate per tick!
 	 */
 	public int getProductionRate()
 	{
 		if (this.isActive())
 		{
-			if (!this.isInversed)
+			int production = (int) (WATTAGE * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
+
+			if (this.processTime > 0)
 			{
-				int production = (int) (WATTAGE * FORTRON_UE_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
-
-				if (this.processTime > 0)
-				{
-					production *= MULTIPLE_PRODUCTION;
-				}
-
-				return production;
+				production *= MULTIPLE_PRODUCTION;
 			}
+
+			return production;
 		}
 
 		return 0;
