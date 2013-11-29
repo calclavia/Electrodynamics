@@ -37,6 +37,8 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 	/** True if the field is done constructing and the projector is simply maintaining the field **/
 	private boolean isCompleteConstructing = false;
+	
+	public boolean markFieldUpdate = false;
 
 	public TileEntityForceFieldProjector()
 	{
@@ -207,8 +209,10 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	{
 		if (this.isCalculated && !this.isCalculating)
 		{
-			if (!this.isCompleteConstructing || this.ticks % 60 == 0)
+			if (!this.isCompleteConstructing || this.ticks % 60 == 0 || this.markFieldUpdate)
 			{
+				this.markFieldUpdate = false;
+				
 				if (this.forceFields.size() <= 0)
 				{
 					if (this.getModeStack().getItem() instanceof ICache)

@@ -33,7 +33,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public static final float MULTIPLE_PRODUCTION = 4;
 	/** Ration from UE to Fortron. Multiply KJ by this value to convert to Fortron. */
 	public static final float UE_FORTRON_RATIO = 1;
-	public static final float ENERGY_LOSS = 1f;
+	public static final float ENERGY_LOSS = 0.008f;
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
