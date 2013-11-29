@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 import mffs.api.IProjector;
+import mffs.api.fortron.FrequencyGrid;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.modules.IModuleAcceptor;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import mffs.fortron.FrequencyGrid;
 import mffs.item.mode.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

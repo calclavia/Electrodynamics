@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import mffs.api.IProjector;
+import mffs.api.fortron.FrequencyGrid;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.base.TileEntityMFFS;
-import mffs.fortron.FrequencyGrid;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.vector.Vector3;
