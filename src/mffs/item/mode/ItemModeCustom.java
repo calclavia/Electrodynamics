@@ -12,6 +12,7 @@ import mffs.api.ICache;
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
+import mffs.item.module.projector.ItemModuleArray;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 import calclavia.lib.NBTFileLoader;
 import cpw.mods.fml.relauncher.Side;
@@ -100,7 +102,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 					if (nbt.hasKey(NBT_POINT_1) && nbt.hasKey(NBT_POINT_2) && !point1.equals(point2))
 					{
-						if (point1.distanceTo(point2) < Settings.MAX_FORCE_FIELD_SCALE)
+						if (point1.distance(point2) < Settings.MAX_FORCE_FIELD_SCALE)
 						{
 							// Clear NBT Data
 							nbt.removeTag(NBT_POINT_1);
@@ -212,7 +214,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 			if (nbt != null)
 			{
-				Vector3 point1 = Vector3.readFromNBT(nbt.getCompoundTag(NBT_POINT_1));
+				Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
 
 				if (!nbt.hasKey(NBT_POINT_1) || point1.equals(new Vector3(0, 0, 0)))
 				{
@@ -279,7 +281,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 	public Set<Vector3> getFieldBlocks(IFieldInteraction projector, ItemStack itemStack)
 	{
-		return this.getFieldBlockMap(projector, itemStack).keySet();
+		return this.getFieldBlockMapClean(projector, itemStack).keySet();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -298,6 +300,43 @@ public class ItemModeCustom extends ItemMode implements ICache
 			}
 		}
 
+		final HashMap<Vector3, int[]> fieldMap = this.getFieldBlockMapClean(projector, itemStack);
+
+		/**
+		 * Array out the field map.
+		 */
+		if (projector.getModuleCount(ModularForceFieldSystem.itemModuleArray) > 0)
+		{
+			HashMap<ForgeDirection, Integer> longestDirectional = ((ItemModuleArray) ModularForceFieldSystem.itemModuleArray).getDirectionWidthMap(fieldMap.keySet());
+
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			{
+				int copyAmount = projector.getSidedModuleCount(ModularForceFieldSystem.itemModuleArray, direction);
+				int directionalDisplacement = (Math.abs(longestDirectional.get(direction)) + Math.abs(longestDirectional.get(direction.getOpposite()))) + 1;
+
+				for (int i = 0; i < copyAmount; i++)
+				{
+					int directionalDisplacementScale = directionalDisplacement * (i + 1);
+
+					for (Vector3 originalFieldBlock : this.getFieldBlocks(projector, itemStack))
+					{
+						Vector3 newFieldBlock = originalFieldBlock.clone().translate(new Vector3(direction).scale(directionalDisplacementScale));
+						fieldMap.put(newFieldBlock, fieldMap.get(originalFieldBlock));
+					}
+				}
+			}
+		}
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, fieldMap);
+		}
+
+		return fieldMap;
+	}
+
+	public HashMap<Vector3, int[]> getFieldBlockMapClean(IFieldInteraction projector, ItemStack itemStack)
+	{
 		float scale = (float) projector.getModuleCount(ModularForceFieldSystem.itemModuleScale) / 3;
 
 		final HashMap<Vector3, int[]> fieldBlocks = new HashMap<Vector3, int[]>();
@@ -327,11 +366,6 @@ public class ItemModeCustom extends ItemMode implements ICache
 						fieldBlocks.put(position, blockInfo);
 					}
 				}
-			}
-
-			if (Settings.USE_CACHE)
-			{
-				this.cache.put(cacheID, fieldBlocks);
 			}
 		}
 

@@ -64,7 +64,7 @@ public class ProjectorCalculationThread extends Thread
 
 				for (IModule module : this.projector.getModules())
 				{
-					module.onPreCalculate(this.projector, newField);
+					newField = module.onPreCalculate(this.projector, newField);
 				}
 
 				for (Vector3 position : newField)

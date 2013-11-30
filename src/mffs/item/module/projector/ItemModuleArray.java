@@ -16,11 +16,45 @@ public class ItemModuleArray extends ItemModule
 		super(i, "moduleArray");
 	}
 
+	@SuppressWarnings("null")
 	@Override
-	public void onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
+	public Set<Vector3> onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
+		Set<Vector3> newField = new HashSet<Vector3>(fieldBlocks);
 		Set<Vector3> originalField = new HashSet<Vector3>(fieldBlocks);
 
+		HashMap<ForgeDirection, Integer> longestDirectional = this.getDirectionWidthMap(originalField);
+
+		HashMap<Vector3, int[]> fieldMap = null;
+		HashMap<Vector3, int[]> newFieldMap = null;
+
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		{
+			int copyAmount = projector.getSidedModuleCount(this, direction);
+			int directionalDisplacement = (Math.abs(longestDirectional.get(direction)) + Math.abs(longestDirectional.get(direction.getOpposite()))) + 1;
+
+			for (int i = 0; i < copyAmount; i++)
+			{
+				int directionalDisplacementScale = directionalDisplacement * (i + 1);
+
+				for (Vector3 originalFieldBlock : originalField)
+				{
+					Vector3 newFieldBlock = originalFieldBlock.clone().translate(new Vector3(direction).scale(directionalDisplacementScale));
+					newField.add(newFieldBlock);
+
+					if (fieldMap != null)
+					{
+						newFieldMap.put(newFieldBlock, fieldMap.get(originalFieldBlock));
+					}
+				}
+			}
+		}
+
+		return newField;
+	}
+
+	public HashMap<ForgeDirection, Integer> getDirectionWidthMap(Set<Vector3> field)
+	{
 		HashMap<ForgeDirection, Integer> longestDirectional = new HashMap<ForgeDirection, Integer>();
 		longestDirectional.put(ForgeDirection.DOWN, 0);
 		longestDirectional.put(ForgeDirection.UP, 0);
@@ -29,10 +63,8 @@ public class ItemModuleArray extends ItemModule
 		longestDirectional.put(ForgeDirection.WEST, 0);
 		longestDirectional.put(ForgeDirection.EAST, 0);
 
-		for (Vector3 fieldPosition : originalField)
+		for (Vector3 fieldPosition : field)
 		{
-			int longestAxis = (int) Math.max(fieldPosition.intX(), Math.max(fieldPosition.intY(), fieldPosition.intZ()));
-
 			if (fieldPosition.intX() > 0 && fieldPosition.intX() > longestDirectional.get(ForgeDirection.EAST))
 			{
 				longestDirectional.put(ForgeDirection.EAST, fieldPosition.intX());
@@ -59,21 +91,8 @@ public class ItemModuleArray extends ItemModule
 			{
 				longestDirectional.put(ForgeDirection.NORTH, fieldPosition.intZ());
 			}
-
 		}
 
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-		{
-			int copyAmount = projector.getSidedModuleCount(this, direction);
-
-			for (int i = 0; i < copyAmount; i++)
-			{
-				for (Vector3 originalFieldBlock : originalField)
-				{
-					int directionalDisplacementScale = (Math.abs(longestDirectional.get(direction)) + Math.abs(longestDirectional.get(direction.getOpposite()))) * (i + 1) + 1;
-					fieldBlocks.add(originalFieldBlock.clone().translate(new Vector3(direction).scale(directionalDisplacementScale)));
-				}
-			}
-		}
+		return longestDirectional;
 	}
 }
