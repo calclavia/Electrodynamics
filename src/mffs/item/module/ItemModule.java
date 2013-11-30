@@ -76,4 +76,10 @@ public class ItemModule extends ItemMFFS implements IModule
 	{
 		return false;
 	}
+
+	@Override
+	public boolean requireTicks(ItemStack moduleStack)
+	{
+		return false;
+	}
 }

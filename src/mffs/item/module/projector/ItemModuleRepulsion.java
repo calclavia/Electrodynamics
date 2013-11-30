@@ -13,6 +13,7 @@ import mffs.item.module.ItemModule;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.core.vector.Vector3;
@@ -99,5 +100,11 @@ public class ItemModuleRepulsion extends ItemModule
 	{
 		((TileEntityForceFieldProjector) projector).sendFieldToClient();
 		return false;
+	}
+
+	@Override
+	public boolean requireTicks(ItemStack moduleStack)
+	{
+		return true;
 	}
 }

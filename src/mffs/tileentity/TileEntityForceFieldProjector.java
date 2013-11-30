@@ -38,6 +38,8 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	/** True if the field is done constructing and the projector is simply maintaining the field **/
 	private boolean isCompleteConstructing = false;
 
+	private boolean fieldRequireTicks = false;
+
 	public boolean markFieldUpdate = true;
 
 	public TileEntityForceFieldProjector()
@@ -124,6 +126,15 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 		super.calculateForceField(callBack);
 		this.isCompleteConstructing = false;
+		this.fieldRequireTicks = false;
+
+		for (ItemStack module : this.getModuleStacks())
+		{
+			if (((IModule) module.getItem()).requireTicks(module))
+			{
+				this.fieldRequireTicks = true;
+			}
+		}
 	}
 
 	@Override
@@ -150,7 +161,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		{
 			this.consumeCost();
 
-			if (this.ticks % 10 == 0 || this.markFieldUpdate || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0)
+			if (this.ticks % 10 == 0 || this.markFieldUpdate || this.fieldRequireTicks)
 			{
 				if (!this.isCalculated)
 				{
@@ -341,13 +352,14 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		this.calculatedField.clear();
 		this.isCalculated = false;
 		this.isCompleteConstructing = false;
+		this.fieldRequireTicks = false;
 	}
 
 	@Override
 	public void invalidate()
 	{
-		//TODO: This might cause an issue.
-		//this.destroyField();
+		// TODO: This might cause an issue.
+		// this.destroyField();
 		super.invalidate();
 	}
 
