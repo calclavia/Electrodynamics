@@ -48,10 +48,10 @@ public class ItemModuleStablize extends ItemModule
 
 		if (projector.getTicks() % 40 == 0)
 		{
-			if (projector.getMode() instanceof ItemModeCustom)
+			if (projector.getMode() instanceof ItemModeCustom && !(projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0 ))
 			{
 				HashMap<Vector3, int[]> fieldBlocks = ((ItemModeCustom) projector.getMode()).getFieldBlockMap(projector, projector.getModeStack());
-				Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+				Vector3 fieldCenter = new Vector3((TileEntity) projector).translate(projector.getTranslation());
 				Vector3 relativePosition = position.clone().subtract(fieldCenter);
 				relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 				blockInfo = fieldBlocks.get(relativePosition.round());

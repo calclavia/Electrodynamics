@@ -51,36 +51,32 @@ public class ItemModuleDisintegration extends ItemModule
 
 			if (block != null)
 			{
-				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+				/**
+				 * Placing a camouflage module makes the filter "inclusive". Otherwise it is
+				 * exclusive.
+				 */
+				int blockMetadata = position.getBlockMetadata(tileEntity.worldObj);
+
+				boolean filterMatch = false;
+
+				for (int i : projector.getModuleSlots())
 				{
-					int blockMetadata = position.getBlockMetadata(tileEntity.worldObj);
-					Set<ItemStack> filterStacks = new HashSet<ItemStack>();
+					ItemStack filterStack = projector.getStackInSlot(i);
 
-					for (int i : projector.getModuleSlots())
+					if (MFFSHelper.getFilterBlock(filterStack) != null)
 					{
-						ItemStack checkStack = projector.getStackInSlot(i);
-						Block filterBlock = MFFSHelper.getFilterBlock(checkStack);
-
-						if (filterBlock != null)
-						{
-							filterStacks.add(checkStack);
-						}
-					}
-					boolean contains = false;
-
-					for (ItemStack filterStack : filterStacks)
-					{
+						// TODO: Add approximation module support.
 						if (filterStack.isItemEqual(new ItemStack(blockID, 1, blockMetadata)))
 						{
-							contains = true;
+							filterMatch = true;
 							break;
 						}
 					}
+				}
 
-					if (!contains)
-					{
-						return 1;
-					}
+				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0 == !filterMatch)
+				{
+					return 1;
 				}
 
 				if (Blacklist.disintegrationBlacklist.contains(block) || block instanceof BlockFluid || block instanceof IFluidBlock)
