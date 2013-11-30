@@ -1,6 +1,5 @@
 package mffs.item.module.projector;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import mffs.IDelayedEventHandler;
@@ -16,6 +15,7 @@ import mffs.item.module.ItemModule;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -66,7 +66,7 @@ public class ItemModuleDisintegration extends ItemModule
 					if (MFFSHelper.getFilterBlock(filterStack) != null)
 					{
 						// TODO: Add approximation module support.
-						if (filterStack.isItemEqual(new ItemStack(blockID, 1, blockMetadata)))
+						if (filterStack.isItemEqual(new ItemStack(blockID, 1, blockMetadata)) || (((ItemBlock) filterStack.getItem()).getBlockID() == blockID && projector.getModuleCount(ModularForceFieldSystem.itemModuleApproximation) > 0))
 						{
 							filterMatch = true;
 							break;

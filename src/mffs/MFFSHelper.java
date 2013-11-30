@@ -366,11 +366,7 @@ public class MFFSHelper
 				if (((ItemBlock) itemStack.getItem()).getBlockID() < Block.blocksList.length)
 				{
 					Block block = Block.blocksList[((ItemBlock) itemStack.getItem()).getBlockID()];
-
-					//if (block.renderAsNormalBlock() && !(block instanceof IFluidBlock))
-					{
-						return block;
-					}
+					return block;
 				}
 			}
 		}

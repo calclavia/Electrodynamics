@@ -163,8 +163,8 @@ public class ModularForceFieldSystem
 
 	// Projector Modules
 	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
-			itemModuleDisintegration, itemModuleShock, itemModuleGlow, itemModuleSponge,
-			itemModuleStablize, itemModuleRepulsion;
+			itemModuleApproximation, itemModuleArray, itemModuleDisintegration, itemModuleShock,
+			itemModuleGlow, itemModuleSponge, itemModuleStablize, itemModuleRepulsion;
 
 	// Interdiction Matrix Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
@@ -270,7 +270,7 @@ public class ModularForceFieldSystem
 		FortronHelper.FLUIDSTACK_FORTRON = new FluidStack(FortronHelper.FLUID_FORTRON, 0);
 
 		itemModuleRepulsion = new ItemModuleRepulsion(Settings.getNextItemID());
-
+		itemModuleApproximation = new ItemModule(Settings.getNextItemID(), "moduleApproximation").setCost(1f);
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName());
