@@ -35,6 +35,7 @@ import mffs.item.module.interdiction.ItemModuleAntiPersonnel;
 import mffs.item.module.interdiction.ItemModuleConfiscate;
 import mffs.item.module.interdiction.ItemModuleInterdictionMatrix;
 import mffs.item.module.interdiction.ItemModuleWarn;
+import mffs.item.module.projector.ItemModuleArray;
 import mffs.item.module.projector.ItemModuleDisintegration;
 import mffs.item.module.projector.ItemModuleFusion;
 import mffs.item.module.projector.ItemModuleManipulator;
@@ -270,7 +271,9 @@ public class ModularForceFieldSystem
 		FortronHelper.FLUIDSTACK_FORTRON = new FluidStack(FortronHelper.FLUID_FORTRON, 0);
 
 		itemModuleRepulsion = new ItemModuleRepulsion(Settings.getNextItemID());
-		itemModuleApproximation = new ItemModule(Settings.getNextItemID(), "moduleApproximation").setCost(1f);
+		itemModuleApproximation = new ItemModule(Settings.getNextItemID(), "moduleApproximation").setMaxStackSize(1).setCost(1f);
+		itemModuleArray = new ItemModuleArray(Settings.getNextItemID()).setCost(2f);
+
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName());
@@ -407,6 +410,10 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleInvert), "L", "F", "L", 'F', itemFocusMatix, 'L', Block.blockLapis));
 		// Silence
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSilence), " N ", "NFN", " N ", 'F', itemFocusMatix, 'N', Block.music));
+		// Approximation
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleApproximation), " N ", "NFN", " N ", 'F', itemFocusMatix, 'N', Item.axeGold));
+		// Array
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleArray), " F ", "DFD", " F ", 'F', itemFocusMatix, 'D', Item.diamond));
 
 		// -- -- Interdiction Matrix -- --
 		// Anti-Hostile

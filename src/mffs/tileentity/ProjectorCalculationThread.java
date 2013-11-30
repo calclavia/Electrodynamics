@@ -62,6 +62,11 @@ public class ProjectorCalculationThread extends Thread
 				int rotationYaw = this.projector.getRotationYaw();
 				int rotationPitch = this.projector.getRotationPitch();
 
+				for (IModule module : this.projector.getModules())
+				{
+					module.onPreCalculate(this.projector, newField);
+				}
+
 				for (Vector3 position : newField)
 				{
 					if (rotationYaw != 0 || rotationPitch != 0)
@@ -78,7 +83,7 @@ public class ProjectorCalculationThread extends Thread
 					}
 				}
 
-				for (IModule module : this.projector.getModules(this.projector.getModuleSlots()))
+				for (IModule module : this.projector.getModules())
 				{
 					module.onCalculate(this.projector, this.projector.getCalculatedField());
 				}
