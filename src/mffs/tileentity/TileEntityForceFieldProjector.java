@@ -37,8 +37,8 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 	/** True if the field is done constructing and the projector is simply maintaining the field **/
 	private boolean isCompleteConstructing = false;
-	
-	public boolean markFieldUpdate = false;
+
+	public boolean markFieldUpdate = true;
 
 	public TileEntityForceFieldProjector()
 	{
@@ -150,7 +150,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		{
 			this.consumeCost();
 
-			if (this.ticks % 10 == 0 || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0)
+			if (this.ticks % 10 == 0 || this.markFieldUpdate || this.getModuleCount(ModularForceFieldSystem.itemModuleRepulsion) > 0)
 			{
 				if (!this.isCalculated)
 				{
@@ -209,10 +209,10 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	{
 		if (this.isCalculated && !this.isCalculating)
 		{
-			if (!this.isCompleteConstructing || this.ticks % 60 == 0 || this.markFieldUpdate)
+			if (!this.isCompleteConstructing || this.markFieldUpdate)
 			{
 				this.markFieldUpdate = false;
-				
+
 				if (this.forceFields.size() <= 0)
 				{
 					if (this.getModeStack().getItem() instanceof ICache)
@@ -253,6 +253,8 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 						{
 							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 							{
+								constructionCount++;
+
 								for (IModule module : this.getModules(this.getModuleSlots()))
 								{
 									int flag = module.onProject(this, vector.clone());
@@ -284,7 +286,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 								this.requestFortron(1, true);
 								this.forceFields.add(vector);
 
-								if (constructionCount++ > constructionSpeed)
+								if (constructionCount > constructionSpeed)
 								{
 									break;
 								}
@@ -358,6 +360,12 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	public int getSizeInventory()
 	{
 		return 3 + 18;
+	}
+
+	@Override
+	public Set<Vector3> getForceFields()
+	{
+		return this.forceFields;
 	}
 
 	@Override

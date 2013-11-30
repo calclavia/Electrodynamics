@@ -3,9 +3,12 @@ package mffs;
 import java.util.HashMap;
 
 import mffs.api.EventStabilize;
+import mffs.api.fortron.FrequencyGrid;
+import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FortronHelper;
+import mffs.tileentity.TileEntityForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.item.ItemSkull;
@@ -18,6 +21,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -121,6 +125,30 @@ public class SubscribeEventHandler
 				{
 					evt.entityPlayer.addChatMessage("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!");
 					evt.setCanceled(true);
+				}
+			}
+		}
+	}
+
+	/**
+	 * When a block breaks, mark force field projectors for an update.
+	 * @param evt
+	 */
+	@ForgeSubscribe
+	public void blockBreakEvent(BreakEvent evt)
+	{
+		for (IFortronFrequency fortronFrequency : FrequencyGrid.instance().getFortronTiles(evt.world))
+		{
+			if (fortronFrequency instanceof TileEntityForceFieldProjector)
+			{
+				TileEntityForceFieldProjector projector = (TileEntityForceFieldProjector) fortronFrequency;
+
+				if (projector.getCalculatedField() != null)
+				{
+					if (projector.getCalculatedField().contains(new Vector3(evt.x, evt.y, evt.z)))
+					{
+						projector.markFieldUpdate = true;
+					}
 				}
 			}
 		}

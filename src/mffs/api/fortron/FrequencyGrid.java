@@ -150,6 +150,20 @@ public class FrequencyGrid
 
 	}
 
+	public Set<IFortronFrequency> getFortronTiles(World world)
+	{
+		Set<IFortronFrequency> set = new HashSet<IFortronFrequency>();
+
+		for (IBlockFrequency tileEntity : this.get())
+		{
+			if (((TileEntity) tileEntity).worldObj == world && tileEntity instanceof IFortronFrequency)
+			{
+				set.add((IFortronFrequency) tileEntity);
+			}
+		}
+		return set;
+	}
+
 	public Set<IFortronFrequency> getFortronTiles(World world, Vector3 position, int radius, int frequency)
 	{
 		Set<IFortronFrequency> set = new HashSet<IFortronFrequency>();
@@ -165,7 +179,6 @@ public class FrequencyGrid
 			}
 		}
 		return set;
-
 	}
 
 	/**
