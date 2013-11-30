@@ -24,7 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 
 /**
@@ -368,7 +367,7 @@ public class MFFSHelper
 				{
 					Block block = Block.blocksList[((ItemBlock) itemStack.getItem()).getBlockID()];
 
-					if (block.renderAsNormalBlock() && !(block instanceof IFluidBlock))
+					//if (block.renderAsNormalBlock() && !(block instanceof IFluidBlock))
 					{
 						return block;
 					}
@@ -396,7 +395,7 @@ public class MFFSHelper
 
 							if (fieldMap != null)
 							{
-								Vector3 fieldCenter = new Vector3((TileEntity) projector).add(projector.getTranslation());
+								Vector3 fieldCenter = new Vector3((TileEntity) projector).translate(projector.getTranslation());
 								Vector3 relativePosition = position.clone().subtract(fieldCenter);
 								relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 								int[] blockInfo = fieldMap.get(relativePosition.round());

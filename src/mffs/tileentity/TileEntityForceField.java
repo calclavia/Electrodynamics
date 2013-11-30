@@ -130,7 +130,7 @@ public class TileEntityForceField extends TileEntityAdvanced implements IPacketR
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.projector = Vector3.readFromNBT(nbt.getCompoundTag("projector"));
+		this.projector = new Vector3(nbt.getCompoundTag("projector"));
 
 	}
 

@@ -1,6 +1,5 @@
 package mffs.block;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -85,10 +84,31 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int par5)
 	{
-		int i1 = par1IBlockAccess.getBlockId(par2, par3, par4);
-		return i1 == this.blockID ? false : super.shouldSideBeRendered(par1IBlockAccess, par2, par3, par4, par5);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileEntityForceField)
+		{
+			if (((TileEntityForceField) tileEntity).camoStack != null)
+			{
+				try
+				{
+					Block block = Block.blocksList[((ItemBlock) ((TileEntityForceField) tileEntity).camoStack.getItem()).getBlockID()];
+					return block.shouldSideBeRendered(world, x, y, z, par5);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+
+				return true;
+			}
+		}
+
+		int i1 = world.getBlockId(x, y, z);
+		return i1 == this.blockID ? false : super.shouldSideBeRendered(world, x, y, z, par5);
+
 	}
 
 	@Override
@@ -226,9 +246,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 				{
 					Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
 
-					final Integer[] allowedRenderTypes = { 0, 1, 4, 31, 20, 39, 5, 13, 23, 6, 8, 7, 12, 29, 30, 14, 16, 17 };
-
-					if (Arrays.asList(allowedRenderTypes).contains(block.getRenderType()))
+					// final Integer[] allowedRenderTypes = { 0, 1, 4, 31, 20, 39, 5, 13, 23, 6, 8,
+					// 7, 12, 29, 30, 14, 16, 17 };
+					// if (Arrays.asList(allowedRenderTypes).contains(block.getRenderType()))
 					{
 						Icon icon = block.getIcon(side, checkStack.getItemDamage());
 
