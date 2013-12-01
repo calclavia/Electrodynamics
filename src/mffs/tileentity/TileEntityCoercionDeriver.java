@@ -1,5 +1,7 @@
 package mffs.tileentity;
 
+import ic2.api.item.IElectricItem;
+
 import java.io.IOException;
 import java.util.EnumSet;
 
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.item.IItemElectric;
+import cofh.api.energy.IEnergyContainerItem;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -221,7 +224,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 				case SLOT_FREQUENCY:
 					return itemStack.getItem() instanceof ItemCardFrequency;
 				case SLOT_BATTERY:
-					return itemStack.getItem() instanceof IItemElectric;
+					return itemStack.getItem() instanceof IItemElectric || itemStack.getItem() instanceof IElectricItem || itemStack.getItem() instanceof IEnergyContainerItem;
 				case SLOT_FUEL:
 					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4)) || itemStack.isItemEqual(new ItemStack(Item.netherQuartz));
 			}
