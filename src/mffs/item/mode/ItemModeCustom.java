@@ -416,4 +416,10 @@ public class ItemModeCustom extends ItemMode implements ICache
 		IProjectorMode[] modes = new IProjectorMode[] { ModularForceFieldSystem.itemModeCube, ModularForceFieldSystem.itemModeSphere, ModularForceFieldSystem.itemModeTube, ModularForceFieldSystem.itemModePyramid };
 		modes[((TileEntity) projector).worldObj.rand.nextInt(modes.length - 1)].render(projector, x, y, z, f, ticks);
 	}
+
+	@Override
+	public float getFortronCost(float amplifier)
+	{
+		return amplifier;
+	}
 }

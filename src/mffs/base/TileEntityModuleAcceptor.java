@@ -1,18 +1,28 @@
 package mffs.base;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import universalelectricity.prefab.network.PacketManager;
+
+import com.google.common.io.ByteArrayDataInput;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ICache;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
+import mffs.base.TileEntityMFFS.TilePacketType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor, ICache
 {
@@ -27,6 +37,31 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 
 	protected int capacityBase = 500;
 	protected int capacityBoost = 5;
+
+	/** Used for client-side only. */
+	public int clientFortronCost = 0;
+
+	@Override
+	public List getPacketUpdate()
+	{
+		List objects = super.getPacketUpdate();
+		objects.add(this.getFortronCost());
+		return objects;
+	}
+
+	@Override
+	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
+	{
+		super.onReceivePacket(packetID, dataStream);
+
+		if (this.worldObj.isRemote)
+		{
+			if (packetID == TilePacketType.DESCRIPTION.ordinal())
+			{
+				this.clientFortronCost = dataStream.readInt();
+			}
+		}
+	}
 
 	@Override
 	public void initiate()
@@ -265,8 +300,13 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	 * Returns Fortron cost in ticks.
 	 */
 	@Override
-	public int getFortronCost()
+	public final int getFortronCost()
 	{
+		if (this.worldObj.isRemote)
+		{
+			return this.clientFortronCost;
+		}
+
 		String cacheID = "getFortronCost";
 
 		if (Settings.USE_CACHE)
@@ -282,6 +322,18 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
+		int result = this.doGetFortronCost();
+
+		if (Settings.USE_CACHE)
+		{
+			this.cache.put(cacheID, result);
+		}
+
+		return this.doGetFortronCost();
+	}
+
+	protected int doGetFortronCost()
+	{
 		float cost = 0;
 
 		for (ItemStack itemStack : this.getModuleStacks())
@@ -292,14 +344,7 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 			}
 		}
 
-		int result = Math.round(cost);
-
-		if (Settings.USE_CACHE)
-		{
-			this.cache.put(cacheID, result);
-		}
-
-		return result;
+		return Math.round(cost);
 	}
 
 	protected float getAmplifier()
@@ -335,5 +380,19 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public void clearCache()
 	{
 		this.cache.clear();
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		this.clientFortronCost = nbt.getInteger("fortronCost");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("fortronCost", this.clientFortronCost);
 	}
 }

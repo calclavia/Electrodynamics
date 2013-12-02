@@ -42,8 +42,7 @@ public abstract class TileEntityInventory extends TileEntityMFFS implements IInv
 	@Override
 	public List getPacketUpdate()
 	{
-		List objects = new ArrayList();
-		objects.addAll(super.getPacketUpdate());
+		List objects = super.getPacketUpdate();
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 		objects.add(nbt);

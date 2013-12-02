@@ -95,4 +95,10 @@ public class ItemModuleArray extends ItemModule
 
 		return longestDirectional;
 	}
+
+	@Override
+	public float getFortronCost(float amplifier)
+	{
+		return super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier) / 100f;
+	}
 }

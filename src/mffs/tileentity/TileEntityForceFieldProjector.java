@@ -12,6 +12,7 @@ import mffs.api.IProjector;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
+import mffs.item.mode.ItemModeCustom;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -171,7 +172,6 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 				{
 					this.projectField();
 				}
-
 			}
 
 			if (this.isActive() && this.worldObj.isRemote)
@@ -194,14 +194,24 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	 * Returns Fortron cost in ticks.
 	 */
 	@Override
-	public int getFortronCost()
+	protected int doGetFortronCost()
 	{
-		return super.getFortronCost() + 5;
+		if (this.getMode() != null)
+		{
+			return Math.round(super.doGetFortronCost() + this.getMode().getFortronCost(this.getAmplifier()));
+		}
+
+		return 0;
 	}
 
 	@Override
-	public float getAmplifier()
+	protected float getAmplifier()
 	{
+		if (this.getMode() instanceof ItemModeCustom)
+		{
+			return ((ItemModeCustom) this.getMode()).getFieldBlocks(this, this.getModeStack()).size() / 1000;
+		}
+
 		return Math.max(Math.min((this.getCalculatedField().size() / 1000), 10), 1);
 	}
 

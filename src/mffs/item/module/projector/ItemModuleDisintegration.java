@@ -30,7 +30,7 @@ public class ItemModuleDisintegration extends ItemModule
 	{
 		super(id, "moduleDisintegration");
 		this.setMaxStackSize(1);
-		this.setCost(20);
+		this.setCost(15);
 	}
 
 	@Override
@@ -107,5 +107,11 @@ public class ItemModuleDisintegration extends ItemModule
 		}
 
 		return 1;
+	}
+
+	@Override
+	public float getFortronCost(float amplifier)
+	{
+		return super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier);
 	}
 }

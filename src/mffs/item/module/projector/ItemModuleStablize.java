@@ -31,7 +31,7 @@ public class ItemModuleStablize extends ItemModule
 	{
 		super(id, "moduleStabilize");
 		this.setMaxStackSize(1);
-		this.setCost(20);
+		this.setCost(15);
 	}
 
 	@Override
@@ -131,5 +131,11 @@ public class ItemModuleStablize extends ItemModule
 	private boolean isApproximationEqual(int id, ItemStack checkStack)
 	{
 		return id == Block.grass.blockID && ((ItemBlock) checkStack.getItem()).getBlockID() == Block.dirt.blockID;
+	}
+
+	@Override
+	public float getFortronCost(float amplifier)
+	{
+		return super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier);
 	}
 }
