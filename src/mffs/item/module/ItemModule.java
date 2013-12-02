@@ -74,7 +74,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public float getFortronCost(float amplifier)
 	{
-		return this.fortronCost * amplifier;
+		return this.fortronCost;
 	}
 
 	@Override

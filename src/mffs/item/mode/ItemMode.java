@@ -28,4 +28,10 @@ public abstract class ItemMode extends ItemMFFS implements IProjectorMode
 	{
 		return false;
 	}
+
+	@Override
+	public float getFortronCost(float amplifier)
+	{
+		return 4;
+	}
 }
