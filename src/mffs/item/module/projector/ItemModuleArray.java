@@ -16,7 +16,6 @@ public class ItemModuleArray extends ItemModule
 		super(i, "moduleArray");
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Set<Vector3> onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
@@ -26,7 +25,6 @@ public class ItemModuleArray extends ItemModule
 		HashMap<ForgeDirection, Integer> longestDirectional = this.getDirectionWidthMap(originalField);
 
 		HashMap<Vector3, int[]> fieldMap = null;
-		HashMap<Vector3, int[]> newFieldMap = null;
 
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -41,11 +39,6 @@ public class ItemModuleArray extends ItemModule
 				{
 					Vector3 newFieldBlock = originalFieldBlock.clone().translate(new Vector3(direction).scale(directionalDisplacementScale));
 					newField.add(newFieldBlock);
-
-					if (fieldMap != null)
-					{
-						newFieldMap.put(newFieldBlock, fieldMap.get(originalFieldBlock));
-					}
 				}
 			}
 		}

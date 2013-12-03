@@ -15,7 +15,7 @@ public class BlockForceManipulator extends BlockMFFS
 	public BlockForceManipulator(int i)
 	{
 		super(i, "manipulator");
-		this.rotationMask = 0b111111;
+		this.rotationMask = 63;
 	}
 
 	public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entityPlayer)
