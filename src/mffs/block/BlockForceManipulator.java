@@ -15,6 +15,7 @@ public class BlockForceManipulator extends BlockMFFS
 	public BlockForceManipulator(int i)
 	{
 		super(i, "manipulator");
+		this.rotationMask = 0b111111;
 	}
 
 	public static int determineOrientation(World world, int x, int y, int z, EntityLivingBase entityPlayer)
@@ -43,18 +44,6 @@ public class BlockForceManipulator extends BlockMFFS
 	{
 		int metadata = determineOrientation(world, x, y, z, par5EntityLiving);
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		int mask = 0x7;
-		int rotMeta = world.getBlockMetadata(x, y, z);
-		int masked = rotMeta & ~mask;
-		ForgeDirection orientation = ForgeDirection.getOrientation(rotMeta & mask);
-		ForgeDirection rotated = orientation.getRotation(ForgeDirection.getOrientation(side));
-		world.setBlockMetadataWithNotify(x, y, z, rotated.ordinal() & mask | masked, 3);
-		return true;
 	}
 
 	@Override

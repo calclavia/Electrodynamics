@@ -40,7 +40,34 @@ public class RenderForceManipulator extends TileEntitySpecialRenderer
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(180F, 0.0F, 0.0F, 1F);
+
+		// Rotate the model
+		switch (tileEntity.getDirection())
+		{
+			case UP:
+				GL11.glRotatef(-90, 1f, 0f, 0);
+				GL11.glTranslated(0, -1, 1);
+				break;
+			case DOWN:
+				GL11.glRotatef(90, 1f, 0f, 0);
+				GL11.glTranslated(0, -1, -1);
+				break;
+			case NORTH:
+				GL11.glRotatef(0, 0f, 1f, 0f);
+				break;
+			case SOUTH:
+				GL11.glRotatef(180, 0f, 1f, 0f);
+				break;
+			case WEST:
+				GL11.glRotatef(-90, 0f, 1f, 0f);
+				break;
+			case EAST:
+				GL11.glRotatef(90, 0f, 1f, 0f);
+				break;
+			default:
+				break;
+		}
 
 		MODEL.render(0.0625F);
 
