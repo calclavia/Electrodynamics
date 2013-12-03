@@ -217,7 +217,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	@Override
 	public int doGetFortronCost()
 	{
-		return (int) Math.round(super.doGetFortronCost() + (this.anchor.getMagnitude() * 1000));
+		return (int) Math.round(super.doGetFortronCost() + (this.anchor != null ? this.anchor.getMagnitude() * 1000 : 0));
 	}
 
 	@Override

@@ -430,8 +430,8 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 				newPosition.rotate(rotationYaw, rotationPitch);
 			}
 
-			newPosition.add(new Vector3(this));
-			newPosition.add(translation);
+			newPosition.translate(new Vector3(this));
+			newPosition.translate(translation);
 
 			returnField.add(newPosition);
 		}
@@ -456,9 +456,9 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 			case DOWN:
 				return new int[] { 6, 14 };
 			case NORTH:
-				return new int[] { 8, 10 };
-			case SOUTH:
 				return new int[] { 7, 9 };
+			case SOUTH:
+				return new int[] { 8, 10 };
 			case WEST:
 				return new int[] { 4, 5 };
 			case EAST:

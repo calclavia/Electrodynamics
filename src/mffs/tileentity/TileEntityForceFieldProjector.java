@@ -368,8 +368,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 	@Override
 	public void invalidate()
 	{
-		// TODO: This might cause an issue.
-		// this.destroyField();
+		this.destroyField();
 		super.invalidate();
 	}
 
