@@ -1,5 +1,7 @@
 package mffs.event;
 
+import java.lang.reflect.Method;
+
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ManipulatorHelper;
@@ -48,7 +50,45 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 				{
 					if (this.tileEntity != null && this.tileData != null)
 					{
-						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, TileEntity.createAndLoadEntity(this.tileData));
+						/**
+						 * Forge Multipart Support.
+						 */
+						boolean isMultipart = this.tileData.getString("id").equals("savedMultipart");
+
+						TileEntity newTile = null;
+
+						if (isMultipart)
+						{
+							try
+							{
+								Class multipart = Class.forName("codechicken.multipart.MultipartHelper");
+								Method m = multipart.getMethod("createTileFromNBT", World.class, NBTTagCompound.class);
+								newTile = (TileEntity) m.invoke(null, this.world, this.tileData);
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
+							}
+						}
+						else
+						{
+							newTile = TileEntity.createAndLoadEntity(this.tileData);
+						}
+
+						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, newTile);
+
+						if (newTile != null && isMultipart)
+						{
+							try
+							{
+								Class multipart = Class.forName("codechicken.multipart.MultipartHelper");
+								newTile = (TileEntity) multipart.getMethod("sendDescPacket", World.class, TileEntity.class).invoke(null, this.world, newTile);
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
+							}
+						}
 					}
 					else
 					{

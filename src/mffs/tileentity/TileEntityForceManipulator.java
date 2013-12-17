@@ -272,7 +272,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				int blockID = targetPosition.getBlockID(this.worldObj);
 
-				if (!(blockID == 0 || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
+				if (!(blockID == 0 || this.worldObj.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
 				{
 					return false;
 				}
