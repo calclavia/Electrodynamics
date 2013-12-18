@@ -2,16 +2,30 @@ package com.dark;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import universalelectricity.compatibility.Compatibility;
+import universalelectricity.core.UniversalElectricity;
+
+import com.dark.fluid.FluidHelper;
+import com.dark.helpers.PlayerKeyHandler;
+import com.dark.prefab.tile.network.NetworkUpdateHandler;
+import com.dark.save.SaveManager;
+
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class DarkCore
 {
     private static DarkCore instance;
+
+    private boolean pre, load, post;
 
     public static final String TEXTURE_DIRECTORY = "textures/";
     public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
     public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
     public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
     public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+    public static final String CHANNEL = "DARKCORE";
 
     /* START IDS */
     public static int BLOCK_ID_PRE = 3100;
@@ -24,6 +38,39 @@ public class DarkCore
             instance = new DarkCore();
         }
         return instance;
+    }
+
+    public void preLoad()
+    {
+        if (!pre)
+        {
+            MinecraftForge.EVENT_BUS.register(new FluidHelper());
+            MinecraftForge.EVENT_BUS.register(SaveManager.instance());
+            TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
+            TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
+            UniversalElectricity.initiate();
+            Compatibility.initiate();
+            pre = true;
+        }
+    }
+
+    public void Load()
+    {
+        if (!load)
+        {
+            ExternalModHandler.init();
+            CoreRegistry.masterBlockConfig.load();
+            load = true;
+        }
+    }
+
+    public void postLoad()
+    {
+        if (!post)
+        {
+            CoreRegistry.masterBlockConfig.save();
+            post = true;
+        }
     }
 
     /** Gets the next unused ID in the block list. Does not prevent config file issues after the file
@@ -63,4 +110,5 @@ public class DarkCore
         ITEM_ID_PREFIX = id + 1;
         return id;
     }
+
 }

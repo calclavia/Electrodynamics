@@ -25,7 +25,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
  *
  * @author DarkGuardsman */
-public class ModObjectRegistry
+public class CoreRegistry
 {
     public static HashMap<Block, String> registredBlocks = new HashMap<Block, String>();
     public static HashMap<Item, String> registredItems = new HashMap<Item, String>();
@@ -37,12 +37,12 @@ public class ModObjectRegistry
 
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass)
     {
-        return ModObjectRegistry.createNewBlock(name, modID, blockClass, true);
+        return CoreRegistry.createNewBlock(name, modID, blockClass, true);
     }
 
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, boolean canDisable)
     {
-        return ModObjectRegistry.createNewBlock(name, modID, blockClass, null, canDisable);
+        return CoreRegistry.createNewBlock(name, modID, blockClass, null, canDisable);
     }
 
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass)
@@ -72,7 +72,7 @@ public class ModObjectRegistry
             {
                 registredBlocks.put(block, name);
                 proxy.registerBlock(block, itemClass, name, modID);
-                ModObjectRegistry.finishCreation(block);
+                CoreRegistry.finishCreation(block);
             }
         }
         return block;
