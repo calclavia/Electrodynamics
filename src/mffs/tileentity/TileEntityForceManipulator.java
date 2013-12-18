@@ -320,8 +320,8 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 	public AxisAlignedBB getSearchAxisAlignedBB()
 	{
-		Vector3 positiveScale = new Vector3(this).add(this.getTranslation()).add(this.getPositiveScale());
-		Vector3 negativeScale = new Vector3(this).add(this.getTranslation()).subtract(this.getNegativeScale());
+		Vector3 positiveScale = new Vector3(this).translate(this.getTranslation()).translate(this.getPositiveScale());
+		Vector3 negativeScale = new Vector3(this).translate(this.getTranslation()).subtract(this.getNegativeScale());
 
 		Vector3 minScale = new Vector3(Math.min(positiveScale.x, negativeScale.x), Math.min(positiveScale.y, negativeScale.y), Math.min(positiveScale.z, negativeScale.z));
 		Vector3 maxScale = new Vector3(Math.max(positiveScale.x, negativeScale.x), Math.max(positiveScale.y, negativeScale.y), Math.max(positiveScale.z, negativeScale.z));
@@ -355,7 +355,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.anchor = Vector3.readFromNBT(nbt.getCompoundTag("anchor"));
+		this.anchor = new Vector3(nbt.getCompoundTag("anchor"));
 		this.displayMode = nbt.getInteger("displayMode");
 		this.doAnchor = nbt.getBoolean("doAnchor");
 	}

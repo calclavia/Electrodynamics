@@ -53,7 +53,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 					if (this.tileEntity != null && this.tileData != null)
 					{
 						/**
-						 * Forge Multipart Support.
+						 * Forge Multipart Support. Use FMP's custom TE creator.
 						 */
 						boolean isMultipart = this.tileData.getString("id").equals("savedMultipart");
 
@@ -83,8 +83,13 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 						{
 							try
 							{
+								// Send the description packet of the TE after moving it.
 								Class multipart = Class.forName("codechicken.multipart.MultipartHelper");
 								newTile = (TileEntity) multipart.getMethod("sendDescPacket", World.class, TileEntity.class).invoke(null, this.world, newTile);
+
+								// Call onMoved event.
+								Class tileMultipart = Class.forName("codechicken.multipart.TileMultipart");
+								tileMultipart.getMethod("onMoved").invoke(newTile);
 							}
 							catch (Exception e)
 							{
