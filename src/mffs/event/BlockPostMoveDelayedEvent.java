@@ -5,9 +5,11 @@ import java.lang.reflect.Method;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ManipulatorHelper;
+import mffs.api.EventForceManipulate.EventPostForceManipulate;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.core.vector.Vector3;
 
 /**
@@ -97,6 +99,8 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
+
+					MinecraftForge.EVENT_BUS.post(new EventPostForceManipulate(this.world, this.originalPosition.intX(), this.originalPosition.intY(), this.originalPosition.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ()));
 				}
 				catch (Exception e)
 				{
