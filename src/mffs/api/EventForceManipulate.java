@@ -3,7 +3,9 @@
  */
 package mffs.api;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.world.WorldEvent;
 
 /**
@@ -25,6 +27,22 @@ public abstract class EventForceManipulate extends WorldEvent
 		this.afterX = afterX;
 		this.afterY = afterY;
 		this.afterZ = afterZ;
+	}
+
+	/**
+	 * Called right before the block is moved by the Force Manipulator.
+	 * 
+	 * @author Calclavia
+	 * 
+	 */
+	@Cancelable
+	public static class EventPreForceManipulate extends EventForceManipulate
+	{
+		public EventPreForceManipulate(World world, int beforeX, int beforeY, int beforeZ, int afterX, int afterY, int afterZ)
+		{
+			super(world, beforeX, beforeY, beforeZ, afterX, afterY, afterZ);
+		}
+
 	}
 
 	/**

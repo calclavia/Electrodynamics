@@ -1,22 +1,27 @@
 package mffs.item;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
+import mffs.api.EventForceManipulate.EventPostForceManipulate;
+import mffs.api.EventForceManipulate.EventPreForceManipulate;
 import mffs.api.card.ICoordLink;
 import mffs.api.fortron.FrequencyGrid;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.Permission;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import universalelectricity.core.electricity.ElectricityDisplay;
@@ -25,6 +30,8 @@ import universalelectricity.core.vector.Vector3;
 
 public class ItemRemoteController extends ItemCardFrequency implements ICoordLink
 {
+	private final Set<ItemStack> remotesCached = new HashSet<ItemStack>();
+
 	public ItemRemoteController(int id)
 	{
 		super("remoteController", id);
@@ -50,6 +57,11 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 		}
 
 		list.add("Not linked.");
+	}
+
+	public void onUpdate(ItemStack itemStack, World par2World, Entity par3Entity, int par4, boolean par5)
+	{
+		this.remotesCached.add(itemStack);
 	}
 
 	@Override
@@ -150,6 +162,36 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 	public Vector3 getLink(ItemStack itemStack)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		return Vector3.readFromNBT(nbt.getCompoundTag("position"));
+		return new Vector3(nbt.getCompoundTag("position"));
+	}
+
+	private final Set<ItemStack> temporaryRemoteBlacklist = new HashSet<ItemStack>();
+
+	@ForgeSubscribe
+	public void preMove(EventPreForceManipulate evt)
+	{
+		this.temporaryRemoteBlacklist.clear();
+	}
+
+	/**
+	 * Moves the coordinates of the link if the Force Manipulator moved a block that is linked by
+	 * the remote.
+	 * 
+	 * @param evt
+	 */
+	@ForgeSubscribe
+	public void onMove(EventPostForceManipulate evt)
+	{
+		if (!evt.world.isRemote)
+		{
+			for (ItemStack itemStack : this.remotesCached)
+			{
+				if (!temporaryRemoteBlacklist.contains(itemStack) && new Vector3(evt.beforeX, evt.beforeY, evt.beforeZ).equals(this.getLink(itemStack)))
+				{
+					this.setLink(itemStack, new Vector3(evt.afterX, evt.afterY, evt.afterZ));
+					temporaryRemoteBlacklist.add(itemStack);
+				}
+			}
+		}
 	}
 }

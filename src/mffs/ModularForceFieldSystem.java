@@ -263,6 +263,8 @@ public class ModularForceFieldSystem
 		itemModuleInvert = new ItemModule(Settings.getNextItemID(), "moduleInvert").setMaxStackSize(1).setCost(15);
 		itemModuleSilence = new ItemModule(Settings.getNextItemID(), "moduleSilence").setMaxStackSize(1).setCost(1);
 
+		MinecraftForge.EVENT_BUS.register(itemRemoteController);
+
 		/**
 		 * The Fortron Liquid
 		 */

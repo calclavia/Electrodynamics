@@ -85,7 +85,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 							{
 								// Send the description packet of the TE after moving it.
 								Class multipart = Class.forName("codechicken.multipart.MultipartHelper");
-								newTile = (TileEntity) multipart.getMethod("sendDescPacket", World.class, TileEntity.class).invoke(null, this.world, newTile);
+								multipart.getMethod("sendDescPacket", World.class, TileEntity.class).invoke(null, this.world, newTile);
 
 								// Call onMoved event.
 								Class tileMultipart = Class.forName("codechicken.multipart.TileMultipart");
