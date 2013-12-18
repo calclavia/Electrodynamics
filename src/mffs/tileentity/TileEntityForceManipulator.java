@@ -128,7 +128,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
+						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
