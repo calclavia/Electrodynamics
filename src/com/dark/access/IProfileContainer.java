@@ -1,4 +1,4 @@
-package dark.api.access;
+package com.dark.access;
 
 /** Applied to tileEntities that contain an access profile that describes how the tile interacts with
  * users
