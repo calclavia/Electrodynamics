@@ -71,7 +71,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					for (Vector3 position : this.manipulationVectors)
 					{
-						if (this.moveBlock(position, dir) && this.isBlockVisible(position) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
+						if (this.moveBlock(position, dir) && this.isBlockVisibleByPlayer(position) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
@@ -128,7 +128,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (this.isBlockVisible(position) && (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
+						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || position.getBlockID(this.worldObj) > 0) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
@@ -144,7 +144,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		}
 	}
 
-	public boolean isBlockVisible(Vector3 position)
+	public boolean isBlockVisibleByPlayer(Vector3 position)
 	{
 		int i = 0;
 
@@ -238,7 +238,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 		loop:
 		for (Vector3 position : mobilizationPoints)
 		{
-			if (position.getBlockID(this.worldObj) > 0)
+			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()))
 			{
 				if (Blacklist.forceManipulationBlacklist.contains(Block.blocksList[position.getBlockID(this.worldObj)]))
 				{
@@ -272,7 +272,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 
 				int blockID = targetPosition.getBlockID(this.worldObj);
 
-				if (!(blockID == 0 || this.worldObj.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
+				if (!(this.worldObj.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
 				{
 					return false;
 				}
@@ -291,7 +291,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
 
-			if (blockID > 0 && tileEntity != this)
+			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && tileEntity != this)
 			{
 				this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, ANIMATION_TIME, this.worldObj, position, newPosition));
 				return true;
