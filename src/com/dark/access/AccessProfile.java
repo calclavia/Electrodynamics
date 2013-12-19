@@ -95,6 +95,7 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
         if (object instanceof EntityPlayer)
         {
             id = ((EntityPlayer) object).username + "_" + System.currentTimeMillis();
+            this.global = true;
         }//Created by a tile
         else if (object instanceof TileEntity || object == null)
         {
@@ -249,10 +250,11 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     }
 
     @Override
-    public void save(NBTTagCompound nbt)
+    public void load(NBTTagCompound nbt)
     {
         this.profileName = nbt.getString("name");
         this.global = nbt.getBoolean("global");
+        this.profileID = nbt.getString("profileID");
         NBTTagList userList = nbt.getTagList("groups");
         if (userList != null && userList.tagCount() > 0)
         {
@@ -267,10 +269,11 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     }
 
     @Override
-    public void load(NBTTagCompound nbt)
+    public void save(NBTTagCompound nbt)
     {
         nbt.setString("name", this.profileName);
         nbt.setBoolean("global", this.global);
+        nbt.setString("profileID", this.profileID);
         NBTTagList usersTag = new NBTTagList();
         for (AccessGroup group : this.getGroups())
         {
