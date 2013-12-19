@@ -19,14 +19,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.PacketHandler;
+import resonantinduction.ResonantInduction;
 import resonantinduction.api.ICapacitor;
-import resonantinduction.base.IPacketReceiver;
 import resonantinduction.base.ListUtil;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -38,7 +39,7 @@ import cpw.mods.fml.common.network.Player;
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketReceiver, IInventory
+public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketSender, IPacketReceiver, IInventory
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -178,7 +179,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 			for (EntityPlayer player : this.playersUsing)
 			{
-				PacketDispatcher.sendPacketToPlayer(PacketHandler.getTileEntityPacket(this, this.getNetworkedData(new ArrayList()).toArray()), (Player) player);
+				PacketDispatcher.sendPacketToPlayer(ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray()), (Player) player);
 			}
 
 			this.produce();
@@ -192,7 +193,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 	public void updateClient()
 	{
-		PacketHandler.sendPacketToAllPlayers(this, getNetworkedData(new ArrayList()).toArray());
+		PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
 	}
 
 	public void updateAllClients()
@@ -200,18 +201,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		for (Vector3 vec : structure.locations)
 		{
 			TileEntityBattery battery = (TileEntityBattery) vec.getTileEntity(worldObj);
-			PacketHandler.sendPacketToAllPlayers(battery, battery.getNetworkedData(new ArrayList()).toArray());
-		}
-	}
-
-	@Override
-	public void validate()
-	{
-		super.validate();
-
-		if (worldObj.isRemote)
-		{
-			PacketHandler.sendDataRequest(this);
+			PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(battery, battery.getPacketData(0).toArray()));
 		}
 	}
 
@@ -479,28 +469,23 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	}
 
 	@Override
-	public void handle(ByteArrayDataInput input)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
-		try
-		{
-			structure.isMultiblock = input.readBoolean();
+		structure.isMultiblock = data.readBoolean();
 
-			clientEnergy = input.readFloat();
-			clientCells = input.readInt();
-			clientMaxEnergy = input.readFloat();
+		clientEnergy = data.readFloat();
+		clientCells = data.readInt();
+		clientMaxEnergy = data.readFloat();
 
-			structure.height = input.readInt();
-			structure.length = input.readInt();
-			structure.width = input.readInt();
-		}
-		catch (Exception e)
-		{
-		}
+		structure.height = data.readInt();
+		structure.length = data.readInt();
+		structure.width = data.readInt();
 	}
 
 	@Override
-	public ArrayList getNetworkedData(ArrayList data)
+	public ArrayList getPacketData(int type)
 	{
+		ArrayList data = new ArrayList();
 		data.add(structure.isMultiblock);
 
 		data.add(getEnergyStored());

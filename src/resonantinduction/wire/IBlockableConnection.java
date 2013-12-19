@@ -1,4 +1,4 @@
-package resonantinduction.wire.multipart;
+package resonantinduction.wire;
 
 import net.minecraftforge.common.ForgeDirection;
 

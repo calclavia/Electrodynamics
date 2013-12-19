@@ -99,7 +99,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 
 				if (tileEntity instanceof IInventory)
 				{
-					tileContractor.setFacing(side.getOpposite());
+					tileContractor.setDirection(side.getOpposite());
 					return;
 				}
 			}

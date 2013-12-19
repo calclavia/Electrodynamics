@@ -29,6 +29,8 @@ import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemLinker;
 import resonantinduction.entangler.ItemQuantumEntangler;
+import resonantinduction.furnace.BlockAdvancedFurnace;
+import resonantinduction.furnace.TileEntityAdvancedFurnace;
 import resonantinduction.multimeter.BlockMultimeter;
 import resonantinduction.multimeter.ItemBlockMultimeter;
 import resonantinduction.multimeter.MultimeterEventHandler;
@@ -44,7 +46,9 @@ import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
 import basiccomponents.api.BasicRegistry;
-import calclavia.lib.UniversalRecipes;
+import calclavia.lib.UniversalRecipe;
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.network.PacketTile;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -154,6 +158,11 @@ public class ResonantInduction
 	/** Without Forge Multipart **/
 	private static Block blockWire;
 	public static Block blockAdvancedFurnaceIdle, blockAdvancedFurnaceBurning;
+
+	/**
+	 * Packets
+	 */
+	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
 
 	public static final Vector3[] DYE_COLORS = new Vector3[] { new Vector3(), new Vector3(1, 0, 0), new Vector3(0, 0.608, 0.232), new Vector3(0.588, 0.294, 0), new Vector3(0, 0, 1), new Vector3(0.5, 0, 05), new Vector3(0, 1, 1), new Vector3(0.8, 0.8, 0.8), new Vector3(0.3, 0.3, 0.3), new Vector3(1, 0.412, 0.706), new Vector3(0.616, 1, 0), new Vector3(1, 1, 0), new Vector3(0.46f, 0.932, 1), new Vector3(0.5, 0.2, 0.5), new Vector3(0.7, 0.5, 0.1), new Vector3(1, 1, 1) };
 
@@ -317,25 +326,25 @@ public class ResonantInduction
 		final ItemStack defaultWire = EnumWireMaterial.IRON.getWire();
 
 		/** Capacitor **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', UniversalRecipes.PRIMARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(emptyCapacitor, "RRR", "RIR", "RRR", 'R', Item.redstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Linker **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'G', UniversalRecipe.SECONDARY_METAL.get()));
 
 		/** Quantum Entangler **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', UniversalRecipes.PRIMARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Tesla - by Jyzarc */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'I', UniversalRecipes.PRIMARY_PLATE));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', emptyCapacitor, 'I', UniversalRecipe.PRIMARY_PLATE.get()));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', emptyCapacitor, 'I', UniversalRecipes.PRIMARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', emptyCapacitor, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipes.PRIMARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** EM Contractor */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipes.PRIMARY_METAL, 'C', emptyCapacitor, 'G', UniversalRecipes.SECONDARY_METAL, 'I', UniversalRecipes.PRIMARY_METAL));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipe.PRIMARY_METAL.get(), 'C', emptyCapacitor, 'G', UniversalRecipe.SECONDARY_METAL.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Wires **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));

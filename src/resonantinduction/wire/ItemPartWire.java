@@ -1,4 +1,4 @@
-package resonantinduction.wire.multipart;
+package resonantinduction.wire;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.render.RenderPartWire;
-import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import codechicken.lib.vec.BlockCoord;
@@ -29,22 +28,15 @@ public class ItemPartWire extends JItemMultiPart
 	public ItemPartWire(int id)
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wireMultipart", id).getInt(id));
-		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
-		this.setCreativeTab(TabRI.INSTANCE);
-		this.setHasSubtypes(true);
-		this.setMaxDamage(0);
+		setCreativeTab(TabRI.INSTANCE);
+		setHasSubtypes(true);
+		setMaxDamage(0);
 	}
 
 	@Override
 	public TMultiPart newPart(ItemStack arg0, EntityPlayer arg1, World arg2, BlockCoord arg3, int arg4, Vector3 arg5)
 	{
-		return new PartWire(this.getDamage(arg0));
-	}
-
-	@Override
-	public String getUnlocalizedName()
-	{
-		return super.getUnlocalizedName().replace("item", "tile");
+		return new PartWire(getDamage(arg0));
 	}
 
 	@Override
@@ -56,39 +48,39 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return this.getUnlocalizedName() + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].name().toLowerCase();
+		return "tile.Wire." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName() + "Wire";
 	}
 
 	@Override
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List par3List, boolean par4)
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
-		par3List.add("Resistance: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, ElectricUnit.RESISTANCE));
-		par3List.add("Max Amperage: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, ElectricUnit.AMPERE));
+		list.add("Resistance: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, ElectricUnit.RESISTANCE));
+		list.add("Max Amperage: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, ElectricUnit.AMPERE));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
-	{
-		for (int i = 0; i < EnumWireMaterial.values().length; i++)
+	public void registerIcons(IconRegister register)
+	{	
+		for(EnumWireMaterial material : EnumWireMaterial.values())
 		{
-			this.icons[i] = iconRegister.registerIcon(this.getUnlocalizedName(new ItemStack(this.itemID, 1, i)).replaceAll("tile.", ""));
+			icons[material.ordinal()] = register.registerIcon("mekanism:" + material.getName() + "Wire");
 		}
 
-		RenderPartWire.registerIcons(iconRegister);
+		RenderPartWire.registerIcons(register);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int meta)
 	{
-		return this.icons[meta];
+		return icons[meta];
 	}
 
 	@Override
 	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
 	{
-		for (EnumWireMaterial mat : EnumWireMaterial.values())
+		for(EnumWireMaterial mat : EnumWireMaterial.values())
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
 		}
@@ -100,5 +92,4 @@ public class ItemPartWire extends JItemMultiPart
 	{
 		return 0;
 	}
-
 }

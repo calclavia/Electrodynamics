@@ -14,17 +14,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.IPacketReceiver;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.grid.IElectricityNetwork;
-import universalelectricity.prefab.tile.IRotatable;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
 import universalelectricity.prefab.tile.TileEntityElectrical;
 import buildcraft.api.power.IPowerReceptor;
+import calclavia.lib.IRotatable;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
+import cofh.api.energy.TileEnergyHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -37,7 +38,7 @@ import cpw.mods.fml.common.network.Player;
  * @author Calclavia
  * 
  */
-public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketReceiver, IConnector, IRotatable
+public class TileEntityMultimeter extends TileEntityAdvanced implements IConnector, IRotatable, IPacketReceiver, IPacketSender
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -48,9 +49,9 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 
 		public String display;
 
-		private DetectMode(String display)
+		private DetectMode(String s)
 		{
-			this.display = display;
+			display = s;
 		}
 	}
 
@@ -66,12 +67,12 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 	{
 		super.updateEntity();
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			if (this.ticks % 20 == 0)
+			if (ticks % 20 == 0)
 			{
-				float prevDetectedEnergy = this.detectedEnergy;
-				this.updateDetection(this.doGetDetectedEnergy());
+				float prevDetectedEnergy = detectedEnergy;
+				updateDetection(doGetDetectedEnergy());
 
 				boolean outputRedstone = false;
 
@@ -80,86 +81,84 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 					default:
 						break;
 					case EQUAL:
-						outputRedstone = this.detectedEnergy == this.energyLimit;
+						outputRedstone = detectedEnergy == energyLimit;
 						break;
 					case GREATER_THAN:
-						outputRedstone = this.detectedEnergy > this.energyLimit;
+						outputRedstone = detectedEnergy > energyLimit;
 						break;
 					case GREATER_THAN_EQUAL:
-						outputRedstone = this.detectedEnergy >= this.energyLimit;
+						outputRedstone = detectedEnergy >= energyLimit;
 						break;
 					case LESS_THAN:
-						outputRedstone = this.detectedEnergy < this.energyLimit;
+						outputRedstone = detectedEnergy < energyLimit;
 						break;
 					case LESS_THAN_EQUAL:
-						outputRedstone = this.detectedEnergy <= this.energyLimit;
+						outputRedstone = detectedEnergy <= energyLimit;
 						break;
 				}
 
-				if (outputRedstone != this.redstoneOn)
+				if (outputRedstone != redstoneOn)
 				{
-					this.redstoneOn = outputRedstone;
-					this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ResonantInduction.blockMultimeter.blockID);
+					redstoneOn = outputRedstone;
+					worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, ResonantInduction.blockMultimeter.blockID);
 				}
 
-				if (prevDetectedEnergy != this.detectedEnergy)
+				if (prevDetectedEnergy != detectedEnergy)
 				{
-					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+					PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
 				}
 			}
 		}
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			for (EntityPlayer player : this.playersUsing)
+			for (EntityPlayer player : playersUsing)
 			{
-				PacketDispatcher.sendPacketToPlayer(this.getDescriptionPacket(), (Player) player);
+				PacketDispatcher.sendPacketToPlayer(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()), (Player) player);
 			}
 		}
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	{
+		switch (data.readByte())
+		{
+			default:
+				detectMode = DetectMode.values()[data.readByte()];
+				detectedEnergy = data.readFloat();
+				energyLimit = data.readFloat();
+				break;
+			case 2:
+				toggleMode();
+				break;
+			case 3:
+				energyLimit = data.readFloat();
+				break;
+		}
+	}
+
+	@Override
+	public ArrayList getPacketData(int type)
+	{
+		ArrayList data = new ArrayList();
+		data.add((byte) 1);
+		data.add((byte) detectMode.ordinal());
+		data.add(detectedEnergy);
+		data.add(energyLimit);
+		return data;
 	}
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 1, (byte) this.detectMode.ordinal(), this.detectedEnergy, this.energyLimit);
-	}
-
-	@Override
-	public void handle(ByteArrayDataInput input)
-	{
-		try
-		{
-			switch (input.readByte())
-			{
-				default:
-					this.detectMode = DetectMode.values()[input.readByte()];
-					this.detectedEnergy = input.readFloat();
-					this.energyLimit = input.readFloat();
-					break;
-				case 2:
-					this.toggleMode();
-					break;
-				case 3:
-					this.energyLimit = input.readFloat();
-					break;
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public ArrayList getNetworkedData(ArrayList data)
-	{
-		return null;
+		return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
 	}
 
 	public float doGetDetectedEnergy()
 	{
-		ForgeDirection direction = this.getDirection();
-		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + direction.offsetX, this.yCoord + direction.offsetY, this.zCoord + direction.offsetZ);
+		ForgeDirection direction = getDirection();
+		TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
 		return getDetectedEnergy(direction.getOpposite(), tileEntity);
 	}
 
@@ -186,9 +185,9 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 		{
 			return ((IEnergyStorage) tileEntity).getStored();
 		}
-		else if (tileEntity instanceof IEnergyStorage)
+		else if (tileEntity instanceof TileEnergyHandler)
 		{
-			return ((IEnergyStorage) tileEntity).getStored();
+			return ((TileEnergyHandler) tileEntity).getEnergyStored(side.getOpposite());
 		}
 		else if (tileEntity instanceof IPowerReceptor)
 		{
@@ -203,82 +202,72 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IPacketR
 
 	public void updateDetection(float detected)
 	{
-		this.detectedEnergy = detected;
-		this.detectedAverageEnergy = (detectedAverageEnergy + this.detectedEnergy) / 2;
-		this.peakDetection = Math.max(peakDetection, this.detectedEnergy);
+		detectedEnergy = detected;
+		detectedAverageEnergy = (detectedAverageEnergy + detectedEnergy) / 2;
+		peakDetection = Math.max(peakDetection, detectedEnergy);
 	}
 
 	public float getDetectedEnergy()
 	{
-		return this.detectedEnergy;
+		return detectedEnergy;
 	}
 
 	public float getAverageDetectedEnergy()
 	{
-		return this.detectedAverageEnergy;
+		return detectedAverageEnergy;
 	}
 
 	public void toggleMode()
 	{
-		this.detectMode = DetectMode.values()[(this.detectMode.ordinal() + 1) % DetectMode.values().length];
+		detectMode = DetectMode.values()[(detectMode.ordinal() + 1) % DetectMode.values().length];
 	}
 
-	/**
-	 * Reads a tile entity from NBT.
-	 */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.detectMode = DetectMode.values()[nbt.getInteger("detectMode")];
-		this.energyLimit = nbt.getFloat("energyLimit");
+		detectMode = DetectMode.values()[nbt.getInteger("detectMode")];
+		energyLimit = nbt.getFloat("energyLimit");
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("detectMode", this.detectMode.ordinal());
-		nbt.setFloat("energyLimit", this.energyLimit);
+		nbt.setInteger("detectMode", detectMode.ordinal());
+		nbt.setFloat("energyLimit", energyLimit);
 	}
 
 	public DetectMode getMode()
 	{
-		return this.detectMode;
+		return detectMode;
 	}
 
 	public float getLimit()
 	{
-		return this.energyLimit;
+		return energyLimit;
 	}
 
-	/**
-	 * @return
-	 */
 	public float getPeak()
 	{
-		return this.peakDetection;
+		return peakDetection;
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction == this.getDirection();
+		return direction == getDirection();
 	}
 
 	@Override
 	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+		return ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
 	}
 
 	@Override
 	public void setDirection(ForgeDirection direction)
 	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, direction.ordinal(), 3);
+		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
 	}
-
 }

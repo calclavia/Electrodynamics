@@ -11,10 +11,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -59,7 +59,7 @@ public class GuiMultimeter extends GuiContainer
 
 		try
 		{
-			PacketHandler.sendPacketToServer(this.tileEntity, (byte) 3, Float.parseFloat(this.textFieldLimit.getText()));
+			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_TILE.getPacket(this.tileEntity, (byte) 3, Float.parseFloat(this.textFieldLimit.getText())));
 		}
 		catch (Exception e)
 		{
@@ -104,7 +104,7 @@ public class GuiMultimeter extends GuiContainer
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		PacketHandler.sendPacketToServer(this.tileEntity, (byte) 2);
+		PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_TILE.getPacket(this.tileEntity, (byte) 2));
 	}
 
 }

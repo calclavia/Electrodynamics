@@ -12,8 +12,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.wire.multipart.PartConductor;
-import resonantinduction.wire.multipart.PartWire;
+import resonantinduction.wire.PartConductor;
+import resonantinduction.wire.PartWire;
 import universalelectricity.core.vector.Vector3;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;

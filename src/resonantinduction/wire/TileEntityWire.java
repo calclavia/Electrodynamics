@@ -2,22 +2,25 @@ package resonantinduction.wire;
 
 import java.util.ArrayList;
 
+import resonantinduction.ResonantInduction;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.PacketHandler;
-import resonantinduction.base.IPacketReceiver;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.compatibility.TileEntityUniversalConductor;
 import universalelectricity.core.block.INetworkProvider;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import buildcraft.api.power.PowerHandler;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
+import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityWire extends TileEntityUniversalConductor implements IPacketReceiver, IInsulatedMaterial
+public class TileEntityWire extends TileEntityUniversalConductor implements IPacketSender, IPacketReceiver, IInsulatedMaterial
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -124,18 +127,25 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public ArrayList getPacketData(int type)
 	{
-		return PacketHandler.getTileEntityPacket(this, this.isInsulated, this.dyeID);
+		ArrayList data = new ArrayList();
+		return data;
 	}
 
 	@Override
-	public void handle(ByteArrayDataInput input)
+	public Packet getDescriptionPacket()
+	{
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(1));
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
 		try
 		{
-			this.isInsulated = input.readBoolean();
-			this.dyeID = input.readInt();
+			this.isInsulated = data.readBoolean();
+			this.dyeID = data.readInt();
 		}
 		catch (Exception e)
 		{
@@ -163,12 +173,6 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 		super.writeToNBT(nbt);
 		nbt.setInteger("dyeID", this.dyeID);
 		nbt.setBoolean("isInsulated", this.isInsulated);
-	}
-
-	@Override
-	public ArrayList getNetworkedData(ArrayList data)
-	{
-		return null;
 	}
 
 	@Override
@@ -204,4 +208,5 @@ public class TileEntityWire extends TileEntityUniversalConductor implements IPac
 	{
 		setDye(dyeID);
 	}
+
 }

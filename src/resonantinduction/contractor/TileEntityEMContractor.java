@@ -11,6 +11,7 @@ import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.BlockVine;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,13 +21,13 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
-import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.IPacketReceiver;
-import resonantinduction.base.InventoryUtil;
 import resonantinduction.tesla.TileEntityTesla;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.InventoryHelper;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -35,7 +36,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author AidanBrady
  * 
  */
-public class TileEntityEMContractor extends TileEntityAdvanced implements IPacketReceiver
+public class TileEntityEMContractor extends TileEntityAdvanced implements IPacketReceiver, IPacketSender
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -69,7 +70,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	public void initiate()
 	{
 		super.initiate();
-		this.updateBounds();
+		updateBounds();
 	}
 
 	@Override
@@ -77,16 +78,16 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	{
 		super.updateEntity();
 
-		this.pushDelay = Math.max(0, this.pushDelay - 1);
+		pushDelay = Math.max(0, pushDelay - 1);
 
-		if (this.tempLinkVector != null)
+		if (tempLinkVector != null)
 		{
-			if (this.tempLinkVector.getTileEntity(this.worldObj) instanceof TileEntityEMContractor)
+			if (tempLinkVector.getTileEntity(worldObj) instanceof TileEntityEMContractor)
 			{
-				this.setLink((TileEntityEMContractor) this.tempLinkVector.getTileEntity(this.worldObj), true);
+				setLink((TileEntityEMContractor) tempLinkVector.getTileEntity(worldObj), true);
 			}
 
-			this.tempLinkVector = null;
+			tempLinkVector = null;
 		}
 
 		if (canFunction())
@@ -96,7 +97,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 			if (!suck && pushDelay == 0)
 			{
-				ItemStack retrieved = InventoryUtil.takeTopItemFromInventory(inventory, this.getDirection().ordinal());
+				ItemStack retrieved = InventoryHelper.takeTopItemFromInventory(inventory, getDirection().getOpposite().ordinal());
 
 				if (retrieved != null)
 				{
@@ -104,7 +105,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 					if (!worldObj.isRemote)
 					{
-						this.worldObj.spawnEntityInWorld(item);
+						worldObj.spawnEntityInWorld(item);
 					}
 
 					pushDelay = PUSH_DELAY;
@@ -114,130 +115,143 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 			{
 				if (suckBounds != null)
 				{
-					for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
+					if (!worldObj.isRemote)
 					{
-						ItemStack remains = InventoryUtil.putStackInInventory(inventory, item.getEntityItem(), this.getDirection().ordinal());
+						for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
+						{
+							ItemStack remains = InventoryHelper.putStackInInventory(inventory, item.getEntityItem(), getDirection().getOpposite().ordinal(), false);
 
-						if (remains == null)
-						{
-							item.setDead();
-						}
-						else
-						{
-							item.setEntityItemStack(remains);
+							if (remains == null)
+							{
+								item.setDead();
+							}
+							else
+							{
+								item.setEntityItemStack(remains);
+							}
 						}
 					}
 				}
 			}
 
-			if (this.thread != null)
+			if (thread != null)
 			{
-				PathfinderEMContractor newPath = this.thread.getPath();
+				PathfinderEMContractor newPath = thread.getPath();
 
 				if (newPath != null)
 				{
-					this.pathfinder = newPath;
-					this.thread = null;
+					pathfinder = newPath;
+					thread = null;
 				}
 			}
 
-			final int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + this.worldObj.rand.nextInt(2) : 10 + this.worldObj.rand.nextInt(2);
-			final boolean renderBeam = this.ticks % renderFrequency == 0 && this.linked != null && !this.linked.isInvalid() && this.linked.suck != this.suck;
+			final int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + worldObj.rand.nextInt(2) : 10 + worldObj.rand.nextInt(2);
+			final boolean renderBeam = ticks % renderFrequency == 0 && hasLink() && linked.suck != suck;
 
-			if (!this.suck)
+			if (hasLink())
 			{
-				if (this.linked != null && !this.linked.isInvalid())
+				if (!suck)
 				{
 					if (renderBeam)
 					{
-						ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+						ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
 					}
 
-					/**
-					 * Push entity along path.
-					 */
-					if (this.pathfinder != null)
+					// Push entity along path.
+					if (pathfinder != null)
 					{
-						for (int i = 0; i < this.pathfinder.results.size(); i++)
+						for (int i = 0; i < pathfinder.results.size(); i++)
 						{
-							Vector3 result = this.pathfinder.results.get(i).clone();
+							Vector3 result = pathfinder.results.get(i).clone();
 
-							if (TileEntityEMContractor.canBePath(this.worldObj, result))
+							if (TileEntityEMContractor.canBePath(worldObj, result))
 							{
 								if (i - 1 >= 0)
 								{
-									Vector3 prevResult = this.pathfinder.results.get(i - 1).clone();
+									Vector3 prevResult = pathfinder.results.get(i - 1).clone();
 
 									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();
 
 									if (renderBeam)
 									{
-										ResonantInduction.proxy.renderElectricShock(this.worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+										ResonantInduction.proxy.renderElectricShock(worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
 									}
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
-									List<EntityItem> entities = this.worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
+									List<EntityItem> entities = worldObj.getEntitiesWithinAABB(EntityItem.class, bounds);
 
 									for (EntityItem entityItem : entities)
 									{
-										this.moveEntity(entityItem, direction, result);
+										moveEntity(entityItem, direction, result);
 									}
 								}
 
 							}
 							else
 							{
-								this.updatePath();
+								updatePath();
 								break;
 							}
 						}
 					}
 					else
 					{
-						this.updatePath();
+						updatePath();
 					}
 				}
-			}
-			else
-			{
-				if (renderBeam && this.linked != null && this.linked.pathfinder != null)
+				else
 				{
-					ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(this.getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
-				}
-
-				this.pathfinder = null;
-
-				AxisAlignedBB searchBounds = this.operationBounds;
-
-				if (this.linked != null)
-				{
-					Vector3 searchVec = new Vector3(this).modifyPositionFromSide(this.getDirection());
-					searchBounds = AxisAlignedBB.getAABBPool().getAABB(searchVec.x, searchVec.y, searchVec.z, searchVec.x + 1, searchVec.y + 1, searchVec.z + 1);
-				}
-
-				if (searchBounds != null)
-				{
-					for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, searchBounds))
+					if (renderBeam)
 					{
-						if (renderBeam)
-						{
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), ResonantInduction.DYE_COLORS[dyeID], false);
-						}
+						ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+					}
 
-						this.moveEntity(entityItem, this.getDirection(), new Vector3(this));
+					pathfinder = null;
+
+					Vector3 searchVec = new Vector3(this).modifyPositionFromSide(getDirection());
+					AxisAlignedBB searchBounds = AxisAlignedBB.getAABBPool().getAABB(searchVec.x, searchVec.y, searchVec.z, searchVec.x + 1, searchVec.y + 1, searchVec.z + 1);
+
+					if (searchBounds != null)
+					{
+						for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, searchBounds))
+						{
+							if (renderBeam)
+							{
+								ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), ResonantInduction.DYE_COLORS[dyeID], false);
+							}
+
+							moveEntity(entityItem, getDirection(), new Vector3(this));
+						}
 					}
 				}
 			}
-		}
+			else if (!hasLink())
+			{
+				for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
+				{
+					moveEntity(entityItem, getDirection(), new Vector3(this));
+				}
+			}
 
-		this.lastCalcTime--;
+			if (linked != null && linked.isInvalid())
+			{
+				linked = null;
+			}
+
+			lastCalcTime--;
+		}
 	}
 
 	public static boolean canBePath(World world, Vector3 position)
 	{
 		Block block = Block.blocksList[position.getBlockID(world)];
 		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
+	}
+
+	private boolean hasLink()
+	{
+		return linked != null && !linked.isInvalid() && linked.linked == this;
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
@@ -348,6 +362,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 				break;
 		}
 
+		entityItem.ticksExisted = 1;
 		entityItem.isAirBorne = true;
 		entityItem.delayBeforeCanPickup = 1;
 		entityItem.age = Math.max(entityItem.age - 1, 0);
@@ -357,7 +372,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	{
 		EntityItem item = null;
 
-		switch (this.getDirection())
+		switch (getDirection())
 		{
 			case DOWN:
 				item = new EntityItem(worldObj, xCoord + 0.5, yCoord - 0.2, zCoord + 0.5, toSend);
@@ -388,20 +403,9 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 		return item;
 	}
 
-	@Override
-	public void validate()
-	{
-		super.validate();
-
-		if (worldObj.isRemote)
-		{
-			PacketHandler.sendDataRequest(this);
-		}
-	}
-
 	public void updateBounds()
 	{
-		switch (this.getDirection())
+		switch (getDirection())
 		{
 			case DOWN:
 				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, Math.max(yCoord - MAX_REACH, 1), zCoord, xCoord + 1, yCoord, zCoord + 1);
@@ -439,7 +443,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 	public TileEntity getLatched()
 	{
-		ForgeDirection side = this.getDirection().getOpposite();
+		ForgeDirection side = getDirection().getOpposite();
 
 		TileEntity tile = worldObj.getBlockTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ);
 
@@ -453,78 +457,40 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 	public void incrementFacing()
 	{
-		int newOrdinal = this.getDirection().ordinal() < 5 ? this.getDirection().ordinal() + 1 : 0;
-		this.setFacing(ForgeDirection.getOrientation(newOrdinal));
+		int newOrdinal = getDirection().ordinal() < 5 ? getDirection().ordinal() + 1 : 0;
+		setDirection(ForgeDirection.getOrientation(newOrdinal));
 	}
 
 	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
-	public void setFacing(ForgeDirection side)
+	public void setDirection(ForgeDirection side)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, side.ordinal(), 3);
-
-		if (!worldObj.isRemote)
-		{
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-
-		updateBounds();
-	}
-
-	public boolean canFunction()
-	{
-		return isLatched() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		this.updateBounds();
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public ArrayList getPacketData(int type)
 	{
-		super.readFromNBT(nbt);
-		this.suck = nbt.getBoolean("suck");
-		this.dyeID = nbt.getInteger("dyeID");
-		this.tempLinkVector = new Vector3(nbt.getCompoundTag("link"));
-	}
+		ArrayList data = new ArrayList();
+		data.add(suck);
+		data.add(dyeID);
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setBoolean("suck", suck);
-		nbt.setInteger("dyeID", this.dyeID);
-
-		if (this.linked != null)
+		if (linked != null)
 		{
-			nbt.setCompoundTag("link", new Vector3(this.linked).writeToNBT(new NBTTagCompound()));
-		}
-	}
+			data.add(true);
 
-	@Override
-	public void handle(ByteArrayDataInput input)
-	{
-		try
+			data.add(linked.xCoord);
+			data.add(linked.yCoord);
+			data.add(linked.zCoord);
+		}
+		else
 		{
-			suck = input.readBoolean();
-			this.dyeID = input.readInt();
-
-			if (input.readBoolean())
-			{
-				this.tempLinkVector = new Vector3(input.readInt(), input.readInt(), input.readInt());
-			}
-
-			this.worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-			updateBounds();
+			data.add(false);
 		}
-		catch (Exception e)
-		{
-		}
-	}
-
-	@Override
-	public ArrayList getNetworkedData(ArrayList data)
-	{
 
 		return data;
 	}
@@ -532,13 +498,54 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (this.linked != null)
+		return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	{
+		suck = data.readBoolean();
+		dyeID = data.readInt();
+
+		if (data.readBoolean())
 		{
-			return PacketHandler.getTileEntityPacket(this, this.suck, this.dyeID, true, this.linked.xCoord, this.linked.yCoord, this.linked.zCoord);
+			tempLinkVector = new Vector3(data.readInt(), data.readInt(), data.readInt());
 		}
-		else
+
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		updateBounds();
+	}
+
+	public boolean canFunction()
+	{
+		return isLatched() && !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		this.suck = nbt.getBoolean("suck");
+		this.dyeID = nbt.getInteger("dyeID");
+
+		if (nbt.hasKey("link"))
 		{
-			return PacketHandler.getTileEntityPacket(this, this.suck, this.dyeID, false);
+			tempLinkVector = new Vector3(nbt.getCompoundTag("link"));
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		nbt.setBoolean("suck", suck);
+		nbt.setInteger("dyeID", dyeID);
+
+		if (linked != null)
+		{
+			nbt.setCompoundTag("link", new Vector3(linked).writeToNBT(new NBTTagCompound()));
 		}
 	}
 
@@ -547,47 +554,46 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	 */
 	public void setLink(TileEntityEMContractor tileEntity, boolean setOpponent)
 	{
-		if (this.linked != null && setOpponent)
+		if (linked != null && setOpponent)
 		{
-			this.linked.setLink(null, false);
+			linked.setLink(null, false);
 		}
 
-		this.linked = tileEntity;
+		linked = tileEntity;
 
 		if (setOpponent)
 		{
-			this.linked.setLink(this, false);
+			linked.setLink(this, false);
 		}
 
-		this.updatePath();
+		updatePath();
 	}
 
 	public void updatePath()
 	{
-		if (this.thread == null && this.linked != null && this.lastCalcTime <= 0)
+		if (thread == null && linked != null && lastCalcTime <= 0)
 		{
-			this.pathfinder = null;
-			Vector3 start = new Vector3(this).modifyPositionFromSide(this.getDirection());
-			Vector3 target = new Vector3(this.linked).modifyPositionFromSide(this.linked.getDirection());
+			pathfinder = null;
+
+			Vector3 start = new Vector3(this).modifyPositionFromSide(getDirection());
+			Vector3 target = new Vector3(linked).modifyPositionFromSide(linked.getDirection());
 
 			if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
 			{
-				if (TileEntityEMContractor.canBePath(this.worldObj, start) && TileEntityEMContractor.canBePath(this.worldObj, target))
+				if (TileEntityEMContractor.canBePath(worldObj, start) && TileEntityEMContractor.canBePath(worldObj, target))
 				{
-					this.thread = new ThreadEMPathfinding(new PathfinderEMContractor(this.worldObj, target), start);
-					this.thread.start();
-					this.lastCalcTime = 40;
+					thread = new ThreadEMPathfinding(new PathfinderEMContractor(worldObj, target), start);
+					thread.start();
+					lastCalcTime = 40;
 				}
 			}
 		}
 	}
 
-	/**
-	 * @param itemDamage
-	 */
-	public void setDye(int dyeID)
+	public void setDye(int dye)
 	{
-		this.dyeID = dyeID;
-		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		dyeID = dye;
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
+
 }

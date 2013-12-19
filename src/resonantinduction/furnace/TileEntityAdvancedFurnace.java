@@ -1,6 +1,6 @@
-package resonantinduction;
+package resonantinduction.furnace;
 
-import net.minecraft.block.BlockFurnace;
+import resonantinduction.ResonantInduction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;

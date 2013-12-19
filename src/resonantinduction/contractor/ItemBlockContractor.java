@@ -23,7 +23,7 @@ public class ItemBlockContractor extends ItemBlock
 		if (place)
 		{
 			TileEntityEMContractor tileContractor = (TileEntityEMContractor) world.getBlockTileEntity(x, y, z);
-			tileContractor.setFacing(ForgeDirection.getOrientation(side));
+			tileContractor.setDirection(ForgeDirection.getOrientation(side));
 
 			if (!tileContractor.isLatched())
 			{
@@ -33,7 +33,7 @@ public class ItemBlockContractor extends ItemBlock
 
 					if (tileEntity instanceof IInventory)
 					{
-						tileContractor.setFacing(side1.getOpposite());
+						tileContractor.setDirection(side1.getOpposite());
 						break;
 					}
 				}

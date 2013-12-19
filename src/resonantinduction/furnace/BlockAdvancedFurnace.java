@@ -1,4 +1,4 @@
-package resonantinduction;
+package resonantinduction.furnace;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;

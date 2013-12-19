@@ -9,12 +9,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
-import universalelectricity.core.block.IConductor;
 import universalelectricity.prefab.block.BlockConductor;
 
 /**

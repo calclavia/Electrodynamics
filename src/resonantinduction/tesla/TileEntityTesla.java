@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
@@ -20,13 +21,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.PacketHandler;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
-import resonantinduction.base.IPacketReceiver;
 import universalelectricity.compatibility.TileEntityUniversalElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -40,7 +41,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileEntityTesla extends TileEntityUniversalElectrical implements ITesla, IPacketReceiver
+public class TileEntityTesla extends TileEntityUniversalElectrical implements ITesla, IPacketSender, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final float TRANSFER_CAP = 10;
@@ -281,63 +282,64 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		return this.isController();
 	}
 
+	/**
+	 * 1 - Description Packet
+	 * 2 - Energy Update
+	 * 3 - Tesla Beam
+	 */
+	@Override
+	public ArrayList getPacketData(int type)
+	{
+		ArrayList data = new ArrayList();
+		data.add((byte) type);
+
+		switch (type)
+		{
+			case 1:
+			{
+				data.add(this.getEnergyStored());
+				data.add(this.dyeID);
+				data.add(this.canReceive);
+				data.add(this.attackEntities);
+				data.add(this.linked != null);
+				break;
+			}
+			case 2:
+			{
+				data.add(this.getEnergyStored());
+			}
+		}
+
+		return data;
+	}
+
+	public void sendPacket(int type)
+	{
+		PacketDispatcher.sendPacketToAllInDimension(ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(type)), this.worldObj.provider.dimensionId);
+	}
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 1, this.getEnergyStored(), this.dyeID, this.canReceive, this.attackEntities, this.linked != null);
-	}
-
-	public Packet getDescriptionPacket2()
-	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 2, this.getEnergyStored());
-	}
-
-	/**
-	 * Do Tesla Beam.
-	 */
-	public Packet getDescriptionPacket3()
-	{
-		return PacketHandler.getTileEntityPacket(this, (byte) 3);
-	}
-
-	public void sendPacket(int id)
-	{
-		switch (id)
-		{
-			case 1:
-				PacketDispatcher.sendPacketToAllInDimension(this.getDescriptionPacket(), this.worldObj.provider.dimensionId);
-				break;
-			case 2:
-				PacketDispatcher.sendPacketToAllInDimension(this.getDescriptionPacket2(), this.worldObj.provider.dimensionId);
-				break;
-			case 3:
-				PacketDispatcher.sendPacketToAllInDimension(this.getDescriptionPacket3(), this.worldObj.provider.dimensionId);
-				break;
-		}
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(1));
 	}
 
 	@Override
-	public ArrayList getNetworkedData(ArrayList data)
-	{
-		return null;
-	}
-
-	@Override
-	public void handle(ByteArrayDataInput input)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
 		try
 		{
-			switch (input.readByte())
+			switch (data.readByte())
 			{
 				case 1:
-					this.setEnergyStored(input.readFloat());
-					this.dyeID = input.readInt();
-					this.canReceive = input.readBoolean();
-					this.attackEntities = input.readBoolean();
-					this.isLinkedClient = input.readBoolean();
+					this.setEnergyStored(data.readFloat());
+					this.dyeID = data.readInt();
+					this.canReceive = data.readBoolean();
+					this.attackEntities = data.readBoolean();
+					this.isLinkedClient = data.readBoolean();
 					break;
 				case 2:
-					this.setEnergyStored(input.readFloat());
+					this.setEnergyStored(data.readFloat());
 					break;
 				case 3:
 					this.doTransfer = true;

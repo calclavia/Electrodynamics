@@ -1,7 +1,7 @@
 package resonantinduction;
 
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.multipart.PartWire;
+import resonantinduction.wire.PartWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
