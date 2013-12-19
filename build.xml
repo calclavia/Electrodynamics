@@ -27,7 +27,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Modding-Library/src">
+			<fileset dir="${dir.development}Calclavia-Library/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
@@ -91,8 +91,10 @@
 		<jar destfile="${file.main}">
 			<fileset dir="JarContents" />
 		</jar>
+		
+		<!--
 		<zip destfile="${file.api}">
 			<fileset dir="APIContents" />
-		</zip>
+		</zip>-->
 	</target>
 </project>

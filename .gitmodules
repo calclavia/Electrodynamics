@@ -1,3 +1,3 @@
-[submodule "Modding-Library"]
-	path = Modding-Library
-	url = git@bitbucket.org:calclavia/modding-library.git
+[submodule "Calclavia-Library"]
+	path = Calclavia-Library
+	url = https://calclavia@bitbucket.org/calclavia/calclavia-library.git
