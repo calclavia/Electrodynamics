@@ -58,7 +58,6 @@ public class DarkCore
     {
         if (!load)
         {
-            ExternalModHandler.init();
             CoreRegistry.masterBlockConfig.load();
             load = true;
         }

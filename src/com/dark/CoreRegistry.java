@@ -35,21 +35,45 @@ public class CoreRegistry
 
     public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "objects/EnabledBlocks.cfg"));
 
+    /** Generates a block using reflection, and runs it threw config checks
+     * 
+     * @param name - name to register the block with
+     * @param modID - mod id to register the block to
+     * @param blockClass - class to generate the instance from */
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass)
     {
         return CoreRegistry.createNewBlock(name, modID, blockClass, true);
     }
 
+    /** Generates a block using reflection, and runs it threw config checks
+     * 
+     * @param name - name to register the block with
+     * @param modID - mod id to register the block to
+     * @param blockClass - class to generate the instance from
+     * @param canDisable - should we allow the player the option to disable the block */
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, boolean canDisable)
     {
         return CoreRegistry.createNewBlock(name, modID, blockClass, null, canDisable);
     }
 
+    /** Generates a block using reflection, and runs it threw config checks
+     * 
+     * @param name - name to register the block with
+     * @param modID - mod id to register the block to
+     * @param blockClass - class to generate the instance from
+     * @param itemClass - item block to register with the block */
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass)
     {
         return createNewBlock(name, modID, blockClass, itemClass, true);
     }
 
+    /** Generates a block using reflection, and runs it threw config checks
+     * 
+     * @param name - name to register the block with
+     * @param modID - mod id to register the block to
+     * @param blockClass - class to generate the instance from
+     * @param canDisable - should we allow the player the option to disable the block
+     * @param itemClass - item block to register with the block */
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemClass, boolean canDisable)
     {
         Block block = null;
@@ -66,7 +90,9 @@ public class CoreRegistry
             }
             catch (Exception e)
             {
+                System.out.println("\n\nWarning: Block [" + name + "] failed to be created\n");
                 e.printStackTrace();
+                System.out.println("\n\n");
             }
             if (block != null)
             {
@@ -166,7 +192,6 @@ public class CoreRegistry
         Item item = null;
         if (clazz != null && (!canDisable || canDisable && masterBlockConfig.get("Enabled_List", "Enabled_" + name, true).getBoolean(true)))
         {
-            //TODO redesign to catch blockID conflict
             try
             {
                 item = clazz.newInstance();

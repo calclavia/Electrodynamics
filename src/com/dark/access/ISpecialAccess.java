@@ -2,10 +2,10 @@ package com.dark.access;
 
 import java.util.List;
 
-/** Used by any object that needs to restrict access to it by a set of users or groups. Make sure to
- * always use the default groups(user,admin,owner) so that things work smoothly.
+/** Deprecated in favor of using profile containers to reduce on methods in the entity class file
  * 
  * @author DarkGuardsman */
+@Deprecated
 public interface ISpecialAccess
 {
     /** Gets the user access instance */

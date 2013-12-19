@@ -8,10 +8,11 @@ public class IndustryTabs extends CreativeTabs
 {
     public ItemStack itemStack = new ItemStack(Item.ingotIron, 1, 0);
 
-    private static IndustryTabs tabAutomation = new IndustryTabs("Automation");
-    private static IndustryTabs tabIndustrial = new IndustryTabs("Industrial");
-    private static IndustryTabs tabHydrualic = new IndustryTabs("Hydraulic");
-    private static IndustryTabs tabMining = new IndustryTabs("Mining");
+    private static IndustryTabs tabAutomation;
+    private static IndustryTabs tabIndustrial;
+    private static IndustryTabs tabHydrualic;
+    private static IndustryTabs tabMining;
+    private static IndustryTabs tabWar;
 
     public IndustryTabs(String label)
     {
@@ -36,6 +37,15 @@ public class IndustryTabs extends CreativeTabs
             tabAutomation = new IndustryTabs("Automation");
         }
         return tabAutomation;
+    }
+
+    public static IndustryTabs tabWar()
+    {
+        if (tabWar == null)
+        {
+            tabWar = new IndustryTabs("War");
+        }
+        return tabWar;
     }
 
     public static IndustryTabs tabIndustrial()

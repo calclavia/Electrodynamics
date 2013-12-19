@@ -284,7 +284,7 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     {
         if (this.saveFile == null)
         {
-            this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), "CoreMachine/Access/" + this.getID() + ".dat");
+            this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), "Access/Profile/" + this.getID() + ".dat");
         }
         return this.saveFile;
     }
