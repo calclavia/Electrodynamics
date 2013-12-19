@@ -1,4 +1,4 @@
-package com.dark.tile.network;
+package com.dark.tilenetwork;
 
 import net.minecraft.entity.Entity;
 import universalelectricity.core.vector.Vector3;

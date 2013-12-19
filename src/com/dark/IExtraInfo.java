@@ -15,12 +15,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /** Used to handle info about the block that would normally be handled by the mod main class. Use the
  * BlockRegistry in order for these methods to be called on load of the mod.
- * 
+ *
  * @author DarkGuardsman */
 public interface IExtraInfo
 {
 
-    /** True will cause a config file to be generated for this block */
+    /** Does this object need to generate a settings config */
     public boolean hasExtraConfigs();
 
     /** Loads the config file for this block. This is a single config file that is tied to just this

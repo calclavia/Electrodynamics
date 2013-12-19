@@ -1,4 +1,4 @@
-package com.dark.prefab.tile.network;
+package com.dark.tilenetwork.prefab;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,8 +10,8 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
-import com.dark.tile.network.IMotionPath;
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.IMotionPath;
+import com.dark.tilenetwork.INetworkPart;
 
 
 /** Class that acts like the redpower pipes system. Each item is marked with a destination. Intended

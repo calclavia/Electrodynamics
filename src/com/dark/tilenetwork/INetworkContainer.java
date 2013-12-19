@@ -1,4 +1,4 @@
-package com.dark.tile.network;
+package com.dark.tilenetwork;
 
 /** Used on tiles that can contain more than one tile network. Currently WIP so don't use unless you
  * know what your doing. When using this use networks like items and store them in slots.

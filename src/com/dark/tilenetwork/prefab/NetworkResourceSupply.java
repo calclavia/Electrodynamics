@@ -1,9 +1,9 @@
-package com.dark.prefab.tile.network;
+package com.dark.tilenetwork.prefab;
 
 import java.util.HashMap;
 import java.util.List;
 
-import com.dark.tile.network.INetworkPart;
+import com.dark.tilenetwork.INetworkPart;
 
 
 import net.minecraft.tileentity.TileEntity;

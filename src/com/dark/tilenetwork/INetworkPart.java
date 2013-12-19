@@ -1,4 +1,4 @@
-package com.dark.tile.network;
+package com.dark.tilenetwork;
 
 import java.util.List;
 

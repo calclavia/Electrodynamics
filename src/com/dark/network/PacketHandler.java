@@ -24,14 +24,13 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.machines.PacketManagerEffects;
 
 /** Packet manager based off the PacketManager from UE created by Calclavia. However changed so it
  * can easily be extended without changing the base handler file. Instead of changing the base file
  * manager can be registered to the handle that pickup on ids and then handle there own data from
  * those ids. This lets new and complex handling to be created without many overlap or long methods
  * in the packet handler
- * 
+ *
  * @author DarkGuardsman */
 public class PacketHandler implements IPacketHandler, IPacketReceiver
 {
@@ -40,13 +39,11 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
     public static HashMap<Integer, IPacketManager> packetTypes = new HashMap<Integer, IPacketManager>();
 
     public static PacketManagerTile tile = new PacketManagerTile();
-    public static PacketManagerEffects effects = new PacketManagerEffects();
 
     public static int maxID = 0;
     static
     {
         registerManager(new PacketManagerTile());
-        registerManager(new PacketManagerEffects());
         registerManager(PacketManagerKeyEvent.instance());
         registerManager(new PacketManagerEntity());
     }
@@ -176,7 +173,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
     }
 
     /** Gets a packet for the tile entity.
-     * 
+     *
      * @return */
     @SuppressWarnings("resource")
     public Packet getTilePacket(String channelName, TileEntity sender, Object... sendData)

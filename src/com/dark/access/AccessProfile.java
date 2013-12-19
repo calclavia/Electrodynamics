@@ -2,18 +2,19 @@ package com.dark.access;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.dark.save.IVirtualObject;
-import com.dark.save.NBTFileHelper;
-import com.dark.save.SaveManager;
-
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+
+import com.dark.save.IVirtualObject;
+import com.dark.save.NBTFileHelper;
+import com.dark.save.SaveManager;
 
 /** Designed to be used as a container for AccessGroups and AccessUser. If you plan to use this make
  * sure to use it correctly. This is designed to be saved separate from the world save if marked for
@@ -34,6 +35,8 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
     /** Save file by which this was loaded from. Mainly used to save it in the same location again. */
     protected File saveFile;
 
+    private static final Set<AccessProfile> globalList = new HashSet<AccessProfile>();
+
     static
     {
         SaveManager.registerClass("AccessProfile", AccessProfile.class);
@@ -44,6 +47,7 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
         if (global)
         {
             SaveManager.register(this);
+            AccessProfile.globalList.add(this);
         }
     }
 
@@ -67,6 +71,18 @@ public class AccessProfile implements ISpecialAccess, IVirtualObject
                 this.generateNew("New Group", "global");
             }
         }
+    }
+
+    public static AccessProfile get(String name)
+    {
+        for (AccessProfile profile : globalList)
+        {
+            if (profile.getID().equalsIgnoreCase(name))
+            {
+                return profile;
+            }
+        }
+        return null;
     }
 
     public AccessProfile generateNew(String name, Object object)

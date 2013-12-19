@@ -23,17 +23,17 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- *
+ * 
  * @author DarkGuardsman */
 public class CoreRegistry
 {
     public static HashMap<Block, String> registredBlocks = new HashMap<Block, String>();
     public static HashMap<Item, String> registredItems = new HashMap<Item, String>();
 
-    @SidedProxy(clientSide = "dark.core.ClientRegistryProxy", serverSide = "dark.core.RegistryProxy")
+    @SidedProxy(clientSide = "com.dark.ClientRegistryProxy", serverSide = "com.dark.RegistryProxy")
     public static RegistryProxy proxy;
 
-    public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/EnabledBlocks.cfg"));
+    public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "objects/EnabledBlocks.cfg"));
 
     public static Block createNewBlock(String name, String modID, Class<? extends Block> blockClass)
     {
@@ -78,13 +78,14 @@ public class CoreRegistry
         return block;
     }
 
+    /** Finishes the creation of the block loading config files and tile entities */
     public static void finishCreation(Block block)
     {
         if (block instanceof IExtraInfo)
         {
             if (((IExtraInfo) block).hasExtraConfigs())
             {
-                Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/blocks/" + block.getUnlocalizedName() + ".cfg"));
+                Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "objects/blocks/" + block.getUnlocalizedName() + ".cfg"));
                 extraBlockConfig.load();
                 ((IExtraInfo) block).loadExtraConfigs(extraBlockConfig);
                 extraBlockConfig.save();
@@ -104,7 +105,7 @@ public class CoreRegistry
     }
 
     /** Method to get block via name
-     *
+     * 
      * @param blockName
      * @return Block requested */
     public static Block getBlock(String blockName)
@@ -120,22 +121,11 @@ public class CoreRegistry
         return null;
     }
 
-    /** Method to get block via id
-     *
-     * @param blockID
-     * @return Block requested */
-    public static Block getBlock(int blockID)
-    {
-        for (Entry<Block, String> entry : registredBlocks.entrySet())
-        {
-            if (entry.getKey().blockID == blockID)
-            {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
+    /** Creates a new fluid block using the prefab following a few conditions.
+     * 
+     * @param modDomainPrefix - prefix of the mod, used for texture refrence and block registry
+     * @param config - config file to pull the blockID from
+     * @param fluid - fluid to link to this block */
     public static Block createNewFluidBlock(String modDomainPrefix, Configuration config, Fluid fluid)
     {
         Block fluidBlock = null;
@@ -165,7 +155,7 @@ public class CoreRegistry
 
     /** Creates a new item using reflection as well runs it threw some check to activate any
      * interface methods
-     *
+     * 
      * @param name - name to register the item with
      * @param modid - mods that the item comes from
      * @param clazz - item class
@@ -193,7 +183,7 @@ public class CoreRegistry
                 {
                     if (((IExtraInfo) item).hasExtraConfigs())
                     {
-                        Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/items/" + item.getUnlocalizedName() + ".cfg"));
+                        Configuration extraBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "objects/items/" + item.getUnlocalizedName() + ".cfg"));
                         extraBlockConfig.load();
                         ((IExtraInfo) item).loadExtraConfigs(extraBlockConfig);
                         extraBlockConfig.save();

@@ -8,8 +8,8 @@ import universalelectricity.core.UniversalElectricity;
 
 import com.dark.fluid.FluidHelper;
 import com.dark.helpers.PlayerKeyHandler;
-import com.dark.prefab.tile.network.NetworkUpdateHandler;
 import com.dark.save.SaveManager;
+import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;

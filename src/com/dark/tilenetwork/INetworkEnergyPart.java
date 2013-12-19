@@ -1,4 +1,4 @@
-package com.dark.tile.network;
+package com.dark.tilenetwork;
 
 import universalelectricity.core.block.IElectricalStorage;
 
