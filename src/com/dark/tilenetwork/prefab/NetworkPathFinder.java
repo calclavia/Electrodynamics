@@ -3,14 +3,13 @@ package com.dark.tilenetwork.prefab;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.dark.tilenetwork.INetworkPart;
-
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.tilenetwork.INetworkPart;
 
 /** Check if a conductor connects with another. */
 public class NetworkPathFinder extends Pathfinder

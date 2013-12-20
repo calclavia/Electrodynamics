@@ -27,6 +27,9 @@ public class DarkCore
     public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
     public static final String CHANNEL = "DARKCORE";
 
+    public static final String DOMAIN = "darkcore";
+    public static final String PREFIX = DOMAIN + ":";
+
     /* START IDS */
     public static int BLOCK_ID_PRE = 3100;
     public static int ITEM_ID_PREFIX = 13200;

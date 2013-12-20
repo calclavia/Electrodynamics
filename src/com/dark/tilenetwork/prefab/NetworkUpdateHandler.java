@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.dark.tilenetwork.ITileNetwork;
 
-
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 

@@ -5,15 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.dark.tilenetwork.INetworkPart;
-import com.dark.tilenetwork.ITileNetwork;
-
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.path.Pathfinder;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
+
+import com.dark.tilenetwork.INetworkPart;
+import com.dark.tilenetwork.ITileNetwork;
 
 public class NetworkTileEntities implements ITileNetwork
 {

@@ -3,11 +3,10 @@ package com.dark.tilenetwork.prefab;
 import java.util.HashMap;
 import java.util.List;
 
-import com.dark.tilenetwork.INetworkPart;
-
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+
+import com.dark.tilenetwork.INetworkPart;
 
 /** Network that supplies resources to tiles that demand a set resource
  * 

@@ -3,8 +3,6 @@ package com.dark.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dark.interfaces.IExtendedStorage;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -14,6 +12,8 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
+
+import com.dark.interfaces.IExtendedStorage;
 
 /** Helper that handles most of the interaction of the tile with the inventories around it
  *
