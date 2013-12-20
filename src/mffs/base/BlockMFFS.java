@@ -1,5 +1,6 @@
 package mffs.base;
 
+import calclavia.lib.prefab.block.BlockRotatable;
 import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.core.UniversalElectricity;
-import universalelectricity.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

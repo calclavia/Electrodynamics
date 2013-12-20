@@ -21,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.PacketManager;
+import calclavia.lib.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 

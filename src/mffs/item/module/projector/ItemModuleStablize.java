@@ -3,6 +3,7 @@ package mffs.item.module.projector;
 import java.util.HashMap;
 import java.util.Set;
 
+import calclavia.lib.prefab.network.PacketManager;
 import mffs.ModularForceFieldSystem;
 import mffs.api.Blacklist;
 import mffs.api.EventStabilize;
@@ -21,7 +22,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
-import universalelectricity.prefab.network.PacketManager;
 
 public class ItemModuleStablize extends ItemModule
 {

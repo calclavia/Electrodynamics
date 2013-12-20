@@ -1,10 +1,10 @@
 package mffs.tileentity;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,8 +37,8 @@ public abstract class TileEntityFieldInteraction extends TileEntityModuleAccepto
 	 */
 	public boolean isAbsolute = false;
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
-	private final List<DelayedEvent> delayedEvents = new ArrayList<DelayedEvent>();
-	private final List<DelayedEvent> quedDelayedEvents = new ArrayList<DelayedEvent>();
+	private final List<DelayedEvent> delayedEvents = new LinkedList<DelayedEvent>();
+	private final List<DelayedEvent> quedDelayedEvents = new LinkedList<DelayedEvent>();
 
 	@Override
 	public void updateEntity()

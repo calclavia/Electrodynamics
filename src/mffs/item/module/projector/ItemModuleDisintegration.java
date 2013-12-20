@@ -2,6 +2,7 @@ package mffs.item.module.projector;
 
 import java.util.Set;
 
+import calclavia.lib.prefab.network.PacketManager;
 import mffs.IDelayedEventHandler;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
@@ -20,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.PacketManager;
 
 public class ItemModuleDisintegration extends ItemModule
 {

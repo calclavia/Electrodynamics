@@ -22,10 +22,10 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.vector.Region2;
 import calclavia.lib.gui.GuiContainerBase;
+import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase

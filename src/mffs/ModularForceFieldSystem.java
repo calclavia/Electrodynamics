@@ -67,12 +67,12 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import universalelectricity.compatibility.Compatibility;
-import universalelectricity.prefab.CustomDamageSource;
-import universalelectricity.prefab.RecipeHelper;
-import universalelectricity.prefab.TranslationHelper;
-import universalelectricity.prefab.network.PacketManager;
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
+import calclavia.lib.prefab.CustomDamageSource;
+import calclavia.lib.prefab.RecipeHelper;
+import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

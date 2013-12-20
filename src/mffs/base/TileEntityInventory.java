@@ -18,8 +18,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.PacketManager;
 import calclavia.lib.multiblock.TileEntityMultiBlockPart;
+import calclavia.lib.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 

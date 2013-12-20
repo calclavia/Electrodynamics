@@ -1,5 +1,7 @@
 package mffs.gui;
 
+import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.prefab.vector.Region2;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileEntityMFFS.TilePacketType;
@@ -15,8 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiMFFS

@@ -1,10 +1,10 @@
 package mffs.base;
 
+import calclavia.lib.prefab.block.BlockTile;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import net.minecraft.block.material.Material;
-import universalelectricity.prefab.block.BlockTile;
 
 public class BlockBase extends BlockTile
 {

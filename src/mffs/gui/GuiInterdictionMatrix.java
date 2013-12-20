@@ -1,5 +1,6 @@
 package mffs.gui;
 
+import calclavia.lib.prefab.network.PacketManager;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileEntityMFFS.TilePacketType;
@@ -10,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.core.electricity.ElectricityDisplay;
 import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiInterdictionMatrix extends GuiMFFS

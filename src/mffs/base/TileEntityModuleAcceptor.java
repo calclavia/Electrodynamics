@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import universalelectricity.prefab.network.PacketManager;
+import calclavia.lib.prefab.network.PacketManager;
 
 import com.google.common.io.ByteArrayDataInput;
 

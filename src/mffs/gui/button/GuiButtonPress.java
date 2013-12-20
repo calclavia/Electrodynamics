@@ -7,8 +7,8 @@ import net.minecraft.client.gui.GuiButton;
 
 import org.lwjgl.opengl.GL11;
 
+import calclavia.lib.prefab.TranslationHelper;
 import universalelectricity.core.vector.Vector2;
-import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiButtonPress extends GuiButton

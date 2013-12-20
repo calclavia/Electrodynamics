@@ -10,9 +10,9 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
-import universalelectricity.prefab.network.PacketManager;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.prefab.network.IPacketReceiver;
+import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
