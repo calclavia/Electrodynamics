@@ -2,22 +2,82 @@ package resonantinduction.wire;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.IConnector;
-import universalelectricity.core.block.INetworkProvider;
-import universalelectricity.core.electricity.NetworkLoader;
-import universalelectricity.core.grid.IElectricityNetwork;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.api.IConnector;
+import universalelectricity.api.INetworkProvider;
+import universalelectricity.api.energy.IConductor;
+import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
+import universalelectricity.core.grid.EnergyNetworkLoader;
+import universalelectricity.core.grid.IEnergyNetwork;
 import codechicken.multipart.TileMultipart;
 
 public abstract class PartConductor extends PartAdvanced implements IConductor
 {
-	private IElectricityNetwork network;
+	private IEnergyNetwork network;
+	private int buffer = 0;
 
 	public TileEntity[] adjacentConnections = null;
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
+
+	@Override
+	public int onReceiveEnergy(ForgeDirection from, int receive, boolean doReceive)
+	{
+		int energyReceived = Math.min(this.getEnergyCapacitance() - this.buffer, receive);
+
+		if (doReceive)
+		{
+			this.buffer += energyReceived;
+		}
+
+		return energyReceived;
+	}
+
+	@Override
+	public int onExtractEnergy(ForgeDirection from, int request, boolean doExtract)
+	{
+		int energyExtracted = Math.min(this.buffer, request);
+
+		if (doExtract)
+		{
+			this.buffer -= energyExtracted;
+		}
+
+		return energyExtracted;
+	}
+
+	@Override
+	public void distribute()
+	{
+		Object[] receivers = this.getAdjacentConnections();
+		int energyUsed = 0;
+
+		for (int i = 0; i < receivers.length; i++)
+		{
+			ForgeDirection direction = ForgeDirection.getOrientation(i);
+			Object receiver = receivers[i];
+
+			if (receiver instanceof IEnergyInterface && !(receiver instanceof IConductor))
+			{
+				energyUsed += ((IEnergyInterface) receiver).onReceiveEnergy(direction.getOpposite(), this.getNetwork().getDistribution(this), true);
+			}
+		}
+
+		this.onExtractEnergy(null, energyUsed, true);
+	}
+
+	@Override
+	public int getEnergyLoss()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getEnergyCapacitance()
+	{
+		return 0;
+	}
 
 	public byte getAllCurrentConnections()
 	{
@@ -31,15 +91,22 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	@Override
+	public void onMoved()
+	{
+		this.refresh();
+	}
+
+	@Override
 	public void bind(TileMultipart t)
 	{
-		if(tile() != null && network != null)
+		if (tile() != null && network != null)
 		{
-			getNetwork().getConductors().remove(tile());
+			getNetwork().getConnectors().remove(tile());
 			super.bind(t);
-			getNetwork().getConductors().add((IConductor) tile());
+			getNetwork().getConnectors().add((IConductor) tile());
 		}
-		else {
+		else
+		{
 			super.bind(t);
 		}
 	}
@@ -47,7 +114,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public void preRemove()
 	{
-		if(!world().isRemote && tile() instanceof IConductor)
+		if (!world().isRemote && tile() instanceof IConductor)
 		{
 			getNetwork().split((IConductor) tile());
 		}
@@ -62,11 +129,11 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	@Override
-	public IElectricityNetwork getNetwork()
+	public IEnergyNetwork getNetwork()
 	{
-		if(network == null && tile() instanceof IConductor)
+		if (network == null && tile() instanceof IConductor)
 		{
-			setNetwork(NetworkLoader.getNewNetwork((IConductor)tile()));
+			setNetwork(EnergyNetworkLoader.getNewNetwork((IConductor) tile()));
 		}
 
 		return network;
@@ -76,16 +143,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	{
 		boolean notPrevented = !isConnectionPrevented(tile, side);
 
-		if(tile instanceof IConnector)
+		if (tile instanceof IConnector)
 		{
-			notPrevented &= ((IConnector)tile).canConnect(side.getOpposite());
+			notPrevented &= ((IConnector) tile).canConnect(side.getOpposite());
 		}
-		
+
 		return notPrevented;
 	}
 
 	@Override
-	public void setNetwork(IElectricityNetwork net)
+	public void setNetwork(IEnergyNetwork net)
 	{
 		network = net;
 	}
@@ -106,16 +173,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	{
 		byte connections = 0x00;
 
-		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-			
-			if(tileEntity instanceof INetworkProvider && canConnectBothSides(tileEntity, side))
+
+			if (tileEntity instanceof INetworkProvider && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
 		}
-		
+
 		return connections;
 	}
 
@@ -123,16 +190,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	{
 		byte connections = 0x00;
 
-		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-			
-			if(isValidAcceptor(tileEntity) && canConnectBothSides(tileEntity, side))
+
+			if (isValidAcceptor(tileEntity) && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
 		}
-		
+
 		return connections;
 	}
 
@@ -144,48 +211,46 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		return tile instanceof IConnector;
 	}
 
-	@Override
 	public void refresh()
 	{
-		if(!world().isRemote)
+		if (!world().isRemote)
 		{
 			adjacentConnections = null;
-			
+
 			byte possibleWireConnections = getPossibleWireConnections();
 			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
 
-			if(possibleWireConnections != currentWireConnections)
+			if (possibleWireConnections != currentWireConnections)
 			{
 				byte or = (byte) (possibleWireConnections | currentWireConnections);
-				
-				if(or != possibleWireConnections) // Connections have been removed
+
+				if (or != possibleWireConnections) // Connections have been removed
 				{
 					getNetwork().split((IConductor) tile());
 					setNetwork(null);
 				}
 
-				for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 				{
-					if(connectionMapContainsSide(possibleWireConnections, side))
+					if (connectionMapContainsSide(possibleWireConnections, side))
 					{
 						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side);
 
-						if(tileEntity instanceof INetworkProvider)
+						if (tileEntity instanceof IConductor)
 						{
-							getNetwork().merge(((INetworkProvider) tileEntity).getNetwork());
+							getNetwork().merge(((IConductor) tileEntity).getNetwork());
 						}
 					}
 				}
 
-				currentWireConnections = possibleWireConnections;
+				this.currentWireConnections = possibleWireConnections;
 			}
 
-			currentAcceptorConnections = possibleAcceptorConnections;
-			
-			getNetwork().refresh();
-			sendDescUpdate();
+			this.currentAcceptorConnections = possibleAcceptorConnections;
+
+			this.sendDescUpdate();
 		}
-		
+
 		tile().markRender();
 	}
 
@@ -196,22 +261,22 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public TileEntity[] getAdjacentConnections()
 	{
-		if(adjacentConnections == null)
+		if (this.adjacentConnections == null)
 		{
-			adjacentConnections = new TileEntity[6];
+			this.adjacentConnections = new TileEntity[6];
 
-			for(byte i = 0; i < 6; i++)
+			for (byte i = 0; i < 6; i++)
 			{
 				ForgeDirection side = ForgeDirection.getOrientation(i);
 				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-				if(isCurrentlyConnected(side))
+				if (isCurrentlyConnected(side))
 				{
-					adjacentConnections[i] = tileEntity;
+					this.adjacentConnections[i] = tileEntity;
 				}
 			}
 		}
-		return adjacentConnections;
+		return this.adjacentConnections;
 	}
 
 	public boolean isCurrentlyConnected(ForgeDirection side)
@@ -250,4 +315,5 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		super.onNeighborChanged();
 		refresh();
 	}
+
 }

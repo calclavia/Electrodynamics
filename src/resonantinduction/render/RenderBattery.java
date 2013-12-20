@@ -25,7 +25,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.model.ModelBattery;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

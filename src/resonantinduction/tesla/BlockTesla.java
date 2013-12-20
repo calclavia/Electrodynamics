@@ -13,7 +13,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
 import resonantinduction.entangler.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

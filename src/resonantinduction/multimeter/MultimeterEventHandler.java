@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
-import universalelectricity.core.electricity.ElectricalEvent.ElectricityProductionEvent;
-import universalelectricity.core.grid.IElectricityNetwork;
+import universalelectricity.api.electricity.ElectricalEvent.EnergyUpdateEvent;
+import universalelectricity.core.grid.IEnergyNetwork;
 
 /**
  * @author Calclavia
@@ -13,12 +13,12 @@ import universalelectricity.core.grid.IElectricityNetwork;
  */
 public class MultimeterEventHandler
 {
-	private static final HashMap<IElectricityNetwork, Float> networkEnergyCache = new HashMap<IElectricityNetwork, Float>();
+	private static final HashMap<IEnergyNetwork, Integer> networkEnergyCache = new HashMap<IEnergyNetwork, Integer>();
 	private static long lastCheckTime = 0;
 
-	public static HashMap<IElectricityNetwork, Float> getCache(World worldObj)
+	public static HashMap<IEnergyNetwork, Float> getCache(World worldObj)
 	{
-		HashMap<IElectricityNetwork, Float> returnCache = (HashMap<IElectricityNetwork, Float>) networkEnergyCache.clone();
+		HashMap<IEnergyNetwork, Float> returnCache = (HashMap<IEnergyNetwork, Float>) networkEnergyCache.clone();
 
 		if (Math.abs(worldObj.getWorldTime() - lastCheckTime) >= 40)
 		{
@@ -30,13 +30,13 @@ public class MultimeterEventHandler
 	}
 
 	@ForgeSubscribe
-	public void event(ElectricityProductionEvent evt)
+	public void event(EnergyUpdateEvent evt)
 	{
-		IElectricityNetwork network = evt.network;
+		IEnergyNetwork network = evt.network;
 
-		if (evt.electricityPack.getWatts() != 0)
+		if (network.getDistribution(null) != 0)
 		{
-			networkEnergyCache.put(network, evt.electricityPack.getWatts());
+			networkEnergyCache.put(network, network.getDistribution(null));
 		}
 	}
 }

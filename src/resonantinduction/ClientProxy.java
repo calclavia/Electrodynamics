@@ -19,7 +19,7 @@ import resonantinduction.render.RenderTesla;
 import resonantinduction.render.RenderWire;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.TileEntityWire;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;

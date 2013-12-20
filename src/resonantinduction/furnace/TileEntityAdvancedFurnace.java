@@ -6,15 +6,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import universalelectricity.api.IEnergyInterface;
-import universalelectricity.api.IVoltage;
 import universalelectricity.api.UniversalClass;
+import universalelectricity.api.electricity.IVoltage;
+import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.block.IConductor;
 import universalelectricity.core.electricity.ElectricityHelper;
 import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.grid.IElectricityNetwork;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.core.grid.IEnergyNetwork;
 
 /**
  * Meant to replace the furnace class.
@@ -72,7 +72,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 							{
 								if (this.furnaceBurnTime > 0)
 								{
-									this.produceUE(direction);
+									this.energyBuffer +=  ResonantInduction.FURNACE_WATTAGE / 20;
 								}
 
 								hasRequest = true;
@@ -137,41 +137,6 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 				((IConductor) tileEntity).refresh();
 			}
 		}
-	}
-
-	/**
-	 * Produces UE power towards a specific direction.
-	 * 
-	 * @param outputDirection - The output direction.
-	 */
-	public boolean produceUE(ForgeDirection outputDirection)
-	{
-		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
-		{
-			float provide = this.onReceiveEnergy(null, Integer.MAX_VALUE, false);
-
-			if (provide > 0)
-			{
-				TileEntity outputTile = VectorHelper.getConnectorFromSide(this.worldObj, new Vector3(this), outputDirection);
-				IElectricityNetwork outputNetwork = ElectricityHelper.getNetworkFromTileEntity(outputTile, outputDirection);
-
-				if (outputNetwork != null)
-				{
-					ElectricityPack powerRequest = outputNetwork.getRequest(this);
-
-					if (powerRequest.getWatts() > 0)
-					{
-						ElectricityPack sendPack = ElectricityPack.getFromWatts(provide, this.getVoltage(null));
-						float rejectedPower = outputNetwork.produce(sendPack, this);
-						this.onExtractEnergy(outputDirection.getOpposite(), (int) (sendPack.getWatts() - rejectedPower), true);
-					}
-
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	@Override

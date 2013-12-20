@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.battery.ContainerBattery;
 import resonantinduction.battery.TileEntityBattery;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.api.electricity.ElectricityDisplay;
+import universalelectricity.api.electricity.ElectricityDisplay.ElectricUnit;
 
 public class GuiBattery extends GuiContainer
 {

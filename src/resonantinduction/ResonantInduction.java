@@ -41,9 +41,9 @@ import resonantinduction.wire.BlockWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemBlockWire;
 import resonantinduction.wire.TileEntityWire;
-import universalelectricity.compatibility.Compatibility;
+import universalelectricity.api.Compatibility;
+import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.item.IItemElectric;
-import universalelectricity.core.vector.Vector3;
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
@@ -310,8 +310,6 @@ public class ResonantInduction
 				LOGGER.severe("Failed to initiate Resonant Induction multipart module.");
 			}
 		}
-
-		Compatibility.initiate();
 	}
 
 	@EventHandler

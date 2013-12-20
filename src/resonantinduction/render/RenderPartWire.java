@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.wire.PartConductor;
 import resonantinduction.wire.PartWire;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.lighting.LightModel;

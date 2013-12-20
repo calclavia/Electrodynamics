@@ -10,7 +10,7 @@ import resonantinduction.battery.ContainerBattery;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**

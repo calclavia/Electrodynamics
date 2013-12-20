@@ -11,7 +11,7 @@ import java.util.Set;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * Uses the well known A* Pathfinding algorithm.

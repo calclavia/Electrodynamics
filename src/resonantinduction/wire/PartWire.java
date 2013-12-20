@@ -21,7 +21,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.render.RenderPartWire;
-import universalelectricity.compatibility.Compatibility;
+import universalelectricity.api.Compatibility;
 import buildcraft.api.power.PowerHandler;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;

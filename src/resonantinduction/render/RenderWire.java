@@ -11,7 +11,7 @@ import resonantinduction.model.ModelInsulation;
 import resonantinduction.model.ModelWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.TileEntityWire;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

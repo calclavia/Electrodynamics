@@ -3,7 +3,7 @@
  */
 package resonantinduction.contractor;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * @author Calclavia
