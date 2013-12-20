@@ -1,16 +1,21 @@
 package com.dark;
 
+import java.io.File;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.compatibility.Compatibility;
 import universalelectricity.core.UniversalElectricity;
 
 import com.dark.fluid.FluidHelper;
 import com.dark.helpers.PlayerKeyHandler;
+import com.dark.prefab.BlockMulti;
 import com.dark.save.SaveManager;
 import com.dark.tilenetwork.prefab.NetworkUpdateHandler;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -20,6 +25,9 @@ public class DarkCore
 
     private boolean pre, load, post;
 
+    public static final String DOMAIN = "darkcore";
+    public static final String PREFIX = DOMAIN + ":";
+
     public static final String TEXTURE_DIRECTORY = "textures/";
     public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
     public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
@@ -27,12 +35,18 @@ public class DarkCore
     public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
     public static final String CHANNEL = "DARKCORE";
 
-    public static final String DOMAIN = "darkcore";
-    public static final String PREFIX = DOMAIN + ":";
+    public static String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
+    public static String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+    public static String LANGUAGE_PATH = DIRECTORY + "languages/";
+    public static String SOUND_PATH = DIRECTORY + "audio/";
+
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/Main.cfg"));
 
     /* START IDS */
     public static int BLOCK_ID_PRE = 3100;
     public static int ITEM_ID_PREFIX = 13200;
+
+    public static BlockMulti multiBlock = null;
 
     public static DarkCore instance()
     {
@@ -41,6 +55,18 @@ public class DarkCore
             instance = new DarkCore();
         }
         return instance;
+    }
+
+    public static void requestMultiBlock(String modID)
+    {
+        if (multiBlock == null)
+        {
+            Block b = CoreRegistry.createNewBlock("DMBlockMulti", modID, BlockMulti.class, false);
+            if (b instanceof BlockMulti)
+            {
+                multiBlock = (BlockMulti) b;
+            }
+        }
     }
 
     public void preLoad()
