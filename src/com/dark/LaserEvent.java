@@ -21,7 +21,7 @@ import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.core.vector.Vector3;
 
-import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.DarksHelper;
 
 /** An event triggered by entities or tiles that create lasers
  * 
@@ -265,7 +265,7 @@ public class LaserEvent extends Event
                     items = event.items;
                     for (ItemStack stack : items)
                     {
-                        ItemWorldHelper.dropItemStack(world, vec.translate(0.5), stack, false);
+                        DarksHelper.dropItemStack(world, vec.translate(0.5), stack, false);
                     }
                 }
             }
