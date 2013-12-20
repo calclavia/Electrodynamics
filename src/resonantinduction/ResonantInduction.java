@@ -37,11 +37,8 @@ import resonantinduction.multimeter.MultimeterEventHandler;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
-import resonantinduction.wire.BlockWire;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemBlockWire;
-import resonantinduction.wire.TileEntityWire;
-import universalelectricity.api.Compatibility;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.item.IItemElectric;
 import basiccomponents.api.BasicRegistry;
@@ -212,11 +209,6 @@ public class ResonantInduction
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
 		blockBattery = new BlockBattery(getNextBlockID());
 
-		if (itemPartWire == null)
-		{
-			blockWire = new BlockWire(getNextBlockID());
-		}
-
 		if (REPLACE_FURNACE)
 		{
 			blockAdvancedFurnaceIdle = BlockAdvancedFurnace.createNew(false);
@@ -249,10 +241,6 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
-		if (blockWire != null)
-		{
-			GameRegistry.registerTileEntity(TileEntityWire.class, blockWire.getUnlocalizedName());
-		}
 
 		ResonantInduction.proxy.registerRenderers();
 

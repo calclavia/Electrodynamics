@@ -43,7 +43,7 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartUniversalConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial, IBlockableConnection
+public class PartWire extends PartConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial, IBlockableConnection
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -150,18 +150,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	}
 
 	@Override
-	public float getResistance()
-	{
-		return getMaterial().resistance;
-	}
-
-	@Override
-	public float getCurrentCapacity()
-	{
-		return getMaterial().maxAmps;
-	}
-
-	@Override
 	public EnumWireMaterial getMaterial()
 	{
 		return material;
@@ -183,15 +171,6 @@ public class PartWire extends PartUniversalConductor implements TSlottedPart, JN
 	public void setMaterialFromID(int id)
 	{
 		material = EnumWireMaterial.values()[id];
-	}
-
-	@Override
-	public void doWork(PowerHandler workProvider)
-	{
-		buildcraftBuffer = Compatibility.BC3_RATIO * 25 * Math.min(getMaterial().maxAmps, 100);
-		powerHandler.configure(0, buildcraftBuffer, buildcraftBuffer, buildcraftBuffer * 2);
-
-		super.doWork(workProvider);
 	}
 
 	@Override

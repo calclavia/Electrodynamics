@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.IConnector;
 import universalelectricity.api.INetworkProvider;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
@@ -12,6 +13,7 @@ import universalelectricity.core.grid.EnergyNetworkLoader;
 import universalelectricity.core.grid.IEnergyNetwork;
 import codechicken.multipart.TileMultipart;
 
+@UniversalClass
 public abstract class PartConductor extends PartAdvanced implements IConductor
 {
 	private IEnergyNetwork network;
