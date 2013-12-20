@@ -38,7 +38,7 @@ import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.ItemBlockWire;
+import resonantinduction.wire.ItemPartWire;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.item.IItemElectric;
 import basiccomponents.api.BasicRegistry;
@@ -152,9 +152,7 @@ public class ResonantInduction
 	public static Block blockMultimeter;
 	public static Block blockEMContractor;
 	public static Block blockBattery;
-	/** Without Forge Multipart **/
-	private static Block blockWire;
-	public static Block blockAdvancedFurnaceIdle, blockAdvancedFurnaceBurning;
+	public static Block blockAdvancedFurnace;
 
 	/**
 	 * Packets
@@ -190,18 +188,7 @@ public class ResonantInduction
 		itemCapacitor = new ItemCapacitor(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
 		itemInfiniteCapacitor = new ItemInfiniteCapacitor(getNextItemID());
-
-		if (Loader.isModLoaded("ForgeMultipart"))
-		{
-			try
-			{
-				itemPartWire = (Item) Class.forName("resonantinduction.wire.multipart.ItemPartWire").getConstructor(Integer.TYPE).newInstance(getNextItemID());
-			}
-			catch (Exception e)
-			{
-				LOGGER.severe("Failed to load multipart wire.");
-			}
-		}
+		itemPartWire = new ItemPartWire(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
@@ -211,11 +198,9 @@ public class ResonantInduction
 
 		if (REPLACE_FURNACE)
 		{
-			blockAdvancedFurnaceIdle = BlockAdvancedFurnace.createNew(false);
-			blockAdvancedFurnaceBurning = BlockAdvancedFurnace.createNew(true);
-			GameRegistry.registerBlock(blockAdvancedFurnaceIdle, "ri_" + blockAdvancedFurnaceIdle.getUnlocalizedName());
-			GameRegistry.registerBlock(blockAdvancedFurnaceBurning, "ri_" + blockAdvancedFurnaceBurning.getUnlocalizedName() + "2");
-			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, blockAdvancedFurnaceIdle.getUnlocalizedName());
+			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
+			GameRegistry.registerBlock(blockAdvancedFurnace, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
+			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, blockAdvancedFurnace.getUnlocalizedName());
 		}
 
 		CONFIGURATION.save();
@@ -230,17 +215,11 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
 
-		if (blockWire != null)
-		{
-			GameRegistry.registerBlock(blockWire, ItemBlockWire.class, blockWire.getUnlocalizedName());
-		}
-
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
-
 
 		ResonantInduction.proxy.registerRenderers();
 
@@ -249,19 +228,9 @@ public class ResonantInduction
 		 */
 		TabRI.ITEMSTACK = new ItemStack(blockBattery);
 
-		if (itemPartWire != null)
+		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
-			for (EnumWireMaterial material : EnumWireMaterial.values())
-			{
-				material.setWire(itemPartWire);
-			}
-		}
-		else
-		{
-			for (EnumWireMaterial material : EnumWireMaterial.values())
-			{
-				material.setWire(blockWire);
-			}
+			material.setWire(itemPartWire);
 		}
 
 		// Basic Components

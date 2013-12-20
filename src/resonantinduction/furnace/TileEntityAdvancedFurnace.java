@@ -10,11 +10,8 @@ import universalelectricity.api.UniversalClass;
 import universalelectricity.api.electricity.IVoltage;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.block.IConductor;
-import universalelectricity.core.electricity.ElectricityHelper;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.grid.IEnergyNetwork;
+import calclavia.lib.prefab.block.EnergyStorage;
 
 /**
  * Meant to replace the furnace class.
@@ -28,82 +25,55 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	private static final float WATTAGE = 5;
 	private boolean doProduce = false;
 	private boolean init = true;
-	private int energyBuffer = 0;
+
+	private EnergyStorage energy = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
 
 	@Override
 	public void updateEntity()
 	{
-		if (this.init)
-		{
-			this.checkProduce();
-			this.init = false;
-		}
+		boolean doSmeltingProcess = canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0;
 
-		if (this.energyBuffer >= ResonantInduction.FURNACE_WATTAGE / 20)
+		if (doSmeltingProcess)
 		{
-			this.furnaceCookTime++;
-
-			if (this.furnaceCookTime == 200)
+			if (this.energy.checkExtract(ResonantInduction.FURNACE_WATTAGE / 20))
 			{
-				this.furnaceCookTime = 0;
-				this.smeltItem();
-				this.onInventoryChanged();
+				this.furnaceCookTime++;
+
+				if (this.furnaceCookTime == 200)
+				{
+					this.furnaceCookTime = 0;
+					this.smeltItem();
+					this.onInventoryChanged();
+				}
+
+				this.energy.extractEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+			}
+		}
+		else if (this.getStackInSlot(0) == null && TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1)) > 0 && !this.energy.isFull())
+		{
+			boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
+
+			if (this.furnaceBurnTime == 0)
+			{
+				int burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1));
+				this.decrStackSize(1, 1);
+				this.furnaceBurnTime = burnTime;
 			}
 
-			this.energyBuffer = 0;
+			if (this.furnaceBurnTime > 0)
+			{
+				this.energy.receiveEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+			}
+
+			if (doBlockStateUpdate != this.furnaceBurnTime > 0)
+			{
+				this.refreshConductors();
+			}
 		}
 		else
 		{
+			// TODO: Fix vanilla changing the blockID of this furnace.
 			super.updateEntity();
-
-			if (this.doProduce)
-			{
-				if (this.getStackInSlot(0) == null)
-				{
-					boolean hasRequest = false;
-
-					for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-					{
-						TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
-
-						if (tileEntity instanceof IConductor)
-						{
-							if (((IConductor) tileEntity).getNetwork().getRequest(this).getWatts() > 0)
-							{
-								if (this.furnaceBurnTime > 0)
-								{
-									this.energyBuffer +=  ResonantInduction.FURNACE_WATTAGE / 20;
-								}
-
-								hasRequest = true;
-								break;
-							}
-						}
-					}
-
-					if (hasRequest)
-					{
-						/**
-						 * Steal power from furnace.
-						 */
-						boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
-
-						if (this.furnaceBurnTime == 0)
-						{
-							int burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1));
-							this.decrStackSize(1, 1);
-							this.furnaceBurnTime = burnTime;
-						}
-
-						if (doBlockStateUpdate != this.furnaceBurnTime > 0)
-						{
-							// BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0,
-							// this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-							this.refreshConductors();
-						}
-					}
-				}
-			}
 		}
 	}
 
@@ -170,13 +140,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	{
 		if (this.canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0)
 		{
-			if (doReceive)
-			{
-				this.energyBuffer += receive;
-				return receive;
-			}
-
-			return ResonantInduction.FURNACE_WATTAGE / 20;
+			return this.energy.receiveEnergy(receive, doReceive);
 		}
 
 		return 0;
@@ -185,12 +149,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	@Override
 	public int onExtractEnergy(ForgeDirection from, int request, boolean doProvide)
 	{
-		if (this.furnaceBurnTime > 0)
-		{
-			return ResonantInduction.FURNACE_WATTAGE / 20;
-		}
-
-		return 0;
+		return this.energy.extractEnergy(request, doProvide);
 	}
 
 	@Override
