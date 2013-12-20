@@ -24,10 +24,10 @@ import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
 import resonantinduction.tesla.TileEntityTesla;
 import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
 import calclavia.lib.InventoryHelper;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 

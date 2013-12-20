@@ -2,6 +2,7 @@ package resonantinduction.wire;
 
 import java.util.List;
 
+import calclavia.lib.prefab.block.BlockConductor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.material.Material;
@@ -13,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
-import universalelectricity.prefab.block.BlockConductor;
 
 /**
  * A copper wire block that can change its collision bounds based on the connection.

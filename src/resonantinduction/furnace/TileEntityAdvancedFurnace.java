@@ -1,13 +1,15 @@
 package resonantinduction.furnace;
 
-import resonantinduction.ResonantInduction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.ResonantInduction;
+import universalelectricity.api.IEnergyInterface;
+import universalelectricity.api.IVoltage;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.core.block.IConductor;
-import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityHelper;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.grid.IElectricityNetwork;
@@ -20,12 +22,13 @@ import universalelectricity.core.vector.VectorHelper;
  * @author Calclavia
  * 
  */
-public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IElectrical
+@UniversalClass
+public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface, IVoltage
 {
 	private static final float WATTAGE = 5;
 	private boolean doProduce = false;
 	private boolean init = true;
-	private float energyBuffer = 0;
+	private int energyBuffer = 0;
 
 	@Override
 	public void updateEntity()
@@ -94,7 +97,8 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 
 						if (doBlockStateUpdate != this.furnaceBurnTime > 0)
 						{
-							//BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+							// BlockFurnace.updateFurnaceBlockState(this.furnaceBurnTime > 0,
+							// this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 							this.refreshConductors();
 						}
 					}
@@ -144,7 +148,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	{
 		if (!this.worldObj.isRemote && outputDirection != null && outputDirection != ForgeDirection.UNKNOWN)
 		{
-			float provide = this.getProvide(outputDirection);
+			float provide = this.onReceiveEnergy(null, Integer.MAX_VALUE, false);
 
 			if (provide > 0)
 			{
@@ -157,9 +161,9 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 
 					if (powerRequest.getWatts() > 0)
 					{
-						ElectricityPack sendPack = ElectricityPack.getFromWatts(provide, this.getVoltage());
+						ElectricityPack sendPack = ElectricityPack.getFromWatts(provide, this.getVoltage(null));
 						float rejectedPower = outputNetwork.produce(sendPack, this);
-						this.provideElectricity(outputDirection.getOpposite(), ElectricityPack.getFromWatts(sendPack.getWatts() - rejectedPower, this.getVoltage()), true);
+						this.onExtractEnergy(outputDirection.getOpposite(), (int) (sendPack.getWatts() - rejectedPower), true);
 					}
 
 					return true;
@@ -197,28 +201,16 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	}
 
 	@Override
-	public float receiveElectricity(ForgeDirection from, ElectricityPack receive, boolean doReceive)
-	{
-		if (doReceive)
-		{
-			this.energyBuffer += receive.getWatts();
-			return 0;
-		}
-
-		return receive.getWatts();
-	}
-
-	@Override
-	public ElectricityPack provideElectricity(ForgeDirection from, ElectricityPack request, boolean doProvide)
-	{
-		return ElectricityPack.getFromWatts(ResonantInduction.FURNACE_WATTAGE / 20, this.getVoltage());
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
+	public int onReceiveEnergy(ForgeDirection from, int receive, boolean doReceive)
 	{
 		if (this.canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0)
 		{
+			if (doReceive)
+			{
+				this.energyBuffer += receive;
+				return receive;
+			}
+
 			return ResonantInduction.FURNACE_WATTAGE / 20;
 		}
 
@@ -226,7 +218,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	}
 
 	@Override
-	public float getProvide(ForgeDirection direction)
+	public int onExtractEnergy(ForgeDirection from, int request, boolean doProvide)
 	{
 		if (this.furnaceBurnTime > 0)
 		{
@@ -237,9 +229,9 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEle
 	}
 
 	@Override
-	public float getVoltage()
+	public int getVoltage(ForgeDirection direction)
 	{
-		return 0.12f;
+		return 100;
 	}
 
 }

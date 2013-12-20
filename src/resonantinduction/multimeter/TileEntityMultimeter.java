@@ -19,12 +19,12 @@ import universalelectricity.core.block.IConductor;
 import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IElectricalStorage;
 import universalelectricity.core.grid.IElectricityNetwork;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
-import universalelectricity.prefab.tile.TileEntityElectrical;
 import buildcraft.api.power.IPowerReceptor;
 import calclavia.lib.IRotatable;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.prefab.tile.TileEntityElectrical;
 import cofh.api.energy.TileEnergyHandler;
 
 import com.google.common.io.ByteArrayDataInput;
