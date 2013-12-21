@@ -126,7 +126,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
-		// super.readDesc(packet);
+		super.readDesc(packet);
 		this.side = packet.readByte();
 		this.connMap = packet.readInt();
 	}
@@ -134,7 +134,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		// super.writeDesc(packet);
+		super.writeDesc(packet);
 		packet.writeByte(this.side);
 		packet.writeInt(this.connMap);
 	}
@@ -142,6 +142,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	@Override
 	public void read(MCDataInput packet)
 	{
+		super.read(packet);
 		read(packet, packet.readUByte());
 	}
 
@@ -581,7 +582,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 
 	public boolean useStaticRenderer()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

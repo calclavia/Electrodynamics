@@ -196,7 +196,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 			}
 
 			this.currentAcceptorConnections = possibleAcceptorConnections;
-			this.sendDescUpdate();
+			//this.sendDescUpdate();
 		}
 
 		tile().markRender();

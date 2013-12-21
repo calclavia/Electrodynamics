@@ -58,7 +58,6 @@ public class RenderLainWire
 	 * 2 = side 2 = -Z = NORTH
 	 * 3 = side 5 = +X = EAST
 	 */
-
 	private static class WireModelGenerator
 	{
 		int side;

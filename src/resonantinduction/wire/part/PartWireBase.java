@@ -102,9 +102,7 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	public void setInsulationColor(int dye)
 	{
 		dyeID = dye;
-
 		refresh();
-		world().markBlockForUpdate(x(), y(), z());
 		tile().notifyPartChange(this);
 	}
 
@@ -113,9 +111,7 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	{
 		isInsulated = insulated;
 		dyeID = DEFAULT_COLOR;
-
 		refresh();
-		world().markBlockForUpdate(x(), y(), z());
 		tile().notifyPartChange(this);
 	}
 
@@ -123,9 +119,7 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	{
 		isInsulated = true;
 		dyeID = dyeColour;
-
 		refresh();
-		world().markBlockForUpdate(x(), y(), z());
 		tile().notifyPartChange(this);
 	}
 
@@ -138,7 +132,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	{
 		dyeID = dye;
 		refresh();
-		world().markBlockForUpdate(x(), y(), z());
 		tile().notifyPartChange(this);
 	}
 
