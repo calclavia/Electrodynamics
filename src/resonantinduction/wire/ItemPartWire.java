@@ -27,10 +27,11 @@ public class ItemPartWire extends JItemMultiPart
 
 	public ItemPartWire(int id)
 	{
-		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wireMultipart", id).getInt(id));
-		setCreativeTab(TabRI.INSTANCE);
-		setHasSubtypes(true);
-		setMaxDamage(0);
+		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
+		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
+		this.setCreativeTab(TabRI.INSTANCE);
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return "tile.Wire." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName() + "Wire";
+		return super.getUnlocalizedName(itemStack) + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName().toLowerCase();
 	}
 
 	@Override
@@ -61,10 +62,10 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister register)
-	{	
-		for(EnumWireMaterial material : EnumWireMaterial.values())
-		{
-			icons[material.ordinal()] = register.registerIcon("mekanism:" + material.getName() + "Wire");
+	{
+		for (EnumWireMaterial material : EnumWireMaterial.values())
+		{System.out.println(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
+			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
 		}
 
 		RenderPartWire.registerIcons(register);
@@ -80,16 +81,9 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
 	{
-		for(EnumWireMaterial mat : EnumWireMaterial.values())
+		for (EnumWireMaterial mat : EnumWireMaterial.values())
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getSpriteNumber()
-	{
-		return 0;
 	}
 }

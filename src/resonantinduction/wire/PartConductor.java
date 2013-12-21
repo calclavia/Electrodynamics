@@ -54,7 +54,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 			}
 		}
 
-		this.onExtractEnergy(null, energyUsed, true);
+		this.buffer.extractEnergy(energyUsed, true);
 	}
 
 	@Override

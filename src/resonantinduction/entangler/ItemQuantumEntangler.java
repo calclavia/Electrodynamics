@@ -18,7 +18,7 @@ public class ItemQuantumEntangler extends ItemCoordLink
 	public ItemQuantumEntangler(int id)
 	{
 		super("quantumEntangler", id);
-		setMaxStackSize(1);
+		this.setMaxStackSize(1);
 		// TODO Handheld model, render animation, energy usage (should be easy?)
 	}
 
