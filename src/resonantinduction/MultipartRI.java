@@ -1,11 +1,9 @@
 package resonantinduction;
 
-import buildcraft.api.power.IPowerReceptor;
+import resonantinduction.wire.IAdvancedConductor;
 import resonantinduction.wire.IBlockableConnection;
-import resonantinduction.wire.IInsulatedMaterial;
 import resonantinduction.wire.part.PartFlatWire;
-import resonantinduction.wire.part.PartWire;
-import universalelectricity.api.energy.IConductor;
+import buildcraft.api.power.IPowerReceptor;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -17,10 +15,9 @@ public class MultipartRI implements IPartFactory
 
 	public MultipartRI()
 	{
-		MultiPartRegistry.registerParts(this, new String[] {/* "resonant_induction_wire",*/ "resonant_induction_flat_wire" });
-		MultipartGenerator.registerPassThroughInterface(IConductor.class.getName());
+		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire" });		
+		MultipartGenerator.registerPassThroughInterface(IAdvancedConductor.class.getName());
 		MultipartGenerator.registerPassThroughInterface(IPowerReceptor.class.getName());
-		MultipartGenerator.registerPassThroughInterface(IInsulatedMaterial.class.getName());
 		MultipartGenerator.registerPassThroughInterface(IBlockableConnection.class.getName());
 		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.TEnergySink");
 	}
@@ -28,11 +25,6 @@ public class MultipartRI implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-		/*if (name.equals("resonant_induction_wire"))
-		{
-			return new PartWire();
-		}
-		else */
 		if (name.equals("resonant_induction_flat_wire"))
 		{
 			return new PartFlatWire();

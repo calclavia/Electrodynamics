@@ -13,10 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IAdvancedConductor;
 import resonantinduction.wire.IBlockableConnection;
-import resonantinduction.wire.IInsulatedMaterial;
-import resonantinduction.wire.IInsulation;
-import resonantinduction.wire.IWireMaterial;
 import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -25,18 +23,18 @@ import codechicken.lib.data.MCDataOutput;
  * @author Calclavia
  * 
  */
-public abstract class PartWireBase extends PartConductor implements IInsulatedMaterial, IBlockableConnection
+public abstract class PartWireBase extends PartConductor implements IBlockableConnection
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 	public boolean isInsulated = false;
 
-	public boolean canConnectToType(IConductor wire)
+	public boolean canConnectToType(Object wire)
 	{
-		if (wire instanceof IWireMaterial)
+		if (wire instanceof IAdvancedConductor)
 		{
-			IWireMaterial wireTile = (IWireMaterial) wire;
+			IAdvancedConductor wireTile = (IAdvancedConductor) wire;
 
 			if (wireTile.getMaterial() != getMaterial())
 			{
@@ -44,9 +42,9 @@ public abstract class PartWireBase extends PartConductor implements IInsulatedMa
 			}
 		}
 
-		if (isInsulated() && wire instanceof IInsulation)
+		if (isInsulated() && wire instanceof IAdvancedConductor)
 		{
-			IInsulation insulatedTile = (IInsulation) wire;
+			IAdvancedConductor insulatedTile = (IAdvancedConductor) wire;
 
 			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != getInsulationColor() && getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
 			{
@@ -55,6 +53,21 @@ public abstract class PartWireBase extends PartConductor implements IInsulatedMa
 		}
 
 		return false;
+	}
+
+	@Override
+	public long getEnergyLoss()
+	{
+		/**
+		 * TODO: FIX THIS!
+		 */
+		return (int) (this.getMaterial().resistance * 1000);
+	}
+
+	@Override
+	public long getEnergyCapacitance()
+	{
+		return this.getMaterial().maxAmps;
 	}
 
 	@Override
@@ -200,11 +213,6 @@ public abstract class PartWireBase extends PartConductor implements IInsulatedMa
 		this.isInsulated = packet.readBoolean();
 		this.currentWireConnections = packet.readByte();
 		this.currentAcceptorConnections = packet.readByte();
-		
-		if (tile() != null)
-		{
-			tile().markRender();
-		}
 	}
 
 	@Override
@@ -231,8 +239,8 @@ public abstract class PartWireBase extends PartConductor implements IInsulatedMa
 	{
 		super.load(nbt);
 		setMaterialFromID(nbt.getInteger("typeID"));
-		dyeID = nbt.getInteger("dyeID");
-		isInsulated = nbt.getBoolean("isInsulated");
+		this.isInsulated = nbt.getBoolean("isInsulated");
+		this.dyeID = nbt.getInteger("dyeID");
 	}
 
 }

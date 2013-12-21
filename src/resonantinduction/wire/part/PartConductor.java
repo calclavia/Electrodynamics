@@ -4,10 +4,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
-import universalelectricity.api.UniversalClass;
+import resonantinduction.wire.IAdvancedConductor;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
-import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
@@ -15,57 +14,44 @@ import calclavia.lib.tile.EnergyStorage;
 import codechicken.multipart.TileMultipart;
 
 //@UniversalClass
-public abstract class PartConductor extends PartAdvanced implements IConductor
+public abstract class PartConductor extends PartAdvanced implements IAdvancedConductor
 {
 	private IEnergyNetwork network;
-	private EnergyStorage buffer = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
 
 	public TileEntity[] cachedConnections = null;
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
 
+	/**
+	 * Universal Electricity conductor functions.
+	 */
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		return this.buffer.receiveEnergy(receive, doReceive);
+		return this.getNetwork().produce(receive);
 	}
 
 	@Override
 	public long onExtractEnergy(ForgeDirection from, long request, boolean doExtract)
 	{
-		return this.buffer.extractEnergy(request, doExtract);
+		return 0;
 	}
 
 	@Override
-	public void distribute()
+	public IEnergyNetwork getNetwork()
 	{
-		Object[] receivers = this.getConnections();
-		int energyUsed = 0;
-
-		for (int i = 0; i < receivers.length; i++)
+		if (this.network == null && tile() instanceof IAdvancedConductor)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(i);
-			Object receiver = receivers[i];
-
-			if (receiver instanceof IEnergyInterface && !(receiver instanceof IConductor))
-			{
-				energyUsed += ((IEnergyInterface) receiver).onReceiveEnergy(direction.getOpposite(), this.getNetwork().getDistribution(this), true);
-			}
+			setNetwork(EnergyNetworkLoader.getNewNetwork((IConductor) tile()));
 		}
 
-		this.buffer.extractEnergy(energyUsed, true);
+		return network;
 	}
 
 	@Override
-	public int getEnergyLoss()
+	public void setNetwork(IEnergyNetwork network)
 	{
-		return 0;
-	}
-
-	@Override
-	public int getEnergyCapacitance()
-	{
-		return 0;
+		this.network = network;
 	}
 
 	public byte getAllCurrentConnections()
@@ -92,7 +78,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		{
 			getNetwork().getConnectors().remove(tile());
 			super.bind(t);
-			getNetwork().getConnectors().add((IConductor) tile());
+			getNetwork().getConnectors().add((IAdvancedConductor) tile());
 		}
 		else
 		{
@@ -103,9 +89,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public void preRemove()
 	{
-		if (!world().isRemote && tile() instanceof IConductor)
+		if (!world().isRemote && tile() instanceof IAdvancedConductor)
 		{
-			getNetwork().split((IConductor) tile());
+			getNetwork().split((IAdvancedConductor) tile());
 		}
 
 		super.preRemove();
@@ -117,33 +103,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		return false;
 	}
 
-	@Override
-	public IEnergyNetwork getNetwork()
-	{
-		if (network == null && tile() instanceof IConductor)
-		{
-			setNetwork(EnergyNetworkLoader.getNewNetwork((IConductor) tile()));
-		}
-
-		return network;
-	}
-
 	public boolean canConnectBothSides(TileEntity tile, ForgeDirection side)
 	{
 		boolean notPrevented = !isConnectionPrevented(tile, side);
 
-		if (tile instanceof IConductor)
+		if (tile instanceof IAdvancedConductor)
 		{
-			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite());
+			notPrevented &= ((IAdvancedConductor) tile).canConnect(side.getOpposite());
 		}
 
 		return notPrevented;
-	}
-
-	@Override
-	public void setNetwork(IEnergyNetwork net)
-	{
-		network = net;
 	}
 
 	/**
@@ -165,9 +134,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-			System.out.println("WORK"+tileEntity + " : "+(tileEntity instanceof IConductor));
+			System.out.println("WORK" + tileEntity + " : " + (tileEntity instanceof IAdvancedConductor));
 
-			if (tileEntity instanceof IConductor && canConnectBothSides(tileEntity, side))
+			if (tileEntity instanceof IAdvancedConductor && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -198,7 +167,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	 */
 	public boolean isValidAcceptor(TileEntity tile)
 	{
-		return tile instanceof IConductor;
+		return tile instanceof IAdvancedConductor;
 	}
 
 	public void refresh()
@@ -227,9 +196,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 					{
 						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side);
 
-						if (tileEntity instanceof IConductor)
+						if (tileEntity instanceof IAdvancedConductor)
 						{
-							getNetwork().merge(((IConductor) tileEntity).getNetwork());
+							getNetwork().merge(((IAdvancedConductor) tileEntity).getNetwork());
 						}
 					}
 				}

@@ -13,9 +13,9 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IAdvancedConductor;
 import resonantinduction.wire.render.RenderLainWire;
 import resonantinduction.wire.render.RenderPartWire;
-import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -44,7 +44,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Modified by Calclavia, MrTJP
  * 
  */
-public class PartFlatWire extends PartWireBase implements IConductor, TFacePart, JNormalOcclusion
+public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOcclusion
 {
 	public static Cuboid6[][] selectionBounds = new Cuboid6[3][6];
 	public static Cuboid6[][] occlusionBounds = new Cuboid6[3][6];
@@ -53,7 +53,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 	{
 		for (int t = 0; t < 3; t++)
 		{
-			// subtract the box a little because we'd like things like posts to get first hit
+			// Subtract the box a little because we'd like things like posts to get first hit
 			Cuboid6 selection = new Cuboid6(0, 0, 0, 1, (t + 2) / 16D, 1).expand(-0.005);
 			Cuboid6 occlusion = new Cuboid6(2 / 8D, 0, 2 / 8D, 6 / 8D, (t + 2) / 16D, 6 / 8D);
 			for (int s = 0; s < 6; s++)
@@ -118,24 +118,24 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 	public void save(NBTTagCompound tag)
 	{
 		super.save(tag);
-		tag.setByte("side", side);
-		tag.setInteger("connMap", connMap);
+		tag.setByte("side", this.side);
+		tag.setInteger("connMap", this.connMap);
 	}
 
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
-		super.readDesc(packet);
-		/*this.side = packet.readByte();
-		this.connMap = packet.readInt();*/
+		// super.readDesc(packet);
+		this.side = packet.readByte();
+		this.connMap = packet.readInt();
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		super.writeDesc(packet);
-		/*packet.writeByte(this.side);
-		packet.writeInt(this.connMap);*/
+		// super.writeDesc(packet);
+		packet.writeByte(this.side);
+		packet.writeInt(this.connMap);
 	}
 
 	@Override
@@ -144,11 +144,11 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		read(packet, packet.readUByte());
 	}
 
-	public void read(MCDataInput packet, int switch_key)
+	public void read(MCDataInput packet, int packetID)
 	{
-		if (switch_key == 0)
+		if (packetID == 0)
 		{
-			connMap = packet.readInt();
+			this.connMap = packet.readInt();
 			tile().markRender();
 		}
 	}
@@ -164,12 +164,22 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		super.onRemoved();
 
 		if (!world().isRemote)
+		{
 			for (int r = 0; r < 4; r++)
+			{
 				if (maskConnects(r))
+				{
 					if ((connMap & 1 << r) != 0)
+					{
 						notifyCornerChange(r);
+					}
 					else if ((connMap & 0x10 << r) != 0)
+					{
 						notifyStraightChange(r);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -332,7 +342,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
-			if (tp instanceof IConductor)
+			if (tp instanceof IAdvancedConductor)
 			{
 				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 				if (b)
@@ -409,7 +419,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		return false;
 	}
 
-	public boolean renderThisCorner(IConductor part)
+	public boolean renderThisCorner(IAdvancedConductor part)
 	{
 		if (!(part instanceof PartFlatWire))
 			return false;
@@ -421,7 +431,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		return wire.getThickness() > getThickness();
 	}
 
-	public boolean connectCorner(IConductor wire, int r)
+	public boolean connectCorner(IAdvancedConductor wire, int r)
 	{
 		if (canConnectToType(wire) && maskOpen(r))
 		{
@@ -437,7 +447,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		return false;
 	}
 
-	public boolean connectStraight(IConductor wire, int r)
+	public boolean connectStraight(IAdvancedConductor wire, int r)
 	{
 		if (canConnectToType(wire) && maskOpen(r))
 		{
@@ -450,7 +460,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 		return false;
 	}
 
-	public boolean connectInternal(IConductor wire, int r)
+	public boolean connectInternal(IAdvancedConductor wire, int r)
 	{
 		if (canConnectToType(wire))
 		{
@@ -492,11 +502,6 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 	public boolean maskOpen(int r)
 	{
 		return (connMap & 0x1000 << r) != 0;
-	}
-
-	public boolean isWireSide(int side)
-	{
-		return true;
 	}
 
 	/** START TILEMULTIPART INTERACTIONS **/
@@ -575,7 +580,7 @@ public class PartFlatWire extends PartWireBase implements IConductor, TFacePart,
 
 	public boolean useStaticRenderer()
 	{
-		return true;
+		return false;
 	}
 
 	@Override

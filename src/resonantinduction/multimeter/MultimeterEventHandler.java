@@ -34,9 +34,9 @@ public class MultimeterEventHandler
 	{
 		IEnergyNetwork network = evt.network;
 
-		if (network.getDistribution(null) != 0)
+		if (network.getLastBuffer() != 0)
 		{
-			networkEnergyCache.put(network, network.getDistribution(null));
+			networkEnergyCache.put(network, network.getLastBuffer());
 		}
 	}
 }
