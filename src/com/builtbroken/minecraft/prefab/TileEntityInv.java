@@ -10,8 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.TileEntityAdvanced;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.access.AccessGroup;
 import com.builtbroken.minecraft.access.AccessUser;

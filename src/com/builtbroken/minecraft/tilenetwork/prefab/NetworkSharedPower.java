@@ -1,8 +1,6 @@
 package com.builtbroken.minecraft.tilenetwork.prefab;
 
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.block.IElectricalStorage;
-import universalelectricity.core.electricity.ElectricityPack;
 
 import com.builtbroken.minecraft.interfaces.IPowerLess;
 import com.builtbroken.minecraft.tilenetwork.INetworkEnergyPart;
@@ -12,9 +10,9 @@ import com.builtbroken.minecraft.tilenetwork.INetworkPart;
  * store power on world save
  * 
  * @author DarkGuardsman */
-public class NetworkSharedPower extends NetworkTileEntities implements IElectricalStorage, IPowerLess
+public class NetworkSharedPower extends NetworkTileEntities implements IPowerLess
 {
-    private float energy, energyMax;
+    private long energy, energyMax;
     private boolean runPowerLess;
 
     public NetworkSharedPower(INetworkPart... parts)
@@ -28,25 +26,16 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         return super.isValidMember(part) && part instanceof INetworkEnergyPart;
     }
 
-    public float receiveElectricity(TileEntity source, float power, boolean doFill)
+    public long addPower(TileEntity entity, long receive, boolean doReceive)
     {
-        if (!this.runPowerLess && this.networkMembers.contains(source))
+        if (this.networkMembers.contains(entity) && !this.runPowerLess() && receive > 0 && this.runPowerLess)
         {
-            return this.receiveElectricity(power, doFill);
-        }
-        return 0;
-    }
-
-    public float receiveElectricity(ElectricityPack receive, boolean doReceive)
-    {
-        if (receive != null)
-        {
-            float prevEnergyStored = this.getEnergyStored();
-            float newStoredEnergy = Math.min(this.getEnergyStored() + receive.getWatts(), this.getMaxEnergyStored());
+            long prevEnergyStored = this.getEnergy();
+            long newStoredEnergy = Math.min(this.getEnergy() + receive, this.getEnergyCapacity());
 
             if (doReceive)
             {
-                this.setEnergyStored(newStoredEnergy);
+                this.setEnergy(newStoredEnergy);
             }
 
             return Math.max(newStoredEnergy - prevEnergyStored, 0);
@@ -54,22 +43,18 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         return 0;
     }
 
-    public float receiveElectricity(float energy, boolean doReceive)
+    public long removePower(TileEntity entity, long request, boolean doExtract)
     {
-        return this.receiveElectricity(ElectricityPack.getFromWatts(energy, .120f), doReceive);
-    }
-
-    public boolean drainPower(TileEntity source, float power, boolean doDrain)
-    {
-        if (this.networkMembers.contains(source) && (this.getEnergyStored() >= power || this.runPowerLess))
+        if (this.networkMembers.contains(entity) && request > 0)
         {
-            if (doDrain && !this.runPowerLess)
+            long requestedEnergy = Math.min(request, this.getEnergy());
+            if (doExtract)
             {
-                this.setEnergyStored(this.getEnergyStored() - power);
+                this.setEnergy(this.getEnergy() - requestedEnergy);
             }
-            return true;
+            return requestedEnergy;
         }
-        return false;
+        return 0;
     }
 
     @Override
@@ -113,18 +98,16 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         }
     }
 
-    @Override
-    public void setEnergyStored(float energy)
+    public void setEnergy(long energy)
     {
         this.energy = energy;
-        if (this.energy > this.getMaxEnergyStored())
+        if (this.energy > this.getEnergyCapacity())
         {
-            this.energy = this.getMaxEnergyStored();
+            this.energy = this.getEnergyCapacity();
         }
     }
 
-    @Override
-    public float getEnergyStored()
+    public long getEnergy()
     {
         if (this.energy < 0)
         {
@@ -133,8 +116,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
         return this.energy;
     }
 
-    @Override
-    public float getMaxEnergyStored()
+    public long getEnergyCapacity()
     {
         if (this.energyMax < 0)
         {
@@ -146,21 +128,21 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     /** Space left to store more energy */
     public float getEnergySpace()
     {
-        return Math.max(this.getMaxEnergyStored() - this.getEnergyStored(), 0);
+        return Math.max(this.getEnergyCapacity() - this.getEnergy(), 0);
     }
 
     @Override
     public void save()
     {
         this.cleanUpMembers();
-        float energyRemaining = this.getEnergyStored();
+        long energyRemaining = this.getEnergy();
         for (INetworkPart part : this.getMembers())
         {
-            float watts = energyRemaining / this.getMembers().size();
+            long watts = energyRemaining / this.getMembers().size();
             if (part instanceof INetworkEnergyPart)
             {
-                ((INetworkEnergyPart) part).setEnergyStored(Math.min(watts, ((INetworkEnergyPart) part).getMaxEnergyStored()));
-                energyRemaining -= Math.min(watts, ((INetworkEnergyPart) part).getMaxEnergyStored());
+                ((INetworkEnergyPart) part).setPartEnergy(Math.min(watts, ((INetworkEnergyPart) part).getPartMaxEnergy()));
+                energyRemaining -= Math.min(((INetworkEnergyPart) part).getPartEnergy(), ((INetworkEnergyPart) part).getPartMaxEnergy());
             }
         }
     }
@@ -168,13 +150,13 @@ public class NetworkSharedPower extends NetworkTileEntities implements IElectric
     @Override
     public void load()
     {
-        this.setEnergyStored(0);
+        this.setEnergy(0);
         this.cleanUpMembers();
         for (INetworkPart part : this.getMembers())
         {
             if (part instanceof INetworkEnergyPart)
             {
-                this.setEnergyStored(this.getEnergyStored() + ((INetworkEnergyPart) part).getPartEnergy());
+                this.setEnergy(this.getEnergy() + ((INetworkEnergyPart) part).getPartEnergy());
             }
         }
     }

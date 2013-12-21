@@ -4,13 +4,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.IExtraInfo.IExtraBlockInfo;

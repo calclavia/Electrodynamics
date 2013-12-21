@@ -7,8 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import universalelectricity.compatibility.Compatibility;
-import universalelectricity.core.UniversalElectricity;
+import universalelectricity.api.Compatibility;
+import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.helpers.PlayerKeyHandler;
@@ -80,8 +80,6 @@ public class DarkCore
             TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
             TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
             MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
-            UniversalElectricity.initiate();
-            Compatibility.initiate();
             pre = true;
         }
     }

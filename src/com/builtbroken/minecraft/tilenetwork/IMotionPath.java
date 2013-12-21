@@ -1,7 +1,7 @@
 package com.builtbroken.minecraft.tilenetwork;
 
 import net.minecraft.entity.Entity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /** Use by tiles to control the path of motion of an item threw a tile network such as items pipes
  * 

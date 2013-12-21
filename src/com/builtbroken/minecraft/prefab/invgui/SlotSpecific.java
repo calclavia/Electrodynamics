@@ -1,4 +1,4 @@
-package universalelectricity.prefab;
+package com.builtbroken.minecraft.prefab.invgui;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

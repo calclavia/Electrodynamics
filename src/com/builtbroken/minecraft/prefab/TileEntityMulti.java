@@ -2,22 +2,22 @@ package com.builtbroken.minecraft.prefab;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
+import com.builtbroken.minecraft.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.Player;
 
 /** This is a multiblock to be used for blocks that are bigger than one block.
  * 
  * @author Calclavia */
-public class TileEntityMulti extends TileEntity implements IPacketReceiver
+public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
 {
     // The the position of the main block
     public Vector3 mainBlockPosition;
@@ -53,7 +53,7 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
                 this.channel = ((BlockMulti) this.getBlockType()).channel;
             }
 
-            return PacketHandler.instance().getTilePacket(this.channel, this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+            return PacketHandler.instance().getTilePacket(this.channel, "MainBlock", this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
 
         }
 
@@ -126,15 +126,21 @@ public class TileEntityMulti extends TileEntity implements IPacketReceiver
     }
 
     @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
     {
         try
         {
-            this.mainBlockPosition = new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt());
+            if (id.equalsIgnoreCase("MainBlock"))
+            {
+                this.mainBlockPosition = new Vector3(data.readInt(), data.readInt(), data.readInt());
+                return true;
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            return true;
         }
+        return false;
     }
 }

@@ -6,7 +6,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -14,8 +13,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.network.IPacketReceiver;
+import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -30,9 +28,9 @@ import cpw.mods.fml.common.network.Player;
  * manager can be registered to the handle that pickup on ids and then handle there own data from
  * those ids. This lets new and complex handling to be created without many overlap or long methods
  * in the packet handler
- *
+ * 
  * @author DarkGuardsman */
-public class PacketHandler implements IPacketHandler, IPacketReceiver
+public class PacketHandler implements IPacketHandler
 {
     protected static PacketHandler instance;
 
@@ -173,10 +171,10 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
     }
 
     /** Gets a packet for the tile entity.
-     *
+     * 
      * @return */
     @SuppressWarnings("resource")
-    public Packet getTilePacket(String channelName, TileEntity sender, Object... sendData)
+    public Packet getTilePacket(String channelName, String packetID, TileEntity sender, Object... sendData)
     {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bytes);
@@ -188,6 +186,7 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
             data.writeInt(sender.xCoord);
             data.writeInt(sender.yCoord);
             data.writeInt(sender.zCoord);
+            data.writeUTF(packetID);
             data = encodeDataStream(data, sendData);
 
             Packet250CustomPayload packet = new Packet250CustomPayload();
@@ -324,20 +323,10 @@ public class PacketHandler implements IPacketHandler, IPacketReceiver
             {
                 packetType.handlePacket(network, packet, player, data);
             }
-            else
-            {
-                this.handlePacketData(network, packetTypeID, packet, ((EntityPlayer) player), data);
-            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
-    {
-
     }
 }

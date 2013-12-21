@@ -5,7 +5,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.prefab.network.IPacketReceiver;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -49,10 +48,6 @@ public class PacketManagerTile implements IPacketManager
                     {
                         String pId = data.readUTF();
                         ((ISimplePacketReceiver) tileEntity).simplePacket(pId, data, player);
-                    }
-                    if (tileEntity instanceof IPacketReceiver)
-                    {
-                        ((IPacketReceiver) tileEntity).handlePacketData(network, 0, packet, ((EntityPlayer) player), data);
                     }
                 }
             }

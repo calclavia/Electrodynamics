@@ -5,9 +5,9 @@ import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.path.IPathCallBack;
 import universalelectricity.core.path.Pathfinder;
-import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 

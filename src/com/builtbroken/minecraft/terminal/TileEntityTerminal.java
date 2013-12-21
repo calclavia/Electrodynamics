@@ -35,12 +35,12 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         super(0, 0);
     }
 
-    public TileEntityTerminal(float wattsPerTick)
+    public TileEntityTerminal(long wattsPerTick)
     {
         super(wattsPerTick);
     }
 
-    public TileEntityTerminal(float wattsPerTick, float maxEnergy)
+    public TileEntityTerminal(long wattsPerTick, long maxEnergy)
     {
         super(wattsPerTick, maxEnergy);
     }
@@ -57,7 +57,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     {
         NBTTagCompound nbt = new NBTTagCompound();
         this.writeToNBT(nbt);
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.NBT.name, nbt);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.NBT.name, this, nbt);
     }
 
     /** Sends all Terminal data Server -> Client */
@@ -68,7 +68,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
         data.add(this.getTerminalOuput().size());
         data.addAll(this.getTerminalOuput());
 
-        Packet packet = PacketHandler.instance().getTilePacket(this.getChannel(), this, data.toArray());
+        Packet packet = PacketHandler.instance().getTilePacket(this.getChannel(), "TerminalOutput", this, data.toArray());
 
         for (Object entity : this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xCoord - 10, yCoord - 10, zCoord - 10, xCoord + 10, yCoord + 10, zCoord + 10)))
         {
@@ -84,7 +84,7 @@ public abstract class TileEntityTerminal extends TileEntityEnergyMachine impleme
     {
         if (this.worldObj.isRemote)
         {
-            Packet packet = PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.GUI_COMMAND.name, entityPlayer.username, cmdInput);
+            Packet packet = PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.GUI_COMMAND.name, this, entityPlayer.username, cmdInput);
             PacketDispatcher.sendPacketToServer(packet);
         }
     }

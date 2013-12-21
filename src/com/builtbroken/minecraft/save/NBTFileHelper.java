@@ -18,8 +18,8 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
-import universalelectricity.core.vector.Vector2;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

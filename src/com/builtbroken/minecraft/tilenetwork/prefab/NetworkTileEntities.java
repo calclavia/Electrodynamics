@@ -7,9 +7,9 @@ import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.path.Pathfinder;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.core.vector.VectorHelper;
 
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 import com.builtbroken.minecraft.tilenetwork.ITileNetwork;

@@ -1,6 +1,7 @@
 package com.builtbroken.minecraft.interfaces;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
+
 
 /** Applied to objects that can be aimed by yaw and pitch. This is used by things like sentry guns,
  * vehicles, or mining tools.

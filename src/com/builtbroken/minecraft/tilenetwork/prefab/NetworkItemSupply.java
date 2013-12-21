@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.tilenetwork.IMotionPath;

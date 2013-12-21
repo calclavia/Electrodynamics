@@ -3,7 +3,7 @@ package com.builtbroken.minecraft.helpers;
 import java.util.Random;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 public class MathHelper extends net.minecraft.util.MathHelper
 {

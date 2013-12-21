@@ -16,7 +16,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import universalelectricity.prefab.block.BlockTile;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;

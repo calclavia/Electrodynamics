@@ -4,9 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.prefab.CustomDamageSource;
+import net.minecraft.util.DamageSource;
 
-public class OtherDamageSource extends CustomDamageSource
+public class OtherDamageSource extends DamageSource
 {
     protected Object damageSource;
 
@@ -33,13 +33,20 @@ public class OtherDamageSource extends CustomDamageSource
         return this.damageSource != null && this.damageSource instanceof EntityLiving && !(this.damageSource instanceof EntityPlayer);
     }
 
+    @Override
+    public OtherDamageSource setProjectile()
+    {
+        super.setProjectile();
+        return this;
+    }
+
     public static OtherDamageSource doBulletDamage(Object object)
     {
-        return (OtherDamageSource) ((CustomDamageSource) new OtherDamageSource("Bullets", object).setProjectile()).setDeathMessage("%1$s was filled with holes!");
+        return new OtherDamageSource("Bullets", object).setProjectile();
     }
 
     public static OtherDamageSource doLaserDamage(Object object)
     {
-        return (OtherDamageSource) ((CustomDamageSource) new OtherDamageSource("Laser", object).setProjectile()).setDeathMessage("%1$s was vaporized!");
+        return new OtherDamageSource("Laser", object).setProjectile();
     }
 }

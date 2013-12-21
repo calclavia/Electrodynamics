@@ -9,8 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
-import universalelectricity.prefab.tile.IRotatable;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraTileEntityInfo;
@@ -24,7 +23,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IRotatable, IExtraTileEntityInfo
+public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IExtraTileEntityInfo
 {
     /** Tick by which this machine stops working */
     protected int disabledTicks = 0;
@@ -126,7 +125,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 
     }
 
-    @Override
     public ForgeDirection getDirection()
     {
         if (this.rotateByMetaGroup)
@@ -146,7 +144,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
         return ForgeDirection.UNKNOWN;
     }
 
-    @Override
     public void setDirection(ForgeDirection direction)
     {
         if (this.rotateByMetaGroup)
@@ -212,7 +209,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
         {
             NBTTagCompound tag = new NBTTagCompound();
             this.writeToNBT(tag);
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.NBT.name, tag), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.NBT.name, this, tag), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -221,7 +218,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     {
         if (!this.worldObj.isRemote)
         {
-            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning), worldObj, new Vector3(this), 64);
+            PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -254,7 +251,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     @Override
     public Packet getDescriptionPacket()
     {
-        return PacketHandler.instance().getTilePacket(this.getChannel(), this, SimplePacketTypes.RUNNING.name, this.functioning);
+        return PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning);
     }
 
     /** NetworkMod channel name */

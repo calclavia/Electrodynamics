@@ -2,7 +2,7 @@ package com.builtbroken.minecraft.interfaces;
 
 
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /** Interface to be applied to tile entity blocks that occupies more than one block space. Useful for
  * large machines.

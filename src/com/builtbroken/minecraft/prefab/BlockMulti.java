@@ -14,8 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;
