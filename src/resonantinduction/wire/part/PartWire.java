@@ -1,28 +1,20 @@
-package resonantinduction.wire;
+package resonantinduction.wire.part;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemShears;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.render.RenderPartWire;
-import universalelectricity.api.Compatibility;
-import buildcraft.api.power.PowerHandler;
+import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.IBlockableConnection;
+import resonantinduction.wire.render.RenderPartWire;
+import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -43,18 +35,29 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartConductor implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects, IInsulatedMaterial, IBlockableConnection
+public class PartWire extends PartWireBase implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
-	public static final int DEFAULT_COLOR = 16;
-	public int dyeID = DEFAULT_COLOR;
-	public boolean isInsulated = false;
+	/** Client Side Connection Check */
+	private ForgeDirection testingSide;
 
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
-	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 
-	/** Client Side Connection Check */
-	private ForgeDirection testingSide;
+	public PartWire()
+	{
+		super();
+	}
+
+	public PartWire(int typeID)
+	{
+		this(EnumWireMaterial.values()[typeID]);
+	}
+
+	public PartWire(EnumWireMaterial type)
+	{
+		super();
+		material = type;
+	}
 
 	static
 	{
@@ -74,22 +77,6 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 		insulatedSides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
 	}
 
-	public PartWire(int typeID)
-	{
-		this(EnumWireMaterial.values()[typeID]);
-	}
-
-	public PartWire(EnumWireMaterial type)
-	{
-		super();
-		material = type;
-	}
-
-	public PartWire()
-	{
-		super();
-	}
-
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
@@ -104,27 +91,7 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 	@Override
 	public boolean isConnectionPrevented(TileEntity tile, ForgeDirection side)
 	{
-		if (tile instanceof IWireMaterial)
-		{
-			IWireMaterial wireTile = (IWireMaterial) tile;
-
-			if (wireTile.getMaterial() != getMaterial())
-			{
-				return true;
-			}
-		}
-
-		if (isInsulated() && tile instanceof IInsulation)
-		{
-			IInsulation insulatedTile = (IInsulation) tile;
-
-			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != getInsulationColor() && getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
-			{
-				return true;
-			}
-		}
-
-		return (isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection) tile).isBlockedOnSide(side.getOpposite()));
+		return (tile instanceof IConductor ? this.canConnectToType((IConductor) tile) : false) || (isBlockedOnSide(side) || tile instanceof IBlockableConnection && ((IBlockableConnection) tile).isBlockedOnSide(side.getOpposite()));
 	}
 
 	@Override
@@ -147,30 +114,6 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 		}
 
 		return super.getPossibleAcceptorConnections();
-	}
-
-	@Override
-	public EnumWireMaterial getMaterial()
-	{
-		return material;
-	}
-
-	public int getTypeID()
-	{
-		return material.ordinal();
-	}
-
-	public void setDye(int dye)
-	{
-		dyeID = dye;
-		refresh();
-		world().markBlockForUpdate(x(), y(), z());
-		tile().notifyPartChange(this);
-	}
-
-	public void setMaterialFromID(int id)
-	{
-		material = EnumWireMaterial.values()[id];
 	}
 
 	@Override
@@ -215,20 +158,6 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 	}
 
 	@Override
-	public Iterable<ItemStack> getDrops()
-	{
-		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(pickItem(null));
-
-		if (isInsulated)
-		{
-			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID)));
-		}
-
-		return drops;
-	}
-
-	@Override
 	public float getStrength(MovingObjectPosition hit, EntityPlayer player)
 	{
 		return 10F;
@@ -262,90 +191,6 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 	}
 
 	@Override
-	public void readDesc(MCDataInput packet)
-	{
-		setMaterialFromID(packet.readInt());
-		dyeID = packet.readInt();
-		isInsulated = packet.readBoolean();
-		currentWireConnections = packet.readByte();
-		currentAcceptorConnections = packet.readByte();
-
-		if (tile() != null)
-		{
-			tile().markRender();
-		}
-	}
-
-	@Override
-	public void writeDesc(MCDataOutput packet)
-	{
-		packet.writeInt(getTypeID());
-		packet.writeInt(dyeID);
-		packet.writeBoolean(isInsulated);
-		packet.writeByte(currentWireConnections);
-		packet.writeByte(currentAcceptorConnections);
-	}
-
-	@Override
-	public void save(NBTTagCompound nbt)
-	{
-		super.save(nbt);
-		nbt.setInteger("typeID", getTypeID());
-		nbt.setInteger("dyeID", dyeID);
-		nbt.setBoolean("isInsulated", isInsulated);
-	}
-
-	@Override
-	public void load(NBTTagCompound nbt)
-	{
-		super.load(nbt);
-		setMaterialFromID(nbt.getInteger("typeID"));
-		dyeID = nbt.getInteger("dyeID");
-		isInsulated = nbt.getBoolean("isInsulated");
-	}
-
-	@Override
-	public ItemStack pickItem(MovingObjectPosition hit)
-	{
-		return EnumWireMaterial.values()[getTypeID()].getWire();
-	}
-
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-	{
-		if (item != null)
-		{
-			if (item.itemID == Item.dyePowder.itemID && isInsulated())
-			{
-				setDye(item.getItemDamage());
-				return true;
-			}
-			else if (item.itemID == Block.cloth.blockID)
-			{
-				if (isInsulated() && !world().isRemote)
-				{
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
-				}
-
-				setInsulated(BlockColored.getDyeFromBlock(item.getItemDamage()));
-				player.inventory.decrStackSize(player.inventory.currentItem, 1);
-				return true;
-			}
-			else if ((item.itemID == Item.shears.itemID || item.getItem() instanceof ItemShears) && isInsulated())
-			{
-				if (!world().isRemote)
-				{
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(dyeID))));
-				}
-
-				setInsulated(false);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
 		return getCollisionBoxes();
@@ -361,54 +206,6 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 	public int getHollowSize()
 	{
 		return isInsulated ? 8 : 6;
-	}
-
-	@Override
-	public boolean isInsulated()
-	{
-		return isInsulated;
-	}
-
-	@Override
-	public int getInsulationColor()
-	{
-		return isInsulated ? dyeID : -1;
-	}
-
-	@Override
-	public void setInsulationColor(int dye)
-	{
-		dyeID = dye;
-
-		refresh();
-		world().markBlockForUpdate(x(), y(), z());
-		tile().notifyPartChange(this);
-	}
-
-	@Override
-	public void setInsulated(boolean insulated)
-	{
-		isInsulated = insulated;
-		dyeID = DEFAULT_COLOR;
-
-		refresh();
-		world().markBlockForUpdate(x(), y(), z());
-		tile().notifyPartChange(this);
-	}
-
-	public void setInsulated(int dyeColour)
-	{
-		isInsulated = true;
-		dyeID = dyeColour;
-
-		refresh();
-		world().markBlockForUpdate(x(), y(), z());
-		tile().notifyPartChange(this);
-	}
-
-	public void setInsulated()
-	{
-		setInsulated(true);
 	}
 
 	@Override
@@ -442,6 +239,12 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 	}
 
 	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		refresh();
+	}
+
+	@Override
 	public boolean isBlockedOnSide(ForgeDirection side)
 	{
 		TMultiPart blocker = tile().partMap(side.ordinal());
@@ -449,11 +252,5 @@ public class PartWire extends PartConductor implements TSlottedPart, JNormalOccl
 		boolean expandable = NormalOcclusionTest.apply(this, blocker);
 		testingSide = null;
 		return !expandable;
-	}
-
-	@Override
-	public void onPartChanged(TMultiPart part)
-	{
-		refresh();
 	}
 }

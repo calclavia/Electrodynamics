@@ -1,11 +1,9 @@
-package resonantinduction.wire;
+package resonantinduction.wire.part;
 
-import resonantinduction.ResonantInduction;
-import calclavia.lib.prefab.block.EnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.IConnector;
-import universalelectricity.api.INetworkProvider;
+import resonantinduction.ResonantInduction;
+import resonantinduction.base.PartAdvanced;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyInterface;
@@ -13,6 +11,7 @@ import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.grid.EnergyNetworkLoader;
 import universalelectricity.core.grid.IEnergyNetwork;
+import calclavia.lib.prefab.block.EnergyStorage;
 import codechicken.multipart.TileMultipart;
 
 @UniversalClass
@@ -21,26 +20,26 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	private IEnergyNetwork network;
 	private EnergyStorage buffer = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
 
-	public TileEntity[] adjacentConnections = null;
+	public TileEntity[] cachedConnections = null;
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
 
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		return buffer.receiveEnergy(receive, doReceive);
+		return this.buffer.receiveEnergy(receive, doReceive);
 	}
 
 	@Override
 	public long onExtractEnergy(ForgeDirection from, long request, boolean doExtract)
 	{
-		return buffer.extractEnergy(request, doExtract);
+		return this.buffer.extractEnergy(request, doExtract);
 	}
 
 	@Override
 	public void distribute()
 	{
-		Object[] receivers = this.getAdjacentConnections();
+		Object[] receivers = this.getConnections();
 		int energyUsed = 0;
 
 		for (int i = 0; i < receivers.length; i++)
@@ -133,9 +132,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	{
 		boolean notPrevented = !isConnectionPrevented(tile, side);
 
-		if (tile instanceof IConnector)
+		if (tile instanceof IConductor)
 		{
-			notPrevented &= ((IConnector) tile).canConnect(side.getOpposite());
+			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite());
 		}
 
 		return notPrevented;
@@ -166,8 +165,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+			System.out.println("WORK"+tileEntity + " : "+(tileEntity instanceof IConductor));
 
-			if (tileEntity instanceof INetworkProvider && canConnectBothSides(tileEntity, side))
+			if (tileEntity instanceof IConductor && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -198,19 +198,20 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	 */
 	public boolean isValidAcceptor(TileEntity tile)
 	{
-		return tile instanceof IConnector;
+		return tile instanceof IConductor;
 	}
 
 	public void refresh()
 	{
 		if (!world().isRemote)
 		{
-			adjacentConnections = null;
+			this.cachedConnections = null;
 
 			byte possibleWireConnections = getPossibleWireConnections();
 			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
+			System.out.println(possibleWireConnections);
 
-			if (possibleWireConnections != currentWireConnections)
+			if (possibleWireConnections != this.currentWireConnections)
 			{
 				byte or = (byte) (possibleWireConnections | currentWireConnections);
 
@@ -237,7 +238,6 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 			}
 
 			this.currentAcceptorConnections = possibleAcceptorConnections;
-
 			this.sendDescUpdate();
 		}
 
@@ -249,11 +249,11 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	 * aren't allowed any more. This is so that networks split correctly.
 	 */
 	@Override
-	public TileEntity[] getAdjacentConnections()
+	public TileEntity[] getConnections()
 	{
-		if (this.adjacentConnections == null)
+		if (this.cachedConnections == null)
 		{
-			this.adjacentConnections = new TileEntity[6];
+			this.cachedConnections = new TileEntity[6];
 
 			for (byte i = 0; i < 6; i++)
 			{
@@ -262,11 +262,11 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 
 				if (isCurrentlyConnected(side))
 				{
-					this.adjacentConnections[i] = tileEntity;
+					this.cachedConnections[i] = tileEntity;
 				}
 			}
 		}
-		return this.adjacentConnections;
+		return this.cachedConnections;
 	}
 
 	public boolean isCurrentlyConnected(ForgeDirection side)

@@ -176,7 +176,7 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IConnect
 		{
 			IElectricityNetwork network = ((IConductor) tileEntity).getNetwork();
 
-			if (MultimeterEventHandler.getCache(tileEntity.worldObj).containsKey(network) && MultimeterEventHandler.getCache(tileEntity.worldObj).get(network) instanceof Float)
+			if (MultimeterEventHandler.getCache(tileEntity.worldObj).containsKey(network) && MultimeterEventHandler.getCache(tileEntity.worldObj).get(network) instanceof Long)
 			{
 				return MultimeterEventHandler.getCache(tileEntity.worldObj).get(network);
 			}

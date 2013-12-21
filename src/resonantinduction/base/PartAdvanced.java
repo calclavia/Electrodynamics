@@ -1,4 +1,4 @@
-package resonantinduction.wire;
+package resonantinduction.base;
 
 import net.minecraft.block.Block;
 import codechicken.multipart.TMultiPart;

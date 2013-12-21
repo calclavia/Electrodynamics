@@ -11,7 +11,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
-import resonantinduction.render.RenderPartWire;
+import resonantinduction.wire.part.PartLainWire;
+import resonantinduction.wire.part.PartWire;
+import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.electricity.ElectricityDisplay;
 import universalelectricity.api.electricity.ElectricityDisplay.ElectricUnit;
 import codechicken.lib.vec.BlockCoord;
@@ -35,9 +37,14 @@ public class ItemPartWire extends JItemMultiPart
 	}
 
 	@Override
-	public TMultiPart newPart(ItemStack arg0, EntityPlayer arg1, World arg2, BlockCoord arg3, int arg4, Vector3 arg5)
+	public TMultiPart newPart(ItemStack arg0, EntityPlayer player, World arg2, BlockCoord arg3, int arg4, Vector3 arg5)
 	{
-		return new PartWire(getDamage(arg0));
+		if (player.isSneaking())
+		{
+			return new PartWire(getDamage(arg0));
+		}
+
+		return new PartLainWire(getDamage(arg0));
 	}
 
 	@Override
@@ -64,7 +71,7 @@ public class ItemPartWire extends JItemMultiPart
 	public void registerIcons(IconRegister register)
 	{
 		for (EnumWireMaterial material : EnumWireMaterial.values())
-		{System.out.println(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
+		{
 			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
 		}
 

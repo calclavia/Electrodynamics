@@ -1,4 +1,4 @@
-package resonantinduction.render;
+package resonantinduction.wire.render;
 
 import java.nio.FloatBuffer;
 import java.util.Map;
@@ -12,8 +12,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.wire.PartConductor;
-import resonantinduction.wire.PartWire;
+import resonantinduction.render.InvertX;
+import resonantinduction.wire.part.PartConductor;
+import resonantinduction.wire.part.PartWire;
 import universalelectricity.api.vector.Vector3;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
@@ -40,6 +41,7 @@ public class RenderPartWire
 	public static final Map<String, CCModel> models;
 	public static final Map<String, CCModel> shinyModels;
 	public static Icon wireIcon;
+	public static Icon lainWireIcon;
 	public static Icon insulationIcon;
 	public static Icon breakIcon;
 	public static FloatBuffer location = BufferUtils.createFloatBuffer(4);
@@ -134,6 +136,7 @@ public class RenderPartWire
 	public static void registerIcons(IconRegister iconReg)
 	{
 		wireIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/wire");
+		lainWireIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/lainWire");
 		insulationIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
 		breakIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "wire");
 	}
@@ -146,10 +149,13 @@ public class RenderPartWire
 		CCRenderState.setBrightness(wire.world(), wire.x(), wire.y(), wire.z());
 		renderSide(ForgeDirection.UNKNOWN, wire);
 		byte renderSides = wire.getAllCurrentConnections();
+
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			if (PartConductor.connectionMapContainsSide(renderSides, side))
+			{
 				renderSide(side, wire);
+			}
 		}
 	}
 
@@ -157,9 +163,9 @@ public class RenderPartWire
 	{
 		String name = side.name().toLowerCase();
 		name = name.equals("unknown") ? "center" : name;
-		Vector3 materialColour = wire.getMaterial().color;
-		Colour colour = new ColourRGBA(materialColour.x, materialColour.y, materialColour.z, 1);
+		Colour colour = wire.getMaterial().color;
 		renderPart(wireIcon, models.get(name), wire.x(), wire.y(), wire.z(), colour);
+
 		if (wire.isInsulated())
 		{
 			Vector3 vecColour = ResonantInduction.DYE_COLORS[wire.dyeID];
@@ -172,7 +178,6 @@ public class RenderPartWire
 	{
 		String name = side.name().toLowerCase();
 		name = name.equals("unknown") ? "center" : name;
-		Vector3 materialColour = wire.getMaterial().color;
 		renderPartShine(shinyModels.get(name));
 	}
 

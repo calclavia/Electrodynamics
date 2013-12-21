@@ -13,12 +13,12 @@ import universalelectricity.core.grid.IEnergyNetwork;
  */
 public class MultimeterEventHandler
 {
-	private static final HashMap<IEnergyNetwork, Integer> networkEnergyCache = new HashMap<IEnergyNetwork, Integer>();
+	private static final HashMap<IEnergyNetwork, Long> networkEnergyCache = new HashMap<IEnergyNetwork, Long>();
 	private static long lastCheckTime = 0;
 
-	public static HashMap<IEnergyNetwork, Float> getCache(World worldObj)
+	public static HashMap<IEnergyNetwork, Long> getCache(World worldObj)
 	{
-		HashMap<IEnergyNetwork, Float> returnCache = (HashMap<IEnergyNetwork, Float>) networkEnergyCache.clone();
+		HashMap<IEnergyNetwork, Long> returnCache = new HashMap<IEnergyNetwork, Long>(networkEnergyCache);
 
 		if (Math.abs(worldObj.getWorldTime() - lastCheckTime) >= 40)
 		{
