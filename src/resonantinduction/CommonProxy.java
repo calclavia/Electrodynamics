@@ -6,8 +6,6 @@ package resonantinduction;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.battery.ContainerBattery;
-import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import universalelectricity.api.vector.Vector3;
@@ -33,10 +31,10 @@ public class CommonProxy implements IGuiHandler
 		{
 			return new ContainerMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
-		else if (tileEntity instanceof TileEntityBattery)
+		/*else if (tileEntity instanceof TileEntityBattery)
 		{
 			return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
-		}
+		}*/
 
 		return null;
 	}

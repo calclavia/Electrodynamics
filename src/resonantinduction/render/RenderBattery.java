@@ -23,7 +23,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.model.ModelBattery;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -55,14 +54,14 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 
-		if (((TileEntityBattery) t).structure.isMultiblock)
+		/*if (((TileEntityBattery) t).structure.isMultiblock)
 		{
 			this.bindTexture(TEXTURE_MULTI);
 		}
 		else
 		{
 			this.bindTexture(TEXTURE);
-		}
+		}*/
 
 		MODEL.render(0.0625f);
 		/*
@@ -83,7 +82,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 				this.renderManager = RenderManager.instance;
 			}
 
-			int renderAmount = Math.min(((TileEntityBattery) t).clientCells, 16);
+			int renderAmount = 0;//Math.min(((TileEntityBattery) t).clientCells, 16);
 
 			if (renderAmount == 0)
 			{

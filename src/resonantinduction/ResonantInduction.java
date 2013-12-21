@@ -20,10 +20,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.battery.BlockBattery;
-import resonantinduction.battery.ItemCapacitor;
-import resonantinduction.battery.ItemInfiniteCapacitor;
-import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.BlockEMContractor;
 import resonantinduction.contractor.ItemBlockContractor;
 import resonantinduction.contractor.TileEntityEMContractor;
@@ -185,16 +181,14 @@ public class ResonantInduction
 
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
-		itemCapacitor = new ItemCapacitor(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
-		itemInfiniteCapacitor = new ItemInfiniteCapacitor(getNextItemID());
 		itemPartWire = new ItemPartWire(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockMultimeter = new BlockMultimeter(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
-		blockBattery = new BlockBattery(getNextBlockID());
+		//blockBattery = new BlockBattery(getNextBlockID());
 
 		if (REPLACE_FURNACE)
 		{
@@ -219,7 +213,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
+		//GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

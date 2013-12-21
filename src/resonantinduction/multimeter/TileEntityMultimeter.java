@@ -15,13 +15,14 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import universalelectricity.api.IConnector;
 import universalelectricity.api.energy.IConductor;
+import universalelectricity.api.energy.IEnergyContainer;
+import universalelectricity.api.energy.IEnergyNetwork;
 import buildcraft.api.power.IPowerReceptor;
 import calclavia.lib.IRotatable;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileEntityAdvanced;
 import cofh.api.energy.TileEnergyHandler;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -35,7 +36,7 @@ import cpw.mods.fml.common.network.Player;
  * @author Calclavia
  * 
  */
-public class TileEntityMultimeter extends TileEntityAdvanced implements IConnector, IRotatable, IPacketReceiver, IPacketSender
+public class TileEntityMultimeter extends TileEntityAdvanced implements IRotatable, IPacketReceiver, IPacketSender
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -159,19 +160,16 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IConnect
 		return getDetectedEnergy(direction.getOpposite(), tileEntity);
 	}
 
+	// TODO: Check if side is correct.
 	public static float getDetectedEnergy(ForgeDirection side, TileEntity tileEntity)
 	{
-		if (tileEntity instanceof TileEntityElectrical)
+		if (tileEntity instanceof IEnergyContainer)
 		{
-			return ((TileEntityElectrical) tileEntity).getEnergy();
-		}
-		else if (tileEntity instanceof IElectricalStorage)
-		{
-			return ((IElectricalStorage) tileEntity).getEnergy();
+			return ((IEnergyContainer) tileEntity).getEnergy(side);
 		}
 		else if (tileEntity instanceof IConductor)
 		{
-			IElectricityNetwork network = ((IConductor) tileEntity).getNetwork();
+			IEnergyNetwork network = ((IConductor) tileEntity).getNetwork();
 
 			if (MultimeterEventHandler.getCache(tileEntity.worldObj).containsKey(network) && MultimeterEventHandler.getCache(tileEntity.worldObj).get(network) instanceof Long)
 			{
@@ -250,7 +248,7 @@ public class TileEntityMultimeter extends TileEntityAdvanced implements IConnect
 		return peakDetection;
 	}
 
-	@Override
+	//@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return direction == getDirection();

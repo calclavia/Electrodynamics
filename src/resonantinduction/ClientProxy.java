@@ -5,14 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
-import resonantinduction.gui.GuiBattery;
 import resonantinduction.gui.GuiMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.render.BlockRenderingHandler;
-import resonantinduction.render.RenderBattery;
 import resonantinduction.render.RenderEMContractor;
 import resonantinduction.render.RenderMultimeter;
 import resonantinduction.render.RenderTesla;
@@ -41,7 +38,8 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultimeter.class, new RenderMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBattery.class, new RenderBattery());
+		// ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBattery.class, new
+		// RenderBattery());
 	}
 
 	@Override
@@ -53,10 +51,12 @@ public class ClientProxy extends CommonProxy
 		{
 			return new GuiMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
-		else if (tileEntity instanceof TileEntityBattery)
-		{
-			return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));
-		}
+		/*
+		 * else if (tileEntity instanceof TileEntityBattery)
+		 * {
+		 * return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));
+		 * }
+		 */
 
 		return null;
 	}

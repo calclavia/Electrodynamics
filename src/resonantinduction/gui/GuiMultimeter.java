@@ -5,7 +5,6 @@ package resonantinduction.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -14,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
+import calclavia.lib.gui.GuiContainerBase;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,9 +25,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class GuiMultimeter extends GuiContainer
+public class GuiMultimeter extends GuiContainerBase
 {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.GUI_DIRECTORY + "gui_multimeter.png");
 	TileEntityMultimeter tileEntity;
 
 	private int containerWidth;
@@ -39,6 +38,7 @@ public class GuiMultimeter extends GuiContainer
 		super(new ContainerMultimeter(inventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
 		this.ySize = 217;
+		this.baseTexture = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.GUI_DIRECTORY + "gui_multimeter.png");
 	}
 
 	@Override
@@ -90,13 +90,7 @@ public class GuiMultimeter extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
-		this.containerWidth = (this.width - this.xSize) / 2;
-		this.containerHeight = (this.height - this.ySize) / 2;
-
-		this.mc.renderEngine.bindTexture(TEXTURE);
-		GL11.glColor4f(1, 1, 1, 1);
-		this.drawTexturedModalRect(this.containerWidth, this.containerHeight, 0, 0, this.xSize, this.ySize);
-
+		super.drawGuiContainerBackgroundLayer(f, x, y);
 		int length = Math.min((int) (this.tileEntity.getDetectedEnergy() / this.tileEntity.getPeak()) * 115, 115);
 		this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length, 176, 115 - length, 6, length);
 	}

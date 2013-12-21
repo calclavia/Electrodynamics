@@ -27,6 +27,8 @@ import universalelectricity.api.electricity.ElectricityPack;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.tile.EnergyStorage;
+import calclavia.lib.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -40,10 +42,10 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileEntityTesla extends TileEntityUniversalElectrical implements ITesla, IPacketSender, IPacketReceiver
+public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPacketSender, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
-	public final float TRANSFER_CAP = 10;
+	public final long TRANSFER_CAP = 10000;
 	private int dyeID = DEFAULT_COLOR;
 
 	private boolean canReceive = true;
@@ -74,6 +76,11 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	private int zapCounter = 0;
 	private boolean isLinkedClient;
 
+	public TileEntityTesla()
+	{
+		this.energyStorage = new EnergyStorage(TRANSFER_CAP);
+	}
+
 	@Override
 	public void initiate()
 	{
@@ -86,16 +93,16 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	{
 		super.updateEntity();
 
-		boolean doPacketUpdate = this.getEnergy() > 0;
+		boolean doPacketUpdate = this.energyStorage.getEnergy() > 0;
 
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
 		if (this.isController())
 		{
-			this.produce();
+			// this.produce();
 
-			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
+			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.energyStorage.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
 				final TileEntityTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
@@ -115,11 +122,11 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 
 							if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
 							{
-								this.transfer(((TileEntityTesla) transferTile), Math.min(this.getProvide(ForgeDirection.UNKNOWN), TRANSFER_CAP));
+								this.transfer(((TileEntityTesla) transferTile), Math.min(this.energyStorage.getEmptySpace(), TRANSFER_CAP));
 
 								if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 								{
-									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energyStorage.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
 							}
 						}
@@ -141,7 +148,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(tesla) && tesla.canReceive(this))
+							if (!this.connectedTeslas.contains(tesla) && tesla.canTeslaTransfer(this))
 							{
 								if (tesla instanceof TileEntityTesla)
 								{
@@ -189,14 +196,14 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 
 					if (transferTeslaCoils.size() > 0)
 					{
-						float transferEnergy = this.getEnergy() / transferTeslaCoils.size();
+						long transferEnergy = this.energyStorage.getEnergy() / transferTeslaCoils.size();
 						int count = 0;
 						boolean sentPacket = false;
 						for (ITesla tesla : transferTeslaCoils)
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 							{
-								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
+								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energyStorage.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
 							}
 
 							Vector3 targetVector = new Vector3((TileEntity) tesla);
@@ -245,7 +252,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				this.doTransfer = false;
 			}
 
-			if (!this.worldObj.isRemote && this.getEnergy() > 0 != doPacketUpdate)
+			if (!this.worldObj.isRemote && this.energyStorage.getEnergy() > 0 != doPacketUpdate)
 			{
 				this.sendPacket(2);
 			}
@@ -254,25 +261,19 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		this.clearCache();
 	}
 
-	private void transfer(ITesla tesla, float transferEnergy)
+	private void transfer(ITesla tesla, long transferEnergy)
 	{
 		if (transferEnergy > 0)
 		{
-			tesla.transfer(transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f)), true);
-			this.transfer(-transferEnergy, true);
+			tesla.teslaTransfer((long) (transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f))), true);
+			this.teslaTransfer(-transferEnergy, true);
 		}
 	}
 
 	@Override
-	public float receiveElectricity(ElectricityPack receive, boolean doReceive)
+	public boolean canTeslaTransfer(TileEntity tileEntity)
 	{
-		return super.receiveElectricity(receive, doReceive);
-	}
-
-	@Override
-	public boolean canReceive(TileEntity tileEntity)
-	{
-		return this.canReceive && !this.outputBlacklist.contains(tileEntity) && this.getRequest(ForgeDirection.UNKNOWN) > 0;
+		return this.canReceive && !this.outputBlacklist.contains(tileEntity);
 	}
 
 	@Override
@@ -296,7 +297,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		{
 			case 1:
 			{
-				data.add(this.getEnergy());
+				data.add(this.energyStorage.getEnergy());
 				data.add(this.dyeID);
 				data.add(this.canReceive);
 				data.add(this.attackEntities);
@@ -305,7 +306,7 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 			}
 			case 2:
 			{
-				data.add(this.getEnergy());
+				data.add(this.energyStorage.getEnergy());
 			}
 		}
 
@@ -331,14 +332,14 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 			switch (data.readByte())
 			{
 				case 1:
-					this.setEnergy(data.readFloat());
+					this.energyStorage.setEnergy(data.readLong());
 					this.dyeID = data.readInt();
 					this.canReceive = data.readBoolean();
 					this.attackEntities = data.readBoolean();
 					this.isLinkedClient = data.readBoolean();
 					break;
 				case 2:
-					this.setEnergy(data.readFloat());
+					this.energyStorage.setEnergy(data.readLong());
 					break;
 				case 3:
 					this.doTransfer = true;
@@ -362,13 +363,13 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 	}
 
 	@Override
-	public float transfer(float transferEnergy, boolean doTransfer)
+	public long teslaTransfer(long transferEnergy, boolean doTransfer)
 	{
 		if (isController() || this.getControllingTelsa() == this)
 		{
 			if (doTransfer)
 			{
-				this.receiveElectricity(transferEnergy, true);
+				this.energyStorage.receiveEnergy(transferEnergy, true);
 			}
 
 			this.sendPacket(2);
@@ -376,13 +377,13 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 		}
 		else
 		{
-			if (this.getEnergy() > 0)
+			if (this.energyStorage.getEnergy() > 0)
 			{
-				transferEnergy += this.getEnergy();
-				this.setEnergy(0);
+				transferEnergy += this.energyStorage.getEnergy();
+				this.energyStorage.setEnergy(0);
 			}
 
-			return this.getControllingTelsa().transfer(transferEnergy, doTransfer);
+			return this.getControllingTelsa().teslaTransfer(transferEnergy, doTransfer);
 		}
 	}
 
@@ -606,34 +607,6 @@ public class TileEntityTesla extends TileEntityUniversalElectrical implements IT
 				}
 			}
 		}
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
-	{
-		if (direction != ForgeDirection.DOWN)
-		{
-			return this.getMaxEnergyStored() - this.getEnergy();
-		}
-
-		return 0;
-	}
-
-	@Override
-	public float getProvide(ForgeDirection direction)
-	{
-		if (this.isController() && direction == ForgeDirection.DOWN)
-		{
-			return this.getEnergy();
-		}
-
-		return 0;
-	}
-
-	@Override
-	public float getMaxEnergyStored()
-	{
-		return TRANSFER_CAP;
 	}
 
 	@Override

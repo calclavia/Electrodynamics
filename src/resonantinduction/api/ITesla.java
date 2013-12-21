@@ -16,8 +16,8 @@ public interface ITesla
 	 * @param doTransfer - Actually transfer
 	 * @return Energy actually transfered.
 	 */
-	public float transfer(float transferEnergy, boolean doTransfer);
+	public long teslaTransfer(long transferEnergy, boolean doTransfer);
 
-	public boolean canReceive(TileEntity transferTile);
+	public boolean canTeslaTransfer(TileEntity transferTile);
 
 }
