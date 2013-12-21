@@ -1,6 +1,6 @@
 package resonantinduction.api;
 
-import universalelectricity.core.item.IElectricalItem;
+import universalelectricity.api.item.IElectricalItem;
 
 /**
  * @author Calclavia

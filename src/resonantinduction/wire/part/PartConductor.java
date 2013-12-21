@@ -5,16 +5,16 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
 import universalelectricity.api.UniversalClass;
+import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import universalelectricity.core.grid.EnergyNetworkLoader;
 import calclavia.lib.tile.EnergyStorage;
 import codechicken.multipart.TileMultipart;
 
-@UniversalClass
+//@UniversalClass
 public abstract class PartConductor extends PartAdvanced implements IConductor
 {
 	private IEnergyNetwork network;

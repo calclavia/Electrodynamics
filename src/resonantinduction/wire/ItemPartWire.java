@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
-import resonantinduction.wire.part.PartLainWire;
+import resonantinduction.wire.part.PartFlatWire;
 import resonantinduction.wire.part.PartWire;
 import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.energy.UnitDisplay;
@@ -39,12 +39,12 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	public TMultiPart newPart(ItemStack arg0, EntityPlayer player, World arg2, BlockCoord arg3, int arg4, Vector3 arg5)
 	{
-		if (player.isSneaking())
+		/*if (player.isSneaking())
 		{
 			return new PartWire(getDamage(arg0));
-		}
+		}*/
 
-		return new PartLainWire(getDamage(arg0));
+		return new PartFlatWire(getDamage(arg0));
 	}
 
 	@Override

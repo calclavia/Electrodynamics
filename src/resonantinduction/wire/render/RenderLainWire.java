@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.util.Icon;
-import resonantinduction.wire.part.PartLainWire;
+import resonantinduction.wire.part.PartFlatWire;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.CCModel;
@@ -400,7 +400,7 @@ public class RenderLainWire
 		return key;
 	}
 
-	public static int modelKey(PartLainWire w)
+	public static int modelKey(PartFlatWire w)
 	{
 		return modelKey(w.side, w.getThickness(), w.connMap);
 	}
@@ -413,7 +413,7 @@ public class RenderLainWire
 		return m;
 	}
 
-	public static void render(PartLainWire w, Vector3 pos)
+	public static void render(PartFlatWire w, Vector3 pos)
 	{
 		IVertexModifier m = w.getColour() == -1 ? ColourModifier.instance : new ColourMultiplier(w.getColour());
 		getOrGenerateModel(modelKey(w)).render(new Translation(pos), new IconTransformation(w.getIcon()), m);
@@ -428,7 +428,7 @@ public class RenderLainWire
 		m.render(t, new IconTransformation(icon));
 	}
 
-	public static void renderBreakingOverlay(Icon icon, PartLainWire wire)
+	public static void renderBreakingOverlay(Icon icon, PartFlatWire wire)
 	{
 		int key = modelKey(wire);
 		int side = (key >> 8) % 6;

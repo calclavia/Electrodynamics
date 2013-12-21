@@ -73,7 +73,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		{
 			if (this.fakeBattery == null)
 			{
-				this.fakeBattery = new EntityItem(t.worldObj, 0, 0, 0, new ItemStack(ResonantInduction.itemCapacitor));
+				//this.fakeBattery = new EntityItem(t.worldObj, 0, 0, 0, new ItemStack(ResonantInduction.itemCapacitor));
 				this.fakeBattery.age = 10;
 			}
 

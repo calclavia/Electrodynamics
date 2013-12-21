@@ -16,19 +16,19 @@ import codechicken.lib.colour.ColourRGBA;
 
 public enum EnumWireMaterial
 {
-	COPPER("Copper", 12.5F, 3, 2, 184, 115, 51), TIN("Tin", 13, 2, 0.5F, 132, 132, 130),
-	IRON("Iron", 0.1F, 2, 4, 97, 102, 105), ALUMINUM("Aluminum", 0.025F, 6, 0.15F, 215, 205, 181),
-	SILVER("Silver", 0.005F, 1, 2, 192, 192, 192),
-	SUPERCONDUCTOR("Superconductor", 0, 1, 2, 192, 192, 192);
+	COPPER("Copper", 12.5F, 3, 20, 184, 115, 51), TIN("Tin", 13, 2, 5, 132, 132, 130),
+	IRON("Iron", 0.1F, 20, 40, 97, 102, 105), ALUMINUM("Aluminum", 0.025F, 6, 150, 215, 205, 181),
+	SILVER("Silver", 5F, 1, 20, 192, 192, 192),
+	SUPERCONDUCTOR("Superconductor", 0, 1, 100, 192, 192, 192);
 
 	public final float resistance;
-	public final float damage;
-	public final float maxAmps;
+	public final int damage;
+	public final long maxAmps;
 	public final ColourRGBA color;
 	private ItemStack wire;
 	private final String name;
 
-	private EnumWireMaterial(String s, float resist, float electrocution, float max, int r, int g, int b)
+	private EnumWireMaterial(String s, float resist, int electrocution, long max, int r, int g, int b)
 	{
 		name = s;
 		resistance = resist;

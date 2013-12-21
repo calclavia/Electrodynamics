@@ -44,7 +44,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Modified by Calclavia, MrTJP
  * 
  */
-public class PartLainWire extends PartWireBase implements IConductor, TFacePart, JNormalOcclusion
+public class PartFlatWire extends PartWireBase implements IConductor, TFacePart, JNormalOcclusion
 {
 	public static Cuboid6[][] selectionBounds = new Cuboid6[3][6];
 	public static Cuboid6[][] occlusionBounds = new Cuboid6[3][6];
@@ -82,17 +82,17 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 	 */
 	public int connMap;
 
-	public PartLainWire()
+	public PartFlatWire()
 	{
 		super();
 	}
 
-	public PartLainWire(int typeID)
+	public PartFlatWire(int typeID)
 	{
 		this(EnumWireMaterial.values()[typeID]);
 	}
 
-	public PartLainWire(EnumWireMaterial type)
+	public PartFlatWire(EnumWireMaterial type)
 	{
 		super();
 		material = type;
@@ -302,7 +302,7 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 	{
 		int absDir = Rotation.rotateSide(side, r);
 		TMultiPart facePart = tile().partMap(absDir);
-		if (facePart != null && (!(facePart instanceof PartLainWire) || !canConnectToType((PartLainWire) facePart)))
+		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectToType((PartFlatWire) facePart)))
 			return false;
 
 		if (tile().partMap(PartMap.edgeBetween(side, absDir)) != null)
@@ -334,11 +334,11 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 			TMultiPart tp = t.partMap(absDir ^ 1);
 			if (tp instanceof IConductor)
 			{
-				boolean b = ((PartLainWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
+				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 				if (b)
 				{
 					// let them connect to us
-					if (tp instanceof PartLainWire && !renderThisCorner((PartLainWire) tp))
+					if (tp instanceof PartFlatWire && !renderThisCorner((PartFlatWire) tp))
 						return 1;
 
 					return 2;
@@ -369,8 +369,8 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(side);
-			if (tp instanceof PartLainWire)
-				return ((PartLainWire) tp).connectStraight(this, (r + 2) % 4);
+			if (tp instanceof PartFlatWire)
+				return ((PartFlatWire) tp).connectStraight(this, (r + 2) % 4);
 		}
 
 		return connectStraightOverride(absDir);
@@ -389,8 +389,8 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 			return false;
 
 		TMultiPart tp = tile().partMap(absDir);
-		if (tp instanceof PartLainWire)
-			return ((PartLainWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
+		if (tp instanceof PartFlatWire)
+			return ((PartFlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
 
 		return connectInternalOverride(tp, r);
 	}
@@ -403,18 +403,18 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 	public boolean connectCenter()
 	{
 		TMultiPart t = tile().partMap(6);
-		if (t instanceof PartLainWire)
-			return ((PartLainWire) t).connectInternal(this, side);
+		if (t instanceof PartFlatWire)
+			return ((PartFlatWire) t).connectInternal(this, side);
 
 		return false;
 	}
 
 	public boolean renderThisCorner(IConductor part)
 	{
-		if (!(part instanceof PartLainWire))
+		if (!(part instanceof PartFlatWire))
 			return false;
 
-		PartLainWire wire = (PartLainWire) part;
+		PartFlatWire wire = (PartFlatWire) part;
 		if (wire.getThickness() == getThickness())
 			return side < wire.side;
 
@@ -556,7 +556,7 @@ public class PartLainWire extends PartWireBase implements IConductor, TFacePart,
 	@Override
 	public String getType()
 	{
-		return "resonant_induction_lain_wire";
+		return "resonant_induction_flat_wire";
 	}
 
 	/**
