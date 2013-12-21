@@ -9,16 +9,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
+import resonantinduction.Utility;
 import resonantinduction.wire.part.PartFlatWire;
-import resonantinduction.wire.part.PartWire;
 import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;
+import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,14 +39,23 @@ public class ItemPartWire extends JItemMultiPart
 	}
 
 	@Override
-	public TMultiPart newPart(ItemStack arg0, EntityPlayer player, World arg2, BlockCoord arg3, int arg4, Vector3 arg5)
+	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		/*if (player.isSneaking())
-		{
-			return new PartWire(getDamage(arg0));
-		}*/
+		BlockCoord onPos = pos.copy().offset(side ^ 1);
 
-		return new PartFlatWire(getDamage(arg0));
+		if (!Utility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
+		{
+			return null;
+		}
+
+		PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+
+		if (wire != null)
+		{
+			wire.preparePlacement(side, itemStack.getItemDamage());
+		}
+
+		return wire;
 	}
 
 	@Override

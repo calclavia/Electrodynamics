@@ -2,15 +2,14 @@ package resonantinduction.wire.part;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
 import resonantinduction.wire.IAdvancedConductor;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import calclavia.lib.tile.EnergyStorage;
 import codechicken.multipart.TileMultipart;
 
 //@UniversalClass
@@ -40,7 +39,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public IEnergyNetwork getNetwork()
 	{
-		if (this.network == null && tile() instanceof IAdvancedConductor)
+		if (this.network == null && tile() instanceof IConductor)
 		{
 			setNetwork(EnergyNetworkLoader.getNewNetwork((IConductor) tile()));
 		}
@@ -78,7 +77,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 		{
 			getNetwork().getConnectors().remove(tile());
 			super.bind(t);
-			getNetwork().getConnectors().add((IAdvancedConductor) tile());
+			getNetwork().getConnectors().add((IConductor) tile());
 		}
 		else
 		{
@@ -89,9 +88,9 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public void preRemove()
 	{
-		if (!world().isRemote && tile() instanceof IAdvancedConductor)
+		if (!world().isRemote && tile() instanceof IConductor)
 		{
-			getNetwork().split((IAdvancedConductor) tile());
+			getNetwork().split((IConductor) tile());
 		}
 
 		super.preRemove();
@@ -107,9 +106,9 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	{
 		boolean notPrevented = !isConnectionPrevented(tile, side);
 
-		if (tile instanceof IAdvancedConductor)
+		if (tile instanceof IConductor)
 		{
-			notPrevented &= ((IAdvancedConductor) tile).canConnect(side.getOpposite());
+			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite());
 		}
 
 		return notPrevented;
@@ -134,9 +133,8 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-			System.out.println("WORK" + tileEntity + " : " + (tileEntity instanceof IAdvancedConductor));
 
-			if (tileEntity instanceof IAdvancedConductor && canConnectBothSides(tileEntity, side))
+			if (tileEntity instanceof IConductor && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -153,21 +151,13 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-			if (isValidAcceptor(tileEntity) && canConnectBothSides(tileEntity, side))
+			if (CompatibilityModule.canConnect(tileEntity, side.getOpposite()) && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
 		}
 
 		return connections;
-	}
-
-	/**
-	 * Override if there are different kinds of acceptor possible
-	 */
-	public boolean isValidAcceptor(TileEntity tile)
-	{
-		return tile instanceof IAdvancedConductor;
 	}
 
 	public void refresh()
@@ -178,7 +168,6 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 
 			byte possibleWireConnections = getPossibleWireConnections();
 			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
-			System.out.println(possibleWireConnections);
 
 			if (possibleWireConnections != this.currentWireConnections)
 			{
@@ -196,9 +185,9 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 					{
 						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side);
 
-						if (tileEntity instanceof IAdvancedConductor)
+						if (tileEntity instanceof IConductor)
 						{
-							getNetwork().merge(((IAdvancedConductor) tileEntity).getNetwork());
+							getNetwork().merge(((IConductor) tileEntity).getNetwork());
 						}
 					}
 				}

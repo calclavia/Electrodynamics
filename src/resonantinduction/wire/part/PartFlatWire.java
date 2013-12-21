@@ -101,6 +101,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	public void preparePlacement(int side, int meta)
 	{
 		this.side = (byte) (side ^ 1);
+		this.material = EnumWireMaterial.values()[meta];
 	}
 
 	/**
