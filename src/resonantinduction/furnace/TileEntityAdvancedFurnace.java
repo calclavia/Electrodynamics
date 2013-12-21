@@ -1,5 +1,6 @@
 package resonantinduction.furnace;
 
+import net.minecraft.block.BlockFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
@@ -31,9 +32,10 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	@Override
 	public void updateEntity()
 	{
-		boolean doSmeltingProcess = canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0;
+		boolean canSmelt = canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0;
+		boolean canBurn = this.getStackInSlot(0) == null && TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1)) > 0;
 
-		if (doSmeltingProcess)
+		if (canSmelt)
 		{
 			if (this.energy.checkExtract(ResonantInduction.FURNACE_WATTAGE / 20))
 			{
@@ -49,7 +51,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 				this.energy.extractEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
 			}
 		}
-		else if (this.getStackInSlot(0) == null && TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1)) > 0 && !this.energy.isFull())
+		else if (!this.energy.isFull())
 		{
 			boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
 
@@ -72,8 +74,63 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 		}
 		else
 		{
-			// TODO: Fix vanilla changing the blockID of this furnace.
-			super.updateEntity();
+			boolean flag = this.furnaceBurnTime > 0;
+			boolean flag1 = false;
+
+			if (this.furnaceBurnTime > 0)
+			{
+				--this.furnaceBurnTime;
+			}
+
+			if (!this.worldObj.isRemote)
+			{
+				if (this.furnaceBurnTime == 0 && this.canSmelt())
+				{
+					this.currentItemBurnTime = this.furnaceBurnTime = getItemBurnTime(this.getStackInSlot(1));
+
+					if (this.furnaceBurnTime > 0)
+					{
+						flag1 = true;
+
+						if (this.getStackInSlot(1) != null)
+						{
+							--this.getStackInSlot(1).stackSize;
+
+							if (this.getStackInSlot(1).stackSize == 0)
+							{
+								this.setInventorySlotContents(1, this.getStackInSlot(1).getItem().getContainerItemStack(this.getStackInSlot(1)));
+							}
+						}
+					}
+				}
+
+				if (this.isBurning() && this.canSmelt())
+				{
+					++this.furnaceCookTime;
+
+					if (this.furnaceCookTime == 200)
+					{
+						this.furnaceCookTime = 0;
+						this.smeltItem();
+						flag1 = true;
+					}
+				}
+				else
+				{
+					this.furnaceCookTime = 0;
+				}
+
+				if (flag != this.furnaceBurnTime > 0)
+				{
+					flag1 = true;
+					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				}
+			}
+
+			if (flag1)
+			{
+				this.onInventoryChanged();
+			}
 		}
 	}
 
@@ -136,7 +193,7 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	}
 
 	@Override
-	public int onReceiveEnergy(ForgeDirection from, int receive, boolean doReceive)
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
 		if (this.canSmelt() && this.getStackInSlot(1) == null && this.furnaceBurnTime == 0)
 		{
@@ -147,13 +204,13 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 	}
 
 	@Override
-	public int onExtractEnergy(ForgeDirection from, int request, boolean doProvide)
+	public long onExtractEnergy(ForgeDirection from, long request, boolean doProvide)
 	{
 		return this.energy.extractEnergy(request, doProvide);
 	}
 
 	@Override
-	public int getVoltage(ForgeDirection direction)
+	public long getVoltage(ForgeDirection direction)
 	{
 		return 100;
 	}

@@ -1,5 +1,7 @@
 package resonantinduction.wire;
 
+import resonantinduction.ResonantInduction;
+import calclavia.lib.prefab.block.EnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.IConnector;
@@ -17,36 +19,22 @@ import codechicken.multipart.TileMultipart;
 public abstract class PartConductor extends PartAdvanced implements IConductor
 {
 	private IEnergyNetwork network;
-	private int buffer = 0;
+	private EnergyStorage buffer = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
 
 	public TileEntity[] adjacentConnections = null;
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
 
 	@Override
-	public int onReceiveEnergy(ForgeDirection from, int receive, boolean doReceive)
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		int energyReceived = Math.min(this.getEnergyCapacitance() - this.buffer, receive);
-
-		if (doReceive)
-		{
-			this.buffer += energyReceived;
-		}
-
-		return energyReceived;
+		return buffer.receiveEnergy(receive, doReceive);
 	}
 
 	@Override
-	public int onExtractEnergy(ForgeDirection from, int request, boolean doExtract)
+	public long onExtractEnergy(ForgeDirection from, long request, boolean doExtract)
 	{
-		int energyExtracted = Math.min(this.buffer, request);
-
-		if (doExtract)
-		{
-			this.buffer -= energyExtracted;
-		}
-
-		return energyExtracted;
+		return buffer.extractEnergy(request, doExtract);
 	}
 
 	@Override
