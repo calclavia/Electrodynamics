@@ -35,7 +35,7 @@ public class ItemCapacitor extends ItemUniversalElectric implements ICapacitor
 	}
 
 	@Override
-	public float getMaxElectricityStored(ItemStack theItem)
+	public float getElectricityCapacity(ItemStack theItem)
 	{
 		return 500;
 	}

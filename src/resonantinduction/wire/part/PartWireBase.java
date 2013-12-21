@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.multipart.NormalOcclusionTest;
-import codechicken.multipart.TMultiPart;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,13 +12,14 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IBlockableConnection;
 import resonantinduction.wire.IInsulatedMaterial;
 import resonantinduction.wire.IInsulation;
 import resonantinduction.wire.IWireMaterial;
 import universalelectricity.api.energy.IConductor;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 
 /**
  * @author Calclavia
@@ -203,11 +200,11 @@ public abstract class PartWireBase extends PartConductor implements IInsulatedMa
 		this.isInsulated = packet.readBoolean();
 		this.currentWireConnections = packet.readByte();
 		this.currentAcceptorConnections = packet.readByte();
+		
 		if (tile() != null)
 		{
 			tile().markRender();
 		}
-
 	}
 
 	@Override

@@ -14,8 +14,8 @@ import resonantinduction.TabRI;
 import resonantinduction.wire.part.PartLainWire;
 import resonantinduction.wire.part.PartWire;
 import resonantinduction.wire.render.RenderPartWire;
-import universalelectricity.api.electricity.ElectricityDisplay;
-import universalelectricity.api.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;
@@ -62,8 +62,8 @@ public class ItemPartWire extends JItemMultiPart
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
-		list.add("Resistance: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, ElectricUnit.RESISTANCE));
-		list.add("Max Amperage: " + ElectricityDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, ElectricUnit.AMPERE));
+		list.add("Resistance: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
+		list.add("Max Amperage: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
 	}
 
 	@Override

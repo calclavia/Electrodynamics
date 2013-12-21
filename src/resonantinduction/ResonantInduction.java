@@ -40,7 +40,7 @@ import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemPartWire;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.item.IElectricalItem;
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
@@ -276,7 +276,7 @@ public class ResonantInduction
 		 * Recipes
 		 */
 		ItemStack emptyCapacitor = new ItemStack(itemCapacitor);
-		((IItemElectric) itemCapacitor).setElectricity(emptyCapacitor, 0);
+		((IElectricalItem) itemCapacitor).setElectricity(emptyCapacitor, 0);
 
 		final ItemStack defaultWire = EnumWireMaterial.IRON.getWire();
 

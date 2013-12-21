@@ -1,6 +1,5 @@
 package resonantinduction.furnace;
 
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
@@ -9,10 +8,10 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.electricity.IVoltage;
+import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.block.IConductor;
-import calclavia.lib.prefab.block.EnergyStorage;
+import calclavia.lib.tile.EnergyStorage;
 
 /**
  * Meant to replace the furnace class.
@@ -69,7 +68,8 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 
 			if (doBlockStateUpdate != this.furnaceBurnTime > 0)
 			{
-				this.refreshConductors();
+				// TODO: Send descript packet.
+				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
 		else
@@ -151,19 +151,6 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 		}
 
 		this.doProduce = false;
-	}
-
-	public void refreshConductors()
-	{
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
-
-			if (tileEntity instanceof IConductor)
-			{
-				((IConductor) tileEntity).refresh();
-			}
-		}
 	}
 
 	@Override

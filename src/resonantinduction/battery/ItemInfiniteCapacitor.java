@@ -68,7 +68,7 @@ public class ItemInfiniteCapacitor extends ItemUniversalElectric
 	}
 
 	@Override
-	public float getMaxElectricityStored(ItemStack theItem)
+	public float getElectricityCapacity(ItemStack theItem)
 	{
 		return Float.POSITIVE_INFINITY;
 	}

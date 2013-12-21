@@ -7,11 +7,11 @@ import resonantinduction.base.PartAdvanced;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import universalelectricity.core.grid.EnergyNetworkLoader;
-import universalelectricity.core.grid.IEnergyNetwork;
-import calclavia.lib.prefab.block.EnergyStorage;
+import calclavia.lib.tile.EnergyStorage;
 import codechicken.multipart.TileMultipart;
 
 @UniversalClass

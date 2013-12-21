@@ -8,7 +8,7 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import resonantinduction.base.ListUtil;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.item.IElectricalItem;
 
 public class SynchronizedBatteryData
 {
@@ -77,7 +77,7 @@ public class SynchronizedBatteryData
 
 			for (int i = 0; i < toSort.length - 1; i++)
 			{
-				if (((IItemElectric) toSort[i].getItem()).getElectricityStored(toSort[i]) < ((IItemElectric) toSort[i + 1].getItem()).getElectricityStored(toSort[i + 1]))
+				if (((IElectricalItem) toSort[i].getItem()).getElectricityStored(toSort[i]) < ((IElectricalItem) toSort[i + 1].getItem()).getElectricityStored(toSort[i + 1]))
 				{
 					temp = toSort[i];
 					toSort[i] = toSort[i + 1];

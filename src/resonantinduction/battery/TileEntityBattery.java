@@ -22,12 +22,12 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ICapacitor;
 import resonantinduction.base.ListUtil;
+import universalelectricity.api.electricity.ElectricityPack;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.compatibility.TileEntityUniversalElectrical;
-import universalelectricity.core.electricity.ElectricityPack;
-import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.item.IElectricalItem;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -39,7 +39,7 @@ import cpw.mods.fml.common.network.Player;
  * 
  * @author AidanBrady
  */
-public class TileEntityBattery extends TileEntityUniversalElectrical implements IPacketSender, IPacketReceiver, IInventory
+public class TileEntityBattery extends TileEntityElectrical implements IPacketSender, IPacketReceiver, IInventory
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -100,9 +100,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 							if (checkStack != null)
 							{
-								if (checkStack.getItem() instanceof IItemElectric)
+								if (checkStack.getItem() instanceof IElectricalItem)
 								{
-									if (((IItemElectric) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+									if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
 									{
 										chargeItem = checkStack;
 										break electricItemLoop;
@@ -117,9 +117,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 						if (checkStack != null)
 						{
-							if (checkStack.getItem() instanceof IItemElectric)
+							if (checkStack.getItem() instanceof IElectricalItem)
 							{
-								if (((IItemElectric) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+								if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
 								{
 									chargeItem = checkStack;
 									break electricItemLoop;
@@ -138,7 +138,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			if (chargeItem != null)
 			{
 				ItemStack itemStack = chargeItem;
-				IItemElectric battery = (IItemElectric) itemStack.getItem();
+				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
 				float batteryNeeded = battery.recharge(itemStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false);
@@ -149,7 +149,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			if (structure.visibleInventory[2] != null)
 			{
 				ItemStack itemStack = structure.visibleInventory[2];
-				IItemElectric battery = (IItemElectric) itemStack.getItem();
+				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
 
 				float energyNeeded = getMaxEnergyStored() - getEnergyStored();
 				float batteryStored = battery.getElectricityStored(itemStack);
@@ -358,12 +358,12 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 
 		for (ItemStack itemStack : structure.inventory)
 		{
-			if (itemStack.getItem() instanceof IItemElectric)
+			if (itemStack.getItem() instanceof IElectricalItem)
 			{
-				IItemElectric battery = (IItemElectric) itemStack.getItem();
+				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
 
 				float needed = amount - added;
-				float itemAdd = Math.min(battery.getMaxElectricityStored(itemStack) - battery.getElectricityStored(itemStack), needed);
+				float itemAdd = Math.min(battery.getElectricityCapacity(itemStack) - battery.getElectricityStored(itemStack), needed);
 
 				if (doAdd)
 				{
@@ -392,9 +392,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 		float removed = 0;
 		for (ItemStack itemStack : inverse)
 		{
-			if (itemStack.getItem() instanceof IItemElectric)
+			if (itemStack.getItem() instanceof IElectricalItem)
 			{
-				IItemElectric battery = (IItemElectric) itemStack.getItem();
+				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
 
 				float needed = amount - removed;
 				float itemRemove = Math.min(battery.getElectricityStored(itemStack), needed);
@@ -427,9 +427,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				if (itemStack != null)
 				{
-					if (itemStack.getItem() instanceof IItemElectric)
+					if (itemStack.getItem() instanceof IElectricalItem)
 					{
-						max += ((IItemElectric) itemStack.getItem()).getMaxElectricityStored(itemStack);
+						max += ((IElectricalItem) itemStack.getItem()).getElectricityCapacity(itemStack);
 					}
 				}
 			}
@@ -453,9 +453,9 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 			{
 				if (itemStack != null)
 				{
-					if (itemStack.getItem() instanceof IItemElectric)
+					if (itemStack.getItem() instanceof IElectricalItem)
 					{
-						energy += ((IItemElectric) itemStack.getItem()).getElectricityStored(itemStack);
+						energy += ((IElectricalItem) itemStack.getItem()).getElectricityStored(itemStack);
 					}
 				}
 			}
@@ -637,7 +637,7 @@ public class TileEntityBattery extends TileEntityUniversalElectrical implements 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemsSack)
 	{
-		return itemsSack.getItem() instanceof IItemElectric;
+		return itemsSack.getItem() instanceof IElectricalItem;
 	}
 
 	@Override

@@ -15,8 +15,6 @@ import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IBlockableConnection;
 import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.energy.IConductor;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;

@@ -10,8 +10,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.battery.ContainerBattery;
 import resonantinduction.battery.TileEntityBattery;
-import universalelectricity.api.electricity.ElectricityDisplay;
-import universalelectricity.api.electricity.ElectricityDisplay.ElectricUnit;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 
 public class GuiBattery extends GuiContainer
 {
@@ -35,8 +35,8 @@ public class GuiBattery extends GuiContainer
 		fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x404040);
 		fontRenderer.drawString("Cells: " + tileEntity.clientCells + " / " + tileEntity.structure.getMaxCells(), 62, 23, 0x404040);
 		fontRenderer.drawString("Energy: ", 62, 33, 0x404040);
-		fontRenderer.drawString(ElectricityDisplay.getDisplay(this.tileEntity.getEnergyStored(), ElectricUnit.JOULES, 4, true), 62, 43, 0x404040);
-		fontRenderer.drawString("Max: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getMaxEnergyStored(), ElectricUnit.JOULES), 62, 53, 0x404040);
+		fontRenderer.drawString(UnitDisplay.getDisplay(this.tileEntity.getEnergyStored(), Unit.JOULES, 4, true), 62, 43, 0x404040);
+		fontRenderer.drawString("Max: " + UnitDisplay.getDisplayShort(this.tileEntity.getMaxEnergyStored(), Unit.JOULES), 62, 53, 0x404040);
 		fontRenderer.drawString("Percentage: " + (int) (this.tileEntity.getEnergyStored() / this.tileEntity.getMaxEnergyStored() * 100) + "%", 62, 63, 0x404040);
 		fontRenderer.drawString("Volume: " + tileEntity.structure.getVolume(), 62, 73, 0x404040);
 	}
