@@ -8,9 +8,12 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.electricity.IVoltageInput;
+import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
@@ -23,7 +26,7 @@ import com.builtbroken.minecraft.interfaces.IPowerLess;
  * Based off both UE universal electrical tile, and electrical tile prefabs
  * 
  * @author DarkGuardsman */
-public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IPowerLess
+public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IPowerLess, IVoltageInput, IVoltageOutput
 {
     /** Forge Ore Directory name of the item to toggle infinite power mode */
     public static String powerToggleItemID = "battery";
@@ -106,7 +109,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        if (!this.runPowerLess() && receive > 0 && this.getInputDirections().contains(from))
+        if (!this.runPowerLess() && this.getInputDirections().contains(from) && receive > 0)
         {
             long prevEnergyStored = this.getEnergy(from);
             long newStoredEnergy = Math.min(this.getEnergy(from) + receive, this.getEnergyCapacity(from));
@@ -158,11 +161,60 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         for (ForgeDirection direction : this.getOutputDirections())
         {
-            if (this.onExtractEnergy(direction.getOpposite(), CompatibilityModule.receiveEnergy(VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction), direction, this.onExtractEnergy(direction.getOpposite(), this.JOULES_PER_TICK, false), true), true) > 0)
+            if (direction != ForgeDirection.UNKNOWN)
             {
-                break;
+                TileEntity entity = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction);
+                if (CompatibilityModule.canConnect(entity, direction.getOpposite()))
+                {
+                    long output = this.onExtractEnergy(direction, this.JOULES_PER_TICK, false);
+                    long input = CompatibilityModule.receiveEnergy(entity, direction.getOpposite(), output, true);
+                    if (input > 0 && this.onExtractEnergy(direction, input, true) > 0)
+                    {
+                        break;
+                    }
+                }
             }
         }
+    }
+
+    @Override
+    public long getVoltageInput(ForgeDirection direction)
+    {
+        if (this.getInputDirections().contains(direction))
+        {
+            return this.ratedVoltage;
+        }
+        return 0;
+    }
+
+    @Override
+    public void onWrongVoltage(ForgeDirection direction, long voltage)
+    {
+        if (voltage > this.ratedVoltage)
+        {
+            if (voltage > this.shortOutVoltage)
+            {
+                //TODO damage machine
+                this.onDisable(this.worldObj.rand.nextInt(100));
+            }
+        }
+        else
+        {
+            if (voltage < this.brownOutVoltage)
+            {
+                //TODO cause machine to run slow
+            }
+        }
+    }
+
+    @Override
+    public long getVoltageOutput(ForgeDirection direction)
+    {
+        if (this.getOutputDirections().contains(direction))
+        {
+            return this.ratedVoltage;
+        }
+        return 0;
     }
 
     /* ********************************************
