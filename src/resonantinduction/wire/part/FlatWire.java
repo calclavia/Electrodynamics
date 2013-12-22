@@ -14,8 +14,9 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IAdvancedConductor;
-import resonantinduction.wire.render.RenderLainWire;
+import resonantinduction.wire.render.RenderFlatWire;
 import resonantinduction.wire.render.RenderPartWire;
+import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -44,7 +45,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Modified by Calclavia, MrTJP
  * 
  */
-public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOcclusion
+public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusion
 {
 	public static Cuboid6[][] selectionBounds = new Cuboid6[3][6];
 	public static Cuboid6[][] occlusionBounds = new Cuboid6[3][6];
@@ -82,17 +83,17 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	 */
 	public int connMap;
 
-	public PartFlatWire()
+	public FlatWire()
 	{
 		super();
 	}
 
-	public PartFlatWire(int typeID)
+	public FlatWire(int typeID)
 	{
 		this(EnumWireMaterial.values()[typeID]);
 	}
 
-	public PartFlatWire(EnumWireMaterial type)
+	public FlatWire(EnumWireMaterial type)
 	{
 		super();
 		material = type;
@@ -314,7 +315,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	{
 		int absDir = Rotation.rotateSide(side, r);
 		TMultiPart facePart = tile().partMap(absDir);
-		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectToType((PartFlatWire) facePart)))
+		if (facePart != null && (!(facePart instanceof FlatWire) || !canConnectToType((FlatWire) facePart)))
 			return false;
 
 		if (tile().partMap(PartMap.edgeBetween(side, absDir)) != null)
@@ -346,11 +347,11 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 			TMultiPart tp = t.partMap(absDir ^ 1);
 			if (tp instanceof IAdvancedConductor)
 			{
-				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
+				boolean b = ((FlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 				if (b)
 				{
 					// let them connect to us
-					if (tp instanceof PartFlatWire && !renderThisCorner((PartFlatWire) tp))
+					if (tp instanceof FlatWire && !renderThisCorner((FlatWire) tp))
 						return 1;
 
 					return 2;
@@ -381,8 +382,8 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(side);
-			if (tp instanceof PartFlatWire)
-				return ((PartFlatWire) tp).connectStraight(this, (r + 2) % 4);
+			if (tp instanceof FlatWire)
+				return ((FlatWire) tp).connectStraight(this, (r + 2) % 4);
 		}
 
 		return connectStraightOverride(absDir);
@@ -401,8 +402,8 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 			return false;
 
 		TMultiPart tp = tile().partMap(absDir);
-		if (tp instanceof PartFlatWire)
-			return ((PartFlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
+		if (tp instanceof FlatWire)
+			return ((FlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
 
 		return connectInternalOverride(tp, r);
 	}
@@ -415,18 +416,18 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	public boolean connectCenter()
 	{
 		TMultiPart t = tile().partMap(6);
-		if (t instanceof PartFlatWire)
-			return ((PartFlatWire) t).connectInternal(this, side);
+		if (t instanceof FlatWire)
+			return ((FlatWire) t).connectInternal(this, side);
 
 		return false;
 	}
 
 	public boolean renderThisCorner(IAdvancedConductor part)
 	{
-		if (!(part instanceof PartFlatWire))
+		if (!(part instanceof FlatWire))
 			return false;
 
-		PartFlatWire wire = (PartFlatWire) part;
+		FlatWire wire = (FlatWire) part;
 		if (wire.getThickness() == getThickness())
 			return side < wire.side;
 
@@ -575,14 +576,14 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 		return RenderPartWire.lainWireIcon;
 	}
 
-	public int getColour()
+	public Colour getColour()
 	{
-		return this.getMaterial().color.pack();
+		return this.getMaterial().color;
 	}
 
 	public boolean useStaticRenderer()
 	{
-		return true;
+		return false;
 	}
 
 	@Override
@@ -592,7 +593,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 		if (pass == 0 && useStaticRenderer())
 		{
 			CCRenderState.setBrightness(world(), x(), y(), z());
-			RenderLainWire.render(this, pos);
+			RenderFlatWire.render(this, pos);
 			CCRenderState.setColour(-1);
 		}
 	}
@@ -607,7 +608,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 			TextureUtils.bindAtlas(0);
 			CCRenderState.useModelColours(true);
 			CCRenderState.startDrawing(7);
-			RenderLainWire.render(this, pos);
+			RenderFlatWire.render(this, pos);
 			CCRenderState.draw();
 			CCRenderState.setColour(-1);
 			GL11.glEnable(GL11.GL_LIGHTING);
@@ -619,7 +620,7 @@ public class PartFlatWire extends PartWireBase implements TFacePart, JNormalOccl
 	public void drawBreaking(RenderBlocks renderBlocks)
 	{
 		CCRenderState.reset();
-		RenderLainWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
+		RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
 	}
 
 }

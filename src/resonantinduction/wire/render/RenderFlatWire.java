@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.util.Icon;
-import resonantinduction.wire.part.PartFlatWire;
+import resonantinduction.wire.part.FlatWire;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.CCModel;
@@ -24,12 +24,7 @@ import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 
-/**
- * 
- * @author MrTJP, ChickenBones
- * 
- */
-public class RenderLainWire
+public class RenderFlatWire
 {
 	public static class UVT implements IUVTransformation
 	{
@@ -58,6 +53,7 @@ public class RenderLainWire
 	 * 2 = side 2 = -Z = NORTH
 	 * 3 = side 5 = +X = EAST
 	 */
+
 	private static class WireModelGenerator
 	{
 		int side;
@@ -399,7 +395,7 @@ public class RenderLainWire
 		return key;
 	}
 
-	public static int modelKey(PartFlatWire w)
+	public static int modelKey(FlatWire w)
 	{
 		return modelKey(w.side, w.getThickness(), w.connMap);
 	}
@@ -412,10 +408,11 @@ public class RenderLainWire
 		return m;
 	}
 
-	public static void render(PartFlatWire w, Vector3 pos)
+	public static void render(FlatWire w, Vector3 pos)
 	{
-		IVertexModifier m = w.getColour() == -1 ? ColourModifier.instance : new ColourMultiplier(w.getColour());
-		getOrGenerateModel(modelKey(w)).render(new Translation(pos), new IconTransformation(w.getIcon()), m);
+		IVertexModifier m = w.getColour().pack() == -1 ? ColourModifier.instance : new ColourMultiplier(w.getColour());
+		CCModel model = getOrGenerateModel(modelKey(w));
+		model.render(new Translation(pos), new IconTransformation(w.getIcon()), m);
 	}
 
 	public static void renderInv(int thickness, Transformation t, Icon icon)
@@ -427,7 +424,7 @@ public class RenderLainWire
 		m.render(t, new IconTransformation(icon));
 	}
 
-	public static void renderBreakingOverlay(Icon icon, PartFlatWire wire)
+	public static void renderBreakingOverlay(Icon icon, FlatWire wire)
 	{
 		int key = modelKey(wire);
 		int side = (key >> 8) % 6;

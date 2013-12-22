@@ -34,7 +34,7 @@ public enum EnumWireMaterial
 		resistance = resist;
 		damage = electrocution;
 		maxAmps = max;
-		color = new ColourRGBA(r, g, b, 1);
+		color = new ColourRGBA(r, g, b, 255);
 	}
 
 	public String getName()

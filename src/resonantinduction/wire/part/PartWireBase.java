@@ -170,6 +170,10 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 				return true;
 			}
 		}
+
+		if (!world().isRemote)
+			System.out.println(this.getNetwork());
+
 		return false;
 	}
 

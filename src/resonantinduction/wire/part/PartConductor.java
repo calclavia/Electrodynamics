@@ -17,7 +17,6 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 {
 	private IEnergyNetwork network;
 
-	public TileEntity[] cachedConnections = null;
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
 
@@ -62,12 +61,6 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	{
 		byte tester = (byte) (1 << side.ordinal());
 		return ((connections & tester) > 0);
-	}
-
-	@Override
-	public void onMoved()
-	{
-		this.refresh();
 	}
 
 	@Override
@@ -164,19 +157,18 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	{
 		if (!world().isRemote)
 		{
-			this.cachedConnections = null;
-
 			byte possibleWireConnections = getPossibleWireConnections();
 			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
 
 			if (possibleWireConnections != this.currentWireConnections)
 			{
-				byte or = (byte) (possibleWireConnections | currentWireConnections);
+				byte or = (byte) (possibleWireConnections | this.currentWireConnections);
 
-				if (or != possibleWireConnections) // Connections have been removed
+				// Connections have been removed
+				if (or != possibleWireConnections)
 				{
-					getNetwork().split((IConductor) tile());
-					setNetwork(null);
+					this.getNetwork().split((IConductor) tile());
+					this.setNetwork(null);
 				}
 
 				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
@@ -187,7 +179,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 
 						if (tileEntity instanceof IConductor)
 						{
-							getNetwork().merge(((IConductor) tileEntity).getNetwork());
+							this.getNetwork().merge(((IConductor) tileEntity).getNetwork());
 						}
 					}
 				}
@@ -196,7 +188,8 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 			}
 
 			this.currentAcceptorConnections = possibleAcceptorConnections;
-			//this.sendDescUpdate();
+			this.getNetwork().reconstruct();
+			// this.sendDescUpdate();
 		}
 
 		tile().markRender();
@@ -209,22 +202,20 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public TileEntity[] getConnections()
 	{
-		if (this.cachedConnections == null)
+		TileEntity[] cachedConnections = new TileEntity[6];
+
+		for (byte i = 0; i < 6; i++)
 		{
-			this.cachedConnections = new TileEntity[6];
+			ForgeDirection side = ForgeDirection.getOrientation(i);
+			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-			for (byte i = 0; i < 6; i++)
+			if (isCurrentlyConnected(side))
 			{
-				ForgeDirection side = ForgeDirection.getOrientation(i);
-				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-
-				if (isCurrentlyConnected(side))
-				{
-					this.cachedConnections[i] = tileEntity;
-				}
+				cachedConnections[i] = tileEntity;
 			}
 		}
-		return this.cachedConnections;
+
+		return cachedConnections;
 	}
 
 	public boolean isCurrentlyConnected(ForgeDirection side)
@@ -251,6 +242,12 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	}
 
 	@Override
+	public void onMoved()
+	{
+		this.refresh();
+	}
+
+	@Override
 	public void onChunkLoad()
 	{
 		super.onChunkLoad();
@@ -263,5 +260,4 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 		super.onNeighborChanged();
 		refresh();
 	}
-
 }

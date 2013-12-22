@@ -2,7 +2,7 @@ package resonantinduction;
 
 import resonantinduction.wire.IAdvancedConductor;
 import resonantinduction.wire.IBlockableConnection;
-import resonantinduction.wire.part.PartFlatWire;
+import resonantinduction.wire.part.FlatWire;
 import buildcraft.api.power.IPowerReceptor;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
@@ -27,7 +27,7 @@ public class MultipartRI implements IPartFactory
 	{
 		if (name.equals("resonant_induction_flat_wire"))
 		{
-			return new PartFlatWire();
+			return new FlatWire();
 		}
 
 		return null;

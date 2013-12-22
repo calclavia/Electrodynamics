@@ -13,7 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.Utility;
-import resonantinduction.wire.part.PartFlatWire;
+import resonantinduction.wire.part.FlatWire;
 import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -48,7 +48,7 @@ public class ItemPartWire extends JItemMultiPart
 			return null;
 		}
 
-		PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+		FlatWire wire = (FlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
 
 		if (wire != null)
 		{
