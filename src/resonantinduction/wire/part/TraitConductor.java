@@ -101,6 +101,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
+		// TODO: Allow floor connections to also receive this.
 		TMultiPart part = this.partMap(from.ordinal());
 
 		if (this.interfaces.contains(part))

@@ -61,13 +61,13 @@ public abstract class PartAdvancedWire extends PartConductor
 		/**
 		 * TODO: FIX THIS!
 		 */
-		return (int) (this.getMaterial().resistance * 1000);
+		return (int) (this.getMaterial().resistance * 10);
 	}
 
 	@Override
 	public long getEnergyCapacitance()
 	{
-		return this.getMaterial().maxAmps;
+		return this.getMaterial().maxAmps * 1000;
 	}
 
 	/**
