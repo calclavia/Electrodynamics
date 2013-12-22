@@ -3,7 +3,6 @@ package resonantinduction.wire.part;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.PartAdvanced;
-import resonantinduction.wire.IAdvancedConductor;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
@@ -12,11 +11,11 @@ import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
 //@UniversalClass
-public abstract class PartConductor extends PartAdvanced implements IAdvancedConductor
+public abstract class PartConductor extends PartAdvanced implements IConductor
 {
 	private IEnergyNetwork network;
 
-	protected Object[] cachedConnections = new Object[6];
+	protected Object[] connections = new Object[6];
 
 	/**
 	 * Universal Electricity conductor functions.
@@ -24,7 +23,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		return this.getNetwork().produce(this, receive, doReceive);
+		return this.getNetwork().produce(new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world()), from.getOpposite(), receive, doReceive);
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public Object[] getConnections()
 	{
-		return this.cachedConnections;
+		return this.connections;
 	}
 
 	/**
@@ -94,11 +93,11 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	public abstract boolean canConnectTo(Object obj);
 
 	/**
-	 * Recalculates all the netwirk connections
+	 * Recalculates all the network connections
 	 */
 	protected void recalculateConnections()
 	{
-		this.cachedConnections = new Object[6];
+		this.connections = new Object[6];
 		/**
 		 * Calculate all external connections with this conductor.
 		 */
@@ -109,7 +108,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 			if (this.canConnect(side))
 			{
 				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-				cachedConnections[i] = tileEntity;
+				connections[i] = tileEntity;
 			}
 		}
 	}

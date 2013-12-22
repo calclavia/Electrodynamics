@@ -88,8 +88,6 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		System.out.println("RECEIVING"+receive);
-
 		/*TMultiPart part = partMap(from.ordinal());
 
 		if (part != null)

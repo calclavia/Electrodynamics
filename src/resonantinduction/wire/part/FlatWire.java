@@ -184,6 +184,8 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 					}
 				}
 			}
+
+			this.getNetwork().split(this);
 		}
 	}
 
@@ -201,13 +203,12 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 			updateInternalConnections();
 
-			// if (updateOpenConnections())
+			if (updateOpenConnections())
 			{
 				updateExternalConnections();
 			}
 
 			this.recalculateConnections();
-			this.getNetwork().reconstruct();
 			tile().markDirty();
 		}
 	}
@@ -227,9 +228,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (changed)
 			{
 				sendConnUpdate();
-				this.recalculateConnections();
-				this.getNetwork().reconstruct();
 			}
+
+			this.recalculateConnections();
 		}
 	}
 
@@ -240,6 +241,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		{
 
 			boolean changed = updateInternalConnections();
+
 			if (updateOpenConnections())
 			{
 				changed |= updateExternalConnections();
@@ -248,9 +250,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (changed)
 			{
 				sendConnUpdate();
-				this.recalculateConnections();
-				this.getNetwork().reconstruct();
 			}
+
+			this.recalculateConnections();
 		}
 	}
 
@@ -267,9 +269,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (updateExternalConnections())
 			{
 				sendConnUpdate();
-				this.recalculateConnections();
-				this.getNetwork().reconstruct();
 			}
+
+			this.recalculateConnections();
 		}
 	}
 
@@ -279,62 +281,42 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		if (!world().isRemote)
 		{
 			System.out.println(this.getNetwork());
-			System.out.println(Integer.toHexString(this.connMap));
 			this.getConnections();
+			this.recalculateConnections();
 		}
 		return super.activate(player, part, item);
 	}
 
 	@Override
-	public Object[] getConnections()
+	public void recalculateConnections()
 	{
-		this.cachedConnections = new Object[6];
+		this.connections = new Object[6];
 
 		/**
 		 * Calculate all external connections of this conductor.
 		 */
 		for (byte r = 0; r < 4; r++)
 		{
-			int absDir = Rotation.rotateSide(side, r);
-			ForgeDirection dir = ForgeDirection.getOrientation(absDir);
-
-			BlockCoord pos = new BlockCoord(tile()).offset(absDir);
-			TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
-
-			TileMultipart t = Utility.getMultipartTile(world(), pos);
-
-			if (this.canConnect(dir))
-			{
-				this.cachedConnections[r] = tileEntity;
-				System.out.println("EXT" + tileEntity);
-			}
+			int absDir = Rotation.rotateSide(this.side, r);
+			this.setExternalConnection(absDir);
 		}
 
 		// Connect to the face of the block the wire is placed on.
-		BlockCoord pos = new BlockCoord(tile()).offset(this.side);
-		TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
-
-		TileMultipart t = Utility.getMultipartTile(world(), pos);
-
-		if (this.canConnect(ForgeDirection.getOrientation(this.side)))
-		{
-			this.cachedConnections[this.side] = tileEntity;
-			System.out.println("EXT" + tileEntity);
-		}
+		this.setExternalConnection(this.side);
 
 		for (byte r = 0; r < 4; r++)
 		{
-			int absDir = Rotation.rotateSide(side, r);
+			int absDir = Rotation.rotateSide(this.side, r);
 
 			// Check straight ahead.
-			if (tile().partMap(PartMap.edgeBetween(absDir, side)) == null)
+			if (tile().partMap(PartMap.edgeBetween(absDir, this.side)) == null)
 			{
 				TMultiPart tp = tile().partMap(absDir);
 
-				if (tp instanceof FlatWire)
+				if (this.canConnectTo(tp))
 				{
-					this.cachedConnections[absDir] = tp;
-					System.out.println("INT" + tp);
+					this.connections[absDir] = tp;
+					this.getNetwork().merge(((FlatWire) tp).getNetwork());
 					continue;
 				}
 			}
@@ -343,25 +325,60 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			BlockCoord cornerPos = new BlockCoord(tile());
 			cornerPos.offset(absDir);
 
-			if (!canConnectThroughCorner(cornerPos, absDir ^ 1, side))
+			if (!canConnectThroughCorner(cornerPos, absDir ^ 1, this.side))
 				continue;
 
-			cornerPos.offset(side);
+			cornerPos.offset(this.side);
 			TileMultipart tpCorner = Utility.getMultipartTile(world(), cornerPos);
 
 			if (tpCorner != null)
 			{
 				TMultiPart tp = tpCorner.partMap(absDir ^ 1);
 
-				if (tp instanceof FlatWire)
+				if (this.canConnectTo(tp))
 				{
-					this.cachedConnections[absDir] = tp;
-					System.out.println("COR" + tp);
+					this.connections[absDir] = tp;
+					this.getNetwork().merge(((FlatWire) tp).getNetwork());
 				}
+			}
+
+			// Cannot find any wire connections on this side. Set null.
+			this.connections[absDir] = null;
+		}
+
+		this.getNetwork().reconstruct();
+	}
+
+	public void setExternalConnection(int absSide)
+	{
+		BlockCoord pos = new BlockCoord(tile()).offset(absSide);
+		TileMultipart t = Utility.getMultipartTile(world(), pos);
+
+		if (t != null)
+		{
+			TMultiPart tp = t.partMap(this.side);
+
+			if (this.canConnectTo(tp))
+			{
+				this.connections[absSide] = tp;
+				this.getNetwork().merge(((FlatWire) tp).getNetwork());
+				return;
 			}
 		}
 
-		return this.cachedConnections;
+		TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
+
+		if (this.canConnectTo(tileEntity))
+		{
+			this.connections[absSide] = tileEntity;
+		}
+
+	}
+
+	@Override
+	public Object[] getConnections()
+	{
+		return this.connections;
 	}
 
 	public boolean canStay()

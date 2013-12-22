@@ -23,7 +23,7 @@ import codechicken.lib.data.MCDataOutput;
  * @author Calclavia
  * 
  */
-public abstract class PartWireBase extends PartConductor
+public abstract class PartWireBase extends PartConductor implements IAdvancedConductor
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
