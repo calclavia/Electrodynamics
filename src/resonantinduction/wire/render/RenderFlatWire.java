@@ -3,6 +3,7 @@ package resonantinduction.wire.render;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
 import resonantinduction.wire.part.FlatWire;
 import codechicken.lib.lighting.LightModel;
@@ -26,6 +27,8 @@ import codechicken.lib.vec.Vector3;
 
 public class RenderFlatWire
 {
+	public static Icon flatWireTexture;
+
 	public static class UVT implements IUVTransformation
 	{
 		public Transformation t;

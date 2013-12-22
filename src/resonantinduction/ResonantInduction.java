@@ -34,7 +34,7 @@ import resonantinduction.multimeter.TileEntityMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.ItemPartWire;
+import resonantinduction.wire.ItemWire;
 import universalelectricity.api.item.IElectricalItem;
 import universalelectricity.api.vector.Vector3;
 import basiccomponents.api.BasicRegistry;
@@ -180,7 +180,7 @@ public class ResonantInduction
 		// Items
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
-		itemPartWire = new ItemPartWire(getNextItemID());
+		itemPartWire = new ItemWire(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());

@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IAdvancedConductor;
-import resonantinduction.wire.ItemPartWire;
 import resonantinduction.wire.render.RenderFlatWire;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
@@ -623,7 +622,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon()
 	{
-		return ItemPartWire.flatWireTexture;
+		return RenderFlatWire.flatWireTexture;
 	}
 
 	public Colour getColour()

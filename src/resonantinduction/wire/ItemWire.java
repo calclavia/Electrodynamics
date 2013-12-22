@@ -14,6 +14,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.Utility;
 import resonantinduction.wire.part.FlatWire;
+import resonantinduction.wire.render.RenderFlatWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
@@ -24,12 +25,11 @@ import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemPartWire extends JItemMultiPart
+public class ItemWire extends JItemMultiPart
 {
-	public static Icon flatWireTexture;
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
-	public ItemPartWire(int id)
+	public ItemWire(int id)
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
 		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
@@ -77,6 +77,12 @@ public class ItemPartWire extends JItemMultiPart
 		list.add("Max Amperage: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
 	}
 
+	@SideOnly(Side.CLIENT)
+	public int getSpriteNumber()
+	{
+		return 0;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister register)
@@ -86,7 +92,7 @@ public class ItemPartWire extends JItemMultiPart
 			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
 		}
 
-		flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
+		RenderFlatWire.flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
 	}
 
 	@Override
