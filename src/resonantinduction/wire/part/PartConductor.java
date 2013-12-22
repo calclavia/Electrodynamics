@@ -24,7 +24,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		return this.getNetwork().produce(receive);
+		return this.getNetwork().produce(this, receive, doReceive);
 	}
 
 	@Override

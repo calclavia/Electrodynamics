@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
-import universalelectricity.api.electricity.ElectricalEvent.EnergyUpdateEvent;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.net.NetworkEvent.EnergyUpdateEvent;
 
 /**
  * @author Calclavia
