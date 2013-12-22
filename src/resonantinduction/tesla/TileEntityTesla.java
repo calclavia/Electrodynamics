@@ -214,7 +214,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) ResonantInduction.DYE_COLORS[this.dyeID].x, (float) ResonantInduction.DYE_COLORS[this.dyeID].y, (float) ResonantInduction.DYE_COLORS[this.dyeID].z);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) ResonantInduction.DYE_COLORS[this.dyeID].r / 255, (float) ResonantInduction.DYE_COLORS[this.dyeID].g / 255, (float) ResonantInduction.DYE_COLORS[this.dyeID].b / 255);
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 

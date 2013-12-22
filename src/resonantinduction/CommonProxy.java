@@ -9,6 +9,8 @@ import net.minecraft.world.World;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.TileEntityMultimeter;
 import universalelectricity.api.vector.Vector3;
+import codechicken.lib.colour.Colour;
+import codechicken.lib.colour.ColourRGBA;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
@@ -31,10 +33,12 @@ public class CommonProxy implements IGuiHandler
 		{
 			return new ContainerMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
 		}
-		/*else if (tileEntity instanceof TileEntityBattery)
-		{
-			return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
-		}*/
+		/*
+		 * else if (tileEntity instanceof TileEntityBattery)
+		 * {
+		 * return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
+		 * }
+		 */
 
 		return null;
 	}
@@ -60,14 +64,14 @@ public class CommonProxy implements IGuiHandler
 		this.renderElectricShock(world, start, target, r, g, b, true);
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, Vector3 color)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color)
 	{
-		this.renderElectricShock(world, start, target, (float) color.x, (float) color.y, (float) color.z);
+		this.renderElectricShock(world, start, target, color.r / 255, color.g / 255, color.b / 255);
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, Vector3 color, boolean split)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color, boolean split)
 	{
-		this.renderElectricShock(world, start, target, (float) color.x, (float) color.y, (float) color.z, split);
+		this.renderElectricShock(world, start, target, color.r / 255, color.g / 255, color.b / 255, split);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target)

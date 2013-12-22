@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,10 +14,12 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.render.RenderFlatWire;
 import codechicken.lib.colour.Colour;
+import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -101,7 +104,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	public void preparePlacement(int side, int meta)
 	{
 		this.side = (byte) (side ^ 1);
-		this.material = EnumWireMaterial.values()[meta];
+		this.setMaterial(meta);
 	}
 
 	/**
@@ -145,12 +148,17 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		read(packet, packet.readUByte());
 	}
 
+	@Override
 	public void read(MCDataInput packet, int packetID)
 	{
 		if (packetID == 0)
 		{
 			this.connMap = packet.readInt();
 			tile().markRender();
+		}
+		else
+		{
+			super.read(packet, packetID);
 		}
 	}
 
@@ -237,7 +245,6 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	{
 		if (!world().isRemote)
 		{
-
 			boolean changed = updateInternalConnections();
 
 			if (updateOpenConnections())
@@ -294,29 +301,13 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		 */
 		for (byte r = 0; r < 4; r++)
 		{
+			if (!maskOpen(r))
+			{
+				continue;
+			}
+
 			int absDir = Rotation.rotateSide(this.side, r);
 			this.setExternalConnection(absDir);
-		}
-
-		// Connect to the face of the block the wire is placed on.
-		this.setExternalConnection(this.side);
-
-		for (byte r = 0; r < 4; r++)
-		{
-			int absDir = Rotation.rotateSide(this.side, r);
-
-			// Check straight ahead.
-			if (tile().partMap(PartMap.edgeBetween(absDir, this.side)) == null)
-			{
-				TMultiPart tp = tile().partMap(absDir);
-
-				if (this.canConnectTo(tp))
-				{
-					this.connections[absDir] = tp;
-					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
-					continue;
-				}
-			}
 
 			// Check Corner
 			BlockCoord cornerPos = new BlockCoord(tile());
@@ -338,10 +329,31 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 				}
 			}
+		}
+
+		for (byte r = 0; r < 4; r++)
+		{
+			int absDir = Rotation.rotateSide(this.side, r);
+
+			// Check straight ahead.
+			if (tile().partMap(PartMap.edgeBetween(absDir, this.side)) == null)
+			{
+				TMultiPart tp = tile().partMap(absDir);
+
+				if (this.canConnectTo(tp))
+				{
+					this.connections[absDir] = tp;
+					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					continue;
+				}
+			}
 
 			// Cannot find any wire connections on this side. Set null.
 			this.connections[absDir] = null;
 		}
+
+		// Connect to the face of the block the wire is placed on.
+		this.setExternalConnection(this.side);
 
 		this.getNetwork().reconstruct();
 	}
@@ -541,14 +553,14 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
 
-			if (tp instanceof PartFlatWire)
+			if (canConnectTo(tp))
 			{
 				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 
 				if (b)
 				{
 					// let them connect to us
-					if (tp instanceof PartFlatWire && !renderThisCorner((PartFlatWire) tp))
+					if (!renderThisCorner((PartFlatWire) tp))
 					{
 						return 1;
 					}
@@ -785,7 +797,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public Colour getColour()
 	{
-		return this.getMaterial().color;
+		return this.isInsulated ? ResonantInduction.DYE_COLORS[this.color] : this.getMaterial().color;
 	}
 
 	public boolean useStaticRenderer()
