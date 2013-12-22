@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.IAdvancedConductor;
 import resonantinduction.wire.render.RenderFlatWire;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
@@ -46,7 +45,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Modified by Calclavia, MrTJP
  * 
  */
-public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusion
+public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormalOcclusion
 {
 	public static Cuboid6[][] selectionBounds = new Cuboid6[3][6];
 	public static Cuboid6[][] occlusionBounds = new Cuboid6[3][6];
@@ -84,17 +83,17 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	 */
 	public int connMap;
 
-	public FlatWire()
+	public PartFlatWire()
 	{
 
 	}
 
-	public FlatWire(int typeID)
+	public PartFlatWire(int typeID)
 	{
 		this(EnumWireMaterial.values()[typeID]);
 	}
 
-	public FlatWire(EnumWireMaterial type)
+	public PartFlatWire(EnumWireMaterial type)
 	{
 		material = type;
 	}
@@ -184,8 +183,6 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 					}
 				}
 			}
-
-			this.getNetwork().split(this);
 		}
 	}
 
@@ -208,9 +205,10 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 				updateExternalConnections();
 			}
 
-			this.recalculateConnections();
 			tile().markDirty();
 		}
+
+		this.recalculateConnections();
 	}
 
 	@Override
@@ -281,9 +279,8 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		if (!world().isRemote)
 		{
 			System.out.println(this.getNetwork());
-			this.getConnections();
-			this.recalculateConnections();
 		}
+
 		return super.activate(player, part, item);
 	}
 
@@ -316,7 +313,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 				if (this.canConnectTo(tp))
 				{
 					this.connections[absDir] = tp;
-					this.getNetwork().merge(((FlatWire) tp).getNetwork());
+					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 					continue;
 				}
 			}
@@ -338,7 +335,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 				if (this.canConnectTo(tp))
 				{
 					this.connections[absDir] = tp;
-					this.getNetwork().merge(((FlatWire) tp).getNetwork());
+					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 				}
 			}
 
@@ -361,7 +358,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (this.canConnectTo(tp))
 			{
 				this.connections[absSide] = tp;
-				this.getNetwork().merge(((FlatWire) tp).getNetwork());
+				this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 				return;
 			}
 		}
@@ -513,7 +510,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	{
 		int absDir = Rotation.rotateSide(side, r);
 		TMultiPart facePart = tile().partMap(absDir);
-		if (facePart != null && (!(facePart instanceof FlatWire) || !canConnectTo((FlatWire) facePart)))
+		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectTo((PartFlatWire) facePart)))
 			return false;
 
 		if (tile().partMap(PartMap.edgeBetween(side, absDir)) != null)
@@ -544,14 +541,14 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
 
-			if (tp instanceof FlatWire)
+			if (tp instanceof PartFlatWire)
 			{
-				boolean b = ((FlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
+				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 
 				if (b)
 				{
 					// let them connect to us
-					if (tp instanceof FlatWire && !renderThisCorner((FlatWire) tp))
+					if (tp instanceof PartFlatWire && !renderThisCorner((PartFlatWire) tp))
 					{
 						return 1;
 					}
@@ -590,9 +587,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		{
 			TMultiPart tp = t.partMap(side);
 
-			if (tp instanceof FlatWire)
+			if (this.canConnectTo(tp))
 			{
-				return ((FlatWire) tp).connectStraight(this, (r + 2) % 4);
+				return ((PartFlatWire) tp).connectStraight(this, (r + 2) % 4);
 			}
 		}
 		else
@@ -613,9 +610,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 		TMultiPart tp = tile().partMap(absDir);
 
-		if (tp instanceof FlatWire)
+		if (this.canConnectTo(tp))
 		{
-			return ((FlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
+			return ((PartFlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
 		}
 
 		return connectInternalOverride(tp, r);
@@ -628,31 +625,31 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 	public boolean connectCenter()
 	{
-		TMultiPart t = tile().partMap(6);
+		TMultiPart tp = tile().partMap(6);
 
-		if (t instanceof FlatWire)
+		if (this.canConnectTo(tp))
 		{
-			return ((FlatWire) t).connectInternal(this, side);
+			return ((PartFlatWire) tp).connectInternal(this, side);
 		}
 
 		return false;
 	}
 
-	public boolean renderThisCorner(IAdvancedConductor part)
+	public boolean renderThisCorner(PartFlatWire part)
 	{
-		if (!(part instanceof FlatWire))
+		if (!(part instanceof PartFlatWire))
 			return false;
 
-		FlatWire wire = (FlatWire) part;
+		PartFlatWire wire = (PartFlatWire) part;
 		if (wire.getThickness() == getThickness())
 			return side < wire.side;
 
 		return wire.getThickness() > getThickness();
 	}
 
-	public boolean connectCorner(IAdvancedConductor wire, int r)
+	public boolean connectCorner(PartFlatWire wire, int r)
 	{
-		if (canConnectTo(wire) && maskOpen(r))
+		if (this.canConnectTo(wire) && maskOpen(r))
 		{
 			int oldConn = connMap;
 			connMap |= 0x1 << r;
@@ -666,9 +663,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		return false;
 	}
 
-	public boolean connectStraight(IAdvancedConductor wire, int r)
+	public boolean connectStraight(PartFlatWire wire, int r)
 	{
-		if (canConnectTo(wire) && maskOpen(r))
+		if (this.canConnectTo(wire) && maskOpen(r))
 		{
 			int oldConn = connMap;
 			connMap |= 0x10 << r;
@@ -679,9 +676,9 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		return false;
 	}
 
-	public boolean connectInternal(IAdvancedConductor wire, int r)
+	public boolean connectInternal(PartFlatWire wire, int r)
 	{
-		if (canConnectTo(wire))
+		if (this.canConnectTo(wire))
 		{
 			int oldConn = connMap;
 			connMap |= 0x100 << r;
@@ -756,7 +753,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 	public int getThickness()
 	{
-		return 0;
+		return this.isInsulated ? 1 : 0;
 	}
 
 	@Override

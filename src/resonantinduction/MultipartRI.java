@@ -1,6 +1,6 @@
 package resonantinduction;
 
-import resonantinduction.wire.part.FlatWire;
+import resonantinduction.wire.part.PartFlatWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -14,7 +14,6 @@ public class MultipartRI implements IPartFactory
 	{
 		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire" });
 		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.wire.part.TraitConductor");
-		//MultipartGenerator.registerTrait("resonantinduction.wire.part.ITest", "resonantinduction.wire.part.TraitTest");
 		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.part.TraitEnergySink");
 	}
 
@@ -23,7 +22,7 @@ public class MultipartRI implements IPartFactory
 	{
 		if (name.equals("resonant_induction_flat_wire"))
 		{
-			return new FlatWire();
+			return new PartFlatWire();
 		}
 
 		return null;

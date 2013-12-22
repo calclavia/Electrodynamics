@@ -56,19 +56,32 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public Object[] getConnections()
 	{
+		for (IConductor conductor : this.interfaces)
+		{
+			return conductor.getConnections();
+		}
+
 		return null;
 	}
 
 	@Override
 	public IEnergyNetwork getNetwork()
 	{
+		for (IConductor conductor : this.interfaces)
+		{
+			return conductor.getNetwork();
+		}
+
 		return null;
 	}
 
 	@Override
 	public void setNetwork(IEnergyNetwork network)
 	{
-
+		for (IConductor conductor : this.interfaces)
+		{
+			conductor.setNetwork(network);
+		}
 	}
 
 	@Override
@@ -88,19 +101,13 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		/*TMultiPart part = partMap(from.ordinal());
+		TMultiPart part = this.partMap(from.ordinal());
 
-		if (part != null)
+		if (this.interfaces.contains(part))
 		{
-			for (IConductor conductor : this.interfaces)
-			{
-				if (conductor == part)
-				{
-					conductor.onReceiveEnergy(from, receive, doReceive);
-				}
-			}
+			((IConductor) part).onReceiveEnergy(from, receive, doReceive);
 		}
-*/
+
 		return 0;
 	}
 
@@ -113,13 +120,37 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public long getEnergyLoss()
 	{
-		return 0;
+		long energyLoss = 0;
+
+		if (this.interfaces.size() > 0)
+		{
+			for (IConductor conductor : this.interfaces)
+			{
+				energyLoss += conductor.getEnergyLoss();
+			}
+
+			energyLoss /= this.interfaces.size();
+		}
+
+		return energyLoss;
 	}
 
 	@Override
 	public long getEnergyCapacitance()
 	{
-		return 0;
+		long capacitance = 0;
+
+		if (this.interfaces.size() > 0)
+		{
+			for (IConductor conductor : this.interfaces)
+			{
+				capacitance += conductor.getEnergyCapacitance();
+			}
+
+			capacitance /= this.interfaces.size();
+		}
+
+		return capacitance;
 	}
 
 }

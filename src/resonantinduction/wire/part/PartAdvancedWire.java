@@ -13,9 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.IAdvancedConductor;
 import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 
@@ -23,7 +21,7 @@ import codechicken.lib.data.MCDataOutput;
  * @author Calclavia
  * 
  */
-public abstract class PartWireBase extends PartConductor implements IAdvancedConductor
+public abstract class PartAdvancedWire extends PartConductor
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -37,15 +35,15 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 	@Override
 	public boolean canConnectTo(Object obj)
 	{
-		if (obj instanceof IAdvancedConductor)
+		if (obj instanceof PartFlatWire)
 		{
-			IAdvancedConductor wire = (IAdvancedConductor) obj;
+			PartFlatWire wire = (PartFlatWire) obj;
 
 			if (wire.getMaterial() == getMaterial())
 			{
 				if (this.isInsulated() && wire.isInsulated())
 				{
-					return this.getInsulationColor() == wire.getInsulationColor();
+					return this.getColor() == wire.getColor();
 				}
 
 				return true;
@@ -70,47 +68,36 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 		return this.getMaterial().maxAmps;
 	}
 
-	@Override
+	/**
+	 * Material Methods
+	 */
 	public EnumWireMaterial getMaterial()
 	{
-		return material;
+		return this.material;
 	}
 
-	public void setMaterialFromID(int id)
+	public void setMaterial(EnumWireMaterial material)
 	{
-		material = EnumWireMaterial.values()[id];
+		this.material = material;
+	}
+
+	public void setMaterial(int id)
+	{
+		this.setMaterial(EnumWireMaterial.values()[id]);
 	}
 
 	public int getMaterialID()
 	{
-		return material.ordinal();
+		return this.material.ordinal();
 	}
 
-	@Override
-	public boolean isInsulated()
-	{
-		return isInsulated;
-	}
-
-	@Override
-	public int getInsulationColor()
-	{
-		return isInsulated ? dyeID : -1;
-	}
-
-	@Override
-	public void setInsulationColor(int dye)
-	{
-		dyeID = dye;
-		tile().notifyPartChange(this);
-	}
-
-	@Override
+	/**
+	 * Insulation Methods
+	 */
 	public void setInsulated(boolean insulated)
 	{
-		isInsulated = insulated;
-		dyeID = DEFAULT_COLOR;
-		tile().notifyPartChange(this);
+		this.isInsulated = insulated;
+		this.dyeID = DEFAULT_COLOR;
 	}
 
 	public void setInsulated(int dyeColour)
@@ -120,15 +107,22 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 		tile().notifyPartChange(this);
 	}
 
-	public void setInsulated()
+	public boolean isInsulated()
 	{
-		setInsulated(true);
+		return this.isInsulated;
 	}
 
-	public void setDye(int dye)
+	/**
+	 * Wire Coloring Methods
+	 */
+	public int getColor()
 	{
-		dyeID = dye;
-		tile().notifyPartChange(this);
+		return this.isInsulated ? this.dyeID : -1;
+	}
+
+	public void setColor(int dye)
+	{
+		this.dyeID = dye;
 	}
 
 	/**
@@ -141,7 +135,7 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 		{
 			if (item.itemID == Item.dyePowder.itemID && isInsulated())
 			{
-				setDye(item.getItemDamage());
+				setColor(item.getItemDamage());
 				return true;
 			}
 			else if (item.itemID == Block.cloth.blockID)
@@ -198,7 +192,7 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
-		this.setMaterialFromID(packet.readByte());
+		this.setMaterial(packet.readByte());
 		this.dyeID = packet.readByte();
 		this.isInsulated = packet.readBoolean();
 	}
@@ -224,7 +218,7 @@ public abstract class PartWireBase extends PartConductor implements IAdvancedCon
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		setMaterialFromID(nbt.getInteger("typeID"));
+		setMaterial(nbt.getInteger("typeID"));
 		this.isInsulated = nbt.getBoolean("isInsulated");
 		this.dyeID = nbt.getInteger("dyeID");
 	}
