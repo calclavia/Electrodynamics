@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
@@ -203,6 +204,8 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 				updateExternalConnections();
 			}
 
+			this.recalculateConnections();
+			this.getNetwork().reconstruct();
 			tile().markDirty();
 		}
 	}
@@ -222,6 +225,27 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (changed)
 			{
 				sendConnUpdate();
+				this.recalculateConnections();
+				this.getNetwork().reconstruct();
+			}
+		}
+	}
+
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		if (!world().isRemote)
+		{
+			boolean changed = updateInternalConnections();
+			if (updateOpenConnections())
+			{
+				changed |= updateExternalConnections();
+			}
+
+			if (changed)
+			{
+				sendConnUpdate();
+				this.recalculateConnections();
 				this.getNetwork().reconstruct();
 			}
 		}
@@ -240,8 +264,30 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			if (updateExternalConnections())
 			{
 				sendConnUpdate();
+				this.recalculateConnections();
 				this.getNetwork().reconstruct();
 			}
+		}
+	}
+
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
+	{
+		if (!world().isRemote)
+		{
+			System.out.println(this.getNetwork());
+			System.out.println(Integer.toHexString(this.connMap));
+		}
+		return super.activate(player, part, item);
+	}
+
+	private void recalculateConnections()
+	{
+		this.cachedConnections = new Object[4];
+
+		for (int i = 0; i < 4; i++)
+		{
+
 		}
 	}
 
@@ -278,12 +324,10 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 		for (int r = 0; r < 4; r++)
 		{
-			/*
-			 * if (!maskOpen(r))
-			 * {
-			 * continue;
-			 * }
-			 */
+			if (!maskOpen(r))
+			{
+				continue;
+			}
 
 			if (connectStraight(r))
 			{
@@ -292,11 +336,15 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			else
 			{
 				int cnrMode = connectCorner(r);
+
 				if (cnrMode != 0)
 				{
 					newConn |= 1 << r;
+
 					if (cnrMode == 2)
+					{
 						newConn |= 0x100000 << r;// render flag
+					}
 				}
 			}
 		}
@@ -306,13 +354,18 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			int diff = connMap ^ newConn;
 			connMap = connMap & ~0xF000FF | newConn;
 
-			// notify corner disconnections
+			// Notify corner disconnections
 			for (int r = 0; r < 4; r++)
+			{
 				if ((diff & 1 << r) != 0)
+				{
 					notifyCornerChange(r);
+				}
+			}
 
 			return true;
 		}
+
 		return false;
 	}
 
@@ -394,14 +447,17 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
-			if (tp instanceof IAdvancedConductor)
+
+			if (tp instanceof FlatWire)
 			{
 				boolean b = ((FlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 				if (b)
 				{
 					// let them connect to us
 					if (tp instanceof FlatWire && !renderThisCorner((FlatWire) tp))
+					{
 						return 1;
+					}
 
 					return 2;
 				}
@@ -413,11 +469,15 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	public boolean canConnectThroughCorner(BlockCoord pos, int side1, int side2)
 	{
 		if (world().isAirBlock(pos.x, pos.y, pos.z))
+		{
 			return true;
+		}
 
 		TileMultipart t = Utility.getMultipartTile(world(), pos);
 		if (t != null)
+		{
 			return t.partMap(side1) == null && t.partMap(side2) == null && t.partMap(PartMap.edgeBetween(side1, side2)) == null;
+		}
 
 		return false;
 	}
@@ -431,8 +491,11 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 		if (t != null)
 		{
 			TMultiPart tp = t.partMap(side);
+
 			if (tp instanceof FlatWire)
+			{
 				return ((FlatWire) tp).connectStraight(this, (r + 2) % 4);
+			}
 		}
 
 		return connectStraightOverride(absDir);
@@ -451,8 +514,11 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			return false;
 
 		TMultiPart tp = tile().partMap(absDir);
+
 		if (tp instanceof FlatWire)
+		{
 			return ((FlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
+		}
 
 		return connectInternalOverride(tp, r);
 	}
@@ -465,8 +531,11 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	public boolean connectCenter()
 	{
 		TMultiPart t = tile().partMap(6);
+
 		if (t instanceof FlatWire)
+		{
 			return ((FlatWire) t).connectInternal(this, side);
+		}
 
 		return false;
 	}
@@ -566,7 +635,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	@Override
 	public int getSlotMask()
 	{
-		return 1 << side;
+		return 1 << this.side;
 	}
 
 	@Override
@@ -589,7 +658,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 	public int getThickness()
 	{
-		return 1;
+		return 0;
 	}
 
 	@Override

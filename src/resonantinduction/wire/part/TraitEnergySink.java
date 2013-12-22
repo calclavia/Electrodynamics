@@ -1,4 +1,4 @@
-package resonantinduction.wire;
+package resonantinduction.wire.part;
 
 import ic2.api.energy.tile.IEnergySink;
 
@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class TEnergySink extends TileMultipart implements IEnergySink
+public class TraitEnergySink extends TileMultipart implements IEnergySink
 {
 	public Set<IEnergySink> ic2Sinks = new HashSet<IEnergySink>();
 
@@ -19,9 +19,9 @@ public class TEnergySink extends TileMultipart implements IEnergySink
 	{
 		super.copyFrom(that);
 		
-		if(that instanceof TEnergySink)
+		if(that instanceof TraitEnergySink)
 		{
-			ic2Sinks = ((TEnergySink)that).ic2Sinks;
+			ic2Sinks = ((TraitEnergySink)that).ic2Sinks;
 		}
 	}
 

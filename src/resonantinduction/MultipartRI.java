@@ -1,9 +1,6 @@
 package resonantinduction;
 
-import resonantinduction.wire.IAdvancedConductor;
-import resonantinduction.wire.IBlockableConnection;
 import resonantinduction.wire.part.FlatWire;
-import buildcraft.api.power.IPowerReceptor;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -15,11 +12,10 @@ public class MultipartRI implements IPartFactory
 
 	public MultipartRI()
 	{
-		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire" });		
-		MultipartGenerator.registerPassThroughInterface(IAdvancedConductor.class.getName());
-		MultipartGenerator.registerPassThroughInterface(IPowerReceptor.class.getName());
-		MultipartGenerator.registerPassThroughInterface(IBlockableConnection.class.getName());
-		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.TEnergySink");
+		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire" });
+		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.part.TraitEnergySink");
+		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.wire.part.TraitConductor");
+
 	}
 
 	@Override

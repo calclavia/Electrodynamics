@@ -37,9 +37,9 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	@Override
 	public IEnergyNetwork getNetwork()
 	{
-		if (this.network == null && tile() instanceof IConductor)
+		if (this.network == null)
 		{
-			setNetwork(EnergyNetworkLoader.getNewNetwork(this));
+			this.setNetwork(EnergyNetworkLoader.getNewNetwork(this));
 		}
 
 		return this.network;
@@ -92,5 +92,7 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	}
 
 	public abstract boolean canConnect(IConductor conductor);
+
+	public abstract boolean isBlockedOnSide(ForgeDirection side);
 
 }

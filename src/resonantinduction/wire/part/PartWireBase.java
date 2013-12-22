@@ -14,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IAdvancedConductor;
-import resonantinduction.wire.IBlockableConnection;
 import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -23,7 +22,7 @@ import codechicken.lib.data.MCDataOutput;
  * @author Calclavia
  * 
  */
-public abstract class PartWireBase extends PartConductor implements IBlockableConnection
+public abstract class PartWireBase extends PartConductor
 {
 	public static final int DEFAULT_COLOR = 16;
 	public int dyeID = DEFAULT_COLOR;
@@ -161,9 +160,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 				return true;
 			}
 		}
-
-		if (!world().isRemote)
-			System.out.println(this.getNetwork());
 
 		return false;
 	}
