@@ -2,8 +2,10 @@ Resonant Induction
 ======
 Resonant Induction is a Minecraft mod focusing on the manipulation of electricity and wireless technology. Ever wanted blazing electrical shocks flying off your evil lairs? You've came to the right place!
 
-### Developers
+### Developer
 * Calclavia
+
+### Former Developer
 * Aidancbrady
 
 ### Artist
@@ -19,7 +21,7 @@ In order to compile the source code into binary form, you must have a working Mi
 5. Install it into Minecraft just like any other Forge mod.
 
 ### Jenkins
-http://calclavia.com:8080/job/Resonant%20Induction/
+http://universalelectricity.com/resonant-induction
 
 ### License
-"Resonant Induction" is under the Educational Public License (http://calclavia.com/license/rpl).
+"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/license/cl
