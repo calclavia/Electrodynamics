@@ -30,24 +30,19 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 	public boolean isInsulated = false;
 
-	public boolean canConnectToType(Object wire)
+	public boolean canConnect(IConductor conductor)
 	{
-		if (wire instanceof IAdvancedConductor)
+		if (conductor instanceof IAdvancedConductor)
 		{
-			IAdvancedConductor wireTile = (IAdvancedConductor) wire;
+			IAdvancedConductor wire = (IAdvancedConductor) conductor;
 
-			if (wireTile.getMaterial() != getMaterial())
+			if (wire.getMaterial() == getMaterial())
 			{
-				return true;
-			}
-		}
+				if (this.isInsulated() && wire.isInsulated())
+				{
+					return this.getInsulationColor() == wire.getInsulationColor();
+				}
 
-		if (isInsulated() && wire instanceof IAdvancedConductor)
-		{
-			IAdvancedConductor insulatedTile = (IAdvancedConductor) wire;
-
-			if ((insulatedTile.isInsulated() && insulatedTile.getInsulationColor() != getInsulationColor() && getInsulationColor() != DEFAULT_COLOR && insulatedTile.getInsulationColor() != DEFAULT_COLOR))
-			{
 				return true;
 			}
 		}
@@ -102,7 +97,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	public void setInsulationColor(int dye)
 	{
 		dyeID = dye;
-		refresh();
 		tile().notifyPartChange(this);
 	}
 
@@ -111,7 +105,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	{
 		isInsulated = insulated;
 		dyeID = DEFAULT_COLOR;
-		refresh();
 		tile().notifyPartChange(this);
 	}
 
@@ -119,7 +112,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	{
 		isInsulated = true;
 		dyeID = dyeColour;
-		refresh();
 		tile().notifyPartChange(this);
 	}
 
@@ -131,7 +123,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 	public void setDye(int dye)
 	{
 		dyeID = dye;
-		refresh();
 		tile().notifyPartChange(this);
 	}
 
@@ -208,8 +199,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 		this.setMaterialFromID(packet.readByte());
 		this.dyeID = packet.readByte();
 		this.isInsulated = packet.readBoolean();
-		this.currentWireConnections = packet.readByte();
-		this.currentAcceptorConnections = packet.readByte();
 	}
 
 	@Override
@@ -218,8 +207,6 @@ public abstract class PartWireBase extends PartConductor implements IBlockableCo
 		packet.writeByte((byte) this.getMaterialID());
 		packet.writeByte((byte) this.dyeID);
 		packet.writeBoolean(this.isInsulated);
-		packet.writeByte(this.currentWireConnections);
-		packet.writeByte(this.currentAcceptorConnections);
 	}
 
 	@Override
