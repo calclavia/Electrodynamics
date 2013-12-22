@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IAdvancedConductor;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -29,11 +30,14 @@ public abstract class PartWireBase extends PartConductor
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 	public boolean isInsulated = false;
 
-	public boolean canConnect(IConductor conductor)
+	/**
+	 * Can connect with this conductor?
+	 */
+	public boolean canConnect(Object obj)
 	{
-		if (conductor instanceof IAdvancedConductor)
+		if (obj instanceof IAdvancedConductor)
 		{
-			IAdvancedConductor wire = (IAdvancedConductor) conductor;
+			IAdvancedConductor wire = (IAdvancedConductor) obj;
 
 			if (wire.getMaterial() == getMaterial())
 			{
@@ -46,7 +50,7 @@ public abstract class PartWireBase extends PartConductor
 			}
 		}
 
-		return false;
+		return CompatibilityModule.isHandler(obj);
 	}
 
 	@Override

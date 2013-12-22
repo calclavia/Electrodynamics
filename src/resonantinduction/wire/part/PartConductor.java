@@ -10,7 +10,6 @@ import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import codechicken.multipart.TileMultipart;
 
 //@UniversalClass
 public abstract class PartConductor extends PartAdvanced implements IAdvancedConductor
@@ -75,24 +74,36 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	}
 
 	/**
-	 * Shouldn't need to be overridden. Override connectionPrevented instead
+	 * Can externally connect?
 	 */
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
-
-		if (connectTile instanceof IConductor)
-		{
-			return canConnect((IConductor) connectTile);
-		}
-
-		return false;
+		return CompatibilityModule.canConnect(connectTile, direction.getOpposite());
 	}
 
-	public abstract boolean canConnect(IConductor conductor);
+	/**
+	 * Recalculates all the netwirk connections
+	 */
+	protected void recalculateConnections()
+	{
+		this.cachedConnections = new Object[6];
+		/**
+		 * Calculate all external connections with this conductor.
+		 */
+		for (byte i = 0; i < 6; i++)
+		{
+			ForgeDirection side = ForgeDirection.getOrientation(i);
 
-	public abstract boolean isBlockedOnSide(ForgeDirection side);
+			if (this.canConnect(side))
+			{
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+				cachedConnections[i] = tileEntity;
+			}
+		}
+	}
 
+	public abstract boolean canConnect(Object obj);
 }
