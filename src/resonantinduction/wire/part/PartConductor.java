@@ -74,15 +74,24 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 	}
 
 	/**
-	 * Can externally connect?
+	 * EXTERNAL USE
+	 * Can this wire be connected by another block?
 	 */
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
-		return CompatibilityModule.canConnect(connectTile, direction.getOpposite());
+
+		if (connectTile instanceof IConductor)
+		{
+			return false;
+		}
+
+		return CompatibilityModule.isHandler(connectTile);
 	}
+
+	public abstract boolean canConnectTo(Object obj);
 
 	/**
 	 * Recalculates all the netwirk connections
@@ -104,6 +113,4 @@ public abstract class PartConductor extends PartAdvanced implements IAdvancedCon
 			}
 		}
 	}
-
-	public abstract boolean canConnect(Object obj);
 }

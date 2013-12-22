@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.electricity.IVoltage;
 import universalelectricity.api.energy.IConductor;
@@ -22,8 +23,6 @@ import calclavia.lib.tile.EnergyStorage;
 public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface, IVoltage
 {
 	private static final float WATTAGE = 5;
-	private boolean doProduce = false;
-	private boolean init = true;
 
 	private EnergyStorage energy = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
 
@@ -63,6 +62,8 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 			if (this.furnaceBurnTime > 0)
 			{
 				this.energy.receiveEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+
+				this.produce();
 			}
 
 			if (doBlockStateUpdate != this.furnaceBurnTime > 0)
@@ -133,23 +134,16 @@ public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEne
 		}
 	}
 
-	/**
-	 * Checks if the furnace should produce power.
-	 */
-	public void checkProduce()
+	private void produce()
 	{
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
-
-			if (tileEntity instanceof IConductor)
+			if (this.energy.getEnergy() > 0)
 			{
-				this.doProduce = true;
-				return;
+				TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+				this.energy.extractEnergy(CompatibilityModule.receiveEnergy(tileEntity, direction.getOpposite(), this.energy.extractEnergy(this.energy.getEnergy(), false), true), true);
 			}
 		}
-
-		this.doProduce = false;
 	}
 
 	@Override

@@ -31,9 +31,11 @@ public abstract class PartWireBase extends PartConductor
 	public boolean isInsulated = false;
 
 	/**
-	 * Can connect with this conductor?
+	 * INTERNAL USE.
+	 * Can this conductor connect with an external object?
 	 */
-	public boolean canConnect(Object obj)
+	@Override
+	public boolean canConnectTo(Object obj)
 	{
 		if (obj instanceof IAdvancedConductor)
 		{
