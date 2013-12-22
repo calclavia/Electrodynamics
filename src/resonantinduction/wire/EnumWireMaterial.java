@@ -19,7 +19,7 @@ public enum EnumWireMaterial
 	COPPER("Copper", 12.5F, 3, 20, 184, 115, 51), TIN("Tin", 13, 2, 5, 132, 132, 130),
 	IRON("Iron", 0.1F, 20, 40, 97, 102, 105), ALUMINUM("Aluminum", 0.025F, 6, 150, 215, 205, 181),
 	SILVER("Silver", 5F, 1, 20, 192, 192, 192),
-	SUPERCONDUCTOR("Superconductor", 0, 1, 100, 192, 192, 192);
+	SUPERCONDUCTOR("Superconductor", 0, 1, 100, 255, 255, 1);
 
 	public final float resistance;
 	public final int damage;
