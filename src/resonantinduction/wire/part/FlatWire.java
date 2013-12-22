@@ -14,8 +14,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.IAdvancedConductor;
+import resonantinduction.wire.ItemPartWire;
 import resonantinduction.wire.render.RenderFlatWire;
-import resonantinduction.wire.render.RenderPartWire;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -198,7 +198,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 			connMap = 0;
 
 			updateInternalConnections();
-			
+
 			if (updateOpenConnections())
 			{
 				updateExternalConnections();
@@ -212,14 +212,14 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	public void onAdded()
 	{
 		super.onAdded();
-		
+
 		if (!world().isRemote)
 		{
 			updateOpenConnections();
 			boolean changed = updateInternalConnections();
 			// don't use || because it's fail fast
 			changed |= updateExternalConnections();
-			
+
 			if (changed)
 			{
 				sendConnUpdate();
@@ -279,10 +279,12 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 
 		for (int r = 0; r < 4; r++)
 		{
-			/*if (!maskOpen(r))
-			{
-				continue;
-			}*/
+			/*
+			 * if (!maskOpen(r))
+			 * {
+			 * continue;
+			 * }
+			 */
 
 			if (connectStraight(r))
 			{
@@ -621,7 +623,7 @@ public class FlatWire extends PartWireBase implements TFacePart, JNormalOcclusio
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon()
 	{
-		return RenderPartWire.lainWireIcon;
+		return ItemPartWire.flatWireTexture;
 	}
 
 	public Colour getColour()

@@ -14,7 +14,6 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.Utility;
 import resonantinduction.wire.part.FlatWire;
-import resonantinduction.wire.render.RenderPartWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
@@ -27,6 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPartWire extends JItemMultiPart
 {
+	public static Icon flatWireTexture;
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
 	public ItemPartWire(int id)
@@ -86,7 +86,7 @@ public class ItemPartWire extends JItemMultiPart
 			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
 		}
 
-		RenderPartWire.registerIcons(register);
+		flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
 	}
 
 	@Override
