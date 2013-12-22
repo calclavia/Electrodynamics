@@ -10,8 +10,11 @@ import net.minecraft.nbt.NBTTagFloat;
 import net.minecraft.nbt.NBTTagLong;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.minecraft.interfaces.IPowerLess;
 
@@ -103,7 +106,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     @Override
     public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
     {
-        if (!this.runPowerLess() && receive > 0 && this.canConnect(from))
+        if (!this.runPowerLess() && receive > 0 && this.getInputDirections().contains(from))
         {
             long prevEnergyStored = this.getEnergy(from);
             long newStoredEnergy = Math.min(this.getEnergy(from) + receive, this.getEnergyCapacity(from));
@@ -149,6 +152,17 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
             return requestedEnergy;
         }
         return 0;
+    }
+
+    protected void produce()
+    {
+        for (ForgeDirection direction : this.getOutputDirections())
+        {
+            if (this.onExtractEnergy(direction.getOpposite(), CompatibilityModule.receiveEnergy(VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this), direction), direction, this.onExtractEnergy(direction.getOpposite(), this.JOULES_PER_TICK, false), true), true) > 0)
+            {
+                break;
+            }
+        }
     }
 
     /* ********************************************

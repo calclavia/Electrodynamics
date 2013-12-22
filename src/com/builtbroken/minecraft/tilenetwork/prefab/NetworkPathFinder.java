@@ -6,10 +6,10 @@ import java.util.Set;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.path.IPathCallBack;
-import universalelectricity.core.path.Pathfinder;
 
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
+import com.builtbroken.minecraft.tilenetwork.IPathCallBack;
+import com.builtbroken.minecraft.tilenetwork.Pathfinder;
 
 /** Check if a conductor connects with another. */
 public class NetworkPathFinder extends Pathfinder
