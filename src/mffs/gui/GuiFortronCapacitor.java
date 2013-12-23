@@ -11,10 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.vector.Vector2;
 import calclavia.lib.prefab.network.PacketManager;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiFortronCapacitor extends GuiMFFS
@@ -47,12 +47,12 @@ public class GuiFortronCapacitor extends GuiMFFS
 		GL11.glPopMatrix();
 
 		this.drawTextWithTooltip("linkedDevice", "%1: " + this.tileEntity.getLinkedDevices().size(), 8, 28, x, y);
-		this.drawTextWithTooltip("transmissionRate", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), ElectricUnit.JOULES), 8, 40, x, y);
+		this.drawTextWithTooltip("transmissionRate", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), Unit.JOULES), 8, 40, x, y);
 		this.drawTextWithTooltip("range", "%1: " + this.tileEntity.getTransmissionRange(), 8, 52, x, y);
 		this.drawTextWithTooltip("frequency", "%1:", 8, 63, x, y);
 		this.textFieldFrequency.drawTextBox();
 		this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y);
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 105, 4210752);
+		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 8, 105, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

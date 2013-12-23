@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * A linking card used to link machines in specific positions.
@@ -73,6 +73,6 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 	public Vector3 getLink(ItemStack itemStack)
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		return Vector3.readFromNBT(nbt.getCompoundTag("position"));
+		return new Vector3(nbt.getCompoundTag("position"));
 	}
 }

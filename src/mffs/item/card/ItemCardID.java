@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import java.util.List;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.MFFSHelper;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
@@ -12,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemCardID extends ItemCard implements ICardIdentification
 {

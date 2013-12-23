@@ -11,7 +11,7 @@ import mffs.api.fortron.IFortronFrequency;
 import mffs.base.TileEntityMFFS;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 public class ItemModuleFusion extends ItemModule
 {

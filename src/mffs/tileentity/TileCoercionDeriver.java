@@ -8,14 +8,16 @@ import java.util.EnumSet;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IModule;
-import mffs.base.TileEntityMFFSUniversal;
+import mffs.base.TileMFFSElectrical;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.item.IItemElectric;
+import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.item.IEnergyItem;
+import calclavia.lib.tile.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -26,17 +28,17 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
+public class TileCoercionDeriver extends TileMFFSElectrical
 {
 	/**
 	 * The amount of KiloWatts this machine uses.
 	 */
-	public static final int WATTAGE = 20;
+	public static final int WATTAGE = 50000;
 	public static final int REQUIRED_TIME = 10 * 20;
-	public static final float MULTIPLE_PRODUCTION = 4;
+	public static final int MULTIPLE_PRODUCTION = 4;
 	/** Ration from UE to Fortron. Multiply KJ by this value to convert to Fortron. */
-	public static final float UE_FORTRON_RATIO = 1;
-	public static final float ENERGY_LOSS = 0.008f;
+	public static final int UE_FORTRON_RATIO = 1;
+	public static final int ENERGY_LOSS = 1;
 
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
@@ -45,11 +47,12 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public int processTime = 0;
 	public boolean isInversed = false;
 
-	public TileEntityCoercionDeriver()
+	public TileCoercionDeriver()
 	{
 		super();
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
+		this.energy = new EnergyStorage(WATTAGE * 2);
 	}
 
 	@Override
@@ -63,11 +66,11 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 			{
 				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
 				{
-					if (this.getEnergyStored() < this.getMaxEnergyStored())
+					if (this.energy.getEnergy() < this.energy.getEnergyCapacity())
 					{
-						float withdrawnElectricity = this.requestFortron(this.getProductionRate(), true) / UE_FORTRON_RATIO;
+						long withdrawnElectricity = (long) (this.requestFortron(this.getProductionRate(), true) / UE_FORTRON_RATIO);
 						// Inject electricity from Fortron.
-						this.receiveElectricity(withdrawnElectricity * ENERGY_LOSS, true);
+						this.energy.receiveEnergy(withdrawnElectricity * ENERGY_LOSS, true);
 					}
 
 					this.recharge(this.getStackInSlot(SLOT_BATTERY));
@@ -80,11 +83,11 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 						// Convert Electricity to Fortron
 						this.discharge(this.getStackInSlot(SLOT_BATTERY));
 
-						if (this.provideElectricity(WATTAGE, false).getWatts() >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+						if (this.energy.extractEnergy(WATTAGE, false) >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
 							// Fill Fortron
 							this.fortronTank.fill(FortronHelper.getFortron(this.getProductionRate()), true);
-							this.provideElectricity(WATTAGE, true);
+							this.energy.extractEnergy(WATTAGE, true);
 
 							// Use fuel
 							if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
@@ -122,28 +125,6 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
 		return EnumSet.allOf(ForgeDirection.class);
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
-	{
-		if (this.canConsume())
-		{
-			return this.getMaxEnergyStored() - this.getEnergyStored();
-		}
-
-		return 0;
-	}
-
-	@Override
-	public float getProvide(ForgeDirection direction)
-	{
-		if (this.isInversed && this.isActive())
-		{
-			return this.getEnergyStored();
-		}
-
-		return 0;
 	}
 
 	/**
@@ -224,7 +205,7 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 				case SLOT_FREQUENCY:
 					return itemStack.getItem() instanceof ItemCardFrequency;
 				case SLOT_BATTERY:
-					return itemStack.getItem() instanceof IItemElectric || itemStack.getItem() instanceof IElectricItem || itemStack.getItem() instanceof IEnergyContainerItem;
+					return CompatibilityModule.isHandler(itemStack.getItem());
 				case SLOT_FUEL:
 					return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4)) || itemStack.isItemEqual(new ItemStack(Item.netherQuartz));
 			}
@@ -237,12 +218,6 @@ public class TileEntityCoercionDeriver extends TileEntityMFFSUniversal
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
-	}
-
-	@Override
-	public float getMaxEnergyStored()
-	{
-		return WATTAGE * 2;
 	}
 
 }

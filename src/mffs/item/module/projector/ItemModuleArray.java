@@ -7,7 +7,7 @@ import java.util.Set;
 import mffs.api.IFieldInteraction;
 import mffs.item.module.ItemModule;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 public class ItemModuleArray extends ItemModule
 {

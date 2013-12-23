@@ -24,7 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * A class containing some general helpful functions.
@@ -170,7 +170,7 @@ public class MFFSHelper
 				// Draw Beam Effect
 				if (world.isRemote && toBeInjected > 0 && !isCamo)
 				{
-					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.add(new Vector3(tileEntity), 0.5), Vector3.add(new Vector3((TileEntity) receiver), 0.5), 0.6f, 0.6f, 1, 20);
+					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3(tileEntity), 0.5), Vector3.translate(new Vector3((TileEntity) receiver), 0.5), 0.6f, 0.6f, 1, 20);
 				}
 			}
 			else
@@ -183,7 +183,7 @@ public class MFFSHelper
 				// Draw Beam Effect
 				if (world.isRemote && toBeEjected > 0 && !isCamo)
 				{
-					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.add(new Vector3((TileEntity) receiver), 0.5), Vector3.add(new Vector3(tileEntity), 0.5), 0.6f, 0.6f, 1, 20);
+					ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3((TileEntity) receiver), 0.5), Vector3.translate(new Vector3(tileEntity), 0.5), 0.6f, 0.6f, 1, 20);
 				}
 
 			}
@@ -204,7 +204,7 @@ public class MFFSHelper
 
 				if (interdictionMatrix.isActive())
 				{
-					if (position.distanceTo(new Vector3((TileEntity) interdictionMatrix)) <= interdictionMatrix.getActionRange())
+					if (position.distance(new Vector3((TileEntity) interdictionMatrix)) <= interdictionMatrix.getActionRange())
 					{
 						return interdictionMatrix;
 					}

@@ -17,7 +17,7 @@ import mffs.render.RenderForceManipulator;
 import mffs.render.RenderFortronCapacitor;
 import mffs.render.RenderIDCard;
 import mffs.tileentity.TileEntityBiometricIdentifier;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityForceManipulator;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -27,7 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(new RenderForceField());
 		MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID.itemID, new RenderIDCard());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoercionDeriver.class, new RenderCoercionDeriver());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCoercionDeriver.class, new RenderCoercionDeriver());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceManipulator.class, new RenderForceManipulator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
 	}
@@ -75,9 +75,9 @@ public class ClientProxy extends CommonProxy
 			{
 				return new GuiForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
+			else if (tileEntity.getClass() == TileCoercionDeriver.class)
 			{
-				return new GuiCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
+				return new GuiCoercionDeriver(player, (TileCoercionDeriver) tileEntity);
 			}
 			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
 			{

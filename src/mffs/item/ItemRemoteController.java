@@ -24,9 +24,9 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.vector.Vector3;
 
 public class ItemRemoteController extends ItemCardFrequency implements ICoordLink
 {
@@ -141,7 +141,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage("Unable to harness " + ElectricityDisplay.getDisplay(requiredEnergy, ElectricUnit.JOULES) + " from the Fortron field.");
+							entityPlayer.addChatMessage("Unable to harness " + UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES) + " from the Fortron field.");
 						}
 					}
 				}

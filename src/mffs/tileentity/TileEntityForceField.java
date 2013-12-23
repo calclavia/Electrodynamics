@@ -9,10 +9,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.network.IPacketReceiver;
 import calclavia.lib.prefab.network.PacketManager;
-import calclavia.lib.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 

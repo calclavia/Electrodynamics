@@ -3,7 +3,7 @@ package mffs.gui.button;
 import mffs.base.GuiMFFS;
 import mffs.tileentity.TileEntityFortronCapacitor;
 import net.minecraft.client.Minecraft;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 
 public class GuiButtonPressTransferMode extends GuiButtonPress
 {

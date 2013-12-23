@@ -4,7 +4,7 @@ import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 public class BlockDropDelayedEvent extends DelayedEvent
 {

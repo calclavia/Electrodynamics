@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerCoercionDeriver extends ContainerBase
 {
-	public ContainerCoercionDeriver(EntityPlayer player, TileEntityCoercionDeriver tileEntity)
+	public ContainerCoercionDeriver(EntityPlayer player, TileCoercionDeriver tileEntity)
 	{
 		super(tileEntity);
 

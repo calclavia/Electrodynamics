@@ -3,7 +3,7 @@ package mffs.tileentity;
 import java.util.HashSet;
 import java.util.Set;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.

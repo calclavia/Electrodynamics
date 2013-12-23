@@ -4,7 +4,7 @@ import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.ItemMFFS;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

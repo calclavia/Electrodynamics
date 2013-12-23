@@ -1,6 +1,5 @@
 package mffs.gui;
 
-import calclavia.lib.prefab.network.PacketManager;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileEntityMFFS.TilePacketType;
@@ -8,9 +7,10 @@ import mffs.container.ContainerInterdictionMatrix;
 import mffs.tileentity.TileEntityInterdictionMatrix;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.vector.Vector2;
+import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiInterdictionMatrix extends GuiMFFS
@@ -72,8 +72,8 @@ public class GuiInterdictionMatrix extends GuiMFFS
 		this.drawTextWithTooltip("frequency", "%1:", 8, 93, x, y);
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, ElectricUnit.JOULES), 120, 121, 4210752);
+		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 8, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.JOULES), 120, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

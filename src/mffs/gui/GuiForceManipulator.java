@@ -1,7 +1,5 @@
 package mffs.gui;
 
-import calclavia.lib.prefab.network.PacketManager;
-import calclavia.lib.prefab.vector.Region2;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileEntityMFFS.TilePacketType;
@@ -14,9 +12,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.vector.Vector2;
+import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiMFFS
@@ -60,7 +60,7 @@ public class GuiForceManipulator extends GuiMFFS
 			west = "Left";
 			east = "Right";
 		}
-		
+
 		this.tooltips.put(new Region2(new Vector2(90 + 18 * 1, 17), new Vector2(90 + 18 * 1, 17).add(18)), north);
 		this.tooltips.put(new Region2(new Vector2(90 + 18 * 2, 17), new Vector2(90 + 18 * 2, 17).add(18)), north);
 
@@ -89,8 +89,8 @@ public class GuiForceManipulator extends GuiMFFS
 
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", "Fortron: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES) + "/" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), ElectricUnit.JOULES), 30, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronCost(), ElectricUnit.JOULES), 9, 121, 4210752);
+		this.drawTextWithTooltip("fortron", "Fortron: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 30, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost(), Unit.JOULES), 9, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

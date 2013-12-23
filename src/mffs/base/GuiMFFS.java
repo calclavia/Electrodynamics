@@ -21,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.input.Keyboard;
 
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.prefab.network.PacketManager;

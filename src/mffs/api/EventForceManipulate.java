@@ -3,7 +3,6 @@
  */
 package mffs.api;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.world.WorldEvent;

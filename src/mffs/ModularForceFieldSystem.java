@@ -44,7 +44,7 @@ import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
 import mffs.item.module.projector.ItemModuleStablize;
 import mffs.tileentity.TileEntityBiometricIdentifier;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import mffs.tileentity.TileEntityForceField;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityForceManipulator;
@@ -66,7 +66,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import universalelectricity.compatibility.Compatibility;
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.prefab.CustomDamageSource;
@@ -184,7 +183,6 @@ public class ModularForceFieldSystem
 		Modstats.instance().getReporter().registerMod(this);
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new SubscribeEventHandler());
-		Compatibility.initiate();
 
 		Settings.load();
 
@@ -287,7 +285,7 @@ public class ModularForceFieldSystem
 		GameRegistry.registerBlock(blockForceManipulator, blockForceManipulator.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());

@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
@@ -71,7 +71,7 @@ public class ManipulatorHelper
 			{
 				if (position.intY() >= heightMapValue)
 				{
-					relightBlock(chunk, Vector3.add(chunkPosition, new Vector3(0, 1, 0)));
+					relightBlock(chunk, Vector3.translate(chunkPosition, new Vector3(0, 1, 0)));
 				}
 			}
 			else if (position.intY() == heightMapValue - 1)

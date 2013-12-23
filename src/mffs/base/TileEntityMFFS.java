@@ -18,7 +18,7 @@ import calclavia.lib.IPlayerUsing;
 import calclavia.lib.prefab.network.IPacketReceiver;
 import calclavia.lib.prefab.network.PacketManager;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileEntityAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 

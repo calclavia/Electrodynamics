@@ -1,6 +1,5 @@
 package mffs.base;
 
-import calclavia.lib.prefab.network.PacketManager;
 import mffs.MFFSHelper;
 import mffs.Settings;
 import mffs.TransferMode;
@@ -18,7 +17,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.network.PacketManager;
 
 /**
  * A TileEntity that is powered by FortronHelper.

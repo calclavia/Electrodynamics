@@ -6,7 +6,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.

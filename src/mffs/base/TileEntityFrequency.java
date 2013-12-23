@@ -13,7 +13,7 @@ import mffs.api.security.IBiometricIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 

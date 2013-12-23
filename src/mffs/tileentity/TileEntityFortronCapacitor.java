@@ -22,7 +22,7 @@ import mffs.api.modules.IModule;
 import mffs.base.TileEntityModuleAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 

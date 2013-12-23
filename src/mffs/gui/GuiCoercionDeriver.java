@@ -4,24 +4,25 @@ import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileEntityMFFS.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.vector.Vector2;
 import calclavia.lib.prefab.network.PacketManager;
-import universalelectricity.core.electricity.ElectricityDisplay;
-import universalelectricity.core.electricity.ElectricityDisplay.ElectricUnit;
-import universalelectricity.core.vector.Vector2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiCoercionDeriver extends GuiMFFS
 {
-	private TileEntityCoercionDeriver tileEntity;
+	private TileCoercionDeriver tileEntity;
 
-	public GuiCoercionDeriver(EntityPlayer player, TileEntityCoercionDeriver tileentity)
+	public GuiCoercionDeriver(EntityPlayer player, TileCoercionDeriver tileentity)
 	{
 		super(new ContainerCoercionDeriver(player, tileentity), tileentity);
 		this.tileEntity = tileentity;
@@ -60,13 +61,13 @@ public class GuiCoercionDeriver extends GuiMFFS
 			}
 		}
 
-		this.renderUniversalDisplay(85, 40, TileEntityCoercionDeriver.WATTAGE, x, y);
-		this.fontRenderer.drawString(ElectricityDisplay.getDisplayShort(this.tileEntity.getVoltage(), ElectricUnit.VOLTAGE), 85, 50, 4210752);
+		this.renderUniversalDisplay(85, 40, TileCoercionDeriver.WATTAGE, x, y);
+		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(UniversalElectricity.DEFAULT_VOLTAGE, Unit.VOLTAGE), 85, 50, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
-		this.drawTextWithTooltip("fortron", "%1: " + ElectricityDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), ElectricUnit.JOULES), 8, 105, x, y);
+		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES), 8, 105, x, y);
 
-		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + ElectricityDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, ElectricUnit.JOULES), 120, 117, 4210752);
+		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + UnitDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, Unit.JOULES), 120, 117, 4210752);
 
 		super.drawGuiContainerForegroundLayer(x, y);
 	}

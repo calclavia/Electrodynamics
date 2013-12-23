@@ -7,7 +7,7 @@ import mffs.container.ContainerForceManipulator;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.container.ContainerInterdictionMatrix;
 import mffs.tileentity.TileEntityBiometricIdentifier;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import mffs.tileentity.TileEntityForceFieldProjector;
 import mffs.tileentity.TileEntityForceManipulator;
 import mffs.tileentity.TileEntityFortronCapacitor;
@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -51,9 +51,9 @@ public class CommonProxy implements IGuiHandler
 			{
 				return new ContainerForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityCoercionDeriver.class)
+			else if (tileEntity.getClass() == TileCoercionDeriver.class)
 			{
-				return new ContainerCoercionDeriver(player, (TileEntityCoercionDeriver) tileEntity);
+				return new ContainerCoercionDeriver(player, (TileCoercionDeriver) tileEntity);
 			}
 			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
 			{

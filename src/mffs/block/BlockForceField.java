@@ -3,7 +3,6 @@ package mffs.block;
 import java.util.List;
 import java.util.Random;
 
-import calclavia.lib.prefab.CustomDamageSource;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IForceFieldBlock;
 import mffs.api.IProjector;
@@ -30,7 +29,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.CustomDamageSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -185,7 +185,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 
 				IBiometricIdentifier biometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier();
 
-				if (new Vector3(entity).distanceTo(new Vector3(x, y, z).add(0.4)) < 0.5)
+				if (new Vector3(entity).distance(new Vector3(x, y, z).add(0.4)) < 0.5)
 				{
 					if (entity instanceof EntityLiving && !world.isRemote)
 					{

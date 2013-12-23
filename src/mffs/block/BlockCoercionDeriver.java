@@ -1,7 +1,7 @@
 package mffs.block;
 
 import mffs.base.BlockMFFS;
-import mffs.tileentity.TileEntityCoercionDeriver;
+import mffs.tileentity.TileCoercionDeriver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -16,6 +16,6 @@ public class BlockCoercionDeriver extends BlockMFFS
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityCoercionDeriver();
+		return new TileCoercionDeriver();
 	}
 }

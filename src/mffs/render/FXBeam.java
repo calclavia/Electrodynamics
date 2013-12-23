@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.CalclaviaRenderHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -59,7 +59,7 @@ public class FXBeam extends EntityFX
 		float xd = (float) (this.posX - this.target.x);
 		float yd = (float) (this.posY - this.target.y);
 		float zd = (float) (this.posZ - this.target.z);
-		this.length = (float) new Vector3(this).distanceTo(this.target);
+		this.length = (float) new Vector3(this).distance(this.target);
 		double var7 = MathHelper.sqrt_double(xd * xd + zd * zd);
 		this.rotYaw = ((float) (Math.atan2(xd, zd) * 180.0D / 3.141592653589793D));
 		this.rotPitch = ((float) (Math.atan2(yd, var7) * 180.0D / 3.141592653589793D));

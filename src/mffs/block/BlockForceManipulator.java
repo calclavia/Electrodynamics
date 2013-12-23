@@ -3,12 +3,10 @@ package mffs.block;
 import mffs.base.BlockMFFS;
 import mffs.tileentity.TileEntityForceManipulator;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 public class BlockForceManipulator extends BlockMFFS
 {

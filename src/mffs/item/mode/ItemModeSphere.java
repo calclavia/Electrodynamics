@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -61,7 +61,7 @@ public class ItemModeSphere extends ItemMode
 				{
 					Vector3 position = new Vector3(x, y, z);
 
-					if (this.isInField(projector, Vector3.add(position, new Vector3((TileEntity) projector)).add(translation)))
+					if (this.isInField(projector, Vector3.translate(position, new Vector3((TileEntity) projector)).add(translation)))
 					{
 						fieldBlocks.add(position);
 					}
@@ -75,7 +75,7 @@ public class ItemModeSphere extends ItemMode
 	@Override
 	public boolean isInField(IFieldInteraction projector, Vector3 position)
 	{
-		return new Vector3((TileEntity) projector).add(projector.getTranslation()).distanceTo(position) < projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
+		return new Vector3((TileEntity) projector).add(projector.getTranslation()).distance(position) < projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 	}
 
 	@SideOnly(Side.CLIENT)

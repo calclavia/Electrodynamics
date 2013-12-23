@@ -1,6 +1,5 @@
 package mffs.gui;
 
-import calclavia.lib.prefab.network.PacketManager;
 import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
@@ -12,7 +11,8 @@ import mffs.tileentity.TileEntityBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import universalelectricity.core.vector.Vector2;
+import universalelectricity.api.vector.Vector2;
+import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBiometricIdentifier extends GuiMFFS

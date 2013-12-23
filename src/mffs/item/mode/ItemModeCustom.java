@@ -22,7 +22,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.core.vector.Vector3;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.NBTFileLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -146,7 +146,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 									for (int z = minPoint.intZ(); z <= maxPoint.intZ(); z++)
 									{
 										Vector3 position = new Vector3(x, y, z);
-										Vector3 targetCheck = Vector3.add(midPoint, position);
+										Vector3 targetCheck = Vector3.translate(midPoint, position);
 										int blockID = targetCheck.getBlockID(world);
 
 										if (blockID > 0)
@@ -163,7 +163,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 											{
 												for (int i = 0; i < list.tagCount(); i++)
 												{
-													Vector3 vector = Vector3.readFromNBT((NBTTagCompound) list.tagAt(i));
+													Vector3 vector = new Vector3((NBTTagCompound) list.tagAt(i));
 
 													if (vector.equals(position))
 													{
@@ -352,7 +352,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 				for (int i = 0; i < nbtTagList.tagCount(); i++)
 				{
 					NBTTagCompound vectorTag = (NBTTagCompound) nbtTagList.tagAt(i);
-					Vector3 position = Vector3.readFromNBT(vectorTag);
+					Vector3 position = new Vector3(vectorTag);
 
 					if (scale > 0)
 					{
