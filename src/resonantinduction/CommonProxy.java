@@ -9,8 +9,9 @@ import net.minecraft.world.World;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.PartMultimeter;
 import universalelectricity.api.vector.Vector3;
-import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
@@ -25,20 +26,18 @@ public class CommonProxy implements IGuiHandler
 	}
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		/*if (tileEntity instanceof PartMultimeter)
+		if (tileEntity instanceof TileMultipart)
 		{
-			return new ContainerMultimeter(player.inventory, ((PartMultimeter) tileEntity));
+			TMultiPart part = ((TileMultipart) tileEntity).partMap(id);
+			if (part instanceof PartMultimeter)
+			{
+				return new ContainerMultimeter(player.inventory, ((PartMultimeter) part));
+			}
 		}
-		
-		 * else if (tileEntity instanceof TileEntityBattery)
-		 * {
-		 * return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));
-		 * }
-		 */
 
 		return null;
 	}

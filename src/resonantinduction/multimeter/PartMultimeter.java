@@ -9,12 +9,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -22,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
 import resonantinduction.render.RenderMultimeter;
-import resonantinduction.wire.render.RenderFlatWire;
+import scala.reflect.ClassTag;
 import universalelectricity.api.Compatibility.CompatibilityType;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyContainer;
@@ -31,7 +30,6 @@ import universalelectricity.api.net.IConnectable;
 import buildcraft.api.power.IPowerReceptor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.TextureUtils;
@@ -93,6 +91,13 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	public void preparePlacement(int side, int itemDamage)
 	{
 		this.side = (byte) (side ^ 1);
+	}
+
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
+	{
+		player.openGui(ResonantInduction.INSTANCE, this.side, world(), x(), y(), z());
+		return true;
 	}
 
 	@Override
@@ -189,8 +194,7 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 			energyLimit = packet.readLong();
 		}
 		else if (packetID == 3)
-		{		System.out.println("READ");
-
+		{
 			this.detectMode = DetectMode.values()[packet.readByte()];
 			this.detectedEnergy = packet.readLong();
 			this.detectedAverageEnergy = packet.readLong();
@@ -344,12 +348,23 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 		return true;
 	}
 
+	protected ItemStack getItem()
+	{
+		return new ItemStack(ResonantInduction.itemMultimeter);
+	}
+
 	@Override
 	public Iterable<ItemStack> getDrops()
 	{
 		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(ResonantInduction.itemMultimeter));
+		drops.add(getItem());
 		return drops;
+	}
+
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		return getItem();
 	}
 
 	@Override

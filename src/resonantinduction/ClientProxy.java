@@ -13,10 +13,11 @@ import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.render.BlockRenderingHandler;
 import resonantinduction.render.RenderEMContractor;
 import resonantinduction.render.RenderItemMultimeter;
-import resonantinduction.render.RenderMultimeter;
 import resonantinduction.render.RenderTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import universalelectricity.api.vector.Vector3;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -38,28 +39,23 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemMultimeter.itemID, new RenderItemMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
-		// ClientRegistry.bindTileEntitySpecialRenderer(PartMultimeter.class, new
-		// RenderMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
-		// ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBattery.class, new
-		// RenderBattery());
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		/*
-		 * if (tileEntity instanceof PartMultimeter)
-		 * {
-		 * return new GuiMultimeter(player.inventory, ((PartMultimeter) tileEntity));
-		 * }
-		 * else if (tileEntity instanceof TileEntityBattery)
-		 * {
-		 * return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));
-		 * }
-		 */
+		if (tileEntity instanceof TileMultipart)
+		{
+			TMultiPart part = ((TileMultipart) tileEntity).partMap(id);
+
+			if (part instanceof PartMultimeter)
+			{
+				return new GuiMultimeter(player.inventory, (PartMultimeter) part);
+			}
+		}
 
 		return null;
 	}
