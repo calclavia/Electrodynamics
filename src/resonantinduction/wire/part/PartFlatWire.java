@@ -765,7 +765,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public int getThickness()
 	{
-		return this.isInsulated ? 1 : 0;
+		return this.isInsulated ? 2 : 1;
 	}
 
 	@Override

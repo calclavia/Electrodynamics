@@ -23,7 +23,7 @@ import codechicken.lib.data.MCDataOutput;
  */
 public abstract class PartAdvancedWire extends PartConductor
 {
-	public static final int DEFAULT_COLOR = 16;
+	public static final int DEFAULT_COLOR = 15;
 	public int color = DEFAULT_COLOR;
 
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
@@ -42,17 +42,20 @@ public abstract class PartAdvancedWire extends PartConductor
 
 			if (this.getMaterial() == wire.getMaterial())
 			{
-				System.out.println("COMMON");
 				if (this.isInsulated() && wire.isInsulated())
 				{
-					return this.getColor() == wire.getColor();
+					return this.getColor() == wire.getColor() || (this.getColor() == DEFAULT_COLOR || wire.getColor() == DEFAULT_COLOR);
 				}
 
 				return true;
 			}
 		}
+		else
+		{
+			return CompatibilityModule.isHandler(obj);
+		}
 
-		return CompatibilityModule.isHandler(obj);
+		return false;
 	}
 
 	@Override
