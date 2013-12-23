@@ -77,7 +77,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	public long recharge(ItemStack itemStack, long energy, boolean doReceive)
 	{
 		long rejectedElectricity = Math.max((this.getEnergy(itemStack) + energy) - this.getEnergyCapacity(itemStack), 0);
-		long energyToReceive = Math.min(energy - rejectedElectricity, getTransferRate());
+		long energyToReceive = Math.min(energy - rejectedElectricity, getTransferRate(itemStack));
 
 		if (doReceive)
 		{
@@ -90,7 +90,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public long discharge(ItemStack itemStack, long energy, boolean doTransfer)
 	{
-		long energyToExtract = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate());
+		long energyToExtract = Math.min(Math.min(this.getEnergy(itemStack), energy), getTransferRate(itemStack));
 
 		if (doTransfer)
 		{
@@ -144,9 +144,9 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 		return TileBattery.STORAGE;
 	}
 
-	public long getTransferRate()
+	public long getTransferRate(ItemStack itemStack)
 	{
-		return TileBattery.STORAGE / 200;
+		return this.getEnergyCapacity(itemStack) / 100;
 	}
 
 	@Override

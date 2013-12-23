@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
+import resonantinduction.base.ListUtil;
 import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -33,7 +34,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 /**
  * 
- * @author AidanBrady
+ * @author Calclavia
  * 
  */
 public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiver, IPacketSender
@@ -160,15 +161,16 @@ public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiv
 					// Push entity along path.
 					if (pathfinder != null)
 					{
-						for (int i = 0; i < pathfinder.results.size(); i++)
+						List<Vector3> results = this.pathfinder.results;
+						for (int i = 0; i < results.size(); i++)
 						{
-							Vector3 result = pathfinder.results.get(i).clone();
+							Vector3 result = results.get(i).clone();
 
 							if (TileEMLevitator.canBePath(worldObj, result))
 							{
 								if (i - 1 >= 0)
 								{
-									Vector3 prevResult = pathfinder.results.get(i - 1).clone();
+									Vector3 prevResult = results.get(i - 1).clone();
 
 									Vector3 difference = prevResult.clone().difference(result);
 									final ForgeDirection direction = difference.toForgeDirection();

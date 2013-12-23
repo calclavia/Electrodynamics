@@ -25,7 +25,7 @@ public class ThreadEMPathfinding extends Thread
 	@Override
 	public void run()
 	{
-		this.pathfinder.find(this.start);
+		this.pathfinder.findNodes(this.start);
 		this.isCompleted = true;
 	}
 
