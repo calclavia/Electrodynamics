@@ -15,7 +15,7 @@
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
 
-		<get src="http://calclavia.com:8080/job/Universal%20Electricity/lastSuccessfulBuild/artifact/output/UniversalElectricity-3.0.0.208-dev.jar"
+		<get src="../Universal%20Electricity/lastSuccessfulBuild/artifact/output/UniversalElectricity-3.0.0.208-dev.jar"
 			dest="${dir.mcp}/lib/UE-dev.jar"/>
 		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar"
 			dest="${dir.mcp}/lib/CCL-dev.jar"/>
