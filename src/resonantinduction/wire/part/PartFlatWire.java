@@ -17,7 +17,6 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.render.RenderFlatWire;
-import universalelectricity.api.energy.IConductor;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -293,8 +292,9 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	@Override
 	public void recalculateConnections()
 	{
-		this.connections = new Object[6];
 		this.updateOpenConnections();
+
+		boolean[] calculatedSides = new boolean[6];
 
 		/**
 		 * Check external connections.
@@ -306,7 +306,10 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				int absDir = Rotation.rotateSide(this.side, r);
 
 				// Check direct connection.
-				this.setExternalConnection(r, absDir);
+				if (this.setExternalConnection(r, absDir))
+				{
+					calculatedSides[absDir] = true;
+				}
 
 				// Check Corner Connection
 				BlockCoord cornerPos = new BlockCoord(tile());
@@ -326,8 +329,15 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 							// We found a wire, merge networks!
 							this.connections[absDir] = tp;
 							this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+							calculatedSides[absDir] = true;
+							continue;
 						}
 					}
+				}
+				
+				if (!calculatedSides[absDir])
+				{
+					this.disconnect(absDir);
 				}
 			}
 		}
@@ -339,7 +349,9 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			int absDir = Rotation.rotateSide(this.side, r);
 
-			// Check straight ahead.
+			/**
+			 * Look for an internal straight connection.
+			 */
 			if (tile().partMap(PartMap.edgeBetween(absDir, this.side)) == null)
 			{
 				TMultiPart tp = tile().partMap(absDir);
@@ -352,10 +364,15 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 					continue;
 				}
 			}
+
+			if (!calculatedSides[absDir])
+			{
+				this.disconnect(absDir);
+			}
 		}
 
 		// Connect to the face of the block the wire is placed on.
-		this.setExternalConnection(0, this.side);
+		this.setExternalConnection(-1, this.side);
 
 		this.getNetwork().reconstruct();
 	}
@@ -377,6 +394,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 			{
 				// Check the wire we are connecting to and see if THAT block can accept this one.
 				int otherR = (r + 2) % 4;
+
 				if (((PartFlatWire) tp).canConnectTo(this) && ((PartFlatWire) tp).maskOpen(otherR))
 				{
 					// We found a wire! Merge connection.
@@ -385,6 +403,8 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 					return true;
 				}
 			}
+
+			this.disconnect(absSide);
 		}
 
 		/**
@@ -398,7 +418,26 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 			return true;
 		}
 
+		this.disconnect(absSide);
+
 		return false;
+	}
+
+	private void disconnect(int i)
+	{
+		if (this.connections[i] != null)
+		{
+			if (this.connections[i] instanceof PartFlatWire)
+			{
+				PartFlatWire wire = (PartFlatWire) this.connections[i];
+				this.connections[i] = null;
+				this.getNetwork().split(this, wire);
+			}
+			else
+			{
+				this.connections[i] = null;
+			}
+		}
 	}
 
 	@Override

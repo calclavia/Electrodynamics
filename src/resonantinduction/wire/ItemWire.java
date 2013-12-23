@@ -76,6 +76,7 @@ public class ItemWire extends JItemMultiPart
 	{
 		list.add("Resistance: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
 		list.add("Max Amperage: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
+		list.add("Shock Damage: " + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
 	}
 
 	@SideOnly(Side.CLIENT)
