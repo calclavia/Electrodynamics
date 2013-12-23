@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.contractor;
+package resonantinduction.levitator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

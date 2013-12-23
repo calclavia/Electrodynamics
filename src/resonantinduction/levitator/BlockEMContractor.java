@@ -1,4 +1,4 @@
-package resonantinduction.contractor;
+package resonantinduction.levitator;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +9,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
-import resonantinduction.entangler.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;

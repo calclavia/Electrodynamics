@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
-import resonantinduction.entangler.ItemCoordLink;
+import resonantinduction.levitator.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;

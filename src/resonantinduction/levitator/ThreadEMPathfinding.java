@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.contractor;
+package resonantinduction.levitator;
 
 import universalelectricity.api.vector.Vector3;
 

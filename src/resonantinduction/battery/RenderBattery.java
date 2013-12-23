@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.render;
+package resonantinduction.battery;
 
 import java.util.Random;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.entangler;
+package resonantinduction.levitator;
 
 import java.util.List;
 

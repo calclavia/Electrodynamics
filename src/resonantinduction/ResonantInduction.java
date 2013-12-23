@@ -19,13 +19,14 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.contractor.BlockEMContractor;
-import resonantinduction.contractor.ItemBlockContractor;
-import resonantinduction.contractor.TileEntityEMContractor;
-import resonantinduction.entangler.ItemLinker;
-import resonantinduction.entangler.ItemQuantumEntangler;
+import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.furnace.BlockAdvancedFurnace;
 import resonantinduction.furnace.TileAdvancedFurnace;
+import resonantinduction.levitator.BlockEMContractor;
+import resonantinduction.levitator.ItemBlockContractor;
+import resonantinduction.levitator.ItemLinker;
+import resonantinduction.levitator.TileEntityEMContractor;
 import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -131,7 +132,6 @@ public class ResonantInduction
 	}
 
 	// Items
-	public static Item itemQuantumEntangler;
 	public static Item itemLinker;
 	/**
 	 * Forge Multipart
@@ -174,7 +174,6 @@ public class ResonantInduction
 		TileEntityEMContractor.PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", TileEntityEMContractor.PUSH_DELAY).getInt(TileEntityEMContractor.PUSH_DELAY);
 
 		// Items
-		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
 		itemPartWire = new ItemWire(getNextItemID());
 		itemMultimeter = new ItemMultimeter(getNextItemID());
@@ -182,7 +181,7 @@ public class ResonantInduction
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
-		// blockBattery = new BlockBattery(getNextBlockID());
+		blockBattery = new BlockBattery(getNextBlockID());
 
 		if (REPLACE_FURNACE)
 		{
@@ -193,19 +192,17 @@ public class ResonantInduction
 
 		CONFIGURATION.save();
 
-		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
-		// GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
+		GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
-		// GameRegistry.registerTileEntity(TileEntityBattery.class,
-		// blockBattery.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 
@@ -254,15 +251,8 @@ public class ResonantInduction
 		 */
 		final ItemStack defaultWire = EnumWireMaterial.IRON.getWire();
 
-		/** Capacitor **/
-		// GameRegistry.addRecipe(new ShapedOreRecipe(UniversalRecipe.BATTERY.get(), "RRR", "RIR",
-		// "RRR", 'R', Item.redstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
-
 		/** Linker **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'G', UniversalRecipe.SECONDARY_METAL.get()));
-
-		/** Quantum Entangler **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumEntangler, "EEE", "ILI", "EEE", 'E', Item.eyeOfEnder, 'L', itemLinker, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Tesla - by Jyzarc */
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
@@ -271,8 +261,7 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Battery */
-		// GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R',
-		// Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** EM Contractor */
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMContractor, " I ", "GCG", "WWW", 'W', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.BATTERY.get(), 'G', UniversalRecipe.SECONDARY_METAL.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));

@@ -34,7 +34,7 @@ public class ItemMultimeter extends JItemMultiPart
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		BlockCoord onPos = pos.copy().offset(side ^ 1);
+		pos.offset(side ^ 1, -1);
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)

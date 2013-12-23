@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.entangler;
+package resonantinduction.levitator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

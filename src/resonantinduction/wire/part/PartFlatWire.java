@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.render.RenderFlatWire;
+import resonantinduction.wire.RenderFlatWire;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;

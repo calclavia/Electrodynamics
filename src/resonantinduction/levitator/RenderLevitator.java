@@ -1,4 +1,4 @@
-package resonantinduction.render;
+package resonantinduction.levitator;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -7,10 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.model.ModelEMContractor;
 
-public class RenderEMContractor extends TileEntitySpecialRenderer
+public class RenderLevitator extends TileEntitySpecialRenderer
 {
 	public static final ModelEMContractor MODEL = new ModelEMContractor(false);
 	public static final ModelEMContractor MODEL_SPIN = new ModelEMContractor(true);

@@ -14,7 +14,6 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.Utility;
 import resonantinduction.wire.part.PartFlatWire;
-import resonantinduction.wire.render.RenderFlatWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import codechicken.lib.vec.BlockCoord;
