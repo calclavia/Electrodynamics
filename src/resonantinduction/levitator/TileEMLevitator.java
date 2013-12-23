@@ -24,10 +24,10 @@ import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
 import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.InventoryHelper;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.tile.TileEntityAdvanced;
+import calclavia.lib.utility.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -97,7 +97,7 @@ public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiv
 
 			if (!suck && pushDelay == 0)
 			{
-				ItemStack retrieved = InventoryHelper.takeTopItemFromInventory(inventory, getDirection().getOpposite().ordinal());
+				ItemStack retrieved = InventoryUtility.takeTopItemFromInventory(inventory, getDirection().getOpposite().ordinal());
 
 				if (retrieved != null)
 				{
@@ -119,7 +119,7 @@ public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiv
 					{
 						for (EntityItem item : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, suckBounds))
 						{
-							ItemStack remains = InventoryHelper.putStackInInventory(inventory, item.getEntityItem(), getDirection().getOpposite().ordinal(), false);
+							ItemStack remains = InventoryUtility.putStackInInventory(inventory, item.getEntityItem(), getDirection().getOpposite().ordinal(), false);
 
 							if (remains == null)
 							{

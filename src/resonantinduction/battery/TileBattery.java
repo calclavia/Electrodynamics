@@ -6,22 +6,16 @@ package resonantinduction.battery;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import resonantinduction.api.ICapacitor;
-import resonantinduction.base.ListUtil;
-import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.tile.EnergyStorage;
 import calclavia.lib.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -49,7 +43,7 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 
 	public TileBattery()
 	{
-		this.energy.setCapacity(1000);
+		this.energy = new EnergyStorage(1000);
 	}
 
 	@Override
