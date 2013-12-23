@@ -30,6 +30,10 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
+			<fileset dir="${dir.development}Universal-Electricity/src/main/java/">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
 		</copy>
 		
 		<mkdir dir="DevContents" />
@@ -57,8 +61,13 @@
 		</exec>
 		
 		<copy todir="ModContents">
-			<fileset dir="${dir.mcp}/reobf/minecraft" excludes=".git/**" />
-		
+			<fileset dir="${dir.mcp}/reobf/minecraft">
+				<exclude name=".git/**"/>
+				<exclude name="codechicken/**"/>
+				<exclude name="universalelectricity/**"/>
+				<include name="universalelectricity/api/**"/>
+			</fileset>
+			
 			<fileset dir="${dir.development}resources">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
