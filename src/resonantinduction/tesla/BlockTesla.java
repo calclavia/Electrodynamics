@@ -34,14 +34,14 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	{
 		super.onBlockAdded(world, x, y, z);
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		((TileEntityTesla) tileEntity).updatePositionStatus();
+		((TileTesla) tileEntity).updatePositionStatus();
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
-		TileEntityTesla tileEntity = ((TileEntityTesla) t).getControllingTelsa();
+		TileTesla tileEntity = ((TileTesla) t).getControllingTelsa();
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
@@ -86,9 +86,9 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 							int dimID = link.getLinkDim(entityPlayer.getCurrentEquippedItem());
 							World otherWorld = MinecraftServer.getServer().worldServerForDimension(dimID);
 
-							if (linkVec.getTileEntity(otherWorld) instanceof TileEntityTesla)
+							if (linkVec.getTileEntity(otherWorld) instanceof TileTesla)
 							{
-								tileEntity.setLink(new Vector3(((TileEntityTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID, true);
+								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID, true);
 
 								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
 
@@ -132,13 +132,13 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		((TileEntityTesla) tileEntity).updatePositionStatus();
+		((TileTesla) tileEntity).updatePositionStatus();
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityTesla();
+		return new TileTesla();
 	}
 
 	@SideOnly(Side.CLIENT)

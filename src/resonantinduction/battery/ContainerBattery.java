@@ -11,9 +11,9 @@ import calclavia.lib.gui.ContainerBase;
 
 public class ContainerBattery extends ContainerBase
 {
-	private TileEntityBattery tileEntity;
+	private TileBattery tileEntity;
 
-	public ContainerBattery(InventoryPlayer inventory, TileEntityBattery unit)
+	public ContainerBattery(InventoryPlayer inventory, TileBattery unit)
 	{
 		super(unit);
 		tileEntity = unit;

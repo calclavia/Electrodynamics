@@ -40,7 +40,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		{
 			if (!entityPlayer.capabilities.isCreativeMode)
 			{
-				TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+				TileBattery tileEntity = (TileBattery) world.getBlockTileEntity(x, y, z);
 				ItemStack itemStack = ListUtil.getTop(tileEntity.structure.inventory);
 
 				if (tileEntity.structure.inventory.remove(itemStack))
@@ -55,7 +55,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float xClick, float yClick, float zClick)
 	{
-		TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+		TileBattery tileEntity = (TileBattery) world.getBlockTileEntity(x, y, z);
 
 		if (entityPlayer.isSneaking())
 		{
@@ -154,7 +154,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		{
 			if (id == blockID)
 			{
-				TileEntityBattery battery = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+				TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 
 				battery.update();
 			}
@@ -166,7 +166,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			TileEntityBattery battery = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 
 			battery.update();
 		}
@@ -189,7 +189,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote && canHarvestBlock(player, world.getBlockMetadata(x, y, z)))
 		{
-			TileEntityBattery tileEntity = (TileEntityBattery) world.getBlockTileEntity(x, y, z);
+			TileBattery tileEntity = (TileBattery) world.getBlockTileEntity(x, y, z);
 
 			if (!tileEntity.structure.isMultiblock)
 			{
@@ -220,6 +220,6 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityBattery();
+		return new TileBattery();
 	}
 }

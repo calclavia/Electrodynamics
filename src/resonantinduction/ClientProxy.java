@@ -6,15 +6,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import resonantinduction.battery.RenderBattery;
+import resonantinduction.battery.TileBattery;
 import resonantinduction.fx.FXElectricBolt;
 import resonantinduction.gui.GuiMultimeter;
 import resonantinduction.levitator.RenderLevitator;
-import resonantinduction.levitator.TileEntityEMContractor;
+import resonantinduction.levitator.TileEMLevitator;
 import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.multimeter.RenderRIItem;
 import resonantinduction.render.BlockRenderingHandler;
-import resonantinduction.render.RenderTesla;
-import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.tesla.RenderTesla;
+import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -39,8 +41,9 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemMultimeter.itemID, RenderRIItem.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemTransformer.itemID, RenderRIItem.INSTANCE);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderLevitator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 	}
 
 	@Override

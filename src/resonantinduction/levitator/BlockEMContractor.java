@@ -32,7 +32,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		TileEntityEMContractor contractor = (TileEntityEMContractor) world.getBlockTileEntity(par2, par3, par4);
+		TileEMLevitator contractor = (TileEMLevitator) world.getBlockTileEntity(par2, par3, par4);
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
@@ -53,9 +53,9 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 
 				if (linkVec != null)
 				{
-					if (linkVec.getTileEntity(world) instanceof TileEntityEMContractor)
+					if (linkVec.getTileEntity(world) instanceof TileEMLevitator)
 					{
-						contractor.setLink((TileEntityEMContractor) linkVec.getTileEntity(world), true);
+						contractor.setLink((TileEMLevitator) linkVec.getTileEntity(world), true);
 
 						if (world.isRemote)
 						{
@@ -88,7 +88,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		TileEntityEMContractor tileContractor = (TileEntityEMContractor) world.getBlockTileEntity(x, y, z);
+		TileEMLevitator tileContractor = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
 
 		if (!world.isRemote && !tileContractor.isLatched())
 		{
@@ -108,7 +108,7 @@ public class BlockEMContractor extends BlockBase implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityEMContractor();
+		return new TileEMLevitator();
 	}
 
 	@Override

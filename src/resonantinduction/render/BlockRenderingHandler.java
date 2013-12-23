@@ -9,9 +9,12 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.RenderBattery;
 import resonantinduction.levitator.BlockEMContractor;
 import resonantinduction.levitator.RenderLevitator;
 import resonantinduction.tesla.BlockTesla;
+import resonantinduction.tesla.RenderTesla;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -49,7 +52,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			RenderLevitator.MODEL.render(0.0625f);
 			GL11.glPopMatrix();
 		}
-		/*else if (block instanceof BlockBattery)
+		else if (block instanceof BlockBattery)
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslated(0.5, 1.42, 0.5);
@@ -57,7 +60,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
 			RenderBattery.MODEL.render(0.0625f);
 			GL11.glPopMatrix();
-		}*/
+		}
 	}
 
 	@Override

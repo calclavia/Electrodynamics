@@ -14,13 +14,6 @@ public class SynchronizedBatteryData
 {
 	public Set<Vector3> locations = new HashSet<Vector3>();
 
-	public List<ItemStack> inventory = new ArrayList<ItemStack>();
-
-	/**
-	 * Slot 0: Cell input slot Slot 1: Battery charge slot Slot 2: Battery discharge slot
-	 */
-	public ItemStack[] visibleInventory = new ItemStack[3];
-
 	public int length;
 
 	public int width;
@@ -33,90 +26,20 @@ public class SynchronizedBatteryData
 
 	public boolean didTick;
 
-	public boolean wroteInventory;
+	public boolean wroteNBT;
 
 	public int getVolume()
 	{
 		return length * width * height;
 	}
 
-	public int getMaxCells()
-	{
-		return getVolume() * BatteryManager.CELLS_PER_BATTERY;
-	}
-
-	public boolean addCell(ItemStack cell)
-	{
-		if (this.inventory.size() < this.getMaxCells())
-		{
-			this.inventory.add(cell);
-			this.sortInventory();
-			return true;
-		}
-
-		return false;
-	}
-
-	public void sortInventory()
-	{
-		Object[] array = ListUtil.copy(inventory).toArray();
-
-		ItemStack[] toSort = new ItemStack[array.length];
-
-		for (int i = 0; i < array.length; i++)
-		{
-			toSort[i] = (ItemStack) array[i];
-		}
-
-		boolean cont = true;
-		ItemStack temp;
-
-		while (cont)
-		{
-			cont = false;
-
-			for (int i = 0; i < toSort.length - 1; i++)
-			{
-				if (((IEnergyItem) toSort[i].getItem()).getEnergy(toSort[i]) < ((IEnergyItem) toSort[i + 1].getItem()).getEnergy(toSort[i + 1]))
-				{
-					temp = toSort[i];
-					toSort[i] = toSort[i + 1];
-					toSort[i + 1] = temp;
-					cont = true;
-				}
-			}
-		}
-
-		inventory = new ArrayList<ItemStack>();
-
-		for (ItemStack itemStack : toSort)
-		{
-			inventory.add(itemStack);
-		}
-	}
-
-	public boolean hasVisibleInventory()
-	{
-		for (ItemStack itemStack : visibleInventory)
-		{
-			if (itemStack != null)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity, List<ItemStack> inventory)
+	public static SynchronizedBatteryData getBase(TileBattery tileEntity, List<ItemStack> inventory)
 	{
 		SynchronizedBatteryData structure = getBase(tileEntity);
-		structure.inventory = inventory;
-
 		return structure;
 	}
 
-	public static SynchronizedBatteryData getBase(TileEntityBattery tileEntity)
+	public static SynchronizedBatteryData getBase(TileBattery tileEntity)
 	{
 		SynchronizedBatteryData structure = new SynchronizedBatteryData();
 		structure.length = 1;

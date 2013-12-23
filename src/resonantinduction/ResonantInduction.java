@@ -21,16 +21,16 @@ import org.modstats.Modstats;
 
 import resonantinduction.battery.BlockBattery;
 import resonantinduction.battery.ItemBlockBattery;
-import resonantinduction.battery.TileEntityBattery;
+import resonantinduction.battery.TileBattery;
 import resonantinduction.furnace.BlockAdvancedFurnace;
 import resonantinduction.furnace.TileAdvancedFurnace;
 import resonantinduction.levitator.BlockEMContractor;
 import resonantinduction.levitator.ItemBlockContractor;
 import resonantinduction.levitator.ItemLinker;
-import resonantinduction.levitator.TileEntityEMContractor;
+import resonantinduction.levitator.TileEMLevitator;
 import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.tesla.BlockTesla;
-import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.tesla.TileTesla;
 import resonantinduction.transformer.ItemTransformer;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemWire;
@@ -171,10 +171,10 @@ public class ResonantInduction
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 		REPLACE_FURNACE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Replace vanilla furnace", REPLACE_FURNACE).getBoolean(REPLACE_FURNACE);
 
-		TileEntityEMContractor.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEntityEMContractor.ACCELERATION).getDouble(TileEntityEMContractor.ACCELERATION);
-		TileEntityEMContractor.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEntityEMContractor.MAX_REACH).getInt(TileEntityEMContractor.MAX_REACH);
-		TileEntityEMContractor.MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", TileEntityEMContractor.MAX_SPEED).getDouble(TileEntityEMContractor.MAX_SPEED);
-		TileEntityEMContractor.PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", TileEntityEMContractor.PUSH_DELAY).getInt(TileEntityEMContractor.PUSH_DELAY);
+		TileEMLevitator.ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", TileEMLevitator.ACCELERATION).getDouble(TileEMLevitator.ACCELERATION);
+		TileEMLevitator.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEMLevitator.MAX_REACH).getInt(TileEMLevitator.MAX_REACH);
+		TileEMLevitator.MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", TileEMLevitator.MAX_SPEED).getDouble(TileEMLevitator.MAX_SPEED);
+		TileEMLevitator.PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", TileEMLevitator.PUSH_DELAY).getInt(TileEMLevitator.PUSH_DELAY);
 
 		// Items
 		itemLinker = new ItemLinker(getNextItemID());
@@ -205,9 +205,9 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
 
 		// Tiles
-		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityBattery.class, blockBattery.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 

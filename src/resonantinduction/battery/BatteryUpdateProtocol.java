@@ -13,10 +13,16 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.base.ListUtil;
 import universalelectricity.api.vector.Vector3;
 
+/**
+ * Essentially a pathfinder for multiblock battery structures.
+ * 
+ * @author Aidancbrady
+ * 
+ */
 public class BatteryUpdateProtocol
 {
 	/** The battery nodes that have already been iterated over. */
-	public Set<TileEntityBattery> iteratedNodes = new HashSet<TileEntityBattery>();
+	public Set<TileBattery> iteratedNodes = new HashSet<TileBattery>();
 
 	/** The structures found, all connected by some nodes to the pointer. */
 	public SynchronizedBatteryData structureFound = null;
@@ -27,6 +33,16 @@ public class BatteryUpdateProtocol
 	public BatteryUpdateProtocol(TileEntity tileEntity)
 	{
 		pointer = tileEntity;
+	}
+
+	public void updateBatteries()
+	{
+		loopThrough(this.pointer);
+
+		if (structureFound != null)
+		{
+			
+		}
 	}
 
 	private void loopThrough(TileEntity tile)
@@ -175,13 +191,13 @@ public class BatteryUpdateProtocol
 			}
 		}
 
-		iteratedNodes.add((TileEntityBattery) tile);
+		iteratedNodes.add((TileBattery) tile);
 
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = new Vector3(tile).modifyPositionFromSide(side).getTileEntity(tile.worldObj);
 
-			if (tileEntity instanceof TileEntityBattery)
+			if (tileEntity instanceof TileBattery)
 			{
 				if (!iteratedNodes.contains(tileEntity))
 				{
@@ -193,7 +209,7 @@ public class BatteryUpdateProtocol
 
 	private boolean isBattery(int x, int y, int z)
 	{
-		if (pointer.worldObj.getBlockTileEntity(x, y, z) instanceof TileEntityBattery)
+		if (pointer.worldObj.getBlockTileEntity(x, y, z) instanceof TileBattery)
 		{
 			return true;
 		}
@@ -201,98 +217,4 @@ public class BatteryUpdateProtocol
 		return false;
 	}
 
-	private void disperseCells()
-	{
-		SynchronizedBatteryData oldStructure = null;
-
-		for (TileEntityBattery tile : iteratedNodes)
-		{
-			if (tile.structure.isMultiblock)
-			{
-				oldStructure = tile.structure;
-				break;
-			}
-		}
-
-		if (oldStructure != null)
-		{
-			int maxCells = iteratedNodes.size() * BatteryManager.CELLS_PER_BATTERY;
-
-			List<ItemStack> rejected = ListUtil.capRemains(oldStructure.inventory, maxCells);
-			ejectItems(rejected, new Vector3(pointer));
-
-			ArrayList<List<ItemStack>> inventories = ListUtil.split(ListUtil.cap(oldStructure.inventory, maxCells), iteratedNodes.size());
-			List<TileEntityBattery> iterList = ListUtil.asList(iteratedNodes);
-
-			boolean didVisibleInventory = false;
-
-			for (int i = 0; i < iterList.size(); i++)
-			{
-				TileEntityBattery tile = iterList.get(i);
-				tile.structure = SynchronizedBatteryData.getBase(tile, inventories.get(i));
-
-				if (!didVisibleInventory)
-				{
-					tile.structure.visibleInventory = oldStructure.visibleInventory;
-					didVisibleInventory = true;
-				}
-			}
-		}
-	}
-
-	private void ejectItems(List<ItemStack> items, Vector3 vec)
-	{
-		for (ItemStack itemStack : items)
-		{
-			float motion = 0.7F;
-			double motionX = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-			double motionY = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-			double motionZ = (pointer.worldObj.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
-
-			EntityItem entityItem = new EntityItem(pointer.worldObj, vec.x + motionX, vec.y + motionY, vec.z + motionZ, itemStack);
-
-			pointer.worldObj.spawnEntityInWorld(entityItem);
-		}
-	}
-
-	public void updateBatteries()
-	{
-		loopThrough(pointer);
-
-		if (structureFound != null)
-		{
-			for (TileEntityBattery tileEntity : iteratedNodes)
-			{
-				if (!structureFound.locations.contains(new Vector3(tileEntity)))
-				{
-					disperseCells();
-
-					return;
-				}
-			}
-
-			for (Vector3 obj : structureFound.locations)
-			{
-				TileEntityBattery tileEntity = (TileEntityBattery) obj.getTileEntity(pointer.worldObj);
-
-				structureFound.inventory = ListUtil.merge(structureFound.inventory, tileEntity.structure.inventory);
-
-				if (tileEntity.structure.hasVisibleInventory())
-				{
-					structureFound.visibleInventory = tileEntity.structure.visibleInventory;
-				}
-
-				tileEntity.structure = structureFound;
-			}
-
-			List<ItemStack> rejected = ListUtil.capRemains(structureFound.inventory, structureFound.getMaxCells());
-			ejectItems(rejected, new Vector3(pointer));
-
-			structureFound.inventory = ListUtil.cap(structureFound.inventory, structureFound.getMaxCells());
-		}
-		else
-		{
-			disperseCells();
-		}
-	}
 }

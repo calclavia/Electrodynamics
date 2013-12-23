@@ -24,7 +24,7 @@ public class RenderLevitator extends TileEntitySpecialRenderer
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
 
-		switch (((TileEntityEMContractor) t).getDirection())
+		switch (((TileEMLevitator) t).getDirection())
 		{
 			case DOWN:
 				GL11.glRotatef(180, 0, 0, 1);
@@ -50,7 +50,7 @@ public class RenderLevitator extends TileEntitySpecialRenderer
 				break;
 		}
 
-		if (((TileEntityEMContractor) t).suck)
+		if (((TileEMLevitator) t).suck)
 		{
 			this.bindTexture(TEXTURE);
 		}
@@ -59,7 +59,7 @@ public class RenderLevitator extends TileEntitySpecialRenderer
 			this.bindTexture(TEXTURE_PUSH);
 		}
 
-		if (((TileEntityEMContractor) t).canFunction() && !ResonantInduction.proxy.isPaused())
+		if (((TileEMLevitator) t).canFunction() && !ResonantInduction.proxy.isPaused())
 		{
 			MODEL_SPIN.render(0.0625f);
 		}

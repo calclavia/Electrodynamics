@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
-import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.InventoryHelper;
 import calclavia.lib.network.IPacketReceiver;
@@ -36,7 +36,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author AidanBrady
  * 
  */
-public class TileEntityEMContractor extends TileEntityAdvanced implements IPacketReceiver, IPacketSender
+public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiver, IPacketSender
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -59,11 +59,11 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	private ThreadEMPathfinding thread;
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
-	private TileEntityEMContractor linked;
+	private TileEMLevitator linked;
 	private int lastCalcTime = 0;
 
 	/** Color of beam */
-	private int dyeID = TileEntityTesla.DEFAULT_COLOR;
+	private int dyeID = TileTesla.DEFAULT_COLOR;
 	private Vector3 tempLinkVector;
 
 	@Override
@@ -82,9 +82,9 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 		if (tempLinkVector != null)
 		{
-			if (tempLinkVector.getTileEntity(worldObj) instanceof TileEntityEMContractor)
+			if (tempLinkVector.getTileEntity(worldObj) instanceof TileEMLevitator)
 			{
-				setLink((TileEntityEMContractor) tempLinkVector.getTileEntity(worldObj), true);
+				setLink((TileEMLevitator) tempLinkVector.getTileEntity(worldObj), true);
 			}
 
 			tempLinkVector = null;
@@ -164,7 +164,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 						{
 							Vector3 result = pathfinder.results.get(i).clone();
 
-							if (TileEntityEMContractor.canBePath(worldObj, result))
+							if (TileEMLevitator.canBePath(worldObj, result))
 							{
 								if (i - 1 >= 0)
 								{
@@ -552,7 +552,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 	/**
 	 * Link between two TileEntities, do pathfinding operation.
 	 */
-	public void setLink(TileEntityEMContractor tileEntity, boolean setOpponent)
+	public void setLink(TileEMLevitator tileEntity, boolean setOpponent)
 	{
 		if (linked != null && setOpponent)
 		{
@@ -580,7 +580,7 @@ public class TileEntityEMContractor extends TileEntityAdvanced implements IPacke
 
 			if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
 			{
-				if (TileEntityEMContractor.canBePath(worldObj, start) && TileEntityEMContractor.canBePath(worldObj, target))
+				if (TileEMLevitator.canBePath(worldObj, start) && TileEMLevitator.canBePath(worldObj, target))
 				{
 					thread = new ThreadEMPathfinding(new PathfinderEMContractor(worldObj, target), start);
 					thread.start();

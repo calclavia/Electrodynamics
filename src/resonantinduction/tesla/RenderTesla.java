@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.render;
+package resonantinduction.tesla;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

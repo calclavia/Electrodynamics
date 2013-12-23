@@ -62,7 +62,7 @@ public class PathfinderEMContractor
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			Vector3 neighbor = this.target.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-			if (!TileEntityEMContractor.canBePath(this.world, neighbor))
+			if (!TileEMLevitator.canBePath(this.world, neighbor))
 			{
 				blockCount++;
 			}
@@ -108,7 +108,7 @@ public class PathfinderEMContractor
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
 				Vector3 neighbor = currentNode.clone().modifyPositionFromSide(direction);
 
-				if (TileEntityEMContractor.canBePath(this.world, neighbor))
+				if (TileEMLevitator.canBePath(this.world, neighbor))
 				{
 					double tentativeG = this.gScore.get(currentNode) + currentNode.distance(neighbor);
 

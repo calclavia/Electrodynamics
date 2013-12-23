@@ -41,7 +41,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPacketSender, IPacketReceiver
+public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSender, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final long TRANSFER_CAP = 10000;
@@ -54,14 +54,14 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 	private boolean doTransfer = true;
 
 	/** Prevents transfer loops */
-	private final Set<TileEntityTesla> outputBlacklist = new HashSet<TileEntityTesla>();
-	private final Set<TileEntityTesla> connectedTeslas = new HashSet<TileEntityTesla>();
+	private final Set<TileTesla> outputBlacklist = new HashSet<TileTesla>();
+	private final Set<TileTesla> connectedTeslas = new HashSet<TileTesla>();
 
 	/**
 	 * Caching
 	 */
-	private TileEntityTesla topCache = null;
-	private TileEntityTesla controlCache = null;
+	private TileTesla topCache = null;
+	private TileTesla controlCache = null;
 
 	/**
 	 * Quantum Tesla
@@ -75,7 +75,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 	private int zapCounter = 0;
 	private boolean isLinkedClient;
 
-	public TileEntityTesla()
+	public TileTesla()
 	{
 		this.energy = new EnergyStorage(TRANSFER_CAP);
 	}
@@ -103,7 +103,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.energy.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
-				final TileEntityTesla topTesla = this.getTopTelsa();
+				final TileTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
 
 				/**
@@ -119,9 +119,9 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 						{
 							TileEntity transferTile = this.linked.getTileEntity(dimWorld);
 
-							if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
+							if (transferTile instanceof TileTesla && !transferTile.isInvalid())
 							{
-								this.transfer(((TileEntityTesla) transferTile), Math.min(this.energy.getEmptySpace(), TRANSFER_CAP));
+								this.transfer(((TileTesla) transferTile), Math.min(this.energy.getEmptySpace(), TRANSFER_CAP));
 
 								if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 								{
@@ -149,14 +149,14 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 							 */
 							if (!this.connectedTeslas.contains(tesla) && tesla.canTeslaTransfer(this))
 							{
-								if (tesla instanceof TileEntityTesla)
+								if (tesla instanceof TileTesla)
 								{
-									if (((TileEntityTesla) tesla).getHeight() <= 1)
+									if (((TileTesla) tesla).getHeight() <= 1)
 									{
 										continue;
 									}
 
-									tesla = ((TileEntityTesla) tesla).getControllingTelsa();
+									tesla = ((TileTesla) tesla).getControllingTelsa();
 								}
 
 								transferTeslaCoils.add(tesla);
@@ -207,10 +207,10 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 							Vector3 targetVector = new Vector3((TileEntity) tesla);
 
-							if (tesla instanceof TileEntityTesla)
+							if (tesla instanceof TileTesla)
 							{
-								((TileEntityTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
-								targetVector = new Vector3(((TileEntityTesla) tesla).getTopTelsa());
+								((TileTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
+								targetVector = new Vector3(((TileTesla) tesla).getTopTelsa());
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
@@ -393,8 +393,8 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 	public void updatePositionStatus()
 	{
-		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileEntityTesla;
-		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileEntityTesla;
+		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
+		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
 
 		if (isTop && isBottom)
 		{
@@ -415,7 +415,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 	 * 
 	 * @return The highest Tesla coil in this tower.
 	 */
-	public TileEntityTesla getTopTelsa()
+	public TileTesla getTopTelsa()
 	{
 		if (this.topCache != null)
 		{
@@ -424,16 +424,16 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 		this.connectedTeslas.clear();
 		Vector3 checkPosition = new Vector3(this);
-		TileEntityTesla returnTile = this;
+		TileTesla returnTile = this;
 
 		while (true)
 		{
 			TileEntity t = checkPosition.getTileEntity(this.worldObj);
 
-			if (t instanceof TileEntityTesla)
+			if (t instanceof TileTesla)
 			{
-				this.connectedTeslas.add((TileEntityTesla) t);
-				returnTile = (TileEntityTesla) t;
+				this.connectedTeslas.add((TileTesla) t);
+				returnTile = (TileTesla) t;
 			}
 			else
 			{
@@ -452,7 +452,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 	 * 
 	 * @return
 	 */
-	public TileEntityTesla getControllingTelsa()
+	public TileTesla getControllingTelsa()
 	{
 		if (this.controlCache != null)
 		{
@@ -460,15 +460,15 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		}
 
 		Vector3 checkPosition = new Vector3(this);
-		TileEntityTesla returnTile = this;
+		TileTesla returnTile = this;
 
 		while (true)
 		{
 			TileEntity t = checkPosition.getTileEntity(this.worldObj);
 
-			if (t instanceof TileEntityTesla)
+			if (t instanceof TileTesla)
 			{
-				returnTile = (TileEntityTesla) t;
+				returnTile = (TileTesla) t;
 			}
 			else
 			{
@@ -496,9 +496,9 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		{
 			TileEntity t = new Vector3(this).translate(new Vector3(0, y, 0)).getTileEntity(this.worldObj);
 
-			if (t instanceof TileEntityTesla)
+			if (t instanceof TileTesla)
 			{
-				this.connectedTeslas.add((TileEntityTesla) t);
+				this.connectedTeslas.add((TileTesla) t);
 				y++;
 			}
 			else
@@ -584,9 +584,9 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 			{
 				TileEntity tileEntity = this.linked.getTileEntity(otherWorld);
 
-				if (tileEntity instanceof TileEntityTesla)
+				if (tileEntity instanceof TileTesla)
 				{
-					((TileEntityTesla) tileEntity).setLink(null, this.linkDim, false);
+					((TileTesla) tileEntity).setLink(null, this.linkDim, false);
 				}
 			}
 
@@ -600,9 +600,9 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 			{
 				TileEntity tileEntity = this.linked.getTileEntity(newOtherWorld);
 
-				if (tileEntity instanceof TileEntityTesla)
+				if (tileEntity instanceof TileTesla)
 				{
-					((TileEntityTesla) tileEntity).setLink(new Vector3(this), this.worldObj.provider.dimensionId, false);
+					((TileTesla) tileEntity).setLink(new Vector3(this), this.worldObj.provider.dimensionId, false);
 				}
 			}
 		}

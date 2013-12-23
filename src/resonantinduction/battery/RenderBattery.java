@@ -50,7 +50,6 @@ public class RenderBattery extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
