@@ -22,7 +22,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	 */
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-	{System.out.println("RECEIVE");
+	{
 		return this.getNetwork().produce(new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world()), from.getOpposite(), receive, doReceive);
 	}
 

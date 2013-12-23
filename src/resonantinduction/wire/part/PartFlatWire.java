@@ -300,17 +300,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		 */
 		for (byte r = 0; r < 4; r++)
 		{
-			boolean didConnect = false;
-
-			int absDir = Rotation.rotateSide(this.side, r);
-
 			if (maskOpen(r))
 			{
+				int absDir = Rotation.rotateSide(this.side, r);
+
 				// Check direct connection.
-				if (this.setExternalConnection(absDir))
-				{
-					didConnect |= true;
-				}
+				this.setExternalConnection(absDir);
 
 				// Check Corner Connection
 				BlockCoord cornerPos = new BlockCoord(tile());
@@ -330,7 +325,6 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 							// We found a wire, merge networks!
 							this.connections[absDir] = tp;
 							this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
-							didConnect |= true;
 						}
 					}
 				}
@@ -370,6 +364,10 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		if (this.maskOpen(absSide))
 		{
 			BlockCoord pos = new BlockCoord(tile()).offset(absSide);
+
+			/**
+			 * Look for an external wire connection.
+			 */
 			TileMultipart t = Utility.getMultipartTile(world(), pos);
 
 			if (t != null)
@@ -385,10 +383,14 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				}
 			}
 
+			/**
+			 * Look for an external energy handler.
+			 */
 			TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
 
 			if (this.canConnectTo(tileEntity))
 			{
+				System.out.println("FOUND TE");
 				this.connections[absSide] = tileEntity;
 				return true;
 			}

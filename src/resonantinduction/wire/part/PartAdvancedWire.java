@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import calclavia.lib.prefab.CustomDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
@@ -14,9 +13,11 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.ResonantInduction;
 import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.energy.IConductor;
+import calclavia.lib.prefab.CustomDamageSource;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 
@@ -53,7 +54,7 @@ public abstract class PartAdvancedWire extends PartConductor
 				return true;
 			}
 		}
-		else
+		else if (!(obj instanceof IConductor))
 		{
 			return CompatibilityModule.isHandler(obj);
 		}
@@ -71,18 +72,15 @@ public abstract class PartAdvancedWire extends PartConductor
 	}
 
 	@Override
-	public long getEnergyLoss()
+	public float getResistance()
 	{
-		/**
-		 * TODO: FIX THIS!
-		 */
-		return (int) (this.getMaterial().resistance * 10);
+		return this.getMaterial().resistance;
 	}
 
 	@Override
-	public long getEnergyCapacitance()
+	public long getTransferCapacity()
 	{
-		return this.getMaterial().maxAmps * 1000;
+		return this.getMaterial().maxAmps * UniversalElectricity.DEFAULT_VOLTAGE;
 	}
 
 	/**

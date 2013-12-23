@@ -130,7 +130,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	}
 
 	@Override
-	public long getEnergyLoss()
+	public float getResistance()
 	{
 		long energyLoss = 0;
 
@@ -138,7 +138,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 		{
 			for (IConductor conductor : this.interfaces)
 			{
-				energyLoss += conductor.getEnergyLoss();
+				energyLoss += conductor.getResistance();
 			}
 
 			energyLoss /= this.interfaces.size();
@@ -148,7 +148,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	}
 
 	@Override
-	public long getEnergyCapacitance()
+	public long getTransferCapacity()
 	{
 		long capacitance = 0;
 
@@ -156,7 +156,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 		{
 			for (IConductor conductor : this.interfaces)
 			{
-				capacitance += conductor.getEnergyCapacitance();
+				capacitance += conductor.getTransferCapacity();
 			}
 
 			capacitance /= this.interfaces.size();

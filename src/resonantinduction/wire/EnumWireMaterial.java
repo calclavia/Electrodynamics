@@ -16,10 +16,18 @@ import codechicken.lib.colour.ColourRGBA;
 
 public enum EnumWireMaterial
 {
-	COPPER("Copper", 12.5F, 3, 20, 184, 115, 51), TIN("Tin", 13, 2, 5, 132, 132, 130),
-	IRON("Iron", 0.1F, 20, 40, 97, 102, 105), ALUMINUM("Aluminum", 0.025F, 6, 150, 215, 205, 181),
-	SILVER("Silver", 5F, 1, 20, 192, 192, 192),
-	SUPERCONDUCTOR("Superconductor", 0, 1, 100, 255, 255, 1);
+	/** Copper: General. */
+	COPPER("Copper", 1.68f, 5, 10, 184, 115, 51),
+	/** Tin: Low shock, cheap */
+	TIN("Tin", 11f, 1, 5, 132, 132, 130),
+	/** Iron: High Capacity */
+	IRON("Iron", 10f, 3, 80, 97, 102, 105),
+	/** Aluminum: High Shock */
+	ALUMINUM("Aluminum", 2.82f, 10, 70, 215, 205, 181),
+	/** Aluminum: Low Resistance */
+	SILVER("Silver", 1.59f, 5, 20, 192, 192, 192),
+	/** Superconductor: Over-powered */
+	SUPERCONDUCTOR("Superconductor", 0, 10, 200, 255, 255, 1);
 
 	public final float resistance;
 	public final int damage;
@@ -28,13 +36,14 @@ public enum EnumWireMaterial
 	private ItemStack wire;
 	private final String name;
 
-	private EnumWireMaterial(String s, float resist, int electrocution, long max, int r, int g, int b)
+	private EnumWireMaterial(String name, float resistance, int electrocutionDamage, long maxAmps, int r, int g, int b)
 	{
-		name = s;
-		resistance = resist;
-		damage = electrocution;
-		maxAmps = max;
-		color = new ColourRGBA(r, g, b, 255);
+		this.name = name;
+		/** Multiply the realistic resistance by a factor for game balance. */
+		this.resistance = resistance * 2;
+		this.damage = electrocutionDamage;
+		this.maxAmps = maxAmps;
+		this.color = new ColourRGBA(r, g, b, 255);
 	}
 
 	public String getName()
