@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.multimeter.ContainerMultimeter;
-import resonantinduction.multimeter.TileEntityMultimeter;
+import resonantinduction.multimeter.PartMultimeter;
 import universalelectricity.api.vector.Vector3;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
@@ -29,11 +29,11 @@ public class CommonProxy implements IGuiHandler
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityMultimeter)
+		/*if (tileEntity instanceof PartMultimeter)
 		{
-			return new ContainerMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
+			return new ContainerMultimeter(player.inventory, ((PartMultimeter) tileEntity));
 		}
-		/*
+		
 		 * else if (tileEntity instanceof TileEntityBattery)
 		 * {
 		 * return new ContainerBattery(player.inventory, ((TileEntityBattery) tileEntity));

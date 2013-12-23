@@ -827,7 +827,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	@Override
 	public int redstoneConductionMap()
 	{
-		return 0xF;
+		return 0;
 	}
 
 	@Override

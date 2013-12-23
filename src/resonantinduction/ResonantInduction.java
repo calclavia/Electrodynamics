@@ -12,9 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -28,10 +26,7 @@ import resonantinduction.entangler.ItemLinker;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.furnace.BlockAdvancedFurnace;
 import resonantinduction.furnace.TileEntityAdvancedFurnace;
-import resonantinduction.multimeter.BlockMultimeter;
-import resonantinduction.multimeter.ItemBlockMultimeter;
-import resonantinduction.multimeter.MultimeterEventHandler;
-import resonantinduction.multimeter.TileEntityMultimeter;
+import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
 import resonantinduction.wire.EnumWireMaterial;
@@ -40,7 +35,6 @@ import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
-import calclavia.lib.prefab.CustomDamageSource;
 import calclavia.lib.prefab.TranslationHelper;
 import codechicken.lib.colour.ColourRGBA;
 import cpw.mods.fml.common.FMLLog;
@@ -139,12 +133,14 @@ public class ResonantInduction
 	// Items
 	public static Item itemQuantumEntangler;
 	public static Item itemLinker;
-	/** With Forge Multipart; Use EnumWireMaterial reference. **/
+	/**
+	 * Forge Multipart
+	 */
 	private static Item itemPartWire;
+	public static Item itemMultimeter;
 
 	// Blocks
 	public static Block blockTesla;
-	public static Block blockMultimeter;
 	public static Block blockEMContractor;
 	public static Block blockBattery;
 	public static Block blockAdvancedFurnace;
@@ -161,7 +157,6 @@ public class ResonantInduction
 		LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
 		Modstats.instance().getReporter().registerMod(this);
-		MinecraftForge.EVENT_BUS.register(new MultimeterEventHandler());
 		CONFIGURATION.load();
 
 		// Config
@@ -181,10 +176,10 @@ public class ResonantInduction
 		itemQuantumEntangler = new ItemQuantumEntangler(getNextItemID());
 		itemLinker = new ItemLinker(getNextItemID());
 		itemPartWire = new ItemWire(getNextItemID());
+		itemMultimeter = new ItemMultimeter(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
-		blockMultimeter = new BlockMultimeter(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
 		// blockBattery = new BlockBattery(getNextBlockID());
 
@@ -199,15 +194,14 @@ public class ResonantInduction
 
 		GameRegistry.registerItem(itemQuantumEntangler, itemQuantumEntangler.getUnlocalizedName());
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
+		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMultimeter, ItemBlockMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 		// GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityMultimeter.class, blockMultimeter.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEntityEMContractor.class, blockEMContractor.getUnlocalizedName());
 		// GameRegistry.registerTileEntity(TileEntityBattery.class,
 		// blockBattery.getUnlocalizedName());
@@ -273,7 +267,7 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
 
 		/** Multimeter */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Battery */
 		// GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R',

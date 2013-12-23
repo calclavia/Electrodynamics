@@ -4,13 +4,15 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.fx.FXElectricBolt;
 import resonantinduction.gui.GuiMultimeter;
-import resonantinduction.multimeter.TileEntityMultimeter;
+import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.render.BlockRenderingHandler;
 import resonantinduction.render.RenderEMContractor;
+import resonantinduction.render.RenderItemMultimeter;
 import resonantinduction.render.RenderMultimeter;
 import resonantinduction.render.RenderTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -34,9 +36,10 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-
+		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemMultimeter.itemID, new RenderItemMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMultimeter.class, new RenderMultimeter());
+		// ClientRegistry.bindTileEntitySpecialRenderer(PartMultimeter.class, new
+		// RenderMultimeter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderEMContractor());
 		// ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBattery.class, new
 		// RenderBattery());
@@ -47,11 +50,11 @@ public class ClientProxy extends CommonProxy
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityMultimeter)
-		{
-			return new GuiMultimeter(player.inventory, ((TileEntityMultimeter) tileEntity));
-		}
 		/*
+		 * if (tileEntity instanceof PartMultimeter)
+		 * {
+		 * return new GuiMultimeter(player.inventory, ((PartMultimeter) tileEntity));
+		 * }
 		 * else if (tileEntity instanceof TileEntityBattery)
 		 * {
 		 * return new GuiBattery(player.inventory, ((TileEntityBattery) tileEntity));

@@ -1,8 +1,7 @@
 package resonantinduction.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -10,9 +9,10 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelMultimeter;
-import resonantinduction.multimeter.TileEntityMultimeter;
+import resonantinduction.multimeter.PartMultimeter;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,16 +23,15 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class RenderMultimeter extends TileEntitySpecialRenderer
+public class RenderMultimeter
 {
 	public static final ModelMultimeter MODEL = new ModelMultimeter();
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "multimeter.png");
 
-	@Override
-	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float var8)
+	@SuppressWarnings("incomplete-switch")
+	public static void render(PartMultimeter tileEntity, double x, double y, double z)
 	{
-		TileEntityMultimeter tileEntity = (TileEntityMultimeter) t;
-		ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+		ForgeDirection direction = tileEntity.getDirection();
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -64,7 +63,7 @@ public class RenderMultimeter extends TileEntitySpecialRenderer
 				break;
 		}
 
-		this.bindTexture(TEXTURE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		MODEL.render(0.0625f);
 
 		GL11.glPopMatrix();
@@ -121,7 +120,7 @@ public class RenderMultimeter extends TileEntitySpecialRenderer
 		GL11.glRotatef(-90, 1, 0, 0);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		FontRenderer fontRenderer = this.getFontRenderer();
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
 		String joules = UnitDisplay.getDisplayShort(tileEntity.getDetectedEnergy(), Unit.JOULES);
 
