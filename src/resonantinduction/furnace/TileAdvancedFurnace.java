@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.tile.EnergyStorage;
@@ -17,6 +18,7 @@ import calclavia.lib.tile.EnergyStorage;
  * @author Calclavia
  * 
  */
+@UniversalClass
 public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface
 {
 	private static final float WATTAGE = 5;
@@ -127,7 +129,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 				// TODO: Send descript packet.
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
-			
+
 			this.produce();
 		}
 	}
