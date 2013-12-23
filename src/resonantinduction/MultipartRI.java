@@ -1,6 +1,7 @@
 package resonantinduction;
 
 import resonantinduction.multimeter.PartMultimeter;
+import resonantinduction.transformer.PartTransformer;
 import resonantinduction.wire.part.PartFlatWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
@@ -31,7 +32,7 @@ public class MultipartRI implements IPartFactory
 		}
 		else if (name.equals("resonant_induction_transformer"))
 		{
-			return new PartMultimeter();
+			return new PartTransformer();
 		}
 
 		return null;

@@ -1,7 +1,16 @@
 package resonantinduction.transformer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.ResonantInduction;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.TextureUtils;
 import codechicken.lib.vec.Cuboid6;
@@ -72,7 +81,26 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
-		return null;
+		return Arrays.asList(oBoxes[this.side]);
+	}
+
+	protected ItemStack getItem()
+	{
+		return new ItemStack(ResonantInduction.itemTransformer);
+	}
+
+	@Override
+	public Iterable<ItemStack> getDrops()
+	{
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(getItem());
+		return drops;
+	}
+
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		return getItem();
 	}
 
 	@Override
@@ -90,6 +118,22 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 			CCRenderState.setColour(-1);
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		this.side = nbt.getByte("side");
+		this.stepUp = nbt.getBoolean("stepUp");
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setByte("side", (byte) this.side);
+		nbt.setBoolean("stepUp", this.stepUp);
 	}
 
 	@Override

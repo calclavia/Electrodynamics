@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderTransformer
 {
-	private static final ModelTransformer MODEL = new ModelTransformer();
+	public static final ModelTransformer MODEL = new ModelTransformer();
 	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "transformer.png");
 
 	public static void render(PartTransformer part, double x, double y, double z)
@@ -45,7 +45,7 @@ public class RenderTransformer
 		GL11.glScalef(1.0F, -1F, -1F);
 		GL11.glRotatef(90, 0.0F, 1.0F, 0.0F);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
-		MODEL.render(null, 0, 0, 0, 0, 0, 0.0625F);
+		MODEL.render(0.0625F);
 		//this.model.renderCores(te.getInput(), te.getOutput(), 0.0625F);
 
 		// this.bindTexture(TextureLocations.MODEL_TRANSFORMER_INPUT);

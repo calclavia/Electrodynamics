@@ -31,6 +31,7 @@ import resonantinduction.levitator.TileEntityEMContractor;
 import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
+import resonantinduction.transformer.ItemTransformer;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemWire;
 import basiccomponents.api.BasicRegistry;
@@ -179,6 +180,7 @@ public class ResonantInduction
 		itemLinker = new ItemLinker(getNextItemID());
 		itemPartWire = new ItemWire(getNextItemID());
 		itemMultimeter = new ItemMultimeter(getNextItemID());
+		itemTransformer = new ItemTransformer(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
@@ -196,6 +198,7 @@ public class ResonantInduction
 
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
+		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());

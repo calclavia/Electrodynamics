@@ -11,7 +11,7 @@ import resonantinduction.gui.GuiMultimeter;
 import resonantinduction.levitator.RenderLevitator;
 import resonantinduction.levitator.TileEntityEMContractor;
 import resonantinduction.multimeter.PartMultimeter;
-import resonantinduction.multimeter.RenderItemMultimeter;
+import resonantinduction.multimeter.RenderRIItem;
 import resonantinduction.render.BlockRenderingHandler;
 import resonantinduction.render.RenderTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -37,7 +37,8 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemMultimeter.itemID, new RenderItemMultimeter());
+		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemMultimeter.itemID, RenderRIItem.INSTANCE);
+		MinecraftForgeClient.registerItemRenderer(ResonantInduction.itemTransformer.itemID, RenderRIItem.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEMContractor.class, new RenderLevitator());
 	}

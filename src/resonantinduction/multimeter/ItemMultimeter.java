@@ -7,28 +7,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.ResonantInduction;
-import resonantinduction.TabRI;
+import resonantinduction.base.ItemMultipartBase;
 import resonantinduction.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemMultimeter extends JItemMultiPart
+public class ItemMultimeter extends ItemMultipartBase
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
 	public ItemMultimeter(int id)
 	{
-		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "multimeter", id).getInt(id));
-		this.setUnlocalizedName(ResonantInduction.PREFIX + "multimeter");
-		this.setCreativeTab(TabRI.INSTANCE);
-		this.setHasSubtypes(true);
-		this.setMaxDamage(0);
+		super("multimeter", id);
 	}
 
 	@Override
