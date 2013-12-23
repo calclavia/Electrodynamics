@@ -138,6 +138,7 @@ public class ResonantInduction
 	 */
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
+	public static Item itemIOPanel;
 
 	// Blocks
 	public static Block blockTesla;
