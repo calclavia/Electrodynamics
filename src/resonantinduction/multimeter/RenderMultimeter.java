@@ -1,4 +1,4 @@
-package resonantinduction.render;
+package resonantinduction.multimeter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import resonantinduction.model.ModelMultimeter;
-import resonantinduction.multimeter.PartMultimeter;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import cpw.mods.fml.client.FMLClientHandler;

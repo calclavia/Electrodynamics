@@ -20,6 +20,7 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import resonantinduction.battery.BlockBattery;
+import resonantinduction.battery.ItemBlockBattery;
 import resonantinduction.battery.TileEntityBattery;
 import resonantinduction.furnace.BlockAdvancedFurnace;
 import resonantinduction.furnace.TileAdvancedFurnace;
@@ -138,6 +139,7 @@ public class ResonantInduction
 	 */
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
+	public static Item itemTransformer;
 	public static Item itemIOPanel;
 
 	// Blocks
@@ -197,7 +199,7 @@ public class ResonantInduction
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
-		GameRegistry.registerBlock(blockBattery, blockBattery.getUnlocalizedName());
+		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileEntityTesla.class, blockTesla.getUnlocalizedName());

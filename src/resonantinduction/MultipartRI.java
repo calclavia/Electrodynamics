@@ -13,7 +13,7 @@ public class MultipartRI implements IPartFactory
 
 	public MultipartRI()
 	{
-		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire", "resonant_induction_multimeter" });
+		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire", "resonant_induction_multimeter", "resonant_induction_transformer" });
 		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.wire.part.TraitConductor");
 		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.part.TraitEnergySink");
 	}
@@ -26,6 +26,10 @@ public class MultipartRI implements IPartFactory
 			return new PartFlatWire();
 		}
 		else if (name.equals("resonant_induction_multimeter"))
+		{
+			return new PartMultimeter();
+		}
+		else if (name.equals("resonant_induction_transformer"))
 		{
 			return new PartMultimeter();
 		}

@@ -20,7 +20,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
-import resonantinduction.render.RenderMultimeter;
 import universalelectricity.api.CompatibilityType;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyContainer;
