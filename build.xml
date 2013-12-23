@@ -15,8 +15,6 @@
 			<fileset dir="../Minecraft Forge Latest/" />
 		</copy>
 
-		<get src="../Universal%20Electricity-dev.jar"
-			dest="${dir.mcp}/lib/UE-dev.jar"/>
 		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar"
 			dest="${dir.mcp}/lib/CCL-dev.jar"/>
 		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.227.jar"
@@ -27,7 +25,11 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Calclavia-Library/src">
+			<fileset dir="${dir.development}Universal-Electricity/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+			<fileset dir="${dir.development}Calclavia-Library/src/main/java/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
