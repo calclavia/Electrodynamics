@@ -49,7 +49,7 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 
 	public TileBattery()
 	{
-
+		this.energy.setCapacity(1000);
 	}
 
 	@Override

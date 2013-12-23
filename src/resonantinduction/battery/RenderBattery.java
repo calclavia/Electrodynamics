@@ -45,7 +45,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 	private Random random = new Random();
 	protected RenderManager renderManager;
 
-	public static final IModelCustom batteryModel = AdvancedModelLoader.loadModel(ResonantInduction.MODEL_DIRECTORY + "battery.tcn");
+	//public static final IModelCustom batteryModel = AdvancedModelLoader.loadModel(ResonantInduction.MODEL_DIRECTORY + "battery.tcn");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
