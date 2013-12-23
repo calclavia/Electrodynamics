@@ -17,6 +17,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.render.RenderFlatWire;
+import universalelectricity.api.energy.IConductor;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -305,7 +306,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				int absDir = Rotation.rotateSide(this.side, r);
 
 				// Check direct connection.
-				this.setExternalConnection(absDir);
+				this.setExternalConnection(r, absDir);
 
 				// Check Corner Connection
 				BlockCoord cornerPos = new BlockCoord(tile());
@@ -354,27 +355,29 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		}
 
 		// Connect to the face of the block the wire is placed on.
-		this.setExternalConnection(this.side);
+		this.setExternalConnection(0, this.side);
 
 		this.getNetwork().reconstruct();
 	}
 
-	public boolean setExternalConnection(int absSide)
+	public boolean setExternalConnection(int r, int absSide)
 	{
-		if (this.maskOpen(absSide))
+		BlockCoord pos = new BlockCoord(tile()).offset(absSide);
+
+		/**
+		 * Look for an external wire connection.
+		 */
+		TileMultipart t = Utility.getMultipartTile(world(), pos);
+
+		if (t != null && r != -1)
 		{
-			BlockCoord pos = new BlockCoord(tile()).offset(absSide);
+			TMultiPart tp = t.partMap(this.side);
 
-			/**
-			 * Look for an external wire connection.
-			 */
-			TileMultipart t = Utility.getMultipartTile(world(), pos);
-
-			if (t != null)
+			if (this.canConnectTo(tp))
 			{
-				TMultiPart tp = t.partMap(this.side);
-
-				if (this.canConnectTo(tp))
+				// Check the wire we are connecting to and see if THAT block can accept this one.
+				int otherR = (r + 2) % 4;
+				if (((PartFlatWire) tp).canConnectTo(this) && ((PartFlatWire) tp).maskOpen(otherR))
 				{
 					// We found a wire! Merge connection.
 					this.connections[absSide] = tp;
@@ -382,18 +385,17 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 					return true;
 				}
 			}
+		}
 
-			/**
-			 * Look for an external energy handler.
-			 */
-			TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
+		/**
+		 * Look for an external energy handler.
+		 */
+		TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
 
-			if (this.canConnectTo(tileEntity))
-			{
-				System.out.println("FOUND TE");
-				this.connections[absSide] = tileEntity;
-				return true;
-			}
+		if (this.canConnectTo(tileEntity))
+		{
+			this.connections[absSide] = tileEntity;
+			return true;
 		}
 
 		return false;
