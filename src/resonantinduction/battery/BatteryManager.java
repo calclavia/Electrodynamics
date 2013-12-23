@@ -3,7 +3,7 @@ package resonantinduction.battery;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import universalelectricity.api.item.IElectricalItem;
+import universalelectricity.api.item.IEnergyItem;
 
 public class BatteryManager
 {
@@ -33,7 +33,7 @@ public class BatteryManager
 		@Override
 		public boolean isItemValid(ItemStack itemstack)
 		{
-			return itemstack.getItem() instanceof IElectricalItem;
+			return itemstack.getItem() instanceof IEnergyItem;
 		}
 	}
 }

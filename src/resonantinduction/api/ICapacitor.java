@@ -1,12 +1,12 @@
 package resonantinduction.api;
 
-import universalelectricity.api.item.IElectricalItem;
+import universalelectricity.api.item.IEnergyItem;
 
 /**
  * @author Calclavia
  * 
  */
-public interface ICapacitor extends IElectricalItem
+public interface ICapacitor extends IEnergyItem
 {
 
 }

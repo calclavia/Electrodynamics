@@ -3,7 +3,6 @@ package resonantinduction.wire.render;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.Icon;
 import resonantinduction.wire.part.PartFlatWire;
 import codechicken.lib.lighting.LightModel;
