@@ -187,7 +187,7 @@ public class ResonantInduction
 		{
 			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
 			GameRegistry.registerBlock(blockAdvancedFurnace, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
-			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, blockAdvancedFurnace.getUnlocalizedName());
+			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
 		}
 
 		CONFIGURATION.save();
