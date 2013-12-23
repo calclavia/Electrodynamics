@@ -215,6 +215,8 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		}
 
 		this.recalculateConnections();
+		
+		super.onChunkLoad();
 	}
 
 	@Override
@@ -257,6 +259,8 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 			this.recalculateConnections();
 		}
+		
+		super.onPartChanged(part);
 	}
 
 	@Override
@@ -276,6 +280,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 			this.recalculateConnections();
 		}
+		super.onNeighborChanged();
 	}
 
 	@Override

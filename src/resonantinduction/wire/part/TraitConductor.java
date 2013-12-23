@@ -90,7 +90,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	{
 		for (IConductor conductor : this.interfaces)
 		{
-			if (conductor.canConnect(direction))
+			if (conductor.canConnect(direction.getOpposite()))
 			{
 				return true;
 			}
