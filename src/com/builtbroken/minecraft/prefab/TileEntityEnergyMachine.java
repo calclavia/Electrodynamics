@@ -102,6 +102,13 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return false;
     }
 
+    @Override
+    public void updateContainingBlockInfo()
+    {
+        super.updateContainingBlockInfo();
+        //TODO use this to reset any values that are based on the block as this gets called when the block changes
+    }
+
     /* ********************************************
      * Electricity logic
      ***********************************************/
@@ -353,14 +360,14 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         super.readFromNBT(nbt);
 
-        NBTBase tag = nbt.getTag("energy");
+        NBTBase tag = nbt.getTag("energyStored");
         if (tag instanceof NBTTagFloat)
         {
-            this.energyStored = (long) nbt.getFloat("energyStored") * 1000;
+            this.setEnergy(ForgeDirection.UNKNOWN, (long) nbt.getFloat("energyStored") * 1000);
         }
         else if (tag instanceof NBTTagLong)
         {
-            this.energyStored = nbt.getLong("energyStored");
+            this.setEnergy(ForgeDirection.UNKNOWN, nbt.getLong("energyStored"));
         }
 
         runWithoutPower = !nbt.getBoolean("shouldPower");
@@ -372,7 +379,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         super.writeToNBT(nbt);
         nbt.setBoolean("shouldPower", !runWithoutPower);
-        nbt.setLong("energyStored", this.energyStored);
+        nbt.setLong("energyStored", this.getEnergyStored());
         nbt.setBoolean("isRunning", this.functioning);
     }
 
