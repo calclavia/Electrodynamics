@@ -30,6 +30,8 @@ import cpw.mods.fml.common.network.Player;
  */
 public class TileBattery extends TileEntityElectrical implements IPacketSender, IPacketReceiver
 {
+	public static final long STORAGE = 10000000;
+
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);

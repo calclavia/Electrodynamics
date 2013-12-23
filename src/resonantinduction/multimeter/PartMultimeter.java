@@ -371,14 +371,7 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	{
 		if (pass == 0)
 		{
-			GL11.glDisable(GL11.GL_LIGHTING);
-			TextureUtils.bindAtlas(0);
-			CCRenderState.useModelColours(true);
-			CCRenderState.startDrawing(7);
 			RenderMultimeter.render(this, pos.x, pos.y, pos.z);
-			CCRenderState.draw();
-			CCRenderState.setColour(-1);
-			GL11.glEnable(GL11.GL_LIGHTING);
 		}
 	}
 
