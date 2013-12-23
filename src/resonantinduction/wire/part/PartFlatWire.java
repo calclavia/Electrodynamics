@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -19,7 +18,6 @@ import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.render.RenderFlatWire;
 import codechicken.lib.colour.Colour;
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -295,42 +293,53 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	public void recalculateConnections()
 	{
 		this.connections = new Object[6];
+		this.updateOpenConnections();
 
 		/**
-		 * Calculate all external connections of this conductor.
+		 * Check external connections.
 		 */
 		for (byte r = 0; r < 4; r++)
 		{
-			if (!maskOpen(r))
-			{
-				continue;
-			}
+			boolean didConnect = false;
 
 			int absDir = Rotation.rotateSide(this.side, r);
-			this.setExternalConnection(absDir);
 
-			// Check Corner
-			BlockCoord cornerPos = new BlockCoord(tile());
-			cornerPos.offset(absDir);
-
-			if (!canConnectThroughCorner(cornerPos, absDir ^ 1, this.side))
-				continue;
-
-			cornerPos.offset(this.side);
-			TileMultipart tpCorner = Utility.getMultipartTile(world(), cornerPos);
-
-			if (tpCorner != null)
+			if (maskOpen(r))
 			{
-				TMultiPart tp = tpCorner.partMap(absDir ^ 1);
-
-				if (this.canConnectTo(tp))
+				// Check direct connection.
+				if (this.setExternalConnection(absDir))
 				{
-					this.connections[absDir] = tp;
-					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					didConnect |= true;
+				}
+
+				// Check Corner Connection
+				BlockCoord cornerPos = new BlockCoord(tile());
+				cornerPos.offset(absDir);
+
+				if (canConnectThroughCorner(cornerPos, absDir ^ 1, this.side))
+				{
+					cornerPos.offset(this.side);
+					TileMultipart tpCorner = Utility.getMultipartTile(world(), cornerPos);
+
+					if (tpCorner != null)
+					{
+						TMultiPart tp = tpCorner.partMap(absDir ^ 1);
+
+						if (this.canConnectTo(tp))
+						{
+							// We found a wire, merge networks!
+							this.connections[absDir] = tp;
+							this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+							didConnect |= true;
+						}
+					}
 				}
 			}
 		}
 
+		/**
+		 * Check internal connections.
+		 */
 		for (byte r = 0; r < 4; r++)
 		{
 			int absDir = Rotation.rotateSide(this.side, r);
@@ -342,14 +351,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 				if (this.canConnectTo(tp))
 				{
+					// We found a wire! Merge networks!
 					this.connections[absDir] = tp;
 					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 					continue;
 				}
 			}
-
-			// Cannot find any wire connections on this side. Set null.
-			this.connections[absDir] = null;
 		}
 
 		// Connect to the face of the block the wire is placed on.
@@ -358,30 +365,36 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		this.getNetwork().reconstruct();
 	}
 
-	public void setExternalConnection(int absSide)
+	public boolean setExternalConnection(int absSide)
 	{
-		BlockCoord pos = new BlockCoord(tile()).offset(absSide);
-		TileMultipart t = Utility.getMultipartTile(world(), pos);
-
-		if (t != null)
+		if (this.maskOpen(absSide))
 		{
-			TMultiPart tp = t.partMap(this.side);
+			BlockCoord pos = new BlockCoord(tile()).offset(absSide);
+			TileMultipart t = Utility.getMultipartTile(world(), pos);
 
-			if (this.canConnectTo(tp))
+			if (t != null)
 			{
-				this.connections[absSide] = tp;
-				this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
-				return;
+				TMultiPart tp = t.partMap(this.side);
+
+				if (this.canConnectTo(tp))
+				{
+					// We found a wire! Merge connection.
+					this.connections[absSide] = tp;
+					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					return true;
+				}
+			}
+
+			TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
+
+			if (this.canConnectTo(tileEntity))
+			{
+				this.connections[absSide] = tileEntity;
+				return true;
 			}
 		}
 
-		TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
-
-		if (this.canConnectTo(tileEntity))
-		{
-			this.connections[absSide] = tileEntity;
-		}
-
+		return false;
 	}
 
 	@Override
