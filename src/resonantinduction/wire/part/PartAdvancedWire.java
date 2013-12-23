@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import calclavia.lib.prefab.CustomDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
+import resonantinduction.ResonantInduction;
 import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.api.CompatibilityModule;
 import codechicken.lib.data.MCDataInput;
@@ -56,6 +59,15 @@ public abstract class PartAdvancedWire extends PartConductor
 		}
 
 		return false;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity)
+	{
+		if (!this.isInsulated() && this.getNetwork().getLastBuffer() > 0)
+		{
+			entity.attackEntityFrom(CustomDamageSource.electrocution, this.getNetwork().getLastBuffer());
+		}
 	}
 
 	@Override

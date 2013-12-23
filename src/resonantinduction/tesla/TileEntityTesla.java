@@ -17,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -26,6 +25,7 @@ import resonantinduction.api.ITesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.CustomDamageSource;
 import calclavia.lib.tile.EnergyStorage;
 import calclavia.lib.tile.TileEntityElectrical;
 
@@ -231,7 +231,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 								{
 									if (mop.entityHit instanceof EntityLivingBase)
 									{
-										mop.entityHit.attackEntityFrom(DamageSource.magic, 4);
+										mop.entityHit.attackEntityFrom(CustomDamageSource.electrocution, 4);
 										ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 									}
 								}

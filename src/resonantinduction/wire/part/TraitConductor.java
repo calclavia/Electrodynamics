@@ -104,15 +104,18 @@ public class TraitConductor extends TileMultipart implements IConductor
 		/**
 		 * Try out different sides to try to inject energy into.
 		 */
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		if (this.partMap(from.ordinal()) == null)
 		{
-			if (dir != from.getOpposite() && dir != from)
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				TMultiPart part = this.partMap(dir.ordinal());
-
-				if (this.interfaces.contains(part))
+				if (dir != from.getOpposite())
 				{
-					return ((IConductor) part).onReceiveEnergy(from, receive, doReceive);
+					TMultiPart part = this.partMap(dir.ordinal());
+
+					if (this.interfaces.contains(part))
+					{
+						return ((IConductor) part).onReceiveEnergy(from, receive, doReceive);
+					}
 				}
 			}
 		}
