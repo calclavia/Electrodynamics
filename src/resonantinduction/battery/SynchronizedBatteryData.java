@@ -7,8 +7,8 @@ import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import resonantinduction.base.ListUtil;
+import universalelectricity.api.item.IElectricalItem;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.item.IElectricalItem;
 
 public class SynchronizedBatteryData
 {

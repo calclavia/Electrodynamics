@@ -77,7 +77,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 	public TileEntityTesla()
 	{
-		this.energyStorage = new EnergyStorage(TRANSFER_CAP);
+		this.energy = new EnergyStorage(TRANSFER_CAP);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 	{
 		super.updateEntity();
 
-		boolean doPacketUpdate = this.energyStorage.getEnergy() > 0;
+		boolean doPacketUpdate = this.energy.getEnergy() > 0;
 
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
@@ -101,7 +101,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		{
 			// this.produce();
 
-			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.energyStorage.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
+			if (this.ticks % (5 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && this.doTransfer) || (this.energy.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
 				final TileEntityTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
@@ -121,11 +121,11 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 							if (transferTile instanceof TileEntityTesla && !transferTile.isInvalid())
 							{
-								this.transfer(((TileEntityTesla) transferTile), Math.min(this.energyStorage.getEmptySpace(), TRANSFER_CAP));
+								this.transfer(((TileEntityTesla) transferTile), Math.min(this.energy.getEmptySpace(), TRANSFER_CAP));
 
 								if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 								{
-									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energyStorage.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energy.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
 							}
 						}
@@ -195,14 +195,14 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 
 					if (transferTeslaCoils.size() > 0)
 					{
-						long transferEnergy = this.energyStorage.getEnergy() / transferTeslaCoils.size();
+						long transferEnergy = this.energy.getEnergy() / transferTeslaCoils.size();
 						int count = 0;
 						boolean sentPacket = false;
 						for (ITesla tesla : transferTeslaCoils)
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 							{
-								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energyStorage.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
+								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", this.energy.getEnergy() / 25, 1.3f - 0.5f * (this.dyeID / 16f));
 							}
 
 							Vector3 targetVector = new Vector3((TileEntity) tesla);
@@ -251,7 +251,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 				this.doTransfer = false;
 			}
 
-			if (!this.worldObj.isRemote && this.energyStorage.getEnergy() > 0 != doPacketUpdate)
+			if (!this.worldObj.isRemote && this.energy.getEnergy() > 0 != doPacketUpdate)
 			{
 				this.sendPacket(2);
 			}
@@ -296,7 +296,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		{
 			case 1:
 			{
-				data.add(this.energyStorage.getEnergy());
+				data.add(this.energy.getEnergy());
 				data.add(this.dyeID);
 				data.add(this.canReceive);
 				data.add(this.attackEntities);
@@ -305,7 +305,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 			}
 			case 2:
 			{
-				data.add(this.energyStorage.getEnergy());
+				data.add(this.energy.getEnergy());
 			}
 		}
 
@@ -331,14 +331,14 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 			switch (data.readByte())
 			{
 				case 1:
-					this.energyStorage.setEnergy(data.readLong());
+					this.energy.setEnergy(data.readLong());
 					this.dyeID = data.readInt();
 					this.canReceive = data.readBoolean();
 					this.attackEntities = data.readBoolean();
 					this.isLinkedClient = data.readBoolean();
 					break;
 				case 2:
-					this.energyStorage.setEnergy(data.readLong());
+					this.energy.setEnergy(data.readLong());
 					break;
 				case 3:
 					this.doTransfer = true;
@@ -368,7 +368,7 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		{
 			if (doTransfer)
 			{
-				this.energyStorage.receiveEnergy(transferEnergy, true);
+				this.energy.receiveEnergy(transferEnergy, true);
 			}
 
 			this.sendPacket(2);
@@ -376,10 +376,10 @@ public class TileEntityTesla extends TileEntityElectrical implements ITesla, IPa
 		}
 		else
 		{
-			if (this.energyStorage.getEnergy() > 0)
+			if (this.energy.getEnergy() > 0)
 			{
-				transferEnergy += this.energyStorage.getEnergy();
-				this.energyStorage.setEnergy(0);
+				transferEnergy += this.energy.getEnergy();
+				this.energy.setEnergy(0);
 			}
 
 			return this.getControllingTelsa().teslaTransfer(transferEnergy, doTransfer);

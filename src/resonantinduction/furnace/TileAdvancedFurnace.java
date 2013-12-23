@@ -17,7 +17,7 @@ import calclavia.lib.tile.EnergyStorage;
  * @author Calclavia
  * 
  */
-public class TileEntityAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface
+public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface
 {
 	private static final float WATTAGE = 5;
 

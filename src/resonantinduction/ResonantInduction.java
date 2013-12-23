@@ -25,7 +25,7 @@ import resonantinduction.contractor.TileEntityEMContractor;
 import resonantinduction.entangler.ItemLinker;
 import resonantinduction.entangler.ItemQuantumEntangler;
 import resonantinduction.furnace.BlockAdvancedFurnace;
-import resonantinduction.furnace.TileEntityAdvancedFurnace;
+import resonantinduction.furnace.TileAdvancedFurnace;
 import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.tesla.BlockTesla;
 import resonantinduction.tesla.TileEntityTesla;
@@ -187,7 +187,7 @@ public class ResonantInduction
 		{
 			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
 			GameRegistry.registerBlock(blockAdvancedFurnace, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
-			GameRegistry.registerTileEntity(TileEntityAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
+			GameRegistry.registerTileEntity(TileAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
 		}
 
 		CONFIGURATION.save();
@@ -300,7 +300,7 @@ public class ResonantInduction
 		}
 
 		/** Inject new furnace tile class */
-		replaceTileEntity(TileEntityFurnace.class, TileEntityAdvancedFurnace.class);
+		replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
 	}
 
 	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)

@@ -3,7 +3,7 @@ package resonantinduction.battery;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import universalelectricity.core.item.IElectricalItem;
+import universalelectricity.api.item.IElectricalItem;
 
 public class BatteryManager
 {

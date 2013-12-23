@@ -70,10 +70,10 @@ public class BlockAdvancedFurnace extends BlockFurnace
 	@Override
 	public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side)
 	{
-		TileEntity tileEntity = (TileEntityAdvancedFurnace) access.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = (TileAdvancedFurnace) access.getBlockTileEntity(x, y, z);
 		int meta = access.getBlockMetadata(x, y, z);
 
-		if (((TileEntityAdvancedFurnace) tileEntity).isBurning())
+		if (((TileAdvancedFurnace) tileEntity).isBurning())
 		{
 			return side == 1 ? this.furnaceIconTop : (side == 0 ? this.furnaceIconTop : (side != meta ? this.blockIcon : this.furnaceIconFrontBurn));
 		}
@@ -92,9 +92,9 @@ public class BlockAdvancedFurnace extends BlockFurnace
 	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random par5Random)
 	{
-		TileEntity tileEntity = (TileEntityAdvancedFurnace) world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = (TileAdvancedFurnace) world.getBlockTileEntity(x, y, z);
 
-		if (((TileEntityAdvancedFurnace) tileEntity).isBurning())
+		if (((TileAdvancedFurnace) tileEntity).isBurning())
 		{
 			int l = world.getBlockMetadata(x, y, z);
 			float f = (float) x + 0.5F;
@@ -129,6 +129,6 @@ public class BlockAdvancedFurnace extends BlockFurnace
 	@Override
 	public TileEntity createNewTileEntity(World par1World)
 	{
-		return new TileEntityAdvancedFurnace();
+		return new TileAdvancedFurnace();
 	}
 }

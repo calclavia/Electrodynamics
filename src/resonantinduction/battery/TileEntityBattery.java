@@ -22,9 +22,8 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ICapacitor;
 import resonantinduction.base.ListUtil;
-import universalelectricity.api.electricity.ElectricityPack;
+import universalelectricity.api.item.IElectricalItem;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.item.IElectricalItem;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.tile.TileEntityElectrical;
@@ -37,14 +36,13 @@ import cpw.mods.fml.common.network.Player;
 /**
  * A modular battery with no GUI.
  * 
- * @author AidanBrady
+ * @author Calclavia, AidanBrady
  */
 public class TileEntityBattery extends TileEntityElectrical implements IPacketSender, IPacketReceiver, IInventory
 {
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
-
 	public SynchronizedBatteryData prevStructure;
 
 	public float clientEnergy;
@@ -81,7 +79,7 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 
 			/**
 			 * Attempt to charge entities above it.
-			 */
+			 
 			ItemStack chargeItem = null;
 
 			if (this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))
@@ -102,7 +100,7 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 							{
 								if (checkStack.getItem() instanceof IElectricalItem)
 								{
-									if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+									if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, this.energy.extractEnergy((this.getTransferThreshhold(), false).getWatts(), false) > 0)
 									{
 										chargeItem = checkStack;
 										break electricItemLoop;
@@ -119,7 +117,7 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 						{
 							if (checkStack.getItem() instanceof IElectricalItem)
 							{
-								if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false) > 0)
+								if (((IElectricalItem) checkStack.getItem()).recharge(checkStack, this.energy.extractEnergy((this.getTransferThreshhold(), false).getWatts(), false) > 0)
 								{
 									chargeItem = checkStack;
 									break electricItemLoop;
@@ -141,9 +139,9 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
 
 				float energyStored = getMaxEnergyStored();
-				float batteryNeeded = battery.recharge(itemStack, provideElectricity(this.getTransferThreshhold(), false).getWatts(), false);
+				float batteryNeeded = battery.recharge(itemStack, this.energy.extractEnergy((this.getTransferThreshhold(), false).getWatts(), false);
 				float toGive = Math.min(energyStored, Math.min(battery.getTransfer(itemStack), batteryNeeded));
-				battery.recharge(itemStack, provideElectricity(toGive, true).getWatts(), true);
+				battery.recharge(itemStack, this.energy.extractEnergy((toGive, true).getWatts(), true);
 			}
 
 			if (structure.visibleInventory[2] != null)
@@ -155,7 +153,7 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 				float batteryStored = battery.getElectricityStored(itemStack);
 				float toReceive = Math.min(energyNeeded, Math.min(this.getTransferThreshhold(), Math.min(battery.getTransfer(itemStack), batteryStored)));
 				battery.discharge(itemStack, receiveElectricity(toReceive, true), true);
-			}
+			}*/
 
 			if (prevStructure != structure)
 			{
@@ -351,124 +349,6 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 	}
 
 	@Override
-	public float receiveElectricity(ElectricityPack receive, boolean doAdd)
-	{
-		float amount = receive.getWatts();
-		float added = 0;
-
-		for (ItemStack itemStack : structure.inventory)
-		{
-			if (itemStack.getItem() instanceof IElectricalItem)
-			{
-				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
-
-				float needed = amount - added;
-				float itemAdd = Math.min(battery.getElectricityCapacity(itemStack) - battery.getElectricityStored(itemStack), needed);
-
-				if (doAdd)
-				{
-					battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) + itemAdd);
-				}
-
-				added += itemAdd;
-
-				if (amount == added)
-				{
-					break;
-				}
-			}
-		}
-
-		return added;
-	}
-
-	@Override
-	public ElectricityPack provideElectricity(ElectricityPack pack, boolean doRemove)
-	{
-		float amount = pack.getWatts();
-
-		List<ItemStack> inverse = ListUtil.inverse(structure.inventory);
-
-		float removed = 0;
-		for (ItemStack itemStack : inverse)
-		{
-			if (itemStack.getItem() instanceof IElectricalItem)
-			{
-				IElectricalItem battery = (IElectricalItem) itemStack.getItem();
-
-				float needed = amount - removed;
-				float itemRemove = Math.min(battery.getElectricityStored(itemStack), needed);
-
-				if (doRemove)
-				{
-					battery.setElectricity(itemStack, battery.getElectricityStored(itemStack) - itemRemove);
-				}
-
-				removed += itemRemove;
-
-				if (amount == removed)
-				{
-					break;
-				}
-			}
-		}
-
-		return ElectricityPack.getFromWatts(removed, this.getVoltage());
-	}
-
-	@Override
-	public float getMaxEnergyStored()
-	{
-		if (!this.worldObj.isRemote)
-		{
-			float max = 0;
-
-			for (ItemStack itemStack : this.structure.inventory)
-			{
-				if (itemStack != null)
-				{
-					if (itemStack.getItem() instanceof IElectricalItem)
-					{
-						max += ((IElectricalItem) itemStack.getItem()).getElectricityCapacity(itemStack);
-					}
-				}
-			}
-
-			return max;
-		}
-		else
-		{
-			return this.clientMaxEnergy;
-		}
-	}
-
-	@Override
-	public float getEnergyStored()
-	{
-		if (!this.worldObj.isRemote)
-		{
-			float energy = 0;
-
-			for (ItemStack itemStack : this.structure.inventory)
-			{
-				if (itemStack != null)
-				{
-					if (itemStack.getItem() instanceof IElectricalItem)
-					{
-						energy += ((IElectricalItem) itemStack.getItem()).getElectricityStored(itemStack);
-					}
-				}
-			}
-
-			return energy;
-		}
-		else
-		{
-			return clientEnergy;
-		}
-	}
-
-	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
 		structure.isMultiblock = data.readBoolean();
@@ -488,9 +368,7 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 		ArrayList data = new ArrayList();
 		data.add(structure.isMultiblock);
 
-		data.add(getEnergyStored());
 		data.add(structure.inventory.size());
-		data.add(getMaxEnergyStored());
 
 		data.add(structure.height);
 		data.add(structure.length);
@@ -638,27 +516,6 @@ public class TileEntityBattery extends TileEntityElectrical implements IPacketSe
 	public boolean isItemValidForSlot(int i, ItemStack itemsSack)
 	{
 		return itemsSack.getItem() instanceof IElectricalItem;
-	}
-
-	@Override
-	public float getRequest(ForgeDirection direction)
-	{
-		if (this.getInputDirections().contains(direction))
-		{
-			return Math.min(this.getMaxEnergyStored() - this.getEnergyStored(), this.getTransferThreshhold());
-		}
-		return 0;
-	}
-
-	@Override
-	public float getProvide(ForgeDirection direction)
-	{
-		if (this.getOutputDirections().contains(direction))
-		{
-			return Math.min(this.getEnergyStored(), this.getTransferThreshhold());
-		}
-
-		return 0;
 	}
 
 	@Override
