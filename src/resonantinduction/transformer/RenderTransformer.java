@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.render.CalclaviaRenderHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -25,35 +26,49 @@ public class RenderTransformer
 
 	public static void render(PartTransformer part, double x, double y, double z)
 	{
-		String status = StatCollector.translateToLocal(part.stepUp() ? "tooltip.transformer.stepUp" : "tooltip.transformer.stepDown");
-		String name = StatCollector.translateToLocal(ResonantInduction.itemTransformer.getUnlocalizedName() + "." + (int) Math.pow(2, part.multiplier + 1) + "x.name");
+		String status = TranslationHelper.getLocal((part.stepUp() ? "tooltip.transformer.stepUp" : "tooltip.transformer.stepDown"));
 
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		MovingObjectPosition movingPosition = player.rayTrace(5, 1f);
 
 		if (movingPosition != null)
 		{
-			if (new Vector3(x, y, z).equals(new Vector3(movingPosition)))
+			if (new Vector3(part.x(), part.y(), part.z()).equals(new Vector3(movingPosition)))
 			{
-				CalclaviaRenderHelper.renderFloatingText(status, (float) ((float) x + .5), (float) y - 1, (float) ((float) z + .5));
-				CalclaviaRenderHelper.renderFloatingText(name, (float) ((float) x + .5), (float) y - .70F, (float) ((float) z + .5));
+				CalclaviaRenderHelper.renderFloatingText(status, (float) (x + 0.5), (float) (y - 1), (float) (z + 0.5));
 			}
 		}
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		GL11.glRotatef(90, 0.0F, 1.0F, 0.0F);
+
+		switch (part.side)
+		{
+			case 1:
+				GL11.glRotatef(180, 0, 0, 1);
+				GL11.glTranslatef(0, -2, 0);
+				break;
+			case 2:
+				GL11.glRotatef(90, 1, 0, 0);
+				GL11.glTranslatef(0, -1, -1);
+				break;
+			case 3:
+				GL11.glRotatef(-90, 1, 0, 0);
+				GL11.glTranslatef(0, -1, 1);
+				break;
+			case 4:
+				GL11.glRotatef(90, 0, 0, 1);
+				GL11.glTranslatef(1, -1,0);
+				break;
+			case 5:
+				GL11.glRotatef(-90, 0, 0, 1);
+				GL11.glTranslatef(-1, -1, 0);
+				break;
+		}
+
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		MODEL.render(0.0625F);
-		//this.model.renderCores(te.getInput(), te.getOutput(), 0.0625F);
-
-		// this.bindTexture(TextureLocations.MODEL_TRANSFORMER_INPUT);
-		//this.model.renderIO(te.getInput(), 0.0625F);
-
-		// this.bindTexture(TextureLocations.MODEL_TRANSFORMER_OUTPUT);
-		//this.model.renderIO(te.getOutput(), 0.0625F);
-
 		GL11.glPopMatrix();
 	}
 }

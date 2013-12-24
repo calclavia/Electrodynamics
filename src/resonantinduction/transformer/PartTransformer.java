@@ -11,6 +11,9 @@ import net.minecraft.util.MovingObjectPosition;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
+import resonantinduction.multimeter.PartMultimeter.DetectMode;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.TextureUtils;
 import codechicken.lib.vec.Cuboid6;
@@ -40,13 +43,25 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 		}
 	}
 
-	private int side;
+	public int side;
 	private boolean stepUp;
 	public int multiplier;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
 		this.side = (byte) (side ^ 1);
+	}
+
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		this.side = packet.readByte();
+	}
+
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		packet.writeByte(this.side);
 	}
 
 	public boolean stepUp()
@@ -109,14 +124,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	{
 		if (pass == 0)
 		{
-			GL11.glDisable(GL11.GL_LIGHTING);
-			TextureUtils.bindAtlas(0);
-			CCRenderState.useModelColours(true);
-			CCRenderState.startDrawing(7);
 			RenderTransformer.render(this, pos.x, pos.y, pos.z);
-			CCRenderState.draw();
-			CCRenderState.setColour(-1);
-			GL11.glEnable(GL11.GL_LIGHTING);
 		}
 	}
 
