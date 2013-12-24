@@ -15,22 +15,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
-
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.PartAdvanced;
-import universalelectricity.api.CompatibilityType;
+import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
-import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnectable;
-import buildcraft.api.power.IPowerReceptor;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.TextureUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
@@ -38,8 +31,6 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.TileEnergyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -212,35 +203,15 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 		return ForgeDirection.getOrientation(this.side);
 	}
 
-	// TODO: Check if side is correct.
 	public static long getDetectedEnergy(ForgeDirection side, TileEntity tileEntity)
 	{
-		if (tileEntity instanceof IEnergyContainer)
-		{
-			return ((IEnergyContainer) tileEntity).getEnergy(side);
-		}
-		else if (tileEntity instanceof IConductor)
+		if (tileEntity instanceof IConductor)
 		{
 			IEnergyNetwork network = ((IConductor) tileEntity).getNetwork();
 			return network.getLastBuffer();
 		}
-		else if (tileEntity instanceof IEnergyHandler)
-		{
-			return (long) (((IEnergyHandler) tileEntity).getEnergyStored(side) * CompatibilityType.INDUSTRIALCRAFT.reciprocal_ratio);
-		}
-		else if (tileEntity instanceof TileEnergyHandler)
-		{
-			return (long) (((TileEnergyHandler) tileEntity).getEnergyStored(side.getOpposite()) * CompatibilityType.THERMAL_EXPANSION.reciprocal_ratio);
-		}
-		else if (tileEntity instanceof IPowerReceptor)
-		{
-			if (((IPowerReceptor) tileEntity).getPowerReceiver(side) != null)
-			{
-				return (long) (((IPowerReceptor) tileEntity).getPowerReceiver(side).getEnergyStored() * CompatibilityType.BUILDCRAFT.reciprocal_ratio);
-			}
-		}
 
-		return 0;
+		return CompatibilityModule.getEnergy(tileEntity, side);
 	}
 
 	public void updateDetection(long detected)

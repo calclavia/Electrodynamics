@@ -8,9 +8,10 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
+import universalelectricity.api.energy.EnergyStorageHandler;
+import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.tile.EnergyStorage;
 
 /**
  * Meant to replace the furnace class.
@@ -19,11 +20,11 @@ import calclavia.lib.tile.EnergyStorage;
  * 
  */
 @UniversalClass
-public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface
+public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface, IEnergyContainer
 {
 	private static final float WATTAGE = 5;
 
-	private EnergyStorage energy = new EnergyStorage(ResonantInduction.FURNACE_WATTAGE * 5);
+	private EnergyStorageHandler energy = new EnergyStorageHandler(ResonantInduction.FURNACE_WATTAGE * 5);
 
 	@Override
 	public void updateEntity()
@@ -192,5 +193,23 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 	public long onExtractEnergy(ForgeDirection from, long request, boolean doProvide)
 	{
 		return this.energy.extractEnergy(request, doProvide);
+	}
+
+	@Override
+	public void setEnergy(ForgeDirection from, long energy)
+	{
+		this.energy.setEnergy(energy);
+	}
+
+	@Override
+	public long getEnergy(ForgeDirection from)
+	{
+		return this.energy.getEnergy();
+	}
+
+	@Override
+	public long getEnergyCapacity(ForgeDirection from)
+	{
+		return this.energy.getEnergyCapacity();
 	}
 }

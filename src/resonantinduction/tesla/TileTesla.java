@@ -22,11 +22,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.tile.EnergyStorage;
 import calclavia.lib.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -77,7 +77,7 @@ public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSe
 
 	public TileTesla()
 	{
-		this.energy = new EnergyStorage(TRANSFER_CAP);
+		this.energy = new EnergyStorageHandler(TRANSFER_CAP);
 	}
 
 	@Override

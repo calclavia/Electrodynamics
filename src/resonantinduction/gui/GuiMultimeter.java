@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import resonantinduction.ResonantInduction;
 import resonantinduction.multimeter.ContainerMultimeter;
 import resonantinduction.multimeter.PartMultimeter;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -75,8 +76,10 @@ public class GuiMultimeter extends GuiContainerBase
 	{
 		String s = TranslationHelper.getLocal("tile.resonantinduction:multimeter.name");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
-		this.fontRenderer.drawString("Average Energy: " + Math.round(this.multimeter.getAverageDetectedEnergy()) + " J", 35, 25, 4210752);
-		this.fontRenderer.drawString("Energy: " + Math.round(this.multimeter.getDetectedEnergy()) + " J", 35, 35, 4210752);
+		this.fontRenderer.drawString("Average Energy:", 35, 15, 4210752);
+		this.renderUniversalDisplay(35, 25, this.multimeter.getAverageDetectedEnergy(), par1, par2, Unit.JOULES);
+		this.fontRenderer.drawString("Energy:", 35, 35, 4210752);
+		this.renderUniversalDisplay(35, 45, this.multimeter.getDetectedEnergy(), par1, par2, Unit.JOULES);
 		this.fontRenderer.drawString("Output Redstone If... ", 35, 54, 4210752);
 		this.fontRenderer.drawString(this.multimeter.getMode().display, 35, 65, 4210752);
 		this.fontRenderer.drawString("KiloJoules", 35, 100, 4210752);
