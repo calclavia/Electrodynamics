@@ -55,17 +55,6 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	@Override
-	public void preRemove()
-	{
-		if (!world().isRemote)
-		{
-			this.getNetwork().split(this);
-		}
-
-		super.preRemove();
-	}
-
-	@Override
 	public boolean doesTick()
 	{
 		return false;
@@ -131,11 +120,19 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	@Override
-	public void onWorldSeparate()
+	public void preRemove()
 	{
-		if (tile() instanceof IEnergyTile && !world().isRemote)
+		if (!world().isRemote)
 		{
-			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
+			this.getNetwork().split(this);
+			
+			if (tile() instanceof IEnergyTile)
+			{
+				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
+			}
 		}
+
+		super.preRemove();
+
 	}
 }

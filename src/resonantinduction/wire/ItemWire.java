@@ -83,10 +83,10 @@ public class ItemWire extends JItemMultiPart
 		}
 		else
 		{
-			list.add("Resistance: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
-			list.add("Current Capacity: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
-			list.add("Shock Damage: " + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
-			list.addAll(Calclavia.splitStringPerWord("The maximum energy transfer rate can be increased and the energy loss may be reduced by using higher the voltage of the network.", 5));
+			list.add(EnumColor.AQUA + "Resistance: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
+			list.add(EnumColor.AQUA + "Current Capacity: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
+			list.add(EnumColor.AQUA + "Shock Damage: " + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
+			list.addAll(Calclavia.splitStringPerWord("The energy transfer rate can be increased and the energy loss may be reduced by using a higher the voltage.", 5));
 		}
 	}
 

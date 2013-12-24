@@ -16,17 +16,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.PartAdvanced;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.net.IConnectable;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
+import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
+import codechicken.microblock.FaceMicroClass;
+import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TFacePart;
@@ -40,17 +40,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends PartAdvanced implements IConnectable, TFacePart, JNormalOcclusion
+public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion
 {
-	public static Cuboid6[] bounds = new Cuboid6[6];
+	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
 	static
 	{
-		// Subtract the box a little because we'd like things like posts to get first hit
-		Cuboid6 selection = new Cuboid6(0, 0, 0, 1, (2) / 16D, 1).expand(-0.005);
-		for (int s = 0; s < 6; s++)
+		bounds[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
+		bounds[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
+		for (int s = 1; s < 6; s++)
 		{
-			bounds[s] = selection.copy().apply(Rotation.sideRotations[s].at(Vector3.center));
+			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
+			bounds[s][0] = bounds[0][0].copy().apply(t);
+			bounds[s][1] = bounds[0][1].copy().apply(t);
 		}
 	}
 
@@ -76,6 +78,7 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	private long detectedAverageEnergy;
 	public boolean redstoneOn;
 	private byte side;
+	private int ticks;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -93,6 +96,8 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	public void update()
 	{
 		super.update();
+
+		this.ticks++;
 
 		if (!world().isRemote)
 		{
@@ -270,12 +275,6 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return direction == getDirection();
-	}
-
-	@Override
 	public String getType()
 	{
 		return "resonant_induction_multimeter";
@@ -288,9 +287,9 @@ public class PartMultimeter extends PartAdvanced implements IConnectable, TFaceP
 	}
 
 	@Override
-	public Iterable<IndexedCuboid6> getSubParts()
+	public Cuboid6 getBounds()
 	{
-		return Arrays.asList(new IndexedCuboid6(0, bounds[side]));
+		return FaceMicroClass.aBounds()[0x10 | this.side];
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 			TMultiPart part = this.partMap(dir.ordinal());
 
 			if (this.icInterfaces.contains(part))
-			{System.out.println("DEMAND"+((IEnergySink) part).demandedEnergyUnits());
+			{
 				return ((IEnergySink) part).demandedEnergyUnits();
 			}
 		}
