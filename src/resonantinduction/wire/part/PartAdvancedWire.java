@@ -78,9 +78,9 @@ public abstract class PartAdvancedWire extends PartConductor
 	}
 
 	@Override
-	public long getTransferCapacity()
+	public long getCurrentCapacity()
 	{
-		return this.getMaterial().maxAmps * UniversalElectricity.DEFAULT_VOLTAGE;
+		return this.getMaterial().maxAmps;
 	}
 
 	/**

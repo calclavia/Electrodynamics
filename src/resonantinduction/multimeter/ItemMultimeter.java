@@ -14,6 +14,7 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class ItemMultimeter extends ItemMultipartBase
 {
@@ -27,7 +28,11 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		pos.offset(side ^ 1, -1);
+		if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart)
+		{
+			pos.offset(side ^ 1, -1);
+		}
+		
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)

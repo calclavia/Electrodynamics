@@ -59,7 +59,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Calclavia
  * 
  */
-@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = ResonantInduction.VERSION)
+@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = ResonantInduction.VERSION, dependencies = "before:ThermalExpansion;before:IC2")
 @NetworkMod(channels = ResonantInduction.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction

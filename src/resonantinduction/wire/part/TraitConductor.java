@@ -149,7 +149,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	}
 
 	@Override
-	public long getTransferCapacity()
+	public long getCurrentCapacity()
 	{
 		long capacitance = 0;
 
@@ -157,7 +157,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 		{
 			for (IConductor conductor : this.ueInterfaces)
 			{
-				capacitance += conductor.getTransferCapacity();
+				capacitance += conductor.getCurrentCapacity();
 			}
 
 			capacitance /= this.ueInterfaces.size();

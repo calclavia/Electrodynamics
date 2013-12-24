@@ -10,12 +10,17 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
+
+import org.lwjgl.input.Keyboard;
+
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
 import resonantinduction.Utility;
 import resonantinduction.wire.part.PartFlatWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import calclavia.lib.Calclavia;
+import calclavia.lib.render.EnumColor;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;
@@ -72,9 +77,17 @@ public class ItemWire extends JItemMultiPart
 	@Override
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
-		list.add("Resistance: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
-		list.add("Max Amperage: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
-		list.add("Shock Damage: " + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
+		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		{
+			list.add("Hold " + EnumColor.AQUA + "shift" + EnumColor.GREY + " for more information");
+		}
+		else
+		{
+			list.add("Resistance: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
+			list.add("Max Amperage: " + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
+			list.add("Shock Damage: " + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
+			list.addAll(Calclavia.splitStringPerWord("The maximum transfer capacity can be increased and the energy loss may be reduced by using higher voltage.", 5));
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
