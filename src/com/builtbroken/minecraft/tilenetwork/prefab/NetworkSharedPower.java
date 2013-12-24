@@ -8,7 +8,7 @@ import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 
 /** Used for tile networks that only need to share power or act like a group battery that doesn't
  * store power on world save
- * 
+ *
  * @author DarkGuardsman */
 public class NetworkSharedPower extends NetworkTileEntities implements IPowerLess
 {
@@ -28,7 +28,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
 
     public long addPower(TileEntity entity, long receive, boolean doReceive)
     {
-        if (this.networkMembers.contains(entity) && !this.runPowerLess() && receive > 0 && this.runPowerLess)
+        if (this.networkMembers.contains(entity) && !this.runPowerLess() && receive > 0)
         {
             long prevEnergyStored = this.getEnergy();
             long newStoredEnergy = Math.min(this.getEnergy() + receive, this.getEnergyCapacity());
@@ -101,27 +101,15 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
     public void setEnergy(long energy)
     {
         this.energy = energy;
-        if (this.energy > this.getEnergyCapacity())
-        {
-            this.energy = this.getEnergyCapacity();
-        }
     }
 
     public long getEnergy()
     {
-        if (this.energy < 0)
-        {
-            this.energy = 0;
-        }
         return this.energy;
     }
 
     public long getEnergyCapacity()
     {
-        if (this.energyMax < 0)
-        {
-            this.energyMax = Math.abs(this.energyMax);
-        }
         return this.energyMax;
     }
 
@@ -152,11 +140,14 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
     {
         this.setEnergy(0);
         this.cleanUpMembers();
+        this.energyMax = 0;
         for (INetworkPart part : this.getMembers())
         {
             if (part instanceof INetworkEnergyPart)
             {
+                this.energyMax += ((INetworkEnergyPart) part).getPartMaxEnergy();
                 this.setEnergy(this.getEnergy() + ((INetworkEnergyPart) part).getPartEnergy());
+
             }
         }
     }

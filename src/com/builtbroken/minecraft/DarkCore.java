@@ -7,8 +7,6 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import universalelectricity.api.Compatibility;
-import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.helpers.PlayerKeyHandler;
