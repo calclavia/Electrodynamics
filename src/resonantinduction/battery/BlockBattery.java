@@ -34,6 +34,16 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	{
+		if (!world.isRemote)
+		{
+			System.out.println(((TileBattery) world.getBlockTileEntity(x, y, z)).structure.hashCode());
+		}
+		return true;
+	}
+
+	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
 		if (!world.isRemote)
@@ -41,7 +51,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 			if (id == blockID)
 			{
 				TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-				battery.update();
+				battery.updateStructure();
 			}
 		}
 	}
@@ -52,7 +62,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 		if (!world.isRemote)
 		{
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.update();
+			battery.updateStructure();
 		}
 	}
 

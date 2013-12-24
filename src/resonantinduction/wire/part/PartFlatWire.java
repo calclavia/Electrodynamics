@@ -215,7 +215,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		}
 
 		this.recalculateConnections();
-		
+
 		super.onChunkLoad();
 	}
 
@@ -259,7 +259,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 			this.recalculateConnections();
 		}
-		
+
 		super.onPartChanged(part);
 	}
 
@@ -339,7 +339,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 						}
 					}
 				}
-				
+
 				if (!calculatedSides[absDir])
 				{
 					this.disconnect(absDir);
@@ -902,5 +902,4 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		CCRenderState.reset();
 		RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
 	}
-
 }

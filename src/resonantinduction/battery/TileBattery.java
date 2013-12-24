@@ -4,19 +4,21 @@
 package resonantinduction.battery;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import universalelectricity.api.energy.EnergyStorageHandler;
+import universalelectricity.api.UniversalClass;
+import universalelectricity.api.energy.IEnergyContainer;
+import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.tile.TileEntityElectrical;
+import calclavia.lib.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -24,28 +26,43 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 /**
- * A modular battery with no GUI.
+ * A modular battery.
  * 
- * @author Calclavia, AidanBrady
+ * @author Calclavia
  */
-public class TileBattery extends TileEntityElectrical implements IPacketSender, IPacketReceiver
+@UniversalClass
+public class TileBattery extends TileAdvanced implements IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
-	public static final long STORAGE = 10000000;
+	public static final long STORAGE = 100000000;
 
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
-	public SynchronizedBatteryData structure = SynchronizedBatteryData.getBase(this);
-	public SynchronizedBatteryData prevStructure;
+	public BatteryStructure structure = new BatteryStructure(this);
 
 	public float clientEnergy;
 	public int clientCells;
 	public float clientMaxEnergy;
 
-	private EnumSet inputSides = EnumSet.allOf(ForgeDirection.class);
-
-	public TileBattery()
+	@Override
+	public void initiate()
 	{
-		this.energy = new EnergyStorageHandler(1000);
+		this.updateStructure();
+	}
+
+	public void updateStructure()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+
+				if (tile instanceof TileBattery)
+				{
+					this.structure.merge((TileBattery) tile);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -55,30 +72,6 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.ticks == 5 && !this.structure.isMultiblock)
-			{
-				this.update();
-			}
-
-			if (this.prevStructure != this.structure)
-			{
-				for (EntityPlayer player : playersUsing)
-				{
-					player.closeScreen();
-				}
-
-				updateClient();
-			}
-
-			this.prevStructure = structure;
-
-			this.structure.wroteNBT = false;
-			this.structure.didTick = false;
-
-			if (this.playersUsing.size() > 0)
-			{
-				updateClient();
-			}
 
 			for (EntityPlayer player : this.playersUsing)
 			{
@@ -87,6 +80,11 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 
 			this.produce();
 		}
+	}
+
+	private void produce()
+	{
+
 	}
 
 	public float getTransferThreshhold()
@@ -99,19 +97,11 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 		PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
 	}
 
-	public void updateAllClients()
-	{
-		for (Vector3 vec : structure.locations)
-		{
-			TileBattery battery = (TileBattery) vec.getTileEntity(worldObj);
-			PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(battery, battery.getPacketData(0).toArray()));
-		}
-	}
-
 	@Override
-	public void readFromNBT(NBTTagCompound nbtTags)
+	public void readFromNBT(NBTTagCompound nbt)
 	{
-		super.readFromNBT(nbtTags);
+		super.readFromNBT(nbt);
+		this.structure.readFromNBT(nbt);
 	}
 
 	@Override
@@ -121,20 +111,8 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 
 		if (!structure.wroteNBT)
 		{
+			this.structure.writeToNBT(nbt);
 			structure.wroteNBT = true;
-		}
-	}
-
-	public void update()
-	{
-		if (!worldObj.isRemote && (structure == null || !structure.didTick))
-		{
-			new BatteryUpdateProtocol(this).updateBatteries();
-
-			if (structure != null)
-			{
-				structure.didTick = true;
-			}
 		}
 	}
 
@@ -162,31 +140,38 @@ public class TileBattery extends TileEntityElectrical implements IPacketSender, 
 	}
 
 	@Override
-	public EnumSet<ForgeDirection> getInputDirections()
+	public boolean canConnect(ForgeDirection direction)
 	{
-		return this.inputSides;
+		return true;
 	}
 
 	@Override
-	public EnumSet<ForgeDirection> getOutputDirections()
+	public void setEnergy(ForgeDirection from, long energy)
 	{
-		return EnumSet.complementOf(this.inputSides);
+		this.structure.setEnergy(energy);
 	}
 
-	/**
-	 * Toggles the input/output sides of the battery.
-	 */
-	public boolean toggleSide(ForgeDirection orientation)
+	@Override
+	public long getEnergy(ForgeDirection from)
 	{
-		if (this.inputSides.contains(orientation))
-		{
-			this.inputSides.remove(orientation);
-			return false;
-		}
-		else
-		{
-			this.inputSides.add(orientation);
-			return true;
-		}
+		return this.structure.getEnergy();
+	}
+
+	@Override
+	public long getEnergyCapacity(ForgeDirection from)
+	{
+		return this.structure.getEnergyCapacity();
+	}
+
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+	{
+		return this.structure.receiveEnergy(receive, doReceive);
+	}
+
+	@Override
+	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
+	{
+		return this.structure.extractEnergy(extract, doExtract);
 	}
 }

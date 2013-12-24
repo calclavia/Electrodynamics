@@ -27,7 +27,7 @@ import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileAdvanced;
 import calclavia.lib.utility.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -37,7 +37,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEMLevitator extends TileEntityAdvanced implements IPacketReceiver, IPacketSender
+public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IPacketSender
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;

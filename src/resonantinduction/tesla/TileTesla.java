@@ -607,18 +607,4 @@ public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSe
 			}
 		}
 	}
-
-	@Override
-	public EnumSet<ForgeDirection> getInputDirections()
-	{
-		EnumSet input = EnumSet.allOf(ForgeDirection.class);
-		input.remove(ForgeDirection.DOWN);
-		return input;
-	}
-
-	@Override
-	public EnumSet<ForgeDirection> getOutputDirections()
-	{
-		return EnumSet.of(ForgeDirection.DOWN);
-	}
 }

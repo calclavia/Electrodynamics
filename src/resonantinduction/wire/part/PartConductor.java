@@ -1,9 +1,9 @@
 package resonantinduction.wire.part;
 
-import codechicken.multipart.TMultiPart;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyTile;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,6 +15,7 @@ import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import codechicken.multipart.TMultiPart;
 
 @UniversalClass
 public abstract class PartConductor extends PartAdvanced implements IConductor
@@ -22,6 +23,8 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	private IEnergyNetwork network;
 
 	protected Object[] connections = new Object[6];
+
+	private long savedBuffer;
 
 	/**
 	 * Universal Electricity conductor functions.
@@ -168,6 +171,31 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		}
 
 		super.preRemove();
+	}
 
+	@Override
+	public long getSavedBuffer()
+	{
+		return this.savedBuffer;
+	}
+
+	@Override
+	public void setSaveBuffer(long energy)
+	{
+		this.savedBuffer = energy;
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setLong("savedBuffer", this.savedBuffer);
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		this.savedBuffer = nbt.getLong("savedBuffer");
 	}
 }
