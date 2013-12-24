@@ -12,11 +12,11 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.network.IPacketReceiver;
 import calclavia.lib.prefab.network.PacketManager;
-import calclavia.lib.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityForceField extends TileEntityAdvanced implements IPacketReceiver
+public class TileEntityForceField extends TileAdvanced implements IPacketReceiver
 {
 	private Vector3 projector = null;
 	public ItemStack camoStack = null;

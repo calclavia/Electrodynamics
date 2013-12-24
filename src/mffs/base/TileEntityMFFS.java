@@ -18,7 +18,7 @@ import calclavia.lib.IPlayerUsing;
 import calclavia.lib.prefab.network.IPacketReceiver;
 import calclavia.lib.prefab.network.PacketManager;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.tile.TileEntityAdvanced;
+import calclavia.lib.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dan200.computer.api.IPeripheral;
 
-public abstract class TileEntityMFFS extends TileEntityAdvanced implements IPacketReceiver, IPlayerUsing, IRotatable, IActivatable, IPeripheral
+public abstract class TileEntityMFFS extends TileAdvanced implements IPacketReceiver, IPlayerUsing, IRotatable, IActivatable, IPeripheral
 {
 	public enum TilePacketType
 	{
