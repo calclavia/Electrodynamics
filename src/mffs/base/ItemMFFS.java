@@ -3,12 +3,12 @@ package mffs.base;
 import java.util.List;
 
 import mffs.MFFSCreativeTab;
-import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import calclavia.lib.Calclavia;
 import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemMFFS extends Item
@@ -29,7 +29,7 @@ public class ItemMFFS extends Item
 
 		if (tooltip != null && tooltip.length() > 0)
 		{
-			info.addAll(MFFSHelper.splitStringPerWord(tooltip, 5));
+			info.addAll(Calclavia.splitStringPerWord(tooltip, 5));
 		}
 	}
 }

@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import calclavia.lib.Calclavia;
 import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemCardID extends ItemCard implements ICardIdentification
@@ -68,7 +69,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 		}
 		if (tooltip != null && tooltip.length() > 0)
 		{
-			info.addAll(MFFSHelper.splitStringPerWord(tooltip, 5));
+			info.addAll(Calclavia.splitStringPerWord(tooltip, 5));
 		}
 	}
 

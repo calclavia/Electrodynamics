@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IBiometricIdentifierLink;
@@ -22,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.Calclavia;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.prefab.network.PacketManager;
@@ -168,7 +168,7 @@ public class GuiMFFS extends GuiContainerBase
 
 		if (this.tooltip != null && this.tooltip != "")
 		{
-			this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop, MFFSHelper.splitStringPerWord(this.tooltip, 5).toArray(new String[] {}));
+			this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop, Calclavia.splitStringPerWord(this.tooltip, 5).toArray(new String[] {}));
 		}
 
 		this.tooltip = "";
