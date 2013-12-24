@@ -124,7 +124,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public void onWorldJoin()
 	{
-		if (tile() instanceof IEnergyTile)
+		if (tile() instanceof IEnergyTile && !world().isRemote)
 		{
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
 		}
@@ -133,7 +133,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public void onWorldSeparate()
 	{
-		if (tile() instanceof IEnergyTile)
+		if (tile() instanceof IEnergyTile && !world().isRemote)
 		{
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
 		}

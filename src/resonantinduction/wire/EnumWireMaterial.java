@@ -17,15 +17,15 @@ import codechicken.lib.colour.ColourRGBA;
 public enum EnumWireMaterial
 {
 	/** Copper: General. */
-	COPPER("Copper", 1.68f, 5, 10, 184, 115, 51),
+	COPPER("Copper", 1.68f, 5, 30, 184, 115, 51),
 	/** Tin: Low shock, cheap */
-	TIN("Tin", 11f, 1, 5, 132, 132, 130),
+	TIN("Tin", 11f, 1, 15, 132, 132, 130),
 	/** Iron: High Capacity */
-	IRON("Iron", 10f, 3, 80, 97, 102, 105),
+	IRON("Iron", 10f, 3, 100, 97, 102, 105),
 	/** Aluminum: High Shock */
-	ALUMINUM("Aluminum", 2.82f, 10, 70, 215, 205, 181),
+	ALUMINUM("Aluminum", 2.82f, 10, 80, 215, 205, 181),
 	/** Aluminum: Low Resistance */
-	SILVER("Silver", 1.59f, 5, 20, 192, 192, 192),
+	SILVER("Silver", 1.59f, 5, 40, 192, 192, 192),
 	/** Superconductor: Over-powered */
 	SUPERCONDUCTOR("Superconductor", 0, 10, 200, 255, 255, 1);
 
@@ -40,7 +40,7 @@ public enum EnumWireMaterial
 	{
 		this.name = name;
 		/** Multiply the realistic resistance by a factor for game balance. */
-		this.resistance = resistance * 2;
+		this.resistance = resistance;
 		this.damage = electrocutionDamage;
 		this.maxAmps = maxAmps;
 		this.color = new ColourRGBA(r, g, b, 255);

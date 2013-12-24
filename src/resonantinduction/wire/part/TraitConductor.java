@@ -12,7 +12,7 @@ import codechicken.multipart.TileMultipart;
 
 public class TraitConductor extends TileMultipart implements IConductor
 {
-	public Set<IConductor> interfaces = new HashSet<IConductor>();
+	public Set<IConductor> ueInterfaces = new HashSet<IConductor>();
 
 	@Override
 	public void copyFrom(TileMultipart that)
@@ -21,7 +21,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 
 		if (that instanceof TraitConductor)
 		{
-			this.interfaces = ((TraitConductor) that).interfaces;
+			this.ueInterfaces = ((TraitConductor) that).ueInterfaces;
 		}
 	}
 
@@ -32,7 +32,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 
 		if (part instanceof IConductor)
 		{
-			this.interfaces.add((IConductor) part);
+			this.ueInterfaces.add((IConductor) part);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 
 		if (part instanceof IConductor)
 		{
-			this.interfaces.remove(part);
+			this.ueInterfaces.remove(part);
 		}
 	}
 
@@ -51,13 +51,13 @@ public class TraitConductor extends TileMultipart implements IConductor
 	public void clearParts()
 	{
 		super.clearParts();
-		this.interfaces.clear();
+		this.ueInterfaces.clear();
 	}
 
 	@Override
 	public Object[] getConnections()
 	{
-		for (IConductor conductor : this.interfaces)
+		for (IConductor conductor : this.ueInterfaces)
 		{
 			return conductor.getConnections();
 		}
@@ -68,7 +68,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public IEnergyNetwork getNetwork()
 	{
-		for (IConductor conductor : this.interfaces)
+		for (IConductor conductor : this.ueInterfaces)
 		{
 			return conductor.getNetwork();
 		}
@@ -79,7 +79,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public void setNetwork(IEnergyNetwork network)
 	{
-		for (IConductor conductor : this.interfaces)
+		for (IConductor conductor : this.ueInterfaces)
 		{
 			conductor.setNetwork(network);
 		}
@@ -88,7 +88,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		for (IConductor conductor : this.interfaces)
+		for (IConductor conductor : this.ueInterfaces)
 		{
 			if (conductor.canConnect(direction.getOpposite()))
 			{
@@ -113,7 +113,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.interfaces.contains(part))
+					if (this.ueInterfaces.contains(part))
 					{
 						return ((IConductor) part).onReceiveEnergy(from, receive, doReceive);
 					}
@@ -135,14 +135,14 @@ public class TraitConductor extends TileMultipart implements IConductor
 	{
 		long energyLoss = 0;
 
-		if (this.interfaces.size() > 0)
+		if (this.ueInterfaces.size() > 0)
 		{
-			for (IConductor conductor : this.interfaces)
+			for (IConductor conductor : this.ueInterfaces)
 			{
 				energyLoss += conductor.getResistance();
 			}
 
-			energyLoss /= this.interfaces.size();
+			energyLoss /= this.ueInterfaces.size();
 		}
 
 		return energyLoss;
@@ -153,14 +153,14 @@ public class TraitConductor extends TileMultipart implements IConductor
 	{
 		long capacitance = 0;
 
-		if (this.interfaces.size() > 0)
+		if (this.ueInterfaces.size() > 0)
 		{
-			for (IConductor conductor : this.interfaces)
+			for (IConductor conductor : this.ueInterfaces)
 			{
 				capacitance += conductor.getTransferCapacity();
 			}
 
-			capacitance /= this.interfaces.size();
+			capacitance /= this.ueInterfaces.size();
 		}
 
 		return capacitance;

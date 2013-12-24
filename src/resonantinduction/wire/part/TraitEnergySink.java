@@ -5,8 +5,6 @@ import ic2.api.energy.tile.IEnergySink;
 import java.util.HashSet;
 import java.util.Set;
 
-import universalelectricity.api.CompatibilityType;
-import universalelectricity.api.energy.IConductor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import codechicken.multipart.TMultiPart;
@@ -14,16 +12,16 @@ import codechicken.multipart.TileMultipart;
 
 public class TraitEnergySink extends TileMultipart implements IEnergySink
 {
-	public Set<IConductor> interfaces = new HashSet<IConductor>();
+	public Set<IEnergySink> icInterfaces = new HashSet<IEnergySink>();
 
 	@Override
 	public void copyFrom(TileMultipart that)
 	{
 		super.copyFrom(that);
 
-		if (that instanceof TraitConductor)
+		if (that instanceof TraitEnergySink)
 		{
-			this.interfaces = ((TraitConductor) that).interfaces;
+			this.icInterfaces = ((TraitEnergySink) that).icInterfaces;
 		}
 	}
 
@@ -32,9 +30,9 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	{
 		super.bindPart(part);
 
-		if (part instanceof IConductor)
+		if (part instanceof IEnergySink)
 		{
-			this.interfaces.add((IConductor) part);
+			this.icInterfaces.add((IEnergySink) part);
 		}
 	}
 
@@ -43,9 +41,9 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	{
 		super.partRemoved(part, p);
 
-		if (part instanceof IConductor)
+		if (part instanceof IEnergySink)
 		{
-			this.interfaces.remove(part);
+			this.icInterfaces.remove(part);
 		}
 	}
 
@@ -53,7 +51,7 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	public void clearParts()
 	{
 		super.clearParts();
-		this.interfaces.clear();
+		this.icInterfaces.clear();
 	}
 
 	@Override
@@ -67,9 +65,9 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.interfaces.contains(part))
+					if (this.icInterfaces.contains(part))
 					{
-						return ((IConductor) part).canConnect(from);
+						return ((IEnergySink) part).acceptsEnergyFrom(emitter, from);
 					}
 				}
 			}
@@ -87,9 +85,9 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 		{
 			TMultiPart part = this.partMap(dir.ordinal());
 
-			if (this.interfaces.contains(part))
+			if (this.icInterfaces.contains(part))
 			{
-				return ((IConductor) part).onReceiveEnergy(ForgeDirection.UNKNOWN, Integer.MAX_VALUE, false) * CompatibilityType.INDUSTRIALCRAFT.ratio;
+				return ((IEnergySink) part).demandedEnergyUnits();
 			}
 		}
 
@@ -99,8 +97,6 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	@Override
 	public double injectEnergyUnits(ForgeDirection from, double amount)
 	{
-		double consumed = 0;
-
 		if (this.partMap(from.ordinal()) == null)
 		{
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -109,15 +105,15 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.interfaces.contains(part))
+					if (this.icInterfaces.contains(part))
 					{
-						consumed = ((IConductor) part).onReceiveEnergy(from, (long) (amount * CompatibilityType.INDUSTRIALCRAFT.reciprocal_ratio), true) * CompatibilityType.INDUSTRIALCRAFT.ratio;
+						return ((IEnergySink) part).injectEnergyUnits(from, amount);
 					}
 				}
 			}
 		}
 
-		return amount - consumed;
+		return amount;
 	}
 
 	@Override

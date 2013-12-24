@@ -214,7 +214,7 @@ public class ResonantInduction
 		/**
 		 * Set reference itemstacks
 		 */
-		TabRI.ITEMSTACK = new ItemStack(itemPartWire);
+		TabRI.ITEMSTACK = new ItemStack(blockBattery);
 
 		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
