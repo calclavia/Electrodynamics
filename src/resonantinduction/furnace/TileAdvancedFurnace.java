@@ -1,7 +1,15 @@
 package resonantinduction.furnace;
 
+import java.util.ArrayList;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
@@ -20,7 +28,7 @@ import universalelectricity.api.vector.Vector3;
  * 
  */
 @UniversalClass
-public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface, IEnergyContainer
+public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInterface, IEnergyContainer, IPacketSender, IPacketReceiver
 {
 	private static final float WATTAGE = 5;
 
@@ -127,7 +135,6 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 
 			if (doBlockStateUpdate != this.furnaceBurnTime > 0)
 			{
-				// TODO: Send descript packet.
 				this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 
@@ -211,5 +218,38 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 	public long getEnergyCapacity(ForgeDirection from)
 	{
 		return this.energy.getEnergyCapacity();
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
+	}
+
+	/**
+	 * 1 - Description Packet
+	 * 2 - Energy Update
+	 * 3 - Tesla Beam
+	 */
+	@Override
+	public ArrayList getPacketData(int type)
+	{
+		ArrayList data = new ArrayList();
+		data.add(this.furnaceBurnTime);
+		return data;
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	{
+		try
+		{
+			this.furnaceBurnTime = data.readInt();
+			this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

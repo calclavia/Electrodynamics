@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.BlockColored;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -214,7 +215,7 @@ public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSe
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
-							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), (float) ResonantInduction.DYE_COLORS[this.dyeID].r / 255, (float) ResonantInduction.DYE_COLORS[this.dyeID].g / 255, (float) ResonantInduction.DYE_COLORS[this.dyeID].b / 255);
+							ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), ResonantInduction.DYE_COLORS[this.dyeID]);
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 
@@ -223,7 +224,7 @@ public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSe
 								this.sendPacket(3);
 							}
 
-							/*if (this.attackEntities && this.zapCounter % 5 == 0)
+							if (this.attackEntities && this.zapCounter % 5 == 0)
 							{
 								MovingObjectPosition mop = topTeslaVector.clone().translate(0.5).rayTraceEntities(this.worldObj, targetVector.clone().translate(0.5));
 
@@ -235,7 +236,7 @@ public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSe
 										ResonantInduction.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 									}
 								}
-							}*/
+							}
 
 							if (count++ > 1)
 							{

@@ -65,12 +65,12 @@ public class CommonProxy implements IGuiHandler
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color)
 	{
-		this.renderElectricShock(world, start, target, color.r / 255, color.g / 255, color.b / 255);
+		this.renderElectricShock(world, start, target, (float) color.r / 255f, (float) color.g / 255f, (float) color.b / 255f);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color, boolean split)
 	{
-		this.renderElectricShock(world, start, target, color.r / 255, color.g / 255, color.b / 255, split);
+		this.renderElectricShock(world, start, target, (float) color.r / 255f, (float) color.g / 255f, (float) color.b / 255f, split);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target)
