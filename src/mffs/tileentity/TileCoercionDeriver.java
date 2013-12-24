@@ -16,8 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.item.IEnergyItem;
-import calclavia.lib.tile.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -52,7 +52,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 		super();
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
-		this.energy = new EnergyStorage(WATTAGE * 2);
+		this.energy = new EnergyStorageHandler(WATTAGE * 2);
 	}
 
 	@Override

@@ -8,10 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.tile.EnergyStorage;
 
 /**
  * @author Calclavia
@@ -20,7 +20,7 @@ import calclavia.lib.tile.EnergyStorage;
 @UniversalClass
 public abstract class TileMFFSElectrical extends TileEntityModuleAcceptor implements IEnergyInterface, IEnergyContainer
 {
-	protected EnergyStorage energy;
+	protected EnergyStorageHandler energy;
 
 	/**
 	 * Recharges electric item.
