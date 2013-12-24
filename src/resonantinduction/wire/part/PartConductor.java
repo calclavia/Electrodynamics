@@ -1,5 +1,6 @@
 package resonantinduction.wire.part;
 
+import codechicken.multipart.TMultiPart;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyTile;
@@ -115,7 +116,24 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	{
 		if (tile() instanceof IEnergyTile && !world().isRemote)
 		{
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
+			// Check if there's another part that's an IEnergyTile
+			boolean foundAnotherPart = false;
+
+			for (int i = 0; i < tile().partList().size(); i++)
+			{
+				TMultiPart part = tile().partMap(i);
+
+				if (part instanceof IEnergyTile)
+				{
+					foundAnotherPart = true;
+					break;
+				}
+			}
+
+			if (!foundAnotherPart)
+			{
+				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
+			}
 		}
 	}
 
@@ -125,10 +143,27 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		if (!world().isRemote)
 		{
 			this.getNetwork().split(this);
-			
+
 			if (tile() instanceof IEnergyTile)
 			{
-				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
+				// Check if there's another part that's an IEnergyTile
+				boolean foundAnotherPart = false;
+
+				for (int i = 0; i < tile().partList().size(); i++)
+				{
+					TMultiPart part = tile().partMap(i);
+
+					if (part instanceof IEnergyTile)
+					{
+						foundAnotherPart = true;
+						break;
+					}
+				}
+
+				if (!foundAnotherPart)
+				{
+					MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
+				}
 			}
 		}
 

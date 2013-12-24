@@ -226,12 +226,12 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		peakDetection = Math.max(peakDetection, detectedEnergy);
 	}
 
-	public float getDetectedEnergy()
+	public long getDetectedEnergy()
 	{
 		return detectedEnergy;
 	}
 
-	public float getAverageDetectedEnergy()
+	public long getAverageDetectedEnergy()
 	{
 		return detectedAverageEnergy;
 	}

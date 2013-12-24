@@ -92,8 +92,8 @@ public class GuiMultimeter extends GuiContainerBase
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
 		super.drawGuiContainerBackgroundLayer(f, x, y);
-		int length = Math.min((int) (this.multimeter.getDetectedEnergy() / this.multimeter.getPeak()) * 115, 115);
-		this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length, 176, 115 - length, 6, length);
+		/*int length = Math.min((int) (this.multimeter.getDetectedEnergy() / this.multimeter.getPeak()) * 115, 115);
+		this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length, 176, 115 - length, 6, length);*/
 	}
 
 	@Override

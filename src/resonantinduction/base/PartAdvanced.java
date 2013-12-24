@@ -11,12 +11,12 @@ public abstract class PartAdvanced extends TMultiPart
 	@Override
 	public void update()
 	{
-		if(ticks == 0)
+		if (ticks == 0)
 		{
 			initiate();
 		}
 
-		if(ticks >= Long.MAX_VALUE)
+		if (ticks >= Long.MAX_VALUE)
 		{
 			ticks = 1;
 		}
@@ -24,14 +24,10 @@ public abstract class PartAdvanced extends TMultiPart
 		ticks++;
 	}
 
-	@Override
-	public void onAdded()
-	{
-		world().notifyBlocksOfNeighborChange(x(), y(), z(), ((Block)MultipartProxy.block()).blockID);
-	}
-
 	/**
 	 * Called on the TileEntity's first tick.
 	 */
-	public void initiate() {}
+	public void initiate()
+	{
+	}
 }
