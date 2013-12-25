@@ -18,7 +18,7 @@ import universalelectricity.api.vector.Vector3;
  * 
  */
 @UniversalClass
-public abstract class TileMFFSElectrical extends TileEntityModuleAcceptor implements IEnergyInterface, IEnergyContainer
+public abstract class TileMFFSElectrical extends TileModuleAcceptor implements IEnergyInterface, IEnergyContainer
 {
 	protected EnergyStorageHandler energy;
 

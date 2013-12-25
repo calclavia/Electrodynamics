@@ -16,12 +16,12 @@ import mffs.render.RenderForceFieldProjector;
 import mffs.render.RenderForceManipulator;
 import mffs.render.RenderFortronCapacitor;
 import mffs.render.RenderIDCard;
-import mffs.tileentity.TileEntityBiometricIdentifier;
+import mffs.tileentity.TileBiometricIdentifier;
 import mffs.tileentity.TileCoercionDeriver;
-import mffs.tileentity.TileEntityForceFieldProjector;
-import mffs.tileentity.TileEntityForceManipulator;
-import mffs.tileentity.TileEntityFortronCapacitor;
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileForceFieldProjector;
+import mffs.tileentity.TileForceManipulator;
+import mffs.tileentity.TileFortronCapacitor;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -48,10 +48,10 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(new RenderBlockHandler());
 		RenderingRegistry.registerBlockHandler(new RenderForceField());
 		MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID.itemID, new RenderIDCard());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFortronCapacitor.class, new RenderFortronCapacitor());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFortronCapacitor.class, new RenderFortronCapacitor());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCoercionDeriver.class, new RenderCoercionDeriver());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceManipulator.class, new RenderForceManipulator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityForceFieldProjector.class, new RenderForceFieldProjector());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileForceManipulator.class, new RenderForceManipulator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileForceFieldProjector.class, new RenderForceFieldProjector());
 	}
 
 	@Override
@@ -67,29 +67,29 @@ public class ClientProxy extends CommonProxy
 
 		if (tileEntity != null)
 		{
-			if (tileEntity.getClass() == TileEntityFortronCapacitor.class)
+			if (tileEntity.getClass() == TileFortronCapacitor.class)
 			{
-				return new GuiFortronCapacitor(player, (TileEntityFortronCapacitor) tileEntity);
+				return new GuiFortronCapacitor(player, (TileFortronCapacitor) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityForceFieldProjector.class)
+			else if (tileEntity.getClass() == TileForceFieldProjector.class)
 			{
-				return new GuiForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
+				return new GuiForceFieldProjector(player, (TileForceFieldProjector) tileEntity);
 			}
 			else if (tileEntity.getClass() == TileCoercionDeriver.class)
 			{
 				return new GuiCoercionDeriver(player, (TileCoercionDeriver) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
+			else if (tileEntity.getClass() == TileBiometricIdentifier.class)
 			{
-				return new GuiBiometricIdentifier(player, (TileEntityBiometricIdentifier) tileEntity);
+				return new GuiBiometricIdentifier(player, (TileBiometricIdentifier) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityInterdictionMatrix.class)
+			else if (tileEntity.getClass() == TileInterdictionMatrix.class)
 			{
-				return new GuiInterdictionMatrix(player, (TileEntityInterdictionMatrix) tileEntity);
+				return new GuiInterdictionMatrix(player, (TileInterdictionMatrix) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityForceManipulator.class)
+			else if (tileEntity.getClass() == TileForceManipulator.class)
 			{
-				return new GuiForceManipulator(player, (TileEntityForceManipulator) tileEntity);
+				return new GuiForceManipulator(player, (TileForceManipulator) tileEntity);
 			}
 		}
 

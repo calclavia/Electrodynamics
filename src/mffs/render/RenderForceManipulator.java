@@ -1,7 +1,7 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.TileEntityMFFS;
+import mffs.base.TileMFFS;
 import mffs.render.model.ModelForceManipulator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +24,7 @@ public class RenderForceManipulator extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		TileEntityMFFS tileEntity = (TileEntityMFFS) t;
+		TileMFFS tileEntity = (TileMFFS) t;
 
 		/**
 		 * Render Model

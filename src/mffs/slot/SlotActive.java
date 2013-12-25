@@ -1,12 +1,12 @@
 package mffs.slot;
 
-import mffs.base.TileEntityInventory;
+import mffs.base.TileMFFSInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class SlotActive extends SlotBase
 {
-	public SlotActive(TileEntityInventory tileEntity, int id, int par4, int par5)
+	public SlotActive(TileMFFSInventory tileEntity, int id, int par4, int par5)
 	{
 		super(tileEntity, id, par4, par5);
 	}

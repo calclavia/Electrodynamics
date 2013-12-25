@@ -9,13 +9,13 @@ import mffs.Settings;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
-import mffs.base.TileEntityFrequency;
+import mffs.base.TileFrequency;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityBiometricIdentifier extends TileEntityFrequency implements IBiometricIdentifier
+public class TileBiometricIdentifier extends TileFrequency implements IBiometricIdentifier
 {
 	public static final int SLOT_COPY = 12;
 

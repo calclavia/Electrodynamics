@@ -1,8 +1,8 @@
 package mffs.base;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
@@ -18,7 +18,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.TileEntityMultiBlockPart;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -31,7 +31,7 @@ import dan200.computer.api.ILuaContext;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityInventory extends TileEntityMFFS implements IInventory
+public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 {
 	/**
 	 * The inventory of the TileEntity.
@@ -39,9 +39,9 @@ public abstract class TileEntityInventory extends TileEntityMFFS implements IInv
 	protected ItemStack[] inventory = new ItemStack[this.getSizeInventory()];
 
 	@Override
-	public List getPacketUpdate()
+	public ArrayList getPacketData(int packetID)
 	{
-		List objects = super.getPacketUpdate();
+		ArrayList objects = super.getPacketData(packetID);
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 		objects.add(nbt);
@@ -57,7 +57,7 @@ public abstract class TileEntityInventory extends TileEntityMFFS implements IInv
 		{
 			if (packetID == TilePacketType.DESCRIPTION.ordinal() || packetID == TilePacketType.INVENTORY.ordinal())
 			{
-				this.readFromNBT(PacketManager.readNBTTagCompound(dataStream));
+				this.readFromNBT(PacketHandler.readNBTTagCompound(dataStream));
 			}
 		}
 	}
@@ -66,7 +66,7 @@ public abstract class TileEntityInventory extends TileEntityMFFS implements IInv
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.INVENTORY.ordinal(), nbt));
+		PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.INVENTORY.ordinal(), nbt));
 	}
 
 	/**

@@ -3,7 +3,7 @@ package mffs.event;
 import java.util.ArrayList;
 
 import mffs.IDelayedEventHandler;
-import mffs.base.TileEntityInventory;
+import mffs.base.TileMFFSInventory;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -11,9 +11,9 @@ import universalelectricity.api.vector.Vector3;
 
 public class BlockInventoryDropDelayedEvent extends BlockDropDelayedEvent
 {
-	private TileEntityInventory projector;
+	private TileMFFSInventory projector;
 
-	public BlockInventoryDropDelayedEvent(IDelayedEventHandler handler, int ticks, Block block, World world, Vector3 position, TileEntityInventory projector)
+	public BlockInventoryDropDelayedEvent(IDelayedEventHandler handler, int ticks, Block block, World world, Vector3 position, TileMFFSInventory projector)
 	{
 		super(handler, ticks, block, world, position);
 		this.projector = projector;

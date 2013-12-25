@@ -1,6 +1,7 @@
 package mffs.tileentity;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ import mffs.api.modules.IModule;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
-import mffs.base.TileEntityModuleAcceptor;
+import mffs.base.TileModuleAcceptor;
 import mffs.card.ItemCard;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,14 +24,14 @@ import net.minecraft.util.AxisAlignedBB;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor implements IInterdictionMatrix
+public class TileInterdictionMatrix extends TileModuleAcceptor implements IInterdictionMatrix
 {
 	/**
 	 * True if the current confiscation mode is for "banning selected items".
 	 */
 	private boolean isBanMode = true;
 
-	public TileEntityInterdictionMatrix()
+	public TileInterdictionMatrix()
 	{
 		this.capacityBase = 30;
 		this.startModuleIndex = 2;
@@ -157,10 +158,9 @@ public class TileEntityInterdictionMatrix extends TileEntityModuleAcceptor imple
 	}
 
 	@Override
-	public List getPacketUpdate()
+	public ArrayList getPacketData(int packetID)
 	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
+		ArrayList objects = super.getPacketData(packetID);
 		objects.add(this.isBanMode);
 		return objects;
 	}

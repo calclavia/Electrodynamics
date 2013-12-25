@@ -1,6 +1,6 @@
 package mffs.render;
 
-import mffs.tileentity.TileEntityForceField;
+import mffs.tileentity.TileForceField;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemBlock;
@@ -32,9 +32,9 @@ public class RenderForceField implements ISimpleBlockRenderingHandler
 		Block camoBlock = null;
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
-			camoStack = ((TileEntityForceField) tileEntity).camoStack;
+			camoStack = ((TileForceField) tileEntity).camoStack;
 
 			if (camoStack != null)
 			{

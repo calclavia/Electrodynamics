@@ -43,13 +43,13 @@ import mffs.item.module.projector.ItemModuleRepulsion;
 import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
 import mffs.item.module.projector.ItemModuleStablize;
-import mffs.tileentity.TileEntityBiometricIdentifier;
 import mffs.tileentity.TileCoercionDeriver;
-import mffs.tileentity.TileEntityForceField;
-import mffs.tileentity.TileEntityForceFieldProjector;
-import mffs.tileentity.TileEntityForceManipulator;
-import mffs.tileentity.TileEntityFortronCapacitor;
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileBiometricIdentifier;
+import mffs.tileentity.TileForceField;
+import mffs.tileentity.TileForceFieldProjector;
+import mffs.tileentity.TileForceManipulator;
+import mffs.tileentity.TileFortronCapacitor;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -68,10 +68,11 @@ import org.modstats.Modstats;
 
 import basiccomponents.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.network.PacketTile;
 import calclavia.lib.prefab.CustomDamageSource;
 import calclavia.lib.prefab.RecipeHelper;
 import calclavia.lib.prefab.TranslationHelper;
-import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -87,7 +88,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, useMetadata = true, dependencies = "after:Mekanism")
-@NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketManager.class)
+@NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "mffs")
 public class ModularForceFieldSystem
 {
@@ -172,6 +173,7 @@ public class ModularForceFieldSystem
 			itemModuleBlockAlter, itemModuleAntiSpawn;
 
 	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
+	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -284,13 +286,13 @@ public class ModularForceFieldSystem
 		GameRegistry.registerBlock(blockInterdictionMatrix, blockInterdictionMatrix.getUnlocalizedName());
 		GameRegistry.registerBlock(blockForceManipulator, blockForceManipulator.getUnlocalizedName());
 
-		GameRegistry.registerTileEntity(TileEntityForceField.class, blockForceField.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileForceField.class, blockForceField.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileCoercionDeriver.class, blockCoercionDeriver.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEntityForceManipulator.class, blockForceManipulator.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileFortronCapacitor.class, blockFortronCapacitor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileForceFieldProjector.class, blockForceFieldProjector.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileBiometricIdentifier.class, blockBiometricIdentifier.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileInterdictionMatrix.class, blockInterdictionMatrix.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileForceManipulator.class, blockForceManipulator.getUnlocalizedName());
 
 		proxy.preInit();
 	}

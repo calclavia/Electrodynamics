@@ -2,12 +2,12 @@ package mffs.slot;
 
 import icbm.api.IBlockFrequency;
 import icbm.api.IItemFrequency;
-import mffs.base.TileEntityFrequency;
+import mffs.base.TileFrequency;
 import net.minecraft.item.ItemStack;
 
 public class SlotCard extends SlotBase
 {
-	public SlotCard(TileEntityFrequency tileEntity, int id, int par4, int par5)
+	public SlotCard(TileFrequency tileEntity, int id, int par4, int par5)
 	{
 		super(tileEntity, id, par4, par5);
 	}

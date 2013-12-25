@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tileentity.TileEntityForceManipulator;
+import mffs.tileentity.TileForceManipulator;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerForceManipulator extends ContainerBase
 {
-	public ContainerForceManipulator(EntityPlayer player, TileEntityForceManipulator tileEntity)
+	public ContainerForceManipulator(EntityPlayer player, TileForceManipulator tileEntity)
 	{
 		super(tileEntity);
 

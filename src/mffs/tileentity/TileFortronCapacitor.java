@@ -3,6 +3,7 @@ package mffs.tileentity;
 import icbm.api.IBlockFrequency;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,18 +20,18 @@ import mffs.api.fortron.IFortronCapacitor;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.fortron.IFortronStorage;
 import mffs.api.modules.IModule;
-import mffs.base.TileEntityModuleAcceptor;
+import mffs.base.TileModuleAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor implements IFortronStorage, IFortronCapacitor
+public class TileFortronCapacitor extends TileModuleAcceptor implements IFortronStorage, IFortronCapacitor
 {
 	private TransferMode transferMode = TransferMode.EQUALIZE;
 
-	public TileEntityFortronCapacitor()
+	public TileFortronCapacitor()
 	{
 		this.capacityBase = 700;
 		this.capacityBoost = 10;
@@ -94,10 +95,9 @@ public class TileEntityFortronCapacitor extends TileEntityModuleAcceptor impleme
 	 * Packet Methods
 	 */
 	@Override
-	public List getPacketUpdate()
+	public ArrayList getPacketData(int packetID)
 	{
-		List objects = new LinkedList();
-		objects.addAll(super.getPacketUpdate());
+		ArrayList objects = super.getPacketData(packetID);
 		objects.add(this.transferMode.ordinal());
 		return objects;
 	}

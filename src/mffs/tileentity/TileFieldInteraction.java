@@ -16,7 +16,7 @@ import mffs.api.ICache;
 import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
-import mffs.base.TileEntityModuleAcceptor;
+import mffs.base.TileModuleAcceptor;
 import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +26,7 @@ import universalelectricity.api.vector.VectorHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileEntityFieldInteraction extends TileEntityModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
+public abstract class TileFieldInteraction extends TileModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
 {
 	protected static final int MODULE_SLOT_ID = 2;
 	protected boolean isCalculating = false;

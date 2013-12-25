@@ -2,22 +2,21 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerInterdictionMatrix;
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiInterdictionMatrix extends GuiMFFS
 {
-	private TileEntityInterdictionMatrix tileEntity;
+	private TileInterdictionMatrix tileEntity;
 
-	public GuiInterdictionMatrix(EntityPlayer player, TileEntityInterdictionMatrix tileEntity)
+	public GuiInterdictionMatrix(EntityPlayer player, TileInterdictionMatrix tileEntity)
 	{
 		super(new ContainerInterdictionMatrix(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;
@@ -40,7 +39,7 @@ public class GuiInterdictionMatrix extends GuiMFFS
 
 		if (guiButton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket(this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal()));
 		}
 	}
 

@@ -21,14 +21,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 
-public class TileEntityForceManipulator extends TileEntityFieldInteraction
+public class TileForceManipulator extends TileFieldInteraction
 {
 	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
@@ -81,7 +81,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					nbt.setByte("type", (byte) 2);
 					nbt.setTag("list", nbtList);
 
-					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+					PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
 
 					if (this.doAnchor)
 					{
@@ -138,7 +138,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 					nbt.setByte("type", (byte) 1);
 					nbt.setTag("list", nbtList);
 
-					PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+					PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
 				}
 			}
 		}
@@ -178,7 +178,7 @@ public class TileEntityForceManipulator extends TileEntityFieldInteraction
 			/**
 			 * Holographic FXs
 			 */
-			NBTTagCompound nbt = PacketManager.readNBTTagCompound(dataStream);
+			NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
 			byte type = nbt.getByte("type");
 
 			NBTTagList nbtList = (NBTTagList) nbt.getTag("list");

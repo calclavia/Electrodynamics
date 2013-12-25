@@ -8,7 +8,7 @@ import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FortronHelper;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.item.ItemSkull;
@@ -139,9 +139,9 @@ public class SubscribeEventHandler
 	{
 		for (IFortronFrequency fortronFrequency : FrequencyGrid.instance().getFortronTiles(evt.world))
 		{
-			if (fortronFrequency instanceof TileEntityForceFieldProjector)
+			if (fortronFrequency instanceof TileForceFieldProjector)
 			{
-				TileEntityForceFieldProjector projector = (TileEntityForceFieldProjector) fortronFrequency;
+				TileForceFieldProjector projector = (TileForceFieldProjector) fortronFrequency;
 
 				if (projector.getCalculatedField() != null)
 				{

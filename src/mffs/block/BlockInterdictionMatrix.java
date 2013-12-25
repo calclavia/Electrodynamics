@@ -1,6 +1,6 @@
 package mffs.block;
 
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -14,6 +14,6 @@ public class BlockInterdictionMatrix extends BlockMachineBlock
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityInterdictionMatrix();
+		return new TileInterdictionMatrix();
 	}
 }

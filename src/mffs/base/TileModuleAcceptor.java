@@ -1,10 +1,10 @@
 package mffs.base;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileEntityModuleAcceptor extends TileEntityFortron implements IModuleAcceptor, ICache
+public abstract class TileModuleAcceptor extends TileFortron implements IModuleAcceptor, ICache
 {
 	/**
 	 * Caching for the module stack data. This is used to reduce calculation time. Cache gets reset
@@ -37,9 +37,9 @@ public abstract class TileEntityModuleAcceptor extends TileEntityFortron impleme
 	public int clientFortronCost = 0;
 
 	@Override
-	public List getPacketUpdate()
+	public ArrayList getPacketData(int packetID)
 	{
-		List objects = super.getPacketUpdate();
+		ArrayList objects = super.getPacketData(packetID);
 		objects.add(this.getFortronCost());
 		return objects;
 	}

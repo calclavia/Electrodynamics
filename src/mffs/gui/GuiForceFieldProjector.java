@@ -2,10 +2,10 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.gui.button.GuiIcon;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,15 +17,14 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceFieldProjector extends GuiMFFS
 {
-	private TileEntityForceFieldProjector tileEntity;
+	private TileForceFieldProjector tileEntity;
 
-	public GuiForceFieldProjector(EntityPlayer player, TileEntityForceFieldProjector tileEntity)
+	public GuiForceFieldProjector(EntityPlayer player, TileForceFieldProjector tileEntity)
 	{
 		super(new ContainerForceFieldProjector(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;
@@ -180,7 +179,7 @@ public class GuiForceFieldProjector extends GuiMFFS
 
 		if (guiButton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_4.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_4.ordinal()));
 		}
 	}
 }

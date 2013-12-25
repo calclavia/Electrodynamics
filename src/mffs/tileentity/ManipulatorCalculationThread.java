@@ -21,15 +21,15 @@ public class ManipulatorCalculationThread extends Thread
 		public void onThreadComplete();
 	}
 
-	private TileEntityForceManipulator manipulator;
+	private TileForceManipulator manipulator;
 	private IThreadCallBack callBack;
 
-	public ManipulatorCalculationThread(TileEntityForceManipulator projector)
+	public ManipulatorCalculationThread(TileForceManipulator projector)
 	{
 		this.manipulator = projector;
 	}
 
-	public ManipulatorCalculationThread(TileEntityForceManipulator projector, IThreadCallBack callBack)
+	public ManipulatorCalculationThread(TileForceManipulator projector, IThreadCallBack callBack)
 	{
 		this(projector);
 		this.callBack = callBack;

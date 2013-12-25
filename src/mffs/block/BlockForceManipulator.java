@@ -1,7 +1,7 @@
 package mffs.block;
 
 import mffs.base.BlockMFFS;
-import mffs.tileentity.TileEntityForceManipulator;
+import mffs.tileentity.TileForceManipulator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -47,6 +47,6 @@ public class BlockForceManipulator extends BlockMFFS
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityForceManipulator();
+		return new TileForceManipulator();
 	}
 }

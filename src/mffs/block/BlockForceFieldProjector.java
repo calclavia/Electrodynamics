@@ -1,7 +1,7 @@
 package mffs.block;
 
 import mffs.base.BlockMFFS;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ public class BlockForceFieldProjector extends BlockMFFS
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityForceFieldProjector();
+		return new TileForceFieldProjector();
 	}
 
 	@Override
@@ -25,9 +25,9 @@ public class BlockForceFieldProjector extends BlockMFFS
 	{
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceFieldProjector)
+		if (tileEntity instanceof TileForceFieldProjector)
 		{
-			if (((TileEntityForceFieldProjector) tileEntity).getMode() != null)
+			if (((TileForceFieldProjector) tileEntity).getMode() != null)
 			{
 				return 10;
 			}

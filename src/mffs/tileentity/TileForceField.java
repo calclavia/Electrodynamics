@@ -10,13 +10,12 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.network.IPacketReceiver;
-import calclavia.lib.prefab.network.PacketManager;
-import calclavia.lib.tile.TileAdvanced;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEntityForceField extends TileAdvanced implements IPacketReceiver
+public class TileForceField extends TileAdvanced implements IPacketReceiver
 {
 	private Vector3 projector = null;
 	public ItemStack camoStack = null;
@@ -41,23 +40,23 @@ public class TileEntityForceField extends TileAdvanced implements IPacketReceive
 				itemMetadata = camoStack.getItemDamage();
 			}
 
-			return PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, this.projector.intX(), this.projector.intY(), this.projector.intZ(), itemID, itemMetadata);
+			return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.projector.intX(), this.projector.intY(), this.projector.intZ(), itemID, itemMetadata);
 		}
 
 		return null;
 	}
 
 	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
 		try
 		{
-			this.setProjector(new Vector3(dataStream.readInt(), dataStream.readInt(), dataStream.readInt()));
+			this.setProjector(new Vector3(data.readInt(), data.readInt(), data.readInt()));
 			this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
 
 			this.camoStack = null;
-			int itemID = dataStream.readInt();
-			int itemMetadata = dataStream.readInt();
+			int itemID = data.readInt();
+			int itemMetadata = data.readInt();
 
 			if (itemID != -1 && itemMetadata != -1)
 			{
@@ -84,7 +83,7 @@ public class TileEntityForceField extends TileAdvanced implements IPacketReceive
 	 * @return Gets the projector block controlling this force field. Removes the force field if no
 	 * projector can be found.
 	 */
-	public TileEntityForceFieldProjector getProjector()
+	public TileForceFieldProjector getProjector()
 	{
 		if (this.getProjectorSafe() != null)
 		{
@@ -99,15 +98,15 @@ public class TileEntityForceField extends TileAdvanced implements IPacketReceive
 		return null;
 	}
 
-	public TileEntityForceFieldProjector getProjectorSafe()
+	public TileForceFieldProjector getProjectorSafe()
 	{
 		if (this.projector != null)
 		{
-			if (this.projector.getTileEntity(this.worldObj) instanceof TileEntityForceFieldProjector)
+			if (this.projector.getTileEntity(this.worldObj) instanceof TileForceFieldProjector)
 			{
-				if (this.worldObj.isRemote || ((TileEntityForceFieldProjector) this.projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
+				if (this.worldObj.isRemote || ((TileForceFieldProjector) this.projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
 				{
-					return (TileEntityForceFieldProjector) this.projector.getTileEntity(this.worldObj);
+					return (TileForceFieldProjector) this.projector.getTileEntity(this.worldObj);
 				}
 			}
 		}

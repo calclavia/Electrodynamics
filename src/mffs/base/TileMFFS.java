@@ -10,15 +10,13 @@ import mffs.ModularForceFieldSystem;
 import mffs.api.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.lib.IPlayerUsing;
-import calclavia.lib.prefab.network.IPacketReceiver;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.tile.TileAdvanced;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -26,7 +24,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dan200.computer.api.IPeripheral;
 
-public abstract class TileEntityMFFS extends TileAdvanced implements IPacketReceiver, IPlayerUsing, IRotatable, IActivatable, IPeripheral
+public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, IPacketSender, IPlayerUsing, IRotatable, IActivatable, IPeripheral
 {
 	public enum TilePacketType
 	{
@@ -57,9 +55,10 @@ public abstract class TileEntityMFFS extends TileAdvanced implements IPacketRece
 	/**
 	 * Override this for packet updating list.
 	 */
-	public List getPacketUpdate()
+	@Override
+	public ArrayList getPacketData(int type)
 	{
-		List objects = new ArrayList();
+		ArrayList objects = new ArrayList();
 		objects.add(TilePacketType.DESCRIPTION.ordinal());
 		objects.add(this.isActive);
 		return objects;
@@ -85,15 +84,15 @@ public abstract class TileEntityMFFS extends TileAdvanced implements IPacketRece
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, this.getPacketUpdate().toArray());
+		return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
 	}
 
 	@Override
-	public void handlePacketData(INetworkManager network, int packetType, Packet250CustomPayload packet, EntityPlayer player, ByteArrayDataInput dataStream)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
 	{
 		try
 		{
-			this.onReceivePacket(dataStream.readInt(), dataStream);
+			this.onReceivePacket(data.readInt(), data);
 		}
 		catch (Exception e)
 		{

@@ -2,10 +2,10 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.gui.button.GuiIcon;
-import mffs.tileentity.TileEntityForceManipulator;
+import mffs.tileentity.TileForceManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,15 +15,14 @@ import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiMFFS
 {
-	private TileEntityForceManipulator tileEntity;
+	private TileForceManipulator tileEntity;
 
-	public GuiForceManipulator(EntityPlayer player, TileEntityForceManipulator tileEntity)
+	public GuiForceManipulator(EntityPlayer player, TileForceManipulator tileEntity)
 	{
 		super(new ContainerForceManipulator(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;
@@ -186,19 +185,19 @@ public class GuiForceManipulator extends GuiMFFS
 
 		if (guiButton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
 		}
 		else if (guiButton.id == 2)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_2.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_2.ordinal()));
 		}
 		else if (guiButton.id == 3)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_3.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_3.ordinal()));
 		}
 		else if (guiButton.id == 4)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_4.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE_4.ordinal()));
 		}
 	}
 

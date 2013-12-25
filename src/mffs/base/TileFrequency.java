@@ -17,7 +17,7 @@ import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileEntityFrequency extends TileEntityInventory implements IBlockFrequency, IBiometricIdentifierLink
+public abstract class TileFrequency extends TileMFFSInventory implements IBlockFrequency, IBiometricIdentifierLink
 {
 	private int frequency;
 

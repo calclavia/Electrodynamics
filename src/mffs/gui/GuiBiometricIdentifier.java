@@ -4,23 +4,22 @@ import mffs.ModularForceFieldSystem;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerBiometricIdentifier;
 import mffs.gui.button.GuiButtonPress;
-import mffs.tileentity.TileEntityBiometricIdentifier;
+import mffs.tileentity.TileBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBiometricIdentifier extends GuiMFFS
 {
-	private TileEntityBiometricIdentifier tileEntity;
+	private TileBiometricIdentifier tileEntity;
 	private GuiTextField textFieldUsername;
 
-	public GuiBiometricIdentifier(EntityPlayer player, TileEntityBiometricIdentifier tileEntity)
+	public GuiBiometricIdentifier(EntityPlayer player, TileBiometricIdentifier tileEntity)
 	{
 		super(new ContainerBiometricIdentifier(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;
@@ -167,7 +166,7 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 		try
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.STRING.ordinal(), this.textFieldUsername.getText()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket(this.tileEntity, TilePacketType.STRING.ordinal(), this.textFieldUsername.getText()));
 		}
 		catch (NumberFormatException e)
 		{
@@ -188,7 +187,7 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 		if (guiButton.id > 0)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal(), guiButton.id - 1));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket(this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal(), guiButton.id - 1));
 		}
 	}
 }

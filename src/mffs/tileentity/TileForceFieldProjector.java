@@ -21,7 +21,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -29,7 +29,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityForceFieldProjector extends TileEntityFieldInteraction implements IProjector, IThreadCallBack
+public class TileForceFieldProjector extends TileFieldInteraction implements IProjector, IThreadCallBack
 {
 	/**
 	 * A set containing all positions of all force field blocks.
@@ -43,7 +43,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 
 	public boolean markFieldUpdate = true;
 
-	public TileEntityForceFieldProjector()
+	public TileForceFieldProjector()
 	{
 		this.capacityBase = 50;
 		this.startModuleIndex = 1;
@@ -86,7 +86,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 			else if (packetID == TilePacketType.FIELD.ordinal())
 			{
 				this.getCalculatedField().clear();
-				NBTTagCompound nbt = PacketManager.readNBTTagCompound(dataStream);
+				NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
 				NBTTagList nbtList = nbt.getTagList("blockList");
 
 				for (int i = 0; i < nbtList.tagCount(); i++)
@@ -111,7 +111,7 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 		}
 
 		nbt.setTag("blockList", nbtList);
-		PacketDispatcher.sendPacketToAllPlayers(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this, TilePacketType.FIELD.ordinal(), nbt));
+		PacketDispatcher.sendPacketToAllPlayers(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FIELD.ordinal(), nbt));
 	}
 
 	@Override
@@ -299,9 +299,9 @@ public class TileEntityForceFieldProjector extends TileEntityFieldInteraction im
 								// one.
 								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
-								if (tileEntity instanceof TileEntityForceField)
+								if (tileEntity instanceof TileForceField)
 								{
-									((TileEntityForceField) tileEntity).setProjector(new Vector3(this));
+									((TileForceField) tileEntity).setProjector(new Vector3(this));
 								}
 
 								this.requestFortron(1, true);

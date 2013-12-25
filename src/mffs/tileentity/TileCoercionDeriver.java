@@ -3,6 +3,7 @@ package mffs.tileentity;
 import ic2.api.item.IElectricItem;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import mffs.ModularForceFieldSystem;
@@ -219,5 +220,4 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	{
 		return true;
 	}
-
 }

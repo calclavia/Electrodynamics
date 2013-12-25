@@ -2,15 +2,15 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tileentity.TileEntityFortronCapacitor;
+import mffs.tileentity.TileFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerFortronCapacitor extends ContainerBase
 {
-	private TileEntityFortronCapacitor tileEntity;
+	private TileFortronCapacitor tileEntity;
 
-	public ContainerFortronCapacitor(EntityPlayer player, TileEntityFortronCapacitor tileEntity)
+	public ContainerFortronCapacitor(EntityPlayer player, TileFortronCapacitor tileEntity)
 	{
 		super(tileEntity);
 		this.tileEntity = tileEntity;

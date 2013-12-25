@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerForceFieldProjector extends ContainerBase
 {
-	public ContainerForceFieldProjector(EntityPlayer player, TileEntityForceFieldProjector tileEntity)
+	public ContainerForceFieldProjector(EntityPlayer player, TileForceFieldProjector tileEntity)
 	{
 		super(tileEntity);
 

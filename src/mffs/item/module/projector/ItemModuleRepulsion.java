@@ -10,7 +10,7 @@ import mffs.api.IProjector;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.item.module.ItemModule;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -98,7 +98,7 @@ public class ItemModuleRepulsion extends ItemModule
 	@Override
 	public boolean onDestroy(IProjector projector, Set<Vector3> field)
 	{
-		((TileEntityForceFieldProjector) projector).sendFieldToClient();
+		((TileForceFieldProjector) projector).sendFieldToClient();
 		return false;
 	}
 

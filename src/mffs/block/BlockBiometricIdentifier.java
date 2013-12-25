@@ -1,6 +1,6 @@
 package mffs.block;
 
-import mffs.tileentity.TileEntityBiometricIdentifier;
+import mffs.tileentity.TileBiometricIdentifier;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -14,6 +14,6 @@ public class BlockBiometricIdentifier extends BlockMachineBlock
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityBiometricIdentifier();
+		return new TileBiometricIdentifier();
 	}
 }

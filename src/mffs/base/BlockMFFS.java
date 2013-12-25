@@ -97,15 +97,15 @@ public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMat
 		{
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-			if (tileEntity instanceof TileEntityMFFS)
+			if (tileEntity instanceof TileMFFS)
 			{
 				if (world.isBlockIndirectlyGettingPowered(x, y, z))
 				{
-					((TileEntityMFFS) tileEntity).onPowerOn();
+					((TileMFFS) tileEntity).onPowerOn();
 				}
 				else
 				{
-					((TileEntityMFFS) tileEntity).onPowerOff();
+					((TileMFFS) tileEntity).onPowerOff();
 				}
 			}
 		}

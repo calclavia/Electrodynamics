@@ -12,7 +12,7 @@ import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.BlockBase;
 import mffs.render.RenderForceField;
-import mffs.tileentity.TileEntityForceField;
+import mffs.tileentity.TileForceField;
 import micdoodle8.mods.galacticraft.API.IPartialSealedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -88,13 +88,13 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
-			if (((TileEntityForceField) tileEntity).camoStack != null)
+			if (((TileForceField) tileEntity).camoStack != null)
 			{
 				try
 				{
-					Block block = Block.blocksList[((ItemBlock) ((TileEntityForceField) tileEntity).camoStack.getItem()).getBlockID()];
+					Block block = Block.blocksList[((ItemBlock) ((TileForceField) tileEntity).camoStack.getItem()).getBlockID()];
 					return block.shouldSideBeRendered(world, x, y, z, par5);
 				}
 				catch (Exception e)
@@ -116,11 +116,11 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
-			if (((TileEntityForceField) tileEntity).getProjector() != null)
+			if (((TileForceField) tileEntity).getProjector() != null)
 			{
-				for (ItemStack moduleStack : ((TileEntityForceField) tileEntity).getProjector().getModuleStacks(((TileEntityForceField) tileEntity).getProjector().getModuleSlots()))
+				for (ItemStack moduleStack : ((TileForceField) tileEntity).getProjector().getModuleStacks(((TileForceField) tileEntity).getProjector().getModuleSlots()))
 				{
 					if (((IModule) moduleStack.getItem()).onCollideWithForceField(world, x, y, z, entityPlayer, moduleStack))
 					{
@@ -171,11 +171,11 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
 			if (this.getProjector(world, x, y, z) != null)
 			{
-				for (ItemStack moduleStack : ((TileEntityForceField) tileEntity).getProjector().getModuleStacks(((TileEntityForceField) tileEntity).getProjector().getModuleSlots()))
+				for (ItemStack moduleStack : ((TileForceField) tileEntity).getProjector().getModuleStacks(((TileForceField) tileEntity).getProjector().getModuleSlots()))
 				{
 					if (((IModule) moduleStack.getItem()).onCollideWithForceField(world, x, y, z, entity, moduleStack))
 					{
@@ -236,9 +236,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
-			ItemStack checkStack = ((TileEntityForceField) tileEntity).camoStack;
+			ItemStack checkStack = ((TileForceField) tileEntity).camoStack;
 
 			if (checkStack != null)
 			{
@@ -279,9 +279,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 		{
 			TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-			if (tileEntity instanceof TileEntityForceField)
+			if (tileEntity instanceof TileForceField)
 			{
-				ItemStack checkStack = ((TileEntityForceField) tileEntity).camoStack;
+				ItemStack checkStack = ((TileForceField) tileEntity).camoStack;
 
 				if (checkStack != null)
 				{
@@ -311,9 +311,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 		{
 			TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-			if (tileEntity instanceof TileEntityForceField)
+			if (tileEntity instanceof TileForceField)
 			{
-				IProjector zhuYao = ((TileEntityForceField) tileEntity).getProjectorSafe();
+				IProjector zhuYao = ((TileForceField) tileEntity).getProjectorSafe();
 
 				if (zhuYao instanceof IProjector)
 				{
@@ -338,7 +338,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityForceField();
+		return new TileForceField();
 	}
 
 	@Override
@@ -368,9 +368,9 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityForceField)
+		if (tileEntity instanceof TileForceField)
 		{
-			return ((TileEntityForceField) tileEntity).getProjector();
+			return ((TileForceField) tileEntity).getProjector();
 		}
 
 		return null;

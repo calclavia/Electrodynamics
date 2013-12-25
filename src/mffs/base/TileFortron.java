@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.PacketHandler;
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -26,7 +26,7 @@ import calclavia.lib.prefab.network.PacketManager;
  * @author Calclavia
  * 
  */
-public abstract class TileEntityFortron extends TileEntityFrequency implements IFluidHandler, IFortronFrequency, ISpecialForceManipulation
+public abstract class TileFortron extends TileFrequency implements IFluidHandler, IFortronFrequency, ISpecialForceManipulation
 {
 	protected FluidTank fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private boolean markSendFortron = true;
@@ -41,7 +41,7 @@ public abstract class TileEntityFortron extends TileEntityFrequency implements I
 		 */
 		if (!Settings.CONSERVE_PACKETS && this.ticks % 60 == 0)
 		{
-			PacketManager.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 30);
+			PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 30);
 		}
 	}
 

@@ -6,12 +6,12 @@ import mffs.container.ContainerForceFieldProjector;
 import mffs.container.ContainerForceManipulator;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.container.ContainerInterdictionMatrix;
-import mffs.tileentity.TileEntityBiometricIdentifier;
+import mffs.tileentity.TileBiometricIdentifier;
 import mffs.tileentity.TileCoercionDeriver;
-import mffs.tileentity.TileEntityForceFieldProjector;
-import mffs.tileentity.TileEntityForceManipulator;
-import mffs.tileentity.TileEntityFortronCapacitor;
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileForceFieldProjector;
+import mffs.tileentity.TileForceManipulator;
+import mffs.tileentity.TileFortronCapacitor;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -43,29 +43,29 @@ public class CommonProxy implements IGuiHandler
 
 		if (tileEntity != null)
 		{
-			if (tileEntity.getClass() == TileEntityFortronCapacitor.class)
+			if (tileEntity.getClass() == TileFortronCapacitor.class)
 			{
-				return new ContainerFortronCapacitor(player, (TileEntityFortronCapacitor) tileEntity);
+				return new ContainerFortronCapacitor(player, (TileFortronCapacitor) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityForceFieldProjector.class)
+			else if (tileEntity.getClass() == TileForceFieldProjector.class)
 			{
-				return new ContainerForceFieldProjector(player, (TileEntityForceFieldProjector) tileEntity);
+				return new ContainerForceFieldProjector(player, (TileForceFieldProjector) tileEntity);
 			}
 			else if (tileEntity.getClass() == TileCoercionDeriver.class)
 			{
 				return new ContainerCoercionDeriver(player, (TileCoercionDeriver) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityBiometricIdentifier.class)
+			else if (tileEntity.getClass() == TileBiometricIdentifier.class)
 			{
-				return new ContainerBiometricIdentifier(player, (TileEntityBiometricIdentifier) tileEntity);
+				return new ContainerBiometricIdentifier(player, (TileBiometricIdentifier) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityInterdictionMatrix.class)
+			else if (tileEntity.getClass() == TileInterdictionMatrix.class)
 			{
-				return new ContainerInterdictionMatrix(player, (TileEntityInterdictionMatrix) tileEntity);
+				return new ContainerInterdictionMatrix(player, (TileInterdictionMatrix) tileEntity);
 			}
-			else if (tileEntity.getClass() == TileEntityForceManipulator.class)
+			else if (tileEntity.getClass() == TileForceManipulator.class)
 			{
-				return new ContainerForceManipulator(player, (TileEntityForceManipulator) tileEntity);
+				return new ContainerForceManipulator(player, (TileForceManipulator) tileEntity);
 			}
 		}
 

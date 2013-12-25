@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tileentity.TileEntityInterdictionMatrix;
+import mffs.tileentity.TileInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerInterdictionMatrix extends ContainerBase
 {
-	public ContainerInterdictionMatrix(EntityPlayer player, TileEntityInterdictionMatrix tileEntity)
+	public ContainerInterdictionMatrix(EntityPlayer player, TileInterdictionMatrix tileEntity)
 	{
 		super(tileEntity);
 

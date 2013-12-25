@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotActive;
 import mffs.slot.SlotBase;
-import mffs.tileentity.TileEntityBiometricIdentifier;
+import mffs.tileentity.TileBiometricIdentifier;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 
 public class ContainerBiometricIdentifier extends ContainerBase
 {
-	public ContainerBiometricIdentifier(EntityPlayer player, TileEntityBiometricIdentifier tileentity)
+	public ContainerBiometricIdentifier(EntityPlayer player, TileBiometricIdentifier tileentity)
 	{
 		super(tileentity);
 
@@ -22,7 +22,7 @@ public class ContainerBiometricIdentifier extends ContainerBase
 			this.addSlotToContainer(new SlotActive(tileentity, 3 + var4, 8 + var4 * 18, 111));
 		}
 
-		this.addSlotToContainer(new SlotBase(tileentity, TileEntityBiometricIdentifier.SLOT_COPY, 8, 66));
+		this.addSlotToContainer(new SlotBase(tileentity, TileBiometricIdentifier.SLOT_COPY, 8, 66));
 
 		this.addPlayerInventory(player);
 	}

@@ -2,7 +2,7 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
 import mffs.tileentity.TileCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;
@@ -15,7 +15,6 @@ import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiCoercionDeriver extends GuiMFFS
@@ -110,7 +109,7 @@ public class GuiCoercionDeriver extends GuiMFFS
 
 		if (guibutton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) this.frequencyTile, TilePacketType.TOGGLE_MODE.ordinal()));
 		}
 	}
 }

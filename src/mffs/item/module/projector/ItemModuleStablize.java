@@ -7,7 +7,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.api.Blacklist;
 import mffs.api.EventStabilize;
 import mffs.api.IProjector;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.item.mode.ItemModeCustom;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
@@ -21,7 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import calclavia.lib.prefab.network.PacketManager;
+import calclavia.lib.network.PacketHandler;
 
 public class ItemModuleStablize extends ItemModule
 {
@@ -96,7 +96,7 @@ public class ItemModuleStablize extends ItemModule
 
 												((ItemBlock) checkStack.getItem()).placeBlockAt(checkStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
 												inventory.decrStackSize(i, 1);
-												PacketManager.sendPacketToClients(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, (TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+												PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
 
 												if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
 												{

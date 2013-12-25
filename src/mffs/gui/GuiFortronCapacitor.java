@@ -2,10 +2,10 @@ package mffs.gui;
 
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
-import mffs.base.TileEntityMFFS.TilePacketType;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.gui.button.GuiButtonPressTransferMode;
-import mffs.tileentity.TileEntityFortronCapacitor;
+import mffs.tileentity.TileFortronCapacitor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -14,14 +14,13 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.network.PacketManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiFortronCapacitor extends GuiMFFS
 {
-	private TileEntityFortronCapacitor tileEntity;
+	private TileFortronCapacitor tileEntity;
 
-	public GuiFortronCapacitor(EntityPlayer player, TileEntityFortronCapacitor tileentity)
+	public GuiFortronCapacitor(EntityPlayer player, TileFortronCapacitor tileentity)
 	{
 		super(new ContainerFortronCapacitor(player, tileentity), tileentity);
 		this.tileEntity = tileentity;
@@ -84,7 +83,7 @@ public class GuiFortronCapacitor extends GuiMFFS
 
 		if (guibutton.id == 1)
 		{
-			PacketDispatcher.sendPacketToServer(PacketManager.getPacket(ModularForceFieldSystem.CHANNEL, this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal()));
+			PacketDispatcher.sendPacketToServer(ModularForceFieldSystem.PACKET_TILE.getPacket(this.tileEntity, TilePacketType.TOGGLE_MODE.ordinal()));
 		}
 	}
 }

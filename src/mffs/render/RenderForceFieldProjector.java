@@ -3,7 +3,7 @@ package mffs.render;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.render.model.ModelForceFieldProjector;
-import mffs.tileentity.TileEntityForceFieldProjector;
+import mffs.tileentity.TileForceFieldProjector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,9 +30,9 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		if (t instanceof TileEntityForceFieldProjector)
+		if (t instanceof TileForceFieldProjector)
 		{
-			TileEntityForceFieldProjector tileEntity = (TileEntityForceFieldProjector) t;
+			TileForceFieldProjector tileEntity = (TileForceFieldProjector) t;
 
 			/**
 			 * Render Model
