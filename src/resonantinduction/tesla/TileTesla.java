@@ -28,7 +28,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.tile.TileEntityElectrical;
+import calclavia.lib.prefab.tile.TileEntityElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 

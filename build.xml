@@ -65,10 +65,7 @@
 		
 		<copy todir="JarContents">
 			<fileset dir="${dir.mcp}/reobf/minecraft">
-				<exclude name=".git/**"/>
-				<exclude name="codechicken/**"/>
-				<exclude name="universalelectricity/compatibility/**"/>
-				<exclude name="universalelectricity/core/**"/>
+				<include name="resonantinduction/**"/>
 			</fileset>
 		
 			<fileset dir="${dir.development}resources">

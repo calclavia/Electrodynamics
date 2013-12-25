@@ -24,15 +24,14 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 
 	protected Object[] connections = new Object[6];
 
-	private long savedBuffer;
-
 	/**
 	 * Universal Electricity conductor functions.
 	 */
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		return this.getNetwork().produce(new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world()), from.getOpposite(), receive, doReceive);
+		// new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world())
+		return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
 	}
 
 	@Override
@@ -174,28 +173,16 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	@Override
-	public long getSavedBuffer()
-	{
-		return this.savedBuffer;
-	}
-
-	@Override
-	public void setSaveBuffer(long energy)
-	{
-		this.savedBuffer = energy;
-	}
-
-	@Override
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setLong("savedBuffer", this.savedBuffer);
+		nbt.setLong("savedBuffer", this.getNetwork().getBufferOf(this));
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		this.savedBuffer = nbt.getLong("savedBuffer");
+		this.getNetwork().setBufferFor(nbt.getLong("savedBuffer"));
 	}
 }

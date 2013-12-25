@@ -27,7 +27,7 @@ import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.tile.TileAdvanced;
+import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
