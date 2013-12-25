@@ -22,9 +22,9 @@ import universalelectricity.api.vector.VectorHelper;
 import com.builtbroken.minecraft.interfaces.IPowerLess;
 
 /** Basic energy tile that can consume power
- *
+ * 
  * Based off both UE universal electrical tile, and electrical tile prefabs
- *
+ * 
  * @author DarkGuardsman */
 public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IPowerLess, IVoltageInput, IVoltageOutput
 {
@@ -118,11 +118,8 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     {
         if (!this.runPowerLess() && this.getInputDirections().contains(from) && receive > 0)
         {
-            System.out.println("Input: " + receive);
             long prevEnergyStored = Math.max(this.getEnergy(from), 0);
-            System.out.println("Prev: " + prevEnergyStored + " Storage:"+this.getEnergyStored());
             long newStoredEnergy = Math.min(this.getEnergy(from) + receive, this.getEnergyCapacity(from));
-            System.out.println("After: " + newStoredEnergy);
             if (doReceive)
             {
                 this.setEnergy(from, newStoredEnergy);
@@ -242,7 +239,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical input direction.
-     *
+     * 
      * @return The direction that electricity is entered into the tile. Return null for no input. By
      * default you can accept power from all sides. */
     public EnumSet<ForgeDirection> getInputDirections()
@@ -251,7 +248,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
     }
 
     /** The electrical output direction.
-     *
+     * 
      * @return The direction that electricity is output from the tile. Return null for no output. By
      * default it will return an empty EnumSet. */
     public EnumSet<ForgeDirection> getOutputDirections()
@@ -335,6 +332,26 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         this.setPowerLess(!this.runPowerLess());
     }
 
+    public long getJoulesPerTick()
+    {
+        return this.JOULES_PER_TICK;
+    }
+
+    public long getJoulesPerSec()
+    {
+        return getJoulesPerTick() * 20;
+    }
+
+    public long getJoulesPerMin()
+    {
+        return getJoulesPerSec() * 60;
+    }
+
+    public long getJoulesPerHour()
+    {
+        return getJoulesPerMin() * 60;
+    }
+
     public TileEntityEnergyMachine setJoulesPerTick(long energy)
     {
         this.JOULES_PER_TICK = energy;
@@ -347,9 +364,15 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return this;
     }
 
-    public TileEntityEnergyMachine setJoulesPerHour(long energy)
+    public TileEntityEnergyMachine setJoulesPerMin(long energy)
     {
         this.JOULES_PER_TICK = energy / 1200;
+        return this;
+    }
+
+    public TileEntityEnergyMachine setJoulesPerHour(long energy)
+    {
+        this.JOULES_PER_TICK = energy / 72000;
         return this;
     }
 
