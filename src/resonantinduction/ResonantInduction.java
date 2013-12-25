@@ -34,7 +34,7 @@ import resonantinduction.tesla.TileTesla;
 import resonantinduction.transformer.ItemTransformer;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemWire;
-import basiccomponents.api.BasicRegistry;
+import calclavia.components.api.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
