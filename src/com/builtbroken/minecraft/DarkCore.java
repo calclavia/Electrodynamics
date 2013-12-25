@@ -40,7 +40,7 @@ public class DarkCore
     public static String LANGUAGE_PATH = DIRECTORY + "languages/";
     public static String SOUND_PATH = DIRECTORY + "audio/";
 
-    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "Dark/Main.cfg"));
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "CoreLibrary.cfg"));
 
     /* START IDS */
     public static int BLOCK_ID_PRE = 3100;
