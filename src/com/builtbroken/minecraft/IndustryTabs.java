@@ -65,14 +65,4 @@ public class IndustryTabs extends CreativeTabs
         }
         return tabHydrualic;
     }
-
-    public static IndustryTabs tabMining()
-    {
-        if (tabMining == null)
-        {
-            tabMining = new IndustryTabs("Mining");
-        }
-        return tabMining;
-    }
-
 }
