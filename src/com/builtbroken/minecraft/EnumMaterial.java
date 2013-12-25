@@ -124,7 +124,7 @@ public enum EnumMaterial
 
     public String getOreName(EnumOrePart part)
     {
-        return this.simpleName.toLowerCase() + part.simpleName;
+        return part.simpleName.toLowerCase() + this.simpleName;
     }
 
     public static String getOreNameReverse(EnumMaterial mat, EnumOrePart part)
