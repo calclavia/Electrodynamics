@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
 
+import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 import com.builtbroken.minecraft.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.network.PacketHandler;
@@ -21,16 +22,10 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
 {
     // The the position of the main block
     public Vector3 mainBlockPosition;
-    public String channel;
 
     public TileEntityMulti()
     {
 
-    }
-
-    public TileEntityMulti(String channel)
-    {
-        this.channel = channel;
     }
 
     public void setMainBlock(Vector3 mainBlock)
@@ -44,17 +39,30 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
     }
 
     @Override
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+    {
+        try
+        {
+            if (id.equalsIgnoreCase("MainBlock"))
+            {
+                this.mainBlockPosition = new Vector3(data.readInt(), data.readInt(), data.readInt());
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Packet getDescriptionPacket()
     {
         if (this.mainBlockPosition != null)
         {
-            if (this.channel == null || this.channel == "" && this.getBlockType() instanceof BlockMulti)
-            {
-                this.channel = ((BlockMulti) this.getBlockType()).channel;
-            }
-
-            return PacketHandler.instance().getTilePacket(this.channel, "MainBlock", this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
-
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "MainBlock", this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
         }
 
         return null;
@@ -125,22 +133,4 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
         return false;
     }
 
-    @Override
-    public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
-    {
-        try
-        {
-            if (id.equalsIgnoreCase("MainBlock"))
-            {
-                this.mainBlockPosition = new Vector3(data.readInt(), data.readInt(), data.readInt());
-                return true;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return true;
-        }
-        return false;
-    }
 }

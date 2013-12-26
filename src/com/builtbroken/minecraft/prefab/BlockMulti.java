@@ -27,20 +27,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockMulti extends BlockContainer implements IExtraBlockInfo
 {
     public String textureName = null;
-    public String channel = "";
 
     public BlockMulti()
     {
         super(DarkCore.CONFIGURATION.getBlock("MultiBlock", DarkCore.getNextID()).getInt(), UniversalElectricity.machine);
         this.setHardness(0.8F);
         this.setUnlocalizedName("multiBlock");
-        this.setChannel(DarkCore.CHANNEL);
-    }
-
-    public BlockMulti setChannel(String channel)
-    {
-        this.channel = channel;
-        return this;
     }
 
     @Override
@@ -121,22 +113,25 @@ public class BlockMulti extends BlockContainer implements IExtraBlockInfo
     @Override
     public TileEntity createNewTileEntity(World var1)
     {
-        return new TileEntityMulti(this.channel);
+        return new TileEntityMulti();
     }
 
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World par1World, int x, int y, int z)
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
-        Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
-
-        if (mainBlockPosition != null)
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+        if (tileEntity instanceof TileEntityMulti)
         {
-            int mainBlockID = par1World.getBlockId(mainBlockPosition.intX(), mainBlockPosition.intY(), mainBlockPosition.intZ());
+            Vector3 mainBlockPosition = ((TileEntityMulti) tileEntity).mainBlockPosition;
 
-            if (mainBlockID > 0)
+            if (mainBlockPosition != null && !mainBlockPosition.equals(new Vector3(x, y, z)))
             {
-                return Block.blocksList[mainBlockID].getPickBlock(target, par1World, mainBlockPosition.intX(), mainBlockPosition.intY(), mainBlockPosition.intZ());
+                int mainBlockID = mainBlockPosition.getBlockID(world);
+
+                if (mainBlockID > 0)
+                {
+                    return Block.blocksList[mainBlockID].getPickBlock(target, world, mainBlockPosition.intX(), mainBlockPosition.intY(), mainBlockPosition.intZ());
+                }
             }
         }
 

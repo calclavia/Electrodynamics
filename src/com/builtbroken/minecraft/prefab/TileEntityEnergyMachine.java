@@ -163,6 +163,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         return 0;
     }
 
+    /** Called to produce power using the output enumset for directions to output in */
     protected void produce()
     {
         for (ForgeDirection direction : this.getOutputDirections())
