@@ -75,7 +75,7 @@ public class MathHelper extends net.minecraft.util.MathHelper
     {
         while (var < min)
         {
-            var += min;
+            var += max;
         }
         while (var > max)
         {
