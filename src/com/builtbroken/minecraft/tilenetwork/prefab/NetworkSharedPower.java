@@ -28,7 +28,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
 
     public long addPower(TileEntity entity, long receive, boolean doReceive)
     {
-        if (this.networkMembers.contains(entity) && !this.runPowerLess() && receive > 0)
+        if (!this.runPowerLess() && receive > 0)
         {
             long prevEnergyStored = this.getEnergy();
             long newStoredEnergy = Math.min(this.getEnergy() + receive, this.getEnergyCapacity());
@@ -45,7 +45,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
 
     public long removePower(TileEntity entity, long request, boolean doExtract)
     {
-        if (this.networkMembers.contains(entity) && request > 0)
+        if (request > 0)
         {
             long requestedEnergy = Math.min(request, this.getEnergy());
             if (doExtract)
