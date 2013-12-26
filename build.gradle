@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+ext.buildProps = file "build.properties"
+
+buildProps.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+group = "calclaviacore"
+archivesBaseName = "Calclavia Core"
+
+minecraft {
+    version = "${config.version.minecraft}-${config.version.forge}"
+}
+
+if (System.getenv("BUILD_NUMBER") != null)
+    version += ".${System.getenv("BUILD_NUMBER")}"
+
+
+task copyBuildXml(type: Copy) {
+    from 'build.properties'
+    into 'output'
+}
+
+jar {
+    dependsOn copyBuildXml
+    classifier = 'core'
+	
+	manifest {
+        attributes FMLCorePlugin: "calclavia.core.CalclaviaLoader"
+    }
+	
+    destinationDir = file 'output'
+}
+
+artifacts {
+
+}
+
+wrapper {
+    version = "1.8"
+}
