@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author DarkGuardsman */
 public enum EnumMaterial
 {
-    WOOD("Wood", EnumToolMaterial.WOOD, EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.GEARS, EnumOrePart.MOLTEN),
+    WOOD("Wood", EnumToolMaterial.WOOD, EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.MOLTEN),
     STONE("Stone", EnumToolMaterial.STONE, EnumOrePart.INGOTS, EnumOrePart.SCRAPS, EnumOrePart.MOLTEN),
     IRON("Iron", EnumToolMaterial.IRON, EnumOrePart.INGOTS),
     OBBY("Obby", true, 7.0f, 500, 4, EnumOrePart.INGOTS, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.PLATES, EnumOrePart.MOLTEN),
