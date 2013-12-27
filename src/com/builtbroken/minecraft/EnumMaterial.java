@@ -127,16 +127,6 @@ public enum EnumMaterial
         return part.simpleName.toLowerCase() + this.simpleName;
     }
 
-    public static String getOreNameReverse(EnumMaterial mat, EnumOrePart part)
-    {
-        return mat.getOreNameReverse(part);
-    }
-
-    public String getOreNameReverse(EnumOrePart part)
-    {
-        return part.simpleName.toLowerCase() + this.simpleName;
-    }
-
     public boolean shouldCreateItem(EnumOrePart part)
     {
         return this.unneedItems == null || !this.unneedItems.contains(part);
