@@ -165,17 +165,4 @@ public class TraitConductor extends TileMultipart implements IConductor
 
 		return capacitance;
 	}
-
-	@Override
-	public long getSavedBuffer()
-	{
-		return 0;
-	}
-
-	@Override
-	public void setSaveBuffer(long energy)
-	{
-
-	}
-
 }

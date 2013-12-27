@@ -30,7 +30,8 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		// new Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world())
+		// new
+		// Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world())
 		return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
 	}
 
@@ -70,8 +71,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	}
 
 	/**
-	 * EXTERNAL USE
-	 * Can this wire be connected by another block?
+	 * EXTERNAL USE Can this wire be connected by another block?
 	 */
 	@Override
 	public boolean canConnect(ForgeDirection direction)
@@ -183,6 +183,6 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		this.getNetwork().setBufferFor(nbt.getLong("savedBuffer"));
+		this.getNetwork().setBufferFor(this, nbt.getLong("savedBuffer"));
 	}
 }
