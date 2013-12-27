@@ -389,11 +389,11 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
         NBTBase tag = nbt.getTag("energyStored");
         if (tag instanceof NBTTagFloat)
         {
-            this.setEnergy(ForgeDirection.UNKNOWN, (long) nbt.getFloat("energyStored") * 1000);
+            this.energyStored = (long) nbt.getFloat("energyStored") * 1000;
         }
         else if (tag instanceof NBTTagLong)
         {
-            this.setEnergy(ForgeDirection.UNKNOWN, nbt.getLong("energyStored"));
+            this.energyStored = nbt.getLong("energyStored");
         }
 
         runWithoutPower = !nbt.getBoolean("shouldPower");
