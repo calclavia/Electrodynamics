@@ -28,7 +28,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.prefab.tile.TileEntityElectrical;
+import calclavia.lib.prefab.tile.TileElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -42,7 +42,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileTesla extends TileEntityElectrical implements ITesla, IPacketSender, IPacketReceiver
+public class TileTesla extends TileElectrical implements ITesla, IPacketSender, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final long TRANSFER_CAP = 10000;
