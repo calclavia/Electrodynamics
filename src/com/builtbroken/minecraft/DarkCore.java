@@ -73,6 +73,7 @@ public class DarkCore
     {
         if (!pre)
         {
+            MinecraftForge.EVENT_BUS.register(this);
             MinecraftForge.EVENT_BUS.register(new FluidHelper());
             MinecraftForge.EVENT_BUS.register(SaveManager.instance());
             TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);

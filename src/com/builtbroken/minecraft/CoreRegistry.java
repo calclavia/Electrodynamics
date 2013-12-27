@@ -39,7 +39,7 @@ public class CoreRegistry
     {
         if (prox == null)
         {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+            if (FMLCommonHandler.instance().getSide().isClient())
             {
                 prox = new ClientRegistryProxy();
             }
