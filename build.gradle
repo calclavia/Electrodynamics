@@ -33,21 +33,11 @@ if (System.getenv("BUILD_NUMBER") != null)
     version += ".${System.getenv("BUILD_NUMBER")}"
 
 
-task copyBuildXml(type: Copy) {
-    from 'build.properties'
-    into 'output'
+processResources {
+	from 'build.properties'
 }
 
 jar {
-    dependsOn copyBuildXml
     classifier = 'core'
     destinationDir = file 'output'
-}
-
-artifacts {
-
-}
-
-wrapper {
-    version = "1.8"
 }
