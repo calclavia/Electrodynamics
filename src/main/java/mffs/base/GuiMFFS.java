@@ -29,12 +29,12 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase
 {
+	/**
+	 * Frequency Text Field
+	 */
 	protected GuiTextField textFieldFrequency;
 	protected Vector2 textFieldPos = new Vector2();
-	public String tooltip = "";
 	protected IBlockFrequency frequencyTile;
-
-	protected HashMap<Region2, String> tooltips = new HashMap<Region2, String>();
 
 	public GuiMFFS(Container container)
 	{
@@ -53,6 +53,7 @@ public class GuiMFFS extends GuiContainerBase
 	{
 		super.initGui();
 		this.buttonList.clear();
+		// Redstone config button.
 		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Block.torchRedstoneIdle), new ItemStack(Block.torchRedstoneActive)));
 
 		Keyboard.enableRepeatEvents(true);
@@ -63,13 +64,6 @@ public class GuiMFFS extends GuiContainerBase
 			this.textFieldFrequency.setMaxStringLength(Settings.MAX_FREQUENCY_DIGITS);
 			this.textFieldFrequency.setText(frequencyTile.getFrequency() + "");
 		}
-	}
-
-	@Override
-	public void onGuiClosed()
-	{
-		Keyboard.enableRepeatEvents(false);
-		super.onGuiClosed();
 	}
 
 	@Override
@@ -144,6 +138,8 @@ public class GuiMFFS extends GuiContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
 		if (this.textFieldFrequency != null)
 		{
 			if (this.isPointInRegion(textFieldPos.intX(), textFieldPos.intY(), this.textFieldFrequency.getWidth(), 12, mouseX, mouseY))
@@ -151,27 +147,6 @@ public class GuiMFFS extends GuiContainerBase
 				this.tooltip = TranslationHelper.getLocal("gui.frequency.tooltip");
 			}
 		}
-
-		Iterator<Entry<Region2, String>> it = this.tooltips.entrySet().iterator();
-
-		while (it.hasNext())
-		{
-			Entry<Region2, String> entry = it.next();
-
-			if (entry.getKey().isIn(new Vector2(mouseX - this.guiLeft, mouseY - this.guiTop)))
-			{
-				this.tooltip = entry.getValue();
-				break;
-			}
-		}
-
-		if (this.tooltip != null && this.tooltip != "")
-		{
-			this.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop, Calclavia.splitStringPerWord(this.tooltip, 5).toArray(new String[] {}));
-		}
-
-		this.tooltip = "";
-
 	}
 
 	@Override
@@ -184,35 +159,4 @@ public class GuiMFFS extends GuiContainerBase
 			this.drawBulb(167, 4, ((IBiometricIdentifierLink) this.frequencyTile).getBiometricIdentifier() != null);
 		}
 	}
-
-	@Override
-	protected void drawTextWithTooltip(String textName, String format, int x, int y, int mouseX, int mouseY)
-	{
-		this.drawTextWithTooltip(textName, format, x, y, mouseX, mouseY, 4210752);
-	}
-
-	@Override
-	protected void drawTextWithTooltip(String textName, String format, int x, int y, int mouseX, int mouseY, int color)
-	{
-		String name = TranslationHelper.getLocal("gui." + textName + ".name");
-		String text = format.replaceAll("%1", name);
-		this.fontRenderer.drawString(text, x, y, color);
-
-		String tooltip = TranslationHelper.getLocal("gui." + textName + ".tooltip");
-
-		if (tooltip != null && tooltip != "")
-		{
-			if (this.isPointInRegion(x, y, (int) (text.length() * 4.8), 12, mouseX, mouseY))
-			{
-				this.tooltip = tooltip;
-			}
-		}
-	}
-
-	@Override
-	protected void drawTextWithTooltip(String textName, int x, int y, int mouseX, int mouseY)
-	{
-		this.drawTextWithTooltip(textName, "%1", x, y, mouseX, mouseY);
-	}
-
 }
