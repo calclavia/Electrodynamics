@@ -5,7 +5,7 @@ import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.gui.button.GuiButtonPressTransferMode;
-import mffs.tileentity.TileFortronCapacitor;
+import mffs.tile.TileFortronCapacitor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 

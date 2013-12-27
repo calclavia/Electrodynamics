@@ -4,7 +4,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerInterdictionMatrix;
-import mffs.tileentity.TileInterdictionMatrix;
+import mffs.tile.TileInterdictionMatrix;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.energy.UnitDisplay;

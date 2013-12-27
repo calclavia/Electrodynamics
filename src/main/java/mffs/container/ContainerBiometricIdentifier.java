@@ -2,7 +2,7 @@ package mffs.container;
 
 import mffs.slot.SlotActive;
 import mffs.slot.SlotBase;
-import mffs.tileentity.TileBiometricIdentifier;
+import mffs.tile.TileBiometricIdentifier;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.gui.ContainerBase;
 

@@ -1,7 +1,7 @@
 package mffs.block;
 
 import mffs.base.BlockMFFS;
-import mffs.tileentity.TileCoercionDeriver;
+import mffs.tile.TileCoercionDeriver;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

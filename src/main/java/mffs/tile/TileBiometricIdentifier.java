@@ -1,4 +1,4 @@
-package mffs.tileentity;
+package mffs.tile;
 
 import java.io.IOException;
 import java.util.HashSet;

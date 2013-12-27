@@ -10,7 +10,7 @@ import mffs.api.IProjector;
 import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.item.module.ItemModule;
-import mffs.tileentity.TileForceFieldProjector;
+import mffs.tile.TileForceFieldProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

@@ -12,7 +12,7 @@ import mffs.api.security.IBiometricIdentifier;
 import mffs.api.security.Permission;
 import mffs.base.BlockBase;
 import mffs.render.RenderForceField;
-import mffs.tileentity.TileForceField;
+import mffs.tile.TileForceField;
 import micdoodle8.mods.galacticraft.API.IPartialSealedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

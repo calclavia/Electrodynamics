@@ -1,4 +1,4 @@
-package mffs.tileentity;
+package mffs.tile;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.base.TileModuleAcceptor;
-import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
+import mffs.tile.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;

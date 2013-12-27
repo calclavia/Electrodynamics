@@ -7,7 +7,7 @@ import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerBiometricIdentifier;
 import mffs.gui.button.GuiButtonPress;
-import mffs.tileentity.TileBiometricIdentifier;
+import mffs.tile.TileBiometricIdentifier;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;

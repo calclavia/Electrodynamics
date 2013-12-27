@@ -8,7 +8,7 @@ import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
 import mffs.fortron.FortronHelper;
-import mffs.tileentity.TileForceFieldProjector;
+import mffs.tile.TileForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.item.ItemSkull;

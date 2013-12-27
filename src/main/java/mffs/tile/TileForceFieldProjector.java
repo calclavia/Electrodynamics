@@ -1,4 +1,4 @@
-package mffs.tileentity;
+package mffs.tile;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
 import mffs.item.mode.ItemModeCustom;
-import mffs.tileentity.ProjectorCalculationThread.IThreadCallBack;
+import mffs.tile.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

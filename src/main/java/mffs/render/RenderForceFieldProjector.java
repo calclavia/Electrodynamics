@@ -3,7 +3,7 @@ package mffs.render;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.render.model.ModelForceFieldProjector;
-import mffs.tileentity.TileForceFieldProjector;
+import mffs.tile.TileForceFieldProjector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;

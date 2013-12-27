@@ -12,7 +12,7 @@ import mffs.base.TileMFFSInventory;
 import mffs.event.BlockDropDelayedEvent;
 import mffs.event.BlockInventoryDropDelayedEvent;
 import mffs.item.module.ItemModule;
-import mffs.tileentity.TileForceFieldProjector;
+import mffs.tile.TileForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.item.ItemBlock;

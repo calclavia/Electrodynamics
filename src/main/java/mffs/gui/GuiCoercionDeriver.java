@@ -4,7 +4,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerCoercionDeriver;
-import mffs.tileentity.TileCoercionDeriver;
+import mffs.tile.TileCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

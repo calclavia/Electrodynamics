@@ -1,4 +1,4 @@
-package mffs.tileentity;
+package mffs.tile;
 
 import ic2.api.item.IElectricItem;
 

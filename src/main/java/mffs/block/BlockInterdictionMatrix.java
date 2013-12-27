@@ -1,6 +1,6 @@
 package mffs.block;
 
-import mffs.tileentity.TileInterdictionMatrix;
+import mffs.tile.TileInterdictionMatrix;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

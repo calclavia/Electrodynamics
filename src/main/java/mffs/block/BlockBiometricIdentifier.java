@@ -1,6 +1,6 @@
 package mffs.block;
 
-import mffs.tileentity.TileBiometricIdentifier;
+import mffs.tile.TileBiometricIdentifier;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

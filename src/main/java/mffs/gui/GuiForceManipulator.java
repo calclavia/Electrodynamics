@@ -5,7 +5,7 @@ import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.gui.button.GuiIcon;
-import mffs.tileentity.TileForceManipulator;
+import mffs.tile.TileForceManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
