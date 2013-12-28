@@ -504,7 +504,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		suck = data.readBoolean();
 		dyeID = data.readInt();

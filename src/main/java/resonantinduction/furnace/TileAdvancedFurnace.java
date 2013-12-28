@@ -240,7 +240,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		try
 		{

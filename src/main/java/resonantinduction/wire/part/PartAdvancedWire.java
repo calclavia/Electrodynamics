@@ -13,6 +13,7 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
+import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalElectricity;
@@ -179,16 +180,23 @@ public abstract class PartAdvancedWire extends PartConductor
 	{
 		if (itemStack != null)
 		{
-			if (itemStack.itemID == Item.dyePowder.itemID && this.isInsulated())
+		    int dyeColor = Utility.isDye(itemStack);
+		    
+			if (dyeColor != -1 && this.isInsulated())
 			{
-				this.setColor(itemStack.getItemDamage());
+                if (!player.capabilities.isCreativeMode)
+                {
+                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                }
+
+				this.setColor(dyeColor);
 				return true;
 			}
 			else if (itemStack.itemID == Block.cloth.blockID)
 			{
 				if (this.isInsulated())
 				{
-					if (!world().isRemote)
+					if (!world().isRemote && player.capabilities.isCreativeMode)
 					{
 						tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
 					}
@@ -198,12 +206,16 @@ public abstract class PartAdvancedWire extends PartConductor
 				}
 				else
 				{
-					this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
-					player.inventory.decrStackSize(player.inventory.currentItem, 1);
+					if (!player.capabilities.isCreativeMode)
+					{
+					    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+					}
+					
+                    this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
 					return true;
 				}
 			}
-			else if ((itemStack.itemID == Item.shears.itemID || itemStack.getItem() instanceof ItemShears) && isInsulated())
+			else if (itemStack.getItem() instanceof ItemShears && isInsulated())
 			{
 				if (!world().isRemote)
 				{

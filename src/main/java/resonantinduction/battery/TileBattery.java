@@ -117,7 +117,7 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		structure.isMultiblock = data.readBoolean();
 

@@ -325,7 +325,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		try
 		{
