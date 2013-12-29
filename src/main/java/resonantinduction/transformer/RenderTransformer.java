@@ -43,7 +43,7 @@ public class RenderTransformer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 
-		switch (part.side)
+		switch (part.placementSide)
 		{
 			case 1:
 				GL11.glRotatef(180, 0, 0, 1);
