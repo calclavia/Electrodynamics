@@ -37,8 +37,8 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	public static final int WATTAGE = 50000;
 	public static final int REQUIRED_TIME = 10 * 20;
 	public static final int MULTIPLE_PRODUCTION = 4;
-	/** Ration from UE to Fortron. Multiply KJ by this value to convert to Fortron. */
-	public static final int UE_FORTRON_RATIO = 1;
+	/** Ration from UE to Fortron. Multiply J by this value to convert to Fortron. */
+	public static final float UE_FORTRON_RATIO = 0.0001f;
 	public static final int ENERGY_LOSS = 1;
 
 	public static final int SLOT_FREQUENCY = 0;
