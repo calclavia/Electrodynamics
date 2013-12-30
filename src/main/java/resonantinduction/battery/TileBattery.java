@@ -9,16 +9,15 @@ import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.UniversalClass;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.TileAdvanced;
+import calclavia.lib.prefab.tile.TileElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -31,7 +30,7 @@ import cpw.mods.fml.common.network.Player;
  * @author Calclavia
  */
 @UniversalClass
-public class TileBattery extends TileAdvanced implements IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
+public class TileBattery extends TileElectrical implements IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
 	public static final long STORAGE = 100000000;
 
@@ -43,6 +42,11 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 	public int clientCells;
 	public float clientMaxEnergy;
 
+	public TileBattery()
+	{
+		this.energy = new EnergyStorageHandler(STORAGE);
+	}
+	
 	@Override
 	public void initiate()
 	{
@@ -53,15 +57,17 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 	{
 		if (!this.worldObj.isRemote)
 		{
-			/*for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
-
-				if (tile instanceof TileBattery)
-				{
-					this.structure.merge((TileBattery) tile);
-				}
-			}*/
+			/*
+			 * for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			 * {
+			 * TileEntity tile = new
+			 * Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+			 * if (tile instanceof TileBattery)
+			 * {
+			 * this.structure.merge((TileBattery) tile);
+			 * }
+			 * }
+			 */
 		}
 	}
 
@@ -72,19 +78,8 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 
 		if (!this.worldObj.isRemote)
 		{
-
-			for (EntityPlayer player : this.playersUsing)
-			{
-				PacketDispatcher.sendPacketToPlayer(ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray()), (Player) player);
-			}
-
 			this.produce();
 		}
-	}
-
-	private void produce()
-	{
-
 	}
 
 	public float getTransferThreshhold()
@@ -143,35 +138,5 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
-	}
-
-	@Override
-	public void setEnergy(ForgeDirection from, long energy)
-	{
-		this.structure.setEnergy(energy);
-	}
-
-	@Override
-	public long getEnergy(ForgeDirection from)
-	{
-		return this.structure.getEnergy();
-	}
-
-	@Override
-	public long getEnergyCapacity(ForgeDirection from)
-	{
-		return this.structure.getEnergyCapacity();
-	}
-
-	@Override
-	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-	{
-		return this.structure.receiveEnergy(receive, doReceive);
-	}
-
-	@Override
-	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-	{
-		return this.structure.extractEnergy(extract, doExtract);
 	}
 }
