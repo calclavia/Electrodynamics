@@ -19,7 +19,7 @@
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
-			<fileset dir="${dir.development}Calclavia-Library/src/main/java/">
+			<fileset dir="${dir.development}Calclavia-Core/src/main/java/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
 			</fileset>
