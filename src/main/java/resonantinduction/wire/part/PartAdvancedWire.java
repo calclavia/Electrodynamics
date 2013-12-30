@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +15,6 @@ import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
 import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.prefab.CustomDamageSource;
 import codechicken.lib.data.MCDataInput;
@@ -217,7 +215,7 @@ public abstract class PartAdvancedWire extends PartConductor
 			}
 			else if (itemStack.getItem() instanceof ItemShears && isInsulated())
 			{
-				if (!world().isRemote)
+				if (!world().isRemote && !player.capabilities.isCreativeMode)
 				{
 					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
 				}

@@ -2,6 +2,7 @@ package resonantinduction.wire.part;
 
 import java.util.Arrays;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -29,6 +31,7 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TFacePart;
@@ -271,15 +274,39 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         super.onNeighborChanged();
     }
 
-    @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
     {
         if (!world().isRemote)
         {
             System.out.println(this.getNetwork());
         }
-
-        return super.activate(player, part, item);
+        TileMultipart tile = tile();
+        World w = world();
+        
+        if (item.getItem().itemID == Block.lever.blockID)
+        {
+            if (!w.isRemote)
+            {
+                PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
+                wire.copyFrom(this);
+                
+                if (tile.canReplacePart(this, wire))
+                {
+                    tile.remPart(this);
+                    TileMultipart.addPart(w, new BlockCoord(tile), wire);
+                    
+                    if (!player.capabilities.isCreativeMode)
+                    {
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    }
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return super.activate(player, part, item);
+        }
     }
 
     @Override
@@ -866,5 +893,21 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         CCRenderState.reset();
         RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
+    }
+    
+    /**
+     * Utility method to aid in initializing this or subclasses, usually when you need to change the wire to another type
+     * @param otherCable the wire to copy from
+     */
+    public void copyFrom(PartFlatWire otherCable)
+    {
+        this.isInsulated = otherCable.isInsulated;
+        this.color = otherCable.color;
+        this.connections = otherCable.connections;
+        this.material = otherCable.material;
+        this.side = otherCable.side;
+        this.connMap = otherCable.connMap;
+        this.setNetwork(otherCable.getNetwork());
+        this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
     }
 }
