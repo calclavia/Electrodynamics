@@ -16,9 +16,9 @@ public class MultipartRI implements IPartFactory
 	public MultipartRI()
 	{
 		MultiPartRegistry.registerParts(this, new String[] { "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer" });
-		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.wire.part.TraitConductor");
-		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "resonantinduction.wire.part.TraitEnergyHandler");
-		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.part.TraitEnergySink");
+		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.wire.trait.TraitConductor");
+		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "resonantinduction.wire.trait.TraitEnergyHandler");
+		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.wire.trait.TraitEnergySink");
 	}
 
 	@Override

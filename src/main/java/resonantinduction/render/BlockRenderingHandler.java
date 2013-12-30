@@ -66,6 +66,12 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
+		if (block instanceof BlockBattery)
+		{
+			RenderBattery.render();
+			return true;
+		}
+		
 		return false;
 	}
 

@@ -53,7 +53,7 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 	{
 		if (!this.worldObj.isRemote)
 		{
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			/*for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
 				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 
@@ -61,7 +61,7 @@ public class TileBattery extends TileAdvanced implements IPacketSender, IPacketR
 				{
 					this.structure.merge((TileBattery) tile);
 				}
-			}
+			}*/
 		}
 	}
 
