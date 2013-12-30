@@ -66,7 +66,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import calclavia.components.api.BasicRegistry;
+import calclavia.components.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
