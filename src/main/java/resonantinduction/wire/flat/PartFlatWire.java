@@ -1,4 +1,4 @@
-package resonantinduction.wire.part;
+package resonantinduction.wire.flat;
 
 import java.util.Arrays;
 
@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.wire.EnumWireMaterial;
-import resonantinduction.wire.RenderFlatWire;
+import resonantinduction.wire.PartAdvancedWire;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;

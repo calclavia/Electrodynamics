@@ -2,8 +2,8 @@ package resonantinduction;
 
 import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.transformer.PartTransformer;
-import resonantinduction.wire.part.PartFlatSwitchWire;
-import resonantinduction.wire.part.PartFlatWire;
+import resonantinduction.wire.flat.PartFlatSwitchWire;
+import resonantinduction.wire.flat.PartFlatWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;

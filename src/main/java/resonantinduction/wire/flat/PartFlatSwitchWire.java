@@ -1,4 +1,4 @@
-package resonantinduction.wire.part;
+package resonantinduction.wire.flat;
 
 import java.util.Collections;
 

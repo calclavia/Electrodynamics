@@ -1,4 +1,4 @@
-package resonantinduction.wire.part;
+package resonantinduction.wire.trait;
 
 import java.util.HashSet;
 import java.util.Set;

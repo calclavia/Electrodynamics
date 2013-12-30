@@ -1,10 +1,9 @@
-package resonantinduction.wire;
+package resonantinduction.wire.flat;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 
 import net.minecraft.util.Icon;
-import resonantinduction.wire.part.PartFlatWire;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.CCModel;

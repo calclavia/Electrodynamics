@@ -1,4 +1,4 @@
-package resonantinduction.wire.part;
+package resonantinduction.wire;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.Utility;
-import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.wire.flat.PartFlatWire;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.prefab.CustomDamageSource;

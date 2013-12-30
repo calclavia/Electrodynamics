@@ -1,4 +1,4 @@
-package resonantinduction.wire.part;
+package resonantinduction.wire.trait;
 
 import ic2.api.energy.tile.IEnergySink;
 
