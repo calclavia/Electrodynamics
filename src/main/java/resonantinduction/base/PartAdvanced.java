@@ -1,8 +1,6 @@
 package resonantinduction.base;
 
-import net.minecraft.block.Block;
 import codechicken.multipart.TMultiPart;
-import codechicken.multipart.handler.MultipartProxy;
 
 public abstract class PartAdvanced extends TMultiPart
 {

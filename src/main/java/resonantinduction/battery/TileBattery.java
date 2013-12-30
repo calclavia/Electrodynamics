@@ -22,7 +22,6 @@ import calclavia.lib.prefab.tile.TileElectrical;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
 /**
  * A modular battery.
@@ -46,7 +45,7 @@ public class TileBattery extends TileElectrical implements IPacketSender, IPacke
 	{
 		this.energy = new EnergyStorageHandler(STORAGE);
 	}
-	
+
 	@Override
 	public void initiate()
 	{

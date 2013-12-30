@@ -254,7 +254,7 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setByte("side", (byte) this.side);
+		nbt.setByte("side", this.side);
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
 		nbt.setLong("energyLimit", energyLimit);
 	}

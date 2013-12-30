@@ -35,112 +35,113 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWire extends JItemMultiPart
 {
-    private Icon[] icons = new Icon[EnumWireMaterial.values().length];
+	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
-    public ItemWire(int id)
-    {
-        super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
-        this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
-        this.setCreativeTab(TabRI.INSTANCE);
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
-    }
+	public ItemWire(int id)
+	{
+		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
+		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
+		this.setCreativeTab(TabRI.INSTANCE);
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
+	}
 
-    @Override
-    public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
-    {
-        BlockCoord onPos = pos.copy().offset(side ^ 1);
+	@Override
+	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
+	{
+		BlockCoord onPos = pos.copy().offset(side ^ 1);
 
-        if (ControlKeyModifer.isControlDown(player))
-        {
-            PartWire wire = (PartWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
+		if (ControlKeyModifer.isControlDown(player))
+		{
+			PartWire wire = (PartWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
 
-            if (wire != null)
-            {
-                wire.preparePlacement(itemStack.getItemDamage());
-            }
+			if (wire != null)
+			{
+				wire.preparePlacement(itemStack.getItemDamage());
+			}
 
-            return wire;
-        }
-        else
-        {
-            if (!Utility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
-            {
-                return null;
-            }
+			return wire;
+		}
+		else
+		{
+			if (!Utility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
+			{
+				return null;
+			}
 
-            PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+			PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
 
-            if (wire != null)
-            {
-                wire.preparePlacement(side, itemStack.getItemDamage());
-            }
+			if (wire != null)
+			{
+				wire.preparePlacement(side, itemStack.getItemDamage());
+			}
 
-            return wire;
-        }
-    }
+			return wire;
+		}
+	}
 
-    @Override
-    public int getMetadata(int damage)
-    {
-        return damage;
-    }
+	@Override
+	public int getMetadata(int damage)
+	{
+		return damage;
+	}
 
-    @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-        return super.getUnlocalizedName(itemStack) + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName().toLowerCase();
-    }
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return super.getUnlocalizedName(itemStack) + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName().toLowerCase();
+	}
 
-    @Override
-    public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
-    {
-        if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-        {
-            list.add("Hold " + EnumColor.AQUA + "shift" + EnumColor.GREY + " for more information");
-        }
-        else
-        {
-            list.add(EnumColor.AQUA + "Resistance: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
-            list.add(EnumColor.AQUA + "Current Capacity: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
-            list.add(EnumColor.AQUA + "Shock Damage: " + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
-            list.addAll(Calclavia.splitStringPerWord("The energy transfer rate can be increased and the energy loss may be reduced by using a higher the voltage.", 5));
-        }
-    }
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
+	{
+		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		{
+			list.add("Hold " + EnumColor.AQUA + "shift" + EnumColor.GREY + " for more information");
+		}
+		else
+		{
+			list.add(EnumColor.AQUA + "Resistance: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
+			list.add(EnumColor.AQUA + "Current Capacity: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
+			list.add(EnumColor.AQUA + "Shock Damage: " + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
+			list.addAll(Calclavia.splitStringPerWord("The energy transfer rate can be increased and the energy loss may be reduced by using a higher the voltage.", 5));
+		}
+	}
 
-    @SideOnly(Side.CLIENT)
-    public int getSpriteNumber()
-    {
-        return 0;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getSpriteNumber()
+	{
+		return 0;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister register)
-    {
-        for (EnumWireMaterial material : EnumWireMaterial.values())
-        {
-            icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
-        }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister register)
+	{
+		for (EnumWireMaterial material : EnumWireMaterial.values())
+		{
+			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
+		}
 
-        RenderFlatWire.flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
-        RenderPartWire.wireIcon = register.registerIcon(ResonantInduction.PREFIX + "models/wire");
-        RenderPartWire.insulationIcon = register.registerIcon(ResonantInduction.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
-    }
+		RenderFlatWire.flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
+		RenderPartWire.wireIcon = register.registerIcon(ResonantInduction.PREFIX + "models/wire");
+		RenderPartWire.insulationIcon = register.registerIcon(ResonantInduction.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage(int meta)
-    {
-        return icons[meta];
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIconFromDamage(int meta)
+	{
+		return icons[meta];
+	}
 
-    @Override
-    public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
-    {
-        for (EnumWireMaterial mat : EnumWireMaterial.values())
-        {
-            listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
-        }
-    }
+	@Override
+	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	{
+		for (EnumWireMaterial mat : EnumWireMaterial.values())
+		{
+			listToAddTo.add(new ItemStack(itemID, 1, mat.ordinal()));
+		}
+	}
 }

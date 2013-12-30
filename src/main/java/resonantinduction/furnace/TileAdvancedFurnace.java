@@ -2,10 +2,6 @@ package resonantinduction.furnace;
 
 import java.util.ArrayList;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -20,6 +16,10 @@ import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketSender;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Meant to replace the furnace class.

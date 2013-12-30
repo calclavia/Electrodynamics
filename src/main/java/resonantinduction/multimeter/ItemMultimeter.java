@@ -32,7 +32,7 @@ public class ItemMultimeter extends ItemMultipartBase
 		{
 			pos.offset(side ^ 1, -1);
 		}
-		
+
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)

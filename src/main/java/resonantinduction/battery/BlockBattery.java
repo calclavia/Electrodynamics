@@ -5,16 +5,12 @@ package resonantinduction.battery;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import resonantinduction.api.ICapacitor;
 import resonantinduction.base.BlockBase;
-import resonantinduction.base.ListUtil;
 import resonantinduction.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -13,14 +13,8 @@ import codechicken.multipart.TMultiPart;
 public class MultipartRI implements IPartFactory
 {
 	public static MultipartRI INSTANCE;
-	
-	public static final String[] PART_TYPES = {
-	                                           "resonant_induction_wire",
-	                                           "resonant_induction_flat_wire", 
-	                                           "resonant_induction_flat_switch_wire", 
-	                                           "resonant_induction_multimeter", 
-	                                           "resonant_induction_transformer"
-	};
+
+	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer" };
 
 	public MultipartRI()
 	{
@@ -33,24 +27,24 @@ public class MultipartRI implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-	    switch(name)
-	    {
-	        case "resonant_induction_wire":
-	            return new PartWire();
-	            
-	        case "resonant_induction_flat_wire":
-	            return new PartFlatWire();
-	            
-	        case "resonant_induction_flat_switch_wire":
-	            return new PartFlatSwitchWire();
-	            
-	        case "resonant_induction_multimeter":
-	            return new PartMultimeter();
-	            
-	        case "resonant_induction_transformer":
-	            return new PartTransformer();
-	    }
-	    
+		switch (name)
+		{
+			case "resonant_induction_wire":
+				return new PartWire();
+
+			case "resonant_induction_flat_wire":
+				return new PartFlatWire();
+
+			case "resonant_induction_flat_switch_wire":
+				return new PartFlatSwitchWire();
+
+			case "resonant_induction_multimeter":
+				return new PartMultimeter();
+
+			case "resonant_induction_transformer":
+				return new PartTransformer();
+		}
+
 		return null;
 	}
 }

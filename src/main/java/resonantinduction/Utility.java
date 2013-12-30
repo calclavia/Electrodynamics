@@ -35,36 +35,18 @@ public class Utility
 			return true;
 		return b.isBlockSolidOnSide(w, x, y, z, side);
 	}
-	
-    public static int isDye(ItemStack is)
-    {
-        String[] dyes =
-        {
-            "dyeBlack",
-            "dyeRed",
-            "dyeGreen",
-            "dyeBrown",
-            "dyeBlue",
-            "dyePurple",
-            "dyeCyan",
-            "dyeLightGray",
-            "dyeGray",
-            "dyePink",
-            "dyeLime",
-            "dyeYellow",
-            "dyeLightBlue",
-            "dyeMagenta",
-            "dyeOrange",
-            "dyeWhite"
-        };
-        
-        for (int i = 0; i < dyes.length; i++)
-        {
-            if (OreDictionary.getOreID(is) != -1 && OreDictionary.getOreName(OreDictionary.getOreID(is)).equals(dyes[i]))
-                return i;
-        }
-        
-        return -1;
-    }
+
+	public static int isDye(ItemStack is)
+	{
+		String[] dyes = { "dyeBlack", "dyeRed", "dyeGreen", "dyeBrown", "dyeBlue", "dyePurple", "dyeCyan", "dyeLightGray", "dyeGray", "dyePink", "dyeLime", "dyeYellow", "dyeLightBlue", "dyeMagenta", "dyeOrange", "dyeWhite" };
+
+		for (int i = 0; i < dyes.length; i++)
+		{
+			if (OreDictionary.getOreID(is) != -1 && OreDictionary.getOreName(OreDictionary.getOreID(is)).equals(dyes[i]))
+				return i;
+		}
+
+		return -1;
+	}
 
 }

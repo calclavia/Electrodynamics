@@ -278,6 +278,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		super.onNeighborChanged();
 	}
 
+	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
 		if (!world().isRemote)
@@ -591,7 +592,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	{
 		int absDir = Rotation.rotateSide(side, r);
 		TMultiPart facePart = tile().partMap(absDir);
-		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectTo((PartFlatWire) facePart)))
+		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectTo(facePart)))
 			return false;
 
 		if (tile().partMap(PartMap.edgeBetween(side, absDir)) != null)
@@ -712,7 +713,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 			{
 				return ((PartFlatWire) tp).connectInternal(this, side);
 			}
-			
+
 			return true;
 		}
 
@@ -724,7 +725,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		if (!(part instanceof PartFlatWire))
 			return false;
 
-		PartFlatWire wire = (PartFlatWire) part;
+		PartFlatWire wire = part;
 		if (wire.getThickness() == getThickness())
 			return side < wire.side;
 

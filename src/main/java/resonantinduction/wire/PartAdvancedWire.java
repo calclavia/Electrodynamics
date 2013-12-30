@@ -178,14 +178,14 @@ public abstract class PartAdvancedWire extends PartConductor
 	{
 		if (itemStack != null)
 		{
-		    int dyeColor = Utility.isDye(itemStack);
-		    
+			int dyeColor = Utility.isDye(itemStack);
+
 			if (dyeColor != -1 && this.isInsulated())
 			{
-                if (!player.capabilities.isCreativeMode)
-                {
-                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                }
+				if (!player.capabilities.isCreativeMode)
+				{
+					player.inventory.decrStackSize(player.inventory.currentItem, 1);
+				}
 
 				this.setColor(dyeColor);
 				return true;
@@ -206,10 +206,10 @@ public abstract class PartAdvancedWire extends PartConductor
 				{
 					if (!player.capabilities.isCreativeMode)
 					{
-					    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+						player.inventory.decrStackSize(player.inventory.currentItem, 1);
 					}
-					
-                    this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
+
+					this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
 					return true;
 				}
 			}

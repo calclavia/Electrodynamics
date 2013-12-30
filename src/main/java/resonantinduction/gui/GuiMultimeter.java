@@ -73,14 +73,15 @@ public class GuiMultimeter extends GuiContainerBase
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int par1, int par2)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		String s = TranslationHelper.getLocal("tile.resonantinduction:multimeter.name");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
 		this.fontRenderer.drawString(EnumColor.DARK_GREEN + "Average Energy:", 35, 15, 4210752);
-		this.renderUniversalDisplay(35, 25, this.multimeter.getAverageDetectedEnergy(), par1, par2, Unit.JOULES);
+		this.renderUniversalDisplay(35, 25, this.multimeter.getAverageDetectedEnergy(), mouseX, mouseY, Unit.JOULES);
 		this.fontRenderer.drawString(EnumColor.DARK_GREEN + "Energy:", 35, 35, 4210752);
-		this.renderUniversalDisplay(35, 45, this.multimeter.getDetectedEnergy(), par1, par2, Unit.JOULES);
+		this.renderUniversalDisplay(35, 45, this.multimeter.getDetectedEnergy(), mouseX, mouseY, Unit.JOULES);
 		this.fontRenderer.drawString(EnumColor.ORANGE + "Output Redstone If... ", 35, 58, 4210752);
 		this.fontRenderer.drawString(EnumColor.RED + this.multimeter.getMode().display, 35, 68, 4210752);
 		this.fontRenderer.drawString(Unit.JOULES.name + "(s)", 35, 100, 4210752);
@@ -92,8 +93,12 @@ public class GuiMultimeter extends GuiContainerBase
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
 		super.drawGuiContainerBackgroundLayer(f, x, y);
-		/*int length = Math.min((int) (this.multimeter.getDetectedEnergy() / this.multimeter.getPeak()) * 115, 115);
-		this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length, 176, 115 - length, 6, length);*/
+		/*
+		 * int length = Math.min((int) (this.multimeter.getDetectedEnergy() /
+		 * this.multimeter.getPeak()) * 115, 115);
+		 * this.drawTexturedModalRect(this.containerWidth + 14, this.containerHeight + 126 - length,
+		 * 176, 115 - length, 6, length);
+		 */
 	}
 
 	@Override

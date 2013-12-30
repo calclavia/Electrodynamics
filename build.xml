@@ -16,7 +16,7 @@
 		
 		<get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar"
 			dest="${dir.mcp}/lib/CCL-dev.jar"/>
-		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.227.jar"
+		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.231.jar"
 			dest="${dir.mcp}/lib/FMP-dev.jar"/>
 
 		<copy todir="${dir.mcp}/src/minecraft">
@@ -67,12 +67,6 @@
 			
 			<!-- Copy all resources -->
 			<fileset dir="${dir.development}src/main/resources">
-				<exclude name=".git/**"/>
-				<exclude name="**/*.java"/>
-				<exclude name="**/*.xml"/>
-			</fileset>
-			
-			<fileset dir="${dir.development}Calclavia-Core/src/main/resources/">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.java"/>
 				<exclude name="**/*.xml"/>

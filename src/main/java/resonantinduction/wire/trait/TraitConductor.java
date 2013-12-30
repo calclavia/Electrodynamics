@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import codechicken.multipart.TMultiPart;

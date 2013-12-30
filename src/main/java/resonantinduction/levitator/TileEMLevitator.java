@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
-import resonantinduction.base.ListUtil;
 import resonantinduction.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;

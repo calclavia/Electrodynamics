@@ -71,7 +71,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			RenderBattery.render();
 			return true;
 		}
-		
+
 		return false;
 	}
 

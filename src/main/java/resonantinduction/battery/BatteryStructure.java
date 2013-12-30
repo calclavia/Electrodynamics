@@ -2,12 +2,10 @@ package resonantinduction.battery;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
 
 public class BatteryStructure extends EnergyStorageHandler
 {
@@ -76,10 +74,10 @@ public class BatteryStructure extends EnergyStorageHandler
 	public void merge(TileBattery tile)
 	{
 		// Merge structure.
-		long energyToMerge = ((TileBattery) tile).structure.getEnergy();
-		long capacityToMerge = ((TileBattery) tile).structure.getEnergyCapacity();
-		this.battery.addAll(((TileBattery) tile).structure.battery);
-		((TileBattery) tile).structure.battery.clear();
+		long energyToMerge = tile.structure.getEnergy();
+		long capacityToMerge = tile.structure.getEnergyCapacity();
+		this.battery.addAll(tile.structure.battery);
+		tile.structure.battery.clear();
 		this.resetReferences();
 		this.setCapacity(capacityToMerge);
 		this.receiveEnergy(energyToMerge, true);

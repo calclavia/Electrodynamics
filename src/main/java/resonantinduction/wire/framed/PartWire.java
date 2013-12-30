@@ -115,11 +115,11 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 		subParts.add(currentSides[6]);
 		return subParts;
 	}
-	
-    public void preparePlacement(int meta)
-    {
-        this.setMaterial(meta);
-    }
+
+	public void preparePlacement(int meta)
+	{
+		this.setMaterial(meta);
+	}
 
 	@Override
 	public Iterable<Cuboid6> getCollisionBoxes()
@@ -277,8 +277,9 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 	 */
 	public boolean isConnectionPrevented(TileEntity tile, ForgeDirection side)
 	{
-		return (tile instanceof IConductor ? this.canConnectTo((IConductor) tile) : false) || (isBlockedOnSide(side));
-		// || tile instanceof IBlockableConnection && ((IBlockableConnection) tile).isBlockedOnSide(side.getOpposite()))*/;
+		return (tile instanceof IConductor ? this.canConnectTo(tile) : false) || (isBlockedOnSide(side));
+		// || tile instanceof IBlockableConnection && ((IBlockableConnection)
+		// tile).isBlockedOnSide(side.getOpposite()))*/;
 	}
 
 	public byte getPossibleWireConnections()

@@ -1,12 +1,9 @@
 package resonantinduction.transformer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -59,7 +56,7 @@ public class RenderTransformer
 				break;
 			case 4:
 				GL11.glRotatef(90, 0, 0, 1);
-				GL11.glTranslatef(1, -1,0);
+				GL11.glTranslatef(1, -1, 0);
 				break;
 			case 5:
 				GL11.glRotatef(-90, 0, 0, 1);
