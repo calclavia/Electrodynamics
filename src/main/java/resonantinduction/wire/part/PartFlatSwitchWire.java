@@ -8,7 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.MultiPartRegistry;
+import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
 public class PartFlatSwitchWire extends PartFlatWire 
@@ -17,7 +20,24 @@ public class PartFlatSwitchWire extends PartFlatWire
     public boolean canConnectTo(Object obj)
     {
         if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))
+        {
             return super.canConnectTo(obj);
+        }
+        else
+        {
+            for (TMultiPart tp : tile().jPartList())
+            {
+                if (tp instanceof IRedstonePart)
+                {
+                    IRedstonePart rp = (IRedstonePart)tp;
+                    if ((Math.max(rp.strongPowerLevel(this.side ^ 0x1), rp.weakPowerLevel(this.side ^ 0x1)) << 4) > 0)
+                    {
+                        return super.canConnectTo(obj);
+                    }
+                }
+            }
+        }
+        
         return false;
     }
     
@@ -37,7 +57,7 @@ public class PartFlatSwitchWire extends PartFlatWire
         {
             if (!w.isRemote)
             {
-                PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+                PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
                 wire.isInsulated = this.isInsulated;
                 wire.color = this.color;
                 wire.connections = this.connections;
@@ -63,4 +83,12 @@ public class PartFlatSwitchWire extends PartFlatWire
             return super.activate(player, part, item);
         }
     }
+    
+    @Override
+    public void drop()
+    {
+        tile().dropItems(Collections.singletonList(new ItemStack(Block.lever, 1)));
+        super.drop();
+    }
+
 }
