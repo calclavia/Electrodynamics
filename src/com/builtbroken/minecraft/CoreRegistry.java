@@ -22,10 +22,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /** Handler to make registering all parts of a mod's objects that are loaded into the game by forge
- * 
+ *
  * @author DarkGuardsman */
 public class CoreRegistry
 {
@@ -54,7 +53,7 @@ public class CoreRegistry
     public static Configuration masterBlockConfig = new Configuration(new File(Loader.instance().getConfigDir(), "objects/EnabledBlocks.cfg"));
 
     /** Generates a block using reflection, and runs it threw config checks
-     * 
+     *
      * @param name - name to register the block with
      * @param modID - mod id to register the block to
      * @param blockClass - class to generate the instance from */
@@ -64,7 +63,7 @@ public class CoreRegistry
     }
 
     /** Generates a block using reflection, and runs it threw config checks
-     * 
+     *
      * @param name - name to register the block with
      * @param modID - mod id to register the block to
      * @param blockClass - class to generate the instance from
@@ -75,7 +74,7 @@ public class CoreRegistry
     }
 
     /** Generates a block using reflection, and runs it threw config checks
-     * 
+     *
      * @param name - name to register the block with
      * @param modID - mod id to register the block to
      * @param blockClass - class to generate the instance from
@@ -86,7 +85,7 @@ public class CoreRegistry
     }
 
     /** Generates a block using reflection, and runs it threw config checks
-     * 
+     *
      * @param name - name to register the block with
      * @param modID - mod id to register the block to
      * @param blockClass - class to generate the instance from
@@ -149,7 +148,7 @@ public class CoreRegistry
     }
 
     /** Method to get block via name
-     * 
+     *
      * @param blockName
      * @return Block requested */
     public static Block getBlock(String blockName)
@@ -166,7 +165,7 @@ public class CoreRegistry
     }
 
     /** Creates a new fluid block using the prefab following a few conditions.
-     * 
+     *
      * @param modDomainPrefix - prefix of the mod, used for texture refrence and block registry
      * @param config - config file to pull the blockID from
      * @param fluid - fluid to link to this block */
@@ -199,7 +198,7 @@ public class CoreRegistry
 
     /** Creates a new item using reflection as well runs it threw some check to activate any
      * interface methods
-     * 
+     *
      * @param name - name to register the item with
      * @param modid - mods that the item comes from
      * @param clazz - item class

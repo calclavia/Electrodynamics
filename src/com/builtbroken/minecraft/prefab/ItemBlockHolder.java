@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-/** Simple itemBlock class for quick use with a block
- * 
+/** Simple itemBlock class for quick use with a block for controlling metadata
+ *
  * @author Darkguardsman */
 public class ItemBlockHolder extends ItemBlock
 {

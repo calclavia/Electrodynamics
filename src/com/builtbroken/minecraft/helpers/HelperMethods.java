@@ -17,7 +17,7 @@ import universalelectricity.api.vector.Vector3;
 /** Class full of generic re-usable methods
  * 
  * @author DarkGuardsman */
-public class DarksHelper
+public class HelperMethods
 {
     /** Used to find all tileEntities sounding the location you will have to filter for selective
      * tileEntities

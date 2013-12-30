@@ -20,7 +20,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
 public class ClientRegistryProxy extends RegistryProxy
 {
     @Override
@@ -36,13 +36,6 @@ public class ClientRegistryProxy extends RegistryProxy
                 ClientRegistry.bindTileEntitySpecialRenderer(par.left(), par.right());
             }
         }
-    }
-
-    @Override
-    public void regiserTileEntity(String name, Class<? extends TileEntity> clazz)
-    {
-        super.regiserTileEntity(name, clazz);
-
     }
 
     @Override
