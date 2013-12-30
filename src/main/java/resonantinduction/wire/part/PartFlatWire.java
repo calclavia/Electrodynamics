@@ -288,12 +288,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
             if (!w.isRemote)
             {
                 PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
-                wire.isInsulated = this.isInsulated;
-                wire.color = this.color;
-                wire.connections = this.connections;
-                wire.material = this.material;
-                wire.side = this.side;
-                wire.connMap = this.connMap;
+                wire.copyFrom(this);
                 
                 if (tile.canReplacePart(this, wire))
                 {
@@ -898,5 +893,21 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
     {
         CCRenderState.reset();
         RenderFlatWire.renderBreakingOverlay(renderBlocks.overrideBlockTexture, this);
+    }
+    
+    /**
+     * Utility method to aid in initializing this or subclasses, usually when you need to change the wire to another type
+     * @param otherCable the wire to copy from
+     */
+    public void copyFrom(PartFlatWire otherCable)
+    {
+        this.isInsulated = otherCable.isInsulated;
+        this.color = otherCable.color;
+        this.connections = otherCable.connections;
+        this.material = otherCable.material;
+        this.side = otherCable.side;
+        this.connMap = otherCable.connMap;
+        this.setNetwork(otherCable.getNetwork());
+        this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
     }
 }

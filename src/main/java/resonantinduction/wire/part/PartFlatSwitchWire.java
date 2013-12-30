@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
 import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
@@ -58,12 +57,7 @@ public class PartFlatSwitchWire extends PartFlatWire
             if (!w.isRemote)
             {
                 PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
-                wire.isInsulated = this.isInsulated;
-                wire.color = this.color;
-                wire.connections = this.connections;
-                wire.material = this.material;
-                wire.side = this.side;
-                wire.connMap = this.connMap;
+                wire.copyFrom(this);
                 
                 if (tile.canReplacePart(this, wire))
                 {
