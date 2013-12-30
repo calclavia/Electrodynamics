@@ -80,7 +80,7 @@
 		</copy>
 		
 		<copy todir="APIContents">
-			<fileset dir="${dir.development}src/resonantinduction/api" excludes=".git/**" />	
+			<fileset dir="${dir.development}src/main/java/resonantinduction/api" excludes=".git/**" />	
 		</copy>
 		
 		<jar destfile="output/${file.mainfile}">
