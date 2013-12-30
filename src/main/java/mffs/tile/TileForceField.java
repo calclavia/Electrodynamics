@@ -47,7 +47,7 @@ public class TileForceField extends TileAdvanced implements IPacketReceiver
 	}
 
 	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... obj)
 	{
 		try
 		{
