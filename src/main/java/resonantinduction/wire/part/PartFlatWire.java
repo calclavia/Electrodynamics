@@ -2,6 +2,7 @@ package resonantinduction.wire.part;
 
 import java.util.Arrays;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -29,6 +31,7 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TFacePart;
@@ -271,15 +274,44 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
         super.onNeighborChanged();
     }
 
-    @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
     {
         if (!world().isRemote)
         {
             System.out.println(this.getNetwork());
         }
-
-        return super.activate(player, part, item);
+        TileMultipart tile = tile();
+        World w = world();
+        
+        if (item.getItem().itemID == Block.lever.blockID)
+        {
+            if (!w.isRemote)
+            {
+                PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
+                wire.isInsulated = this.isInsulated;
+                wire.color = this.color;
+                wire.connections = this.connections;
+                wire.material = this.material;
+                wire.side = this.side;
+                wire.connMap = this.connMap;
+                
+                if (tile.canReplacePart(this, wire))
+                {
+                    tile.remPart(this);
+                    TileMultipart.addPart(w, new BlockCoord(tile), wire);
+                    
+                    if (!player.capabilities.isCreativeMode)
+                    {
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    }
+                }
+            }
+            return true;
+        }
+        else
+        {
+            return super.activate(player, part, item);
+        }
     }
 
     @Override
