@@ -133,9 +133,7 @@ public class RenderPartWire
 
 	public static void registerIcons(IconRegister iconReg)
 	{
-		wireIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/wire");
 		lainWireIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/lainWire");
-		insulationIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
 		breakIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "wire");
 	}
 
