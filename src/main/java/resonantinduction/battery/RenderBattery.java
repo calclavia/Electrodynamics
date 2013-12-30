@@ -86,14 +86,15 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 	public static void render()
 	{
+		/*
 		advancedmodel.renderAll();
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);*/
 	}
 	
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		/*GL11.glPushMatrix();
+		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 
@@ -107,6 +108,6 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		}
 
 		MODEL.render(0.0625f);
-		GL11.glPopMatrix();*/
+		GL11.glPopMatrix();
 	}
 }
