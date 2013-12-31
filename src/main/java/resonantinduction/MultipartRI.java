@@ -27,22 +27,25 @@ public class MultipartRI implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-		switch (name)
+		if (name == "resonant_induction_wire")
 		{
-			case "resonant_induction_wire":
-				return new PartWire();
-
-			case "resonant_induction_flat_wire":
-				return new PartFlatWire();
-
-			case "resonant_induction_flat_switch_wire":
-				return new PartFlatSwitchWire();
-
-			case "resonant_induction_multimeter":
-				return new PartMultimeter();
-
-			case "resonant_induction_transformer":
-				return new PartTransformer();
+			return new PartWire();
+		}
+		else if (name == "resonant_induction_flat_wire")
+		{
+			return new PartFlatWire();
+		}
+		else if (name == "resonant_induction_flat_switch_wire")
+		{
+			return new PartFlatSwitchWire();
+		}
+		else if (name == "resonant_induction_multimeter")
+		{
+			return new PartMultimeter();
+		}
+		else if (name == "resonant_induction_transformer")
+		{
+			return new PartTransformer();
 		}
 
 		return null;
