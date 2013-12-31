@@ -34,7 +34,7 @@ import resonantinduction.tesla.TileTesla;
 import resonantinduction.transformer.ItemTransformer;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemWire;
-import calclavia.components.BasicRegistry;
+import calclavia.components.ComponentRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -220,12 +220,6 @@ public class ResonantInduction
 		{
 			material.setWire(itemPartWire);
 		}
-
-		// Basic Components
-		BasicRegistry.register("itemIngotCopper");
-		BasicRegistry.register("itemIngotSteel");
-		BasicRegistry.register("itemPlateSteel");
-		BasicRegistry.register("itemIngotBronze");
 	}
 
 	@EventHandler
