@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.interfaces.IMultiBlock;
 import com.builtbroken.minecraft.network.ISimplePacketReceiver;
 import com.builtbroken.minecraft.network.PacketHandler;
@@ -15,22 +16,23 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 
-/** This is a multiblock to be used for blocks that are bigger than one block.
- * 
- * @author Calclavia */
 public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
-{
-    // The the position of the main block
-    public Vector3 mainBlockPosition;
+{    
+    private Vector3 hostPosition;
 
-    public TileEntityMulti()
+    public Vector3 getMainBlock()
     {
+        if (this.hostPosition != null)
+        {
+            return new Vector3(this).translate(this.hostPosition);
+        }
 
+        return null;
     }
 
     public void setMainBlock(Vector3 mainBlock)
     {
-        this.mainBlockPosition = mainBlock;
+        this.hostPosition = mainBlock.clone().translate(new Vector3(this).invert());
 
         if (!this.worldObj.isRemote)
         {
@@ -39,13 +41,24 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
     }
 
     @Override
+    public Packet getDescriptionPacket()
+    {
+        if (this.hostPosition != null)
+        {
+            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "desc", this, this.hostPosition.intX(), this.hostPosition.intY(), this.hostPosition.intZ());
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
     {
         try
         {
-            if (id.equalsIgnoreCase("MainBlock"))
+            if (id.equalsIgnoreCase("desc"))
             {
-                this.mainBlockPosition = new Vector3(data.readInt(), data.readInt(), data.readInt());
+                this.hostPosition = new Vector3(data.readInt(), data.readInt(), data.readInt());
                 return true;
             }
         }
@@ -57,47 +70,28 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
         return false;
     }
 
-    @Override
-    public Packet getDescriptionPacket()
+    public void onBlockRemoval(BlockMulti block)
     {
-        if (this.mainBlockPosition != null)
+        if (this.getMainBlock() != null)
         {
-            return PacketHandler.instance().getTilePacket(DarkCore.CHANNEL, "MainBlock", this, this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
-        }
+            TileEntity tileEntity = this.getMainBlock().getTileEntity(this.worldObj);
 
-        return null;
-    }
-
-    public void onBlockRemoval()
-    {
-        if (this.mainBlockPosition != null)
-        {
-            TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
-
-            if (tileEntity != null && tileEntity instanceof IMultiBlock)
+            if (tileEntity instanceof IMultiBlock)
             {
-                IMultiBlock mainBlock = (IMultiBlock) tileEntity;
-
-                if (mainBlock != null)
-                {
-                    mainBlock.onDestroy(this);
-                }
+                block.destroyMultiBlockStructure((IMultiBlock) tileEntity);
             }
         }
     }
 
-    public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer)
+    public boolean onBlockActivated(World par1World, int x, int y, int z, EntityPlayer entityPlayer)
     {
-        if (this.mainBlockPosition != null)
+        if (this.getMainBlock() != null)
         {
-            TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.mainBlockPosition.intX(), this.mainBlockPosition.intY(), this.mainBlockPosition.intZ());
+            TileEntity tileEntity = this.getMainBlock().getTileEntity(this.worldObj);
 
-            if (tileEntity != null)
+            if (tileEntity instanceof IBlockActivated)
             {
-                if (tileEntity instanceof IMultiBlock)
-                {
-                    return ((IMultiBlock) tileEntity).onActivated(par5EntityPlayer);
-                }
+                return ((IBlockActivated) tileEntity).onActivated(entityPlayer);
             }
         }
 
@@ -109,7 +103,11 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.mainBlockPosition = new Vector3(nbt.getCompoundTag("mainBlockPosition"));
+
+        if (nbt.hasKey("mainBlockPosition"))
+        {
+            this.hostPosition = new Vector3(nbt.getCompoundTag("mainBlockPosition"));
+        }
     }
 
     /** Writes a tile entity to NBT. */
@@ -118,9 +116,9 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
     {
         super.writeToNBT(nbt);
 
-        if (this.mainBlockPosition != null)
+        if (this.hostPosition != null)
         {
-            nbt.setCompoundTag("mainBlockPosition", this.mainBlockPosition.writeToNBT(new NBTTagCompound()));
+            nbt.setCompoundTag("mainBlockPosition", this.hostPosition.writeToNBT(new NBTTagCompound()));
         }
     }
 
@@ -132,5 +130,4 @@ public class TileEntityMulti extends TileEntity implements ISimplePacketReceiver
     {
         return false;
     }
-
 }
