@@ -30,8 +30,6 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		// new
-		// Vector3(tile()).modifyPositionFromSide(from).getTileEntity(world())
 		return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
 	}
 

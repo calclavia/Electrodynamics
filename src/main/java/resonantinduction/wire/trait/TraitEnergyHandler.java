@@ -4,12 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.wire.PartConductor;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cofh.api.energy.IEnergyHandler;
 
 public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 {
+	public Set<PartConductor> teConductorInterfaces = new HashSet<PartConductor>();
 	public Set<IEnergyHandler> teInterfaces = new HashSet<IEnergyHandler>();
 
 	@Override
@@ -19,6 +21,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 
 		if (that instanceof TraitEnergyHandler)
 		{
+			this.teConductorInterfaces = ((TraitEnergyHandler) that).teConductorInterfaces;
 			this.teInterfaces = ((TraitEnergyHandler) that).teInterfaces;
 		}
 	}
@@ -30,7 +33,14 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 
 		if (part instanceof IEnergyHandler)
 		{
-			this.teInterfaces.add((IEnergyHandler) part);
+			if (part instanceof PartConductor)
+			{
+				this.teConductorInterfaces.add((PartConductor) part);
+			}
+			else
+			{
+				this.teInterfaces.add((IEnergyHandler) part);
+			}
 		}
 	}
 
@@ -41,7 +51,14 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 
 		if (part instanceof IEnergyHandler)
 		{
-			this.teInterfaces.remove(part);
+			if (part instanceof PartConductor)
+			{
+				this.teConductorInterfaces.remove((PartConductor) part);
+			}
+			else
+			{
+				this.teInterfaces.remove(part);
+			}
 		}
 	}
 
@@ -50,6 +67,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 	{
 		super.clearParts();
 		this.teInterfaces.clear();
+		this.teConductorInterfaces.clear();
 	}
 
 	@Override
@@ -66,12 +84,20 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.teInterfaces.contains(part))
+					if (this.teConductorInterfaces.contains(part))
 					{
 						return ((IEnergyHandler) part).receiveEnergy(from, maxReceive, simulate);
 					}
 				}
 			}
+		}
+
+		/**
+		 * Failed, try pure TE interfaces.
+		 */
+		for (IEnergyHandler handler : this.teInterfaces)
+		{
+			return handler.receiveEnergy(from, maxReceive, simulate);
 		}
 
 		return 0;
@@ -94,12 +120,17 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.teInterfaces.contains(part))
+					if (this.teConductorInterfaces.contains(part))
 					{
 						return ((IEnergyHandler) part).canInterface(from);
 					}
 				}
 			}
+		}
+
+		for (IEnergyHandler handler : this.teInterfaces)
+		{
+			return handler.canInterface(from);
 		}
 
 		return false;
@@ -108,12 +139,54 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 	@Override
 	public int getEnergyStored(ForgeDirection from)
 	{
+		if (this.partMap(from.ordinal()) == null)
+		{
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (dir != from.getOpposite())
+				{
+					TMultiPart part = this.partMap(dir.ordinal());
+
+					if (this.teConductorInterfaces.contains(part))
+					{
+						return ((IEnergyHandler) part).getEnergyStored(from);
+					}
+				}
+			}
+		}
+
+		for (IEnergyHandler handler : this.teInterfaces)
+		{
+			return handler.getEnergyStored(from);
+		}
+
 		return 0;
 	}
 
 	@Override
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
+		if (this.partMap(from.ordinal()) == null)
+		{
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (dir != from.getOpposite())
+				{
+					TMultiPart part = this.partMap(dir.ordinal());
+
+					if (this.teConductorInterfaces.contains(part))
+					{
+						return ((IEnergyHandler) part).getMaxEnergyStored(from);
+					}
+				}
+			}
+		}
+
+		for (IEnergyHandler handler : this.teInterfaces)
+		{
+			return handler.getMaxEnergyStored(from);
+		}
+
 		return 0;
 	}
 
