@@ -8,9 +8,8 @@ import mffs.api.modules.IProjectorMode;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.IRotatable;
 
-public interface IFieldInteraction extends IModuleAcceptor, IRotatable, IActivatable
+public interface IFieldInteraction extends IModuleAcceptor, IActivatable
 {
 	/**
 	 * Gets the mode of the projector, mainly the shape and size of it.
@@ -68,4 +67,8 @@ public interface IFieldInteraction extends IModuleAcceptor, IRotatable, IActivat
 
 	public void setCalculated(boolean bool);
 
+	/**
+	 * @return Gets the facing direction. Always returns the front side of the block.
+	 */
+	public ForgeDirection getDirection();
 }
