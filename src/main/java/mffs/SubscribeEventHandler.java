@@ -148,7 +148,7 @@ public class SubscribeEventHandler
 					TileForceFieldProjector projector = (TileForceFieldProjector) fortronFrequency;
 
 					if (projector.getCalculatedField() != null)
-					{System.out.println(new Vector3(evt.x, evt.y, evt.z));
+					{
 						if (projector.getCalculatedField().contains(new Vector3(evt.x, evt.y, evt.z)))
 						{
 							projector.markFieldUpdate = true;
