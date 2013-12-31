@@ -44,6 +44,7 @@ public class PacketHandler implements IPacketHandler
         registerManager(new PacketManagerTile());
         registerManager(PacketManagerKeyEvent.instance());
         registerManager(new PacketManagerEntity());
+        registerManager(new PacketManagerItem());
     }
 
     public static void registerManager(IPacketManager manager)

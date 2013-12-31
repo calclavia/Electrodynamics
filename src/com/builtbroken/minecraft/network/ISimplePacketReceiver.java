@@ -16,5 +16,6 @@ public interface ISimplePacketReceiver
      * @param data - data from the packet, after location has been read
      * @param player - player that the packet was sent to or came from
      * @return true if the packet was used */
-    public boolean simplePacket(String id, ByteArrayDataInput data, Player player);
+    public boolean simplePacket(String id, ByteArrayDataInput data, Player player);    
+    
 }
