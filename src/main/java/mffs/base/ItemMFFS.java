@@ -2,6 +2,7 @@ package mffs.base;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -20,6 +21,7 @@ public class ItemMFFS extends Item
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
 		this.setTextureName(ModularForceFieldSystem.PREFIX + name);
 		this.setNoRepair();
+		GameRegistry.registerItem(this, this.getUnlocalizedName(), ModularForceFieldSystem.ID);
 	}
 
 	@Override

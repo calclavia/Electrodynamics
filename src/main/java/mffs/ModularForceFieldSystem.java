@@ -66,7 +66,6 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import calclavia.components.BasicRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -87,7 +86,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "required-after:CalclaviaCore")
+@Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "after:CalclaviaCore")
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "mffs")
 public class ModularForceFieldSystem
@@ -300,15 +299,6 @@ public class ModularForceFieldSystem
 	@EventHandler
 	public void load(FMLInitializationEvent evt)
 	{
-		/**
-		 * Load Basic Components
-		 */
-		BasicRegistry.register("itemIngotSteel");
-		BasicRegistry.register("itemDustSteel");
-		BasicRegistry.register("itemIngotCopper");
-		BasicRegistry.register("blockOreCopper");
-		BasicRegistry.register("itemWrench");
-
 		/**
 		 * Load language file(s)
 		 */
