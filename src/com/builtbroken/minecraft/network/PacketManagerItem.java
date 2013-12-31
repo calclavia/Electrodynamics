@@ -49,7 +49,7 @@ public class PacketManagerItem implements IPacketManager
             }
             else if (slot == -1)
             {
-                stack = entityPlayer.getHeldItem();
+                stack = entityPlayer.inventory.getCurrentItem();
             }
             if (stack != null & stack.getItem() != null)
             {
