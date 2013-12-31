@@ -1,6 +1,7 @@
 package mffs.tile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.chunk.Chunk;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 
@@ -42,6 +44,8 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	private boolean fieldRequireTicks = false;
 
 	public boolean markFieldUpdate = true;
+
+	public static final HashMap<Chunk, Set<TileForceFieldProjector>> chunkProjectorMap = new HashMap<Chunk, Set<TileForceFieldProjector>>();
 
 	public TileForceFieldProjector()
 	{
@@ -295,6 +299,8 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 								}
 
+								this.forceFields.add(vector);
+
 								// Sets the controlling projector of the force field block to this
 								// one.
 								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
@@ -305,7 +311,6 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 								}
 
 								this.requestFortron(1, true);
-								this.forceFields.add(vector);
 
 								if (constructionCount > constructionSpeed)
 								{

@@ -23,6 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.event.ChunkModifiedEvent.ChunkSetBlockEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -132,22 +133,26 @@ public class SubscribeEventHandler
 
 	/**
 	 * When a block breaks, mark force field projectors for an update.
+	 * 
 	 * @param evt
 	 */
 	@ForgeSubscribe
-	public void blockBreakEvent(BreakEvent evt)
+	public void chunkModifyEvent(ChunkSetBlockEvent evt)
 	{
-		for (IFortronFrequency fortronFrequency : FrequencyGrid.instance().getFortronTiles(evt.world))
+		if (!evt.world.isRemote && evt.blockID == 0)
 		{
-			if (fortronFrequency instanceof TileForceFieldProjector)
+			for (IFortronFrequency fortronFrequency : FrequencyGrid.instance().getFortronTiles(evt.world))
 			{
-				TileForceFieldProjector projector = (TileForceFieldProjector) fortronFrequency;
-
-				if (projector.getCalculatedField() != null)
+				if (fortronFrequency instanceof TileForceFieldProjector)
 				{
-					if (projector.getCalculatedField().contains(new Vector3(evt.x, evt.y, evt.z)))
-					{
-						projector.markFieldUpdate = true;
+					TileForceFieldProjector projector = (TileForceFieldProjector) fortronFrequency;
+
+					if (projector.getCalculatedField() != null)
+					{System.out.println(new Vector3(evt.x, evt.y, evt.z));
+						if (projector.getCalculatedField().contains(new Vector3(evt.x, evt.y, evt.z)))
+						{
+							projector.markFieldUpdate = true;
+						}
 					}
 				}
 			}
