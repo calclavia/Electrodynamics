@@ -328,6 +328,15 @@ public class TileForceManipulator extends TileFieldInteraction
 
 		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
 	}
+	
+	/**
+	 * Gets the position in which the manipulator will try to translate the field into.
+	 */
+	public Vector3 getTargetTranslation()
+	{
+		
+		return null;
+	}
 
 	@Override
 	public boolean isItemValidForSlot(int slotID, ItemStack itemStack)
