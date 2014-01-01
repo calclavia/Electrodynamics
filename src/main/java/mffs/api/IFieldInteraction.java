@@ -54,7 +54,7 @@ public interface IFieldInteraction extends IModuleAcceptor, IActivatable
 	public Set<Vector3> getCalculatedField();
 
 	/**
-	 * Gets the interior points of the projector. This might cause lag so call sparingly.
+	 * Gets the absolute interior points of the projector. This might cause lag so call sparingly.
 	 * 
 	 * @return
 	 */

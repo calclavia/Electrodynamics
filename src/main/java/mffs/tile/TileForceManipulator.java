@@ -8,6 +8,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.Blacklist;
 import mffs.api.ISpecialForceManipulation;
+import mffs.api.card.ICoordLink;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
@@ -21,6 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -41,6 +43,8 @@ public class TileForceManipulator extends TileFieldInteraction
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
 	public boolean doAnchor = true;
+	
+	private int moveTime = 0;
 
 	@Override
 	public void updateEntity()
@@ -54,6 +58,9 @@ public class TileForceManipulator extends TileFieldInteraction
 
 		if (this.getMode() != null && Settings.ENABLE_MANIPULATOR)
 		{
+			/**
+			 * Passed the instance manipulation starts and only once.
+			 */
 			if (!this.worldObj.isRemote)
 			{
 				if (this.manipulationVectors != null && !this.isCalculatingManipulation)
@@ -94,6 +101,9 @@ public class TileForceManipulator extends TileFieldInteraction
 				}
 			}
 
+			/**
+			 * Force Manipulator activated, start moving...
+			 */
 			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
 			{
 				if (!this.worldObj.isRemote)
@@ -111,6 +121,9 @@ public class TileForceManipulator extends TileFieldInteraction
 				this.setActive(false);
 			}
 
+			/**
+			 * Render preview
+			 */
 			if (!this.worldObj.isRemote)
 			{
 				if (!this.isCalculated)
@@ -233,7 +246,8 @@ public class TileForceManipulator extends TileFieldInteraction
 	protected boolean canMove()
 	{
 		Set<Vector3> mobilizationPoints = this.getInteriorPoints();
-		ForgeDirection dir = this.getDirection();
+		/** The center in which we want to translate into */
+		Vector3 targetCenterPosition = this.getTargetTranslation();
 
 		loop:
 		for (Vector3 position : mobilizationPoints)
@@ -255,7 +269,9 @@ public class TileForceManipulator extends TileFieldInteraction
 					}
 				}
 
-				Vector3 targetPosition = position.clone().modifyPositionFromSide(dir);
+				// The relative position between this coordinate and the anchor.
+				Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
+				Vector3 targetPosition = targetCenterPosition.clone().add(relativePosition);
 
 				if (targetPosition.getTileEntity(this.worldObj) == this)
 				{
@@ -328,14 +344,53 @@ public class TileForceManipulator extends TileFieldInteraction
 
 		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
 	}
-	
+
 	/**
 	 * Gets the position in which the manipulator will try to translate the field into.
+	 * 
+	 * @return A vector of the target position.
 	 */
-	public Vector3 getTargetTranslation()
+	public VectorWorld getTargetTranslation()
 	{
-		
-		return null;
+		if (this.getCard() != null)
+		{
+			if (this.getCard().getItem() instanceof ICoordLink)
+			{
+				Vector3 link = ((ICoordLink) this.getCard().getItem()).getLink(this.getCard());
+				// TODO: Add multi-dimension compatibility
+				return new VectorWorld(this.worldObj, link);
+			}
+		}
+
+		return (VectorWorld) new VectorWorld(this.worldObj, this.getAbsoluteAnchor()).clone().modifyPositionFromSide(this.getDirection());
+	}
+
+	/**
+	 * Gets the movement time required in TICKS.
+	 * 
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR -1 for
+	 * default move
+	 */
+	public int getMoveTime()
+	{
+		if (this.getCard() != null)
+		{
+			if (this.getCard().getItem() instanceof ICoordLink)
+			{
+				return (int) (20 * this.getTargetTranslation().distance(this.getAbsoluteAnchor()));
+			}
+		}
+
+		return -1;
+	}
+
+	public Vector3 getAbsoluteAnchor()
+	{
+		if (this.anchor != null)
+		{
+			return new Vector3(this).add(this.anchor);
+		}
+		return new Vector3(this);
 	}
 
 	@Override
