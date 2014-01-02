@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.EventForceManipulate.EventPostForceManipulate;
@@ -52,15 +53,15 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 			if (Block.blocksList[blockId] != null)
 			{
-				list.add("Linked with: " + Block.blocksList[blockId].getLocalizedName());
+				list.add(TranslationHelper.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add("Dimension: '" + vec.world.provider.getDimensionName() + "'");
+			list.add(TranslationHelper.getLocal("info.item.dimension" + " '" + vec.world.provider.getDimensionName() + "'");
 		}
 		else
 		{
-			list.add("Not linked.");
+			list.add(TranslationHelper.getLocal("info.item.notLinked"));
 		}
 	}
 
@@ -74,7 +75,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage("Linked to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage(TranslationHelper.getLocal("message.remoteController.linked").replace("%p", x + ", " + y + ", " + z).replace("%q", Block.blocksList[vector.getBlockID(world)].getLocalizedName()));
 			}
 		}
 
@@ -164,7 +165,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage("Unable to harness " + UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES) + " from the Fortron field.");
+							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.remoteController.fail").replace("%p",UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
 						}
 					}
 				}

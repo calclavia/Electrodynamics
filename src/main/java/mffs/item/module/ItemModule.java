@@ -3,6 +3,7 @@ package mffs.item.module;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
@@ -25,7 +26,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add("Fortron: " + this.getFortronCost(1));
+		info.add(TranslationHelper.getLocal("info.item.fortron") + " " + this.getFortronCost(1));
 		super.addInformation(itemStack, player, info, b);
 	}
 

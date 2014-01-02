@@ -1,5 +1,6 @@
 package mffs.item.module.interdiction;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 		boolean hasPermission = false;
 		if (!hasPermission && entityLiving instanceof EntityPlayer)
 		{
-			((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] Leave this zone immediately. You have no right to enter.");
+			((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + TranslationHelper.getLocal("message.moduleWarn.warn"));
 		}
 
 		return false;
