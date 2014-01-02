@@ -29,7 +29,7 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 	public enum TilePacketType
 	{
 		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS,
-		TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD;
+		TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER;
 	}
 
 	/**

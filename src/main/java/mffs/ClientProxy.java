@@ -10,6 +10,8 @@ import mffs.render.FXBeam;
 import mffs.render.FXHologram;
 import mffs.render.FXHologramMoving;
 import mffs.render.FXHologramOrbit;
+import mffs.render.FxMFFS;
+import mffs.render.IEffectController;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceField;
@@ -126,6 +128,14 @@ public class ClientProxy extends CommonProxy
 	public void renderHologramOrbit(World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
 	{
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed));
+	}
+
+	@Override
+	public void renderHologramOrbit(IEffectController controller, World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
+	{
+		FxMFFS fx = new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed);
+		fx.setController(controller);
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
 	}
 
 	@Override

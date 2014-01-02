@@ -1,7 +1,6 @@
 package mffs.render;
 
 import mffs.ModularForceFieldSystem;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
@@ -15,7 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class FXHologram extends EntityFX
+public class FXHologram extends FxMFFS
 {
 	private Vector3 targetPosition = null;
 
@@ -46,6 +45,8 @@ public class FXHologram extends EntityFX
 	@Override
 	public void onUpdate()
 	{
+		super.onUpdate();
+
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;

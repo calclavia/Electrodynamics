@@ -6,6 +6,7 @@ import mffs.container.ContainerForceFieldProjector;
 import mffs.container.ContainerForceManipulator;
 import mffs.container.ContainerFortronCapacitor;
 import mffs.container.ContainerInterdictionMatrix;
+import mffs.render.IEffectController;
 import mffs.tile.TileBiometricIdentifier;
 import mffs.tile.TileCoercionDeriver;
 import mffs.tile.TileForceFieldProjector;
@@ -105,12 +106,17 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
+	public void renderHologramMoving(World world, Vector3 position, float red, float green, float blue, int age)
+	{
+
+	}
+
 	public void renderHologramOrbit(World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
 	{
 
 	}
 
-	public void renderHologramMoving(World world, Vector3 position, float red, float green, float blue, int age)
+	public void renderHologramOrbit(IEffectController owner, World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
 	{
 
 	}

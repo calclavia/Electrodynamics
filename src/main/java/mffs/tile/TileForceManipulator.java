@@ -1,6 +1,7 @@
 package mffs.tile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,8 +12,10 @@ import mffs.api.ISpecialForceManipulation;
 import mffs.api.card.ICoordLink;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
+import mffs.base.TileMFFS.TilePacketType;
 import mffs.card.ItemCard;
 import mffs.event.BlockPreMoveDelayedEvent;
+import mffs.render.IEffectController;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -30,7 +33,7 @@ import com.google.common.io.ByteArrayDataInput;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 
-public class TileForceManipulator extends TileFieldInteraction
+public class TileForceManipulator extends TileFieldInteraction implements IEffectController
 {
 	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
@@ -48,8 +51,9 @@ public class TileForceManipulator extends TileFieldInteraction
 	 * Used ONLY for teleporting.
 	 */
 	private int moveTime = 0;
-
+	private boolean canRenderMove = true;
 	public boolean didFailMove = false;
+	public int clientMoveTime;
 
 	@Override
 	public void updateEntity()
@@ -196,7 +200,14 @@ public class TileForceManipulator extends TileFieldInteraction
 					nbt.setByte("type", (byte) 1);
 					nbt.setTag("list", nbtList);
 
-					PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
+					if (this.isTeleport())
+					{
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), 60);
+					}
+					else
+					{
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
+					}
 				}
 			}
 
@@ -205,6 +216,7 @@ public class TileForceManipulator extends TileFieldInteraction
 				this.moveTime = 0;
 				this.getDelayedEvents().clear();
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal()), this.worldObj, new Vector3(this), 60);
 				this.didFailMove = false;
 			}
 		}
@@ -235,80 +247,103 @@ public class TileForceManipulator extends TileFieldInteraction
 	}
 
 	@Override
+	public ArrayList getPacketData(int packetID)
+	{
+		ArrayList objects = super.getPacketData(packetID);
+		objects.add(this.getMoveTime());
+		return objects;
+	}
+
+	@Override
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
 		super.onReceivePacket(packetID, dataStream);
-
-		if (packetID == TilePacketType.FXS.ordinal() && this.worldObj.isRemote)
+		if (this.worldObj.isRemote)
 		{
-			switch (dataStream.readByte())
+			if (packetID == TilePacketType.FXS.ordinal())
 			{
-				case 1:
+				switch (dataStream.readByte())
 				{
-					/**
-					 * Holographic FXs
-					 */
-					NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
-					byte type = nbt.getByte("type");
-
-					NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
-
-					for (int i = 0; i < nbtList.tagCount(); i++)
+					case 1:
 					{
-						Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
+						/**
+						 * Holographic FXs
+						 */
+						NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
+						byte type = nbt.getByte("type");
 
-						if (type == 1)
+						NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
+
+						for (int i = 0; i < nbtList.tagCount(); i++)
 						{
-							ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
+							Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
+
+							if (type == 1)
+							{
+								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
+							}
+							else if (type == 2)
+							{
+								// Red
+								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
+								this.updatePushedObjects(0.02f);
+							}
 						}
-						else if (type == 2)
-						{
-							// Red
-							ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
-							this.updatePushedObjects(0.02f);
-						}
+						break;
 					}
-					break;
-				}
-				case 2:
-				{
-					int animationTime = dataStream.readInt();
-					Vector3 anchorPosition = new Vector3(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
-					VectorWorld targetPosition = new VectorWorld(PacketHandler.readNBTTagCompound(dataStream));
-
-					/**
-					 * Holographic Orbit FXs
-					 */
-					NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
-
-					NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
-
-					for (int i = 0; i < nbtList.tagCount(); i++)
+					case 2:
 					{
-						// Render hologram for starting position
-						Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
-						ModularForceFieldSystem.proxy.renderHologramOrbit(this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
-						// Render hologram for destination position
-						Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
-						ModularForceFieldSystem.proxy.renderHologramOrbit(this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
-					}
+						int animationTime = dataStream.readInt();
+						Vector3 anchorPosition = new Vector3(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
+						VectorWorld targetPosition = new VectorWorld(PacketHandler.readNBTTagCompound(dataStream));
 
-					break;
+						/**
+						 * Holographic Orbit FXs
+						 */
+						NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
+
+						NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
+
+						for (int i = 0; i < nbtList.tagCount(); i++)
+						{
+							// Render hologram for starting position
+							Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
+							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
+							// Render hologram for destination position
+							Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
+							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+						}
+
+						this.canRenderMove = true;
+						break;
+					}
 				}
+
+			}
+			else if (packetID == TilePacketType.RENDER.ordinal())
+			{
+				this.canRenderMove = false;
+			}
+			else if (packetID == TilePacketType.DESCRIPTION.ordinal())
+			{
+				this.clientMoveTime = dataStream.readInt();
 			}
 		}
-		else if (packetID == TilePacketType.TOGGLE_MODE.ordinal() && !this.worldObj.isRemote)
+		else
 		{
-			this.anchor = null;
-			this.onInventoryChanged();
-		}
-		else if (packetID == TilePacketType.TOGGLE_MODE_2.ordinal() && !this.worldObj.isRemote)
-		{
-			this.displayMode = (this.displayMode + 1) % 3;
-		}
-		else if (packetID == TilePacketType.TOGGLE_MODE_3.ordinal() && !this.worldObj.isRemote)
-		{
-			this.doAnchor = !this.doAnchor;
+			if (packetID == TilePacketType.TOGGLE_MODE.ordinal())
+			{
+				this.anchor = null;
+				this.onInventoryChanged();
+			}
+			else if (packetID == TilePacketType.TOGGLE_MODE_2.ordinal())
+			{
+				this.displayMode = (this.displayMode + 1) % 3;
+			}
+			else if (packetID == TilePacketType.TOGGLE_MODE_3.ordinal())
+			{
+				this.doAnchor = !this.doAnchor;
+			}
 		}
 	}
 
@@ -373,7 +408,7 @@ public class TileForceManipulator extends TileFieldInteraction
 
 				int blockID = targetPosition.getBlockID();
 
-				if (!(this.worldObj.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
+				if (!(targetPosition.world.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(targetPosition.world, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
 				{
 					return false;
 				}
@@ -464,8 +499,6 @@ public class TileForceManipulator extends TileFieldInteraction
 				time += 20 * 60;
 			}
 
-			// TODO: Remove this, for testing.
-			time = 60;
 			return time;
 		}
 
@@ -570,5 +603,11 @@ public class TileForceManipulator extends TileFieldInteraction
 		}
 
 		return super.callMethod(computer, context, method, arguments);
+	}
+
+	@Override
+	public boolean canContinueEffect()
+	{
+		return this.canRenderMove;
 	}
 }
