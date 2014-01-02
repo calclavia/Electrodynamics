@@ -1,6 +1,7 @@
 package com.builtbroken.minecraft.save;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -11,5 +12,5 @@ public interface IPacketLoad
 {
     public void readPacket(ByteArrayDataInput data);
     
-    public void loadPacket(DataOutputStream data);    
+    public void loadPacket(DataOutputStream data) throws IOException;    
 }
