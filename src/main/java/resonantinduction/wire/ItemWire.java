@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
@@ -92,19 +93,20 @@ public class ItemWire extends JItemMultiPart
 		return super.getUnlocalizedName(itemStack) + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName().toLowerCase();
 	}
 
-	@Override
+    @Override
+    @SuppressWarnings("unchecked")
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
 		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 		{
-			list.add("Hold " + EnumColor.AQUA + "shift" + EnumColor.GREY + " for more information");
+			list.add(StatCollector.translateToLocal("tooltip.wire.noShift").replace("%0", EnumColor.AQUA.toString()).replace("%1", EnumColor.GREY.toString()));
 		}
 		else
 		{
-			list.add(EnumColor.AQUA + "Resistance: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE));
-			list.add(EnumColor.AQUA + "Current Capacity: " + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE));
-			list.add(EnumColor.AQUA + "Shock Damage: " + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage);
-			list.addAll(Calclavia.splitStringPerWord("The energy transfer rate can be increased and the energy loss may be reduced by using a higher the voltage.", 5));
+			list.add(EnumColor.AQUA + StatCollector.translateToLocal("tooltip.wire.resistance").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].resistance, Unit.RESISTANCE)));
+			list.add(EnumColor.AQUA + StatCollector.translateToLocal("tooltip.wire.current").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumWireMaterial.values()[itemstack.getItemDamage()].maxAmps, Unit.AMPERE)));
+			list.add(EnumColor.AQUA + StatCollector.translateToLocal("tooltip.wire.damage").replace("%v", "" + EnumColor.ORANGE + EnumWireMaterial.values()[itemstack.getItemDamage()].damage));
+			list.addAll(Calclavia.splitStringPerWord(StatCollector.translateToLocal("tooltip.wire.helpText"), 5));
 		}
 	}
 
