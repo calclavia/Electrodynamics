@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
 
+import com.builtbroken.minecraft.save.IPacketLoad;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -171,9 +172,54 @@ public class PacketHandler implements IPacketHandler
         return getPacketWithID(channelName, -1, sendData);
     }
 
-    /** Gets a packet for the tile entity.
+    /** Generates a packet for a tile entity using a loader instance. This is mainly used to pass
+     * data from an object inside a tile entity and have it go write back to that object on the
+     * other side of the network. Your tile entity will still need to grab the data in the same way
+     * as getTilePacket. Then just pass it back to the object that wrote the data.
      * 
-     * @return */
+     * @param channelName - channel to send the packet threw
+     * @param packetID - id to be used with the tile entity receive method
+     * @param sender - tile entity that send the packet, and will get the packet
+     * @param load - object that will be loading the data
+     * @return new Packet250CustomPayLoad */
+    public Packet getPacketFromLoader(String channelName, String packetID, TileEntity sender, IPacketLoad load)
+    {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+
+        try
+        {
+            data.writeInt(PacketHandler.tile.getID());
+
+            data.writeInt(sender.xCoord);
+            data.writeInt(sender.yCoord);
+            data.writeInt(sender.zCoord);
+            data.writeUTF(packetID);
+            load.loadPacket(data);
+
+            Packet250CustomPayload packet = new Packet250CustomPayload();
+            packet.channel = channelName;
+            packet.data = bytes.toByteArray();
+            packet.length = packet.data.length;
+
+            return packet;
+        }
+        catch (IOException e)
+        {
+            System.out.println("Failed to create packet.");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /** Generates a packet for a tile entity using the data given
+     * 
+     * @param channelName - channel to send the packet threw
+     * @param packetID - id to be used with the tile entity receive method
+     * @param sender - tile entity that send the packet, and will get the packet
+     * @param sendData - data to be sent
+     * @return new Packet250CustomPayLoad */
     @SuppressWarnings("resource")
     public Packet getTilePacket(String channelName, String packetID, TileEntity sender, Object... sendData)
     {
