@@ -43,8 +43,13 @@ public class TileForceManipulator extends TileFieldInteraction
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
 	public boolean doAnchor = true;
-	
+
+	/**
+	 * Used ONLY for teleporting.
+	 */
 	private int moveTime = 0;
+
+	public boolean didFailMove = false;
 
 	@Override
 	public void updateEntity()
@@ -63,48 +68,84 @@ public class TileForceManipulator extends TileFieldInteraction
 			 */
 			if (!this.worldObj.isRemote)
 			{
-				if (this.manipulationVectors != null && !this.isCalculatingManipulation)
+				if (this.manipulationVectors != null && this.manipulationVectors.size() > 0 && !this.isCalculatingManipulation)
 				{
 					/**
 					 * This section is called when blocks set events are set and animation packets
 					 * are to be sent.
 					 */
-					ForgeDirection dir = this.getDirection();
-
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
 
+					// Number of blocks we're actually moving.
 					int i = 0;
 
 					for (Vector3 position : this.manipulationVectors)
 					{
-						if (this.moveBlock(position, dir) && this.isBlockVisibleByPlayer(position) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
+						if (this.moveBlock(position) && this.isBlockVisibleByPlayer(position) && i < Settings.MAX_FORCE_FIELDS_PER_TICK)
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
 						}
 					}
 
-					nbt.setByte("type", (byte) 2);
-					nbt.setTag("list", nbtList);
-
-					PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
-
-					if (this.doAnchor)
+					if (i > 0)
 					{
-						this.anchor = this.anchor.modifyPositionFromSide(dir);
+						nbt.setByte("type", (byte) 2);
+						nbt.setTag("list", nbtList);
+
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
+
+						if (!this.isTeleporting())
+						{
+							if (this.doAnchor)
+							{
+								this.anchor = this.anchor.modifyPositionFromSide(this.getDirection());
+							}
+						}
+
+						this.updatePushedObjects(0.02f);
+
+						if (this.isTeleporting())
+						{
+							this.moveTime = this.getMoveTime();
+						}
+					}
+					else
+					{
+						this.didFailMove = true;
 					}
 
-					this.updatePushedObjects(0.02f);
 					this.manipulationVectors = null;
 					this.onInventoryChanged();
+				}
+			}
+
+			if (this.moveTime > 0 && this.isTeleporting())
+			{
+				if (this.requestFortron(this.getFortronCost(), true) >= this.getFortronCost())
+				{
+					if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0 && this.ticks % 10 == 0)
+					{
+						int moveTime = this.getMoveTime();
+						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 1, 0.5f + 0.8f * (float) (moveTime - this.moveTime) / (float) moveTime);
+					}
+
+					if (--this.moveTime == 0)
+					{
+						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+					}
+				}
+				else
+				{
+					this.didFailMove = true;
 				}
 			}
 
 			/**
 			 * Force Manipulator activated, start moving...
 			 */
-			if (this.isActive() && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
+			if (this.isActive() && this.moveTime <= 0 && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
 			{
 				if (!this.worldObj.isRemote)
 				{
@@ -112,6 +153,8 @@ public class TileForceManipulator extends TileFieldInteraction
 					// Start multi-threading calculations
 					(new ManipulatorCalculationThread(this)).start();
 				}
+
+				this.moveTime = 0;
 
 				if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 				{
@@ -153,6 +196,14 @@ public class TileForceManipulator extends TileFieldInteraction
 
 					PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), nbt), worldObj, new Vector3(this), 60);
 				}
+			}
+
+			if (this.didFailMove)
+			{
+				this.moveTime = 0;
+				this.getDelayedEvents().clear();
+				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+				this.didFailMove = false;
 			}
 		}
 	}
@@ -247,7 +298,7 @@ public class TileForceManipulator extends TileFieldInteraction
 	{
 		Set<Vector3> mobilizationPoints = this.getInteriorPoints();
 		/** The center in which we want to translate into */
-		Vector3 targetCenterPosition = this.getTargetTranslation();
+		Vector3 targetCenterPosition = this.getTargetPosition();
 
 		loop:
 		for (Vector3 position : mobilizationPoints)
@@ -298,18 +349,19 @@ public class TileForceManipulator extends TileFieldInteraction
 		return true;
 	}
 
-	protected boolean moveBlock(Vector3 position, ForgeDirection direction)
+	protected boolean moveBlock(Vector3 position)
 	{
 		if (!this.worldObj.isRemote)
 		{
-			Vector3 newPosition = position.clone().modifyPositionFromSide(direction);
+			Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
+			Vector3 newPosition = this.getTargetPosition().clone().add(relativePosition);
 
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
 
 			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && tileEntity != this)
 			{
-				this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, ANIMATION_TIME, this.worldObj, position, newPosition));
+				this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, getMoveTime(), this.worldObj, position, newPosition));
 				return true;
 			}
 		}
@@ -350,7 +402,7 @@ public class TileForceManipulator extends TileFieldInteraction
 	 * 
 	 * @return A vector of the target position.
 	 */
-	public VectorWorld getTargetTranslation()
+	public VectorWorld getTargetPosition()
 	{
 		if (this.getCard() != null)
 		{
@@ -368,7 +420,8 @@ public class TileForceManipulator extends TileFieldInteraction
 	/**
 	 * Gets the movement time required in TICKS.
 	 * 
-	 * @return The time it takes to teleport (using a link card) to another coordinate OR -1 for
+	 * @return The time it takes to teleport (using a link card) to another coordinate OR
+	 * ANIMATION_TIME for
 	 * default move
 	 */
 	public int getMoveTime()
@@ -377,11 +430,24 @@ public class TileForceManipulator extends TileFieldInteraction
 		{
 			if (this.getCard().getItem() instanceof ICoordLink)
 			{
-				return (int) (20 * this.getTargetTranslation().distance(this.getAbsoluteAnchor()));
+				return (int) (20 * this.getTargetPosition().distance(this.getAbsoluteAnchor()));
 			}
 		}
 
-		return -1;
+		return ANIMATION_TIME;
+	}
+
+	private boolean isTeleporting()
+	{
+		if (this.getCard() != null)
+		{
+			if (this.getCard().getItem() instanceof ICoordLink)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public Vector3 getAbsoluteAnchor()

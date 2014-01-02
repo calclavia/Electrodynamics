@@ -45,7 +45,6 @@ public class ManipulatorCalculationThread extends Thread
 			/**
 			 * Move
 			 */
-
 			Set<Vector3> mobilizationPoints = this.manipulator.getInteriorPoints();
 
 			if (this.manipulator.canMove())
@@ -56,6 +55,10 @@ public class ManipulatorCalculationThread extends Thread
 				{
 					this.manipulator.manipulationVectors.add(position.clone());
 				}
+			}
+			else
+			{
+				this.manipulator.didFailMove = true;
 			}
 		}
 		catch (Exception e)
