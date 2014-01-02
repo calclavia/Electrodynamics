@@ -175,7 +175,7 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 	}
 
 	/**
-	 * Gets the frequency card that's in this machine.
+	 * Gets the card that's in this machine.
 	 * 
 	 * @return
 	 */
