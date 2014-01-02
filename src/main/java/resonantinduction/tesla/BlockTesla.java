@@ -3,6 +3,7 @@
  */
 package resonantinduction.tesla;
 
+import calclavia.lib.prefab.item.ItemCoordLink;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -11,9 +12,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.base.BlockBase;
-import resonantinduction.levitator.ItemCoordLink;
 import resonantinduction.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -77,18 +78,17 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 				if (tileEntity.linked == null)
 				{
 					ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
-					Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
+					VectorWorld linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
 
 					if (linkVec != null)
 					{
 						if (!world.isRemote)
 						{
-							int dimID = link.getLinkDim(entityPlayer.getCurrentEquippedItem());
-							World otherWorld = MinecraftServer.getServer().worldServerForDimension(dimID);
+							World otherWorld = linkVec.world;
 
 							if (linkVec.getTileEntity(otherWorld) instanceof TileTesla)
 							{
-								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), dimID, true);
+								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), linkVec.world.provider.dimensionId, true);
 
 								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
 

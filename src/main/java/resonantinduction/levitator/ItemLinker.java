@@ -6,7 +6,10 @@ package resonantinduction.levitator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
+import resonantinduction.ResonantInduction;
+import resonantinduction.TabRI;
+import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.prefab.item.ItemCoordLink;
 
 /**
  * @author Calclavia
@@ -16,7 +19,7 @@ public class ItemLinker extends ItemCoordLink
 {
 	public ItemLinker(int id)
 	{
-		super("linker", id);
+		super(id, "linker", ResonantInduction.CONFIGURATION, ResonantInduction.PREFIX, TabRI.INSTANCE);
 	}
 
 	@Override
@@ -24,9 +27,8 @@ public class ItemLinker extends ItemCoordLink
 	{
 		if (!world.isRemote)
 		{
-			int dimID = world.provider.dimensionId;
-			player.addChatMessage("Set link to block [" + x + ", " + y + ", " + z + "], dimension '" + dimID + "'");
-			this.setLink(stack, new Vector3(x, y, z), dimID);
+			player.addChatMessage("Set link to block [" + x + ", " + y + ", " + z + "], Dimension: '" + world.getWorldInfo().getWorldName() + "'");
+			this.setLink(stack, new VectorWorld(world, x, y, z));
 		}
 
 		return true;

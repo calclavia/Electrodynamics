@@ -1,5 +1,6 @@
 package resonantinduction.levitator;
 
+import calclavia.lib.prefab.item.ItemCoordLink;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
