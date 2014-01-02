@@ -96,7 +96,7 @@ public class TileForceManipulator extends TileFieldInteraction
 
 						this.updatePushedObjects(0.02f);
 
-						if (!this.isTeleporting())
+						if (!this.isTeleport())
 						{
 							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
 
@@ -112,7 +112,7 @@ public class TileForceManipulator extends TileFieldInteraction
 						}
 						else
 						{
-							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5), nbt), worldObj, new Vector3(this), 60);
+							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), 60);
 							this.moveTime = this.getMoveTime();
 						}
 					}
@@ -131,7 +131,7 @@ public class TileForceManipulator extends TileFieldInteraction
 			 */
 			if (this.moveTime > 0)
 			{
-				if (this.isTeleporting() && this.requestFortron(this.getFortronCost(), true) >= this.getFortronCost())
+				if (this.isTeleport() && this.requestFortron(this.getFortronCost(), true) >= this.getFortronCost())
 				{
 					if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0 && this.ticks % 10 == 0)
 					{
@@ -186,7 +186,7 @@ public class TileForceManipulator extends TileFieldInteraction
 
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
+						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
 						{
 							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
@@ -274,7 +274,7 @@ public class TileForceManipulator extends TileFieldInteraction
 				{
 					int animationTime = dataStream.readInt();
 					Vector3 anchorPosition = new Vector3(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
-					Vector3 targetPosition = new Vector3(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
+					VectorWorld targetPosition = new VectorWorld(PacketHandler.readNBTTagCompound(dataStream));
 
 					/**
 					 * Holographic Orbit FXs
@@ -285,10 +285,14 @@ public class TileForceManipulator extends TileFieldInteraction
 
 					for (int i = 0; i < nbtList.tagCount(); i++)
 					{
+						// Render hologram for starting position
 						Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
-						ModularForceFieldSystem.proxy.renderHologramOrbit(this.worldObj, anchorPosition, vector, 1, 1, 1, animationTime, 30f);
+						ModularForceFieldSystem.proxy.renderHologramOrbit(this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
+						// Render hologram for destination position
+						Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
+						ModularForceFieldSystem.proxy.renderHologramOrbit(this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
 					}
-					
+
 					break;
 				}
 			}
@@ -311,7 +315,7 @@ public class TileForceManipulator extends TileFieldInteraction
 	@Override
 	public int doGetFortronCost()
 	{
-		return (int) Math.round(super.doGetFortronCost() + (this.anchor != null ? this.anchor.getMagnitude() * 1000 : 0));
+		return (int) Math.round(super.doGetFortronCost() * 10 + (this.anchor != null ? this.anchor.getMagnitude() * 1000 : 0));
 	}
 
 	@Override
@@ -328,7 +332,7 @@ public class TileForceManipulator extends TileFieldInteraction
 	{
 		Set<Vector3> mobilizationPoints = this.getInteriorPoints();
 		/** The center in which we want to translate into */
-		Vector3 targetCenterPosition = this.getTargetPosition();
+		VectorWorld targetCenterPosition = this.getTargetPosition();
 
 		loop:
 		for (Vector3 position : mobilizationPoints)
@@ -352,9 +356,9 @@ public class TileForceManipulator extends TileFieldInteraction
 
 				// The relative position between this coordinate and the anchor.
 				Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
-				Vector3 targetPosition = targetCenterPosition.clone().add(relativePosition);
+				VectorWorld targetPosition = (VectorWorld) targetCenterPosition.clone().add(relativePosition);
 
-				if (targetPosition.getTileEntity(this.worldObj) == this)
+				if (targetPosition.getTileEntity() == this)
 				{
 					return false;
 				}
@@ -367,7 +371,7 @@ public class TileForceManipulator extends TileFieldInteraction
 					}
 				}
 
-				int blockID = targetPosition.getBlockID(this.worldObj);
+				int blockID = targetPosition.getBlockID();
 
 				if (!(this.worldObj.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(this.worldObj, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
 				{
@@ -384,7 +388,7 @@ public class TileForceManipulator extends TileFieldInteraction
 		if (!this.worldObj.isRemote)
 		{
 			Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
-			Vector3 newPosition = this.getTargetPosition().clone().add(relativePosition);
+			VectorWorld newPosition = (VectorWorld) this.getTargetPosition().clone().add(relativePosition);
 
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
@@ -434,14 +438,9 @@ public class TileForceManipulator extends TileFieldInteraction
 	 */
 	public VectorWorld getTargetPosition()
 	{
-		if (this.getCard() != null)
+		if (this.isTeleport())
 		{
-			if (this.getCard().getItem() instanceof ICoordLink)
-			{
-				Vector3 link = ((ICoordLink) this.getCard().getItem()).getLink(this.getCard());
-				// TODO: Add multi-dimension compatibility
-				return new VectorWorld(this.worldObj, link);
-			}
+			return ((ICoordLink) this.getCard().getItem()).getLink(this.getCard());
 		}
 
 		return (VectorWorld) new VectorWorld(this.worldObj, this.getAbsoluteAnchor()).clone().modifyPositionFromSide(this.getDirection());
@@ -456,24 +455,30 @@ public class TileForceManipulator extends TileFieldInteraction
 	 */
 	public int getMoveTime()
 	{
-		if (this.getCard() != null)
+		if (this.isTeleport())
 		{
-			if (this.getCard().getItem() instanceof ICoordLink)
+			int time = (int) (20 * this.getTargetPosition().distance(this.getAbsoluteAnchor()));
+
+			if (this.getTargetPosition().world != this.worldObj)
 			{
-				return (int) (20 * this.getTargetPosition().distance(this.getAbsoluteAnchor()));
+				time += 20 * 60;
 			}
+
+			// TODO: Remove this, for testing.
+			time = 60;
+			return time;
 		}
 
 		return ANIMATION_TIME;
 	}
 
-	private boolean isTeleporting()
+	private boolean isTeleport()
 	{
 		if (this.getCard() != null)
 		{
 			if (this.getCard().getItem() instanceof ICoordLink)
 			{
-				return true;
+				return ((ICoordLink) this.getCard().getItem()).getLink(this.getCard()) != null;
 			}
 		}
 

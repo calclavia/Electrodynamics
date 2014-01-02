@@ -85,6 +85,7 @@ public class GuiForceManipulator extends GuiMFFS
 		}
 
 		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), 35, 82, 4210752);
+		this.fontRenderer.drawString((this.tileEntity.getMoveTime() / 20) + "s", 35, 94, 4210752);
 
 		this.textFieldFrequency.drawTextBox();
 

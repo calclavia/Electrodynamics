@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import java.util.List;
 
-import mffs.MFFSHelper;
 import mffs.api.card.ICoordLink;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
@@ -10,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A linking card used to link machines in specific positions.
@@ -26,24 +27,28 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean b)
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
 	{
-		Vector3 position = this.getLink(itemStack);
+		super.addInformation(itemstack, entityplayer, list, flag);
 
-		if (position != null)
+		if (hasLink(itemstack))
 		{
-			int blockId = position.getBlockID(player.worldObj);
+			VectorWorld vec = getLink(itemstack);
+			int blockId = vec.getBlockID(entityplayer.worldObj);
 
 			if (Block.blocksList[blockId] != null)
 			{
 				list.add("Linked with: " + Block.blocksList[blockId].getLocalizedName());
 			}
 
-			list.add(position.intX() + ", " + position.intY() + ", " + position.intZ());
-			return;
+			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
+			list.add("Dimension: '" + vec.world.provider.getDimensionName() + "'");
 		}
-
-		list.add("Not linked.");
+		else
+		{
+			list.add("Not linked.");
+		}
 	}
 
 	@Override
@@ -51,29 +56,45 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 	{
 		if (!world.isRemote)
 		{
-			Vector3 vector = new Vector3(x, y, z);
+			VectorWorld vector = new VectorWorld(world, x, y, z);
 			this.setLink(itemStack, vector);
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage("Linked card to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage("Linked to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
 			}
 		}
 
 		return true;
 	}
 
-	@Override
-	public void setLink(ItemStack itemStack, Vector3 position)
+	public boolean hasLink(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		nbt.setCompoundTag("position", position.writeToNBT(new NBTTagCompound()));
+		return getLink(itemStack) != null;
 	}
 
-	@Override
-	public Vector3 getLink(ItemStack itemStack)
+	public VectorWorld getLink(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
-		return new Vector3(nbt.getCompoundTag("position"));
+		if (itemStack.stackTagCompound == null || !itemStack.getTagCompound().hasKey("link"))
+		{
+			return null;
+		}
+
+		return new VectorWorld(itemStack.getTagCompound().getCompoundTag("link"));
+	}
+
+	public void setLink(ItemStack itemStack, VectorWorld vec)
+	{
+		if (itemStack.getTagCompound() == null)
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
+
+		itemStack.getTagCompound().setCompoundTag("link", vec.writeToNBT(new NBTTagCompound()));
+	}
+
+	public void clearLink(ItemStack itemStack)
+	{
+		itemStack.getTagCompound().removeTag("link");
 	}
 }

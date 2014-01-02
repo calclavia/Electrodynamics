@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 
 /**
  * Removes the TileEntity
@@ -21,9 +22,9 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 {
 	private World world;
 	private Vector3 position;
-	private Vector3 newPosition;
+	private VectorWorld newPosition;
 
-	public BlockPreMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 position, Vector3 newPosition)
+	public BlockPreMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 position, VectorWorld newPosition)
 	{
 		super(handler, ticks);
 		this.world = world;

@@ -1,11 +1,11 @@
 package mffs.api.card;
 
 import net.minecraft.item.ItemStack;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 
 public interface ICoordLink
 {
-	public void setLink(ItemStack itemStack, Vector3 position);
+	public void setLink(ItemStack itemStack, VectorWorld position);
 
-	public Vector3 getLink(ItemStack itemStack);
+	public VectorWorld getLink(ItemStack itemStack);
 }

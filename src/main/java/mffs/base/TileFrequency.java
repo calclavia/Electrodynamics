@@ -105,11 +105,14 @@ public abstract class TileFrequency extends TileMFFSInventory implements IBlockF
 			{
 				Vector3 linkedPosition = ((ICoordLink) itemStack.getItem()).getLink(itemStack);
 
-				TileEntity tileEntity = linkedPosition.getTileEntity(this.worldObj);
-
-				if (linkedPosition != null && tileEntity instanceof IBiometricIdentifier)
+				if (linkedPosition != null)
 				{
-					list.add((IBiometricIdentifier) tileEntity);
+					TileEntity tileEntity = linkedPosition.getTileEntity(this.worldObj);
+
+					if (linkedPosition != null && tileEntity instanceof IBiometricIdentifier)
+					{
+						list.add((IBiometricIdentifier) tileEntity);
+					}
 				}
 			}
 		}

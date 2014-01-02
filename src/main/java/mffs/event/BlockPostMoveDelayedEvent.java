@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 
 /**
  * Sets the new position into the original TileEntities' block.
@@ -22,14 +23,14 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 {
 	private World world;
 	private Vector3 originalPosition;
-	private Vector3 newPosition;
+	private VectorWorld newPosition;
 
 	private int blockID = 0;
 	private int blockMetadata = 0;
 	private TileEntity tileEntity;
 	private NBTTagCompound tileData;
 
-	public BlockPostMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 originalPosition, Vector3 newPosition, int blockID, int blockMetadata, TileEntity tileEntity, NBTTagCompound tileData)
+	public BlockPostMoveDelayedEvent(IDelayedEventHandler handler, int ticks, World world, Vector3 originalPosition, VectorWorld newPosition, int blockID, int blockMetadata, TileEntity tileEntity, NBTTagCompound tileData)
 	{
 		super(handler, ticks);
 		this.world = world;
@@ -77,7 +78,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 							newTile = TileEntity.createAndLoadEntity(this.tileData);
 						}
 
-						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, newTile);
+						ManipulatorHelper.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, newTile);
 
 						if (newTile != null && isMultipart)
 						{
@@ -99,7 +100,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 					}
 					else
 					{
-						ManipulatorHelper.setBlockSneaky(this.world, this.newPosition, this.blockID, this.blockMetadata, null);
+						ManipulatorHelper.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, null);
 					}
 
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
