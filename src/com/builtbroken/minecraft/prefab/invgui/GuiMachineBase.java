@@ -20,7 +20,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 public class GuiMachineBase extends GuiBase
 {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
+    public ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
 
     protected static final int MAX_BUTTON_ID = 3;
     protected TileEntityMachine tileEntity;

@@ -7,10 +7,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage.ButtonIcon;
 
@@ -28,6 +30,8 @@ public abstract class GuiMachineContainer extends GuiContainer
     protected int guiID = -1, guiID2 = -1, guiID3 = -1;
     protected ButtonIcon guiIcon = ButtonIcon.CHEST, guiIcon2 = ButtonIcon.PERSON, guiIcon3 = ButtonIcon.BLANK;
     protected String invName = "Home", invName2 = "2", invName3 = "3";
+
+    public ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
 
     protected int containerWidth;
     protected int containerHeight;
@@ -110,7 +114,7 @@ public abstract class GuiMachineContainer extends GuiContainer
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int x, int y)
     {
-        FMLClientHandler.instance().getClient().renderEngine.bindTexture(GuiMachineBase.TEXTURE);
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
