@@ -3,6 +3,7 @@
  */
 package resonantinduction.tesla;
 
+import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.prefab.item.ItemCoordLink;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
+import resonantinduction.Utility;
 import resonantinduction.base.BlockBase;
 import resonantinduction.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
@@ -46,9 +48,12 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
-			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
+	          int dyeColor = Utility.isDye(entityPlayer.getCurrentEquippedItem());
+
+
+			if (dyeColor != -1)
 			{
-				tileEntity.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				tileEntity.setDye(dyeColor);
 
 				if (!entityPlayer.capabilities.isCreativeMode)
 				{
@@ -68,7 +73,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 
 				if (!world.isRemote)
 				{
-					entityPlayer.addChatMessage("Toggled entity attack to: " + status);
+					entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.toggleAttack").replace("%v", status + ""));
 				}
 
 				return true;
@@ -90,7 +95,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 							{
 								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), linkVec.world.provider.dimensionId, true);
 
-								entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
+								entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.pair").replace("%v0", this.getLocalizedName()).replace("%v1", linkVec.x + "").replace("%v2", linkVec.y + "").replace("%v3", linkVec.z + ""));
 
 								link.clearLink(entityPlayer.getCurrentEquippedItem());
 								world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
@@ -119,7 +124,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 
 			if (world.isRemote)
 			{
-				entityPlayer.addChatMessage("Tesla receive mode is now " + receiveMode);
+				entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.mode").replace("%v", receiveMode + ""));
 			}
 			return true;
 
