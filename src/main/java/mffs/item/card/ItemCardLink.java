@@ -2,6 +2,7 @@ package mffs.item.card;
 
 import java.util.List;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.card.ICoordLink;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
@@ -39,15 +40,15 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[blockId] != null)
 			{
-				list.add("Linked with: " + Block.blocksList[blockId].getLocalizedName());
+				list.add(TranslationHelper.getLocal("gui.item.linkedWith") + ": " + Block.blocksList[blockId].getLocalizedName());
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add("Dimension: '" + vec.world.provider.getDimensionName() + "'");
+			list.add(TranslationHelper.getLocal("gui.item.dimension") + ": " + vec.world.provider.getDimensionName());
 		}
 		else
 		{
-			list.add("Not linked.");
+			list.add(TranslationHelper.getLocal("gui.item.notLinked"));
 		}
 	}
 
@@ -61,7 +62,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage("Linked to position: " + x + ", " + y + ", " + z + " with block: " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage(TranslationHelper.getLocal("gui.item.linkedWith") + ": " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
 			}
 		}
 
