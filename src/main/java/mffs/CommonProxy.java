@@ -105,6 +105,11 @@ public class CommonProxy implements IGuiHandler
 
 	}
 
+	public void renderHologramOrbit(World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
+	{
+
+	}
+
 	public void renderHologramMoving(World world, Vector3 position, float red, float green, float blue, int age)
 	{
 

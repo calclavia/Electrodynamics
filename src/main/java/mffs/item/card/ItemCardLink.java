@@ -37,9 +37,10 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 			if (Block.blocksList[blockId] != null)
 			{
 				list.add("Linked with: " + Block.blocksList[blockId].getLocalizedName());
-				list.add(position.intX() + ", " + position.intY() + ", " + position.intZ());
-				return;
 			}
+
+			list.add(position.intX() + ", " + position.intY() + ", " + position.intZ());
+			return;
 		}
 
 		list.add("Not linked.");

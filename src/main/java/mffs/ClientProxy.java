@@ -9,6 +9,7 @@ import mffs.gui.GuiInterdictionMatrix;
 import mffs.render.FXBeam;
 import mffs.render.FXHologram;
 import mffs.render.FXHologramMoving;
+import mffs.render.FXHologramOrbit;
 import mffs.render.RenderBlockHandler;
 import mffs.render.RenderCoercionDeriver;
 import mffs.render.RenderForceField;
@@ -119,6 +120,12 @@ public class ClientProxy extends CommonProxy
 		{
 			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age));
 		}
+	}
+
+	@Override
+	public void renderHologramOrbit(World world, Vector3 orbitCenter, Vector3 position, float red, float green, float blue, int age, float maxSpeed)
+	{
+		FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed));
 	}
 
 	@Override
