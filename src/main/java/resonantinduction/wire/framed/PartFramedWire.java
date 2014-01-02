@@ -17,6 +17,8 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
@@ -36,7 +38,7 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
 	/** Client Side Connection Check */
 	private ForgeDirection testingSide;
@@ -50,17 +52,17 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 	public byte currentWireConnections = 0x00;
 	public byte currentAcceptorConnections = 0x00;
 
-	public PartWire()
+	public PartFramedWire()
 	{
 		super();
 	}
 
-	public PartWire(int typeID)
+	public PartFramedWire(int typeID)
 	{
 		this(EnumWireMaterial.values()[typeID]);
 	}
 
-	public PartWire(EnumWireMaterial type)
+	public PartFramedWire(EnumWireMaterial type)
 	{
 		super();
 		material = type;
@@ -362,7 +364,7 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 
 			this.currentAcceptorConnections = possibleAcceptorConnections;
 			this.getNetwork().reconstruct();
-			// this.sendDescUpdate();
+			this.sendConnectionUpdate();
 		}
 
 		tile().markRender();
@@ -375,7 +377,7 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 	@Override
 	public TileEntity[] getConnections()
 	{
-		TileEntity[] cachedConnections = new TileEntity[6];
+		TileEntity[] connections = new TileEntity[6];
 
 		for (byte i = 0; i < 6; i++)
 		{
@@ -384,11 +386,11 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 
 			if (isCurrentlyConnected(side))
 			{
-				cachedConnections[i] = tileEntity;
+				connections[i] = tileEntity;
 			}
 		}
 
-		return cachedConnections;
+		return connections;
 	}
 
 	public boolean isCurrentlyConnected(ForgeDirection side)
@@ -437,5 +439,50 @@ public class PartWire extends PartAdvancedWire implements TSlottedPart, JNormalO
 	{
 		super.onNeighborChanged();
 		refresh();
+	}
+
+	/**
+	 * Packets
+	 */
+	public void sendConnectionUpdate()
+	{
+		tile().getWriteStream(this).writeByte(0).writeByte(this.currentWireConnections).writeByte(this.currentAcceptorConnections);
+	}
+
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		super.readDesc(packet);
+		this.currentWireConnections = packet.readByte();
+		this.currentAcceptorConnections = packet.readByte();
+	}
+
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		super.writeDesc(packet);
+		packet.writeByte(this.currentWireConnections);
+		packet.writeByte(this.currentAcceptorConnections);
+	}
+
+	@Override
+	public void read(MCDataInput packet)
+	{
+		read(packet, packet.readUByte());
+	}
+
+	@Override
+	public void read(MCDataInput packet, int packetID)
+	{
+		if (packetID == 0)
+		{
+			this.currentWireConnections = packet.readByte();
+			this.currentAcceptorConnections = packet.readByte();
+			tile().markRender();
+		}
+		else
+		{
+			super.read(packet, packetID);
+		}
 	}
 }

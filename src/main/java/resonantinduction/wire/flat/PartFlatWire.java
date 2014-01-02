@@ -440,17 +440,20 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	private void disconnect(int i)
 	{
-		if (this.connections[i] != null)
+		if (!this.world().isRemote)
 		{
-			if (this.connections[i] instanceof PartFlatWire)
+			if (this.connections[i] != null)
 			{
-				PartFlatWire wire = (PartFlatWire) this.connections[i];
-				this.connections[i] = null;
-				this.getNetwork().split(this, wire);
-			}
-			else
-			{
-				this.connections[i] = null;
+				if (this.connections[i] instanceof PartFlatWire)
+				{
+					PartFlatWire wire = (PartFlatWire) this.connections[i];
+					this.connections[i] = null;
+					this.getNetwork().split(this, wire);
+				}
+				else
+				{
+					this.connections[i] = null;
+				}
 			}
 		}
 	}

@@ -19,7 +19,7 @@ import resonantinduction.TabRI;
 import resonantinduction.Utility;
 import resonantinduction.wire.flat.PartFlatWire;
 import resonantinduction.wire.flat.RenderFlatWire;
-import resonantinduction.wire.framed.PartWire;
+import resonantinduction.wire.framed.PartFramedWire;
 import resonantinduction.wire.framed.RenderPartWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -54,7 +54,7 @@ public class ItemWire extends JItemMultiPart
 
 		if (ControlKeyModifer.isControlDown(player))
 		{
-			PartWire wire = (PartWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
+			PartFramedWire wire = (PartFramedWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
 
 			if (wire != null)
 			{

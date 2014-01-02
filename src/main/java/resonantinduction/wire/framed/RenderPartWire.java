@@ -87,7 +87,7 @@ public class RenderPartWire
 		buffer.flip();
 	}
 
-	public void renderShine(PartWire wire, double x, double y, double z, float f)
+	public void renderShine(PartFramedWire wire, double x, double y, double z, float f)
 	{
 		if (wire != null)
 		{
@@ -113,7 +113,7 @@ public class RenderPartWire
 
 			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
-				if (PartWire.connectionMapContainsSide(renderSides, side))
+				if (PartFramedWire.connectionMapContainsSide(renderSides, side))
 					renderSideShine(side, wire);
 			}
 			CCRenderState.draw();
@@ -137,7 +137,7 @@ public class RenderPartWire
 		breakIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "wire");
 	}
 
-	public void renderStatic(PartWire wire)
+	public void renderStatic(PartFramedWire wire)
 	{
 		TextureUtils.bindAtlas(0);
 		CCRenderState.reset();
@@ -148,14 +148,14 @@ public class RenderPartWire
 
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (PartWire.connectionMapContainsSide(renderSides, side))
+			if (PartFramedWire.connectionMapContainsSide(renderSides, side))
 			{
 				renderSide(side, wire);
 			}
 		}
 	}
 
-	public void renderSide(ForgeDirection side, PartWire wire)
+	public void renderSide(ForgeDirection side, PartFramedWire wire)
 	{
 		String name = side.name().toLowerCase();
 		name = name.equals("unknown") ? "center" : name;
@@ -169,7 +169,7 @@ public class RenderPartWire
 		}
 	}
 
-	public void renderSideShine(ForgeDirection side, PartWire wire)
+	public void renderSideShine(ForgeDirection side, PartFramedWire wire)
 	{
 		String name = side.name().toLowerCase();
 		name = name.equals("unknown") ? "center" : name;

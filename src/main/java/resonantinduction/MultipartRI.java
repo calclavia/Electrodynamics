@@ -4,7 +4,7 @@ import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.transformer.PartTransformer;
 import resonantinduction.wire.flat.PartFlatSwitchWire;
 import resonantinduction.wire.flat.PartFlatWire;
-import resonantinduction.wire.framed.PartWire;
+import resonantinduction.wire.framed.PartFramedWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -29,7 +29,7 @@ public class MultipartRI implements IPartFactory
 	{
 		if (name == "resonant_induction_wire")
 		{
-			return new PartWire();
+			return new PartFramedWire();
 		}
 		else if (name == "resonant_induction_flat_wire")
 		{
