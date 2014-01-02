@@ -60,8 +60,8 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 	public enum DetectMode
 	{
-		NONE("None"), LESS_THAN("Less Than"), LESS_THAN_EQUAL("Less Than or Equal"),
-		EQUAL("Equal"), GREATER_THAN("Greater Than or Equal"), GREATER_THAN_EQUAL("Greater Than");
+		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"),
+		EQUAL("equal"), GREATER_THAN("greaterThanOrEqual"), GREATER_THAN_EQUAL("greaterThan");
 
 		public String display;
 
