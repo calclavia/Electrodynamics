@@ -12,7 +12,6 @@ import mffs.api.ISpecialForceManipulation;
 import mffs.api.card.ICoordLink;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
-import mffs.base.TileMFFS.TilePacketType;
 import mffs.card.ItemCard;
 import mffs.event.BlockPreMoveDelayedEvent;
 import mffs.render.IEffectController;
@@ -24,7 +23,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
@@ -37,6 +35,7 @@ import dan200.computer.api.ILuaContext;
 
 public class TileForceManipulator extends TileFieldInteraction implements IEffectController
 {
+	public static final int PACKET_DISTANCE = 60;
 	public static final int ANIMATION_TIME = 20;
 	public Vector3 anchor = null;
 
@@ -57,6 +56,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	public boolean markFailMove = false;
 	public int clientMoveTime;
 	public boolean markMoveEntity = false;
+	private Set<Vector3> failedPositions;
 
 	@Override
 	public void updateEntity()
@@ -103,7 +103,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 						if (!this.isTeleport())
 						{
-							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
+							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 
 							if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 							{
@@ -117,7 +117,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						}
 						else
 						{
-							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), 60);
+							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 							this.moveTime = this.getMoveTime();
 						}
 					}
@@ -189,13 +189,12 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 					NBTTagList nbtList = new NBTTagList();
 
 					int i = 0;
-
 					for (Vector3 position : this.getInteriorPoints())
 					{
 						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
 						{
-							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 							i++;
+							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
 						}
 					}
 
@@ -204,11 +203,11 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (this.isTeleport())
 					{
-						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), 60);
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 					}
 					else
 					{
-						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 					}
 				}
 			}
@@ -224,8 +223,26 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				this.moveTime = 0;
 				this.getDelayedEvents().clear();
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
-				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal()), this.worldObj, new Vector3(this), 60);
+				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal()), this.worldObj, new Vector3(this), PACKET_DISTANCE);
 				this.markFailMove = false;
+
+				/**
+				 * Send failed positions to client to inform them WHICH blocks are causing the field
+				 * to fail.
+				 */
+				NBTTagCompound nbt = new NBTTagCompound();
+				NBTTagList nbtList = new NBTTagList();
+
+				for (Vector3 position : this.failedPositions)
+				{
+					nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+				}
+
+				nbt.setByte("type", (byte) 1);
+				nbt.setTag("list", nbtList);
+
+				this.failedPositions.clear();
+				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 3, nbt), this.worldObj, new Vector3(this), PACKET_DISTANCE);
 			}
 		}
 	}
@@ -327,6 +344,23 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						this.canRenderMove = true;
 						break;
 					}
+					case 3:
+					{
+						/**
+						 * Holographic FXs: FAILED TO MOVE
+						 */
+						NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
+
+						NBTTagList nbtList = (NBTTagList) nbt.getTag("list");
+
+						for (int i = 0; i < nbtList.tagCount(); i++)
+						{
+							Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
+							ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, null);
+						}
+
+						break;
+					}
 				}
 			}
 			else if (packetID == TilePacketType.RENDER.ordinal())
@@ -389,6 +423,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				if (Blacklist.forceManipulationBlacklist.contains(Block.blocksList[position.getBlockID(this.worldObj)]))
 				{
+					this.failedPositions.add(position);
 					return false;
 				}
 
@@ -398,6 +433,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				{
 					if (!((ISpecialForceManipulation) tileEntity).preMove(position.intX(), position.intY(), position.intZ()))
 					{
+						this.failedPositions.add(position);
 						return false;
 					}
 				}
@@ -408,6 +444,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 				if (targetPosition.getTileEntity() == this)
 				{
+					this.failedPositions.add(position);
 					return false;
 				}
 
@@ -423,6 +460,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 				if (!(targetPosition.world.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(targetPosition.world, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
 				{
+					this.failedPositions.add(position);
 					return false;
 				}
 			}
@@ -494,6 +532,8 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				time += 20 * 60;
 			}
+			// TODO: REMOVE
+			time = 60;
 
 			return time;
 		}
@@ -550,6 +590,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				entity.travelToDimension(location.world.provider.dimensionId);
 			}
+			// TODO: Fix otherworld teleport
 
 			entity.motionX = 0;
 			entity.motionY = 0;
