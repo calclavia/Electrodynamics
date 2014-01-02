@@ -58,7 +58,7 @@ public class ManipulatorCalculationThread extends Thread
 			}
 			else
 			{
-				this.manipulator.didFailMove = true;
+				this.manipulator.markFailMove = true;
 			}
 		}
 		catch (Exception e)

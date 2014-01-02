@@ -3,6 +3,7 @@ package mffs.event;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.api.ISpecialForceManipulation;
+import mffs.tile.TileForceManipulator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
@@ -62,6 +63,11 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 						e.printStackTrace();
 					}
 				}
+			}
+
+			if (handler instanceof TileForceManipulator)
+			{
+				((TileForceManipulator) handler).markMoveEntity = true;
 			}
 		}
 	}

@@ -18,11 +18,13 @@ import mffs.event.BlockPreMoveDelayedEvent;
 import mffs.render.IEffectController;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
@@ -52,8 +54,9 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	 */
 	private int moveTime = 0;
 	private boolean canRenderMove = true;
-	public boolean didFailMove = false;
+	public boolean markFailMove = false;
 	public int clientMoveTime;
+	public boolean markMoveEntity = false;
 
 	@Override
 	public void updateEntity()
@@ -98,8 +101,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						nbt.setByte("type", (byte) 2);
 						nbt.setTag("list", nbtList);
 
-						this.updatePushedObjects(0.02f);
-
 						if (!this.isTeleport())
 						{
 							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 1, nbt), worldObj, new Vector3(this), 60);
@@ -122,7 +123,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 					}
 					else
 					{
-						this.didFailMove = true;
+						this.markFailMove = true;
 					}
 
 					this.manipulationVectors = null;
@@ -145,12 +146,13 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (--this.moveTime == 0)
 					{
+						this.moveEntities();
 						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 					}
 				}
 				else
 				{
-					this.didFailMove = true;
+					this.markFailMove = true;
 				}
 			}
 
@@ -211,13 +213,19 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				}
 			}
 
-			if (this.didFailMove)
+			if (this.markMoveEntity)
+			{
+				this.moveEntities();
+				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FIELD.ordinal()));
+			}
+
+			if (this.markFailMove)
 			{
 				this.moveTime = 0;
 				this.getDelayedEvents().clear();
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal()), this.worldObj, new Vector3(this), 60);
-				this.didFailMove = false;
+				this.markFailMove = false;
 			}
 		}
 	}
@@ -258,6 +266,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
 	{
 		super.onReceivePacket(packetID, dataStream);
+
 		if (this.worldObj.isRemote)
 		{
 			if (packetID == TilePacketType.FXS.ordinal())
@@ -280,13 +289,13 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 							if (type == 1)
 							{
+								// Blue, PREVIEW
 								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
 							}
 							else if (type == 2)
 							{
-								// Red
-								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
-								this.updatePushedObjects(0.02f);
+								// Green, DO MOVE
+								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
 							}
 						}
 						break;
@@ -314,15 +323,19 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
 						}
 
+						this.moveEntities();
 						this.canRenderMove = true;
 						break;
 					}
 				}
-
 			}
 			else if (packetID == TilePacketType.RENDER.ordinal())
 			{
 				this.canRenderMove = false;
+			}
+			else if (packetID == TilePacketType.FIELD.ordinal())
+			{
+				this.markMoveEntity = true;
 			}
 			else if (packetID == TilePacketType.DESCRIPTION.ordinal())
 			{
@@ -438,23 +451,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		return false;
 	}
 
-	public void updatePushedObjects(float amount)
-	{
-		ForgeDirection dir = this.getDirection();
-		AxisAlignedBB axisalignedbb = this.getSearchAxisAlignedBB();
-
-		if (axisalignedbb != null)
-		{
-			@SuppressWarnings("unchecked")
-			List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, axisalignedbb);
-
-			for (Entity entity : entities)
-			{
-				entity.addVelocity(amount * dir.offsetX, amount * dir.offsetY, amount * dir.offsetZ);
-			}
-		}
-	}
-
 	public AxisAlignedBB getSearchAxisAlignedBB()
 	{
 		Vector3 positiveScale = new Vector3(this).translate(this.getTranslation()).translate(this.getPositiveScale());
@@ -525,6 +521,49 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			return new Vector3(this).add(this.anchor);
 		}
 		return new Vector3(this);
+	}
+
+	protected void moveEntities()
+	{
+		VectorWorld targetLocation = this.getTargetPosition();
+		AxisAlignedBB axisalignedbb = this.getSearchAxisAlignedBB();
+
+		if (axisalignedbb != null)
+		{
+			List<Entity> entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
+
+			for (Entity entity : entities)
+			{
+				Vector3 relativePosition = new VectorWorld(entity).clone().subtract(this.getAbsoluteAnchor().translate(0.5));
+				VectorWorld newLocation = (VectorWorld) targetLocation.clone().translate(0.5).add(relativePosition);
+				newLocation.y += 1;
+				this.moveEntity(entity, newLocation);
+			}
+		}
+	}
+
+	protected void moveEntity(Entity entity, VectorWorld location)
+	{
+		if (entity != null && location != null)
+		{
+			if (entity.worldObj != location.world)
+			{
+				entity.travelToDimension(location.world.provider.dimensionId);
+			}
+
+			entity.motionX = 0;
+			entity.motionY = 0;
+			entity.motionZ = 0;
+
+			if (entity instanceof EntityPlayerMP)
+			{
+				((EntityPlayerMP) entity).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, 0, 0);
+			}
+			else
+			{
+				entity.setPosition(location.x, location.y, location.z);
+			}
+		}
 	}
 
 	@Override
