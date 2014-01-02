@@ -2,6 +2,7 @@ package mffs.tile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	public boolean markFailMove = false;
 	public int clientMoveTime;
 	public boolean markMoveEntity = false;
-	private Set<Vector3> failedPositions;
+	private final Set<Vector3> failedPositions = new LinkedHashSet<Vector3>();
 
 	@Override
 	public void updateEntity()

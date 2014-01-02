@@ -4,16 +4,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import mffs.MFFSHelper;
+import mffs.ModularForceFieldSystem;
 import mffs.api.EventForceManipulate.EventPostForceManipulate;
 import mffs.api.EventForceManipulate.EventPreForceManipulate;
 import mffs.api.card.ICoordLink;
+import mffs.api.fortron.FrequencyGrid;
+import mffs.api.fortron.IFortronFrequency;
+import mffs.api.security.Permission;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.relauncher.Side;
@@ -98,6 +109,69 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 	public void clearLink(ItemStack itemStack)
 	{
 		itemStack.getTagCompound().removeTag("link");
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
+		if (!entityPlayer.isSneaking())
+		{
+			Vector3 position = this.getLink(itemStack);
+
+			if (position != null)
+			{
+				int blockId = position.getBlockID(world);
+
+				if (Block.blocksList[blockId] != null)
+				{
+					Chunk chunk = world.getChunkFromBlockCoords(position.intX(), position.intZ());
+
+					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer)))
+					{
+						float requiredEnergy = (float) Vector3.distance(new Vector3(entityPlayer), position) * (FluidContainerRegistry.BUCKET_VOLUME / 100);
+						int receivedEnergy = 0;
+
+						Set<IFortronFrequency> fortronTiles = FrequencyGrid.instance().getFortronTiles(world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack));
+
+						for (IFortronFrequency fortronTile : fortronTiles)
+						{
+							int consumedEnergy = fortronTile.requestFortron((int) Math.ceil(requiredEnergy / fortronTiles.size()), true);
+
+							if (consumedEnergy > 0)
+							{
+								if (world.isRemote)
+								{
+									ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight() - 0.2, 0)), new Vector3((TileEntity) fortronTile).add(0.5), 0.6f, 0.6f, 1, 20);
+								}
+
+								receivedEnergy += consumedEnergy;
+							}
+
+							if (receivedEnergy >= requiredEnergy)
+							{
+								try
+								{
+									Block.blocksList[blockId].onBlockActivated(world, position.intX(), position.intY(), position.intZ(), entityPlayer, 0, 0, 0, 0);
+								}
+								catch (Exception e)
+								{
+									e.printStackTrace();
+								}
+
+								return itemStack;
+							}
+						}
+
+						if (!world.isRemote)
+						{
+							entityPlayer.addChatMessage("Unable to harness " + UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES) + " from the Fortron field.");
+						}
+					}
+				}
+			}
+		}
+
+		return itemStack;
 	}
 
 	private final Set<ItemStack> temporaryRemoteBlacklist = new HashSet<ItemStack>();
