@@ -54,9 +54,13 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	 */
 	private int moveTime = 0;
 	private boolean canRenderMove = true;
-	public boolean markFailMove = false;
 	public int clientMoveTime;
+
+	/** Server side ONLY */
 	public boolean markMoveEntity = false;
+
+	/** Marking failures */
+	public boolean markFailMove = false;
 	private final Set<Vector3> failedPositions = new LinkedHashSet<Vector3>();
 
 	@Override
@@ -147,7 +151,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (--this.moveTime == 0)
 					{
-						this.moveEntities();
 						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 					}
 				}
@@ -217,6 +220,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				this.moveEntities();
 				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FIELD.ordinal()));
+				this.markMoveEntity = false;
 			}
 
 			if (this.markFailMove)
@@ -341,7 +345,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
 						}
 
-						this.moveEntities();
 						this.canRenderMove = true;
 						break;
 					}
@@ -370,7 +373,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			}
 			else if (packetID == TilePacketType.FIELD.ordinal())
 			{
-				this.markMoveEntity = true;
+				this.moveEntities();
 			}
 			else if (packetID == TilePacketType.DESCRIPTION.ordinal())
 			{
@@ -533,8 +536,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				time += 20 * 60;
 			}
-			// TODO: REMOVE
-			time = 60;
 
 			return time;
 		}
@@ -587,11 +588,10 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	{
 		if (entity != null && location != null)
 		{
-			if (entity.worldObj != location.world)
+			if (entity.worldObj.provider.dimensionId != location.world.provider.dimensionId)
 			{
 				entity.travelToDimension(location.world.provider.dimensionId);
 			}
-			// TODO: Fix otherworld teleport
 
 			entity.motionX = 0;
 			entity.motionY = 0;
