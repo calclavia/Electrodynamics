@@ -13,12 +13,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.Utility;
-import resonantinduction.wire.flat.PartFlatWire;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.prefab.CustomDamageSource;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.multipart.IRedstonePart;
+import codechicken.multipart.TMultiPart;
 
 /**
  * @author Calclavia
@@ -39,9 +40,9 @@ public abstract class PartAdvancedWire extends PartConductor
 	@Override
 	public boolean canConnectTo(Object obj)
 	{
-		if (obj instanceof PartFlatWire)
+		if (obj != null && (obj.getClass().isAssignableFrom(this.getClass()) || this.getClass().isAssignableFrom(obj.getClass())))
 		{
-			PartFlatWire wire = (PartFlatWire) obj;
+		    PartAdvancedWire wire = (PartAdvancedWire) obj;
 
 			if (this.getMaterial() == wire.getMaterial())
 			{
@@ -302,4 +303,27 @@ public abstract class PartAdvancedWire extends PartConductor
 		this.color = nbt.getInteger("dyeID");
 	}
 
+    protected boolean checkRedstone(int side)
+    {
+        if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))
+        {
+            return true;
+        }
+        else
+        {
+            for (TMultiPart tp : tile().jPartList())
+            {
+                if (tp instanceof IRedstonePart)
+                {
+                    IRedstonePart rp = (IRedstonePart) tp;
+                    if ((Math.max(rp.strongPowerLevel(side), rp.weakPowerLevel(side)) << 4) > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }

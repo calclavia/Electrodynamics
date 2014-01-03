@@ -162,7 +162,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		tile().getWriteStream(this).writeByte(0).writeInt(this.connMap);
 	}
 
-	/** WORLD EVENTS */
+	/* WORLD EVENTS */
 	@Override
 	public void onRemoved()
 	{
@@ -438,7 +438,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		return false;
 	}
 
-	private void disconnect(int i)
+	private synchronized void disconnect(int i)
 	{
 		if (!this.world().isRemote)
 		{

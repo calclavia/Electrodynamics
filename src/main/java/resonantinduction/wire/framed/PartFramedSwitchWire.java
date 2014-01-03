@@ -1,4 +1,4 @@
-package resonantinduction.wire.flat;
+package resonantinduction.wire.framed;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,27 +8,27 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TileMultipart;
 
-public class PartFlatSwitchWire extends PartFlatWire
+public class PartFramedSwitchWire extends PartFramedWire
 {
     @Override
-    public boolean canConnectTo(Object obj)
+    public boolean isBlockedOnSide(ForgeDirection side)
     {
-        if (this.checkRedstone(this.side ^ 0x1))
+        if (this.checkRedstone(6))
         {
-            return super.canConnectTo(obj);
+            return super.isBlockedOnSide(side);
         }
-
-        return false;
+        return true;
     }
 
     @Override
     public String getType()
     {
-        return "resonant_induction_flat_switch_wire";
+        return "resonant_induction_switch_wire";
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PartFlatSwitchWire extends PartFlatWire
         {
             if (!w.isRemote)
             {
-                PartFlatWire wire = (PartFlatWire) MultiPartRegistry.createPart("resonant_induction_flat_wire", false);
+                PartFramedWire wire = (PartFramedWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
                 wire.copyFrom(this);
 
                 if (tile.canReplacePart(this, wire))
@@ -64,18 +64,31 @@ public class PartFlatSwitchWire extends PartFlatWire
     }
 
     @Override
-    public void drop()
-    {
-        tile().dropItems(Collections.singletonList(new ItemStack(Block.lever, 1)));
-        super.drop();
-    }
-
-    @Override
     public Iterable<ItemStack> getDrops()
     {
         List<ItemStack> drops = (List<ItemStack>) super.getDrops();
         drops.add(new ItemStack(Block.lever, 1 ));
 
         return drops;
+    }
+    
+    @Override
+    public byte getPossibleAcceptorConnections()
+    {
+        if (this.checkRedstone(6))
+        {
+            return super.getPossibleAcceptorConnections();
+        }
+        return 0x00;
+    }
+    
+    @Override
+    public byte getPossibleWireConnections()
+    {
+        if (this.checkRedstone(6))
+        {
+            return super.getPossibleWireConnections();
+        }
+        return 0x00;
     }
 }
