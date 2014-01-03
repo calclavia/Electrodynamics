@@ -29,8 +29,8 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	/**
 	 * The amount of KiloWatts this machine uses.
 	 */
-	public static final int WATTAGE = 50000;
-	public static final int REQUIRED_TIME = 10 * 20;
+	private static final int DEFAULT_WATTAGE = 50000;
+	public static final int FUEL_PROCESS_TIME = 10 * 20;
 	public static final int MULTIPLE_PRODUCTION = 4;
 	/** Ration from UE to Fortron. Multiply J by this value to convert to Fortron. */
 	public static final float UE_FORTRON_RATIO = 0.0001f;
@@ -48,7 +48,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 		super();
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
-		this.energy = new EnergyStorageHandler(WATTAGE * 2);
+		this.energy = new EnergyStorageHandler(this.getWattage() * 2);
 	}
 
 	@Override
@@ -79,17 +79,17 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 						// Convert Electricity to Fortron
 						this.discharge(this.getStackInSlot(SLOT_BATTERY));
 
-						if (this.energy.extractEnergy(WATTAGE, false) >= WATTAGE || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+						if (this.energy.extractEnergy(getWattage(), false) >= getWattage() || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
 							// Fill Fortron
 							this.fortronTank.fill(FortronHelper.getFortron(this.getProductionRate()), true);
-							this.energy.extractEnergy(WATTAGE, true);
+							this.energy.extractEnergy(getWattage(), true);
 
 							// Use fuel
 							if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
 							{
 								this.decrStackSize(SLOT_FUEL, 1);
-								this.processTime = REQUIRED_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 20, 1);
+								this.processTime = FUEL_PROCESS_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleScale) / 20, 1);
 							}
 
 							if (this.processTime > 0)
@@ -117,6 +117,20 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 		}
 	}
 
+	public long getWattage()
+	{
+		return (long) (DEFAULT_WATTAGE + (DEFAULT_WATTAGE * ((float) this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / (float) 10)));
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+		this.energy.setCapacity(this.getWattage() * 2);
+		this.energy.setMaxReceive(this.getWattage() * 2);
+		this.energy.setMaxExtract(this.getWattage() * 2);
+	}
+
 	@Override
 	public EnumSet<ForgeDirection> getOutputDirections()
 	{
@@ -130,7 +144,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	{
 		if (this.isActive())
 		{
-			int production = (int) (WATTAGE * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
+			int production = (int) (getWattage() * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
 
 			if (this.processTime > 0)
 			{
@@ -215,4 +229,5 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	{
 		return true;
 	}
+
 }

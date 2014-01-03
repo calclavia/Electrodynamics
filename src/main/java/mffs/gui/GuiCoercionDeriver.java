@@ -61,8 +61,8 @@ public class GuiCoercionDeriver extends GuiMFFS
 			}
 		}
 
-		this.renderUniversalDisplay(85, 40, TileCoercionDeriver.WATTAGE, x, y, Unit.WATT);
-		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(UniversalElectricity.DEFAULT_VOLTAGE, Unit.VOLTAGE), 85, 50, 4210752);
+		this.renderUniversalDisplay(85, 30, this.tileEntity.getWattage(), x, y, Unit.WATT);
+		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(UniversalElectricity.DEFAULT_VOLTAGE, Unit.VOLTAGE), 85, 40, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? TranslationHelper.getLocal("gui.deriver.running") : TranslationHelper.getLocal("gui.deriver.idle")), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES), 8, 105, x, y);
