@@ -351,9 +351,14 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 						if (this.canConnectTo(tp))
 						{
-							// We found a wire, merge networks!
 							this.connections[absDir] = tp;
-							this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+
+							if (tp instanceof PartFlatWire)
+							{
+								// We found a wire, merge networks!
+								this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+							}
+
 							calculatedSides[absDir] = true;
 							continue;
 						}
@@ -628,18 +633,23 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 			if (canConnectTo(tp))
 			{
-				boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
-
-				if (b)
+				if (tp instanceof PartFlatWire)
 				{
-					// let them connect to us
-					if (!renderThisCorner((PartFlatWire) tp))
-					{
-						return 1;
-					}
+					boolean b = ((PartFlatWire) tp).connectCorner(this, Rotation.rotationTo(absDir ^ 1, side ^ 1));
 
-					return 2;
+					if (b)
+					{
+						// let them connect to us
+						if (!renderThisCorner((PartFlatWire) tp))
+						{
+							return 1;
+						}
+
+						return 2;
+					}
 				}
+
+				return 2;
 			}
 		}
 		return 0;
@@ -674,7 +684,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 			if (this.canConnectTo(tp))
 			{
-				return ((PartFlatWire) tp).connectStraight(this, (r + 2) % 4);
+				if (tp instanceof PartFlatWire)
+				{
+					return ((PartFlatWire) tp).connectStraight(this, (r + 2) % 4);
+				}
+
+				return true;
 			}
 		}
 		else
