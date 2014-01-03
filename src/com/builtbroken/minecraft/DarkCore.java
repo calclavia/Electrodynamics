@@ -73,6 +73,7 @@ public class DarkCore
     {
         if (!pre)
         {
+            CoreRegistry.masterBlockConfig.load();
             MinecraftForge.EVENT_BUS.register(this);
             MinecraftForge.EVENT_BUS.register(new FluidHelper());
             MinecraftForge.EVENT_BUS.register(SaveManager.instance());
@@ -87,7 +88,7 @@ public class DarkCore
     {
         if (!load)
         {
-            CoreRegistry.masterBlockConfig.load();
+            
             load = true;
         }
     }
