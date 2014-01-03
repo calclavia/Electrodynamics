@@ -280,7 +280,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	public ArrayList getPacketData(int packetID)
 	{
 		ArrayList objects = super.getPacketData(packetID);
-		objects.add(this.getMoveTime());
+		objects.add(this.moveTime > 0 ? this.moveTime : this.getMoveTime());
 		return objects;
 	}
 
