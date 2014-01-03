@@ -1,6 +1,7 @@
 package resonantinduction.battery;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,7 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
-import universalelectricity.api.UniversalClass;
+import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.electricity.IVoltageInput;
+import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
@@ -27,10 +30,15 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author Calclavia
  */
-@UniversalClass
-public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
+public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
 	public static final long STORAGE = 100000000;
+
+	/** The transfer rate **/
+	public static final long DEFAULT_WATTAGE = 1000000;
+
+	/** Voltage increases as series connection increases */
+	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
 
 	private BatteryStructure structure;
 
@@ -65,6 +73,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 				}
 			}
 
+			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().get().size());
 		}
 	}
 
@@ -75,13 +84,39 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0 && this.getNetwork().getFirstNode() == this)
+			if (this.produce() > 0)
 			{
 				this.getNetwork().redistribute();
 			}
-
-			this.produce();
 		}
+	}
+
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+	{
+		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
+
+		if (doReceive)
+			this.getNetwork().redistribute();
+
+		return returnValue;
+	}
+
+	@Override
+	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
+	{
+		long returnValue = super.onExtractEnergy(from, extract, doExtract);
+
+		if (doExtract)
+			this.getNetwork().redistribute();
+
+		return returnValue;
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		return EnumSet.of(ForgeDirection.DOWN);
 	}
 
 	public void updateClient()
@@ -149,5 +184,23 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 		this.getNetwork().redistribute(this);
 		this.getNetwork().split(this);
 		super.invalidate();
+	}
+
+	@Override
+	public long getVoltageOutput(ForgeDirection side)
+	{
+		return DEFAULT_VOLTAGE;
+	}
+
+	@Override
+	public long getVoltageInput(ForgeDirection direction)
+	{
+		return DEFAULT_VOLTAGE;
+	}
+
+	@Override
+	public void onWrongVoltage(ForgeDirection direction, long voltage)
+	{
+
 	}
 }
