@@ -122,7 +122,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						}
 						else
 						{
-							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
+							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 							this.moveTime = this.getMoveTime();
 						}
 					}
@@ -207,7 +207,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (this.isTeleport())
 					{
-						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 					}
 					else
 					{
@@ -327,6 +327,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						int animationTime = dataStream.readInt();
 						Vector3 anchorPosition = new Vector3(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
 						VectorWorld targetPosition = new VectorWorld(PacketHandler.readNBTTagCompound(dataStream));
+						boolean isPreview = dataStream.readBoolean();
 
 						/**
 						 * Holographic Orbit FXs
@@ -339,10 +340,26 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						{
 							// Render hologram for starting position
 							Vector3 vector = new Vector3((NBTTagCompound) nbtList.tagAt(i)).translate(0.5);
-							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
+
+							if (isPreview)
+							{
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 1, 1, 1, animationTime, 30f);
+							}
+							else
+							{
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
+							}
+
 							// Render hologram for destination position
 							Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
-							ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+							if (isPreview)
+							{
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 1, 1, 1, animationTime, 30f);
+							}
+							else
+							{
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+							}
 						}
 
 						this.canRenderMove = true;
