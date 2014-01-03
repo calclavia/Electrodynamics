@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.Blacklist;
@@ -13,6 +14,7 @@ import mffs.api.ISpecialForceManipulation;
 import mffs.api.card.ICoordLink;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
+import mffs.api.security.Permission;
 import mffs.card.ItemCard;
 import mffs.event.BlockPreMoveDelayedEvent;
 import mffs.render.IEffectController;
@@ -442,6 +444,9 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		{
 			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()))
 			{
+				/**
+				 * Search for possible failing conditions.
+				 */
 				if (Blacklist.forceManipulationBlacklist.contains(Block.blocksList[position.getBlockID(this.worldObj)]))
 				{
 					this.failedPositions.add(position);
@@ -462,6 +467,20 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				// The relative position between this coordinate and the anchor.
 				Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
 				VectorWorld targetPosition = (VectorWorld) targetCenterPosition.clone().add(relativePosition);
+
+				if (this.getBiometricIdentifier() != null)
+				{
+					if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()) && !MFFSHelper.hasPermission(targetPosition.world, targetPosition, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()))
+					{
+						this.failedPositions.add(position);
+						return false;
+					}
+				}
+				else if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(targetPosition.world, targetPosition, Permission.BLOCK_ALTER, ""))
+				{
+					this.failedPositions.add(position);
+					return false;
+				}
 
 				if (targetPosition.getTileEntity() == this)
 				{

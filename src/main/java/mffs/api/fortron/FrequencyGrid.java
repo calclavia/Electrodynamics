@@ -6,11 +6,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import mffs.IServerThread;
+import net.minecraft.server.ServerListenThread;
+import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * A grid MFFS uses to search for machines with frequencies that can be linked and spread Fortron
@@ -192,7 +193,9 @@ public class FrequencyGrid
 
 	public static FrequencyGrid instance()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		Thread thr = Thread.currentThread();
+
+		if ((thr instanceof ThreadMinecraftServer) || (thr instanceof ServerListenThread) || (thr instanceof IServerThread))
 		{
 			return SERVER_INSTANCE;
 		}

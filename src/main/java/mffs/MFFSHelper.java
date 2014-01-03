@@ -422,11 +422,16 @@ public class MFFSHelper
 
 	public static boolean hasPermission(World world, Vector3 position, Permission permission, EntityPlayer player)
 	{
+		return hasPermission(world, position, permission, player.username);
+	}
+
+	public static boolean hasPermission(World world, Vector3 position, Permission permission, String username)
+	{
 		IInterdictionMatrix interdictionMatrix = getNearestInterdictionMatrix(world, position);
 
 		if (interdictionMatrix != null)
 		{
-			return isPermittedByInterdictionMatrix(interdictionMatrix, player.username, permission);
+			return isPermittedByInterdictionMatrix(interdictionMatrix, username, permission);
 		}
 
 		return true;

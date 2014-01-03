@@ -3,6 +3,7 @@ package mffs.tile;
 import java.util.HashSet;
 import java.util.Set;
 
+import mffs.IServerThread;
 import universalelectricity.api.vector.Vector3;
 
 /**
@@ -11,7 +12,7 @@ import universalelectricity.api.vector.Vector3;
  * @author Calclavia
  * 
  */
-public class ManipulatorCalculationThread extends Thread
+public class ManipulatorCalculationThread extends Thread implements IServerThread
 {
 	public interface IThreadCallBack
 	{

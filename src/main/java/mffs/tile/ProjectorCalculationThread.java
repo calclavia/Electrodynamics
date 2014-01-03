@@ -2,6 +2,7 @@ package mffs.tile;
 
 import java.util.Set;
 
+import mffs.IServerThread;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IFieldInteraction;
 import mffs.api.modules.IModule;
@@ -14,7 +15,7 @@ import universalelectricity.api.vector.Vector3;
  * @author Calclavia
  * 
  */
-public class ProjectorCalculationThread extends Thread
+public class ProjectorCalculationThread extends Thread implements IServerThread
 {
 	public interface IThreadCallBack
 	{
