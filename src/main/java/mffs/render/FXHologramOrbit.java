@@ -1,13 +1,14 @@
 package mffs.render;
 
-import org.lwjgl.opengl.GL11;
-
-import calclavia.lib.render.CalclaviaRenderHelper;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
+
+import org.lwjgl.opengl.GL11;
+
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.CalclaviaRenderHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -146,7 +146,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 					if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0 && this.ticks % 10 == 0)
 					{
 						int moveTime = this.getMoveTime();
-						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 1.5f, 0.5f + 0.8f * (float) (moveTime - this.moveTime) / (float) moveTime);
+						this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime);
 					}
 
 					if (--this.moveTime == 0)

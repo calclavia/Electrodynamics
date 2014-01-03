@@ -2,9 +2,7 @@ package mffs;
 
 import icbm.api.IBlockFrequency;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import mffs.api.IProjector;

@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import java.util.List;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.card.ICoordLink;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -74,6 +74,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 		return getLink(itemStack) != null;
 	}
 
+	@Override
 	public VectorWorld getLink(ItemStack itemStack)
 	{
 		if (itemStack.stackTagCompound == null || !itemStack.getTagCompound().hasKey("link"))
@@ -84,6 +85,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 		return new VectorWorld(itemStack.getTagCompound().getCompoundTag("link"));
 	}
 
+	@Override
 	public void setLink(ItemStack itemStack, VectorWorld vec)
 	{
 		if (itemStack.getTagCompound() == null)

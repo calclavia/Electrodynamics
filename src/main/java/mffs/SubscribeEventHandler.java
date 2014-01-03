@@ -21,7 +21,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.event.ChunkModifiedEvent.ChunkSetBlockEvent;
 import cpw.mods.fml.relauncher.Side;

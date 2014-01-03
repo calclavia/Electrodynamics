@@ -3,7 +3,6 @@ package mffs.item.module;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.IFieldInteraction;
 import mffs.api.IProjector;
 import mffs.api.modules.IModule;
@@ -13,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemModule extends ItemMFFS implements IModule
 {

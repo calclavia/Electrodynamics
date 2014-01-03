@@ -11,11 +11,11 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.prefab.TranslationHelper;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiCoercionDeriver extends GuiMFFS

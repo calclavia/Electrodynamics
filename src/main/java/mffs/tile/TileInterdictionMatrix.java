@@ -3,11 +3,9 @@ package mffs.tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IInterdictionMatrixModule;
@@ -22,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import calclavia.lib.prefab.TranslationHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 

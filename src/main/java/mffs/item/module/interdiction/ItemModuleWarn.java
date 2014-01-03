@@ -1,9 +1,9 @@
 package mffs.item.module.interdiction;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 {

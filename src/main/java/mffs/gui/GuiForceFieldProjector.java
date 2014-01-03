@@ -17,8 +17,8 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.vector.Region2;
 import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceFieldProjector extends GuiMFFS
@@ -50,7 +50,7 @@ public class GuiForceFieldProjector extends GuiMFFS
 		String south = TranslationHelper.getLocal("gui.projector.south");
 		String west = TranslationHelper.getLocal("gui.projector.west");
 		String east = TranslationHelper.getLocal("gui.projector.east");
-	
+
 		if (!this.tileEntity.isAbsolute)
 		{
 			north = TranslationHelper.getLocal("gui.projector.front");

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import mffs.ModularForceFieldSystem;
 import mffs.api.IActivatable;

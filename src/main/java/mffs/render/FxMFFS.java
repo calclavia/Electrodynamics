@@ -1,10 +1,9 @@
 package mffs.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import mffs.ClientProxy;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia

@@ -2,7 +2,6 @@ package mffs.base;
 
 import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -11,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import calclavia.lib.Calclavia;
 import calclavia.lib.prefab.TranslationHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemMFFS extends Item
 {

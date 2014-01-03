@@ -1,11 +1,6 @@
 package mffs.base;
 
 import icbm.api.IBlockFrequency;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.IBiometricIdentifierLink;
@@ -21,10 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.Calclavia;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.prefab.TranslationHelper;
-import calclavia.lib.prefab.vector.Region2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase

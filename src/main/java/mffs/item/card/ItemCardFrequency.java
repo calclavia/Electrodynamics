@@ -5,7 +5,6 @@ import icbm.api.IItemFrequency;
 
 import java.util.List;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.Settings;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import calclavia.lib.prefab.TranslationHelper;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {
@@ -88,7 +88,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			{
 				((IBlockFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
 				world.markBlockForUpdate(x, y, z);
-				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.set").replace("%p",this.getFrequency(itemStack)));
+				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.set").replaceAll("%p", "" + this.getFrequency(itemStack)));
 			}
 
 			return true;

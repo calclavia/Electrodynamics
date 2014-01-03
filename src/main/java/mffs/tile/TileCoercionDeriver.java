@@ -1,9 +1,6 @@
 package mffs.tile;
 
-import ic2.api.item.IElectricItem;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.EnumSet;
 
 import mffs.ModularForceFieldSystem;
@@ -18,8 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.item.IEnergyItem;
-import cofh.api.energy.IEnergyContainerItem;
 
 import com.google.common.io.ByteArrayDataInput;
 

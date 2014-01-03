@@ -37,7 +37,7 @@ public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100);
 				interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
 
-				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] "+TranslationHelper.getLocal("message.moduleAntiPersonnel.death"));
+				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] " + TranslationHelper.getLocal("message.moduleAntiPersonnel.death"));
 			}
 		}
 

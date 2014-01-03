@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.prefab.TranslationHelper;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.api.EventForceManipulate.EventPostForceManipulate;
@@ -28,6 +27,7 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -57,7 +57,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add(TranslationHelper.getLocal("info.item.dimension" + " '" + vec.world.provider.getDimensionName() + "'");
+			list.add(TranslationHelper.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName() + "'");
 		}
 		else
 		{
@@ -87,6 +87,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 		return getLink(itemStack) != null;
 	}
 
+	@Override
 	public VectorWorld getLink(ItemStack itemStack)
 	{
 		if (itemStack.stackTagCompound == null || !itemStack.getTagCompound().hasKey("link"))
@@ -97,6 +98,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 		return new VectorWorld(itemStack.getTagCompound().getCompoundTag("link"));
 	}
 
+	@Override
 	public void setLink(ItemStack itemStack, VectorWorld vec)
 	{
 		if (itemStack.getTagCompound() == null)
@@ -165,7 +167,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.remoteController.fail").replace("%p",UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
+							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.remoteController.fail").replace("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
 						}
 					}
 				}
