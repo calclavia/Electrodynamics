@@ -75,7 +75,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.getNetwork().getFirstNode() == this)
+			if (this.ticks % 10 == 0 && this.getNetwork().getFirstNode() == this)
 			{
 				this.getNetwork().redistribute();
 			}
@@ -146,6 +146,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	@Override
 	public void invalidate()
 	{
+		this.getNetwork().redistribute(this);
 		this.getNetwork().split(this);
 		super.invalidate();
 	}

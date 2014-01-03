@@ -1,13 +1,12 @@
 package resonantinduction.battery;
 
-import java.util.Iterator;
+import java.util.Arrays;
 
-import universalelectricity.api.net.IConnector;
 import calclavia.lib.multiblock.structure.Structure;
 
 public class BatteryStructure extends Structure<TileBattery>
 {
-	public void redistribute()
+	public void redistribute(TileBattery... exclusion)
 	{
 		long totalEnergy = 0;
 
@@ -15,21 +14,29 @@ public class BatteryStructure extends Structure<TileBattery>
 		{
 			totalEnergy += battery.getEnergy(null);
 		}
+		
+		int amountOfNodes = this.get().size() - exclusion.length;
 
-		long totalPerBattery = totalEnergy / this.get().size();
-		long totalPerBatteryRemainder = totalPerBattery + totalEnergy % this.get().size();
-
-		TileBattery firstNode = this.getFirstNode();
-
-		for (TileBattery battery : this.get())
+		if (totalEnergy > 0 && amountOfNodes > 0)
 		{
-			if (battery == firstNode)
+			long totalPerBattery = totalEnergy / amountOfNodes;
+			long totalPerBatteryRemainder = totalPerBattery + totalEnergy % amountOfNodes;
+
+			TileBattery firstNode = this.getFirstNode();
+
+			for (TileBattery battery : this.get())
 			{
-				battery.setEnergy(null, totalPerBatteryRemainder);
-			}
-			else
-			{
-				battery.setEnergy(null, totalPerBattery);
+				if (!Arrays.asList(exclusion).contains(battery))
+				{
+					if (battery == firstNode)
+					{
+						battery.setEnergy(null, totalPerBatteryRemainder);
+					}
+					else
+					{
+						battery.setEnergy(null, totalPerBattery);
+					}
+				}
 			}
 		}
 	}

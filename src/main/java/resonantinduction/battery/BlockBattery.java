@@ -32,10 +32,6 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
 	{
-		if (!world.isRemote)
-		{
-			System.out.println(((TileBattery) world.getBlockTileEntity(x, y, z)).getNetwork().hashCode());
-		}
 		return true;
 	}
 
