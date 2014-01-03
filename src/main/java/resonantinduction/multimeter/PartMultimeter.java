@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +21,7 @@ import resonantinduction.ResonantInduction;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import calclavia.lib.network.IPacketReceiver;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -31,6 +34,7 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -40,7 +44,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion
+public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFacePart, JNormalOcclusion
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
@@ -60,8 +64,8 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 	public enum DetectMode
 	{
-		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"),
-		EQUAL("equal"), GREATER_THAN("greaterThanOrEqual"), GREATER_THAN_EQUAL("greaterThan");
+		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"), EQUAL("equal"),
+		GREATER_THAN("greaterThanOrEqual"), GREATER_THAN_EQUAL("greaterThan");
 
 		public String display;
 
@@ -179,11 +183,7 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 	public void read(MCDataInput packet, int packetID)
 	{
-		if (packetID == 0)
-		{
-			toggleMode();
-		}
-		else if (packetID == 1)
+		if (packetID == 1)
 		{
 			energyLimit = packet.readLong();
 		}
@@ -196,11 +196,21 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		}
 	}
 
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		toggleMode();
+	}
+
 	public long doGetDetectedEnergy()
 	{
+		return getDetectedEnergy(getDirection().getOpposite(), getDetectedTile());
+	}
+
+	public TileEntity getDetectedTile()
+	{
 		ForgeDirection direction = getDirection();
-		TileEntity tileEntity = world().getBlockTileEntity(x() + direction.offsetX, y() + direction.offsetY, z() + direction.offsetZ);
-		return getDetectedEnergy(direction.getOpposite(), tileEntity);
+		return world().getBlockTileEntity(x() + direction.offsetX, y() + direction.offsetY, z() + direction.offsetZ);
 	}
 
 	public ForgeDirection getDirection()
@@ -238,7 +248,27 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 	public void toggleMode()
 	{
-		detectMode = DetectMode.values()[(detectMode.ordinal() + 1) % DetectMode.values().length];
+		if (!this.world().isRemote)
+		{
+			detectMode = DetectMode.values()[(detectMode.ordinal() + 1) % DetectMode.values().length];
+		}
+		else
+		{
+			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), getPartID()));
+		}
+	}
+
+	public int getPartID()
+	{
+		for (int i = 0; i < this.tile().partList().size(); i++)
+		{
+			if (this.tile().partMap(i) == this)
+			{
+				return i;
+			}
+		}
+
+		return 0;
 	}
 
 	@Override

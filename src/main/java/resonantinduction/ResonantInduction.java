@@ -34,7 +34,6 @@ import resonantinduction.tesla.TileTesla;
 import resonantinduction.transformer.ItemTransformer;
 import resonantinduction.wire.EnumWireMaterial;
 import resonantinduction.wire.ItemWire;
-import calclavia.components.ComponentRegistry;
 import calclavia.lib.UniversalRecipe;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -153,6 +152,7 @@ public class ResonantInduction
 	 * Packets
 	 */
 	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
+	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(CHANNEL);
 	public static final ColourRGBA[] DYE_COLORS = new ColourRGBA[] { new ColourRGBA(255, 255, 255, 255), new ColourRGBA(1, 0, 0, 1d), new ColourRGBA(0, 0.608, 0.232, 1d), new ColourRGBA(0.588, 0.294, 0, 1d), new ColourRGBA(0, 0, 1, 1d), new ColourRGBA(0.5, 0, 05, 1d), new ColourRGBA(0, 1, 1, 1d), new ColourRGBA(0.8, 0.8, 0.8, 1d), new ColourRGBA(0.3, 0.3, 0.3, 1d), new ColourRGBA(1, 0.412, 0.706, 1d), new ColourRGBA(0.616, 1, 0, 1d), new ColourRGBA(1, 1, 0, 1d), new ColourRGBA(0.46f, 0.932, 1, 1d), new ColourRGBA(0.5, 0.2, 0.5, 1d), new ColourRGBA(0.7, 0.5, 0.1, 1d), new ColourRGBA(1, 1, 1, 1d) };
 
 	@EventHandler

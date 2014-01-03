@@ -104,7 +104,7 @@ public class GuiMultimeter extends GuiContainerBase
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		this.multimeter.getWriteStream().writeByte(0);
+		this.multimeter.toggleMode();
 	}
 
 }
