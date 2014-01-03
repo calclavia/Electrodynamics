@@ -34,7 +34,7 @@ public class BlockBattery extends BlockBase implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			System.out.println(((TileBattery) world.getBlockTileEntity(x, y, z)).structure.hashCode());
+			System.out.println(((TileBattery) world.getBlockTileEntity(x, y, z)).getNetwork().hashCode());
 		}
 		return true;
 	}

@@ -93,14 +93,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 
-		if (((TileBattery) t).structure.isMultiblock)
-		{
-			this.bindTexture(TEXTURE_MULTI);
-		}
-		else
-		{
-			this.bindTexture(TEXTURE);
-		}
+		this.bindTexture(TEXTURE);
 
 		MODEL.render(0.0625f);
 		GL11.glPopMatrix();
