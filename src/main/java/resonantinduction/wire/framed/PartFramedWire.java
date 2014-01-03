@@ -131,13 +131,13 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 			System.out.println(this.getNetwork());
 		}
 
-		TileMultipart tile = tile();
-		World w = world();
-
 		if (item != null)
 		{
 			if (item.getItem().itemID == Block.lever.blockID)
 			{
+				TileMultipart tile = tile();
+				World w = world();
+
 				if (!w.isRemote)
 				{
 					PartFramedSwitchWire wire = (PartFramedSwitchWire) MultiPartRegistry.createPart("resonant_induction_switch_wire", false);

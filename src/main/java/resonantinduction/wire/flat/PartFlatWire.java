@@ -285,33 +285,35 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			System.out.println(this.getNetwork());
 		}
-		TileMultipart tile = tile();
-		World w = world();
 
-		if (item.getItem().itemID == Block.lever.blockID)
+		if (item != null)
 		{
-			if (!w.isRemote)
+			if (item.getItem().itemID == Block.lever.blockID)
 			{
-				PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
-				wire.copyFrom(this);
+				TileMultipart tile = tile();
+				World w = world();
 
-				if (tile.canReplacePart(this, wire))
+				if (!w.isRemote)
 				{
-					tile.remPart(this);
-					TileMultipart.addPart(w, new BlockCoord(tile), wire);
+					PartFlatSwitchWire wire = (PartFlatSwitchWire) MultiPartRegistry.createPart("resonant_induction_flat_switch_wire", false);
+					wire.copyFrom(this);
 
-					if (!player.capabilities.isCreativeMode)
+					if (tile.canReplacePart(this, wire))
 					{
-						player.inventory.decrStackSize(player.inventory.currentItem, 1);
+						tile.remPart(this);
+						TileMultipart.addPart(w, new BlockCoord(tile), wire);
+
+						if (!player.capabilities.isCreativeMode)
+						{
+							player.inventory.decrStackSize(player.inventory.currentItem, 1);
+						}
 					}
 				}
+				return true;
 			}
-			return true;
 		}
-		else
-		{
-			return super.activate(player, part, item);
-		}
+
+		return super.activate(player, part, item);
 	}
 
 	@Override
