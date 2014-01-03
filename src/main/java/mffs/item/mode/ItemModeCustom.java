@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.NBTFileLoader;
+import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -50,29 +51,29 @@ public class ItemModeCustom extends ItemMode implements ICache
 	{
 		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
 
-		list.add("Mode: " + (nbt.getBoolean(NBT_MODE) ? "Subtraction" : "Additive"));
+		list.add(TranslationHelper.getLocal("info.modeCustom.mode") + " " + (nbt.getBoolean(NBT_MODE) ? TranslationHelper.getLocal("info.modeCustom.substraction") : TranslationHelper.getLocal("info.modeCustom.additive")));
 
 		Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
-		list.add("Point 1: " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
+		list.add(TranslationHelper.getLocal("info.modeCustom.point1") + " " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
 
 		Vector3 point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2));
-		list.add("Point 2: " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
+		list.add(TranslationHelper.getLocal("info.modeCustom.point2") + " " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
 
 		int modeID = nbt.getInteger(NBT_ID);
 
 		if (modeID > 0)
 		{
-			list.add("Mode ID: " + modeID);
+			list.add(TranslationHelper.getLocal("info.modeCustom.modeID") + " " + modeID);
 
 			int fieldSize = nbt.getInteger(NBT_FIELD_SIZE);
 
 			if (fieldSize > 0)
 			{
-				list.add("Field size: " + fieldSize);
+				list.add(TranslationHelper.getLocal("info.modeCustom.fieldSize") + " " + fieldSize);
 			}
 			else
 			{
-				list.add("Field not saved.");
+				list.add(TranslationHelper.getLocal("info.modeCustom.notSaved"));
 			}
 		}
 
@@ -82,7 +83,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 		}
 		else
 		{
-			list.add("Hold shift for more...");
+			list.add(TranslationHelper.getLocal("info.modeCustom.shift"));
 		}
 	}
 
@@ -184,7 +185,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 							this.clearCache();
 
-							entityPlayer.addChatMessage("Field structure saved.");
+							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.modeCustom.saved"));
 						}
 					}
 				}
@@ -197,7 +198,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 				if (nbt != null)
 				{
 					nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE));
-					entityPlayer.addChatMessage("Changed selection mode to " + (nbt.getBoolean(NBT_MODE) ? "subtraction" : "additive"));
+					entityPlayer.addChatMessage(TranslationHelper.getLocal("message.modeCustom.modeChange").replace("%p",(nbt.getBoolean(NBT_MODE) ? TranslationHelper.getLocal("info.modeCustom.substraction") : TranslationHelper.getLocal("info.modeCustom.additive"))));
 				}
 			}
 		}

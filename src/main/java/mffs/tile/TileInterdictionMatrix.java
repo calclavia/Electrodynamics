@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.modules.IInterdictionMatrixModule;
@@ -94,7 +95,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 					if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
 					{
-						player.addChatMessage("[" + this.getInvName() + "] Warning! You are near the scanning range!");
+						player.addChatMessage("[" + this.getInvName() + "] " + TranslationHelper.getLocal("message.interdictionMatrix.warn"));
 					}
 
 				}

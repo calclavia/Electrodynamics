@@ -2,6 +2,7 @@ package mffs.item.module.interdiction;
 
 import java.util.List;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.api.modules.IInterdictionMatrixModule;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.item.module.ItemModule;
@@ -19,7 +20,7 @@ public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdi
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add("\u00a74Interdiction Matrix");
+		info.add("\u00a74"+TranslationHelper.getLocal("tile.mffs\:interdictionMatrix.name"));
 		super.addInformation(itemStack, player, info, b);
 	}
 

@@ -40,15 +40,15 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[blockId] != null)
 			{
-				list.add(TranslationHelper.getLocal("gui.item.linkedWith") + ": " + Block.blocksList[blockId].getLocalizedName());
+				list.add(TranslationHelper.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add(TranslationHelper.getLocal("gui.item.dimension") + ": " + vec.world.provider.getDimensionName());
+			list.add(TranslationHelper.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName());
 		}
 		else
 		{
-			list.add(TranslationHelper.getLocal("gui.item.notLinked"));
+			list.add(TranslationHelper.getLocal("info.item.notLinked"));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage(TranslationHelper.getLocal("gui.item.linkedWith") + ": " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage(TranslationHelper.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
 			}
 		}
 

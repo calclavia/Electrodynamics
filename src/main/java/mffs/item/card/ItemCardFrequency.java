@@ -5,6 +5,7 @@ import icbm.api.IItemFrequency;
 
 import java.util.List;
 
+import calclavia.lib.prefab.TranslationHelper;
 import mffs.Settings;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		list.add("Frequency: " + this.getFrequency(itemStack));
+		list.add(TranslationHelper.getLocal("info.cardFrequency.freq") + " " + this.getFrequency(itemStack));
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			if (player.isSneaking())
 			{
 				this.setFrequency(world.rand.nextInt((int) Math.pow(10, (Settings.MAX_FREQUENCY_DIGITS - 1))), itemStack);
-				player.addChatMessage("Generated random frequency: " + this.getFrequency(itemStack));
+				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.generated") + " " + this.getFrequency(itemStack));
 			}
 		}
 
@@ -87,7 +88,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			{
 				((IBlockFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
 				world.markBlockForUpdate(x, y, z);
-				player.addChatMessage("Frequency set to: " + this.getFrequency(itemStack));
+				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.set").replace("%p",this.getFrequency(itemStack)));
 			}
 
 			return true;

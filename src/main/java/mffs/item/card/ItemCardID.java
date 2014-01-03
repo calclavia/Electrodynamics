@@ -44,11 +44,11 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	{
 		if (this.getUsername(itemStack) != null && !this.getUsername(itemStack).isEmpty())
 		{
-			info.add("Username: " + this.getUsername(itemStack));
+			info.add(TranslationHelper.getLocal("info.cardIdentification.username") + " " + this.getUsername(itemStack));
 		}
 		else
 		{
-			info.add("Unidentified");
+			info.add(TranslationHelper.getLocal("info.cardIdentification.empty"));
 		}
 
 		String tooltip = "";

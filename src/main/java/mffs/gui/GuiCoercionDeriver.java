@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import calclavia.lib.prefab.TranslationHelper;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -32,7 +33,7 @@ public class GuiCoercionDeriver extends GuiMFFS
 	{
 		this.textFieldPos = new Vector2(30, 43);
 		super.initGui();
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, "Derive"));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, TranslationHelper.getLocal("gui.deriver.derive")));
 	}
 
 	@Override
@@ -52,18 +53,18 @@ public class GuiCoercionDeriver extends GuiMFFS
 		{
 			if (!this.tileEntity.isInversed)
 			{
-				((GuiButton) this.buttonList.get(1)).displayString = "Derive";
+				((GuiButton) this.buttonList.get(1)).displayString = TranslationHelper.getLocal("gui.deriver.derive");
 			}
 			else
 			{
-				((GuiButton) this.buttonList.get(1)).displayString = "Integrate";
+				((GuiButton) this.buttonList.get(1)).displayString = TranslationHelper.getLocal("gui.deriver.integrate");
 			}
 		}
 
 		this.renderUniversalDisplay(85, 40, TileCoercionDeriver.WATTAGE, x, y, Unit.WATT);
 		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(UniversalElectricity.DEFAULT_VOLTAGE, Unit.VOLTAGE), 85, 50, 4210752);
 
-		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? "Running" : "Idle"), 8, 70, x, y);
+		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? TranslationHelper.getLocal("gui.deriver.running") : TranslationHelper.getLocal("gui.deriver.idle")), 8, 70, x, y);
 		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES), 8, 105, x, y);
 
 		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + UnitDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, Unit.JOULES), 120, 117, 4210752);
