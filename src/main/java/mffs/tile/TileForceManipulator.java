@@ -124,7 +124,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						}
 						else
 						{
-							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
+							PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, this.getMoveTime(), this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), false, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 							this.moveTime = this.getMoveTime();
 						}
 					}
@@ -447,7 +447,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				/**
 				 * Search for possible failing conditions.
 				 */
-				if (Blacklist.forceManipulationBlacklist.contains(Block.blocksList[position.getBlockID(this.worldObj)]))
+				if (Blacklist.forceManipulationBlacklist.contains(position.getBlockID(this.worldObj)))
 				{
 					this.failedPositions.add(position);
 					return false;

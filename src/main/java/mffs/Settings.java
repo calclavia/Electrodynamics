@@ -120,7 +120,7 @@ public class Settings
 					try
 					{
 						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.forceManipulationBlacklist.add(Block.blocksList[blockID]);
+						Blacklist.forceManipulationBlacklist.add(blockID);
 					}
 					catch (Exception e)
 					{
@@ -143,7 +143,7 @@ public class Settings
 					try
 					{
 						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.stabilizationBlacklist.add(Block.blocksList[blockID]);
+						Blacklist.stabilizationBlacklist.add(blockID);
 					}
 					catch (Exception e)
 					{
@@ -166,7 +166,7 @@ public class Settings
 					try
 					{
 						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.disintegrationBlacklist.add(Block.blocksList[blockID]);
+						Blacklist.disintegrationBlacklist.add(blockID);
 					}
 					catch (Exception e)
 					{
@@ -176,22 +176,6 @@ public class Settings
 				}
 			}
 		}
-
-		/**
-		 * Default blacklist variables.
-		 */
-		Blacklist.stabilizationBlacklist.add(Block.waterStill);
-		Blacklist.stabilizationBlacklist.add(Block.waterMoving);
-		Blacklist.stabilizationBlacklist.add(Block.lavaStill);
-		Blacklist.stabilizationBlacklist.add(Block.lavaMoving);
-
-		Blacklist.disintegrationBlacklist.add(Block.waterStill);
-		Blacklist.disintegrationBlacklist.add(Block.waterMoving);
-		Blacklist.disintegrationBlacklist.add(Block.lavaStill);
-		Blacklist.stabilizationBlacklist.add(Block.lavaMoving);
-
-		Blacklist.forceManipulationBlacklist.add(Block.bedrock);
-		Blacklist.forceManipulationBlacklist.add(ModularForceFieldSystem.blockForceField);
 
 		CONFIGURATION.save();
 	}

@@ -3,6 +3,7 @@ package mffs;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import mffs.api.Blacklist;
 import mffs.api.fortron.FrequencyGrid;
 import mffs.base.BlockBase;
 import mffs.base.BlockMFFS;
@@ -303,6 +304,22 @@ public class ModularForceFieldSystem
 		 * Load language file(s)
 		 */
 		LOGGER.fine("Language(s) Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US", "zh_CN", "de_DE" }));
+
+		/**
+		 * Default blacklist variables.
+		 */
+		Blacklist.stabilizationBlacklist.add(Block.waterStill.blockID);
+		Blacklist.stabilizationBlacklist.add(Block.waterMoving.blockID);
+		Blacklist.stabilizationBlacklist.add(Block.lavaStill.blockID);
+		Blacklist.stabilizationBlacklist.add(Block.lavaMoving.blockID);
+
+		Blacklist.disintegrationBlacklist.add(Block.waterStill.blockID);
+		Blacklist.disintegrationBlacklist.add(Block.waterMoving.blockID);
+		Blacklist.disintegrationBlacklist.add(Block.lavaStill.blockID);
+		Blacklist.stabilizationBlacklist.add(Block.lavaMoving.blockID);
+
+		Blacklist.forceManipulationBlacklist.add(Block.bedrock.blockID);
+		Blacklist.forceManipulationBlacklist.add(ModularForceFieldSystem.blockForceField.blockID);
 
 		/**
 		 * Write metadata information
