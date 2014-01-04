@@ -22,12 +22,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.ResonantInduction;
 import resonantinduction.core.base.ItemBase;
 import calclavia.lib.Calclavia;
+import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -50,11 +52,21 @@ public class ItemDust extends ItemBase
 		this.setTextureName("gunpowder");
 	}
 
+//	@Override
+//	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+//	{
+//		String dustName = getDustFromStack(itemStack);
+//		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
+//	}
+//	
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	public String getItemDisplayName(ItemStack is)
 	{
-		String dustName = getDustFromStack(itemStack);
-		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
+		String dustName = getDustFromStack(is);
+		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
+		
+		String name = type.getDisplayName().replace(TranslationHelper.getLocal("misc.resonantinduction.ingot"), "");
+		return (TranslationHelper.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");	
 	}
 
 	@ForgeSubscribe
