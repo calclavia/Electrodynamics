@@ -349,7 +349,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 					{
 						TMultiPart tp = tpCorner.partMap(absDir ^ 1);
 
-						if (this.canConnectTo(tp))
+						if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
 						{
 							this.connections[absDir] = tp;
 
@@ -414,12 +414,12 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			TMultiPart tp = t.partMap(this.side);
 
-			if (this.canConnectTo(tp))
+			if (this.canConnectTo(tp, ForgeDirection.getOrientation(absSide)))
 			{
 				// Check the wire we are connecting to and see if THAT block can accept this one.
 				int otherR = (r + 2) % 4;
 
-				if (tp instanceof PartFlatWire && ((PartFlatWire) tp).canConnectTo(this) && ((PartFlatWire) tp).maskOpen(otherR))
+				if (tp instanceof PartFlatWire && ((PartFlatWire) tp).canConnectTo(this, ForgeDirection.getOrientation(absSide).getOpposite()) && ((PartFlatWire) tp).maskOpen(otherR))
 				{
 					// We found a wire! Merge connection.
 					this.connections[absSide] = tp;
@@ -434,7 +434,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		/** Look for an external energy handler. */
 		TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
 
-		if (this.canConnectTo(tileEntity))
+		if (this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absSide)))
 		{
 			this.connections[absSide] = tileEntity;
 			return true;
@@ -602,7 +602,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	{
 		int absDir = Rotation.rotateSide(side, r);
 		TMultiPart facePart = tile().partMap(absDir);
-		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectTo(facePart)))
+		if (facePart != null && (!(facePart instanceof PartFlatWire) || !canConnectTo(facePart, ForgeDirection.getOrientation(absDir))))
 			return false;
 
 		if (tile().partMap(PartMap.edgeBetween(side, absDir)) != null)
@@ -631,7 +631,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			TMultiPart tp = t.partMap(absDir ^ 1);
 
-			if (canConnectTo(tp))
+			if (canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
 			{
 				if (tp instanceof PartFlatWire)
 				{
@@ -682,7 +682,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		{
 			TMultiPart tp = t.partMap(side);
 
-			if (this.canConnectTo(tp))
+			if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
 			{
 				if (tp instanceof PartFlatWire)
 				{
@@ -695,7 +695,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		else
 		{
 			TileEntity tileEntity = world().getBlockTileEntity(pos.x, pos.y, pos.z);
-			return this.canConnectTo(tileEntity);
+			return this.canConnectTo(tileEntity, ForgeDirection.getOrientation(absDir));
 		}
 
 		return false;
@@ -710,7 +710,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 		TMultiPart tp = tile().partMap(absDir);
 
-		if (this.canConnectTo(tp))
+		if (this.canConnectTo(tp, ForgeDirection.getOrientation(absDir)))
 		{
 			return ((PartFlatWire) tp).connectInternal(this, Rotation.rotationTo(absDir, side));
 		}
@@ -754,7 +754,9 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public boolean connectCorner(PartFlatWire wire, int r)
 	{
-		if (this.canConnectTo(wire) && maskOpen(r))
+		int absDir = Rotation.rotateSide(side, r);
+
+		if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
 		{
 			int oldConn = connMap;
 			connMap |= 0x1 << r;
@@ -770,7 +772,9 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public boolean connectStraight(PartFlatWire wire, int r)
 	{
-		if (this.canConnectTo(wire) && maskOpen(r))
+		int absDir = Rotation.rotateSide(side, r);
+
+		if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)) && maskOpen(r))
 		{
 			int oldConn = connMap;
 			connMap |= 0x10 << r;
@@ -783,7 +787,9 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public boolean connectInternal(PartFlatWire wire, int r)
 	{
-		if (this.canConnectTo(wire))
+		int absDir = Rotation.rotateSide(side, r);
+
+		if (this.canConnectTo(wire, ForgeDirection.getOrientation(absDir)))
 		{
 			int oldConn = connMap;
 			connMap |= 0x100 << r;

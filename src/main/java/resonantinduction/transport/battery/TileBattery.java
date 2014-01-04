@@ -132,12 +132,6 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return true;
-	}
-
-	@Override
 	public BatteryStructure getNetwork()
 	{
 		if (this.structure == null)

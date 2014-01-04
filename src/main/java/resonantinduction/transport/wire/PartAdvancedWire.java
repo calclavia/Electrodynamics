@@ -12,6 +12,7 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.Utility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
@@ -42,7 +43,7 @@ public abstract class PartAdvancedWire extends PartConductor
 	{
 		if (obj != null && (obj.getClass().isAssignableFrom(this.getClass()) || this.getClass().isAssignableFrom(obj.getClass())))
 		{
-		    PartAdvancedWire wire = (PartAdvancedWire) obj;
+			PartAdvancedWire wire = (PartAdvancedWire) obj;
 
 			if (this.getMaterial() == wire.getMaterial())
 			{
@@ -57,6 +58,30 @@ public abstract class PartAdvancedWire extends PartConductor
 		else if (!(obj instanceof IConductor))
 		{
 			return CompatibilityModule.isHandler(obj);
+		}
+
+		return false;
+	}
+
+	protected boolean canConnectTo(Object obj, ForgeDirection dir)
+	{
+		if (obj != null && (obj.getClass().isAssignableFrom(this.getClass()) || this.getClass().isAssignableFrom(obj.getClass())))
+		{
+			PartAdvancedWire wire = (PartAdvancedWire) obj;
+
+			if (this.getMaterial() == wire.getMaterial())
+			{
+				if (this.isInsulated() && wire.isInsulated())
+				{
+					return this.getColor() == wire.getColor() || (this.getColor() == DEFAULT_COLOR || wire.getColor() == DEFAULT_COLOR);
+				}
+
+				return true;
+			}
+		}
+		else if (!(obj instanceof IConductor))
+		{
+			return CompatibilityModule.canConnect(obj, dir.getOpposite());
 		}
 
 		return false;
@@ -303,27 +328,27 @@ public abstract class PartAdvancedWire extends PartConductor
 		this.color = nbt.getInteger("dyeID");
 	}
 
-    protected boolean checkRedstone(int side)
-    {
-        if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))
-        {
-            return true;
-        }
-        else
-        {
-            for (TMultiPart tp : tile().jPartList())
-            {
-                if (tp instanceof IRedstonePart)
-                {
-                    IRedstonePart rp = (IRedstonePart) tp;
-                    if ((Math.max(rp.strongPowerLevel(side), rp.weakPowerLevel(side)) << 4) > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
+	protected boolean checkRedstone(int side)
+	{
+		if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))
+		{
+			return true;
+		}
+		else
+		{
+			for (TMultiPart tp : tile().jPartList())
+			{
+				if (tp instanceof IRedstonePart)
+				{
+					IRedstonePart rp = (IRedstonePart) tp;
+					if ((Math.max(rp.strongPowerLevel(side), rp.weakPowerLevel(side)) << 4) > 0)
+					{
+						return true;
+					}
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }
