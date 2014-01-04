@@ -5,6 +5,7 @@ import mffs.IDelayedEventHandler;
 import mffs.ManipulatorHelper;
 import mffs.api.EventForceManipulate.EventPreForceManipulate;
 import mffs.api.ISpecialForceManipulation;
+import mffs.tile.TileForceManipulator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -37,30 +38,38 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 	{
 		if (!this.world.isRemote)
 		{
-			TileEntity tileEntity = this.position.getTileEntity(this.world);
-
-			if (tileEntity instanceof ISpecialForceManipulation)
+			// Do a final check before actually moving.
+			if (((TileForceManipulator) this.handler).canMove(new VectorWorld(world, position), newPosition))
 			{
-				((ISpecialForceManipulation) tileEntity).move(newPosition.intX(), newPosition.intY(), newPosition.intZ());
-			}
+				TileEntity tileEntity = this.position.getTileEntity(this.world);
 
-			EventPreForceManipulate evt = new EventPreForceManipulate(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ());
-			MinecraftForge.EVENT_BUS.post(evt);
-
-			if (!evt.isCanceled())
-			{
-				int blockID = this.position.getBlockID(this.world);
-				int blockMetadata = this.position.getBlockMetadata(this.world);
-
-				NBTTagCompound tileData = new NBTTagCompound();
-
-				if (tileEntity != null)
+				if (tileEntity instanceof ISpecialForceManipulation)
 				{
-					tileEntity.writeToNBT(tileData);
+					((ISpecialForceManipulation) tileEntity).move(newPosition.intX(), newPosition.intY(), newPosition.intZ());
 				}
 
-				ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
-				this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.position, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
+				EventPreForceManipulate evt = new EventPreForceManipulate(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ());
+				MinecraftForge.EVENT_BUS.post(evt);
+
+				if (!evt.isCanceled())
+				{
+					int blockID = this.position.getBlockID(this.world);
+					int blockMetadata = this.position.getBlockMetadata(this.world);
+
+					NBTTagCompound tileData = new NBTTagCompound();
+
+					if (tileEntity != null)
+					{
+						tileEntity.writeToNBT(tileData);
+					}
+
+					ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
+					this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.position, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
+				}
+			}
+			else
+			{
+				((TileForceManipulator) this.handler).markFailMove = true;
 			}
 		}
 	}

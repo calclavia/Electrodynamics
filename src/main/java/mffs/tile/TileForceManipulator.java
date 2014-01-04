@@ -439,71 +439,78 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		/** The center in which we want to translate into */
 		VectorWorld targetCenterPosition = this.getTargetPosition();
 
-		loop:
 		for (Vector3 position : mobilizationPoints)
 		{
 			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()))
 			{
-				/**
-				 * Search for possible failing conditions.
-				 */
-				if (Blacklist.forceManipulationBlacklist.contains(position.getBlockID(this.worldObj)))
-				{
-					this.failedPositions.add(position);
-					return false;
-				}
-
-				TileEntity tileEntity = position.getTileEntity(this.worldObj);
-
-				if (tileEntity instanceof ISpecialForceManipulation)
-				{
-					if (!((ISpecialForceManipulation) tileEntity).preMove(position.intX(), position.intY(), position.intZ()))
-					{
-						this.failedPositions.add(position);
-						return false;
-					}
-				}
-
 				// The relative position between this coordinate and the anchor.
 				Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
 				VectorWorld targetPosition = (VectorWorld) targetCenterPosition.clone().add(relativePosition);
 
-				if (this.getBiometricIdentifier() != null)
-				{
-					if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()) && !MFFSHelper.hasPermission(targetPosition.world, targetPosition, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()))
-					{
-						this.failedPositions.add(position);
-						return false;
-					}
-				}
-				else if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(targetPosition.world, targetPosition, Permission.BLOCK_ALTER, ""))
-				{
-					this.failedPositions.add(position);
-					return false;
-				}
-
-				if (targetPosition.getTileEntity() == this)
-				{
-					this.failedPositions.add(position);
-					return false;
-				}
-
-				for (Vector3 checkPos : mobilizationPoints)
-				{
-					if (checkPos.equals(targetPosition))
-					{
-						continue loop;
-					}
-				}
-
-				int blockID = targetPosition.getBlockID();
-
-				if (!(targetPosition.world.isAirBlock(targetPosition.intX(), targetPosition.intY(), targetPosition.intZ()) || (blockID > 0 && (Block.blocksList[blockID].isBlockReplaceable(targetPosition.world, targetPosition.intX(), targetPosition.intY(), targetPosition.intZ())))))
+				if (!this.canMove(new VectorWorld(this.worldObj, position), targetPosition))
 				{
 					this.failedPositions.add(position);
 					return false;
 				}
 			}
+		}
+
+		return true;
+	}
+
+	public boolean canMove(VectorWorld position, VectorWorld target)
+	{
+		/**
+		 * Search for possible failing conditions for the starting position.
+		 */
+		if (Blacklist.forceManipulationBlacklist.contains(position.getBlockID()))
+		{
+			return false;
+		}
+
+		TileEntity tileEntity = position.getTileEntity();
+
+		if (tileEntity instanceof ISpecialForceManipulation)
+		{
+			if (!((ISpecialForceManipulation) tileEntity).preMove(position.intX(), position.intY(), position.intZ()))
+			{
+				return false;
+			}
+		}
+
+		/** Check Permissions */
+		if (this.getBiometricIdentifier() != null)
+		{
+			if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()) && !MFFSHelper.hasPermission(target.world, target, Permission.BLOCK_ALTER, this.getBiometricIdentifier().getOwner()))
+			{
+				return false;
+			}
+		}
+		else if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(target.world, target, Permission.BLOCK_ALTER, ""))
+		{
+			return false;
+		}
+
+		if (target.getTileEntity() == this)
+		{
+			return false;
+		}
+
+		/** Check if the target position is current occupied by a block that is GOING to be moved. */
+		for (Vector3 checkPos : this.getInteriorPoints())
+		{
+			if (checkPos.equals(target))
+			{
+				return true;
+			}
+		}
+
+		/** Check Target */
+		int targetBlockID = target.getBlockID();
+
+		if (!(target.world.isAirBlock(target.intX(), target.intY(), target.intZ()) || (targetBlockID > 0 && (Block.blocksList[targetBlockID].isBlockReplaceable(target.world, target.intX(), target.intY(), target.intZ())))))
+		{
+			return false;
 		}
 
 		return true;
