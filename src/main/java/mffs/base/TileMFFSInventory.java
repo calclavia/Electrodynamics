@@ -81,7 +81,12 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 	@Override
 	public String getInvName()
 	{
-		return this.getBlockType().getLocalizedName();
+		if (this.getBlockType() != null)
+		{
+			return this.getBlockType().getLocalizedName();
+		}
+
+		return null;
 	}
 
 	@Override
