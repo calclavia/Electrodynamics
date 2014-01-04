@@ -1,6 +1,7 @@
 package resonantinduction.api;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeUtils
@@ -23,6 +24,7 @@ public class RecipeUtils
         }
         
         public abstract boolean isEqual(ItemStack is);
+        public abstract boolean isEqual(FluidStack fs);
         
         public boolean hasChance()
         {
@@ -56,6 +58,12 @@ public class RecipeUtils
         {
             return is.equals(this.itemStack);
         }
+
+        @Override
+        public boolean isEqual(FluidStack fs)
+        {
+            return false;
+        }
     }
     
     public static class OreDictResource extends Resource
@@ -79,6 +87,40 @@ public class RecipeUtils
         {
             return OreDictionary.getOres(this.name).contains(is);
         }
-    }
 
+        @Override
+        public boolean isEqual(FluidStack fs)
+        {
+            return false;
+        }
+    }
+    
+    public static class FluidStackResource extends Resource
+    {
+        public final FluidStack fluidStack;
+
+        public FluidStackResource(FluidStack fs)
+        {
+            super();
+            this.fluidStack = fs;
+        }
+        
+        public FluidStackResource(FluidStack fs, float chance)
+        {
+            super(chance);
+            this.fluidStack = fs;
+        }
+        
+        @Override
+        public boolean isEqual(ItemStack is)
+        {
+            return false;
+        }
+
+        @Override
+        public boolean isEqual(FluidStack fs)
+        {
+            return fs.isFluidEqual(this.fluidStack);
+        }
+    }
 }
