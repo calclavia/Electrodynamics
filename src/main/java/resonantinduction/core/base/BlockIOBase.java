@@ -7,15 +7,15 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.ResonantInduction;
 import resonantinduction.TabRI;
-import calclavia.lib.prefab.block.BlockAdvanced;
+import calclavia.lib.prefab.block.BlockSidedIO;
 
 /**
  * @author Calclavia
  * 
  */
-public class BlockBase extends BlockAdvanced
+public class BlockIOBase extends BlockSidedIO
 {
-	public BlockBase(String name, int id)
+	public BlockIOBase(String name, int id)
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
 		this.setCreativeTab(TabRI.INSTANCE);

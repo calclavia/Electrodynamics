@@ -3,20 +3,19 @@
  */
 package resonantinduction.transport.tesla;
 
-import calclavia.lib.prefab.TranslationHelper;
-import calclavia.lib.prefab.item.ItemCoordLink;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
-import resonantinduction.core.base.BlockBase;
+import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.prefab.item.ItemCoordLink;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockTesla extends BlockBase implements ITileEntityProvider
+public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 {
 	public BlockTesla(int id)
 	{
@@ -48,8 +47,7 @@ public class BlockTesla extends BlockBase implements ITileEntityProvider
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
-	          int dyeColor = Utility.isDye(entityPlayer.getCurrentEquippedItem());
-
+			int dyeColor = Utility.isDye(entityPlayer.getCurrentEquippedItem());
 
 			if (dyeColor != -1)
 			{

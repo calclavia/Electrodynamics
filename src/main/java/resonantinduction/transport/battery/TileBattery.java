@@ -51,6 +51,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	public TileBattery()
 	{
 		this.energy = new EnergyStorageHandler(STORAGE);
+		this.saveIOMap = true;
 	}
 
 	@Override
@@ -111,12 +112,6 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 			this.getNetwork().redistribute();
 
 		return returnValue;
-	}
-
-	@Override
-	public EnumSet<ForgeDirection> getOutputDirections()
-	{
-		return EnumSet.of(ForgeDirection.DOWN);
 	}
 
 	public void updateClient()

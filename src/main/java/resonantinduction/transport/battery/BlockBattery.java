@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
-import resonantinduction.core.base.BlockBase;
+import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockBattery extends BlockBase implements ITileEntityProvider
+public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 {
 	public BlockBattery(int id)
 	{

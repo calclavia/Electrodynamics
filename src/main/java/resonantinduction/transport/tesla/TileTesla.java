@@ -78,6 +78,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	public TileTesla()
 	{
 		this.energy = new EnergyStorageHandler(TRANSFER_CAP);
+		this.saveIOMap = true;
 	}
 
 	@Override
