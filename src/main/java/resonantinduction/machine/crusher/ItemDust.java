@@ -1,15 +1,23 @@
 package resonantinduction.machine.crusher;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
@@ -27,8 +35,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemDust extends ItemBase
 {
-	public static final Set<String> ingots = new HashSet<String>();
+	public static final Set<String> ingotNames = new HashSet<String>();
 	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
+	public static final HashMap<String, Integer> ingotColors = new HashMap<String, Integer>();
 
 	public ItemDust(int id)
 	{
@@ -49,13 +58,13 @@ public class ItemDust extends ItemBase
 		if (evt.Name.startsWith("ingot"))
 		{
 			String ingotName = evt.Name.replace("ingot", "");
-			ingots.add(ingotName.toLowerCase());
+			ingotNames.add(ingotName.toLowerCase());
 		}
 	}
 
 	public static void postInit()
 	{
-		for (String ingotName : ingots)
+		for (String ingotName : ingotNames)
 		{
 			String dustName = "dust" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1);
 
@@ -63,13 +72,40 @@ public class ItemDust extends ItemBase
 			{
 				dusts.add(getStackFromDust(ingotName));
 				OreDictionary.registerOre(dustName, getStackFromDust(ingotName));
+			}
+		}
+	}
 
-				// Compute color
-				int totalR = 0;
-				int totalG = 0;
-				int totalB = 0;
+	@SideOnly(Side.CLIENT)
+	public static void computeColors()
+	{
+		for (String ingotName : ingotNames)
+		{
+			// Compute color
+			int totalR = 0;
+			int totalG = 0;
+			int totalB = 0;
 
-				ArrayList<Integer> colorCodes = new ArrayList<Integer>();
+			ResourceLocation textureLocation = new ResourceLocation("");
+			InputStream inputstream;
+			try
+			{
+				inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
+
+				BufferedImage bufferedimage = ImageIO.read(inputstream);
+
+				LinkedList<Integer> colorCodes = new LinkedList<Integer>();
+
+				int width = bufferedimage.getWidth();
+				int height = bufferedimage.getWidth();
+
+				for (int x = 0; x < width; x++)
+				{
+					for (int y = 0; y < height; y++)
+					{
+						colorCodes.add(bufferedimage.getRGB(x, y));
+					}
+				}
 
 				if (colorCodes.size() > 0)
 				{
@@ -86,7 +122,12 @@ public class ItemDust extends ItemBase
 					totalB /= colorCodes.size();
 
 					int resultantColor = new Color(totalR, totalG, totalB).getRGB();
+					ingotColors.put(ingotName, resultantColor);
 				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
 			}
 		}
 	}

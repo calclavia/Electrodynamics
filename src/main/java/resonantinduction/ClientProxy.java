@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.core.render.BlockRenderingHandler;
+import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.multimeter.PartMultimeter;
 import resonantinduction.multimeter.RenderRIItem;
 import resonantinduction.transport.battery.RenderBattery;
@@ -44,6 +45,12 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
+	}
+
+	@Override
+	public void postInit()
+	{
+		ItemDust.computeColors();
 	}
 
 	@Override

@@ -300,6 +300,7 @@ public class ResonantInduction
 
 		/** Auto-gen dusts */
 		ItemDust.postInit();
+		ResonantInduction.proxy.postInit();
 
 		/** Inject new furnace tile class */
 		replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
