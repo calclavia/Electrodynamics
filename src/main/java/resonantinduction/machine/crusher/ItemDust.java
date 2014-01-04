@@ -1,8 +1,13 @@
 package resonantinduction.machine.crusher;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -23,11 +28,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemDust extends ItemBase
 {
 	public static final Set<String> ingots = new HashSet<String>();
+	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
 
 	public ItemDust(int id)
 	{
 		super("dust", id);
 		this.setTextureName("gunpowder");
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	{
+		String dustName = getDustFromStack(itemStack);
+		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
 	}
 
 	@ForgeSubscribe
@@ -48,7 +61,32 @@ public class ItemDust extends ItemBase
 
 			if (OreDictionary.getOres(dustName).size() > 0)
 			{
+				dusts.add(getStackFromDust(ingotName));
 				OreDictionary.registerOre(dustName, getStackFromDust(ingotName));
+
+				// Compute color
+				int totalR = 0;
+				int totalG = 0;
+				int totalB = 0;
+
+				ArrayList<Integer> colorCodes = new ArrayList<Integer>();
+
+				if (colorCodes.size() > 0)
+				{
+					for (int colorCode : colorCodes)
+					{
+						Color color = new Color(colorCode);
+						totalR += color.getRed();
+						totalG += color.getGreen();
+						totalB += color.getBlue();
+					}
+
+					totalR /= colorCodes.size();
+					totalG /= colorCodes.size();
+					totalB /= colorCodes.size();
+
+					int resultantColor = new Color(totalR, totalG, totalB).getRGB();
+				}
 			}
 		}
 	}
@@ -71,6 +109,14 @@ public class ItemDust extends ItemBase
 		}
 
 		return null;
+	}
+
+	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (ItemStack dust : dusts)
+		{
+			par3List.add(dust);
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
