@@ -3,15 +3,14 @@ package resonantinduction.multimeter;
 import java.util.List;
 
 import calclavia.lib.prefab.TranslationHelper;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.base.ItemMultipartBase;
-import resonantinduction.wire.EnumWireMaterial;
+import resonantinduction.core.base.ItemMultipartBase;
+import resonantinduction.transport.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.MultiPartRegistry;

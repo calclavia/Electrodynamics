@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.model.ModelMultimeter;
+import resonantinduction.transport.model.ModelMultimeter;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import cpw.mods.fml.client.FMLClientHandler;

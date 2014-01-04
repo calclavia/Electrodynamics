@@ -5,8 +5,8 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.transformer.ItemTransformer;
-import resonantinduction.transformer.RenderTransformer;
+import resonantinduction.transport.transformer.ItemTransformer;
+import resonantinduction.transport.transformer.RenderTransformer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
