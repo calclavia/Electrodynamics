@@ -38,85 +38,9 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 	public void updateEntity()
 	{
 		/**
-		 * If we have fuel and can smelt properly, do the vanilla process.
+		 * Producing energy from coal.
 		 */
-		if (this.canSmelt() && TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1)) > 0)
-		{
-			boolean flag = this.furnaceBurnTime > 0;
-			boolean flag1 = false;
-
-			if (this.furnaceBurnTime > 0)
-			{
-				--this.furnaceBurnTime;
-			}
-
-			if (!this.worldObj.isRemote)
-			{
-				if (this.furnaceBurnTime == 0 && this.canSmelt())
-				{
-					this.currentItemBurnTime = this.furnaceBurnTime = getItemBurnTime(this.getStackInSlot(1));
-
-					if (this.furnaceBurnTime > 0)
-					{
-						flag1 = true;
-
-						if (this.getStackInSlot(1) != null)
-						{
-							--this.getStackInSlot(1).stackSize;
-
-							if (this.getStackInSlot(1).stackSize == 0)
-							{
-								this.setInventorySlotContents(1, this.getStackInSlot(1).getItem().getContainerItemStack(this.getStackInSlot(1)));
-							}
-						}
-					}
-				}
-
-				if (this.isBurning() && this.canSmelt())
-				{
-					++this.furnaceCookTime;
-
-					if (this.furnaceCookTime == 200)
-					{
-						this.furnaceCookTime = 0;
-						this.smeltItem();
-						flag1 = true;
-					}
-				}
-				else
-				{
-					this.furnaceCookTime = 0;
-				}
-
-				if (flag != this.furnaceBurnTime > 0)
-				{
-					flag1 = true;
-					this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-				}
-			}
-
-			if (flag1)
-			{
-				this.onInventoryChanged();
-			}
-		}
-		else if (this.getStackInSlot(1) == null && canSmelt() && this.furnaceBurnTime == 0)
-		{
-			if (this.energy.checkExtract(ResonantInduction.FURNACE_WATTAGE / 20))
-			{
-				this.furnaceCookTime++;
-
-				if (this.furnaceCookTime == 200)
-				{
-					this.furnaceCookTime = 0;
-					this.smeltItem();
-					this.onInventoryChanged();
-				}
-
-				this.energy.extractEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
-			}
-		}
-		else if (this.getStackInSlot(0) == null)
+		if (TileEntityFurnace.getItemBurnTime(this.getStackInSlot(1)) > 0)
 		{
 			boolean doBlockStateUpdate = this.furnaceBurnTime > 0;
 
@@ -139,6 +63,29 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 			}
 
 			this.produce();
+		}
+
+		/**
+		 * Consuming energy for smelting
+		 */
+		if (this.canSmelt())
+		{
+			if (this.energy.checkExtract(ResonantInduction.FURNACE_WATTAGE / 20))
+			{
+				this.furnaceCookTime++;
+
+				if (this.furnaceCookTime == 200)
+				{
+					this.furnaceCookTime = 0;
+					this.smeltItem();
+				}
+
+				this.energy.extractEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+			}
+		}
+		else
+		{
+			this.furnaceCookTime = 0;
 		}
 	}
 
