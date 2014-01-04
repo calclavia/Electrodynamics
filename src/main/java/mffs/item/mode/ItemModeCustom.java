@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ICache;
@@ -23,6 +22,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.Calclavia;
 import calclavia.lib.NBTFileLoader;
 import calclavia.lib.prefab.TranslationHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -49,7 +49,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 
 		list.add(TranslationHelper.getLocal("info.modeCustom.mode") + " " + (nbt.getBoolean(NBT_MODE) ? TranslationHelper.getLocal("info.modeCustom.substraction") : TranslationHelper.getLocal("info.modeCustom.additive")));
 
@@ -94,7 +94,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 		{
 			if (entityPlayer.isSneaking())
 			{
-				NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+				NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 
 				if (nbt != null)
 				{
@@ -193,7 +193,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 			else
 			{
 
-				NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+				NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 
 				if (nbt != null)
 				{
@@ -211,7 +211,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	{
 		if (!world.isRemote)
 		{
-			NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+			NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 
 			if (nbt != null)
 			{
@@ -236,7 +236,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 	public int getModeID(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 
 		int id = nbt.getInteger(NBT_ID);
 

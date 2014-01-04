@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -394,27 +393,6 @@ public class MFFSHelper
 					}
 				}
 			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Gets a compound from an itemStack.
-	 * 
-	 * @param itemStack
-	 * @return
-	 */
-	public static NBTTagCompound getNBTTagCompound(ItemStack itemStack)
-	{
-		if (itemStack != null)
-		{
-			if (itemStack.getTagCompound() == null)
-			{
-				itemStack.setTagCompound(new NBTTagCompound());
-			}
-
-			return itemStack.getTagCompound();
 		}
 
 		return null;

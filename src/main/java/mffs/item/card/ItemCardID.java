@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import java.util.List;
 
-import mffs.MFFSHelper;
 import mffs.api.card.ICardIdentification;
 import mffs.api.security.Permission;
 import mffs.card.ItemCard;
@@ -83,14 +82,14 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public void setUsername(ItemStack itemStack, String username)
 	{
-		NBTTagCompound nbtTagCompound = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbtTagCompound = Calclavia.getNBTTagCompound(itemStack);
 		nbtTagCompound.setString("name", username);
 	}
 
 	@Override
 	public String getUsername(ItemStack itemStack)
 	{
-		NBTTagCompound nbtTagCompound = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbtTagCompound = Calclavia.getNBTTagCompound(itemStack);
 
 		if (nbtTagCompound != null)
 		{
@@ -106,14 +105,14 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public boolean hasPermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 		return nbt.getBoolean(NBT_PREFIX + permission.id);
 	}
 
 	@Override
 	public boolean addPermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, true);
 		return false;
 	}
@@ -121,7 +120,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public boolean removePermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = MFFSHelper.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, false);
 		return false;
 	}
