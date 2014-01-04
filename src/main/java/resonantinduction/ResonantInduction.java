@@ -20,6 +20,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonantinduction.machine.BlockMachinePart;
 import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
@@ -149,10 +150,8 @@ public class ResonantInduction
 	public static Item itemDust;
 
 	// Blocks
-	public static Block blockTesla;
-	public static Block blockEMContractor;
-	public static Block blockBattery;
-	public static Block blockAdvancedFurnace;
+	public static Block blockTesla, blockEMContractor, blockBattery, blockAdvancedFurnace,
+			blockMachinePart;
 
 	/**
 	 * Packets
@@ -193,6 +192,7 @@ public class ResonantInduction
 		blockTesla = new BlockTesla(getNextBlockID());
 		blockEMContractor = new BlockEMContractor(getNextBlockID());
 		blockBattery = new BlockBattery(getNextBlockID());
+		blockMachinePart = new BlockMachinePart(getNextBlockID());
 
 		if (REPLACE_FURNACE)
 		{
