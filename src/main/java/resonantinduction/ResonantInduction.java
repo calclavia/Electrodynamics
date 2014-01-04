@@ -28,7 +28,7 @@ import resonantinduction.multimeter.ItemMultimeter;
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.ItemBlockBattery;
 import resonantinduction.transport.battery.TileBattery;
-import resonantinduction.transport.levitator.BlockEMContractor;
+import resonantinduction.transport.levitator.BlockLevitator;
 import resonantinduction.transport.levitator.ItemBlockContractor;
 import resonantinduction.transport.levitator.ItemLinker;
 import resonantinduction.transport.levitator.TileEMLevitator;
@@ -190,7 +190,7 @@ public class ResonantInduction
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
-		blockEMContractor = new BlockEMContractor(getNextBlockID());
+		blockEMContractor = new BlockLevitator(getNextBlockID());
 		blockBattery = new BlockBattery(getNextBlockID());
 		blockMachinePart = new BlockMachinePart(getNextBlockID());
 

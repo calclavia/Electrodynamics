@@ -15,9 +15,9 @@ import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEMContractor extends BlockBase implements ITileEntityProvider
+public class BlockLevitator extends BlockBase implements ITileEntityProvider
 {
-	public BlockEMContractor(int id)
+	public BlockLevitator(int id)
 	{
 		super("contractor", id);
 		this.setTextureName(ResonantInduction.PREFIX + "machine");

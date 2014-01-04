@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.RenderBattery;
-import resonantinduction.transport.levitator.BlockEMContractor;
+import resonantinduction.transport.levitator.BlockLevitator;
 import resonantinduction.transport.levitator.RenderLevitator;
 import resonantinduction.transport.tesla.BlockTesla;
 import resonantinduction.transport.tesla.RenderTesla;
@@ -43,7 +43,7 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			RenderTesla.MODEL_BOTTOM.render(0.0625f);
 			GL11.glPopMatrix();
 		}
-		else if (block instanceof BlockEMContractor)
+		else if (block instanceof BlockLevitator)
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslated(0.5, 1.5, 0.5);
