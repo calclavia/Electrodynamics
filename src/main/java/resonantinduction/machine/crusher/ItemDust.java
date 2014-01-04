@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -15,6 +18,7 @@ import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +28,7 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.ResonantInduction;
 import resonantinduction.core.base.ItemBase;
 import calclavia.lib.Calclavia;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -81,53 +86,73 @@ public class ItemDust extends ItemBase
 	{
 		for (String ingotName : ingotNames)
 		{
-			// Compute color
-			int totalR = 0;
-			int totalG = 0;
-			int totalB = 0;
-
-			ResourceLocation textureLocation = new ResourceLocation("");
-			InputStream inputstream;
-			try
+			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1)))
 			{
-				inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
+				// Compute color
+				int totalR = 0;
+				int totalG = 0;
+				int totalB = 0;
 
-				BufferedImage bufferedimage = ImageIO.read(inputstream);
+				Item theIngot = ingotStack.getItem();
 
-				LinkedList<Integer> colorCodes = new LinkedList<Integer>();
-
-				int width = bufferedimage.getWidth();
-				int height = bufferedimage.getWidth();
-
-				for (int x = 0; x < width; x++)
+				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] {"getIconString", "func_" + "111208_A"});
+				String iconString;
+				try
 				{
-					for (int y = 0; y < height; y++)
+					iconString = (String) o.invoke(theIngot);
+				} 
+				catch (ReflectiveOperationException e1)
+				{
+					break;
+				} 
+
+				ResourceLocation textureLocation = new ResourceLocation(iconString);
+				InputStream inputstream;
+				try
+				{
+					inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
+
+					BufferedImage bufferedimage = ImageIO.read(inputstream);
+
+					LinkedList<Integer> colorCodes = new LinkedList<Integer>();
+
+					int width = bufferedimage.getWidth();
+					int height = bufferedimage.getWidth();
+
+					for (int x = 0; x < width; x++)
 					{
-						colorCodes.add(bufferedimage.getRGB(x, y));
+						for (int y = 0; y < height; y++)
+						{
+							colorCodes.add(bufferedimage.getRGB(x, y));
+						}
+					}
+
+					if (colorCodes.size() > 0)
+					{
+						for (int colorCode : colorCodes)
+						{
+							Color color = new Color(colorCode);
+							totalR += color.getRed();
+							totalG += color.getGreen();
+							totalB += color.getBlue();
+						}
+
+						totalR /= colorCodes.size();
+						totalG /= colorCodes.size();
+						totalB /= colorCodes.size();
+
+						int resultantColor = new Color(totalR, totalG, totalB).getRGB();
+						ingotColors.put(ingotName, resultantColor);
 					}
 				}
-
-				if (colorCodes.size() > 0)
+				catch (IOException e)
 				{
-					for (int colorCode : colorCodes)
-					{
-						Color color = new Color(colorCode);
-						totalR += color.getRed();
-						totalG += color.getGreen();
-						totalB += color.getBlue();
-					}
-
-					totalR /= colorCodes.size();
-					totalG /= colorCodes.size();
-					totalB /= colorCodes.size();
-
-					int resultantColor = new Color(totalR, totalG, totalB).getRGB();
-					ingotColors.put(ingotName, resultantColor);
+					e.printStackTrace();
 				}
 			}
-			catch (IOException e)
+			if (!ingotColors.containsKey(ingotName))
 			{
-				e.printStackTrace();
+				ingotColors.put(ingotName, 0xFFFFFF);
 			}
 		}
 	}
