@@ -274,7 +274,7 @@ public class ModularForceFieldSystem
 
 		itemModuleRepulsion = new ItemModuleRepulsion(Settings.getNextItemID());
 		itemModuleApproximation = new ItemModule(Settings.getNextItemID(), "moduleApproximation").setMaxStackSize(1).setCost(1f);
-		itemModuleArray = new ItemModuleArray(Settings.getNextItemID()).setCost(2f);
+		itemModuleArray = new ItemModuleArray(Settings.getNextItemID()).setCost(3f);
 
 		Settings.CONFIGURATION.save();
 

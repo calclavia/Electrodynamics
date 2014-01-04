@@ -13,6 +13,7 @@ public class ItemModuleDome extends ItemModule
 	public ItemModuleDome(int i)
 	{
 		super(i, "moduleDome");
+		this.setMaxStackSize(1);
 	}
 
 	@Override
