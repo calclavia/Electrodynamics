@@ -107,7 +107,7 @@ public class ItemDust extends ItemBase
 					break;
 				}
 
-				ResourceLocation textureLocation = new ResourceLocation(iconString);
+				ResourceLocation textureLocation = new ResourceLocation(iconString.replace(":", ":" + ResonantInduction.ITEM_TEXTURE_DIRECTORY) + ".png");
 				InputStream inputstream;
 				try
 				{
