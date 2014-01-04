@@ -208,6 +208,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
+		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());

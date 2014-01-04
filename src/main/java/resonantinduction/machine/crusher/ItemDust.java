@@ -49,13 +49,6 @@ public class ItemDust extends ItemBase
 		this.setTextureName(ResonantInduction.PREFIX + "dust");
 	}
 
-	//	@Override
-	//	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
-	//	{
-	//		String dustName = getDustFromStack(itemStack);
-	//		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
-	//	}
-	//	
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
@@ -63,7 +56,7 @@ public class ItemDust extends ItemBase
 		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
 
 		String name = type.getDisplayName().replace(TranslationHelper.getLocal("misc.resonantinduction.ingot"), "");
-		return (TranslationHelper.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");	
+		return (TranslationHelper.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
 	}
 
 	@ForgeSubscribe
@@ -75,7 +68,7 @@ public class ItemDust extends ItemBase
 			ingotNames.add(ingotName.toLowerCase());
 		}
 	}
-	
+
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void reloadTextures(TextureStitchEvent.Post e)
