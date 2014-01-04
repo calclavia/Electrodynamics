@@ -30,12 +30,6 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-	{
-		return true;
-	}
-
-	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
 		if (!world.isRemote)

@@ -278,7 +278,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return this.isController();
+		return super.canConnect(direction) && this.isController();
 	}
 
 	public void sendPacket(int type)

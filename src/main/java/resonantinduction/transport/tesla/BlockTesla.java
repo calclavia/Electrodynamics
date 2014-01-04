@@ -40,7 +40,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 		TileTesla tileEntity = ((TileTesla) t).getControllingTelsa();
@@ -128,7 +128,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 
 		}
 
-		return false;
+		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
 	}
 
 	@Override
