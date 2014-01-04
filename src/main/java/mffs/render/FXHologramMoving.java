@@ -2,6 +2,7 @@ package mffs.render;
 
 import mffs.ModularForceFieldSystem;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
@@ -63,12 +64,11 @@ public class FXHologramMoving extends EntityFX
 
 		GL11.glColor4d(this.particleRed, this.particleGreen, this.particleBlue, op * 2);
 
-		CalclaviaRenderHelper.disableLighting();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		CalclaviaRenderHelper.enableBlending();
 		CalclaviaRenderHelper.setTerrainTexture();
 		CalclaviaRenderHelper.renderNormalBlockAsItem(ModularForceFieldSystem.blockForceField, 0, new RenderBlocks());
 		CalclaviaRenderHelper.disableBlending();
-		CalclaviaRenderHelper.enableLighting();
 		GL11.glPopMatrix();
 
 		tessellator.startDrawingQuads();
