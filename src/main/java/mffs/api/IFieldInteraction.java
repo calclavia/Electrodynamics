@@ -37,6 +37,7 @@ public interface IFieldInteraction extends IModuleAcceptor, IActivatable
 
 	/**
 	 * Transformation information functions. Returns CACHED information unless the cache is cleared.
+	 * Note that these are all RELATIVE to the projector's position.
 	 */
 	public Vector3 getTranslation();
 

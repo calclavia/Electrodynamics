@@ -39,7 +39,7 @@ import mffs.item.module.interdiction.ItemModuleWarn;
 import mffs.item.module.projector.ItemModuleArray;
 import mffs.item.module.projector.ItemModuleDisintegration;
 import mffs.item.module.projector.ItemModuleFusion;
-import mffs.item.module.projector.ItemModuleManipulator;
+import mffs.item.module.projector.ItemModuleDome;
 import mffs.item.module.projector.ItemModuleRepulsion;
 import mffs.item.module.projector.ItemModuleShock;
 import mffs.item.module.projector.ItemModuleSponge;
@@ -163,7 +163,7 @@ public class ModularForceFieldSystem
 			itemModuleSilence;
 
 	// Projector Modules
-	public static ItemModule itemModuleFusion, itemModuleManipulator, itemModuleCamouflage,
+	public static ItemModule itemModuleFusion, itemModuleDome, itemModuleCamouflage,
 			itemModuleApproximation, itemModuleArray, itemModuleDisintegration, itemModuleShock,
 			itemModuleGlow, itemModuleSponge, itemModuleStablize, itemModuleRepulsion;
 
@@ -232,7 +232,7 @@ public class ModularForceFieldSystem
 
 		// Force Field Projector Modules
 		itemModuleFusion = new ItemModuleFusion(Settings.getNextItemID());
-		itemModuleManipulator = new ItemModuleManipulator(Settings.getNextItemID());
+		itemModuleDome = new ItemModuleDome(Settings.getNextItemID());
 		itemModuleCamouflage = new ItemModule(Settings.getNextItemID(), "moduleCamouflage").setCost(1.5f).setMaxStackSize(1);
 		itemModuleDisintegration = new ItemModuleDisintegration(Settings.getNextItemID());
 		itemModuleShock = new ItemModuleShock(Settings.getNextItemID());
@@ -396,7 +396,7 @@ public class ModularForceFieldSystem
 		// Disintegration
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F', itemFocusMatix, 'W', UniversalRecipe.WIRE.get(), 'B', UniversalRecipe.BATTERY.get()));
 		// Manipulator
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleManipulator), "F", " ", "F", 'F', itemFocusMatix));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDome), "F", " ", "F", 'F', itemFocusMatix));
 		// Camouflage
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCamouflage), "WFW", "FWF", "WFW", 'F', itemFocusMatix, 'W', new ItemStack(Block.cloth, 1, OreDictionary.WILDCARD_VALUE)));
 		// Fusion

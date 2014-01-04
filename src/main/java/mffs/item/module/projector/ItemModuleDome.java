@@ -8,23 +8,25 @@ import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
 
-public class ItemModuleManipulator extends ItemModule
+public class ItemModuleDome extends ItemModule
 {
-	public ItemModuleManipulator(int i)
+	public ItemModuleDome(int i)
 	{
-		super(i, "moduleManipulator");
+		super(i, "moduleDome");
 	}
 
 	@Override
 	public void onCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
+		Vector3 absoluteTranslation = new Vector3((TileEntity) projector).translate(projector.getTranslation());
+
 		Iterator<Vector3> it = fieldBlocks.iterator();
 
 		while (it.hasNext())
 		{
 			Vector3 position = it.next();
 
-			if (position.y < ((TileEntity) projector).yCoord)
+			if (position.y < absoluteTranslation.y)
 			{
 				it.remove();
 			}
