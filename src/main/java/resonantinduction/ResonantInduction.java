@@ -13,12 +13,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
 import resonantinduction.multimeter.ItemMultimeter;
@@ -133,14 +135,18 @@ public class ResonantInduction
 	}
 
 	// Items
-	public static Item itemLinker;
 	/**
-	 * Forge Multipart
+	 * Transport
 	 */
+	public static Item itemLinker;
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
 	public static Item itemTransformer;
-	public static Item itemIOPanel;
+
+	/**
+	 * Machines
+	 */
+	public static Item itemDust;
 
 	// Blocks
 	public static Block blockTesla;
@@ -181,6 +187,7 @@ public class ResonantInduction
 		itemPartWire = new ItemWire(getNextItemID());
 		itemMultimeter = new ItemMultimeter(getNextItemID());
 		itemTransformer = new ItemTransformer(getNextItemID());
+		itemDust = new ItemDust(getNextItemID());
 
 		// Blocks
 		blockTesla = new BlockTesla(getNextBlockID());
@@ -199,6 +206,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
+		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
@@ -220,6 +228,8 @@ public class ResonantInduction
 		{
 			material.setWire(itemPartWire);
 		}
+
+		MinecraftForge.EVENT_BUS.register(itemDust);
 	}
 
 	@EventHandler
@@ -287,6 +297,9 @@ public class ResonantInduction
 		{
 			GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.COPPER.getWire(), "universalCable"));
 		}
+
+		/** Auto-gen dusts */
+		ItemDust.postInit();
 
 		/** Inject new furnace tile class */
 		replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
