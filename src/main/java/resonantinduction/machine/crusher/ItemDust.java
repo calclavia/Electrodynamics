@@ -95,16 +95,17 @@ public class ItemDust extends ItemBase
 
 				Item theIngot = ingotStack.getItem();
 
-				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] {"getIconString", "func_" + "111208_A"});
+				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] { "getIconString", "func_" + "111208_A" });
 				String iconString;
 				try
 				{
 					iconString = (String) o.invoke(theIngot);
-				} 
+				}
 				catch (ReflectiveOperationException e1)
 				{
+					e1.printStackTrace();
 					break;
-				} 
+				}
 
 				ResourceLocation textureLocation = new ResourceLocation(iconString);
 				InputStream inputstream;
@@ -132,9 +133,13 @@ public class ItemDust extends ItemBase
 						for (int colorCode : colorCodes)
 						{
 							Color color = new Color(colorCode);
-							totalR += color.getRed();
-							totalG += color.getGreen();
-							totalB += color.getBlue();
+
+							if (color.getAlpha() != 0)
+							{
+								totalR += color.getRed();
+								totalG += color.getGreen();
+								totalB += color.getBlue();
+							}
 						}
 
 						totalR /= colorCodes.size();
@@ -191,6 +196,13 @@ public class ItemDust extends ItemBase
 		/**
 		 * Auto-color based on the texture of the ingot.
 		 */
+		String name = this.getDustFromStack(itemStack);
+
+		if (ingotColors.containsKey(name))
+		{
+			return ingotColors.get(name);
+		}
+
 		return 16777215;
 	}
 }
