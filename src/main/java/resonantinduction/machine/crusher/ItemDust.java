@@ -27,6 +27,7 @@ public class ItemDust extends ItemBase
 	public ItemDust(int id)
 	{
 		super("dust", id);
+		this.setTextureName("gunpowder");
 	}
 
 	@ForgeSubscribe
