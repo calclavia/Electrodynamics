@@ -4,6 +4,7 @@ import ic2.api.item.Items;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -12,8 +13,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.Icon;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -24,6 +30,7 @@ import resonantinduction.machine.BlockMachinePart;
 import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
+import resonantinduction.machine.liquid.BlockFluidMixture;
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.ItemBlockBattery;
 import resonantinduction.transport.battery.TileBattery;
@@ -56,6 +63,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia
@@ -154,7 +163,9 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla, blockEMContractor, blockBattery, blockAdvancedFurnace,
-			blockMachinePart;
+			blockMachinePart, blockFluidMixture;
+
+	public static Fluid MIXTURE;
 
 	/**
 	 * Packets
@@ -197,6 +208,10 @@ public class ResonantInduction
 		blockBattery = new BlockBattery(getNextBlockID());
 		blockMachinePart = new BlockMachinePart(getNextBlockID());
 
+		MIXTURE = new Fluid("mixture");
+		FluidRegistry.registerFluid(MIXTURE);
+		blockFluidMixture = new BlockFluidMixture(getNextBlockID(), MIXTURE);
+
 		if (REPLACE_FURNACE)
 		{
 			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
@@ -211,6 +226,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
+		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
@@ -337,4 +353,29 @@ public class ResonantInduction
 			e.printStackTrace();
 		}
 	}
+
+	public static final HashMap<String, Icon> fluidIconMap = new HashMap<String, Icon>();
+
+	public void registerIcon(String name, TextureStitchEvent.Pre event)
+	{
+		fluidIconMap.put(name, event.map.registerIcon(name));
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void preTextureHook(TextureStitchEvent.Pre event)
+	{
+		if (event.map.textureType == 0)
+		{
+			registerIcon(PREFIX + "mixture", event);
+		}
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Post event)
+	{
+		MIXTURE.setIcons(fluidIconMap.get(PREFIX + "mixture"));
+	}
+
 }
