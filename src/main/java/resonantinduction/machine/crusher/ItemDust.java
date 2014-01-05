@@ -87,12 +87,12 @@ public class ItemDust extends ItemBase
 	{
 		for (String ingotName : ingotNames)
 		{
-			String dustName = "dust" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1);
+			String name = ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1);
 
-			if (OreDictionary.getOres(dustName).size() > 0)
+			if (OreDictionary.getOres("dust" + name).size() == 0 && OreDictionary.getOres("ore" + name).size() > 0)
 			{
 				dusts.add(getStackFromDust(ingotName));
-				OreDictionary.registerOre(dustName, getStackFromDust(ingotName));
+				OreDictionary.registerOre("dust" + name, getStackFromDust(ingotName));
 			}
 		}
 	}
