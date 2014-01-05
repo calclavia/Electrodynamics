@@ -6,12 +6,15 @@ package resonantinduction.transport.battery;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.ResonantInduction;
 import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
+import universalelectricity.api.CompatibilityModule;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -75,5 +78,25 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileBattery();
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int id = idPicked(world, x, y, z);
+
+		if (id == 0)
+		{
+			return null;
+		}
+
+		Item item = Item.itemsList[id];
+		if (item == null)
+		{
+			return null;
+		}
+
+		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+		return CompatibilityModule.getItemWithCharge(new ItemStack(id, 1, getDamageValue(world, x, y, z)), battery.getEnergy(null));
 	}
 }
