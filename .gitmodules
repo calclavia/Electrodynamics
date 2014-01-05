@@ -1,6 +1,0 @@
-[submodule "Universal-Electricity"]
-	path = Universal-Electricity
-	url = https://github.com/Universal-Electricity/Universal-Electricity.git
-[submodule "Calclavia-Core"]
-	path = Calclavia-Core
-	url = git@bitbucket.org:calclavia/calclavia-core.git

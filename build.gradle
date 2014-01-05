@@ -56,7 +56,7 @@ task copyBuildXml(type: Copy) {
 
 jar {
     dependsOn copyBuildXml
-    classifier = 'core'
+    classifier = ''
     destinationDir = file 'output'
 	include('mffs/**')
 }
