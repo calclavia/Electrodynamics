@@ -53,7 +53,12 @@ public class RecipeUtils
 		@Override
 		public boolean equals(Object obj)
 		{
-			return (obj instanceof ItemStack) ? ((ItemStack) obj).equals(this.itemStack) : false;
+			if (obj instanceof ItemStackResource)
+			{
+				return this.itemStack.isItemEqual(((ItemStackResource) obj).itemStack);
+			}
+
+			return false;
 		}
 	}
 
@@ -76,7 +81,17 @@ public class RecipeUtils
 		@Override
 		public boolean equals(Object obj)
 		{
-			return (obj instanceof ItemStack) ? OreDictionary.getOres(this.name).contains(((ItemStack) obj)) : false;
+			if (obj instanceof OreDictResource)
+			{
+				return this.name.equals(((OreDictResource) obj).name);
+			}
+
+			if (obj instanceof ItemStackResource)
+			{
+				return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
+			}
+
+			return false;
 		}
 	}
 

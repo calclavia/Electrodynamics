@@ -1,7 +1,10 @@
 package resonantinduction.api;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
 import resonantinduction.api.RecipeUtils.ItemStackResource;
@@ -12,7 +15,7 @@ public final class MachineRecipes
 {
 	public static enum RecipeType
 	{
-		GRINDER, SAWMILL, SMELTER, FURNACE, ROLLER, BLAST_FURNACE, METAL_FORMER;
+		GRINDER, SAWMILL, SMELTER;
 	}
 
 	private final Map<RecipeType, Map<Resource[], Resource[]>> recipes = new HashMap<RecipeType, Map<Resource[], Resource[]>>();
@@ -57,9 +60,32 @@ public final class MachineRecipes
 		return new HashMap<RecipeType, Map<Resource[], Resource[]>>(this.recipes);
 	}
 
-	public Resource[] getRecipe(RecipeType machine, ItemStack... inputs)
+	public Resource[] getOutput(RecipeType machine, Resource[] input)
 	{
-		return this.getRecipes(machine).get(inputs);
+		Iterator<Entry<Resource[], Resource[]>> it = this.getRecipes(machine).entrySet().iterator();
+
+		while (it.hasNext())
+		{
+			Entry<Resource[], Resource[]> entry = it.next();
+
+			if (Arrays.equals(entry.getKey(), input))
+			{
+				return entry.getValue();
+			}
+		}
+
+		return new Resource[] {};
 	}
 
+	public Resource[] getRecipe(RecipeType machine, ItemStack... inputs)
+	{
+		Resource[] resourceInputs = new Resource[inputs.length];
+
+		for (int i = 0; i < inputs.length; i++)
+		{
+			resourceInputs[i] = new ItemStackResource(inputs[i]);
+		}
+
+		return this.getOutput(machine, resourceInputs);
+	}
 }
