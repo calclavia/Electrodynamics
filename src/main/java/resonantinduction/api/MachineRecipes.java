@@ -10,7 +10,7 @@ public final class MachineRecipes
 {
     public static enum RecipeType
     {
-        CRUSHER,
+        GRINDER,
         SAWMILL,
         SMELTER,
         FURNACE,
