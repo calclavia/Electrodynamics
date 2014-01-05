@@ -21,7 +21,9 @@ import calclavia.lib.prefab.tile.TileElectrical;
 public class TileGrinderWheel extends TileElectrical
 {
 	/** A map of ItemStacks and their remaining grind-time left. */
-	public final HashMap<EntityItem, Integer> grinderTimer = new HashMap<EntityItem, Integer>();
+	public static final HashMap<EntityItem, Integer> grinderTimer = new HashMap<EntityItem, Integer>();
+
+	public EntityItem grindingItem = null;
 
 	public TileGrinderWheel()
 	{
@@ -37,28 +39,24 @@ public class TileGrinderWheel extends TileElectrical
 
 	public void doWork()
 	{
-		Iterator<Entry<EntityItem, Integer>> it = grinderTimer.entrySet().iterator();
-
-		while (it.hasNext())
+		if (grindingItem != null && grinderTimer.containsKey(grindingItem))
 		{
-			Entry<EntityItem, Integer> entry = it.next();
-			entry.setValue(entry.getValue() - 1);
+			int timeLeft = grinderTimer.get(grindingItem) - 1;
+			grinderTimer.put(grindingItem, timeLeft);
 
-			if (entry.getValue() <= 0)
+			if (timeLeft <= 0)
 			{
-
-				if (this.doGrind(entry.getKey()))
+				if (this.doGrind(grindingItem))
 				{
-					entry.getKey().setDead();
-					it.remove();
+					grindingItem.setDead();
+					grinderTimer.remove(grindingItem);
+					grindingItem = null;
 				}
 			}
 			else
 			{
-				// Make the entity not be able to be picked up.
-				EntityItem entity = entry.getKey();
-				entity.delayBeforeCanPickup = 20;
-				this.worldObj.spawnParticle("crit", entity.posX, entity.posY, entity.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
+				grindingItem.delayBeforeCanPickup = 20;
+				this.worldObj.spawnParticle("crit", grindingItem.posX, grindingItem.posY, grindingItem.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
 			}
 		}
 	}
