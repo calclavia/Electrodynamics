@@ -24,6 +24,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.ResonantInduction;
+import resonantinduction.api.OreDetectionBlackList;
 import resonantinduction.core.base.ItemBase;
 import calclavia.lib.Calclavia;
 import calclavia.lib.prefab.TranslationHelper;
@@ -65,6 +66,10 @@ public class ItemDust extends ItemBase
 		if (evt.Name.startsWith("ingot"))
 		{
 			String ingotName = evt.Name.replace("ingot", "");
+			
+			if (OreDetectionBlackList.isIngotBlackListed("ingot" + ingotName) || OreDetectionBlackList.isOreBlackListed("ore" + ingotName))
+				return;
+			
 			ingotNames.add(ingotName.toLowerCase());
 		}
 	}
