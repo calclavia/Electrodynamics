@@ -10,6 +10,7 @@ import resonantinduction.api.MachineRecipes.RecipeType;
 import resonantinduction.api.RecipeUtils.ItemStackResource;
 import resonantinduction.api.RecipeUtils.Resource;
 import universalelectricity.api.energy.EnergyStorageHandler;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileElectrical;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -56,7 +57,7 @@ public class TileGrinderWheel extends TileElectrical
 
 		if (grindingItem != null)
 		{
-			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead)
+			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(new Vector3(grindingItem)) < 1)
 			{
 				int timeLeft = getTimer().get(grindingItem) - 1;
 				getTimer().put(grindingItem, timeLeft);
