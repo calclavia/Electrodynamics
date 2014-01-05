@@ -1,4 +1,4 @@
-package resonantinduction.machine.crusher;
+package resonantinduction.machine.grinder;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

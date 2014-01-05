@@ -27,9 +27,10 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import resonantinduction.machine.BlockMachinePart;
-import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
+import resonantinduction.machine.grinder.BlockGrinderWheel;
+import resonantinduction.machine.grinder.ItemDust;
 import resonantinduction.machine.liquid.BlockFluidMixture;
 import resonantinduction.machine.liquid.TileFluidMixture;
 import resonantinduction.transport.battery.BlockBattery;
@@ -164,7 +165,7 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla, blockEMContractor, blockBattery, blockAdvancedFurnace,
-			blockMachinePart, blockFluidMixture;
+			blockMachinePart, blockGrinderWheel, blockFluidMixture;
 
 	public static Fluid MIXTURE;
 
@@ -208,6 +209,7 @@ public class ResonantInduction
 		blockEMContractor = new BlockLevitator(getNextBlockID());
 		blockBattery = new BlockBattery(getNextBlockID());
 		blockMachinePart = new BlockMachinePart(getNextBlockID());
+		blockGrinderWheel = new BlockGrinderWheel(getNextBlockID());
 
 		MIXTURE = new Fluid("mixture");
 		FluidRegistry.registerFluid(MIXTURE);
