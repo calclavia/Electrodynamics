@@ -6,121 +6,100 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class RecipeUtils
 {
-    public static abstract class Resource
-    {
-        public final boolean hasChance;
-        public final float chance;
-        
-        protected Resource()
-        {
-            this.hasChance = false;
-            this.chance = 100;
-        }
-        
-        protected Resource(float chance)
-        {
-            this.hasChance = true;
-            this.chance = chance;
-        }
-        
-        public abstract boolean isEqual(ItemStack is);
-        public abstract boolean isEqual(FluidStack fs);
-        
-        public boolean hasChance()
-        {
-            return this.hasChance;
-        }
+	public static abstract class Resource
+	{
+		public final boolean hasChance;
+		public final float chance;
 
-        public float getChance()
-        {
-            return this.chance;
-        }
-    }
-    
-    public static class ItemStackResource extends Resource
-    {
-        public final ItemStack itemStack;
+		protected Resource()
+		{
+			this.hasChance = false;
+			this.chance = 100;
+		}
 
-        public ItemStackResource(ItemStack is)
-        {
-            super();
-            this.itemStack = is;
-        }
-        
-        public ItemStackResource(ItemStack is, float chance)
-        {
-            super(chance);
-            this.itemStack = is;
-        }
+		protected Resource(float chance)
+		{
+			this.hasChance = true;
+			this.chance = chance;
+		}
 
-        @Override
-        public boolean isEqual(ItemStack is)
-        {
-            return is.equals(this.itemStack);
-        }
+		public boolean hasChance()
+		{
+			return this.hasChance;
+		}
 
-        @Override
-        public boolean isEqual(FluidStack fs)
-        {
-            return false;
-        }
-    }
-    
-    public static class OreDictResource extends Resource
-    {
-        public final String name;
+		public float getChance()
+		{
+			return this.chance;
+		}
+	}
 
-        public OreDictResource(String s)
-        {
-            super();
-            this.name = s;
-        }
-        
-        public OreDictResource(String s, float chance)
-        {
-            super(chance);
-            this.name = s;
-        }
+	public static class ItemStackResource extends Resource
+	{
+		public final ItemStack itemStack;
 
-        @Override
-        public boolean isEqual(ItemStack is)
-        {
-            return OreDictionary.getOres(this.name).contains(is);
-        }
+		public ItemStackResource(ItemStack is)
+		{
+			super();
+			this.itemStack = is;
+		}
 
-        @Override
-        public boolean isEqual(FluidStack fs)
-        {
-            return false;
-        }
-    }
-    
-    public static class FluidStackResource extends Resource
-    {
-        public final FluidStack fluidStack;
+		public ItemStackResource(ItemStack is, float chance)
+		{
+			super(chance);
+			this.itemStack = is;
+		}
 
-        public FluidStackResource(FluidStack fs)
-        {
-            super();
-            this.fluidStack = fs;
-        }
-        
-        public FluidStackResource(FluidStack fs, float chance)
-        {
-            super(chance);
-            this.fluidStack = fs;
-        }
-        
-        @Override
-        public boolean isEqual(ItemStack is)
-        {
-            return false;
-        }
+		@Override
+		public boolean equals(Object obj)
+		{
+			return (obj instanceof ItemStack) ? ((ItemStack) obj).equals(this.itemStack) : false;
+		}
+	}
 
-        @Override
-        public boolean isEqual(FluidStack fs)
-        {
-            return fs.isFluidEqual(this.fluidStack);
-        }
-    }
+	public static class OreDictResource extends Resource
+	{
+		public final String name;
+
+		public OreDictResource(String s)
+		{
+			super();
+			this.name = s;
+		}
+
+		public OreDictResource(String s, float chance)
+		{
+			super(chance);
+			this.name = s;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			return (obj instanceof ItemStack) ? OreDictionary.getOres(this.name).contains(((ItemStack) obj)) : false;
+		}
+	}
+
+	public static class FluidStackResource extends Resource
+	{
+		public final FluidStack fluidStack;
+
+		public FluidStackResource(FluidStack fs)
+		{
+			super();
+			this.fluidStack = fs;
+		}
+
+		public FluidStackResource(FluidStack fs, float chance)
+		{
+			super(chance);
+			this.fluidStack = fs;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(obj) : false;
+		}
+	}
 }

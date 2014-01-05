@@ -24,6 +24,8 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.ResonantInduction;
+import resonantinduction.api.MachineRecipes;
+import resonantinduction.api.MachineRecipes.RecipeType;
 import resonantinduction.api.OreDetectionBlackList;
 import resonantinduction.core.base.ItemBase;
 import calclavia.lib.Calclavia;
@@ -40,7 +42,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemDust extends ItemBase
 {
-	public static final Set<String> ingotNames = new HashSet<String>();
+	public static final Set<String> materialNames = new HashSet<String>();
 	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
 	public static final HashMap<String, Integer> ingotColors = new HashMap<String, Integer>();
 
@@ -66,11 +68,11 @@ public class ItemDust extends ItemBase
 		if (evt.Name.startsWith("ingot"))
 		{
 			String ingotName = evt.Name.replace("ingot", "");
-			
+
 			if (OreDetectionBlackList.isIngotBlackListed("ingot" + ingotName) || OreDetectionBlackList.isOreBlackListed("ore" + ingotName))
 				return;
-			
-			ingotNames.add(ingotName.toLowerCase());
+
+			materialNames.add(ingotName.toLowerCase());
 		}
 	}
 
@@ -81,16 +83,23 @@ public class ItemDust extends ItemBase
 		computeColors();
 	}
 
-	public static void postInit()
-	{
-		for (String ingotName : ingotNames)
+	public static void generateDusts()
+	{		
+		for (String materialName : materialNames)
 		{
-			String name = ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1);
-
-			if (OreDictionary.getOres("dust" + name).size() == 0 && OreDictionary.getOres("ore" + name).size() > 0)
+			String name = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
+			
+			if (OreDictionary.getOres("ore" + name).size() > 0)
 			{
-				dusts.add(getStackFromDust(ingotName));
-				OreDictionary.registerOre("dust" + name, getStackFromDust(ingotName));
+				if (OreDictionary.getOres("dust" + name).size() == 0)
+				{
+					dusts.add(getStackFromDust(materialName));
+					OreDictionary.registerOre("dust" + name, getStackFromDust(materialName));
+
+				}
+
+				// Add to machine recipes
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, OreDictionary.getOres("dust" + name).get(0));
 			}
 		}
 	}
@@ -98,7 +107,7 @@ public class ItemDust extends ItemBase
 	@SideOnly(Side.CLIENT)
 	public static void computeColors()
 	{
-		for (String ingotName : ingotNames)
+		for (String ingotName : materialNames)
 		{
 			LinkedList<Integer> colorCodes = new LinkedList<Integer>();
 
@@ -114,14 +123,14 @@ public class ItemDust extends ItemBase
 
 				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] { "getIconString", "func_" + "111208_A" });
 				String iconString;
-				
+
 				try
 				{
 					iconString = (String) o.invoke(theIngot);
 				}
 				catch (ReflectiveOperationException e1)
 				{
-					//e1.printStackTrace();
+					// e1.printStackTrace();
 					break;
 				}
 
@@ -146,7 +155,7 @@ public class ItemDust extends ItemBase
 				}
 				catch (IOException e)
 				{
-					//e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
 			if (colorCodes.size() > 0)
