@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,12 +15,11 @@ import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
@@ -49,22 +46,22 @@ public class ItemDust extends ItemBase
 	public ItemDust(int id)
 	{
 		super("dust", id);
-		this.setTextureName("gunpowder");
+		this.setTextureName(ResonantInduction.PREFIX + "dust");
 	}
 
-//	@Override
-//	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
-//	{
-//		String dustName = getDustFromStack(itemStack);
-//		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
-//	}
-//	
+	//	@Override
+	//	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	//	{
+	//		String dustName = getDustFromStack(itemStack);
+	//		par3List.add("Type: " + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
+	//	}
+	//	
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
 		String dustName = getDustFromStack(is);
 		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
-		
+
 		String name = type.getDisplayName().replace(TranslationHelper.getLocal("misc.resonantinduction.ingot"), "");
 		return (TranslationHelper.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");	
 	}
@@ -77,6 +74,13 @@ public class ItemDust extends ItemBase
 			String ingotName = evt.Name.replace("ingot", "");
 			ingotNames.add(ingotName.toLowerCase());
 		}
+	}
+	
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void reloadTextures(TextureStitchEvent.Post e)
+	{
+		computeColors();
 	}
 
 	public static void postInit()
@@ -98,12 +102,15 @@ public class ItemDust extends ItemBase
 	{
 		for (String ingotName : ingotNames)
 		{
+			LinkedList<Integer> colorCodes = new LinkedList<Integer>();
+
+			// Compute color
+			int totalR = 0;
+			int totalG = 0;
+			int totalB = 0;
+
 			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1)))
 			{
-				// Compute color
-				int totalR = 0;
-				int totalG = 0;
-				int totalB = 0;
 
 				Item theIngot = ingotStack.getItem();
 
@@ -127,8 +134,6 @@ public class ItemDust extends ItemBase
 
 					BufferedImage bufferedimage = ImageIO.read(inputstream);
 
-					LinkedList<Integer> colorCodes = new LinkedList<Integer>();
-
 					int width = bufferedimage.getWidth();
 					int height = bufferedimage.getWidth();
 
@@ -139,33 +144,32 @@ public class ItemDust extends ItemBase
 							colorCodes.add(bufferedimage.getRGB(x, y));
 						}
 					}
-
-					if (colorCodes.size() > 0)
-					{
-						for (int colorCode : colorCodes)
-						{
-							Color color = new Color(colorCode);
-
-							if (color.getAlpha() != 0)
-							{
-								totalR += color.getRed();
-								totalG += color.getGreen();
-								totalB += color.getBlue();
-							}
-						}
-
-						totalR /= colorCodes.size();
-						totalG /= colorCodes.size();
-						totalB /= colorCodes.size();
-
-						int resultantColor = new Color(totalR, totalG, totalB).getRGB();
-						ingotColors.put(ingotName, resultantColor);
-					}
 				}
 				catch (IOException e)
 				{
 					e.printStackTrace();
 				}
+			}
+			if (colorCodes.size() > 0)
+			{
+				for (int colorCode : colorCodes)
+				{
+					Color color = new Color(colorCode);
+
+					if (color.getAlpha() != 0)
+					{
+						totalR += color.getRed();
+						totalG += color.getGreen();
+						totalB += color.getBlue();
+					}
+				}
+
+				totalR /= colorCodes.size();
+				totalG /= colorCodes.size();
+				totalB /= colorCodes.size();
+
+				int resultantColor = new Color(totalR, totalG, totalB).brighter().brighter().getRGB();
+				ingotColors.put(ingotName, resultantColor);
 			}
 			if (!ingotColors.containsKey(ingotName))
 			{
