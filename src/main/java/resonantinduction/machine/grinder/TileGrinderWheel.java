@@ -46,14 +46,19 @@ public class TileGrinderWheel extends TileElectrical
 
 			if (entry.getValue() <= 0)
 			{
-				this.doGrind(entry.getKey());
+
+				if (this.doGrind(entry.getKey()))
+				{
+					entry.getKey().setDead();
+					it.remove();
+				}
 			}
 			else
 			{
 				// Make the entity not be able to be picked up.
 				EntityItem entity = entry.getKey();
 				entity.delayBeforeCanPickup = 20;
-				this.worldObj.spawnParticle("smoke", entity.posX, entity.posY, entity.posZ, 0, 0, 0);
+				this.worldObj.spawnParticle("crit", entity.posX, entity.posY, entity.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
 			}
 		}
 	}
@@ -63,19 +68,28 @@ public class TileGrinderWheel extends TileElectrical
 		return MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack) == null ? false : MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack).length > 0;
 	}
 
-	private void doGrind(EntityItem entity)
+	private boolean doGrind(EntityItem entity)
 	{
-		ItemStack itemStack = entity.getEntityItem();
-
-		Resource[] results = MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack);
-
-		for (Resource resource : results)
+		if (!this.worldObj.isRemote)
 		{
-			if (resource instanceof ItemStackResource)
+			ItemStack itemStack = entity.getEntityItem();
+
+			Resource[] results = MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack);
+
+			for (Resource resource : results)
 			{
-				entity.setEntityItemStack(((ItemStackResource) resource).itemStack);
-				entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
+				if (resource instanceof ItemStackResource)
+				{
+					EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY, entity.posZ, ((ItemStackResource) resource).itemStack.copy());
+					entityItem.delayBeforeCanPickup = 20;
+					entityItem.motionX = 0;
+					entityItem.motionY = 0;
+					entityItem.motionZ = 0;
+					this.worldObj.spawnEntityInWorld(entityItem);
+				}
 			}
 		}
+
+		return true;
 	}
 }

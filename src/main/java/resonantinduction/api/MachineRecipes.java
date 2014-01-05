@@ -88,4 +88,16 @@ public final class MachineRecipes
 
 		return this.getOutput(machine, resourceInputs);
 	}
+
+	public Resource[] getRecipe(RecipeType machine, String... oreDictNames)
+	{
+		Resource[] resourceInputs = new Resource[oreDictNames.length];
+
+		for (int i = 0; i < oreDictNames.length; i++)
+		{
+			resourceInputs[i] = new OreDictResource(oreDictNames[i]);
+		}
+
+		return this.getOutput(machine, resourceInputs);
+	}
 }

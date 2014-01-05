@@ -6,6 +6,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.base.BlockRotatableBase;
 
 /**
@@ -43,8 +44,15 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 		}
 		else
 		{
-			entity.attackEntityFrom(DamageSource.cactus, 1);
+			entity.attackEntityFrom(DamageSource.cactus, 2);
 		}
+
+		// Move entity based on the direction of the block.
+		ForgeDirection dir = this.getDirection(world, x, y, z);
+		entity.motionX += dir.offsetX * 0.1;
+		entity.motionZ += dir.offsetZ * 0.1;
+
+		entity.motionY += Math.random() * 0.3;
 	}
 
 	@Override

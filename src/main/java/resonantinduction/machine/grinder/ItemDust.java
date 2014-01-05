@@ -84,11 +84,11 @@ public class ItemDust extends ItemBase
 	}
 
 	public static void generateDusts()
-	{		
+	{
 		for (String materialName : materialNames)
 		{
 			String name = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
-			
+
 			if (OreDictionary.getOres("ore" + name).size() > 0)
 			{
 				if (OreDictionary.getOres("dust" + name).size() == 0)
@@ -99,7 +99,10 @@ public class ItemDust extends ItemBase
 				}
 
 				// Add to machine recipes
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, OreDictionary.getOres("dust" + name).get(0));
+
+				ItemStack dust = OreDictionary.getOres("dust" + name).get(0).copy();
+				dust.stackSize = 2;
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, dust);
 			}
 		}
 	}
