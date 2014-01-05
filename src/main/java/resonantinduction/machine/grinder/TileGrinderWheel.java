@@ -60,7 +60,7 @@ public class TileGrinderWheel extends TileElectrical
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack) == null ? false : MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack).length > 0;
 	}
 
 	private void doGrind(EntityItem entity)
