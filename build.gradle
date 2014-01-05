@@ -22,8 +22,8 @@ buildProps.withReader {
 }
 
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
-group = "calclaviacore"
-archivesBaseName = "Calclavia Core"
+group = "resonant-induction"
+archivesBaseName = "Resonant-Induction"
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
@@ -33,6 +33,11 @@ if (System.getenv("BUILD_NUMBER") != null)
     version += ".${System.getenv("BUILD_NUMBER")}"
 
 
+processResources {
+	from 'build.properties'
+}
+
+
 task copyBuildXml(type: Copy) {
     from 'build.properties'
     into 'output'
@@ -40,19 +45,15 @@ task copyBuildXml(type: Copy) {
 
 jar {
     dependsOn copyBuildXml
-    classifier = 'core'
-	
-	manifest {
-        attributes FMLCorePlugin: "calclavia.core.CalclaviaLoader"
-    }
-	
+    classifier = ''
     destinationDir = file 'output'
+	include('resonantinduction/**')
 }
 
-artifacts {
-
+repositories {
+    maven { url 'http://calclavia.com/maven/' }
 }
-
-wrapper {
-    version = "1.8"
+dependencies {
+    compile 'universalelectricity:Universal-Electricity:3.0.0.258:dev'
+    compile 'calclaviacore:calclavia-core:1.0.0.44:dev'
 }
