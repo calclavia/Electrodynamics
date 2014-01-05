@@ -1,9 +1,7 @@
 package resonantinduction.machine.liquid;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.TreeSet;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,7 +13,39 @@ import calclavia.lib.prefab.tile.TileAdvanced;
  */
 public class TileFluidMixture extends TileAdvanced
 {
-	public final Set<FluidStack> fluids = new HashSet<FluidStack>();
+	public final TreeSet<FluidStack> fluids = new TreeSet<FluidStack>();
+
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
+
+	public void mix(FluidStack fluid)
+	{
+		if (fluids.contains(fluid))
+		{
+			for (FluidStack checkFluid : fluids)
+			{
+				if (fluid.equals(checkFluid))
+				{
+					checkFluid.amount += fluid.amount;
+				}
+			}
+		}
+		else
+		{
+			fluids.add(fluid);
+		}
+	}
+
+	/**
+	 * @return The color of the liquid based on the fluidStacks stored.
+	 */
+	public int getColor()
+	{
+		return 0xFFFFFF;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)

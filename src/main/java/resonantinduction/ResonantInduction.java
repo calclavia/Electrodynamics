@@ -31,6 +31,7 @@ import resonantinduction.machine.crusher.ItemDust;
 import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
 import resonantinduction.machine.liquid.BlockFluidMixture;
+import resonantinduction.machine.liquid.TileFluidMixture;
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.ItemBlockBattery;
 import resonantinduction.transport.battery.TileBattery;
@@ -236,6 +237,7 @@ public class ResonantInduction
 		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
 		ResonantInduction.proxy.registerRenderers();
 
