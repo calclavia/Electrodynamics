@@ -31,6 +31,7 @@ import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
 import resonantinduction.machine.grinder.BlockGrinderWheel;
 import resonantinduction.machine.grinder.ItemDust;
+import resonantinduction.machine.grinder.TileGrinderWheel;
 import resonantinduction.machine.liquid.BlockFluidMixture;
 import resonantinduction.machine.liquid.TileFluidMixture;
 import resonantinduction.transport.battery.BlockBattery;
@@ -229,6 +230,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
+		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
@@ -236,6 +238,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
 
 		// Tiles
+		GameRegistry.registerTileEntity(TileGrinderWheel.class, blockGrinderWheel.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());

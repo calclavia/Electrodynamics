@@ -11,6 +11,7 @@ import resonantinduction.api.MachineRecipes;
 import resonantinduction.api.MachineRecipes.RecipeType;
 import resonantinduction.api.RecipeUtils.ItemStackResource;
 import resonantinduction.api.RecipeUtils.Resource;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
 
 /**
@@ -20,11 +21,23 @@ import calclavia.lib.prefab.tile.TileElectrical;
 public class TileGrinderWheel extends TileElectrical
 {
 	/** A map of ItemStacks and their remaining grind-time left. */
-	public static final HashMap<EntityItem, Integer> map = new HashMap<EntityItem, Integer>();
+	public final HashMap<EntityItem, Integer> grinderTimer = new HashMap<EntityItem, Integer>();
+
+	public TileGrinderWheel()
+	{
+		this.energy = new EnergyStorageHandler(100000);
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		// TODO: Add electricity support.
+		doWork();
+	}
 
 	public void doWork()
 	{
-		Iterator<Entry<EntityItem, Integer>> it = map.entrySet().iterator();
+		Iterator<Entry<EntityItem, Integer>> it = grinderTimer.entrySet().iterator();
 
 		while (it.hasNext())
 		{
@@ -35,10 +48,17 @@ public class TileGrinderWheel extends TileElectrical
 			{
 				this.doGrind(entry.getKey());
 			}
+			else
+			{
+				// Make the entity not be able to be picked up.
+				EntityItem entity = entry.getKey();
+				entity.delayBeforeCanPickup = 20;
+				this.worldObj.spawnParticle("smoke", entity.posX, entity.posY, entity.posZ, 0, 0, 0);
+			}
 		}
 	}
 
-	private boolean canGrind(ItemStack itemStack)
+	public boolean canGrind(ItemStack itemStack)
 	{
 		return MachineRecipes.INSTANCE.getRecipes(RecipeType.GRINDER).containsKey(itemStack);
 	}
@@ -54,6 +74,7 @@ public class TileGrinderWheel extends TileElectrical
 			if (resource instanceof ItemStackResource)
 			{
 				entity.setEntityItemStack(((ItemStackResource) resource).itemStack);
+				entity.posY -= 1;
 			}
 		}
 	}
