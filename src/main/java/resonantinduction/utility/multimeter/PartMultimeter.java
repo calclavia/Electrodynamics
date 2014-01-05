@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.multimeter;
+package resonantinduction.utility.multimeter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

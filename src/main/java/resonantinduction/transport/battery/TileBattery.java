@@ -32,10 +32,10 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  */
 public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
-	public static final long STORAGE = 100000000;
+	public static final long STORAGE = 1000000000;
 
 	/** The transfer rate **/
-	public static final long DEFAULT_WATTAGE = 1000000;
+	public static final long DEFAULT_WATTAGE = (long) (STORAGE * 0.01);
 
 	/** Voltage increases as series connection increases */
 	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;

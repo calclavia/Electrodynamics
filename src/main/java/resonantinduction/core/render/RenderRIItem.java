@@ -1,4 +1,4 @@
-package resonantinduction.multimeter;
+package resonantinduction.core.render;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.transport.transformer.ItemTransformer;
 import resonantinduction.transport.transformer.RenderTransformer;
+import resonantinduction.utility.multimeter.ItemMultimeter;
+import resonantinduction.utility.multimeter.RenderMultimeter;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

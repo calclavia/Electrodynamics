@@ -1,4 +1,4 @@
-package resonantinduction.multimeter;
+package resonantinduction.utility.multimeter;
 
 import java.util.List;
 

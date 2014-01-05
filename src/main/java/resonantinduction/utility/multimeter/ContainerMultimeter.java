@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.multimeter;
+package resonantinduction.utility.multimeter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

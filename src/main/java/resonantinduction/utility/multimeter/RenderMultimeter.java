@@ -1,4 +1,4 @@
-package resonantinduction.multimeter;
+package resonantinduction.utility.multimeter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
