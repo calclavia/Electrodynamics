@@ -50,8 +50,16 @@ task copyUniversalElectricity(type: Copy) {
 }
 
 jar {
-    dependsOn copyBuildXml, copyUniversalElectricity
+    dependsOn copyBuildXml
     classifier = 'core'
     destinationDir = file 'output'
 	include('mffs/**')
+}
+
+repositories {
+    maven { url 'http://calclavia.com/maven/' }
+}
+dependencies {
+    compile 'universalelectricity:Universal-Electricity:3.0.0.258:dev'
+    compile 'calclaviacore:calclavia-core:1.0.0.44:dev'
 }
