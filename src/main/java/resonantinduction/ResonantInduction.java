@@ -100,8 +100,11 @@ public class ResonantInduction
 	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
 	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
 	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-	public static final String MODEL_DIRECTORY = DIRECTORY + "models/";
+
+	public static final String MODEL_PATH = "models/";
+
+	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + MODEL_PATH;
+	public static final String MODEL_DIRECTORY = DIRECTORY + MODEL_PATH;
 
 	public static final String LANGUAGE_DIRECTORY = DIRECTORY + "languages/";
 	public static final String[] LANGUAGES = new String[] { "en_US", "de_DE" };

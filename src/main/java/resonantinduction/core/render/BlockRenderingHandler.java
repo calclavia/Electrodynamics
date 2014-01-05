@@ -6,9 +6,6 @@ package resonantinduction.core.render;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
-
-import org.lwjgl.opengl.GL11;
-
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.RenderBattery;
 import resonantinduction.transport.levitator.BlockLevitator;
@@ -20,6 +17,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * @author Calclavia
@@ -36,42 +34,37 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 	{
 		if (block instanceof BlockTesla)
 		{
-			GL11.glPushMatrix();
-			GL11.glTranslated(0.5, 1.5, 0.5);
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+			glPushMatrix();
+			glTranslated(0.5, 1.5, 0.5);
+			glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderTesla.TEXTURE_BOTTOM);
 			RenderTesla.MODEL_BOTTOM.render(0.0625f);
-			GL11.glPopMatrix();
+			glPopMatrix();
 		}
 		else if (block instanceof BlockLevitator)
 		{
-			GL11.glPushMatrix();
-			GL11.glTranslated(0.5, 1.5, 0.5);
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+			glPushMatrix();
+			glTranslated(0.5, 1.5, 0.5);
+			glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderLevitator.TEXTURE);
 			RenderLevitator.MODEL.render(0.0625f);
-			GL11.glPopMatrix();
+			glPopMatrix();
 		}
 		else if (block instanceof BlockBattery)
 		{
-			GL11.glPushMatrix();
-			GL11.glTranslated(0.5, 1.42, 0.5);
-			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+			glPushMatrix();
+			glTranslatef(0.5f, 0.9f, 0.5f);
+			glScalef(0.5f, 0.5f, 0.5f);
+			glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
-			RenderBattery.MODEL.render(0.0625f);
-			GL11.glPopMatrix();
+			RenderBattery.MODEL.renderAll();
+			glPopMatrix();
 		}
 	}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		if (block instanceof BlockBattery)
-		{
-			RenderBattery.render();
-			return true;
-		}
-
 		return false;
 	}
 

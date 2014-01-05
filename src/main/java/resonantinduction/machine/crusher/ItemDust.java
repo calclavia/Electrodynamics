@@ -115,7 +115,7 @@ public class ItemDust extends ItemBase
 				}
 				catch (ReflectiveOperationException e1)
 				{
-					e1.printStackTrace();
+					//e1.printStackTrace();
 					break;
 				}
 
