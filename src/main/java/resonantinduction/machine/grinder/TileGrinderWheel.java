@@ -74,7 +74,7 @@ public class TileGrinderWheel extends TileElectrical
 			if (resource instanceof ItemStackResource)
 			{
 				entity.setEntityItemStack(((ItemStackResource) resource).itemStack);
-				entity.posY -= 1;
+				entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 			}
 		}
 	}

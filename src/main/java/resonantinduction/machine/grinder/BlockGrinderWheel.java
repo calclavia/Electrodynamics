@@ -38,7 +38,7 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 			}
 			else
 			{
-				entity.moveEntity(0, -1, 0);
+				entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 			}
 		}
 		else

@@ -114,6 +114,7 @@ public class ItemDust extends ItemBase
 
 				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] { "getIconString", "func_" + "111208_A" });
 				String iconString;
+				
 				try
 				{
 					iconString = (String) o.invoke(theIngot);
@@ -145,7 +146,7 @@ public class ItemDust extends ItemBase
 				}
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			if (colorCodes.size() > 0)
