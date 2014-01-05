@@ -49,6 +49,11 @@ task copyUniversalElectricity(type: Copy) {
     into '${dir.mcp}/src/minecraft'
 }
 
+task copyBuildXml(type: Copy) {
+    from 'build.properties'
+    into 'output'
+}
+
 jar {
     dependsOn copyBuildXml
     classifier = 'core'
