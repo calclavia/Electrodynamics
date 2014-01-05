@@ -1,18 +1,18 @@
 package resonantinduction.machine.grinder;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import resonantinduction.ResonantInduction;
 import resonantinduction.api.MachineRecipes;
 import resonantinduction.api.MachineRecipes.RecipeType;
 import resonantinduction.api.RecipeUtils.ItemStackResource;
 import resonantinduction.api.RecipeUtils.Resource;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia
@@ -20,8 +20,10 @@ import calclavia.lib.prefab.tile.TileElectrical;
  */
 public class TileGrinderWheel extends TileElectrical
 {
+	public static final int DEFAULT_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
-	public static final HashMap<EntityItem, Integer> grinderTimer = new HashMap<EntityItem, Integer>();
+	private static final HashMap<EntityItem, Integer> clientGrinderTimer = new HashMap<EntityItem, Integer>();
+	private static final HashMap<EntityItem, Integer> serverGrinderTimer = new HashMap<EntityItem, Integer>();
 
 	public EntityItem grindingItem = null;
 
@@ -33,30 +35,71 @@ public class TileGrinderWheel extends TileElectrical
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		// TODO: Add electricity support.
 		doWork();
 	}
 
+	/**
+	 * Can this machine work this tick?
+	 * 
+	 * @return
+	 */
+	public boolean canWork()
+	{
+		return true;
+	}
+
 	public void doWork()
 	{
-		if (grindingItem != null && grinderTimer.containsKey(grindingItem))
-		{
-			int timeLeft = grinderTimer.get(grindingItem) - 1;
-			grinderTimer.put(grindingItem, timeLeft);
+		boolean didWork = false;
 
-			if (timeLeft <= 0)
+		if (grindingItem != null)
+		{
+			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead)
 			{
-				if (this.doGrind(grindingItem))
+				int timeLeft = getTimer().get(grindingItem) - 1;
+				getTimer().put(grindingItem, timeLeft);
+
+				if (timeLeft <= 0)
 				{
-					grindingItem.setDead();
-					grinderTimer.remove(grindingItem);
-					grindingItem = null;
+					if (this.doGrind(grindingItem))
+					{
+						if (--grindingItem.getEntityItem().stackSize <= 0)
+						{
+							grindingItem.setDead();
+							getTimer().remove(grindingItem);
+							grindingItem = null;
+						}
+						else
+						{
+							grindingItem.setEntityItemStack(grindingItem.getEntityItem());
+							// Reset timer
+							getTimer().put(grindingItem, DEFAULT_TIME);
+						}
+					}
 				}
+				else
+				{
+					grindingItem.delayBeforeCanPickup = 20;
+					this.worldObj.spawnParticle("crit", grindingItem.posX, grindingItem.posY, grindingItem.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
+				}
+
+				didWork = true;
 			}
 			else
 			{
-				grindingItem.delayBeforeCanPickup = 20;
-				this.worldObj.spawnParticle("crit", grindingItem.posX, grindingItem.posY, grindingItem.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
+				getTimer().remove(grindingItem);
+				grindingItem = null;
+			}
+		}
+
+		if (didWork)
+		{
+			// TODO: Consume energy.
+			if (this.ticks % 20 == 0)
+			{
+				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "grinder", 0.5f, 1);
 			}
 		}
 	}
@@ -68,15 +111,15 @@ public class TileGrinderWheel extends TileElectrical
 
 	private boolean doGrind(EntityItem entity)
 	{
-		if (!this.worldObj.isRemote)
+		ItemStack itemStack = entity.getEntityItem();
+
+		Resource[] results = MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack);
+
+		for (Resource resource : results)
 		{
-			ItemStack itemStack = entity.getEntityItem();
-
-			Resource[] results = MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack);
-
-			for (Resource resource : results)
+			if (resource instanceof ItemStackResource)
 			{
-				if (resource instanceof ItemStackResource)
+				if (!this.worldObj.isRemote)
 				{
 					EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY, entity.posZ, ((ItemStackResource) resource).itemStack.copy());
 					entityItem.delayBeforeCanPickup = 20;
@@ -85,9 +128,21 @@ public class TileGrinderWheel extends TileElectrical
 					entityItem.motionZ = 0;
 					this.worldObj.spawnEntityInWorld(entityItem);
 				}
+
+				return true;
 			}
 		}
 
-		return true;
+		return false;
+	}
+
+	public static HashMap<EntityItem, Integer> getTimer()
+	{
+		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		{
+			return serverGrinderTimer;
+		}
+
+		return clientGrinderTimer;
 	}
 }

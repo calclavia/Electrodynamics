@@ -26,33 +26,41 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		if (entity instanceof EntityItem)
-		{
-			TileGrinderWheel tile = (TileGrinderWheel) world.getBlockTileEntity(x, y, z);
+		TileGrinderWheel tile = (TileGrinderWheel) world.getBlockTileEntity(x, y, z);
 
-			if (tile.canGrind(((EntityItem) entity).getEntityItem()))
+		if (tile.canWork())
+		{
+			if (entity instanceof EntityItem)
 			{
-				if (!tile.grinderTimer.containsKey((EntityItem) entity))
+				if (tile.canGrind(((EntityItem) entity).getEntityItem()))
 				{
-					tile.grinderTimer.put((EntityItem) entity, 10 * 20);
+					if (tile.grindingItem == null)
+					{
+						tile.grindingItem = (EntityItem) entity;
+					}
+
+					if (!tile.getTimer().containsKey((EntityItem) entity))
+					{
+						tile.getTimer().put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
+					}
+				}
+				else
+				{
+					entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 				}
 			}
 			else
 			{
-				entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
+				entity.attackEntityFrom(DamageSource.cactus, 2);
 			}
-		}
-		else
-		{
-			entity.attackEntityFrom(DamageSource.cactus, 2);
-		}
 
-		// Move entity based on the direction of the block.
-		ForgeDirection dir = this.getDirection(world, x, y, z);
-		entity.motionX += dir.offsetX * 0.1;
-		entity.motionZ += dir.offsetZ * 0.1;
-
-		entity.motionY += Math.random() * 0.3;
+			// Move entity based on the direction of the block.
+			ForgeDirection dir = this.getDirection(world, x, y, z);
+			entity.motionX += dir.offsetX * 0.1;
+			entity.motionZ += dir.offsetZ * 0.1;
+			entity.motionY += 0.3;
+			entity.isAirBorne = true;
+		}
 	}
 
 	@Override
