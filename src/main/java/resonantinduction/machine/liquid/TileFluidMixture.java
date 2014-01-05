@@ -51,7 +51,18 @@ public class TileFluidMixture extends TileAdvanced
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		readFluidFromNBT(nbt);
+	}
 
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		writeFluidToNBT(nbt);
+	}
+	
+	public void readFluidFromNBT(NBTTagCompound nbt)
+	{
 		fluids.clear();
 
 		NBTTagList nbtList = nbt.getTagList("fluids");
@@ -63,11 +74,8 @@ public class TileFluidMixture extends TileAdvanced
 		}
 	}
 
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public void writeFluidToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbt);
-
 		NBTTagList nbtList = new NBTTagList();
 
 		for (FluidStack fluid : fluids)
