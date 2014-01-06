@@ -27,7 +27,6 @@ archivesBaseName = "Modular-Force-Field-System"
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
-	assetDir = "assets"
 	
 	replaceIn "ModularForceFieldSystem.java"
 	replace "@MAJOR@", config.version.mod.major
@@ -54,6 +53,7 @@ jar {
     classifier = ''
     destinationDir = file 'output'
 	include('mffs/**')
+	include('assets/**')
 }
 
 repositories {
