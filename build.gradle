@@ -22,11 +22,17 @@ buildProps.withReader {
 }
 
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
-group = "resonant-induction"
+group = "resonantinduction"
 archivesBaseName = "Resonant-Induction"
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
+	
+	replaceIn "ResonantInduction.java"
+	replace "@MAJOR@", config.version.mod.major
+	replace "@MINOR@", config.version.mod.minor
+	replace "@REVIS@", config.version.mod.revis
+	replace "@BUILD@", System.getenv("BUILD_NUMBER")
 }
 
 if (System.getenv("BUILD_NUMBER") != null)
@@ -37,10 +43,20 @@ processResources {
 	from 'build.properties'
 }
 
-
 task copyBuildXml(type: Copy) {
     from 'build.properties'
     into 'output'
+}
+
+task apiZip(type: Zip) {
+    classifier = 'api'
+    from sourceSets*.allSource
+    include 'resonantinduction/api/**'
+    destinationDir = file 'output'
+}
+
+artifacts {
+    archives apiZip
 }
 
 jar {
@@ -48,12 +64,14 @@ jar {
     classifier = ''
     destinationDir = file 'output'
 	include('resonantinduction/**')
+	include('assets/**')
+	include('*.png')
 }
 
 repositories {
     maven { url 'http://calclavia.com/maven/' }
 }
 dependencies {
-    compile 'universalelectricity:Universal-Electricity:3.0.0.258:dev'
-    compile 'calclaviacore:calclavia-core:1.0.0.44:dev'
+    compile 'universalelectricity:Universal-Electricity:3.0.0.300:dev'
+    compile 'calclaviacore:calclavia-core:1.0.0.48:dev'
 }
