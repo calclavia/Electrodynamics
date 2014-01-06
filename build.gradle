@@ -27,8 +27,9 @@ archivesBaseName = "Modular-Force-Field-System"
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
+	assetDir = "run/assets"
 	
-	replaceIn "ModularForceFieldSystem.java"
+	replaceIn "**/*.java"
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
