@@ -28,7 +28,7 @@ archivesBaseName = "Modular-Force-Field-System"
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
 	
-	replaceIn "**/**"
+	replaceIn "ModularForceFieldSystem.java"
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
