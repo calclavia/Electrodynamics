@@ -8,7 +8,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.core.render.BlockRenderingHandler;
 import resonantinduction.core.render.RenderRIItem;
-import resonantinduction.machine.grinder.ItemDust;
+import resonantinduction.machine.item.ItemDust;
 import resonantinduction.transport.battery.RenderBattery;
 import resonantinduction.transport.battery.TileBattery;
 import resonantinduction.transport.fx.FXElectricBolt;

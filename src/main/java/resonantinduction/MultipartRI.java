@@ -1,15 +1,21 @@
 package resonantinduction;
 
+import ic2.api.energy.tile.IEnergySink;
 import resonantinduction.transport.transformer.PartTransformer;
 import resonantinduction.transport.wire.flat.PartFlatSwitchWire;
 import resonantinduction.transport.wire.flat.PartFlatWire;
 import resonantinduction.transport.wire.framed.PartFramedSwitchWire;
 import resonantinduction.transport.wire.framed.PartFramedWire;
+import resonantinduction.transport.wire.trait.TraitConductor;
+import resonantinduction.transport.wire.trait.TraitEnergyHandler;
+import resonantinduction.transport.wire.trait.TraitEnergySink;
 import resonantinduction.utility.multimeter.PartMultimeter;
+import universalelectricity.api.energy.IConductor;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
 import codechicken.multipart.TMultiPart;
+import cofh.api.energy.IEnergyHandler;
 
 public class MultipartRI implements IPartFactory
 {
@@ -20,9 +26,9 @@ public class MultipartRI implements IPartFactory
 	public MultipartRI()
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
-		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.transport.wire.trait.TraitConductor");
-		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "resonantinduction.transport.wire.trait.TraitEnergyHandler");
-		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.transport.wire.trait.TraitEnergySink");
+		MultipartGenerator.registerTrait(IConductor.class.getCanonicalName(), TraitConductor.class.getCanonicalName());
+		MultipartGenerator.registerTrait(IEnergyHandler.class.getCanonicalName(), TraitEnergyHandler.class.getCanonicalName());
+		MultipartGenerator.registerTrait(IEnergySink.class.getCanonicalName(), TraitEnergySink.class.getCanonicalName());
 	}
 
 	@Override
