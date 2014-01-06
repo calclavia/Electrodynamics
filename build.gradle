@@ -28,7 +28,7 @@ archivesBaseName = "Modular-Force-Field-System"
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
 	
-	replaceIn "**"
+	replaceIn "**/**"
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
@@ -41,18 +41,6 @@ if (System.getenv("BUILD_NUMBER") != null)
 
 processResources {
 	from 'build.properties'
-}
-
-task copyCalclaviaCore(type: Copy) {
-	description 'Copies the dependent source into the appropriate directory.'
-    from '${dir.development}Calclavia-Core/src/main/java'
-    into '${dir.mcp}/src/minecraft'
-}
-
-task copyUniversalElectricity(type: Copy) {
-	description 'Copies the dependent source into the appropriate directory.'
-    from '${dir.development}Universal-Electricity/src/main/java'
-    into '${dir.mcp}/src/minecraft'
 }
 
 task copyBuildXml(type: Copy) {
