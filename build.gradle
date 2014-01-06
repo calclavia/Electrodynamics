@@ -74,6 +74,22 @@ repositories {
 dependencies {
     compile 'universalelectricity:Universal-Electricity:+:dev'
     compile 'calclaviacore:calclavia-core:+:dev'
-	compile files('http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar')
-	compile files('http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.233.jar')
+	
+	compile 
+	{
+        artifact {
+            name = 'CodeChickenLib'
+            extension = 'jar'
+            url = 'http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar'
+        }
+    }
+	
+	compile 
+	{
+        artifact {
+            name = 'ForgeMultipart'
+            extension = 'jar'
+            url = 'http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.233.jar'
+        }
+    }
 }
