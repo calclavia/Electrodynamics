@@ -48,12 +48,24 @@ task copyBuildXml(type: Copy) {
     into 'output'
 }
 
+task apiZip(type: Zip) {
+    classifier = 'api'
+    from sourceSets*.allSource
+    include 'mffs/api/**'
+    destinationDir = file 'output'
+}
+
+artifacts {
+    archives apiZip
+}
+
 jar {
     dependsOn copyBuildXml
     classifier = ''
     destinationDir = file 'output'
 	include('mffs/**')
 	include('assets/**')
+	include('*.png')
 }
 
 repositories {
