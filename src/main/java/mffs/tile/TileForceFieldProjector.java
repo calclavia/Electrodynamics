@@ -1,6 +1,7 @@
 package mffs.tile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -249,8 +250,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 				int constructionCount = 0;
 				int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
 
-				HashSet<Vector3> fieldToBeProjected = new HashSet<Vector3>();
-				fieldToBeProjected.addAll(this.calculatedField);
+				Set<Vector3> fieldToBeProjected = Collections.synchronizedSet(new HashSet<Vector3>(this.calculatedField));
 
 				for (IModule module : this.getModules(this.getModuleSlots()))
 				{

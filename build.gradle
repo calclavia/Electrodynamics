@@ -70,5 +70,5 @@ repositories {
 }
 dependencies {
     compile 'universalelectricity:Universal-Electricity:3.0.+:dev'
-    compile 'calclaviacore:calclavia-core:+:dev'
+    compile 'calclaviacore:calclavia-core:1.1.+:dev'
 }
