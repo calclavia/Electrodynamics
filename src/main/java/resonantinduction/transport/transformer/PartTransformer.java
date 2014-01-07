@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -291,7 +292,11 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
             else
                 this.face = 0;
             this.sendDescUpdate();
-            player.sendChatToPlayer(ChatMessageComponent.createFromText("Face:" + this.face));
+
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+            {
+                tile().notifyNeighborChange(dir.ordinal());
+            }
             return true;
         }
         return false;
