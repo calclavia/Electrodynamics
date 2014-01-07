@@ -15,8 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.prefab.vector.Region2;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiMFFS
@@ -48,17 +48,17 @@ public class GuiForceManipulator extends GuiMFFS
 		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 3), new Vector2(90, 17 + 18 * 3).add(18)), "Down");
 		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 3), new Vector2(90 + 18 * 3, 17 + 18 * 3).add(18)), "Down");
 
-		String north = TranslationHelper.getLocal("gui.projector.north");
-		String south = TranslationHelper.getLocal("gui.projector.south");
-		String west = TranslationHelper.getLocal("gui.projector.west");
-		String east = TranslationHelper.getLocal("gui.projector.east");
+		String north = LanguageUtility.getLocal("gui.projector.north");
+		String south = LanguageUtility.getLocal("gui.projector.south");
+		String west = LanguageUtility.getLocal("gui.projector.west");
+		String east = LanguageUtility.getLocal("gui.projector.east");
 
 		if (!this.tileEntity.isAbsolute)
 		{
-			north = TranslationHelper.getLocal("gui.projector.front");
-			south = TranslationHelper.getLocal("gui.projector.back");
-			west = TranslationHelper.getLocal("gui.projector.left");
-			east = TranslationHelper.getLocal("gui.projector.right");
+			north = LanguageUtility.getLocal("gui.projector.front");
+			south = LanguageUtility.getLocal("gui.projector.back");
+			west = LanguageUtility.getLocal("gui.projector.left");
+			east = LanguageUtility.getLocal("gui.projector.right");
 		}
 
 		this.tooltips.put(new Region2(new Vector2(90 + 18 * 1, 17), new Vector2(90 + 18 * 1, 17).add(18)), north);
@@ -78,7 +78,7 @@ public class GuiForceManipulator extends GuiMFFS
 	protected void drawGuiContainerForegroundLayer(int x, int y)
 	{
 		this.fontRenderer.drawString(this.tileEntity.getInvName(), this.xSize / 2 - this.fontRenderer.getStringWidth(this.tileEntity.getInvName()) / 2, 6, 4210752);
-		this.fontRenderer.drawString(TranslationHelper.getLocal("gui.manipulator.anchor"), 35, 60, 4210752);
+		this.fontRenderer.drawString(LanguageUtility.getLocal("gui.manipulator.anchor"), 35, 60, 4210752);
 
 		if (this.tileEntity.anchor != null)
 		{
@@ -90,7 +90,7 @@ public class GuiForceManipulator extends GuiMFFS
 
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", TranslationHelper.getLocal("gui.manipulator.fortron") + " " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 30, 110, x, y);
+		this.drawTextWithTooltip("fortron", LanguageUtility.getLocal("gui.manipulator.fortron") + " " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 30, 110, x, y);
 		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost(), Unit.JOULES), 9, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}

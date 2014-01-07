@@ -67,12 +67,12 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import calclavia.lib.UniversalRecipe;
+import calclavia.lib.CustomDamageSource;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
-import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.prefab.RecipeHelper;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.recipe.RecipeUtility;
+import calclavia.lib.recipe.UniversalRecipe;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -303,7 +303,7 @@ public class ModularForceFieldSystem
 		/**
 		 * Load language file(s)
 		 */
-		LOGGER.fine("Language(s) Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US", "zh_CN", "de_DE" }));
+		LOGGER.fine("Language(s) Loaded: " + LanguageUtility.loadLanguages(LANGUAGE_DIRECTORY, new String[] { "en_US", "zh_CN", "de_DE" }));
 
 		/**
 		 * Default blacklist variables.
@@ -430,7 +430,7 @@ public class ModularForceFieldSystem
 		// Anti-Personnel
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiPersonnel), "BFG", 'F', itemFocusMatix, 'B', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 		// Confiscate
-		RecipeHelper.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl), Settings.CONFIGURATION, true);
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl), Settings.CONFIGURATION, true);
 		// Warn
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleWarn), "NFN", 'F', itemFocusMatix, 'N', Block.music));
 		// Block Access

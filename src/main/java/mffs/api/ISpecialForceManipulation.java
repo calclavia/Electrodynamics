@@ -7,6 +7,7 @@ package mffs.api;
  * @author Calclavia
  * 
  */
+@Deprecated
 public interface ISpecialForceManipulation
 {
 	/**

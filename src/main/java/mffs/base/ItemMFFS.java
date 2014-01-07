@@ -8,8 +8,7 @@ import mffs.Settings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import calclavia.lib.Calclavia;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemMFFS extends Item
@@ -27,11 +26,11 @@ public class ItemMFFS extends Item
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		String tooltip = TranslationHelper.getLocal(this.getUnlocalizedName() + ".tooltip");
+		String tooltip = LanguageUtility.getLocal(this.getUnlocalizedName() + ".tooltip");
 
 		if (tooltip != null && tooltip.length() > 0)
 		{
-			info.addAll(Calclavia.splitStringPerWord(tooltip, 5));
+			info.addAll(LanguageUtility.splitStringPerWord(tooltip, 5));
 		}
 	}
 }

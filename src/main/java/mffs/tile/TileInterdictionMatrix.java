@@ -20,7 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -94,7 +94,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 					if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
 					{
-						player.addChatMessage("[" + this.getInvName() + "] " + TranslationHelper.getLocal("message.interdictionMatrix.warn"));
+						player.addChatMessage("[" + this.getInvName() + "] " + LanguageUtility.getLocal("message.interdictionMatrix.warn"));
 					}
 
 				}

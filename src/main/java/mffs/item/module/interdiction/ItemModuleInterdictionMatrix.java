@@ -8,7 +8,7 @@ import mffs.item.module.ItemModule;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdictionMatrixModule
 {
@@ -20,7 +20,7 @@ public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdi
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add("\u00a74" + TranslationHelper.getLocal("tile.mffs:interdictionMatrix.name"));
+		info.add("\u00a74" + LanguageUtility.getLocal("tile.mffs:interdictionMatrix.name"));
 		super.addInformation(itemStack, player, info, b);
 	}
 

@@ -22,9 +22,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.Calclavia;
-import calclavia.lib.NBTFileLoader;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -49,31 +48,31 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
-		list.add(TranslationHelper.getLocal("info.modeCustom.mode") + " " + (nbt.getBoolean(NBT_MODE) ? TranslationHelper.getLocal("info.modeCustom.substraction") : TranslationHelper.getLocal("info.modeCustom.additive")));
+		list.add(LanguageUtility.getLocal("info.modeCustom.mode") + " " + (nbt.getBoolean(NBT_MODE) ? LanguageUtility.getLocal("info.modeCustom.substraction") : LanguageUtility.getLocal("info.modeCustom.additive")));
 
 		Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
-		list.add(TranslationHelper.getLocal("info.modeCustom.point1") + " " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
+		list.add(LanguageUtility.getLocal("info.modeCustom.point1") + " " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
 
 		Vector3 point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2));
-		list.add(TranslationHelper.getLocal("info.modeCustom.point2") + " " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
+		list.add(LanguageUtility.getLocal("info.modeCustom.point2") + " " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
 
 		int modeID = nbt.getInteger(NBT_ID);
 
 		if (modeID > 0)
 		{
-			list.add(TranslationHelper.getLocal("info.modeCustom.modeID") + " " + modeID);
+			list.add(LanguageUtility.getLocal("info.modeCustom.modeID") + " " + modeID);
 
 			int fieldSize = nbt.getInteger(NBT_FIELD_SIZE);
 
 			if (fieldSize > 0)
 			{
-				list.add(TranslationHelper.getLocal("info.modeCustom.fieldSize") + " " + fieldSize);
+				list.add(LanguageUtility.getLocal("info.modeCustom.fieldSize") + " " + fieldSize);
 			}
 			else
 			{
-				list.add(TranslationHelper.getLocal("info.modeCustom.notSaved"));
+				list.add(LanguageUtility.getLocal("info.modeCustom.notSaved"));
 			}
 		}
 
@@ -83,7 +82,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 		}
 		else
 		{
-			list.add(TranslationHelper.getLocal("info.modeCustom.shift"));
+			list.add(LanguageUtility.getLocal("info.modeCustom.shift"));
 		}
 	}
 
@@ -94,7 +93,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 		{
 			if (entityPlayer.isSneaking())
 			{
-				NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+				NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
 				if (nbt != null)
 				{
@@ -122,7 +121,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 							Vector3 minPoint = new Vector3(Math.min(point1.x, point2.x), Math.min(point1.y, point2.y), Math.min(point1.z, point2.z));
 							Vector3 maxPoint = new Vector3(Math.max(point1.x, point2.x), Math.max(point1.y, point2.y), Math.max(point1.z, point2.z));
 
-							NBTTagCompound saveNBT = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
+							NBTTagCompound saveNBT = NBTUtility.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
 
 							if (saveNBT == null)
 							{
@@ -181,11 +180,11 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 							nbt.setInteger(NBT_FIELD_SIZE, list.tagCount());
 
-							NBTFileLoader.saveData(getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT);
+							NBTUtility.saveData(getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack), saveNBT);
 
 							this.clearCache();
 
-							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.modeCustom.saved"));
+							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.modeCustom.saved"));
 						}
 					}
 				}
@@ -193,12 +192,12 @@ public class ItemModeCustom extends ItemMode implements ICache
 			else
 			{
 
-				NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+				NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
 				if (nbt != null)
 				{
 					nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE));
-					entityPlayer.addChatMessage(TranslationHelper.getLocal("message.modeCustom.modeChange").replace("%p", (nbt.getBoolean(NBT_MODE) ? TranslationHelper.getLocal("info.modeCustom.substraction") : TranslationHelper.getLocal("info.modeCustom.additive"))));
+					entityPlayer.addChatMessage(LanguageUtility.getLocal("message.modeCustom.modeChange").replace("%p", (nbt.getBoolean(NBT_MODE) ? LanguageUtility.getLocal("info.modeCustom.substraction") : LanguageUtility.getLocal("info.modeCustom.additive"))));
 				}
 			}
 		}
@@ -211,7 +210,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 	{
 		if (!world.isRemote)
 		{
-			NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+			NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
 			if (nbt != null)
 			{
@@ -236,7 +235,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 	public int getModeID(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
 		int id = nbt.getInteger(NBT_ID);
 
@@ -263,7 +262,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 	public File getSaveDirectory()
 	{
-		File saveDirectory = NBTFileLoader.getSaveDirectory(MinecraftServer.getServer().getFolderName());
+		File saveDirectory = NBTUtility.getSaveDirectory(MinecraftServer.getServer().getFolderName());
 
 		if (!saveDirectory.exists())
 		{
@@ -344,7 +343,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 
 		if (this.getSaveDirectory() != null)
 		{
-			NBTTagCompound nbt = NBTFileLoader.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
+			NBTTagCompound nbt = NBTUtility.loadData(this.getSaveDirectory(), NBT_FILE_SAVE_PREFIX + getModeID(itemStack));
 
 			if (nbt != null)
 			{

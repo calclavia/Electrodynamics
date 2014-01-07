@@ -10,8 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import calclavia.lib.Calclavia;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.NBTUtility;
 
 public class ItemCardID extends ItemCard implements ICardIdentification
 {
@@ -43,11 +43,11 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	{
 		if (this.getUsername(itemStack) != null && !this.getUsername(itemStack).isEmpty())
 		{
-			info.add(TranslationHelper.getLocal("info.cardIdentification.username") + " " + this.getUsername(itemStack));
+			info.add(LanguageUtility.getLocal("info.cardIdentification.username") + " " + this.getUsername(itemStack));
 		}
 		else
 		{
-			info.add(TranslationHelper.getLocal("info.cardIdentification.empty"));
+			info.add(LanguageUtility.getLocal("info.cardIdentification.empty"));
 		}
 
 		String tooltip = "";
@@ -63,12 +63,12 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 				}
 
 				isFirst = false;
-				tooltip += TranslationHelper.getLocal("gui." + permission.name + ".name");
+				tooltip += LanguageUtility.getLocal("gui." + permission.name + ".name");
 			}
 		}
 		if (tooltip != null && tooltip.length() > 0)
 		{
-			info.addAll(Calclavia.splitStringPerWord(tooltip, 5));
+			info.addAll(LanguageUtility.splitStringPerWord(tooltip, 5));
 		}
 	}
 
@@ -82,14 +82,14 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public void setUsername(ItemStack itemStack, String username)
 	{
-		NBTTagCompound nbtTagCompound = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbtTagCompound = NBTUtility.getNBTTagCompound(itemStack);
 		nbtTagCompound.setString("name", username);
 	}
 
 	@Override
 	public String getUsername(ItemStack itemStack)
 	{
-		NBTTagCompound nbtTagCompound = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbtTagCompound = NBTUtility.getNBTTagCompound(itemStack);
 
 		if (nbtTagCompound != null)
 		{
@@ -105,14 +105,14 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public boolean hasPermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		return nbt.getBoolean(NBT_PREFIX + permission.id);
 	}
 
 	@Override
 	public boolean addPermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, true);
 		return false;
 	}
@@ -120,7 +120,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	@Override
 	public boolean removePermission(ItemStack itemStack, Permission permission)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, false);
 		return false;
 	}

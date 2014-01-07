@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 {
@@ -89,7 +89,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 
 			if (confiscationCount > 0 && entityLiving instanceof EntityPlayer)
 			{
-				((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + TranslationHelper.getLocal("message.moduleConfiscate.confiscate").replace("%p", "" + confiscationCount));
+				((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replace("%p", "" + confiscationCount));
 			}
 
 			interdictionMatrix.requestFortron(confiscationCount, true);

@@ -1,8 +1,8 @@
 package mffs.event;
 
+import calclavia.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.ManipulatorHelper;
 import mffs.api.EventForceManipulate.EventPreForceManipulate;
 import mffs.api.ISpecialForceManipulation;
 import mffs.tile.TileForceManipulator;
@@ -43,11 +43,6 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 			{
 				TileEntity tileEntity = this.position.getTileEntity(this.world);
 
-				if (tileEntity instanceof ISpecialForceManipulation)
-				{
-					((ISpecialForceManipulation) tileEntity).move(newPosition.intX(), newPosition.intY(), newPosition.intZ());
-				}
-
 				EventPreForceManipulate evt = new EventPreForceManipulate(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ());
 				MinecraftForge.EVENT_BUS.post(evt);
 
@@ -63,7 +58,7 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 						tileEntity.writeToNBT(tileData);
 					}
 
-					ManipulatorHelper.setBlockSneaky(this.world, this.position, 0, 0, null);
+					MovementUtility.setBlockSneaky(this.world, this.position, 0, 0, null);
 					this.handler.getQuedDelayedEvents().add(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.position, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
 				}
 			}

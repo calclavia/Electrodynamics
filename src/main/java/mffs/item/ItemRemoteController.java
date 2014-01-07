@@ -27,7 +27,7 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -53,15 +53,15 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 			if (Block.blocksList[blockId] != null)
 			{
-				list.add(TranslationHelper.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
+				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add(TranslationHelper.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName() + "'");
+			list.add(LanguageUtility.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName() + "'");
 		}
 		else
 		{
-			list.add(TranslationHelper.getLocal("info.item.notLinked"));
+			list.add(LanguageUtility.getLocal("info.item.notLinked"));
 		}
 	}
 
@@ -75,7 +75,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage(TranslationHelper.getLocal("message.remoteController.linked").replace("%p", x + ", " + y + ", " + z).replace("%q", Block.blocksList[vector.getBlockID(world)].getLocalizedName()));
+				player.addChatMessage(LanguageUtility.getLocal("message.remoteController.linked").replace("%p", x + ", " + y + ", " + z).replace("%q", Block.blocksList[vector.getBlockID(world)].getLocalizedName()));
 			}
 		}
 
@@ -167,7 +167,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage(TranslationHelper.getLocal("message.remoteController.fail").replace("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
+							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.remoteController.fail").replace("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
 						}
 					}
 				}

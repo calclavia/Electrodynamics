@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiButtonPress extends GuiButton
@@ -75,9 +75,9 @@ public class GuiButtonPress extends GuiButton
 		{
 			if (this.isPointInRegion(this.xPosition, this.yPosition, this.width, this.height, x, y))
 			{
-				String title = TranslationHelper.getLocal("gui." + this.displayString + ".name");
+				String title = LanguageUtility.getLocal("gui." + this.displayString + ".name");
 
-				this.mainGui.tooltip = TranslationHelper.getLocal("gui." + this.displayString + ".tooltip");
+				this.mainGui.tooltip = LanguageUtility.getLocal("gui." + this.displayString + ".tooltip");
 
 				if (title != null && title.length() > 0)
 				{

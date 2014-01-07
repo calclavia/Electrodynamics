@@ -5,7 +5,7 @@ import mffs.Settings;
 import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 {
@@ -37,7 +37,7 @@ public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 				player.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100);
 				interdictionMatrix.requestFortron(Settings.INTERDICTION_MURDER_ENERGY, false);
 
-				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] " + TranslationHelper.getLocal("message.moduleAntiPersonnel.death"));
+				player.addChatMessage("[" + interdictionMatrix.getInvName() + "] " + LanguageUtility.getLocal("message.moduleAntiPersonnel.death"));
 			}
 		}
 

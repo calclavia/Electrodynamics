@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -40,15 +40,15 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[blockId] != null)
 			{
-				list.add(TranslationHelper.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
+				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
 			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
-			list.add(TranslationHelper.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName());
+			list.add(LanguageUtility.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName());
 		}
 		else
 		{
-			list.add(TranslationHelper.getLocal("info.item.notLinked"));
+			list.add(LanguageUtility.getLocal("info.item.notLinked"));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage(TranslationHelper.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
 			}
 		}
 

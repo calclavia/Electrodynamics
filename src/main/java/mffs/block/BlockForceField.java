@@ -30,7 +30,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.CustomDamageSource;
+import calclavia.lib.CustomDamageSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

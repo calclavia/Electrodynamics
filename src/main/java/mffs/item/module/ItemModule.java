@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModule extends ItemMFFS implements IModule
 {
@@ -26,7 +26,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add(TranslationHelper.getLocal("info.item.fortron") + " " + this.getFortronCost(1));
+		info.add(LanguageUtility.getLocal("info.item.fortron") + " " + this.getFortronCost(1));
 		super.addInformation(itemStack, player, info, b);
 	}
 

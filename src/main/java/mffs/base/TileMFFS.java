@@ -11,9 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import calclavia.lib.IPlayerUsing;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.tile.IPlayerUsing;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileAdvanced;
 

@@ -17,7 +17,7 @@ import org.lwjgl.input.Keyboard;
 
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.gui.GuiContainerBase;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase
@@ -137,7 +137,7 @@ public class GuiMFFS extends GuiContainerBase
 		{
 			if (this.isPointInRegion(textFieldPos.intX(), textFieldPos.intY(), this.textFieldFrequency.getWidth(), 12, mouseX, mouseY))
 			{
-				this.tooltip = TranslationHelper.getLocal("gui.frequency.tooltip");
+				this.tooltip = LanguageUtility.getLocal("gui.frequency.tooltip");
 			}
 		}
 	}

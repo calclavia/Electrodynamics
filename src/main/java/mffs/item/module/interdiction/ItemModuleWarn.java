@@ -3,7 +3,7 @@ package mffs.item.module.interdiction;
 import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 {
@@ -18,7 +18,7 @@ public class ItemModuleWarn extends ItemModuleInterdictionMatrix
 		boolean hasPermission = false;
 		if (!hasPermission && entityLiving instanceof EntityPlayer)
 		{
-			((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + TranslationHelper.getLocal("message.moduleWarn.warn"));
+			((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + LanguageUtility.getLocal("message.moduleWarn.warn"));
 		}
 
 		return false;

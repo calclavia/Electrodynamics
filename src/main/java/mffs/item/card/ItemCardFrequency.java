@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {
@@ -29,7 +29,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		list.add(TranslationHelper.getLocal("info.cardFrequency.freq") + " " + this.getFrequency(itemStack));
+		list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + this.getFrequency(itemStack));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			if (player.isSneaking())
 			{
 				this.setFrequency(world.rand.nextInt((int) Math.pow(10, (Settings.MAX_FREQUENCY_DIGITS - 1))), itemStack);
-				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.generated") + " " + this.getFrequency(itemStack));
+				player.addChatMessage(LanguageUtility.getLocal("message.cardFrequency.generated") + " " + this.getFrequency(itemStack));
 			}
 		}
 
@@ -88,7 +88,7 @@ public class ItemCardFrequency extends ItemCard implements IItemFrequency
 			{
 				((IBlockFrequency) tileEntity).setFrequency(this.getFrequency(itemStack));
 				world.markBlockForUpdate(x, y, z);
-				player.addChatMessage(TranslationHelper.getLocal("message.cardFrequency.set").replaceAll("%p", "" + this.getFrequency(itemStack)));
+				player.addChatMessage(LanguageUtility.getLocal("message.cardFrequency.set").replaceAll("%p", "" + this.getFrequency(itemStack)));
 			}
 
 			return true;

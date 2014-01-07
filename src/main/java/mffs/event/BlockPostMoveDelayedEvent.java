@@ -2,9 +2,9 @@ package mffs.event;
 
 import java.lang.reflect.Method;
 
+import calclavia.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.ManipulatorHelper;
 import mffs.api.EventForceManipulate.EventPostForceManipulate;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -78,7 +78,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 							newTile = TileEntity.createAndLoadEntity(this.tileData);
 						}
 
-						ManipulatorHelper.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, newTile);
+						MovementUtility.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, newTile);
 
 						if (newTile != null && isMultipart)
 						{
@@ -100,7 +100,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 					}
 					else
 					{
-						ManipulatorHelper.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, null);
+						MovementUtility.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, null);
 					}
 
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
