@@ -21,16 +21,17 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class TileGrinderWheel extends TileElectrical
 {
+	public static final long POWER = 500000;
 	public static final int DEFAULT_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
-	private static final HashMap<EntityItem, Integer> clientGrinderTimer = new HashMap<EntityItem, Integer>();
-	private static final HashMap<EntityItem, Integer> serverGrinderTimer = new HashMap<EntityItem, Integer>();
+	private static final HashMap<EntityItem, Integer> clientTimer = new HashMap<EntityItem, Integer>();
+	private static final HashMap<EntityItem, Integer> serverTimer = new HashMap<EntityItem, Integer>();
 
 	public EntityItem grindingItem = null;
 
 	public TileGrinderWheel()
 	{
-		this.energy = new EnergyStorageHandler(100000);
+		this.energy = new EnergyStorageHandler(POWER * 2);
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class TileGrinderWheel extends TileElectrical
 
 		if (grindingItem != null)
 		{
-			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(new Vector3(grindingItem)) < 1)
+			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
 			{
 				int timeLeft = getTimer().get(grindingItem) - 1;
 				getTimer().put(grindingItem, timeLeft);
@@ -97,11 +98,12 @@ public class TileGrinderWheel extends TileElectrical
 
 		if (didWork)
 		{
-			// TODO: Consume energy.
 			if (this.ticks % 20 == 0)
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "grinder", 0.5f, 1);
 			}
+
+			this.energy.extractEnergy(POWER / 20, true);
 		}
 	}
 
@@ -141,9 +143,9 @@ public class TileGrinderWheel extends TileElectrical
 	{
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 		{
-			return serverGrinderTimer;
+			return serverTimer;
 		}
 
-		return clientGrinderTimer;
+		return clientTimer;
 	}
 }

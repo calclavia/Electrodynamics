@@ -31,9 +31,11 @@ import resonantinduction.machine.furnace.BlockAdvancedFurnace;
 import resonantinduction.machine.furnace.TileAdvancedFurnace;
 import resonantinduction.machine.grinder.BlockGrinderWheel;
 import resonantinduction.machine.grinder.TileGrinderWheel;
+import resonantinduction.machine.grinder.TilePurifier;
 import resonantinduction.machine.item.ItemDust;
 import resonantinduction.machine.liquid.BlockFluidMixture;
 import resonantinduction.machine.liquid.TileFluidMixture;
+import resonantinduction.machine.purifier.BlockPurifier;
 import resonantinduction.transport.LinkEvent;
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.ItemBlockBattery;
@@ -165,7 +167,7 @@ public class ResonantInduction
 
 	// Blocks
 	public static Block blockTesla, blockEMContractor, blockBattery, blockAdvancedFurnace,
-			blockMachinePart, blockGrinderWheel, blockFluidMixture;
+			blockMachinePart, blockGrinderWheel, blockPurifier, blockFluidMixture;
 
 	public static Fluid MIXTURE;
 
@@ -209,6 +211,7 @@ public class ResonantInduction
 		blockBattery = new BlockBattery(getNextBlockID());
 		blockMachinePart = new BlockMachinePart(getNextBlockID());
 		blockGrinderWheel = new BlockGrinderWheel(getNextBlockID());
+		blockPurifier = new BlockPurifier(getNextBlockID());
 
 		MIXTURE = new Fluid("mixture");
 		FluidRegistry.registerFluid(MIXTURE);
@@ -228,6 +231,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
+		GameRegistry.registerBlock(blockPurifier, blockPurifier.getUnlocalizedName());
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
@@ -235,6 +239,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
 
 		// Tiles
+		GameRegistry.registerTileEntity(TilePurifier.class, blockPurifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileGrinderWheel.class, blockGrinderWheel.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());

@@ -96,7 +96,7 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 			ForgeDirection dir = this.getDirection(world, x, y, z);
 			entity.motionX += dir.offsetX * 0.1;
 			entity.motionZ += dir.offsetZ * 0.1;
-			entity.motionY += 0.3;
+			entity.motionY += 0.1;
 			entity.isAirBorne = true;
 		}
 	}
