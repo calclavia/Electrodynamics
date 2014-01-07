@@ -12,6 +12,7 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.Utility;
 import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
+import resonantinduction.transport.levitator.TileEMLevitator;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.prefab.item.ItemCoordLink;
@@ -40,7 +41,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 		TileTesla tileEntity = ((TileTesla) t).getControllingTelsa();
@@ -76,45 +77,6 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 
 				return true;
 			}
-			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
-			{
-				if (tileEntity.linked == null)
-				{
-					ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
-					VectorWorld linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
-
-					if (linkVec != null)
-					{
-						if (!world.isRemote)
-						{
-							World otherWorld = linkVec.world;
-
-							if (linkVec.getTileEntity(otherWorld) instanceof TileTesla)
-							{
-								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), linkVec.world.provider.dimensionId, true);
-
-								entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.pair").replace("%v0", this.getLocalizedName()).replace("%v1", linkVec.x + "").replace("%v2", linkVec.y + "").replace("%v3", linkVec.z + ""));
-
-								link.clearLink(entityPlayer.getCurrentEquippedItem());
-								world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
-
-								return true;
-							}
-						}
-					}
-				}
-				else
-				{
-					tileEntity.setLink(null, world.provider.dimensionId, true);
-
-					if (!world.isRemote)
-					{
-						entityPlayer.addChatMessage("Unlinked Tesla.");
-					}
-
-					return true;
-				}
-			}
 		}
 		else
 		{
@@ -124,11 +86,12 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 			{
 				entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.mode").replace("%v", receiveMode + ""));
 			}
+
 			return true;
 
 		}
 
-		return super.onBlockActivated(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+		return false;
 	}
 
 	@Override

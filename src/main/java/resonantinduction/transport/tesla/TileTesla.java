@@ -21,12 +21,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
+import resonantinduction.transport.ILinkable;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.CustomDamageSource;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileElectrical;
+import calclavia.lib.utility.LanguageUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -40,7 +43,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileTesla extends TileElectrical implements ITesla, IPacketSender, IPacketReceiver
+public class TileTesla extends TileElectrical implements ITesla, IPacketSender, IPacketReceiver, ILinkable
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final long TRANSFER_CAP = 10000;
@@ -609,5 +612,39 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean onLink(EntityPlayer player, VectorWorld vector)
+	{
+		if (linked == null)
+		{
+			if (vector != null)
+			{
+				if (!worldObj.isRemote)
+				{
+					World otherWorld = vector.world;
+
+					if (vector.getTileEntity(otherWorld) instanceof TileTesla)
+					{
+						this.setLink(new Vector3(((TileTesla) vector.getTileEntity(otherWorld)).getTopTelsa()), vector.world.provider.dimensionId, true);
+						player.addChatMessage(LanguageUtility.getLocal("message.tesla.pair").replace("%v0", this.getBlockType().getLocalizedName()).replace("%v1", vector.x + "").replace("%v2", vector.y + "").replace("%v3", vector.z + ""));
+						worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "ambient.weather.thunder", 5, 1);
+						return true;
+					}
+				}
+			}
+		}
+		else
+		{
+			this.setLink(null, worldObj.provider.dimensionId, true);
+
+			if (!worldObj.isRemote)
+			{
+				player.addChatMessage("Unlinked Tesla.");
+			}
+		}
+
+		return false;
 	}
 }

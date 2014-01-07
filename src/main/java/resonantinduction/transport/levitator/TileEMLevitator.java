@@ -22,10 +22,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.ResonantInduction;
+import resonantinduction.transport.ILinkable;
 import resonantinduction.transport.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.item.ItemCoordLink;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.InventoryUtility;
 
@@ -36,7 +39,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IPacketSender
+public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IPacketSender, ILinkable
 {
 	public static int MAX_REACH = 40;
 	public static int PUSH_DELAY = 5;
@@ -595,6 +598,27 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 	{
 		dyeID = dye;
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public boolean onLink(EntityPlayer player, VectorWorld vector)
+	{
+		if (vector != null)
+		{
+			if (vector.getTileEntity(this.worldObj) instanceof TileEMLevitator)
+			{
+				this.setLink((TileEMLevitator) vector.getTileEntity(this.worldObj), true);
+
+				if (this.worldObj.isRemote)
+				{
+					player.addChatMessage("Linked " + this.getBlockType().getLocalizedName() + " with " + " [" + (int) vector.x + ", " + (int) vector.y + ", " + (int) vector.z + "]");
+				}
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

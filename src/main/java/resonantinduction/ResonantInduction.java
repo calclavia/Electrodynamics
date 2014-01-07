@@ -34,12 +34,12 @@ import resonantinduction.machine.grinder.TileGrinderWheel;
 import resonantinduction.machine.item.ItemDust;
 import resonantinduction.machine.liquid.BlockFluidMixture;
 import resonantinduction.machine.liquid.TileFluidMixture;
+import resonantinduction.transport.LinkEvent;
 import resonantinduction.transport.battery.BlockBattery;
 import resonantinduction.transport.battery.ItemBlockBattery;
 import resonantinduction.transport.battery.TileBattery;
 import resonantinduction.transport.levitator.BlockLevitator;
 import resonantinduction.transport.levitator.ItemBlockContractor;
-import resonantinduction.transport.levitator.ItemLinker;
 import resonantinduction.transport.levitator.TileEMLevitator;
 import resonantinduction.transport.tesla.BlockTesla;
 import resonantinduction.transport.tesla.TileTesla;
@@ -154,7 +154,6 @@ public class ResonantInduction
 	/**
 	 * Transport
 	 */
-	public static Item itemLinker;
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
 	public static Item itemTransformer;
@@ -199,7 +198,6 @@ public class ResonantInduction
 		TileEMLevitator.PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", TileEMLevitator.PUSH_DELAY).getInt(TileEMLevitator.PUSH_DELAY);
 
 		// Items
-		itemLinker = new ItemLinker(getNextItemID());
 		itemPartWire = new ItemWire(getNextItemID());
 		itemMultimeter = new ItemMultimeter(getNextItemID());
 		itemTransformer = new ItemTransformer(getNextItemID());
@@ -225,7 +223,6 @@ public class ResonantInduction
 
 		CONFIGURATION.save();
 
-		GameRegistry.registerItem(itemLinker, itemLinker.getUnlocalizedName());
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
@@ -257,6 +254,7 @@ public class ResonantInduction
 		}
 
 		MinecraftForge.EVENT_BUS.register(itemDust);
+		MinecraftForge.EVENT_BUS.register(new LinkEvent());
 	}
 
 	@EventHandler
@@ -286,9 +284,6 @@ public class ResonantInduction
 		 * Recipes
 		 */
 		final ItemStack defaultWire = EnumWireMaterial.IRON.getWire();
-
-		/** Linker **/
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLinker, " E ", "GCG", " E ", 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'G', UniversalRecipe.SECONDARY_METAL.get()));
 
 		/** Tesla - by Jyzarc */
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', defaultWire, 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_PLATE.get()));

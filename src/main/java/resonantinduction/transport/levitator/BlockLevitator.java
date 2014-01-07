@@ -1,6 +1,5 @@
 package resonantinduction.transport.levitator;
 
-import calclavia.lib.prefab.item.ItemCoordLink;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -11,7 +10,6 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.ResonantInduction;
 import resonantinduction.core.base.BlockBase;
 import resonantinduction.core.render.BlockRenderingHandler;
-import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,7 +17,7 @@ public class BlockLevitator extends BlockBase implements ITileEntityProvider
 {
 	public BlockLevitator(int id)
 	{
-		super("contractor", id);
+		super("levitator", id);
 		this.setTextureName(ResonantInduction.PREFIX + "machine");
 	}
 
@@ -31,59 +29,42 @@ public class BlockLevitator extends BlockBase implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		TileEMLevitator contractor = (TileEMLevitator) world.getBlockTileEntity(par2, par3, par4);
+		TileEMLevitator levitator = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
 			if (entityPlayer.getCurrentEquippedItem().itemID == Item.dyePowder.itemID)
 			{
-				contractor.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
+				levitator.setDye(entityPlayer.getCurrentEquippedItem().getItemDamage());
 
 				if (!entityPlayer.capabilities.isCreativeMode)
 				{
 					entityPlayer.inventory.decrStackSize(entityPlayer.inventory.currentItem, 1);
 				}
+
 				return true;
 			}
-			else if (entityPlayer.getCurrentEquippedItem().getItem() instanceof ItemCoordLink)
-			{
-				ItemCoordLink link = ((ItemCoordLink) entityPlayer.getCurrentEquippedItem().getItem());
-				Vector3 linkVec = link.getLink(entityPlayer.getCurrentEquippedItem());
-
-				if (linkVec != null)
-				{
-					if (linkVec.getTileEntity(world) instanceof TileEMLevitator)
-					{
-						contractor.setLink((TileEMLevitator) linkVec.getTileEntity(world), true);
-
-						if (world.isRemote)
-						{
-							entityPlayer.addChatMessage("Linked " + this.getLocalizedName() + " with " + " [" + (int) linkVec.x + ", " + (int) linkVec.y + ", " + (int) linkVec.z + "]");
-						}
-
-						link.clearLink(entityPlayer.getCurrentEquippedItem());
-
-						return true;
-					}
-				}
-
-				return false;
-			}
 		}
 
+		levitator.suck = !levitator.suck;
+		levitator.updatePath();
+
+		return false;
+	}
+
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
 		if (!entityPlayer.isSneaking())
 		{
-			contractor.incrementFacing();
-		}
-		else
-		{
-			contractor.suck = !contractor.suck;
-			contractor.updatePath();
+			TileEMLevitator levitator = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
+			levitator.incrementFacing();
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
