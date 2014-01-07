@@ -2,7 +2,6 @@ package mffs.event;
 
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.api.ISpecialForceManipulation;
 import mffs.tile.TileForceManipulator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -39,11 +38,6 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 
 			if (newTile != null)
 			{
-				if (newTile instanceof ISpecialForceManipulation)
-				{
-					((ISpecialForceManipulation) newTile).postMove();
-				}
-
 				if (Loader.isModLoaded("BuildCraft|Factory"))
 				{
 					/**

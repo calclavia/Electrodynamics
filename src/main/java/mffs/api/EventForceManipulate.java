@@ -29,9 +29,28 @@ public abstract class EventForceManipulate extends WorldEvent
 	}
 
 	/**
-	 * Called right before the block is moved by the Force Manipulator.
+	 * Called every single time a block is checked if it can be manipulated by the Force
+	 * Manipulator.
 	 * 
 	 * @author Calclavia
+	 * 
+	 */
+	@Cancelable
+	public static class EventCheckForceManipulate extends EventForceManipulate
+	{
+		public EventCheckForceManipulate(World world, int beforeX, int beforeY, int beforeZ, int afterX, int afterY, int afterZ)
+		{
+			super(world, beforeX, beforeY, beforeZ, afterX, afterY, afterZ);
+		}
+
+	}
+
+	/**
+	 * Called right before the TileEntity is moved. After this function is called, the force
+	 * manipulator will write all TileEntity data into NBT and remove the TileEntity block. A new
+	 * TileEntity class will be instantiated after words in the new position. This can be canceled
+	 * and the
+	 * block will then not move at all.
 	 * 
 	 */
 	@Cancelable
@@ -58,5 +77,4 @@ public abstract class EventForceManipulate extends WorldEvent
 			super(world, beforeX, beforeY, beforeZ, afterX, afterY, afterZ);
 		}
 	}
-
 }

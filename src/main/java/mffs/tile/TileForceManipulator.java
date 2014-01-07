@@ -10,7 +10,7 @@ import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.Blacklist;
-import mffs.api.ISpecialForceManipulation;
+import mffs.api.EventForceManipulate.EventCheckForceManipulate;
 import mffs.api.card.ICoordLink;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IProjectorMode;
@@ -27,6 +27,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.PacketHandler;
@@ -468,15 +469,15 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			return false;
 		}
 
-		TileEntity tileEntity = position.getTileEntity();
+		EventCheckForceManipulate evt = new EventCheckForceManipulate(position.world, position.intX(), position.intY(), position.intZ(), target.intX(), target.intY(), target.intZ());
+		MinecraftForge.EVENT_BUS.post(evt);
 
-		if (tileEntity instanceof ISpecialForceManipulation)
+		if (evt.isCanceled())
 		{
-			if (!((ISpecialForceManipulation) tileEntity).preMove(position.intX(), position.intY(), position.intZ()))
-			{
-				return false;
-			}
+			return false;
 		}
+
+		TileEntity tileEntity = position.getTileEntity();
 
 		/** Check Permissions */
 		if (this.getBiometricIdentifier() != null)

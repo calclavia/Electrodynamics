@@ -1,10 +1,8 @@
 package mffs.event;
 
-import calclavia.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.api.EventForceManipulate.EventPreForceManipulate;
-import mffs.api.ISpecialForceManipulation;
 import mffs.tile.TileForceManipulator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.utility.MovementUtility;
 
 /**
  * Removes the TileEntity

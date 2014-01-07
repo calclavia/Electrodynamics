@@ -2,11 +2,13 @@ package mffs;
 
 import java.util.HashMap;
 
+import mffs.api.EventForceManipulate.EventPreForceManipulate;
 import mffs.api.EventStabilize;
 import mffs.api.fortron.FrequencyGrid;
 import mffs.api.fortron.IFortronFrequency;
 import mffs.api.security.IInterdictionMatrix;
 import mffs.api.security.Permission;
+import mffs.base.TileFortron;
 import mffs.fortron.FortronHelper;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.block.Block;
@@ -50,6 +52,17 @@ public class SubscribeEventHandler
 	public void textureHook(TextureStitchEvent.Post event)
 	{
 		FortronHelper.FLUID_FORTRON.setIcons(fluidIconMap.get(ModularForceFieldSystem.PREFIX + "fortron"));
+	}
+
+	@ForgeSubscribe
+	public void eventPreForceManipulate(EventPreForceManipulate evt)
+	{
+		TileEntity tileEntity = evt.world.getBlockTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ);
+
+		if (tileEntity instanceof TileFortron)
+		{
+			((TileFortron) tileEntity).markSendFortron = false;
+		}
 	}
 
 	/**

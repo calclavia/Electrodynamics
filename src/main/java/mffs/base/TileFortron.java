@@ -3,7 +3,6 @@ package mffs.base;
 import mffs.MFFSHelper;
 import mffs.Settings;
 import mffs.TransferMode;
-import mffs.api.ISpecialForceManipulation;
 import mffs.api.card.ICard;
 import mffs.api.fortron.FrequencyGrid;
 import mffs.api.fortron.IFortronFrequency;
@@ -26,10 +25,10 @@ import calclavia.lib.network.PacketHandler;
  * @author Calclavia
  * 
  */
-public abstract class TileFortron extends TileFrequency implements IFluidHandler, IFortronFrequency, ISpecialForceManipulation
+public abstract class TileFortron extends TileFrequency implements IFluidHandler, IFortronFrequency
 {
 	protected FluidTank fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-	private boolean markSendFortron = true;
+	public boolean markSendFortron = true;
 
 	@Override
 	public void updateEntity()
@@ -54,24 +53,6 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 			MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
 		}
 		super.invalidate();
-	}
-
-	@Override
-	public boolean preMove(int x, int y, int z)
-	{
-		return true;
-	}
-
-	@Override
-	public void move(int x, int y, int z)
-	{
-		this.markSendFortron = false;
-	}
-
-	@Override
-	public void postMove()
-	{
-
 	}
 
 	/**
