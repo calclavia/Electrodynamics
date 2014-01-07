@@ -66,9 +66,9 @@ jar {
 }
 
 repositories {
-    maven { url 'http://calclavia.com/maven/' }
+    maven { url 'file://var/www/maven/' }
 }
 dependencies {
-    compile 'universalelectricity:Universal-Electricity:+:dev'
+    compile 'universalelectricity:Universal-Electricity:3.0.+:dev'
     compile 'calclaviacore:calclavia-core:+:dev'
 }
