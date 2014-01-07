@@ -16,7 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.Utility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
-import calclavia.lib.prefab.CustomDamageSource;
+import calclavia.lib.CustomDamageSource;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;

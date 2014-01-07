@@ -14,8 +14,8 @@ import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.prefab.item.ItemCoordLink;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -71,7 +71,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 
 				if (!world.isRemote)
 				{
-					entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.toggleAttack").replace("%v", status + ""));
+					entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.toggleAttack").replace("%v", status + ""));
 				}
 
 				return true;
@@ -93,7 +93,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 							{
 								tileEntity.setLink(new Vector3(((TileTesla) linkVec.getTileEntity(otherWorld)).getTopTelsa()), linkVec.world.provider.dimensionId, true);
 
-								entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.pair").replace("%v0", this.getLocalizedName()).replace("%v1", linkVec.x + "").replace("%v2", linkVec.y + "").replace("%v3", linkVec.z + ""));
+								entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.pair").replace("%v0", this.getLocalizedName()).replace("%v1", linkVec.x + "").replace("%v2", linkVec.y + "").replace("%v3", linkVec.z + ""));
 
 								link.clearLink(entityPlayer.getCurrentEquippedItem());
 								world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "ambient.weather.thunder", 5, 1);
@@ -122,7 +122,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 
 			if (world.isRemote)
 			{
-				entityPlayer.addChatMessage(TranslationHelper.getLocal("message.tesla.mode").replace("%v", receiveMode + ""));
+				entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.mode").replace("%v", receiveMode + ""));
 			}
 			return true;
 

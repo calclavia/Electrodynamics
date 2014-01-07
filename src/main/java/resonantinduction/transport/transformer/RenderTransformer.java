@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.render.CalclaviaRenderHelper;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,7 +23,7 @@ public class RenderTransformer
 
     public static void render(PartTransformer part, double x, double y, double z)
     {
-        String status = TranslationHelper.getLocal((part.stepUp() ? "tooltip.transformer.stepUp" : "tooltip.transformer.stepDown"));
+        String status = LanguageUtility.getLocal((part.stepUp() ? "tooltip.transformer.stepUp" : "tooltip.transformer.stepDown"));
 
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         MovingObjectPosition movingPosition = player.rayTrace(5, 1f);

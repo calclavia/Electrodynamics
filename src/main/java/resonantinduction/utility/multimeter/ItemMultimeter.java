@@ -2,7 +2,7 @@ package resonantinduction.utility.multimeter;
 
 import java.util.List;
 
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,18 +47,18 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		par3List.add(TranslationHelper.getLocal("tooltip.multimeter.line1"));
-		par3List.add(TranslationHelper.getLocal("tooltip.multimeter.line2"));
+		par3List.add(LanguageUtility.getLocal("tooltip.multimeter.line1"));
+		par3List.add(LanguageUtility.getLocal("tooltip.multimeter.line2"));
 
 		float detection = this.getDetection(itemStack);
 
 		if (detection != -1)
 		{
-			par3List.add(TranslationHelper.getLocal("tooltip.multimeter.lastSave").replace("%v", detection + ""));
+			par3List.add(LanguageUtility.getLocal("tooltip.multimeter.lastSave").replace("%v", detection + ""));
 		}
 		else
 		{
-			par3List.add(TranslationHelper.getLocal("tooltip.multimeter.noSave"));
+			par3List.add(LanguageUtility.getLocal("tooltip.multimeter.noSave"));
 		}
 	}
 
@@ -69,7 +69,7 @@ public class ItemMultimeter extends ItemMultipartBase
 		{
 			if (!world.isRemote)
 			{
-				par2EntityPlayer.addChatMessage(TranslationHelper.getLocal("message.multimeter.onUse").replace("%v", "" + PartMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z))));
+				par2EntityPlayer.addChatMessage(LanguageUtility.getLocal("message.multimeter.onUse").replace("%v", "" + PartMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z))));
 			}
 
 			return true;

@@ -12,8 +12,8 @@ import resonantinduction.utility.multimeter.ContainerMultimeter;
 import resonantinduction.utility.multimeter.PartMultimeter;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.gui.GuiContainerBase;
-import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,7 +44,7 @@ public class GuiMultimeter extends GuiContainerBase
 	public void initGui()
 	{
 		super.initGui();
-		this.buttonList.add(new GuiButton(0, this.width / 2 + 20, this.height / 2 - 30, 50, 20, TranslationHelper.getLocal("gui.resonantinduction.multimeter.toggle")));
+		this.buttonList.add(new GuiButton(0, this.width / 2 + 20, this.height / 2 - 30, 50, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggle")));
 		this.textFieldLimit = new GuiTextField(fontRenderer, 35, 82, 65, 12);
 		this.textFieldLimit.setMaxStringLength(8);
 		this.textFieldLimit.setText("" + this.multimeter.getLimit());
@@ -76,14 +76,14 @@ public class GuiMultimeter extends GuiContainerBase
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		String s = TranslationHelper.getLocal("tile.resonantinduction:multimeter.name");
+		String s = LanguageUtility.getLocal("tile.resonantinduction:multimeter.name");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
-		this.fontRenderer.drawString(EnumColor.DARK_GREEN + TranslationHelper.getLocal("gui.resonantinduction.multimeter.averageEnergy"), 35, 15, 4210752);
+		this.fontRenderer.drawString(EnumColor.DARK_GREEN + LanguageUtility.getLocal("gui.resonantinduction.multimeter.averageEnergy"), 35, 15, 4210752);
 		this.renderUniversalDisplay(35, 25, this.multimeter.getAverageDetectedEnergy(), mouseX, mouseY, Unit.JOULES);
-		this.fontRenderer.drawString(EnumColor.DARK_GREEN + TranslationHelper.getLocal("gui.resonantinduction.multimeter.energy"), 35, 35, 4210752);
+		this.fontRenderer.drawString(EnumColor.DARK_GREEN + LanguageUtility.getLocal("gui.resonantinduction.multimeter.energy"), 35, 35, 4210752);
 		this.renderUniversalDisplay(35, 45, this.multimeter.getDetectedEnergy(), mouseX, mouseY, Unit.JOULES);
-		this.fontRenderer.drawString(EnumColor.ORANGE + TranslationHelper.getLocal("gui.resonantinduction.multimeter.redstone"), 35, 58, 4210752);
-		this.fontRenderer.drawString(EnumColor.RED + TranslationHelper.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 35, 68, 4210752);
+		this.fontRenderer.drawString(EnumColor.ORANGE + LanguageUtility.getLocal("gui.resonantinduction.multimeter.redstone"), 35, 58, 4210752);
+		this.fontRenderer.drawString(EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 35, 68, 4210752);
 		this.fontRenderer.drawString(Unit.JOULES.name + "(s)", 35, 100, 4210752);
 
 		this.textFieldLimit.drawTextBox();

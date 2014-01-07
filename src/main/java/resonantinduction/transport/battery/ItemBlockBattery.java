@@ -2,9 +2,8 @@ package resonantinduction.transport.battery;
 
 import java.util.List;
 
-import calclavia.lib.prefab.TranslationHelper;
 import calclavia.lib.render.EnumColor;
-
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -49,7 +48,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 			color = "\u00a76";
 		}
 
-		list.add(TranslationHelper.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", UnitDisplay.getDisplayShort(joules, Unit.JOULES)).replace("%v1", UnitDisplay.getDisplayShort(this.getEnergyCapacity(itemStack), Unit.JOULES)));
+		list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", UnitDisplay.getDisplayShort(joules, Unit.JOULES)).replace("%v1", UnitDisplay.getDisplayShort(this.getEnergyCapacity(itemStack), Unit.JOULES)));
 	}
 
 	@Override

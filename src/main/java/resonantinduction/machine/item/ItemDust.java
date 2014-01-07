@@ -28,8 +28,8 @@ import resonantinduction.api.MachineRecipes;
 import resonantinduction.api.MachineRecipes.RecipeType;
 import resonantinduction.api.OreDetectionBlackList;
 import resonantinduction.core.base.ItemBase;
-import calclavia.lib.Calclavia;
-import calclavia.lib.prefab.TranslationHelper;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.NBTUtility;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -58,8 +58,8 @@ public class ItemDust extends ItemBase
 		String dustName = getDustFromStack(is);
 		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
 
-		String name = type.getDisplayName().replace(TranslationHelper.getLocal("misc.resonantinduction.ingot"), "");
-		return (TranslationHelper.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
+		String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "");
+		return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
 	}
 
 	@ForgeSubscribe
@@ -192,14 +192,14 @@ public class ItemDust extends ItemBase
 	public static ItemStack getStackFromDust(String name)
 	{
 		ItemStack itemStack = new ItemStack(ResonantInduction.itemDust);
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setString("name", name);
 		return itemStack;
 	}
 
 	public static String getDustFromStack(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = Calclavia.getNBTTagCompound(itemStack);
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
 		if (nbt.hasKey("name"))
 		{

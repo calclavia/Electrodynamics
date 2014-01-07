@@ -23,9 +23,9 @@ import resonantinduction.ResonantInduction;
 import resonantinduction.api.ITesla;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.CustomDamageSource;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.CustomDamageSource;
 import calclavia.lib.prefab.tile.TileElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
