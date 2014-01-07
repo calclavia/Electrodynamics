@@ -327,7 +327,7 @@ public class ModularForceFieldSystem
 		metadata.modId = ID;
 		metadata.name = NAME;
 		metadata.description = "Modular Force Field System is a mod that adds force fields, high tech machinery and defensive measures to Minecraft.";
-		metadata.url = "http://www.universalelectricity.com/mffs/";
+		metadata.url = "http://www.calclavia.com/mffs/";
 		metadata.logoFile = "/mffs_logo.png";
 		metadata.version = VERSION + "." + BUILD_VERSION;
 		metadata.authorList = Arrays.asList(new String[] { "Calclavia" });

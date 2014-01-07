@@ -63,9 +63,6 @@ jar {
     dependsOn copyBuildXml
     classifier = ''
     destinationDir = file 'output'
-	include('mffs/**')
-	include('assets/**')
-	include('*.png')
 }
 
 repositories {
