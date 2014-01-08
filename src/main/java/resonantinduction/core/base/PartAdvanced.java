@@ -1,5 +1,6 @@
 package resonantinduction.core.base;
 
+import net.minecraft.world.World;
 import codechicken.multipart.TMultiPart;
 
 public abstract class PartAdvanced extends TMultiPart
@@ -27,5 +28,10 @@ public abstract class PartAdvanced extends TMultiPart
 	 */
 	public void initiate()
 	{
+	}
+
+	public World getWorld()
+	{
+		return world();
 	}
 }
