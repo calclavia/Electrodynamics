@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.mechanics.generator.TileEntityGenerator;
+import resonantinduction.mechanics.generator.TileGenerator;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -168,7 +168,7 @@ public class ItemReadoutTools extends ItemBasic
 						}
 						if (tileEntity instanceof TileEntityEnergyMachine)
 						{
-							if (tileEntity instanceof TileEntityGenerator)
+							if (tileEntity instanceof TileGenerator)
 							{
 								player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(((TileEntityEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
 							}

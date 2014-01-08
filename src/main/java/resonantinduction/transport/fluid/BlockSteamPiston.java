@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.blocks.BlockHydraulic;
-import resonantinduction.mechanics.generator.TileEntitySteamPiston;
+import resonantinduction.mechanics.generator.steam.TileEntitySteamPiston;
 
 import com.builtbroken.common.Pair;
 

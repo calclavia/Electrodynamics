@@ -14,9 +14,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.client.render.BlockRenderHelper;
-import resonantinduction.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.fluid.pipes.ItemBlockPipe;
-import resonantinduction.fluid.pipes.TileEntityPipe;
+import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.transport.fluid.pipes.ItemBlockPipe;
+import resonantinduction.transport.fluid.pipes.TileEntityPipe;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;

@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import resonantinduction.energy.battery.ContainerBatteryBox;
 import resonantinduction.energy.battery.TileBatteryBox;
 import resonantinduction.mechanics.generator.ContainerCoalGenerator;
-import resonantinduction.mechanics.generator.TileEntitySteamGen;
+import resonantinduction.mechanics.generator.steam.TileEntitySteamGen;
 import resonantinduction.mechanics.processor.ContainerProcessor;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
 import resonantinduction.transport.encoder.ContainerEncoder;

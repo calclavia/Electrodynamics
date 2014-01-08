@@ -11,10 +11,10 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.client.model.ModelLargePipe;
 import resonantinduction.client.model.ModelOpenTrough;
-import resonantinduction.fluid.pipes.EnumPipeType;
-import resonantinduction.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.fluid.pipes.TileEntityPipe;
 import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.transport.fluid.pipes.EnumPipeType;
+import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.transport.fluid.pipes.TileEntityPipe;
 
 import com.builtbroken.common.Pair;
 

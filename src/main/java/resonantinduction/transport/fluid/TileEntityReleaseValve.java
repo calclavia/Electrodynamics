@@ -7,8 +7,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkPipe;
-import resonantinduction.fluid.network.NetworkPipes;
-import resonantinduction.fluid.prefab.TileEntityFluidDevice;
+import resonantinduction.transport.fluid.network.NetworkPipes;
+import resonantinduction.transport.fluid.prefab.TileEntityFluidDevice;
 
 import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.interfaces.IToolReadOut;

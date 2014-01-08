@@ -7,7 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import resonantinduction.client.model.ModelTurkey;
-import resonantinduction.misc.EntityTurkey;
+import resonantinduction.core.misc.EntityTurkey;
 import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

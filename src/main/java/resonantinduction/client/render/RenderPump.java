@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.client.model.ModelPump;
-import resonantinduction.fluid.pump.TileEntityStarterPump;
 import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.transport.fluid.pump.TileEntityStarterPump;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

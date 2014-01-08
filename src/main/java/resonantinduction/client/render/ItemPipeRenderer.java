@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.client.model.ModelReleaseValve;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

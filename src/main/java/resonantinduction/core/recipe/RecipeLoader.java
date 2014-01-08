@@ -11,12 +11,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.blocks.BlockBasalt;
+import resonantinduction.core.misc.EnumTool;
 import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts.Parts;
-import resonantinduction.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.mechanics.processor.BlockProcessor;
-import resonantinduction.tool.EnumTool;
 import resonantinduction.transport.crate.BlockCrate;
+import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
 
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;

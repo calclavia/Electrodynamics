@@ -8,8 +8,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.network.ISimplePacketReceiver;
-import resonantinduction.fluid.prefab.TileEntityFluidStorage;
 import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.transport.fluid.prefab.TileEntityFluidStorage;
 import calclavia.lib.network.PacketHandler;
 
 import com.builtbroken.minecraft.helpers.ColorCode;

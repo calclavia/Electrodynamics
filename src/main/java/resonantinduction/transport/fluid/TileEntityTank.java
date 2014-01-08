@@ -3,8 +3,8 @@ package resonantinduction.transport.fluid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.fluid.INetworkFluidPart;
-import resonantinduction.fluid.network.NetworkFluidContainers;
-import resonantinduction.fluid.prefab.TileEntityFluidNetworkTile;
+import resonantinduction.transport.fluid.network.NetworkFluidContainers;
+import resonantinduction.transport.fluid.prefab.TileEntityFluidNetworkTile;
 
 import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 import com.builtbroken.minecraft.tilenetwork.ITileNetwork;

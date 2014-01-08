@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.client.model.ModelLaserTile;
-import resonantinduction.mechanics.mining.TileMiningLaser;
+import resonantinduction.mechanics.machine.mining.TileMiningLaser;
 import resonantinduction.transport.ResonantInductionTransport;
 
 /** @author Darkguardsman */

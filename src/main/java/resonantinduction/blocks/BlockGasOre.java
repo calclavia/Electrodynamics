@@ -20,8 +20,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.fluid.EnumGas;
 import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.transport.fluid.EnumGas;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.DarkCore;
