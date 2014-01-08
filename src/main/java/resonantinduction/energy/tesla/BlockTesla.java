@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import resonantinduction.core.Utility;
 import resonantinduction.core.base.BlockIOBase;
 import resonantinduction.core.render.BlockRenderingHandler;
@@ -29,7 +29,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 	public BlockTesla(int id)
 	{
 		super("tesla", id);
-		this.setTextureName(ResonantInduction.PREFIX + "machine");
+		this.setTextureName(Reference.PREFIX + "machine");
 	}
 
 	@Override

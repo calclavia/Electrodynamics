@@ -1,4 +1,4 @@
-package resonantinduction.energy;
+package resonantinduction.core;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,12 +39,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(ResonantInductionEnergy.itemMultimeter.itemID, RenderRIItem.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(ResonantInductionEnergy.itemTransformer.itemID, RenderRIItem.INSTANCE);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
+		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 	}
 
 	@Override
@@ -53,29 +48,27 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
+	public boolean isPaused()
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileMultipart)
+		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
 		{
-			TMultiPart part = ((TileMultipart) tileEntity).partMap(id);
+			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
 
-			if (part instanceof PartMultimeter)
+			if (screen != null)
 			{
-				return new GuiMultimeter(player.inventory, (PartMultimeter) part);
+				if (screen.doesGuiPauseGame())
+				{
+					return true;
+				}
 			}
 		}
 
-		return null;
+		return false;
 	}
 
 	@Override
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
+	public boolean isFancy()
 	{
-		if (world.isRemote)
-		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b));
-		}
+		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
 	}
 }

@@ -30,6 +30,7 @@ import resonantinduction.Reference;
 import resonantinduction.core.multimeter.ItemMultimeter;
 import resonantinduction.energy.CommonProxy;
 import resonantinduction.energy.LinkEvent;
+import resonantinduction.energy.ResonantInductionEnergy;
 import resonantinduction.energy.battery.BlockBattery;
 import resonantinduction.energy.battery.ItemBlockBattery;
 import resonantinduction.energy.battery.TileBattery;
@@ -102,26 +103,6 @@ public class ResonantInduction
 	public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
 
 	/**
-	 * Directory Information
-	 */
-	public static final String DOMAIN = "resonantinduction";
-	public static final String PREFIX = DOMAIN + ":";
-	public static final String DIRECTORY = "/assets/" + DOMAIN + "/";
-	public static final String TEXTURE_DIRECTORY = "textures/";
-	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-	public static final String BLOCK_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-	public static final String ITEM_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-
-	public static final String MODEL_PATH = "models/";
-
-	public static final String MODEL_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + MODEL_PATH;
-	public static final String MODEL_DIRECTORY = DIRECTORY + MODEL_PATH;
-
-	public static final String LANGUAGE_DIRECTORY = DIRECTORY + "languages/";
-	public static final String[] LANGUAGES = new String[] { "en_US", "de_DE" };
-
-	
-	/**
 	 * Packets
 	 */
 	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
@@ -131,22 +112,23 @@ public class ResonantInduction
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
-		LOGGER.setParent(FMLLog.getLogger());
+		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
 		Modstats.instance().getReporter().registerMod(this);
 
 		/**
 		 * Set reference itemstacks
 		 */
-		ResonantInductionTabs.ITEMSTACK = new ItemStack(null);
+		//ResonantInductionTabs.ITEMSTACK = new ItemStack(null);
 		MinecraftForge.EVENT_BUS.register(new LinkEvent());
+		Settings.init();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(LANGUAGE_DIRECTORY, LANGUAGES));
-		// TODO localize this
+		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
+		
 		metadata.modId = ID;
 		metadata.name = Reference.NAME;
 		metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");

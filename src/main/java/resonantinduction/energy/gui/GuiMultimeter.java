@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import resonantinduction.core.multimeter.ContainerMultimeter;
 import resonantinduction.core.multimeter.PartMultimeter;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -37,7 +37,7 @@ public class GuiMultimeter extends GuiContainerBase
 		super(new ContainerMultimeter(inventoryPlayer, tileEntity));
 		this.multimeter = tileEntity;
 		this.ySize = 217;
-		this.baseTexture = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.GUI_DIRECTORY + "gui_multimeter.png");
+		this.baseTexture = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_multimeter.png");
 	}
 
 	@Override

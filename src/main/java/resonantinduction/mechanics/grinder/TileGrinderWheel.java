@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import resonantinduction.core.api.MachineRecipes;
 import resonantinduction.core.api.MachineRecipes.RecipeType;
 import resonantinduction.core.api.RecipeUtils.ItemStackResource;
@@ -100,7 +100,7 @@ public class TileGrinderWheel extends TileElectrical
 		{
 			if (this.ticks % 20 == 0)
 			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "grinder", 0.5f, 1);
+				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
 			}
 
 			this.energy.extractEnergy(POWER / 20, true);

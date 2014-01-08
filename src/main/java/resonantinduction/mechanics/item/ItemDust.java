@@ -1,36 +1,23 @@
 package resonantinduction.mechanics.item;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.api.MachineRecipes;
 import resonantinduction.core.api.OreDetectionBlackList;
-import resonantinduction.core.api.MachineRecipes.RecipeType;
 import resonantinduction.core.base.ItemBase;
+import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.NBTUtility;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -42,14 +29,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemDust extends ItemBase
 {
-	public static final Set<String> materialNames = new HashSet<String>();
 	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
-	public static final HashMap<String, Integer> ingotColors = new HashMap<String, Integer>();
-
 	public ItemDust(int id)
 	{
 		super("dust", id);
-		this.setTextureName(ResonantInduction.PREFIX + "dust");
+		this.setTextureName(Reference.PREFIX + "dust");
 	}
 
 	@Override
@@ -72,7 +56,7 @@ public class ItemDust extends ItemBase
 			if (OreDetectionBlackList.isIngotBlackListed("ingot" + ingotName) || OreDetectionBlackList.isOreBlackListed("ore" + ingotName))
 				return;
 
-			materialNames.add(ingotName.toLowerCase());
+			ResourceGenerator.materialNames.add(ingotName.toLowerCase());
 		}
 	}
 
@@ -80,113 +64,7 @@ public class ItemDust extends ItemBase
 	@SideOnly(Side.CLIENT)
 	public void reloadTextures(TextureStitchEvent.Post e)
 	{
-		computeColors();
-	}
-
-	public static void generateDusts()
-	{
-		for (String materialName : materialNames)
-		{
-			String name = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
-
-			if (OreDictionary.getOres("ore" + name).size() > 0)
-			{
-				if (OreDictionary.getOres("dust" + name).size() == 0)
-				{
-					dusts.add(getStackFromDust(materialName));
-					OreDictionary.registerOre("dust" + name, getStackFromDust(materialName));
-
-				}
-
-				// Add to machine recipes
-
-				ItemStack dust = OreDictionary.getOres("dust" + name).get(0).copy();
-				dust.stackSize = 2;
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, dust);
-			}
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void computeColors()
-	{
-		for (String ingotName : materialNames)
-		{
-			LinkedList<Integer> colorCodes = new LinkedList<Integer>();
-
-			// Compute color
-			int totalR = 0;
-			int totalG = 0;
-			int totalB = 0;
-
-			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1)))
-			{
-
-				Item theIngot = ingotStack.getItem();
-
-				Method o = ReflectionHelper.findMethod(Item.class, theIngot, new String[] { "getIconString", "func_" + "111208_A" });
-				String iconString;
-
-				try
-				{
-					iconString = (String) o.invoke(theIngot);
-				}
-				catch (ReflectiveOperationException e1)
-				{
-					// e1.printStackTrace();
-					break;
-				}
-
-				ResourceLocation textureLocation = new ResourceLocation(iconString.replace(":", ":" + ResonantInduction.ITEM_TEXTURE_DIRECTORY) + ".png");
-				InputStream inputstream;
-				try
-				{
-					inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
-
-					BufferedImage bufferedimage = ImageIO.read(inputstream);
-
-					int width = bufferedimage.getWidth();
-					int height = bufferedimage.getWidth();
-
-					for (int x = 0; x < width; x++)
-					{
-						for (int y = 0; y < height; y++)
-						{
-							colorCodes.add(bufferedimage.getRGB(x, y));
-						}
-					}
-				}
-				catch (IOException e)
-				{
-					// e.printStackTrace();
-				}
-			}
-			if (colorCodes.size() > 0)
-			{
-				for (int colorCode : colorCodes)
-				{
-					Color color = new Color(colorCode);
-
-					if (color.getAlpha() != 0)
-					{
-						totalR += color.getRed();
-						totalG += color.getGreen();
-						totalB += color.getBlue();
-					}
-				}
-
-				totalR /= colorCodes.size();
-				totalG /= colorCodes.size();
-				totalB /= colorCodes.size();
-
-				int resultantColor = new Color(totalR, totalG, totalB).brighter().brighter().getRGB();
-				ingotColors.put(ingotName, resultantColor);
-			}
-			if (!ingotColors.containsKey(ingotName))
-			{
-				ingotColors.put(ingotName, 0xFFFFFF);
-			}
-		}
+		ResourceGenerator.computeColors();
 	}
 
 	public static ItemStack getStackFromDust(String name)
@@ -225,9 +103,9 @@ public class ItemDust extends ItemBase
 		 */
 		String name = this.getDustFromStack(itemStack);
 
-		if (ingotColors.containsKey(name))
+		if (ResourceGenerator.materialColors.containsKey(name))
 		{
-			return ingotColors.get(name);
+			return ResourceGenerator.materialColors.get(name);
 		}
 
 		return 16777215;

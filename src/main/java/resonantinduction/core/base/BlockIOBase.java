@@ -5,6 +5,7 @@ package resonantinduction.core.base;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import calclavia.lib.prefab.block.BlockSidedIO;
@@ -19,8 +20,8 @@ public class BlockIOBase extends BlockSidedIO
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
 		this.setCreativeTab(ResonantInductionTabs.CORE);
-		this.setUnlocalizedName(ResonantInduction.PREFIX + name);
-		this.setTextureName(ResonantInduction.PREFIX + name);
+		this.setUnlocalizedName(Reference.PREFIX + name);
+		this.setTextureName(Reference.PREFIX + name);
 		this.setHardness(1f);
 	}
 }

@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Utility;
@@ -40,7 +41,7 @@ public class ItemWire extends JItemMultiPart
 	public ItemWire(int id)
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
-		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
+		this.setUnlocalizedName(Reference.PREFIX + "wire");
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -122,12 +123,12 @@ public class ItemWire extends JItemMultiPart
 	{
 		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
-			icons[material.ordinal()] = register.registerIcon(ResonantInduction.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
+			icons[material.ordinal()] = register.registerIcon(Reference.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
 		}
 
-		RenderFlatWire.flatWireTexture = register.registerIcon(ResonantInduction.PREFIX + "models/flatWire");
-		RenderPartWire.wireIcon = register.registerIcon(ResonantInduction.PREFIX + "models/wire");
-		RenderPartWire.insulationIcon = register.registerIcon(ResonantInduction.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
+		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
+		RenderPartWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
+		RenderPartWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation" + (ResonantInduction.LO_FI_INSULATION ? "tiny" : ""));
 	}
 
 	@Override

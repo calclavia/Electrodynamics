@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import resonantinduction.core.base.BlockBase;
 import resonantinduction.core.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -18,7 +18,7 @@ public class BlockLevitator extends BlockBase implements ITileEntityProvider
 	public BlockLevitator(int id)
 	{
 		super("levitator", id);
-		this.setTextureName(ResonantInduction.PREFIX + "machine");
+		this.setTextureName(Reference.PREFIX + "machine");
 	}
 
 	@SideOnly(Side.CLIENT)

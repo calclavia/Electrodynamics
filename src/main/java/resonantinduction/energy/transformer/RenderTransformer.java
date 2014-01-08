@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.CalclaviaRenderHelper;
 import calclavia.lib.utility.LanguageUtility;
@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderTransformer
 {
     public static final ModelTransformer MODEL = new ModelTransformer();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "transformer.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "transformer.png");
 
     public static void render(PartTransformer part, double x, double y, double z)
     {

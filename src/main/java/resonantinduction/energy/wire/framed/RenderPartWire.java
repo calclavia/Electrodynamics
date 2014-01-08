@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.render.InvertX;
 import codechicken.lib.colour.Colour;
@@ -33,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPartWire
 {
-	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "white.png");
+	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "white.png");
 	public static final Map<String, CCModel> models;
 	public static final Map<String, CCModel> shinyModels;
 	public static Icon wireIcon;
@@ -133,8 +134,8 @@ public class RenderPartWire
 
 	public static void registerIcons(IconRegister iconReg)
 	{
-		lainWireIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "models/lainWire");
-		breakIcon = iconReg.registerIcon(ResonantInduction.PREFIX + "wire");
+		lainWireIcon = iconReg.registerIcon(Reference.PREFIX + "models/lainWire");
+		breakIcon = iconReg.registerIcon(Reference.PREFIX + "wire");
 	}
 
 	public void renderStatic(PartFramedWire wire)

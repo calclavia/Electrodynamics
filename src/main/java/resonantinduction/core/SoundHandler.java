@@ -3,6 +3,7 @@
  */
 package resonantinduction.core;
 
+import resonantinduction.Reference;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import cpw.mods.fml.relauncher.Side;
@@ -24,7 +25,7 @@ public class SoundHandler
 	{
 		for (int i = 0; i < SOUND_FILES.length; i++)
 		{
-			event.manager.addSound(ResonantInduction.PREFIX + SOUND_FILES[i]);
+			event.manager.addSound(Reference.PREFIX + SOUND_FILES[i]);
 		}
 
 		ResonantInduction.LOGGER.fine("Loaded sound fxs");

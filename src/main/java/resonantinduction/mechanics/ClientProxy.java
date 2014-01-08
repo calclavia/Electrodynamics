@@ -1,4 +1,4 @@
-package resonantinduction.energy;
+package resonantinduction.mechanics;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,11 +40,6 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(ResonantInductionEnergy.itemMultimeter.itemID, RenderRIItem.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(ResonantInductionEnergy.itemTransformer.itemID, RenderRIItem.INSTANCE);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 	}
 
 	@Override
@@ -68,6 +63,31 @@ public class ClientProxy extends CommonProxy
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean isPaused()
+	{
+		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
+		{
+			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
+
+			if (screen != null)
+			{
+				if (screen.doesGuiPauseGame())
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isFancy()
+	{
+		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
 	}
 
 	@Override

@@ -45,6 +45,7 @@ import resonantinduction.blocks.BlockOre;
 import resonantinduction.blocks.GasOreGenerator;
 import resonantinduction.blocks.ItemBlockColored;
 import resonantinduction.blocks.BlockOre.OreData;
+import resonantinduction.core.Settings;
 import resonantinduction.core.debug.BlockDebug;
 import resonantinduction.core.multimeter.ItemReadoutTools;
 import resonantinduction.core.network.PacketIDTile;
@@ -89,6 +90,9 @@ import resonantinduction.transport.fluid.ItemFluidCan;
 import resonantinduction.transport.hopper.BlockAdvancedHopper;
 import resonantinduction.transport.imprinter.BlockImprinter;
 import resonantinduction.transport.imprinter.ItemImprinter;
+import resonantinduction.transport.levitator.BlockLevitator;
+import resonantinduction.transport.levitator.ItemBlockContractor;
+import resonantinduction.transport.levitator.TileEMLevitator;
 import resonantinduction.transport.logistic.BlockDetector;
 import resonantinduction.transport.logistic.BlockManipulator;
 import resonantinduction.transport.logistic.BlockRejector;
@@ -132,268 +136,274 @@ import cpw.mods.fml.relauncher.Side;
 @NetworkMod(channels = { ResonantInductionTransport.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class ResonantInductionTransport
 {
-    public static final String TEXTURE_DIRECTORY = "textures/";
-    public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-    public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-    public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-    public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-    public static final String CHANNEL = "ALChannel";
+	public static final String TEXTURE_DIRECTORY = "textures/";
+	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
+	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+	public static final String CHANNEL = "ALChannel";
 
-    // @Mod
-    public static final String MOD_ID = "AssemblyLine";
-    public static final String MOD_NAME = "Assembly Line";
+	// @Mod
+	public static final String MOD_ID = "AssemblyLine";
+	public static final String MOD_NAME = "Assembly Line";
 
-    public static final String DOMAIN = "al";
-    public static final String PREFIX = DOMAIN + ":";
+	public static final String DOMAIN = "al";
+	public static final String PREFIX = DOMAIN + ":";
 
-    public static String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
-    public static String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
-    public static String LANGUAGE_PATH = DIRECTORY + "languages/";
-    public static String SOUND_PATH = DIRECTORY + "audio/";
+	public static String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
+	public static String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
+	public static String LANGUAGE_PATH = DIRECTORY + "languages/";
+	public static String SOUND_PATH = DIRECTORY + "audio/";
 
-    @SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide = "com.builtbroken.assemblyline.CommonProxy")
-    public static CommonProxy proxy;
+	@SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide = "com.builtbroken.assemblyline.CommonProxy")
+	public static CommonProxy proxy;
 
-    @Instance(ResonantInductionTransport.MOD_ID)
-    public static ResonantInductionTransport instance;
+	@Instance(ResonantInductionTransport.MOD_ID)
+	public static ResonantInductionTransport instance;
 
-    @Metadata(ResonantInductionTransport.MOD_ID)
-    public static ModMetadata meta;
+	@Metadata(ResonantInductionTransport.MOD_ID)
+	public static ModMetadata meta;
 
-    private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
+	private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US", "de_DE" };
 
-    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "AssemblyLine.cfg"));
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "AssemblyLine.cfg"));
 
-    public static Logger FMLog = Logger.getLogger(ResonantInductionTransport.MOD_NAME);
+	public static Logger FMLog = Logger.getLogger(ResonantInductionTransport.MOD_NAME);
 
-    public static boolean VINALLA_RECIPES = false;
+	public static boolean VINALLA_RECIPES = false;
 
-    public static int entitiesIds = 60;
+	public static int entitiesIds = 60;
 
-    private static PacketIDTile tilePacket;
+	private static PacketIDTile tilePacket;
 
-    public static PacketIDTile getTilePacket()
-    {
-        if (tilePacket == null)
-        {
-            tilePacket = new PacketIDTile(ResonantInductionTransport.CHANNEL);
-        }
-        return tilePacket;
-    }
+	public static Block blockEMContractor;
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        CONFIGURATION.load();
-        FMLog.setParent(FMLLog.getLogger());
+	public static PacketIDTile getTilePacket()
+	{
+		if (tilePacket == null)
+		{
+			tilePacket = new PacketIDTile(ResonantInductionTransport.CHANNEL);
+		}
+		return tilePacket;
+	}
 
-        DarkCore.instance().preLoad();
-        Modstats.instance().getReporter().registerMod(this);
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new FluidHelper());
-        MinecraftForge.EVENT_BUS.register(SaveManager.instance());
-        TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
-        TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(ResonantInductionTransport.CHANNEL), Side.CLIENT);
-        MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
-        NetworkRegistry.instance().registerGuiHandler(this, proxy);
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		CONFIGURATION.load();
+		
+		blockEMContractor = new BlockLevitator(Settings.getNextBlockID());
+		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 
-        TaskRegistry.registerCommand(new TaskDrop());
-        TaskRegistry.registerCommand(new TaskGive());
-        TaskRegistry.registerCommand(new TaskTake());
-        TaskRegistry.registerCommand(new TaskGrabItem());
-        TaskRegistry.registerCommand(new TaskGrabEntity());
-        TaskRegistry.registerCommand(new TaskRotateBy());
-        TaskRegistry.registerCommand(new TaskRotateTo());
-        TaskRegistry.registerCommand(new TaskUse());
-        TaskRegistry.registerCommand(new TaskIF());
-        TaskRegistry.registerCommand(new TaskGOTO());
-        TaskRegistry.registerCommand(new TaskReturn());
-        TaskRegistry.registerCommand(new TaskEnd());
-        TaskRegistry.registerCommand(new TaskFire());
-        TaskRegistry.registerCommand(new TaskHarvest());
-        TaskRegistry.registerCommand(new TaskPlace());
-        TaskRegistry.registerCommand(new TaskBreak());
-        TaskRegistry.registerCommand(new TaskStart());
-        TaskRegistry.registerCommand(new TaskIdle());
+		DarkCore.instance().preLoad();
+		Modstats.instance().getReporter().registerMod(this);
+		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new FluidHelper());
+		MinecraftForge.EVENT_BUS.register(SaveManager.instance());
+		TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
+		TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(ResonantInductionTransport.CHANNEL), Side.CLIENT);
+		MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
+		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
-        this.registerObjects();
-        proxy.preInit();
-    }
+		TaskRegistry.registerCommand(new TaskDrop());
+		TaskRegistry.registerCommand(new TaskGive());
+		TaskRegistry.registerCommand(new TaskTake());
+		TaskRegistry.registerCommand(new TaskGrabItem());
+		TaskRegistry.registerCommand(new TaskGrabEntity());
+		TaskRegistry.registerCommand(new TaskRotateBy());
+		TaskRegistry.registerCommand(new TaskRotateTo());
+		TaskRegistry.registerCommand(new TaskUse());
+		TaskRegistry.registerCommand(new TaskIF());
+		TaskRegistry.registerCommand(new TaskGOTO());
+		TaskRegistry.registerCommand(new TaskReturn());
+		TaskRegistry.registerCommand(new TaskEnd());
+		TaskRegistry.registerCommand(new TaskFire());
+		TaskRegistry.registerCommand(new TaskHarvest());
+		TaskRegistry.registerCommand(new TaskPlace());
+		TaskRegistry.registerCommand(new TaskBreak());
+		TaskRegistry.registerCommand(new TaskStart());
+		TaskRegistry.registerCommand(new TaskIdle());
 
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        DarkCore.instance().Load();
+		this.registerObjects();
+		proxy.preInit();
+	}
 
-        FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
+	@EventHandler
+	public void init(FMLInitializationEvent event)
+	{
+		DarkCore.instance().Load();
 
-        for (EnumGas gas : EnumGas.values())
-        {
-            FluidRegistry.registerFluid(gas.getGas());
-        }
-        if (RecipeLoader.blockGas != null)
-        {
-            EnumGas.NATURAL_GAS.getGas().setBlockID(RecipeLoader.blockGas);
-        }
-        if (RecipeLoader.blockGas != null)
-        {
-            GameRegistry.registerWorldGenerator(new GasOreGenerator());
-        }
-        if (RecipeLoader.blockOre != null)
-        {
-            for (OreData data : OreData.values())
-            {
-                if (data.doWorldGen)
-                {
-                    OreGenReplaceStone gen = data.getGeneratorSettings();
-                    if (gen != null)
-                    {
-                        OreGenerator.addOre(gen);
-                    }
-                }
-            }
-        }
-        if (RecipeLoader.itemParts != null)
-        {
-            for (Parts part : Parts.values())
-            {
-                OreDictionary.registerOre(part.name, new ItemStack(RecipeLoader.itemParts, 1, part.ordinal()));
-            }
-        }
-        proxy.init();
-    }
+		FMLog.info("Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " languages.");
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        DarkCore.instance().postLoad();
-        proxy.postInit();
-        RecipeLoader.instance().loadRecipes();
-        CONFIGURATION.save();
-    }
+		for (EnumGas gas : EnumGas.values())
+		{
+			FluidRegistry.registerFluid(gas.getGas());
+		}
+		if (RecipeLoader.blockGas != null)
+		{
+			EnumGas.NATURAL_GAS.getGas().setBlockID(RecipeLoader.blockGas);
+		}
+		if (RecipeLoader.blockGas != null)
+		{
+			GameRegistry.registerWorldGenerator(new GasOreGenerator());
+		}
+		if (RecipeLoader.blockOre != null)
+		{
+			for (OreData data : OreData.values())
+			{
+				if (data.doWorldGen)
+				{
+					OreGenReplaceStone gen = data.getGeneratorSettings();
+					if (gen != null)
+					{
+						OreGenerator.addOre(gen);
+					}
+				}
+			}
+		}
+		if (RecipeLoader.itemParts != null)
+		{
+			for (Parts part : Parts.values())
+			{
+				OreDictionary.registerOre(part.name, new ItemStack(RecipeLoader.itemParts, 1, part.ordinal()));
+			}
+		}
+		proxy.init();
+	}
 
-    /** Separated method for registering & creating objects */
-    public void registerObjects()
-    {
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		DarkCore.instance().postLoad();
+		proxy.postInit();
+		RecipeLoader.instance().loadRecipes();
+		CONFIGURATION.save();
+	}
 
-        /* BLOCKS */
-        RecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", ResonantInductionTransport.MOD_ID, BlockConveyorBelt.class);
-        RecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", ResonantInductionTransport.MOD_ID, BlockManipulator.class);
-        RecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", ResonantInductionTransport.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
-        RecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", ResonantInductionTransport.MOD_ID, BlockImprinter.class);
-        RecipeLoader.blockDetector = CoreRegistry.createNewBlock("Detector", ResonantInductionTransport.MOD_ID, BlockDetector.class);
+	/** Separated method for registering & creating objects */
+	public void registerObjects()
+	{
 
-        RecipeLoader.blockRejector = CoreRegistry.createNewBlock("Rejector", ResonantInductionTransport.MOD_ID, BlockRejector.class);
-        RecipeLoader.blockEncoder = CoreRegistry.createNewBlock("Encoder", ResonantInductionTransport.MOD_ID, BlockEncoder.class);
-        RecipeLoader.blockArmbot = CoreRegistry.createNewBlock("Armbot", ResonantInductionTransport.MOD_ID, BlockArmbot.class);
-        RecipeLoader.blockTurntable = CoreRegistry.createNewBlock("Turntable", ResonantInductionTransport.MOD_ID, BlockTurntable.class);
-        RecipeLoader.processorMachine = CoreRegistry.createNewBlock("ALBlockProcessor", ResonantInductionTransport.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+		/* BLOCKS */
+		RecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", ResonantInductionTransport.MOD_ID, BlockConveyorBelt.class);
+		RecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", ResonantInductionTransport.MOD_ID, BlockManipulator.class);
+		RecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", ResonantInductionTransport.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
+		RecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", ResonantInductionTransport.MOD_ID, BlockImprinter.class);
+		RecipeLoader.blockDetector = CoreRegistry.createNewBlock("Detector", ResonantInductionTransport.MOD_ID, BlockDetector.class);
 
-        RecipeLoader.blockAdvancedHopper = CoreRegistry.createNewBlock("ALBlockHopper", ResonantInductionTransport.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
-        RecipeLoader.blockPipe = CoreRegistry.createNewBlock("FMBlockPipe", ResonantInductionTransport.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
-        RecipeLoader.blockPumpMachine = CoreRegistry.createNewBlock("FMBlockPump", ResonantInductionTransport.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
-        RecipeLoader.blockReleaseValve = CoreRegistry.createNewBlock("FMBlockReleaseValve", ResonantInductionTransport.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
-        RecipeLoader.blockTank = CoreRegistry.createNewBlock("FMBlockTank", ResonantInductionTransport.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+		RecipeLoader.blockRejector = CoreRegistry.createNewBlock("Rejector", ResonantInductionTransport.MOD_ID, BlockRejector.class);
+		RecipeLoader.blockEncoder = CoreRegistry.createNewBlock("Encoder", ResonantInductionTransport.MOD_ID, BlockEncoder.class);
+		RecipeLoader.blockArmbot = CoreRegistry.createNewBlock("Armbot", ResonantInductionTransport.MOD_ID, BlockArmbot.class);
+		RecipeLoader.blockTurntable = CoreRegistry.createNewBlock("Turntable", ResonantInductionTransport.MOD_ID, BlockTurntable.class);
+		RecipeLoader.processorMachine = CoreRegistry.createNewBlock("ALBlockProcessor", ResonantInductionTransport.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
-        RecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", ResonantInductionTransport.MOD_ID, BlockKitchenSink.class, ItemBlockHolder.class);
-        RecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", ResonantInductionTransport.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
-        RecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", ResonantInductionTransport.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
-        RecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", ResonantInductionTransport.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
-        RecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", ResonantInductionTransport.MOD_ID, BlockOre.class, ItemBlockOre.class);
+		RecipeLoader.blockAdvancedHopper = CoreRegistry.createNewBlock("ALBlockHopper", ResonantInductionTransport.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
+		RecipeLoader.blockPipe = CoreRegistry.createNewBlock("FMBlockPipe", ResonantInductionTransport.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
+		RecipeLoader.blockPumpMachine = CoreRegistry.createNewBlock("FMBlockPump", ResonantInductionTransport.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
+		RecipeLoader.blockReleaseValve = CoreRegistry.createNewBlock("FMBlockReleaseValve", ResonantInductionTransport.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
+		RecipeLoader.blockTank = CoreRegistry.createNewBlock("FMBlockTank", ResonantInductionTransport.MOD_ID, BlockTank.class, ItemBlockPipe.class);
 
-        RecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", ResonantInductionTransport.MOD_ID, BlockWire.class, ItemBlockWire.class);
-        RecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", ResonantInductionTransport.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
-        RecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", ResonantInductionTransport.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
-        RecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", ResonantInductionTransport.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
-        RecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", ResonantInductionTransport.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+		RecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", ResonantInductionTransport.MOD_ID, BlockKitchenSink.class, ItemBlockHolder.class);
+		RecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", ResonantInductionTransport.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
+		RecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", ResonantInductionTransport.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
+		RecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", ResonantInductionTransport.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
+		RecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", ResonantInductionTransport.MOD_ID, BlockOre.class, ItemBlockOre.class);
 
-        RecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", ResonantInductionTransport.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
-        RecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", ResonantInductionTransport.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
-        RecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", ResonantInductionTransport.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-        RecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
+		RecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", ResonantInductionTransport.MOD_ID, BlockWire.class, ItemBlockWire.class);
+		RecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", ResonantInductionTransport.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
+		RecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", ResonantInductionTransport.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
+		RecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", ResonantInductionTransport.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
+		RecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", ResonantInductionTransport.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
 
-        /* ITEMS */
-        RecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", ResonantInductionTransport.MOD_ID, ItemReadoutTools.class, true);
-        RecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", ResonantInductionTransport.MOD_ID, ItemBattery.class, true);
-        RecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", ResonantInductionTransport.MOD_ID, ItemWrench.class, true);
-        RecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", ResonantInductionTransport.MOD_ID, ItemColoredDust.class, true);
-        RecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", ResonantInductionTransport.MOD_ID, ItemCommonTool.class, true);
+		RecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", ResonantInductionTransport.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+		RecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", ResonantInductionTransport.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+		RecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", ResonantInductionTransport.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
+		RecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
 
-        RecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", ResonantInductionTransport.MOD_ID, ItemVehicleSpawn.class, true);
-        RecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
-        RecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());
-        RecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", ResonantInductionTransport.MOD_ID, ItemFluidCan.class, true);
-        RecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", ResonantInductionTransport.MOD_ID, ItemParts.class, true);
+		/* ITEMS */
+		RecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", ResonantInductionTransport.MOD_ID, ItemReadoutTools.class, true);
+		RecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", ResonantInductionTransport.MOD_ID, ItemBattery.class, true);
+		RecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", ResonantInductionTransport.MOD_ID, ItemWrench.class, true);
+		RecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", ResonantInductionTransport.MOD_ID, ItemColoredDust.class, true);
+		RecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", ResonantInductionTransport.MOD_ID, ItemCommonTool.class, true);
 
-        RecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", ResonantInductionTransport.MOD_ID, ItemOreDirv.class, true);
-        //ALRecipeLoader.itemMPWire = CoreRegistry.createNewItem("DMMPWire", AssemblyLine.MOD_ID, ItemWire.class, true);
+		RecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", ResonantInductionTransport.MOD_ID, ItemVehicleSpawn.class, true);
+		RecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
+		RecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());
+		RecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", ResonantInductionTransport.MOD_ID, ItemFluidCan.class, true);
+		RecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", ResonantInductionTransport.MOD_ID, ItemParts.class, true);
 
-        TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
-        TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
+		RecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", ResonantInductionTransport.MOD_ID, ItemOreDirv.class, true);
+		// ALRecipeLoader.itemMPWire = CoreRegistry.createNewItem("DMMPWire", AssemblyLine.MOD_ID,
+		// ItemWire.class, true);
 
-        //Entities
-        if (ResonantInductionTransport.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
-        {
-            Item.itemsList[Item.egg.itemID] = null;
-            Item.egg = null;
-            Item.egg = new ItemFarmEgg(88);
-            GameRegistry.registerItem(Item.egg, "FTEgg", MOD_ID);
-            EntityRegistry.registerGlobalEntityID(EntityFarmEgg.class, "FarmEgg", EntityRegistry.findGlobalUniqueEntityId());
-            EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", entitiesIds++, this, 64, 1, true);
-            BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
-        }
+		TileEntityAssembly.refresh_diff = CONFIGURATION.get("TileSettings", "RefreshRandomRange", 9, "n = value of config, 1 + n, random number range from 1 to n that will be added to the lowest refresh value").getInt();
+		TileEntityAssembly.refresh_min_rate = CONFIGURATION.get("TileSettings", "RefreshLowestValue", 20, "Lowest value the refresh rate of the tile network will be").getInt();
 
-        EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
-        EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
+		// Entities
+		if (ResonantInductionTransport.CONFIGURATION.get("Override", "Eggs", true).getBoolean(true))
+		{
+			Item.itemsList[Item.egg.itemID] = null;
+			Item.egg = null;
+			Item.egg = new ItemFarmEgg(88);
+			GameRegistry.registerItem(Item.egg, "FTEgg", MOD_ID);
+			EntityRegistry.registerGlobalEntityID(EntityFarmEgg.class, "FarmEgg", EntityRegistry.findGlobalUniqueEntityId());
+			EntityRegistry.registerModEntity(EntityFarmEgg.class, "FarmEgg", entitiesIds++, this, 64, 1, true);
+			BlockDispenser.dispenseBehaviorRegistry.putObject(Item.egg, new BehaviorDispenseEgg());
+		}
 
-        for (EnumBird bird : EnumBird.values())
-        {
-            if (bird != EnumBird.VANILLA_CHICKEN && CONFIGURATION.get("Entities", "Enable_" + bird.name(), true).getBoolean(true))
-            {
-                bird.register();
-            }
-        }
-        //Post object creation, normally creative tab icon setup
-        if (RecipeLoader.blockPipe != null)
-        {
-            ResonantInductionTabs.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
-        }
-        else
-        {
-            ResonantInductionTabs.tabHydraulic().setIconItemStack(new ItemStack(Item.bucketWater));
-        }
-        if (RecipeLoader.itemMetals != null)
-        {
-            ResonantInductionTabs.tabIndustrial().itemStack = EnumMaterial.getStack(RecipeLoader.itemMetals, EnumMaterial.IRON, EnumOrePart.GEARS, 1);
-            RecipeLoader.parseOreNames(CONFIGURATION);
-        }
-        else
-        {
+		EntityRegistry.registerGlobalEntityID(EntityTestCar.class, "TestCar", EntityRegistry.findGlobalUniqueEntityId());
+		EntityRegistry.registerModEntity(EntityTestCar.class, "TestCar", 60, this, 64, 1, true);
 
-        }
-        if (RecipeLoader.blockConveyorBelt != null)
-        {
-            ResonantInductionTabs.tabAutomation().setIconItemStack(new ItemStack(RecipeLoader.blockConveyorBelt));
-        }
-        else
-        {
-            ResonantInductionTabs.tabAutomation().setIconItemStack(new ItemStack(Block.pistonStickyBase));
-        }
+		for (EnumBird bird : EnumBird.values())
+		{
+			if (bird != EnumBird.VANILLA_CHICKEN && CONFIGURATION.get("Entities", "Enable_" + bird.name(), true).getBoolean(true))
+			{
+				bird.register();
+			}
+		}
+		// Post object creation, normally creative tab icon setup
+		if (RecipeLoader.blockPipe != null)
+		{
+			ResonantInductionTabs.tabHydraulic().setIconItemStack(FluidPartsMaterial.IRON.getStack());
+		}
+		else
+		{
+			ResonantInductionTabs.tabHydraulic().setIconItemStack(new ItemStack(Item.bucketWater));
+		}
+		if (RecipeLoader.itemMetals != null)
+		{
+			ResonantInductionTabs.tabIndustrial().itemStack = EnumMaterial.getStack(RecipeLoader.itemMetals, EnumMaterial.IRON, EnumOrePart.GEARS, 1);
+			RecipeLoader.parseOreNames(CONFIGURATION);
+		}
+		else
+		{
 
-    }
+		}
+		if (RecipeLoader.blockConveyorBelt != null)
+		{
+			ResonantInductionTabs.tabAutomation().setIconItemStack(new ItemStack(RecipeLoader.blockConveyorBelt));
+		}
+		else
+		{
+			ResonantInductionTabs.tabAutomation().setIconItemStack(new ItemStack(Block.pistonStickyBase));
+		}
 
-    public void loadModMeta()
-    {
-        meta.modId = ResonantInductionTransport.MOD_ID;
-        meta.name = ResonantInductionTransport.MOD_NAME;
-        meta.version = ResonantInductionTransport.VERSION;
-        meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
-        meta.url = "http://www.universalelectricity.com/coremachine";
-        meta.logoFile = "/al_logo.png";
+	}
 
-        meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
-        meta.credits = "Archadia - Developer" + "LiQuiD - Dev of BioTech\n" + "Hangcow - Ex-Dev Greater Security\n" + "Calclavia - Ex-CoDev of assembly line\n" + "Briman0094 - Ex-CoDev of assembly line\n" + "Elrath18 - Colored Glass, Sand, & Stone\n" + "Doppelgangerous - Researcher\n" + "Freesound.org - Sound effects\n" + "MineMan1(wdtod) - asset creation\n" + "AlphaToOmega - asset creation\n" + "pinksheep - asset creation\n" + "X-wing9 - asset creation\n" + "Azkhare - asset creation\n" + "Vexatos - German Translation\n" + "crafteverywhere - Chinese Translations\n" + "PancakeCandy - French & Dutch Translations\n";
-        meta.autogenerated = false;
+	public void loadModMeta()
+	{
+		meta.modId = ResonantInductionTransport.MOD_ID;
+		meta.name = ResonantInductionTransport.MOD_NAME;
+		meta.version = ResonantInductionTransport.VERSION;
+		meta.description = "Simi Realistic factory system for minecraft bring in conveyor belts, robotic arms, and simple machines";
+		meta.url = "http://www.universalelectricity.com/coremachine";
+		meta.logoFile = "/al_logo.png";
 
-    }
+		meta.authorList = Arrays.asList(new String[] { "DarkGuardsman" });
+		meta.credits = "Archadia - Developer" + "LiQuiD - Dev of BioTech\n" + "Hangcow - Ex-Dev Greater Security\n" + "Calclavia - Ex-CoDev of assembly line\n" + "Briman0094 - Ex-CoDev of assembly line\n" + "Elrath18 - Colored Glass, Sand, & Stone\n" + "Doppelgangerous - Researcher\n" + "Freesound.org - Sound effects\n" + "MineMan1(wdtod) - asset creation\n" + "AlphaToOmega - asset creation\n" + "pinksheep - asset creation\n" + "X-wing9 - asset creation\n" + "Azkhare - asset creation\n" + "Vexatos - German Translation\n" + "crafteverywhere - Chinese Translations\n" + "PancakeCandy - French & Dutch Translations\n";
+		meta.autogenerated = false;
+
+	}
 }

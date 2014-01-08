@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.Reference;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -41,7 +41,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FXElectricBolt extends EntityFX
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "fadedSphere.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "fadedSphere.png");
 	public static final ResourceLocation PARTICLE_RESOURCE = new ResourceLocation("textures/particle/particles.png");
 
 	/** The width of the electrical bolt. */

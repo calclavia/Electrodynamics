@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.energy.model.ModelEMContractor;
 
@@ -13,8 +14,8 @@ public class RenderLevitator extends TileEntitySpecialRenderer
 {
 	public static final ModelEMContractor MODEL = new ModelEMContractor(false);
 	public static final ModelEMContractor MODEL_SPIN = new ModelEMContractor(true);
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor.png");
-	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(ResonantInduction.DOMAIN, ResonantInduction.MODEL_TEXTURE_DIRECTORY + "em_contractor_push.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "em_contractor.png");
+	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "em_contractor_push.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

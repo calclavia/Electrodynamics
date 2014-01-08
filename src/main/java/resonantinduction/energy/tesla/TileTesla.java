@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.api.ITesla;
 import resonantinduction.energy.ILinkable;
@@ -129,7 +130,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 
 								if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 								{
-									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
 							}
 						}
@@ -205,7 +206,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 						{
 							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
 							{
-								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, ResonantInduction.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
+								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 							}
 
 							Vector3 targetVector = new Vector3((TileEntity) tesla);

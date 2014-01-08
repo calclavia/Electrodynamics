@@ -61,5 +61,6 @@ public class Settings
 		TileEMLevitator.MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", TileEMLevitator.MAX_REACH).getInt(TileEMLevitator.MAX_REACH);
 		TileEMLevitator.MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", TileEMLevitator.MAX_SPEED).getDouble(TileEMLevitator.MAX_SPEED);
 		TileEMLevitator.PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", TileEMLevitator.PUSH_DELAY).getInt(TileEMLevitator.PUSH_DELAY);
+		CONFIGURATION.save();
 	}
 }
