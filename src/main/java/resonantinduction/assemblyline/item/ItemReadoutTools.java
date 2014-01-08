@@ -3,7 +3,7 @@ package resonantinduction.assemblyline.item;
 import java.util.List;
 
 import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.machine.TileEntityGenerator;
+import resonantinduction.energy.generator.TileEntityGenerator;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

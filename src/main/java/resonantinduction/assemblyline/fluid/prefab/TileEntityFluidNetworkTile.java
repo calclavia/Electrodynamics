@@ -25,7 +25,7 @@ import resonantinduction.assemblyline.api.fluid.FluidMasterList;
 import resonantinduction.assemblyline.api.fluid.INetworkFluidPart;
 import resonantinduction.assemblyline.fluid.network.NetworkFluidTiles;
 import resonantinduction.assemblyline.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.assemblyline.network.ISimplePacketReceiver;
+import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 

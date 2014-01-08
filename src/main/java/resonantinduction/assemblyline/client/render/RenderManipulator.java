@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelManipulator;
-import resonantinduction.assemblyline.machine.TileEntityManipulator;
+import resonantinduction.transport.logistic.TileEntityManipulator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

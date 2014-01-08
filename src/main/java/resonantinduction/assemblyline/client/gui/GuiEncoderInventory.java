@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.machine.encoder.ContainerEncoder;
-import resonantinduction.assemblyline.machine.encoder.TileEntityEncoder;
+import resonantinduction.transport.encoder.ContainerEncoder;
+import resonantinduction.transport.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

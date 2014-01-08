@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelRejectorPiston;
-import resonantinduction.assemblyline.machine.TileEntityRejector;
+import resonantinduction.transport.logistic.TileEntityRejector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

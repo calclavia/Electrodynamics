@@ -2,7 +2,7 @@ package resonantinduction.assemblyline.entities.prefab;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.network.ISimplePacketReceiver;
+import resonantinduction.core.network.ISimplePacketReceiver;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;

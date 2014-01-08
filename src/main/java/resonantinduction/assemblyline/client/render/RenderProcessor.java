@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelCrusher;
 import resonantinduction.assemblyline.client.model.ModelGrinder;
-import resonantinduction.assemblyline.machine.processor.TileEntityProcessor;
+import resonantinduction.mechanics.processor.TileEntityProcessor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

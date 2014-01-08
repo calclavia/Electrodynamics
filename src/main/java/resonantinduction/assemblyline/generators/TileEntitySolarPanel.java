@@ -2,7 +2,7 @@ package resonantinduction.assemblyline.generators;
 
 import java.util.EnumSet;
 
-import resonantinduction.assemblyline.machine.TileEntityGenerator;
+import resonantinduction.energy.generator.TileEntityGenerator;
 import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
 import net.minecraftforge.common.ForgeDirection;
 

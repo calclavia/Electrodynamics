@@ -8,8 +8,8 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.machine.ContainerBatteryBox;
-import resonantinduction.assemblyline.machine.TileEntityBatteryBox;
+import resonantinduction.energy.battery.ContainerBatteryBox;
+import resonantinduction.energy.battery.TileEntityBatteryBox;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import cpw.mods.fml.relauncher.Side;

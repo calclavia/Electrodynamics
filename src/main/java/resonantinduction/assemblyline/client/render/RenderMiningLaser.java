@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelLaserTile;
-import resonantinduction.assemblyline.machine.TileLaserSentry;
+import resonantinduction.mechanics.mining.TileMiningLaser;
 
 /** @author Darkguardsman */
 public class RenderMiningLaser extends TileEntitySpecialRenderer
@@ -25,9 +25,9 @@ public class RenderMiningLaser extends TileEntitySpecialRenderer
         GL11.glPushMatrix();
         GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
         GL11.glScalef(1.0F, -1F, -1F);
-        if (tileEntity instanceof TileLaserSentry)
+        if (tileEntity instanceof TileMiningLaser)
         {
-            float yaw = ((TileLaserSentry) tileEntity).getYaw() - 90;
+            float yaw = ((TileMiningLaser) tileEntity).getYaw() - 90;
             GL11.glRotatef(yaw, 0, 1, 0);
         }
         model.renderAll();

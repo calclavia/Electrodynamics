@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.machine.processor.ContainerProcessor;
-import resonantinduction.assemblyline.machine.processor.TileEntityProcessor;
+import resonantinduction.mechanics.processor.ContainerProcessor;
+import resonantinduction.mechanics.processor.TileEntityProcessor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

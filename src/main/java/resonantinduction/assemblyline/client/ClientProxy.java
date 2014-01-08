@@ -28,12 +28,12 @@ import resonantinduction.assemblyline.fluid.pipes.TileEntityPipe;
 import resonantinduction.assemblyline.fluid.pump.TileEntityConstructionPump;
 import resonantinduction.assemblyline.fluid.pump.TileEntityStarterPump;
 import resonantinduction.assemblyline.imprinter.TileEntityImprinter;
-import resonantinduction.assemblyline.machine.TileEntityBatteryBox;
-import resonantinduction.assemblyline.machine.TileEntityReleaseValve;
-import resonantinduction.assemblyline.machine.TileEntitySink;
-import resonantinduction.assemblyline.machine.TileEntityTank;
-import resonantinduction.assemblyline.machine.encoder.TileEntityEncoder;
-import resonantinduction.assemblyline.machine.processor.TileEntityProcessor;
+import resonantinduction.energy.battery.TileEntityBatteryBox;
+import resonantinduction.mechanics.processor.TileEntityProcessor;
+import resonantinduction.transport.encoder.TileEntityEncoder;
+import resonantinduction.transport.fluid.TileEntityReleaseValve;
+import resonantinduction.transport.fluid.TileEntityTank;
+import resonantinduction.transport.fluid.TileKitchenSink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,7 +70,7 @@ public class ClientProxy extends CommonProxy
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new RenderGenerator());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReleaseValve.class, new RenderReleaseValve());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySink.class, new RenderSink());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileKitchenSink.class, new RenderSink());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 

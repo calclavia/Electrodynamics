@@ -1,11 +1,11 @@
 package resonantinduction.core;
 
-import resonantinduction.core.core.multimeter.PartMultimeter;
-import resonantinduction.core.energy.transformer.PartTransformer;
-import resonantinduction.core.energy.wire.flat.PartFlatSwitchWire;
-import resonantinduction.core.energy.wire.flat.PartFlatWire;
-import resonantinduction.core.energy.wire.framed.PartFramedSwitchWire;
-import resonantinduction.core.energy.wire.framed.PartFramedWire;
+import resonantinduction.core.multimeter.PartMultimeter;
+import resonantinduction.energy.transformer.PartTransformer;
+import resonantinduction.energy.wire.flat.PartFlatSwitchWire;
+import resonantinduction.energy.wire.flat.PartFlatWire;
+import resonantinduction.energy.wire.framed.PartFramedSwitchWire;
+import resonantinduction.energy.wire.framed.PartFramedWire;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;

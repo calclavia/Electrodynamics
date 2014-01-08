@@ -11,7 +11,7 @@ import resonantinduction.assemblyline.armbot.command.TaskGrabItem;
 import resonantinduction.assemblyline.armbot.command.TaskReturn;
 import resonantinduction.assemblyline.armbot.command.TaskRotateTo;
 import resonantinduction.assemblyline.machine.TileEntityAssembly;
-import resonantinduction.assemblyline.machine.encoder.ItemDisk;
+import resonantinduction.transport.encoder.ItemDisk;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;

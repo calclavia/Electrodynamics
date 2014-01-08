@@ -1,7 +1,7 @@
 package resonantinduction.assemblyline.client.gui;
 
 import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.machine.encoder.TileEntityEncoder;
+import resonantinduction.transport.encoder.TileEntityEncoder;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 

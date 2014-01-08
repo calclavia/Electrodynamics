@@ -1,6 +1,6 @@
 package resonantinduction.assemblyline.generators;
 
-import resonantinduction.assemblyline.machine.TileEntityGenerator;
+import resonantinduction.energy.generator.TileEntityGenerator;
 
 /** TileEntity that acts as the connection node for the solar panel */
 public class TileEntitySolarBox extends TileEntityGenerator

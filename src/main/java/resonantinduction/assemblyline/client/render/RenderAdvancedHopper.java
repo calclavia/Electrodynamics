@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelAdvancedHopper;
-import resonantinduction.assemblyline.redstone.TileEntityAdvancedHopper;
+import resonantinduction.transport.hopper.TileEntityAdvancedHopper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

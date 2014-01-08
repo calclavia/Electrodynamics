@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.assemblyline.ALRecipeLoader;
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelSmallFluidCan;
-import resonantinduction.assemblyline.machine.ItemFluidCan;
+import resonantinduction.transport.fluid.ItemFluidCan;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

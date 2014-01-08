@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.assemblyline.client.model.ModelTankSide;
-import resonantinduction.assemblyline.machine.TileEntityTank;
+import resonantinduction.transport.fluid.TileEntityTank;
 
 import com.builtbroken.minecraft.helpers.ColorCode;
 

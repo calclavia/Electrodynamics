@@ -16,7 +16,7 @@ import resonantinduction.assemblyline.client.model.ModelMachine;
 import resonantinduction.assemblyline.client.model.ModelManipulator;
 import resonantinduction.assemblyline.client.model.ModelRejectorPiston;
 import resonantinduction.assemblyline.client.model.ModelSolarPanel;
-import resonantinduction.assemblyline.redstone.BlockAdvancedHopper;
+import resonantinduction.transport.hopper.BlockAdvancedHopper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;

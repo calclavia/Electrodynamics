@@ -12,7 +12,7 @@ import resonantinduction.assemblyline.api.coding.ITask;
 import resonantinduction.assemblyline.armbot.command.TaskEnd;
 import resonantinduction.assemblyline.armbot.command.TaskIdle;
 import resonantinduction.assemblyline.armbot.command.TaskStart;
-import resonantinduction.assemblyline.machine.encoder.TileEntityEncoder;
+import resonantinduction.transport.encoder.TileEntityEncoder;
 
 import com.builtbroken.minecraft.interfaces.IScroll;
 

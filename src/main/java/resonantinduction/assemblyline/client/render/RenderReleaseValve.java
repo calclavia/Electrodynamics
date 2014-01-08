@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelLargePipe;
 import resonantinduction.assemblyline.client.model.ModelReleaseValve;
-import resonantinduction.assemblyline.machine.TileEntityReleaseValve;
+import resonantinduction.transport.fluid.TileEntityReleaseValve;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import resonantinduction.assemblyline.ALRecipeLoader;
 import resonantinduction.assemblyline.fluid.prefab.TileEntityFluidNetworkTile;
-import resonantinduction.assemblyline.machine.TileEntityTank;
+import resonantinduction.transport.fluid.TileEntityTank;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

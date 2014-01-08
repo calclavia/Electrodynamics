@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.assemblyline.ALRecipeLoader;
 import resonantinduction.assemblyline.AssemblyLine;
 import resonantinduction.assemblyline.client.model.ModelTankSide;
-import resonantinduction.assemblyline.machine.BlockTank;
+import resonantinduction.transport.fluid.BlockTank;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
