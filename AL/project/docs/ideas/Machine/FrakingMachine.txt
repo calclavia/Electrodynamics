@@ -1,7 +1,0 @@
-So, it will have a few stages.
-
-1) It destroys all blocks underneath it. (.5KJ per destroy)
-2) It deploys the pipe (.5KJ per deploy)
-3) It uses up water and sand (2KJ per use)
-4) It collects gas (4KJ per collection)
-

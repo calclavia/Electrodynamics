@@ -1,8 +1,0 @@
-First the belt needs major work to take it from an item mover to a useful tool.
-
-
-One thing that needs worked on is replacing the velocity system for items with a pipe logic system. Pipes have item movement right to save on performance. In which they move the item threw a routing system and then render it inside the pipe. We can use the same system by routing the items threw the conveyor network. Then render the item floating above the belt. This will save on performance by not having items on the ground, nor on collision motion updates. 
-
-Next idea is to have block actually render on the belt at 1/3 or 2/3 size. This way there is more visual effect of working with the belts. This can then later be tied into complex crafting to offer really cool looks. In which you can watch as the block changes threw the factory. We can work this for some items as well like armor, tools, and ingots. 
-
-After this we need to rework the power system to support machines again. This way you can connect and power machines from wires in the belt. As well add fluid support. Both need to be optional and require the item to be added to the belt in word. It will show in a tray on the side of the belt.
