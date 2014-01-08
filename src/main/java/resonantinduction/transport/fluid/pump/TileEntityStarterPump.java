@@ -15,11 +15,11 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.interfaces.IToolReadOut;
+import com.builtbroken.minecraft.interfaces.IReadOut;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 
-public class TileEntityStarterPump extends TileEntityEnergyMachine implements IToolReadOut, ITileConnector
+public class TileEntityStarterPump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
 {
 	private int currentWorldEdits, MAX_WORLD_EDITS_PER_PROCESS;
 

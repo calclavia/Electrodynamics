@@ -1,9 +1,7 @@
 package resonantinduction.api.coding.args;
 
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.builtbroken.minecraft.save.ISaveObj;
-import com.builtbroken.minecraft.save.NBTFileHelper;
+import calclavia.lib.utility.ISaveObj;
 
 /**
  * Used to store arguments in a way that can be easier to read, limit, and understand

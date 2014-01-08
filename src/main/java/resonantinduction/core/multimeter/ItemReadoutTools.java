@@ -28,8 +28,8 @@ import cofh.api.energy.IEnergyStorage;
 
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.interfaces.IToolReadOut;
-import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
+import com.builtbroken.minecraft.interfaces.IReadOut;
+import com.builtbroken.minecraft.interfaces.IReadOut.EnumTools;
 import com.builtbroken.minecraft.prefab.ItemBasic;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
@@ -105,9 +105,9 @@ public class ItemReadoutTools extends ItemBasic
 			if (tool != null)
 			{
 				ForgeDirection hitSide = ForgeDirection.getOrientation(side);
-				if (tileEntity instanceof IToolReadOut)
+				if (tileEntity instanceof IReadOut)
 				{
-					String output = ((IToolReadOut) tileEntity).getMeterReading(player, hitSide, tool);
+					String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, tool);
 					if (output != null && !output.isEmpty())
 					{
 						if (output.length() > 100)

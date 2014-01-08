@@ -11,10 +11,10 @@ import resonantinduction.transport.fluid.network.NetworkPipes;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidDevice;
 
 import com.builtbroken.minecraft.helpers.HelperMethods;
-import com.builtbroken.minecraft.interfaces.IToolReadOut;
+import com.builtbroken.minecraft.interfaces.IReadOut;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 
-public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IToolReadOut
+public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {
 	public TileEntity[] connected = new TileEntity[6];
 

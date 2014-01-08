@@ -185,7 +185,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 				}
 				if (id.equalsIgnoreCase(SimplePacketTypes.NBT.name))
 				{
-					this.readFromNBT(PacketHandler.instance().readNBTTagCompound(dis));
+					this.readFromNBT(PacketHandler.readNBTTagCompound(dis));
 					return true;
 				}
 			}
@@ -204,7 +204,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			this.writeToNBT(tag);
-			PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.NBT.name, this, tag), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(PacketHandler.getTilePacket(this.getChannel(), SimplePacketTypes.NBT.name, this, tag), worldObj, new Vector3(this), 64);
 		}
 	}
 

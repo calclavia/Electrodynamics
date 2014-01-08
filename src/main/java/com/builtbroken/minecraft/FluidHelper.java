@@ -21,9 +21,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.AutoCraftingManager;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.recipes.AutoCraftingManager;
 
 public class FluidHelper
 {

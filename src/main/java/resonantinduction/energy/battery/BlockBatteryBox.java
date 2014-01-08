@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.energy.CommonProxy;
 import resonantinduction.energy.ResonantInductionEnergy;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.IConductor;

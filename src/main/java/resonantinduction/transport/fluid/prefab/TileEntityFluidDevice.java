@@ -4,13 +4,13 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
-import com.builtbroken.minecraft.interfaces.IToolReadOut;
-import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
+import com.builtbroken.minecraft.interfaces.IReadOut;
 import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 
-public abstract class TileEntityFluidDevice extends TileEntityAdvanced implements IToolReadOut, ITileConnector
+public abstract class TileEntityFluidDevice extends TileAdvanced implements IReadOut, ITileConnector
 {
 	public Random random = new Random();
 

@@ -21,7 +21,7 @@ import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.interfaces.IToolReadOut.EnumTools;
+import com.builtbroken.minecraft.interfaces.IReadOut.EnumTools;
 import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
 import com.builtbroken.minecraft.recipes.ProcessorType;
 

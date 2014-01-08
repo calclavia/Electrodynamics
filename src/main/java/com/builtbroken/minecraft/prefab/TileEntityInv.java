@@ -16,6 +16,7 @@ import calclavia.lib.access.AccessUser;
 import calclavia.lib.access.GroupRegistry;
 import calclavia.lib.access.ISpecialAccess;
 import calclavia.lib.access.Nodes;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.builtbroken.minecraft.interfaces.IExternalInv;
 import com.builtbroken.minecraft.interfaces.IInvBox;
@@ -27,7 +28,7 @@ import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
  * 
  * @author Darkguardsman
  */
-public class TileEntityInv extends TileEntityAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
+public class TileEntityInv extends TileAdvanced implements IExternalInv, ISidedInventory, ISpecialAccess
 {
 	protected IInvBox inventory;
 	protected boolean lockInv;

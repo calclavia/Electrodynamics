@@ -15,7 +15,6 @@ import resonantinduction.client.render.BlockRenderHelper;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

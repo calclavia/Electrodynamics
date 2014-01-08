@@ -42,7 +42,6 @@ import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts;
 import resonantinduction.core.resource.ItemParts.Parts;
 import resonantinduction.energy.battery.BlockBatteryBox;
-import resonantinduction.energy.battery.ItemBattery;
 import resonantinduction.energy.battery.ItemBlockEnergyStorage;
 import resonantinduction.mechanics.armbot.BlockArmbot;
 import resonantinduction.mechanics.armbot.command.TaskBreak;
@@ -96,6 +95,7 @@ import resonantinduction.transport.vechicle.ItemVehicleSpawn;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.ore.OreGenReplaceStone;
 import calclavia.lib.ore.OreGenerator;
+import calclavia.lib.utility.SaveManager;
 
 import com.builtbroken.minecraft.CoreRegistry;
 import com.builtbroken.minecraft.DarkCore;
@@ -106,7 +106,6 @@ import com.builtbroken.minecraft.LaserEntityDamageSource;
 import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.helpers.PlayerKeyHandler;
 import com.builtbroken.minecraft.prefab.ItemBlockHolder;
-import com.builtbroken.minecraft.save.SaveManager;
 import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
 
 import cpw.mods.fml.common.Loader;

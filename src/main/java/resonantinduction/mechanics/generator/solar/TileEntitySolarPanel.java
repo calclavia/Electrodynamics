@@ -2,8 +2,8 @@ package resonantinduction.mechanics.generator.solar;
 
 import java.util.EnumSet;
 
-import resonantinduction.mechanics.generator.TileGenerator;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanics.generator.TileGenerator;
 
 public class TileEntitySolarPanel extends TileGenerator
 {

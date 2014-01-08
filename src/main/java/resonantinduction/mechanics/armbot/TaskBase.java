@@ -11,8 +11,6 @@ import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
 
-import com.builtbroken.minecraft.save.NBTFileHelper;
-
 /** @author DarkGuardsman */
 public abstract class TaskBase implements ITask
 {

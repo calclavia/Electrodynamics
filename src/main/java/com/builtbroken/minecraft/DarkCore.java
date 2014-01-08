@@ -6,9 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
-
-import com.builtbroken.minecraft.prefab.BlockMulti;
-
+import calclavia.lib.multiblock.link.BlockMulti;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 

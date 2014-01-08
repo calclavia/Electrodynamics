@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.transport.fluid.network.IFluidRecipeCrafter;
 import resonantinduction.transport.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
+import resonantinduction.transport.fluid.network.IFluidRecipeCrafter;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;

@@ -14,8 +14,6 @@ import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.TaskRegistry;
 import universalelectricity.api.vector.Vector2;
 
-import com.builtbroken.minecraft.save.NBTFileHelper;
-
 public class Program implements IProgram
 {
 	protected Vector2 currentPos = new Vector2(0, 0);

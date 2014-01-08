@@ -18,6 +18,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import calclavia.lib.access.AccessUser;
 import calclavia.lib.access.ISpecialAccess;
+import calclavia.lib.prefab.block.BlockTile;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.DarkCore;

@@ -6,8 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import resonantinduction.api.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
-
-import com.builtbroken.minecraft.save.ISaveObj;
+import calclavia.lib.utility.ISaveObj;
 
 /** @author DarkGuardsman */
 public interface ITask extends Cloneable, ISaveObj

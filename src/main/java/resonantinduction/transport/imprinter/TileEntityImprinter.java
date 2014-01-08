@@ -15,13 +15,12 @@ import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
 import resonantinduction.api.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.AutoCraftingManager;
+import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.TranslationHelper;
-import com.builtbroken.minecraft.prefab.TileEntityAdvanced;
 import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
-import com.builtbroken.minecraft.recipes.AutoCraftingManager;
-import com.builtbroken.minecraft.recipes.AutoCraftingManager.IAutoCrafter;
 
 public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {

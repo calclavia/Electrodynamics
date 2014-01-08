@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import calclavia.lib.utility.AutoCraftingManager;
 
 import com.builtbroken.common.Pair;
 

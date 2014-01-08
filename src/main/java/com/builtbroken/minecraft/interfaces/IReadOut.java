@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
  * 
  * @author DarkGuardsman
  */
-public interface IToolReadOut
+public interface IReadOut
 {
 	/**
 	 * Grabs the message displayed to the user on right click of the machine with the given tool
