@@ -1,8 +1,8 @@
 package resonantinduction.mechanics.mining;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
-import resonantinduction.assemblyline.fluid.EnumGas;
-import resonantinduction.assemblyline.fluid.GasTank;
+import resonantinduction.ALRecipeLoader;
+import resonantinduction.fluid.EnumGas;
+import resonantinduction.fluid.GasTank;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;

@@ -2,7 +2,7 @@ package resonantinduction.energy.battery;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
+import resonantinduction.ALRecipeLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;

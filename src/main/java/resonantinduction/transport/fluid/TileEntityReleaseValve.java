@@ -1,8 +1,8 @@
 package resonantinduction.transport.fluid;
 
-import resonantinduction.assemblyline.api.fluid.INetworkPipe;
-import resonantinduction.assemblyline.fluid.network.NetworkPipes;
-import resonantinduction.assemblyline.fluid.prefab.TileEntityFluidDevice;
+import resonantinduction.api.fluid.INetworkPipe;
+import resonantinduction.fluid.network.NetworkPipes;
+import resonantinduction.fluid.prefab.TileEntityFluidDevice;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

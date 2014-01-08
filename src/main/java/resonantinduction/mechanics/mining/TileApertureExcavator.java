@@ -3,7 +3,7 @@ package resonantinduction.mechanics.mining;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonantinduction.assemblyline.api.MachineMiningEvent;
+import resonantinduction.api.MachineMiningEvent;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
-import resonantinduction.assemblyline.api.IBelt;
-import resonantinduction.assemblyline.machine.TileEntityAssembly;
+import resonantinduction.ALRecipeLoader;
+import resonantinduction.api.IBelt;
+import resonantinduction.machine.TileEntityAssembly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;

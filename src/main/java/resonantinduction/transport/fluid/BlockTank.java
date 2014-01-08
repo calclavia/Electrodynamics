@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.blocks.BlockHydraulic;
-import resonantinduction.assemblyline.client.render.BlockRenderHelper;
-import resonantinduction.assemblyline.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.assemblyline.fluid.pipes.ItemBlockPipe;
-import resonantinduction.assemblyline.fluid.pipes.TileEntityPipe;
+import resonantinduction.blocks.BlockHydraulic;
+import resonantinduction.client.render.BlockRenderHelper;
+import resonantinduction.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.fluid.pipes.ItemBlockPipe;
+import resonantinduction.fluid.pipes.TileEntityPipe;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

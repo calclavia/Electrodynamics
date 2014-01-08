@@ -1,6 +1,6 @@
 package resonantinduction.transport;
 
-import resonantinduction.assemblyline.imprinter.prefab.TileEntityFilterable;
+import resonantinduction.transport.imprinter.TileEntityFilterable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;

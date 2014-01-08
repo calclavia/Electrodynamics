@@ -1,6 +1,6 @@
 package resonantinduction.transport.crate;
 
-import resonantinduction.assemblyline.AssemblyLine;
+import resonantinduction.AssemblyLine;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

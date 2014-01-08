@@ -3,7 +3,7 @@ package resonantinduction.transport.fluid;
 import java.util.Random;
 import java.util.Set;
 
-import resonantinduction.assemblyline.blocks.BlockHydraulic;
+import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.energy.generator.TileEntitySteamPiston;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

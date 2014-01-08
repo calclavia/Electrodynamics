@@ -3,9 +3,9 @@ package resonantinduction.transport.logistic;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.client.render.BlockRenderingHandler;
-import resonantinduction.assemblyline.client.render.RenderManipulator;
-import resonantinduction.assemblyline.imprinter.prefab.BlockImprintable;
+import resonantinduction.client.render.BlockRenderingHandler;
+import resonantinduction.client.render.RenderManipulator;
+import resonantinduction.transport.imprinter.BlockImprintable;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

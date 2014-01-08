@@ -2,8 +2,8 @@ package resonantinduction.transport.fluid;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.IndustryTabs;
+import resonantinduction.AssemblyLine;
+import resonantinduction.IndustryTabs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

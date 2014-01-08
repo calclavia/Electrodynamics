@@ -2,9 +2,9 @@ package resonantinduction.transport.encoder;
 
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.CommonProxy;
-import resonantinduction.assemblyline.blocks.BlockAssembly;
+import resonantinduction.AssemblyLine;
+import resonantinduction.CommonProxy;
+import resonantinduction.blocks.BlockAssembly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;

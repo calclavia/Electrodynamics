@@ -2,7 +2,7 @@ package resonantinduction.mechanics.mining;
 
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
+import resonantinduction.AssemblyLine;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

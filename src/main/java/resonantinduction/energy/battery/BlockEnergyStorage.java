@@ -3,9 +3,9 @@ package resonantinduction.energy.battery;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.CommonProxy;
-import resonantinduction.assemblyline.IndustryTabs;
+import resonantinduction.AssemblyLine;
+import resonantinduction.CommonProxy;
+import resonantinduction.IndustryTabs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

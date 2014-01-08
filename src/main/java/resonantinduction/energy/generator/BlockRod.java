@@ -2,9 +2,9 @@ package resonantinduction.energy.generator;
 
 import java.util.Set;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
-import resonantinduction.assemblyline.blocks.BlockHydraulic;
-import resonantinduction.assemblyline.client.render.BlockRenderHelper;
+import resonantinduction.ALRecipeLoader;
+import resonantinduction.blocks.BlockHydraulic;
+import resonantinduction.client.render.BlockRenderHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

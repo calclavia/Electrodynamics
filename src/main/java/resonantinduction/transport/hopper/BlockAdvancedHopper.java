@@ -3,9 +3,9 @@ package resonantinduction.transport.hopper;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.IndustryTabs;
-import resonantinduction.assemblyline.client.render.RenderAdvancedHopper;
+import resonantinduction.AssemblyLine;
+import resonantinduction.IndustryTabs;
+import resonantinduction.client.render.RenderAdvancedHopper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

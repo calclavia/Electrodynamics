@@ -3,10 +3,10 @@ package resonantinduction.transport.logistic;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.client.render.BlockRenderingHandler;
-import resonantinduction.assemblyline.client.render.RenderRejector;
-import resonantinduction.assemblyline.imprinter.prefab.BlockImprintable;
+import resonantinduction.AssemblyLine;
+import resonantinduction.client.render.BlockRenderingHandler;
+import resonantinduction.client.render.RenderRejector;
+import resonantinduction.transport.imprinter.BlockImprintable;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

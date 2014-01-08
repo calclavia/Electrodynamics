@@ -2,8 +2,8 @@ package resonantinduction.transport.hopper;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.imprinter.ItemImprinter;
-import resonantinduction.assemblyline.imprinter.prefab.TileEntityFilterable;
+import resonantinduction.transport.imprinter.ItemImprinter;
+import resonantinduction.transport.imprinter.TileEntityFilterable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

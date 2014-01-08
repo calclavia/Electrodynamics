@@ -2,8 +2,8 @@ package resonantinduction.mechanics.mining;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.client.render.BlockRenderHelper;
+import resonantinduction.AssemblyLine;
+import resonantinduction.client.render.BlockRenderHelper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

@@ -1,6 +1,6 @@
 package resonantinduction.transport.encoder;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
+import resonantinduction.ALRecipeLoader;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;

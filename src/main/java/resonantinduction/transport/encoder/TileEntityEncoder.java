@@ -2,12 +2,12 @@ package resonantinduction.transport.encoder;
 
 import java.io.IOException;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.api.coding.IProgram;
-import resonantinduction.assemblyline.api.coding.ITask;
-import resonantinduction.assemblyline.api.coding.TaskRegistry;
-import resonantinduction.assemblyline.armbot.Program;
-import resonantinduction.assemblyline.armbot.command.TaskRotateTo;
+import resonantinduction.AssemblyLine;
+import resonantinduction.api.coding.IProgram;
+import resonantinduction.api.coding.ITask;
+import resonantinduction.api.coding.TaskRegistry;
+import resonantinduction.armbot.Program;
+import resonantinduction.armbot.command.TaskRotateTo;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;

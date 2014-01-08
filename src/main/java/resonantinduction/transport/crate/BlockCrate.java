@@ -3,9 +3,9 @@ package resonantinduction.transport.crate;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.blocks.BlockAssembly;
-import resonantinduction.assemblyline.client.render.RenderCrate;
+import resonantinduction.AssemblyLine;
+import resonantinduction.blocks.BlockAssembly;
+import resonantinduction.client.render.RenderCrate;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

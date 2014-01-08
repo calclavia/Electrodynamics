@@ -3,8 +3,8 @@ package resonantinduction.core.debug;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.IndustryTabs;
+import resonantinduction.AssemblyLine;
+import resonantinduction.IndustryTabs;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;

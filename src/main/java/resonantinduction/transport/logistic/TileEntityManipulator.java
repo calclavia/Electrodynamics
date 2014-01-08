@@ -2,9 +2,9 @@ package resonantinduction.transport.logistic;
 
 import java.util.List;
 
-import resonantinduction.assemblyline.api.IManipulator;
-import resonantinduction.assemblyline.imprinter.ItemImprinter;
-import resonantinduction.assemblyline.imprinter.prefab.TileEntityFilterable;
+import resonantinduction.api.IManipulator;
+import resonantinduction.transport.imprinter.ItemImprinter;
+import resonantinduction.transport.imprinter.TileEntityFilterable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

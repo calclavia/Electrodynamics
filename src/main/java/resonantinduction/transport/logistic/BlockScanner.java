@@ -2,7 +2,7 @@ package resonantinduction.transport.logistic;
 
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
+import resonantinduction.AssemblyLine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.UniversalElectricity;

@@ -3,9 +3,9 @@ package resonantinduction.transport.belt;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.blocks.BlockAssembly;
-import resonantinduction.assemblyline.client.render.BlockRenderingHandler;
-import resonantinduction.assemblyline.client.render.RenderConveyorBelt;
+import resonantinduction.blocks.BlockAssembly;
+import resonantinduction.client.render.BlockRenderingHandler;
+import resonantinduction.client.render.RenderConveyorBelt;
 import resonantinduction.transport.belt.TileEntityConveyorBelt.SlantType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;

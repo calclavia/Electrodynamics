@@ -3,8 +3,8 @@ package resonantinduction.transport.fluid;
 import java.util.Random;
 import java.util.Set;
 
-import resonantinduction.assemblyline.ALRecipeLoader;
-import resonantinduction.assemblyline.blocks.BlockHydraulic;
+import resonantinduction.ALRecipeLoader;
+import resonantinduction.blocks.BlockHydraulic;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

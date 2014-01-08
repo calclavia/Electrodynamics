@@ -3,11 +3,11 @@ package resonantinduction.mechanics.processor;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.CommonProxy;
-import resonantinduction.assemblyline.IndustryTabs;
-import resonantinduction.assemblyline.client.render.BlockRenderingHandler;
-import resonantinduction.assemblyline.client.render.RenderProcessor;
+import resonantinduction.AssemblyLine;
+import resonantinduction.CommonProxy;
+import resonantinduction.IndustryTabs;
+import resonantinduction.client.render.BlockRenderingHandler;
+import resonantinduction.client.render.RenderProcessor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

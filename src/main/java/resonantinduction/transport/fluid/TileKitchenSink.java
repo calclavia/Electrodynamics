@@ -1,8 +1,8 @@
 package resonantinduction.transport.fluid;
 
-import resonantinduction.assemblyline.AssemblyLine;
-import resonantinduction.assemblyline.fluid.prefab.TileEntityFluidStorage;
+import resonantinduction.AssemblyLine;
 import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.fluid.prefab.TileEntityFluidStorage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
