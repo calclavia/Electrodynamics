@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.ResonantInduction;
-import resonantinduction.transport.model.ModelEMContractor;
+import resonantinduction.energy.model.ModelEMContractor;
 
 public class RenderLevitator extends TileEntitySpecialRenderer
 {
