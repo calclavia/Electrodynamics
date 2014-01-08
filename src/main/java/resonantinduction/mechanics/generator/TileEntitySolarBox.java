@@ -1,4 +1,4 @@
-package resonantinduction.energy.generator;
+package resonantinduction.mechanics.generator;
 
 /** TileEntity that acts as the connection node for the solar panel */
 public class TileEntitySolarBox extends TileEntityGenerator

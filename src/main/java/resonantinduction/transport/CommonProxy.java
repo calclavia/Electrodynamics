@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.energy.battery.ContainerBatteryBox;
-import resonantinduction.energy.battery.TileEntityBatteryBox;
-import resonantinduction.energy.generator.ContainerCoalGenerator;
-import resonantinduction.energy.generator.TileEntitySteamGen;
+import resonantinduction.energy.battery.TileBatteryBox;
+import resonantinduction.mechanics.generator.ContainerCoalGenerator;
+import resonantinduction.mechanics.generator.TileEntitySteamGen;
 import resonantinduction.mechanics.processor.ContainerProcessor;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
 import resonantinduction.transport.encoder.ContainerEncoder;
@@ -148,9 +148,9 @@ public class CommonProxy implements IGuiHandler
 						return new ContainerCoalGenerator(player.inventory, ((TileEntitySteamGen) tileEntity));
 					}
 				case GUI_BATTERY_BOX:
-					if (tileEntity instanceof TileEntityBatteryBox)
+					if (tileEntity instanceof TileBatteryBox)
 					{
-						return new ContainerBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
+						return new ContainerBatteryBox(player.inventory, (TileBatteryBox) tileEntity);
 					}
 				default:
 					return new ContainerFake(tileEntity);

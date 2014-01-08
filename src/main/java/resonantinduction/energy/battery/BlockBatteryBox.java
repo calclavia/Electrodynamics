@@ -13,7 +13,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
+import resonantinduction.energy.CommonProxy;
+import resonantinduction.energy.ResonantInductionEnergy;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.vector.Vector3;
@@ -27,12 +29,12 @@ import com.builtbroken.minecraft.prefab.BlockMachine;
  * 
  * @author Rseifert
  */
-public class BlockEnergyStorage extends BlockMachine
+public class BlockBatteryBox extends BlockMachine
 {
-	public BlockEnergyStorage()
+	public BlockBatteryBox()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
-		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
+		super(Settings.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
+		this.setCreativeTab(ResonantInductionTabs.CORE);
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class BlockEnergyStorage extends BlockMachine
 
 		if (!par1World.isRemote)
 		{
-			par5EntityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
+			par5EntityPlayer.openGui(ResonantInductionEnergy.INSTANCE, 0, par1World, x, y, z);
 
 		}
 		return true;
@@ -111,14 +113,14 @@ public class BlockEnergyStorage extends BlockMachine
 	@Override
 	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
 	{
-		list.add(new Pair<String, Class<? extends TileEntity>>("DCTileBatBox", TileEntityBatteryBox.class));
+		list.add(new Pair<String, Class<? extends TileEntity>>("DCTileBatBox", TileBatteryBox.class));
 
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{
-		return new TileEntityBatteryBox();
+		return new TileBatteryBox();
 	}
 
 	@Override

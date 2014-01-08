@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.energy.generator.TileEntityGenerator;
+import resonantinduction.mechanics.generator.TileEntityGenerator;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;

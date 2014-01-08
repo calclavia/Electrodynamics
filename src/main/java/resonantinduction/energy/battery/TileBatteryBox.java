@@ -19,9 +19,9 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
  * 
  * @author DarkGuardsman
  */
-public class TileEntityBatteryBox extends TileEntityEnergyMachine
+public class TileBatteryBox extends TileEntityEnergyMachine
 {
-	public TileEntityBatteryBox()
+	public TileBatteryBox()
 	{
 		super(10000, 5000000);
 		this.invSlots = 2;

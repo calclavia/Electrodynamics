@@ -28,7 +28,7 @@ import resonantinduction.client.render.RenderTank;
 import resonantinduction.client.render.RenderTestCar;
 import resonantinduction.client.render.RenderTurkey;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.energy.battery.TileEntityBatteryBox;
+import resonantinduction.energy.battery.TileBatteryBox;
 import resonantinduction.fluid.pipes.TileEntityPipe;
 import resonantinduction.fluid.pump.TileEntityConstructionPump;
 import resonantinduction.fluid.pump.TileEntityStarterPump;
@@ -114,7 +114,7 @@ public class ClientProxy extends CommonProxy
 					return new GuiProcessor(player.inventory, (TileEntityProcessor) tileEntity);
 				}
 				case GUI_BATTERY_BOX:
-					return new GuiBatteryBox(player.inventory, (TileEntityBatteryBox) tileEntity);
+					return new GuiBatteryBox(player.inventory, (TileBatteryBox) tileEntity);
 			}
 		}
 

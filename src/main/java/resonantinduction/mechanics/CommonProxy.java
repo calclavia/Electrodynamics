@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.multimeter.ContainerMultimeter;
-import resonantinduction.core.multimeter.PartMultimeter;
+import resonantinduction.energy.multimeter.PartMultimeter;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.network.IGuiHandler;

@@ -1,4 +1,4 @@
-package resonantinduction.energy.generator;
+package resonantinduction.mechanics.generator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

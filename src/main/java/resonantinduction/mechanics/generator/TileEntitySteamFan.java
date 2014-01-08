@@ -1,4 +1,4 @@
-package resonantinduction.energy.generator;
+package resonantinduction.mechanics.generator;
 
 public class TileEntitySteamFan extends TileEntitySteamPiston
 {

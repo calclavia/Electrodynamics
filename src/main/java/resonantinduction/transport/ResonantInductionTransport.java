@@ -35,11 +35,9 @@ import resonantinduction.core.resource.ItemBlockOre;
 import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts;
 import resonantinduction.core.resource.ItemParts.Parts;
-import resonantinduction.energy.battery.BlockEnergyStorage;
+import resonantinduction.energy.battery.BlockBatteryBox;
 import resonantinduction.energy.battery.ItemBattery;
 import resonantinduction.energy.battery.ItemBlockEnergyStorage;
-import resonantinduction.energy.generator.BlockSmallSteamGen;
-import resonantinduction.energy.generator.BlockSolarPanel;
 import resonantinduction.fluid.EnumGas;
 import resonantinduction.fluid.pipes.BlockPipe;
 import resonantinduction.fluid.pipes.FluidPartsMaterial;
@@ -66,6 +64,8 @@ import resonantinduction.mechanics.armbot.command.TaskRotateTo;
 import resonantinduction.mechanics.armbot.command.TaskStart;
 import resonantinduction.mechanics.armbot.command.TaskTake;
 import resonantinduction.mechanics.armbot.command.TaskUse;
+import resonantinduction.mechanics.generator.BlockSmallSteamGen;
+import resonantinduction.mechanics.generator.BlockSolarPanel;
 import resonantinduction.mechanics.processor.BlockProcessor;
 import resonantinduction.misc.EntityFarmEgg;
 import resonantinduction.misc.EnumBird;
@@ -313,7 +313,7 @@ public class ResonantInductionTransport
 		RecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", ResonantInductionTransport.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
 		RecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", ResonantInductionTransport.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
 		RecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", ResonantInductionTransport.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-		RecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockEnergyStorage.class, ItemBlockEnergyStorage.class);
+		RecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockBatteryBox.class, ItemBlockEnergyStorage.class);
 
 		/* ITEMS */
 		RecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", ResonantInductionTransport.MOD_ID, ItemReadoutTools.class, true);

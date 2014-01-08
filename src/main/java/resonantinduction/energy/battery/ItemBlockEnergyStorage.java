@@ -74,17 +74,17 @@ public class ItemBlockEnergyStorage extends ItemBlock
 			if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("wrenched"))
 			{
 				TileEntity entity = world.getBlockTileEntity(x, y, z);
-				if (entity instanceof TileEntityBatteryBox)
+				if (entity instanceof TileBatteryBox)
 				{
-					((TileEntityBatteryBox) entity).getInventory().loadInv(stack.getTagCompound());
+					((TileBatteryBox) entity).getInventory().loadInv(stack.getTagCompound());
 					NBTBase energy = stack.getTagCompound().getTag("energy");
 					if (energy instanceof NBTTagFloat)
 					{
-						((TileEntityBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, (long) (stack.getTagCompound().getFloat("energy") * 1000));
+						((TileBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, (long) (stack.getTagCompound().getFloat("energy") * 1000));
 					}
 					else if (energy instanceof NBTTagLong)
 					{
-						((TileEntityBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, stack.getTagCompound().getLong("energy"));
+						((TileBatteryBox) entity).setEnergy(ForgeDirection.UNKNOWN, stack.getTagCompound().getLong("energy"));
 					}
 
 				}
@@ -98,16 +98,16 @@ public class ItemBlockEnergyStorage extends ItemBlock
 	{
 		ItemStack itemStack = new ItemStack(RecipeLoader.blockBatBox);
 		TileEntity entity = vec.getTileEntity(world);
-		if (entity instanceof TileEntityBatteryBox)
+		if (entity instanceof TileBatteryBox)
 		{
 			if (itemStack.getTagCompound() == null)
 			{
 				itemStack.setTagCompound(new NBTTagCompound());
 			}
 			itemStack.getTagCompound().setBoolean("wrenched", true);
-			itemStack.getTagCompound().setFloat("energy", ((TileEntityBatteryBox) entity).getEnergyStored());
-			((TileEntityBatteryBox) entity).getInventory().saveInv(itemStack.getTagCompound());
-			((TileEntityBatteryBox) entity).getInventory().clear();
+			itemStack.getTagCompound().setFloat("energy", ((TileBatteryBox) entity).getEnergyStored());
+			((TileBatteryBox) entity).getInventory().saveInv(itemStack.getTagCompound());
+			((TileBatteryBox) entity).getInventory().clear();
 		}
 		return itemStack;
 	}

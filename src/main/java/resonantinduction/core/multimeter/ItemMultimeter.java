@@ -9,6 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.base.ItemMultipartBase;
+import resonantinduction.energy.multimeter.PartMultimeter;
 import resonantinduction.energy.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;

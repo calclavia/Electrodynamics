@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.Settings;
 import resonantinduction.core.api.ITesla;
 import resonantinduction.energy.ILinkable;
 import universalelectricity.api.energy.EnergyStorageHandler;
@@ -128,7 +129,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 							{
 								this.transfer(((TileTesla) transferTile), Math.min(this.energy.getEmptySpace(), TRANSFER_CAP));
 
-								if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
+								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
 								{
 									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 								}
@@ -204,7 +205,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 						boolean sentPacket = false;
 						for (ITesla tesla : transferTeslaCoils)
 						{
-							if (this.zapCounter % 5 == 0 && ResonantInduction.SOUND_FXS)
+							if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
 							{
 								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
 							}

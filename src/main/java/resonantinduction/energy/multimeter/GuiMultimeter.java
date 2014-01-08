@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.energy.gui;
+package resonantinduction.energy.multimeter;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -9,7 +9,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import resonantinduction.Reference;
 import resonantinduction.core.multimeter.ContainerMultimeter;
-import resonantinduction.core.multimeter.PartMultimeter;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.render.EnumColor;

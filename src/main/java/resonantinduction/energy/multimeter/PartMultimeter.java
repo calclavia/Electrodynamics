@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.core.multimeter;
+package resonantinduction.energy.multimeter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.multimeter.RenderMultimeter;
+import resonantinduction.energy.ResonantInductionEnergy;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
@@ -349,7 +351,7 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 
 	protected ItemStack getItem()
 	{
-		return new ItemStack(ResonantInduction.itemMultimeter);
+		return new ItemStack(ResonantInductionEnergy.itemMultimeter);
 	}
 
 	@Override

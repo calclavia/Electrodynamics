@@ -1,4 +1,4 @@
-package resonantinduction.energy.generator;
+package resonantinduction.mechanics.generator;
 
 import java.util.Set;
 

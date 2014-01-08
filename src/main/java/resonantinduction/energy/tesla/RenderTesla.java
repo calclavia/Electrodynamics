@@ -10,9 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.Reference;
-import resonantinduction.energy.model.ModelTeslaBottom;
-import resonantinduction.energy.model.ModelTeslaMiddle;
-import resonantinduction.energy.model.ModelTeslaTop;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

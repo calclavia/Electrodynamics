@@ -8,7 +8,7 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.energy.battery.ContainerBatteryBox;
-import resonantinduction.energy.battery.TileEntityBatteryBox;
+import resonantinduction.energy.battery.TileBatteryBox;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -20,12 +20,12 @@ public class GuiBatteryBox extends GuiContainer
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "battery_box.png");
 
-	private TileEntityBatteryBox tileEntity;
+	private TileBatteryBox tileEntity;
 
 	private int containerWidth;
 	private int containerHeight;
 
-	public GuiBatteryBox(InventoryPlayer par1InventoryPlayer, TileEntityBatteryBox batteryBox)
+	public GuiBatteryBox(InventoryPlayer par1InventoryPlayer, TileBatteryBox batteryBox)
 	{
 		super(new ContainerBatteryBox(par1InventoryPlayer, batteryBox));
 		this.tileEntity = batteryBox;

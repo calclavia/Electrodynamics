@@ -1,6 +1,6 @@
 package resonantinduction.core;
 
-import resonantinduction.core.multimeter.PartMultimeter;
+import resonantinduction.energy.multimeter.PartMultimeter;
 import resonantinduction.energy.transformer.PartTransformer;
 import resonantinduction.energy.wire.flat.PartFlatSwitchWire;
 import resonantinduction.energy.wire.flat.PartFlatWire;

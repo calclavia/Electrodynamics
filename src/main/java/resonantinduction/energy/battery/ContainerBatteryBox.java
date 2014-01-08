@@ -11,9 +11,9 @@ import com.builtbroken.minecraft.prefab.invgui.SlotSpecific;
 
 public class ContainerBatteryBox extends Container
 {
-	private TileEntityBatteryBox tileEntity;
+	private TileBatteryBox tileEntity;
 
-	public ContainerBatteryBox(InventoryPlayer par1InventoryPlayer, TileEntityBatteryBox batteryBox)
+	public ContainerBatteryBox(InventoryPlayer par1InventoryPlayer, TileBatteryBox batteryBox)
 	{
 		this.tileEntity = batteryBox;
 		// Top slot for battery output

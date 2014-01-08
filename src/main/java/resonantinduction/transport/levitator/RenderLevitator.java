@@ -8,7 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.energy.model.ModelEMContractor;
 
 public class RenderLevitator extends TileEntitySpecialRenderer
 {
