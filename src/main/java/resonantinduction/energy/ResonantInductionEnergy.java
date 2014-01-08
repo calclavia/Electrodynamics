@@ -3,20 +3,10 @@ package resonantinduction.energy;
 import ic2.api.item.Items;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.Icon;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -37,19 +27,6 @@ import resonantinduction.energy.tesla.TileTesla;
 import resonantinduction.energy.transformer.ItemTransformer;
 import resonantinduction.energy.wire.EnumWireMaterial;
 import resonantinduction.energy.wire.ItemWire;
-import resonantinduction.mechanics.BlockMachinePart;
-import resonantinduction.mechanics.furnace.BlockAdvancedFurnace;
-import resonantinduction.mechanics.furnace.TileAdvancedFurnace;
-import resonantinduction.mechanics.grinder.BlockGrinderWheel;
-import resonantinduction.mechanics.grinder.TileGrinderWheel;
-import resonantinduction.mechanics.grinder.TilePurifier;
-import resonantinduction.mechanics.item.ItemDust;
-import resonantinduction.mechanics.liquid.BlockFluidMixture;
-import resonantinduction.mechanics.liquid.TileFluidMixture;
-import resonantinduction.mechanics.purifier.BlockPurifier;
-import resonantinduction.transport.levitator.BlockLevitator;
-import resonantinduction.transport.levitator.ItemBlockContractor;
-import resonantinduction.transport.levitator.TileEMLevitator;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.recipe.UniversalRecipe;
@@ -61,7 +38,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -69,8 +45,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The core module of Resonant Induction

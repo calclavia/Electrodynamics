@@ -2,9 +2,9 @@ package resonantinduction.mechanics.mining;
 
 import java.util.Set;
 
-import resonantinduction.AssemblyLine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
@@ -14,20 +14,20 @@ import com.builtbroken.minecraft.prefab.BlockMachine;
 public class BlockApertureExcavator extends BlockMachine
 {
 
-    public BlockApertureExcavator()
-    {
-        super(ResonantInductionTransport.CONFIGURATION, "Machine_ApertureExcavator", UniversalElectricity.machine);
-    }
+	public BlockApertureExcavator()
+	{
+		super(ResonantInductionTransport.CONFIGURATION, "Machine_ApertureExcavator", UniversalElectricity.machine);
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, int metadata)
-    {
-        return new TileApertureExcavator();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, int metadata)
+	{
+		return new TileApertureExcavator();
+	}
 
-    @Override
-    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-    {
-        list.add(new Pair<String, Class<? extends TileEntity>>("TileApertureExcavator", TileApertureExcavator.class));
-    }
+	@Override
+	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+	{
+		list.add(new Pair<String, Class<? extends TileEntity>>("TileApertureExcavator", TileApertureExcavator.class));
+	}
 }

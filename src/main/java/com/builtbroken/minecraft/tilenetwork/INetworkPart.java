@@ -6,15 +6,15 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface INetworkPart extends ITileConnector
 {
-    /** Array of connections this tile has to other tiles */
-    public List<TileEntity> getNetworkConnections();
+	/** Array of connections this tile has to other tiles */
+	public List<TileEntity> getNetworkConnections();
 
-    /** Update the connection this tile has to other tiles */
-    public void refresh();
+	/** Update the connection this tile has to other tiles */
+	public void refresh();
 
-    /** Gets the networkPart's primary network */
-    public ITileNetwork getTileNetwork();
+	/** Gets the networkPart's primary network */
+	public ITileNetwork getTileNetwork();
 
-    /** Sets the networkPart's primary network */
-    public void setTileNetwork(ITileNetwork network);
+	/** Sets the networkPart's primary network */
+	public void setTileNetwork(ITileNetwork network);
 }

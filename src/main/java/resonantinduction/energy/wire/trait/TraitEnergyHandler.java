@@ -53,7 +53,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 		{
 			if (part instanceof PartConductor)
 			{
-				this.teConductorInterfaces.remove((PartConductor) part);
+				this.teConductorInterfaces.remove(part);
 			}
 			else
 			{

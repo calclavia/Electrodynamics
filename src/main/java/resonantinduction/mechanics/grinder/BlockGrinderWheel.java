@@ -77,9 +77,9 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 						tile.grindingItem = (EntityItem) entity;
 					}
 
-					if (!tile.getTimer().containsKey((EntityItem) entity))
+					if (!TileGrinderWheel.getTimer().containsKey(entity))
 					{
-						tile.getTimer().put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
+						TileGrinderWheel.getTimer().put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
 					}
 				}
 				else

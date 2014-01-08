@@ -2,9 +2,9 @@ package resonantinduction.energy.generator;
 
 public class TileEntitySteamFan extends TileEntitySteamPiston
 {
-    @Override
-    protected void updateAnimation()
-    {
+	@Override
+	protected void updateAnimation()
+	{
 
-    }
+	}
 }

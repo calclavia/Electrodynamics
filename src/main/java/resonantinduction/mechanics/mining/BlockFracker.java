@@ -2,10 +2,10 @@ package resonantinduction.mechanics.mining;
 
 import java.util.Set;
 
-import resonantinduction.AssemblyLine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
@@ -15,30 +15,30 @@ import com.builtbroken.minecraft.prefab.BlockMachine;
 public class BlockFracker extends BlockMachine
 {
 
-    public BlockFracker()
-    {
-        super(ResonantInductionTransport.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
-    }
+	public BlockFracker()
+	{
+		super(ResonantInductionTransport.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float b, float c, float d)
-    {
-        //  player.openGui(MechanizedMining.instance, 1, world, x, y, z);
-        TileFracker tile = (TileFracker) world.getBlockTileEntity(x, y, z);
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int a, float b, float c, float d)
+	{
+		// player.openGui(MechanizedMining.instance, 1, world, x, y, z);
+		TileFracker tile = (TileFracker) world.getBlockTileEntity(x, y, z);
 
-        System.out.println(tile.tank.getFluidAmount());
-        return true;
-    }
+		System.out.println(tile.tank.getFluidAmount());
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, int metadata)
-    {
-        return new TileFracker();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, int metadata)
+	{
+		return new TileFracker();
+	}
 
-    @Override
-    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-    {
-        list.add(new Pair<String, Class<? extends TileEntity>>("TileFracker", TileFracker.class));
-    }
+	@Override
+	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+	{
+		list.add(new Pair<String, Class<? extends TileEntity>>("TileFracker", TileFracker.class));
+	}
 }

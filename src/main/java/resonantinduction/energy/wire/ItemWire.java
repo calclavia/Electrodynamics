@@ -93,8 +93,8 @@ public class ItemWire extends JItemMultiPart
 		return super.getUnlocalizedName(itemStack) + "." + EnumWireMaterial.values()[itemStack.getItemDamage()].getName().toLowerCase();
 	}
 
-    @Override
-    @SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings("unchecked")
 	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
 		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))

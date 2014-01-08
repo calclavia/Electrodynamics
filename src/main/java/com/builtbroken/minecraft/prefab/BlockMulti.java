@@ -2,9 +2,6 @@ package com.builtbroken.minecraft.prefab;
 
 import java.util.Random;
 
-import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.interfaces.IMultiBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -15,6 +12,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
+
+import com.builtbroken.minecraft.DarkCore;
+import com.builtbroken.minecraft.interfaces.IMultiBlock;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

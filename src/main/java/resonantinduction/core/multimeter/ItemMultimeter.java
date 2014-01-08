@@ -2,7 +2,6 @@ package resonantinduction.core.multimeter;
 
 import java.util.List;
 
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.base.ItemMultipartBase;
 import resonantinduction.energy.wire.EnumWireMaterial;
+import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.MultiPartRegistry;

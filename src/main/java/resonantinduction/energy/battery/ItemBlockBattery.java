@@ -2,8 +2,6 @@ package resonantinduction.energy.battery;
 
 import java.util.List;
 
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -17,6 +15,8 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.IVoltageItem;
+import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LanguageUtility;
 
 @UniversalClass
 public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltageItem

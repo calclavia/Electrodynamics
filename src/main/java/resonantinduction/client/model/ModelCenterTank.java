@@ -15,31 +15,31 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ModelCenterTank extends ModelBase
 {
 
-    ModelRenderer Block;
+	ModelRenderer Block;
 
-    public ModelCenterTank(float par1)
-    {
-        textureWidth = 128;
-        textureHeight = 128;
+	public ModelCenterTank(float par1)
+	{
+		textureWidth = 128;
+		textureHeight = 128;
 
-        //block
-        Block = new ModelRenderer(this, 0, 0);
-        Block.addBox(0F, 0F, 0F, 16, 16, 16);
-        Block.setRotationPoint(-8F, 8F, -8F);
-        Block.setTextureSize(128, 32);
-        Block.mirror = true;
-        setRotation(Block, 0F, 0F, 0F);
-    }
+		// block
+		Block = new ModelRenderer(this, 0, 0);
+		Block.addBox(0F, 0F, 0F, 16, 16, 16);
+		Block.setRotationPoint(-8F, 8F, -8F);
+		Block.setTextureSize(128, 32);
+		Block.mirror = true;
+		setRotation(Block, 0F, 0F, 0F);
+	}
 
-    public void renderBlock(float f5)
-    {
-        Block.render(f5);
-    }
+	public void renderBlock(float f5)
+	{
+		Block.render(f5);
+	}
 
-    private void setRotation(ModelRenderer model, float x, float y, float z)
-    {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
-    }
+	private void setRotation(ModelRenderer model, float x, float y, float z)
+	{
+		model.rotateAngleX = x;
+		model.rotateAngleY = y;
+		model.rotateAngleZ = z;
+	}
 }

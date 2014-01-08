@@ -1,7 +1,6 @@
 package resonantinduction.mechanics;
 
 import resonantinduction.core.base.BlockBase;
-import universalelectricity.api.UniversalElectricity;
 
 /**
  * A block used to build machines.

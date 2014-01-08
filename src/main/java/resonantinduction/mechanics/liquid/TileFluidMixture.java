@@ -60,7 +60,7 @@ public class TileFluidMixture extends TileAdvanced
 		super.writeToNBT(nbt);
 		writeFluidToNBT(nbt);
 	}
-	
+
 	public void readFluidFromNBT(NBTTagCompound nbt)
 	{
 		fluids.clear();

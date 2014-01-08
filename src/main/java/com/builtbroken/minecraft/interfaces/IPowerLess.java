@@ -1,14 +1,16 @@
 package com.builtbroken.minecraft.interfaces;
 
-/** Applied to devices that have the option to run without power. Normally this option is only shown
+/**
+ * Applied to devices that have the option to run without power. Normally this option is only shown
  * to creative mode players
  * 
- * @author DarkGuardsman */
+ * @author DarkGuardsman
+ */
 public interface IPowerLess
 {
-    /** Should this run without power */
-    public boolean runPowerLess();
+	/** Should this run without power */
+	public boolean runPowerLess();
 
-    /** Set if this should run powerless */
-    public void setPowerLess(boolean bool);
+	/** Set if this should run powerless */
+	public void setPowerLess(boolean bool);
 }

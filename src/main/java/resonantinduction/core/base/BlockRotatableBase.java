@@ -3,13 +3,12 @@
  */
 package resonantinduction.core.base;
 
-import calclavia.lib.prefab.block.BlockRotatable;
-import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockRotatable;
 
 /**
  * @author Calclavia

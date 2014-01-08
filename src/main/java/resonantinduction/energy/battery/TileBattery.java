@@ -1,7 +1,6 @@
 package resonantinduction.energy.battery;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 

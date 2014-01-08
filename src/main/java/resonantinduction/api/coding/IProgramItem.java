@@ -1,13 +1,15 @@
 package resonantinduction.api.coding;
 
-/** IDs that an item can load/save a program
+/**
+ * IDs that an item can load/save a program
  * 
- * @author Darkguardsman */
+ * @author Darkguardsman
+ */
 public interface IProgramItem
 {
-    /** Sets the program into the item */
-    public void setProgram(IProgram program);
+	/** Sets the program into the item */
+	public void setProgram(IProgram program);
 
-    /** Gets the program from the item */
-    public IProgram getProgram();
+	/** Gets the program from the item */
+	public IProgram getProgram();
 }

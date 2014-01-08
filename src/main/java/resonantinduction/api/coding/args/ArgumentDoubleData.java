@@ -3,35 +3,37 @@ package resonantinduction.api.coding.args;
 import net.minecraft.util.MathHelper;
 import universalelectricity.api.energy.UnitDisplay;
 
-/** Used to create argument data for the encoder. Should only be used if the value needs to be
+/**
+ * Used to create argument data for the encoder. Should only be used if the value needs to be
  * clearly limited inside the encoder display.
  * 
- * @author DarkGuardsman */
+ * @author DarkGuardsman
+ */
 public class ArgumentDoubleData extends ArgumentData
 {
-    protected double max, min;
+	protected double max, min;
 
-    public ArgumentDoubleData(String name, double value, double max, double min)
-    {
-        super(name, value);
-        this.max = max;
-        this.min = min;
-    }
+	public ArgumentDoubleData(String name, double value, double max, double min)
+	{
+		super(name, value);
+		this.max = max;
+		this.min = min;
+	}
 
-    @Override
-    public boolean isValid(Object object)
-    {
-        if (super.isValid())
-        {
-            double value = MathHelper.parseDoubleWithDefault("" + object, min - 100);
-            return value != min - 100 && value >= min && value <= max;
-        }
-        return false;
-    }
+	@Override
+	public boolean isValid(Object object)
+	{
+		if (super.isValid())
+		{
+			double value = MathHelper.parseDoubleWithDefault("" + object, min - 100);
+			return value != min - 100 && value >= min && value <= max;
+		}
+		return false;
+	}
 
-    @Override
-    public String warning()
-    {
-        return "" + UnitDisplay.roundDecimals(min, 2) + " - " + UnitDisplay.roundDecimals(max, 2);
-    }
+	@Override
+	public String warning()
+	{
+		return "" + UnitDisplay.roundDecimals(min, 2) + " - " + UnitDisplay.roundDecimals(max, 2);
+	}
 }

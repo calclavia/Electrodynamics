@@ -3,7 +3,6 @@
  */
 package resonantinduction.energy;
 
-import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +10,7 @@ import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.components.event.MultitoolEvent;
+import codechicken.multipart.ControlKeyModifer;
 
 /**
  * @author Calclavia

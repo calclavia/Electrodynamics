@@ -8,8 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.multimeter.ContainerMultimeter;
 import resonantinduction.core.multimeter.PartMultimeter;
-import universalelectricity.api.vector.Vector3;
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.network.IGuiHandler;

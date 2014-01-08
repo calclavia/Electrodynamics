@@ -28,7 +28,6 @@ import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.item.ItemCoordLink;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.InventoryUtility;
 

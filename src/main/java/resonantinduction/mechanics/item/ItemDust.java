@@ -30,6 +30,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemDust extends ItemBase
 {
 	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
+
 	public ItemDust(int id)
 	{
 		super("dust", id);
@@ -87,6 +88,7 @@ public class ItemDust extends ItemBase
 		return null;
 	}
 
+	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
 		for (ItemStack dust : dusts)
@@ -95,13 +97,14 @@ public class ItemDust extends ItemBase
 		}
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack itemStack, int par2)
 	{
 		/**
 		 * Auto-color based on the texture of the ingot.
 		 */
-		String name = this.getDustFromStack(itemStack);
+		String name = ItemDust.getDustFromStack(itemStack);
 
 		if (ResourceGenerator.materialColors.containsKey(name))
 		{

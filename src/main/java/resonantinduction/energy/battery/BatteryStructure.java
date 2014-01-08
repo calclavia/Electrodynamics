@@ -14,7 +14,7 @@ public class BatteryStructure extends Structure<TileBattery>
 		{
 			totalEnergy += battery.getEnergy(null);
 		}
-		
+
 		int amountOfNodes = this.get().size() - exclusion.length;
 
 		if (totalEnergy > 0 && amountOfNodes > 0)

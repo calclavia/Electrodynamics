@@ -3,7 +3,6 @@
  */
 package resonantinduction.core.base;
 
-import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
