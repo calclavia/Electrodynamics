@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.save;
+package com.builtbroken.minecraft.network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

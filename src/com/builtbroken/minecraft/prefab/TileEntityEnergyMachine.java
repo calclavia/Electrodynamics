@@ -202,7 +202,6 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
             if (voltage > this.shortOutVoltage)
             {
                 //TODO damage machine
-                this.onDisable(this.worldObj.rand.nextInt(100));
             }
         }
         else

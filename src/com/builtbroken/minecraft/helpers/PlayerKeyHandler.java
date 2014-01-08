@@ -8,8 +8,6 @@ import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.builtbroken.minecraft.network.PacketManagerKeyEvent;
-
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 
@@ -18,6 +16,12 @@ import cpw.mods.fml.common.TickType;
  * @author DarkGuardsman */
 public class PlayerKeyHandler implements IScheduledTickHandler
 {
+    private String channel;
+
+    public PlayerKeyHandler(String channel)
+    {
+        this.channel = channel;
+    }
 
     @Override
     public final void tickStart(EnumSet<TickType> type, Object... tickData)
@@ -40,7 +44,7 @@ public class PlayerKeyHandler implements IScheduledTickHandler
             boolean state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
             if (state)
             {
-                PacketManagerKeyEvent.sendPacket(keyCode);
+                //PacketManagerKeyEvent.sendPacket(this.channel, keyCode);
             }
         }
     }

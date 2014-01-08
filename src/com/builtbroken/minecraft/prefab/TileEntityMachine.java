@@ -13,7 +13,6 @@ import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraTileEntityInfo;
-import com.builtbroken.minecraft.interfaces.IDisableable;
 import com.builtbroken.minecraft.interfaces.IExternalInv;
 import com.builtbroken.minecraft.interfaces.IInvBox;
 import com.builtbroken.minecraft.network.ISimplePacketReceiver;
@@ -23,7 +22,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IDisableable, ISimplePacketReceiver, IExtraTileEntityInfo
+public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv,  ISimplePacketReceiver, IExtraTileEntityInfo
 {
     /** Tick by which this machine stops working */
     protected int disabledTicks = 0;
@@ -96,7 +95,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     /** Can this tile function, or run threw normal processes */
     public boolean canFunction()
     {
-        return !this.isDisabled() && this.enabled;
+        return this.enabled;
     }
 
     public boolean isFunctioning()
@@ -115,7 +114,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     {
         System.out.println("\n  CanRun: " + this.canFunction());
         System.out.println("  RedPower: " + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord));
-        System.out.println("  IsDisabled: " + this.isDisabled());//TODO i'm going to kick myself if this is it, yep disabled
         System.out.println("  IsRunning: " + this.functioning);
     }
 
@@ -252,27 +250,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
     public Packet getDescriptionPacket()
     {
         return PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning);
-    }
-
-    /** NetworkMod channel name */
-    public String getChannel()
-    {
-        return DarkCore.CHANNEL;
-    }
-
-    @Override
-    public void onDisable(int duration)
-    {
-        if (this.canBeDisabled)
-        {
-            this.disabledTicks = duration;
-        }
-    }
-
-    @Override
-    public boolean isDisabled()
-    {
-        return !this.canBeDisabled && this.disabledTicks > 0;
     }
 
     @Override

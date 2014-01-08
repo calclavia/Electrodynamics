@@ -8,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 
-import com.builtbroken.minecraft.fluid.FluidHelper;
 import com.builtbroken.minecraft.helpers.PlayerKeyHandler;
 import com.builtbroken.minecraft.prefab.BlockMulti;
 import com.builtbroken.minecraft.save.SaveManager;
@@ -28,12 +27,7 @@ public class DarkCore
     public static final String DOMAIN = "darkcore";
     public static final String PREFIX = DOMAIN + ":";
 
-    public static final String TEXTURE_DIRECTORY = "textures/";
-    public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-    public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-    public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-    public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-    public static final String CHANNEL = "DARKCORE";
+   
 
     public static String DIRECTORY_NO_SLASH = "assets/" + DOMAIN + "/";
     public static String DIRECTORY = "/" + DIRECTORY_NO_SLASH;
@@ -73,13 +67,7 @@ public class DarkCore
     {
         if (!pre)
         {
-            CoreRegistry.masterBlockConfig.load();
-            MinecraftForge.EVENT_BUS.register(this);
-            MinecraftForge.EVENT_BUS.register(new FluidHelper());
-            MinecraftForge.EVENT_BUS.register(SaveManager.instance());
-            TickRegistry.registerTickHandler(NetworkUpdateHandler.instance(), Side.SERVER);
-            TickRegistry.registerScheduledTickHandler(new PlayerKeyHandler(), Side.CLIENT);
-            MinecraftForge.EVENT_BUS.register(new LaserEntityDamageSource(null));
+            CoreRegistry.masterBlockConfig.load();          
             pre = true;
         }
     }

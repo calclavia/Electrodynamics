@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.fluid;
+package com.builtbroken.minecraft;
 
 import java.util.ArrayList;
 import java.util.HashMap;

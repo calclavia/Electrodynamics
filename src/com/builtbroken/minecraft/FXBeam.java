@@ -44,7 +44,7 @@ public class FXBeam extends EntityFX
     /** beam diameter */
     private float beamD = 0.08f;
 
-    private String texture = DarkCore.TEXTURE_DIRECTORY + "";
+    private String texture = "";
 
     public FXBeam(World world, Vector3 start, Vector3 end, Color color, String texture, int age, boolean pulse)
     {

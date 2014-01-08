@@ -37,19 +37,4 @@ public class LaserEntityDamageSource extends EntityDamageSource
             }
         }
     }
-
-    @ForgeSubscribe
-    public void LivingAttackEvent(LivingAttackEvent event)
-    {
-        if (event.entity instanceof EntityPlayer)
-        {
-            if (((EntityPlayer) event.entity).inventory.armorItemInSlot(3) == new ItemStack(Item.plateDiamond, 1))
-            {
-                if (event.isCancelable())
-                {
-                    event.setCanceled(true);
-                }
-            }
-        }
-    }
 }
