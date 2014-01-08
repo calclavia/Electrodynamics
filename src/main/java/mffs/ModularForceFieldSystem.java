@@ -338,11 +338,6 @@ public class ModularForceFieldSystem
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		/**
-		 * Add recipes
-		 */
-		UniversalRecipe.init();
-
 		// -- General Items --
 		// Focus Matrix
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 9), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get(), 'D', Item.diamond, 'R', Item.redstone));
