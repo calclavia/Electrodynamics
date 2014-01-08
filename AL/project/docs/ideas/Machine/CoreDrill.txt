@@ -1,0 +1,1 @@
+Used to break holes in bedrock to access areas bellow including the mining dim. When combined with other machines in can be used as a way to automaticly mine large sums of ore. 

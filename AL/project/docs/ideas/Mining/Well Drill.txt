@@ -1,0 +1,4 @@
+Combine this will a drill that will be created later. The idea is that a player can drill a hole threw bedrock to tab into an underground well for water. This way they have an inf source of water since well generally can hold 1M gallons of water and are constanly refilled when it rains. Though make sure that we limit the max water output to a few bucks a min to prevent abuse. As well after making the well the player will need to make a pipe down to it which should be 1-3K blocks under bedrock. The player will also need to pump it out using the FM pump. 
+
+
+We can also do the same to tap into a lava source though there will be dire outcomes. Example is the lava escapes from the well and errupts causing damage tot eh sourounding area. Make sure to add a config option for this. Options should be can create, volume per hour output, and can greif. 

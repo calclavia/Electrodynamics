@@ -1,0 +1,11 @@
+Need improved just a bit to provide better features. Currently the only features are lagless mutli-block networks, and redstone output.
+
+Feature ideas
+Auto feed system. Tanks use to have this were they feed machines bellow them with fluids. was original designed to support the tank design and was removed during a rewrite.
+
+
+Graphics
+Though i've been working to reduce graphics so things run better i had a few ideas.
+Fluid flow - actually show the fluid moving and sloshing in the tank. 
+Connections - show the fluid moving in and out of connected machines/pipe
+Wrench support - allow the wrench to turn off side renders. Too improve design and performance.

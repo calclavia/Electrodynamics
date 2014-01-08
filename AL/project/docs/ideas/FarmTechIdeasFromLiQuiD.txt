@@ -1,0 +1,38 @@
+DNA Digital Card
+	-Instead of using the DNA string use a digital card and store all the DNA stats on it.
+DNA Digital Card Reader/Writer
+	-And add a new machine/computer that reads the card and on which you can change the stats with using the DNA string as a currency. 
+	-So if you want to add more health to a mob you need like 15 DNA strings of that mob type per 1 health added.
+DNA Spawner
+	-It reads the DNA card and then consumes a very large amount of energy/electricity to spawn the mob.
+Farming Machine
+	-My idea for this machine is to let it create a farming area depended on how much Range Upgrades there were inside the machine.
+	-The farm produces waste as a side product of the farm.
+Waste
+	-Is a liquid side product created by the farming machine.
+	-It is distributed through maybe a waste pipe that can be added to Fluid Mechanics or the Sewer block
+Sewer
+	-As I didn't want to have FM as a must install to transport waste I had this idea in mind for Biotech.
+Refinery
+	-This machine refines waste in to water and maybe fertilizer?
+Cow Milker
+	-I don't know if you want to add this machine to FarmTech I just liked the idea to automate the cow milking process.
+BioRefinery
+	-Maybe this machine can be combined with the other refinery and can be switch to be a refinery for milk or for waste?
+Egg Battery(Probably should have a different name)
+	-Don't know if this would be nice but having a multiblock machine that uses eggs to spawn chickens on a "threadmill" and generate power?
+Woodcutter
+	-My original idea was to have this machine put next to a line of trees and let it cut the blocks one by one. 
+	-And the length of the line of trees that can be cut is defined by the amount of Range Upgrades inside the woodcutter.
+BioCheese
+	-Dunno if this would be a nice item to keep in FarmTech. It was produced by putting milk in the BioRefinery and then it would refine the milk into the cheese.
+	-It would produce more cheese if you would add seeds.
+Sprinklers
+	-If you use those with the farming machine, the farming machine will produce a lot more waste.
+	-But these machines use fertilizer and water to increase the crop growth.
+Milk
+	-Maybe make it a placeable liquid/fluid?
+	-Needs more uses if the Cow Milker is implemented. Cause the only use now is BioCheese
+	
+
+

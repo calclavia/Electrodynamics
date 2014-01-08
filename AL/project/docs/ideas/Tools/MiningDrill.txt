@@ -1,0 +1,9 @@
+Idea of the drill is the same as the IC2 drill but vastly improved.
+
+Main thing to work on is have it drill on right click and not mine on left. Though how this is actually done is optional. The recommended plan is to have it drill only while right click is held just like the mining laser. The same code can actually be used but with the range being 3 blocks only. This should allow it to work much better than the slow left clikc hold that will not work with the model. 
+
+For animation the drill head should spin and kick up particles from what it mines. Yes, even when attacking an entity should it create particles but instead if will be blood. Its a bit graphics but will make for a more full experience when using the tool.
+
+The down side for the drill should be the same as the mining laser. Its a heavy peace of mining gear that is very effect at mining stone but is a bit hard for the player to move around with. It should actually out do the mining laser as the laser advantage is range over speed. 
+
+Another downside is the drill's head should slowly fade away but can be replace by several material types. As well both a fuel and battery powered drill should be created for the player to pick between.

@@ -1,0 +1,1 @@
+This will work in combo with automation to allow auto fishing. However, the user can use it to detect fish in water. Though what it actually does is increase the chance to catch fish, and create random dots on the GUI. its more of a fake block that just offers a bonus to creation. Though when used with armbot it will allow it to fish.

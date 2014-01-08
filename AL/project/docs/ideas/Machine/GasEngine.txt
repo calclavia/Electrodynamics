@@ -1,0 +1,7 @@
+Both a compact version and a extended version
+
+Gas being gases like butan, and methain not gasoel as that will be used in fluid mechanics
+
+Compact version will be self comtained including a 6 bucket tank to store gas in. It will generate direct AC power to the UE network
+
+Extend version will generate rotational force using the gas. This force will be applied to a mechanical rod from the core and used to generate power when conencted to a motor. 

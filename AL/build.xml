@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="CoreMachine" default="build">
+
+	<property file="build.properties" />
+	<property environment="env" />
+	<property name="file.core" value="[Indev]AssemblyLine_v${version.mod.major}.${version.mod.minor}.${version.mod.revis}.${env.BUILD_NUMBER}.jar" />
+	<target name="build">
+		<copy todir="${dir.development}">
+			<fileset dir="../Minecraft Forge Latest/" />
+		</copy>
+        <get src="http://files.minecraftforge.net/CodeChickenLib/CodeChickenLib-dev-1.6.4-1.0.0.49.jar"
+			dest="${dir.mcp}/lib/CCL-dev.jar"/>
+		<get src="http://files.minecraftforge.net/ForgeMultipart/ForgeMultipart-dev-1.6.4-1.0.0.227.jar"
+			dest="${dir.mcp}/lib/FMP-dev.jar"/>
+		<copy todir="${dir.mcp}/src/minecraft">
+			
+			<fileset dir="${dir.development}src/main/java">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+            <fileset dir="${dir.development}src/APIs">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+             <fileset dir="${dir.development}Universal-Electricity/src/main/java">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+             <fileset dir="${dir.development}Built-Broken-Lib/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+              <fileset dir="${dir.development}CoreLibrary/src">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>
+              <fileset dir="${dir.development}CoreLibrary/dependencies">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>            			
+		</copy>
+		
+		<!-- Make all directories -->
+		<mkdir dir="output" />
+
+		
+		
+		
+		<!-- Replace version numbers -->
+		<replace dir="${dir.mcp}/src/minecraft" token="@MAJOR@" value="${version.mod.major}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@MINOR@" value="${version.mod.minor}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@REVIS@" value="${version.mod.revis}" />
+		<replace dir="${dir.mcp}/src/minecraft" token="@BUILD@" value="${env.BUILD_NUMBER}" />
+
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
+			<arg line="recompile.bat" />
+		</exec>
+		<exec dir="${dir.mcp}" executable="cmd" osfamily="windows">
+			<arg line="reobfuscate_srg.bat" />
+		</exec>
+		
+		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
+			<arg line="recompile.sh" />
+		</exec>
+		<exec dir="${dir.mcp}" executable="bash" osfamily="unix">
+			<arg line="reobfuscate_srg.sh" />
+		</exec>
+		
+		<!-- Copy compiled files into folders to be zipped -->
+		<copy todir="core">
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/assemblyline/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/common/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="com/builtbroken/minecraft/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="buildcraft/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="cofh/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="dan200/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="ic2/" />
+            <fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/api/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="universalelectricity/compatibility/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="micdoodle8/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="mffs/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="org/modstats/" />
+			<fileset dir="${dir.mcp}/reobf/minecraft" includes="icbm/" />
+            <fileset dir="${dir.development}resources" excludes=".git/**" />
+			<fileset dir="${dir.development}CoreLibrary/resources" excludes=".git/**" />
+		</copy>
+        <copy todir="output" file="LICENSE.txt" />
+        <copy todir="output" file="build.properties" />
+		
+		<!-- OUTPUT LATEST JAR AND ZIP FILES -->
+		<jar destfile="output/${file.core}">
+			<fileset dir="core" />
+		</jar>
+	</target>
+</project>

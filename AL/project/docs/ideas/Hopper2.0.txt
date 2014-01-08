@@ -1,0 +1,11 @@
+Advanced versions of the hopper should be added to assembly line to both boost its use and increase functionality of the hopper design.
+
+
+A) Multi output hopper
+Multi output hopper that is configured with a wrench for connections. Can output to several blocks but cost a bit more than a normal hopper
+
+B) Sorting hopper
+Combination of a  mulit output hopper with a few motors and a detector. Can not only output on several sides but has the logic to support sorting to those sides. Uses inprints in the GUI per side opened. 
+
+C) Hopper 2.0
+Either override the current hopper or make a better one. This hopper will contain open to turn it off with redstone and control the timing of items being outputed. As well can support imprints to determine what can enter and exit. 

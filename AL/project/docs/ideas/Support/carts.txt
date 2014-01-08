@@ -1,0 +1,25 @@
+Since i'm looking to start having each mod support railcraft and mods like it we need some mining carts. Including a much better version of railcrafts bore.
+
+
+Cart 1: Ore cart
+Simple as create a handler to turn let a normal cart be filled with items and render the items in it. We will need to override the built in cart or at least make a right click function that turns the  current cart into a new ore cart. As well another to turn it back into a cart the player can ride. The purpose of this is a very cheap way to move a large amount of ore in  cart without a chest. As well it looks really nice.
+
+Cart 2: Drill cart
+More of a comical cart as it doesn't do much though when combined with a track layer it can dig and lay tracks down.
+
+Cart 3: Laser cart
+More useful as it can be angled in all direction to act as a mobile digger when combined with a steam engine and battery cart. Will eat up a lot of power but will melt a block a second.
+
+Cart 4: Mining cart
+A decoration cart that allows the player to place a pick ax on the outside. 
+
+Cart 5: Demo cart
+A cart that is used to store demolition gear and a more visual way. Once again is a decortaion cart as it has no real function.
+
+Cart 6: Boring machine
+Same as the railcraft cart but is a bit more complex. Not only can it drill but it has 4 robotic arms on the outside to place blocks to create a tunnel. The arms can also mine the walls as well and later with FM can spray concrete on the wall to form blocks. This version of the boring machine is a lot slower than the railcraft version but has many more uses. Including a GUI to design the tunnel, run time args to tell it when to stop, and built in chunk loading. It will also lay down pipes or conveyor belts so that items are funnel back to the exit of the tunnel. Though this will be a configurable option. As well this machine should only be activated with assembly line installed since it will use the robotic arms to function. However, we could make a lesser version of it that loads in its place.
+
+Cart 7: Track layer
+Can lay tracks. Though i'm unsure which mod to place this in but it makes since to add it to a heavy mining mod. Basicly its a 2 robotic arm machine that places tracks. The arms can only place forwards and are attacked to the side of the cart. The tracks will sit in the cart up right. The track layer can only hold 64 tracks but can be combined with a chest cart to carry many more. Though we can add a config option for the number of storage slots. 
+
+

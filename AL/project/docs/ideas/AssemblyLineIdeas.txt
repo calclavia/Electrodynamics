@@ -1,0 +1,37 @@
+Curent Objects
+    Armbot
+    Conveyor belt
+    Manipulator
+    Rejector
+    Crate
+    Detector
+    
+Planned Objects
+    Item Rail line - pipe based rail that has a drone cart inside to pickup and move items. Moves very fast but cost a lot of energy to use.
+    Armbot Drone - movable version of the armbot that can do basic task but is limited on range from its station.
+    Armbot Drone Station - docking point for the armbot after the task has been completed. As well charges the armbot battery. 
+    Armbot Cart - Rail cart version of the armbot. Requires the use of power rails or battery cart to function.
+    Power Rails - rails that are powered by electricity
+    Powered Cart - Electric version of the steam cart
+    Iron Storage cart - Reinforced cart that caries items like a chest cart. Can't be opened by a player
+    Battery box cart - holds energy to be used by the train or for transport.
+    Tanker cart - Barrel strabed to a cart. moves stabled fluids
+    Reinforced tanker cart - sames as above but for unstabled fluids
+    Reinfoeced Powered cart - armored tank like version of the powered cart. comes with a plow to removed things from infront of it.
+    Light cart - produced light 
+    Crate cart - crate in a cart. Used the same as a chest cart but with more storage.
+    Chain motor - moves chains up or down. suppors redstone and computer control
+    Chain - defines the path by which objects can be pulled up or down by the chain motor
+    Chain claw - attaches chains to an object so it can be moved with the chains.
+    Elevator Belt - moves items strait up
+    Elevator box - moves objects strait up and can be connected to several boxes at once to make a lift. Used to move entities or carts up or down.
+    Crane - Advanced version of the armbot that has a range equal to its rails. Can move anything with its arm.
+        Crane Rail - defines the area by which the crane can move on. 
+        Crane PLC - controls the crane
+        Crane Drop off - defines the area for which items are to be dropped by the cranes mining arm
+        Crane pickup - defines and area by which the crane should pickup items. Supports carts
+        Drill - attachment for the crane to make it mine
+        Laser Drill - same as above but uses energy to mine with.
+        Arm - normal attachment for the armbot to pickup entities, or blocks. 
+        
+    Box - An item used to store and move items with out knowing what they are. Made from paper, and very cheap. Designed for shipping items to other players. Can be used to store items by stacking them up. However, has no real use.

@@ -1,0 +1,11 @@
+3 versions of this will need to be created
+
+
+A) Sentry gun version
+	This will use an advanced system in combo with the player to select mine around it. The player using a hand tool will flag blocks to be mined. A few seconds after doing this the sentry will aim at the block and start to mine it. 
+
+B) Player mounted version
+	Mounted version of C. It will use code like that used in the vehicle prefab but will not move. The player will aim it with the WASD keys since mouse input will let the player move it to fast. The player will then fire it with the space bar or mouse button if we can code that in correctly. 
+
+c) Prototype version
+	This will be dumped down almost item mining laser type. It will need to be manually moved by the player without the player mounting it. This means it will be hard to use and about useless. However, its purpose is a stepping stone in the developement of mining lasers. Once the player crafts it they should then be able to create the other two versions.

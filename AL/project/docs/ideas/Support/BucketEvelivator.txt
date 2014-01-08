@@ -1,0 +1,1 @@
+A very small single block evelvator that can carry either a playter or a few items. Is designed to be an earlier tier elevator for deep mines.Later version of this will be used by the player to access the mining dimension that exist bellow bedrock.  

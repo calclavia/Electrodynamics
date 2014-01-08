@@ -1,0 +1,3 @@
+Too support the idea of ore viens existing bellow bedrock we need to create a dim that the player can access. This dim will use the ore vien map to actually generate a very large vien of ore for the player to see. While the player is in the dim they will actually see their machines work on collecting ore. As well any ore they mine will be removed from the global vien map. 
+
+Another thing this dim will not actually save, and will regen often. Its used as a fake dim for the player to have an area to always mine from. Though we might be able to tie in a few feature to let it remain. 

@@ -1,0 +1,14 @@
+Designed off a phototron grow box from getPhototrom.com TV segment
+
+Well not completely as i've had this idea before and the comercal reminded me of what i was planning. As well added to it a bit.
+
+The design is a multi-block box design of any shape, and model design. It will be provided with dirt, seeds, water, and electricity to produce farming plants. Its 100% self contained and comes in several teirs.
+
+Teir 1
+Basic box that requires no power but must be in sun light. As well must be hand feed with water, dirt, and seeds. Made out of wood, sticks, and glass. Pretty much a green house box.
+
+Teir 2
+Start of automation. Box contains a protective case, heater, and sun lamp. Must be provided with electricity. Still must be watered, and feed with items.
+
+Teir 3
+Increased automation and comes with a robotic arm. Can now be auto feed with items, and fluids. Will do everything needed to grow the plant. Will only need a little bit of water, dirt, and seeds when it runs out. Will auto output farm products over time. 

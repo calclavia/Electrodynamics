@@ -1,0 +1,3 @@
+Upgraded version of the current mining laser using the same Item that has the ability to collect the items using a gravity field. Should cost the player a lot to create and render a blue/purple cone like void around the laser.
+
+Render should be about the same size of the current laser but look more like a cannon. 

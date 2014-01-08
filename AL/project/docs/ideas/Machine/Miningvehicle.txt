@@ -1,0 +1,4 @@
+2 Tracked vehicle that can support several options for mining. Including a drill, laser, claw, and hammer. Each tool will have its advantages and down sides. 
+
+
+The render for the vehicle should be very generic allowing for additional tools to be added without issues. The player should site on the left side of the vehicle with the tool extending down the right side. The model should include a cab to protect the player from damage. Including prevent mobs from attack the player while inside. The cab and tools should be able to rotate while on top of the tracks and act like a tank. 

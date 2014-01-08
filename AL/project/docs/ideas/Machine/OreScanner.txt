@@ -1,0 +1,20 @@
+Basic device to scan an area to give a rough idea of the mineral value in the area. 
+
+Functionality
+    Scan for ores and output a data table of elements found. Useful for planning large scale mining sites. In which a smart player will look for a good site before laying down the gear.
+    
+Mod compatibility
+    Use ore directory to pin down a rough idea what is going on. Though some mods will need direct support to work beyond the normal ores. Any unkown blocks will be lumped in with stone.
+    
+Display out
+    Minerals will be displayed in the main mode of percent total. This will make the user work a bit to understand what is going on but they will get a very large idea of what is here to mine. Though there will be display config option to sort out what is there. Along with advanced scanning to get per blockID and ammount output. 
+    Ex.
+        75% Rock/Soil/Other
+        11% Cu
+        9% Fe
+        5% Silicon
+        
+        
+End product 
+    I'm thinking about making a underground mapping system to go with this. Though it will become its own set of sub blocks that link with the scanner. This can be used for both mining, treasure hunting, and base protection. As well a very cool thing to look at since it will 3D render above the block. 
+        

@@ -1,0 +1,1 @@
+remote version of the ore scanner. It has a much weaker range than the block version but should work just the same. Though it's down side is it will only give the player very generic results unless they bring it back to an actual ore scanner to process. 

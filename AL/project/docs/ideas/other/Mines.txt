@@ -1,0 +1,1 @@
+Replace the built in mine world generator to create more complex and fuller mines. As well add special biome cases were the mine will change. For example watery biomes should have flood chances. 

@@ -1,0 +1,1 @@
+Gas powered version of the furnace that is used to cook items with. Should either be a block on its own or support the heating system currently in progress that heats up other blocks. 

@@ -1,0 +1,1 @@
+When the Crane is finished for Assembly line an addon should be created for it to mine as well. Addons should include a laser drill, and core drill. They should act very similiar to quarry from buildcraft but will need more setup by the player to function. However, for the extra setup the crane will mine much faster including up to 4 blocks at a time.

@@ -1,0 +1,1 @@
+Block that will detect and grab items from belts. Depending on its settings it will fill or drain the item of its fluid volume.

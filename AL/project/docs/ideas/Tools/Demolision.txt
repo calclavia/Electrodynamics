@@ -1,0 +1,5 @@
+Demo tools and explosive are listed in the tool txt file.
+
+This will be a very effective way to mine. In which the rocks will be broken down into easy to mine rubble blocks. The rubble blocks will be non-ticking tileEntities that store the itemStack of the item they will drop. These blocks will look like gravel and mine just as easy. Other machines will be added to make this very fast. As well this will work in combo with the current rubble ore items used by Assembly Line crusher and grinder. That way we get a more realistic explosive drop rate. 
+
+To do this the base explosion will be override as well some ICBM content. In which it will logicaly understand that different items drop. Though we might be able to pull this off with a forge hook as well. Some research will be needed to make this work correctly
