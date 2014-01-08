@@ -1,4 +1,4 @@
-package resonantinduction;
+package resonantinduction.transport;
 
 import java.io.File;
 import java.io.FileInputStream;

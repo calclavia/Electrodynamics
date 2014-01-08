@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,7 +20,7 @@ public class ItemDisk extends Item
     {
         super(id);
         this.setUnlocalizedName("disk");
-        this.setCreativeTab(IndustryTabs.tabAutomation());
+        this.setCreativeTab(ResonantInductionTabs.tabAutomation());
         this.setHasSubtypes(true);
     }
 
@@ -28,7 +28,7 @@ public class ItemDisk extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "disk");
+        this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "disk");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package resonantinduction;
+package resonantinduction.core.recipe;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class ALRecipeLoader
+public class RecipeLoader
 {
 
     public static Block blockConveyorBelt;
@@ -79,15 +79,15 @@ public class ALRecipeLoader
     public static Item itemVehicleTest;
     public static Item itemMPWire;
 
-    private static ALRecipeLoader instance;
+    private static RecipeLoader instance;
 
     public static final String COPPER_WIRE = "wireCopper";
 
-    public static ALRecipeLoader instance()
+    public static RecipeLoader instance()
     {
         if (instance == null)
         {
-            instance = new ALRecipeLoader();
+            instance = new RecipeLoader();
         }
         return instance;
     }

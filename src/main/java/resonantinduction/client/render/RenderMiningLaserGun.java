@@ -18,7 +18,7 @@ public class RenderMiningLaserGun implements IItemRenderer
 {
 
     private static final ModelMiningLaserGun MODEL = new ModelMiningLaserGun();
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "LaserGun.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "LaserGun.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

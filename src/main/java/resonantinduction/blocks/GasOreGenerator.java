@@ -2,7 +2,7 @@ package resonantinduction.blocks;
 
 import java.util.Random;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -101,7 +101,7 @@ public class GasOreGenerator implements IWorldGenerator
                                 Block block = Block.blocksList[blockid];
                                 if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0D && (block == null || block.isAirBlock(world, x, y, z) || block.canBeReplacedByLeaves(world, x, y, z) || blockid == this.replaceID))
                                 {
-                                    world.setBlock(x, y, z, ALRecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
+                                    world.setBlock(x, y, z, RecipeLoader.blockGas.blockID, 10 + world.rand.nextInt(5), 2);
                                 }
                             }
                         }

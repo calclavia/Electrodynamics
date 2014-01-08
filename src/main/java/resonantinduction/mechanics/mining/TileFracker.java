@@ -1,6 +1,6 @@
 package resonantinduction.mechanics.mining;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.fluid.EnumGas;
 import resonantinduction.fluid.GasTank;
 import net.minecraft.block.Block;
@@ -76,7 +76,7 @@ public class TileFracker extends TileEntityEnergyMachine implements IFluidHandle
                     worldObj.setBlockToAir(target.intX(), target.intY(), target.intZ());
                     this.consumePower(2, true);
                 }
-                worldObj.setBlock(target.intX(), target.intY(), target.intZ(), ALRecipeLoader.frackingPipe.blockID);
+                worldObj.setBlock(target.intX(), target.intY(), target.intZ(), RecipeLoader.frackingPipe.blockID);
                 this.consumePower(500, true);
             }
         }

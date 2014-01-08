@@ -2,7 +2,7 @@ package resonantinduction.fluid.pipes;
 
 import java.util.List;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.fluid.prefab.TileEntityFluidNetworkTile;
 import resonantinduction.transport.fluid.TileEntityTank;
 import net.minecraft.block.Block;
@@ -54,7 +54,7 @@ public class ItemBlockPipe extends ItemBlock
         TileEntity entity = vec.getTileEntity(world);
         if (entity instanceof TileEntityTank && ((TileEntityTank) entity).getTankInfo() != null && ((TileEntityTank) entity).getTankInfo()[0] != null)
         {
-            ItemStack itemStack = new ItemStack(ALRecipeLoader.blockTank);
+            ItemStack itemStack = new ItemStack(RecipeLoader.blockTank);
             FluidStack stack = ((TileEntityTank) entity).getTankInfo()[0].fluid;
 
             if (itemStack.getTagCompound() == null)

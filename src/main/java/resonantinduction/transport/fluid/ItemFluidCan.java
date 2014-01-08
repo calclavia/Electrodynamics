@@ -3,7 +3,7 @@ package resonantinduction.transport.fluid;
 import java.util.List;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -32,9 +32,9 @@ public class ItemFluidCan extends ItemFluidContainer
 
     public ItemFluidCan()
     {
-        super(AssemblyLine.CONFIGURATION.getItem("FluidCan", DarkCore.getNextItemId()).getInt());
+        super(ResonantInductionTransport.CONFIGURATION.getItem("FluidCan", DarkCore.getNextItemId()).getInt());
         this.setUnlocalizedName("FluidCan");
-        this.setCreativeTab(IndustryTabs.tabHydraulic());
+        this.setCreativeTab(ResonantInductionTabs.tabHydraulic());
         this.setMaxStackSize(1);
         this.setMaxDamage(100);
         this.setNoRepair();

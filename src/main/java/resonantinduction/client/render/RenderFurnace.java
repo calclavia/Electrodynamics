@@ -16,7 +16,7 @@ public class RenderFurnace extends TileEntitySpecialRenderer
 {
     int type = 0;
     private ModelFurnace model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "Furnace.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "Furnace.png");
 
     public RenderFurnace()
     {

@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBlockWire extends TileEntitySpecialRenderer
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, "textures/models/copperWire.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, "textures/models/copperWire.png");
 
     public static final ModelCopperWire model = new ModelCopperWire();
 

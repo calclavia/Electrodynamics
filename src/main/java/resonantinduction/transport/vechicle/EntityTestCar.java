@@ -1,6 +1,6 @@
 package resonantinduction.transport.vechicle;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.world.World;
 
 public class EntityTestCar extends EntityVehicle
@@ -26,7 +26,7 @@ public class EntityTestCar extends EntityVehicle
     @Override
     public void dropAsItem()
     {
-        this.dropItemWithOffset(ALRecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
+        this.dropItemWithOffset(RecipeLoader.itemVehicleTest.itemID, 1, 0.0F);
     }
 
 }

@@ -7,7 +7,6 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.client.model.ModelConveyorBelt;
 import resonantinduction.client.model.ModelCrusher;
@@ -16,6 +15,7 @@ import resonantinduction.client.model.ModelMachine;
 import resonantinduction.client.model.ModelManipulator;
 import resonantinduction.client.model.ModelRejectorPiston;
 import resonantinduction.client.model.ModelSolarPanel;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.transport.hopper.BlockAdvancedHopper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
@@ -38,18 +38,18 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
     @Override
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
     {
-        if (ALRecipeLoader.blockConveyorBelt != null && block.blockID == ALRecipeLoader.blockConveyorBelt.blockID)
+        if (RecipeLoader.blockConveyorBelt != null && block.blockID == RecipeLoader.blockConveyorBelt.blockID)
         {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 1.5F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "belt/frame0.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "belt/frame0.png"));
             modelConveyorBelt.render(0.0625F, 0, false, false, false, false);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.blockRejector != null && block.blockID == ALRecipeLoader.blockRejector.blockID)
+        else if (RecipeLoader.blockRejector != null && block.blockID == RecipeLoader.blockRejector.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "rejector.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "rejector.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -58,9 +58,9 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             modelEjector.renderPiston(0.0625F, 1);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.blockManipulator != null && block.blockID == ALRecipeLoader.blockManipulator.blockID)
+        else if (RecipeLoader.blockManipulator != null && block.blockID == RecipeLoader.blockManipulator.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "manipulator1.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.6F, 1.5F, 0.6F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -68,9 +68,9 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             modelInjector.render(0.0625F, true, 0);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.blockArmbot != null && block.blockID == ALRecipeLoader.blockArmbot.blockID)
+        else if (RecipeLoader.blockArmbot != null && block.blockID == RecipeLoader.blockArmbot.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + RenderArmbot.TEXTURE));
             GL11.glPushMatrix();
             GL11.glTranslatef(0.4f, 0.8f, 0f);
             GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -79,9 +79,9 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             RenderArmbot.MODEL.render(0.0625F, 0, 0);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 0)
+        else if (RecipeLoader.processorMachine != null && block.blockID == RecipeLoader.processorMachine.blockID && metadata == 0)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "CrusherBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -90,9 +90,9 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             this.modelCrushor.renderPiston(0.0625f, 4);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.processorMachine != null && block.blockID == ALRecipeLoader.processorMachine.blockID && metadata == 4)
+        else if (RecipeLoader.processorMachine != null && block.blockID == RecipeLoader.processorMachine.blockID && metadata == 4)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "GrinderBlock.png"));
             GL11.glPushMatrix();
             GL11.glTranslatef(0f, 1f, 0f);
             GL11.glRotatef(180f, 0f, 0f, 1f);
@@ -101,14 +101,14 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
             this.grinderModel.renderRotation(0.0625f, 0);
             GL11.glPopMatrix();
         }
-        else if (ALRecipeLoader.blockSolar != null && block.blockID == ALRecipeLoader.blockSolar.blockID)
+        else if (RecipeLoader.blockSolar != null && block.blockID == RecipeLoader.blockSolar.blockID)
         {
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBlockSolarPanel.TEXTURE);
             GL11.glTranslatef(0.0F, 1.1F, 0.0F);
             GL11.glRotatef(180f, 0f, 0f, 1f);
             solarPanelModel.render(0.0625F);
         }
-        else if (ALRecipeLoader.blockSteamGen != null && block.blockID == ALRecipeLoader.blockSteamGen.blockID)
+        else if (RecipeLoader.blockSteamGen != null && block.blockID == RecipeLoader.blockSteamGen.blockID)
         {
             ModelMachine model = RenderSteamGen.getModel(metadata);
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSteamGen.getTexture(metadata));

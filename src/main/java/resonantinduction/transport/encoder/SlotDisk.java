@@ -1,6 +1,6 @@
 package resonantinduction.transport.encoder;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ public class SlotDisk extends Slot
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return itemStack.itemID == ALRecipeLoader.itemDisk.itemID;
+        return itemStack.itemID == RecipeLoader.itemDisk.itemID;
     }
 
 }

@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBlockSolarPanel extends TileEntitySpecialRenderer
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "SolarPanel.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "SolarPanel.png");
 
     public static final ModelSolarPanel model = new ModelSolarPanel();
 

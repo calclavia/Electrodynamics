@@ -3,8 +3,8 @@ package resonantinduction.blocks;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -32,9 +32,9 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public BlockOre()
     {
-        super(AssemblyLine.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
+        super(ResonantInductionTransport.CONFIGURATION.getBlock("Ore", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
-        this.setUnlocalizedName(AssemblyLine.PREFIX + "Ore");
+        this.setUnlocalizedName(ResonantInductionTransport.PREFIX + "Ore");
         this.setHardness(2.5f);
         this.setResistance(5.0f);
 
@@ -65,7 +65,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
     {
         for (OreData data : OreData.values())
         {
-            data.oreIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + data.name + "Ore");
+            data.oreIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + data.name + "Ore");
         }
     }
 
@@ -123,8 +123,8 @@ public class BlockOre extends Block implements IExtraBlockInfo
         {
             if (this.doWorldGen)
             {
-                ItemStack stack = new ItemStack(ALRecipeLoader.blockOre, 1, this.ordinal());
-                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(AssemblyLine.CONFIGURATION);
+                ItemStack stack = new ItemStack(RecipeLoader.blockOre, 1, this.ordinal());
+                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(ResonantInductionTransport.CONFIGURATION);
             }
             return null;
         }

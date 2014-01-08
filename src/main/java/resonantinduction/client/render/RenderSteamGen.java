@@ -23,8 +23,8 @@ public class RenderSteamGen extends TileEntitySpecialRenderer
     public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
     public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
 
-    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "SmallSteamFan.png");
-    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "SteamGenerator.png");
+    public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "SmallSteamFan.png");
+    public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "SteamGenerator.png");
     private static float rot1 = 0;
 
     @Override

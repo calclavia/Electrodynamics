@@ -37,7 +37,7 @@ public enum EnumBird
         public void register()
         {
             EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId(), 5651507, Color.red.getRGB());
-            EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", AssemblyLine.entitiesIds++, AssemblyLine.instance, 64, 1, true);
+            EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", ResonantInductionTransport.entitiesIds++, ResonantInductionTransport.instance, 64, 1, true);
             EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 10, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
         }
 

@@ -29,7 +29,7 @@ public class BlockArmbot extends BlockAssembly
     public BlockArmbot()
     {
         super("armbot", UniversalElectricity.machine);
-        DarkCore.requestMultiBlock(AssemblyLine.MOD_ID);
+        DarkCore.requestMultiBlock(ResonantInductionTransport.MOD_ID);
     }
 
     @Override

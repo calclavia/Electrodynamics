@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderGearPiston extends TileEntitySpecialRenderer
 {
     private ModelGearPiston model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GearShaftPiston.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "GearShaftPiston.png");
 
     public RenderGearPiston()
     {

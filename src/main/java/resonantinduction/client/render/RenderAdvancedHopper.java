@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderAdvancedHopper extends RenderImprintable
 {
     private static final ModelAdvancedHopper MODEL = new ModelAdvancedHopper();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.instance.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "AdvancedHopper.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.instance.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "AdvancedHopper.png");
 
     private void renderAModelAt(TileEntityAdvancedHopper tileEntity, double x, double y, double z, float f)
     {

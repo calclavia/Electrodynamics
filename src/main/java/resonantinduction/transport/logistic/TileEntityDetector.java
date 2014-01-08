@@ -2,7 +2,7 @@ package resonantinduction.transport.logistic;
 
 import java.util.ArrayList;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.transport.imprinter.TileEntityFilterable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -66,13 +66,13 @@ public class TileEntityDetector extends TileEntityFilterable
             if (powerCheck != this.powering)
             {
                 this.powering = powerCheck;
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ALRecipeLoader.blockDetector.blockID);
-                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, ALRecipeLoader.blockDetector.blockID);
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, RecipeLoader.blockDetector.blockID);
+                this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, RecipeLoader.blockDetector.blockID);
                 for (int x = this.xCoord - 1; x <= this.xCoord + 1; x++)
                 {
                     for (int z = this.zCoord - 1; z <= this.zCoord + 1; z++)
                     {
-                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, ALRecipeLoader.blockDetector.blockID);
+                        this.worldObj.notifyBlocksOfNeighborChange(x, this.yCoord + 1, z, RecipeLoader.blockDetector.blockID);
                     }
                 }
 
@@ -84,8 +84,8 @@ public class TileEntityDetector extends TileEntityFilterable
     @Override
     public void invalidate()
     {
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, ALRecipeLoader.blockDetector.blockID);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, ALRecipeLoader.blockDetector.blockID);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, RecipeLoader.blockDetector.blockID);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord + 1, this.zCoord, RecipeLoader.blockDetector.blockID);
         super.invalidate();
     }
 

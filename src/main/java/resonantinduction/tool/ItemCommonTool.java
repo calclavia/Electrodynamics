@@ -55,7 +55,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
     public ItemCommonTool()
     {
-        super(AssemblyLine.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
+        super(ResonantInductionTransport.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabTools);
     }
@@ -435,7 +435,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
     {
         if (itemStack != null)
         {
-            return "item." + AssemblyLine.PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
+            return "item." + ResonantInductionTransport.PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
         }
         else
         {
@@ -475,7 +475,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
                     if (tool.enabled)
                     {
-                        tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(AssemblyLine.PREFIX + "tool." + mat.simpleName + tool.name);
+                        tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "tool." + mat.simpleName + tool.name);
                     }
                 }
             }

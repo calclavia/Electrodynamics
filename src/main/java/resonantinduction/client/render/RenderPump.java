@@ -17,7 +17,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 {
     int type = 0;
     private ModelPump model;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "pumps/WaterPump.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "pumps/WaterPump.png");
 
     public RenderPump()
     {

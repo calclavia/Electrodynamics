@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.api.IBelt;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.machine.TileEntityAssembly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -71,7 +71,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
         }
         if (this.worldObj.isRemote && this.isFunctioning())
         {
-            if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != ALRecipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != ALRecipeLoader.blockConveyorBelt.blockID)
+            if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != RecipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != RecipeLoader.blockConveyorBelt.blockID)
             {
                 this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
             }

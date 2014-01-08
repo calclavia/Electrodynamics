@@ -25,7 +25,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
 {
     public ItemParts()
     {
-        super(DarkCore.getNextItemId(), "DMParts", AssemblyLine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMParts", ResonantInductionTransport.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         this.setMaxStackSize(64);
@@ -60,7 +60,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
         super.registerIcons(iconRegister);
         for (Parts part : Parts.values())
         {
-            part.icon = iconRegister.registerIcon(AssemblyLine.PREFIX + "part." + part.name);
+            part.icon = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "part." + part.name);
         }
     }
 

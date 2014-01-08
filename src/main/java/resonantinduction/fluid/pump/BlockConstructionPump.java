@@ -3,10 +3,10 @@ package resonantinduction.fluid.pump;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.client.render.BlockRenderHelper;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -39,7 +39,7 @@ public class BlockConstructionPump extends BlockHydraulic
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "ironMachineSide");
+        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "ironMachineSide");
     }
 
     @Override
@@ -71,7 +71,7 @@ public class BlockConstructionPump extends BlockHydraulic
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(ALRecipeLoader.blockConPump, 1, 0);
+        return new ItemStack(RecipeLoader.blockConPump, 1, 0);
     }
 
     @Override

@@ -19,19 +19,19 @@ public class ItemFarmBucket extends ItemBucket
 {
     public ItemFarmBucket(int itemID, int blockID)
     {
-        super(AssemblyLine.CONFIGURATION.getItem("Bucket", itemID).getInt(), blockID);
+        super(ResonantInductionTransport.CONFIGURATION.getItem("Bucket", itemID).getInt(), blockID);
         this.setCreativeTab(CreativeTabs.tabMisc);
         this.setHasSubtypes(true);
         this.setContainerItem(Item.bucketEmpty);
         this.setUnlocalizedName("farmBucket");
-        this.setTextureName(AssemblyLine.PREFIX + "farmBucket");
+        this.setTextureName(ResonantInductionTransport.PREFIX + "farmBucket");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "compostBucket");
+        this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "compostBucket");
     }
 
     @SideOnly(Side.CLIENT)

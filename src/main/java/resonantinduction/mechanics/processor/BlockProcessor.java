@@ -5,7 +5,7 @@ import java.util.Set;
 
 import resonantinduction.AssemblyLine;
 import resonantinduction.CommonProxy;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderProcessor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -33,8 +33,8 @@ public class BlockProcessor extends BlockMachine
 
     public BlockProcessor()
     {
-        super(AssemblyLine.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        super(ResonantInductionTransport.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BlockProcessor extends BlockMachine
             }
             else
             {
-                entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
+                entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
                 return true;
             }
         }

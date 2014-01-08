@@ -26,7 +26,7 @@ public class ItemBlockOre extends ItemBlock
     {
         if (par1ItemStack != null && par1ItemStack.getItemDamage() < OreData.values().length)
         {
-            return "tile." + AssemblyLine.PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
+            return "tile." + ResonantInductionTransport.PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
         }
         return super.getUnlocalizedName();
     }

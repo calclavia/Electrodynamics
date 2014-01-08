@@ -16,7 +16,7 @@ public class BlockColorGlass extends BlockColored
 
     public BlockColorGlass(String name)
     {
-        super(name, AssemblyLine.CONFIGURATION.getBlock(name, DarkCore.getNextID()).getInt(), Material.glass);
+        super(name, ResonantInductionTransport.CONFIGURATION.getBlock(name, DarkCore.getNextID()).getInt(), Material.glass);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(.5f);
         this.setResistance(.5f);

@@ -17,7 +17,7 @@ public class RenderSink extends TileEntitySpecialRenderer
     int type = 0;
     private ModelSink model;
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "Sink.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "Sink.png");
 
     public RenderSink()
     {

@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBatteryBox extends GuiContainer
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "battery_box.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "battery_box.png");
 
     private TileEntityBatteryBox tileEntity;
 

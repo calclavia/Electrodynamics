@@ -37,9 +37,9 @@ public class BlockImprinter extends BlockAssembly
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.imprinter_side = iconReg.registerIcon(AssemblyLine.PREFIX + "imprinter_side");
-        this.imprinter_top = iconReg.registerIcon(AssemblyLine.PREFIX + "imprinter_top");
-        this.imprinter_bottom = iconReg.registerIcon(AssemblyLine.PREFIX + "imprinter_bottom");
+        this.imprinter_side = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_side");
+        this.imprinter_top = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_top");
+        this.imprinter_bottom = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_bottom");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BlockImprinter extends BlockAssembly
     {
         if (!world.isRemote)
         {
-            entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_IMPRINTER, world, x, y, z);
+            entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_IMPRINTER, world, x, y, z);
         }
 
         return true;

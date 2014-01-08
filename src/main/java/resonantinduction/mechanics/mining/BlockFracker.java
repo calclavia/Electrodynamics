@@ -17,7 +17,7 @@ public class BlockFracker extends BlockMachine
 
     public BlockFracker()
     {
-        super(AssemblyLine.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
+        super(ResonantInductionTransport.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
     }
 
     @Override

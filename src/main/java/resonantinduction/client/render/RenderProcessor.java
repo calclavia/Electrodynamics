@@ -79,11 +79,11 @@ public class RenderProcessor extends TileEntitySpecialRenderer
         int g = meta / 4;
         if (g == 0)
         {
-            return new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "CrusherBlock.png");
+            return new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "CrusherBlock.png");
         }
         else if (g == 1)
         {
-            return new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "GrinderBlock.png");
+            return new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "GrinderBlock.png");
         }
         return null;
 

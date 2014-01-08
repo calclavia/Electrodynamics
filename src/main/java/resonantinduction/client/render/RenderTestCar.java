@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderTestCar extends Render
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "TestCar.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "TestCar.png");
 
     /** instance of ModelBoat for rendering */
     protected ModelBase modelBoat;

@@ -22,7 +22,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 
 public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_task_edit.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "gui_task_edit.png");
 
     protected GuiEncoderCoder gui;
     protected ITask task, editTask;

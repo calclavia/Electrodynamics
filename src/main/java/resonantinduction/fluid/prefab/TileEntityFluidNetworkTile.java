@@ -428,7 +428,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[6] = this.renderConnection[5];
         data[7] = this.getTank().getCapacity();
         data[8] = this.getTank().writeToNBT(new NBTTagCompound());
-        return AssemblyLine.getTilePacket().getPacket(this, "DescriptionPacket", data);
+        return ResonantInductionTransport.getTilePacket().getPacket(this, "DescriptionPacket", data);
     }
 
     public void sendRenderUpdate()
@@ -441,14 +441,14 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
         data[4] = this.renderConnection[3];
         data[5] = this.renderConnection[4];
         data[6] = this.renderConnection[5];
-        PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "RenderPacket", data));
+        PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "RenderPacket", data));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getTank() != null && index == 0)
         {
-            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

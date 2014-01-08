@@ -46,7 +46,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
                     }
                 }
             }
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + TEXTURE);
+            ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + TEXTURE);
             bindTexture(name);
 
             GL11.glPushMatrix();

@@ -3,7 +3,7 @@ package resonantinduction.fluid.pipes;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.fluid.prefab.TileEntityFluidNetworkTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -125,12 +125,12 @@ public enum FluidPartsMaterial
 
     public ItemStack getStack(int s)
     {
-        return new ItemStack(ALRecipeLoader.blockPipe, s, (this.ordinal() * spacing));
+        return new ItemStack(RecipeLoader.blockPipe, s, (this.ordinal() * spacing));
     }
 
     public ItemStack getStack(int s, ColorCode color)
     {
-        return new ItemStack(ALRecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
+        return new ItemStack(RecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
     }
 
     public int getMeta(int typeID)

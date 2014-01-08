@@ -1,7 +1,7 @@
 package resonantinduction.blocks;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.machine.TileEntityAssembly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +15,8 @@ public class BlockAssembly extends BlockMachine
 {
     public BlockAssembly(String blockName, Material material)
     {
-        super(AssemblyLine.CONFIGURATION, blockName, material);
-        this.setCreativeTab(IndustryTabs.tabAutomation());
+        super(ResonantInductionTransport.CONFIGURATION, blockName, material);
+        this.setCreativeTab(ResonantInductionTabs.tabAutomation());
     }
 
     @Override

@@ -17,7 +17,7 @@ public class BlockLaserDrill extends BlockMachine
 
     public BlockLaserDrill()
     {
-        super(AssemblyLine.CONFIGURATION, "Machine_LaserDrill", Material.iron);
+        super(ResonantInductionTransport.CONFIGURATION, "Machine_LaserDrill", Material.iron);
     }
 
     @Override

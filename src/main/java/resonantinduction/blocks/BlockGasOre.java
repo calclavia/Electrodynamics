@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.fluid.EnumGas;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -42,9 +42,9 @@ public class BlockGasOre extends Block implements IFluidBlock
 
     public BlockGasOre()
     {
-        super(AssemblyLine.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
+        super(ResonantInductionTransport.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
         this.setUnlocalizedName("DMBlockGas");
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
         this.setTickRandomly(true);
     }
 
@@ -147,7 +147,7 @@ public class BlockGasOre extends Block implements IFluidBlock
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "gas");
+        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "gas");
     }
 
     @Override

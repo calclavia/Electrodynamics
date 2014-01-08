@@ -66,7 +66,7 @@ public class BlockColored extends Block
     {
         if (colorized)
         {
-            this.blockIcon = iconReg.registerIcon(AssemblyLine.PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+            this.blockIcon = iconReg.registerIcon(ResonantInductionTransport.PREFIX + this.getUnlocalizedName().replace("tile.", ""));
         }
         else
         {
@@ -74,7 +74,7 @@ public class BlockColored extends Block
 
             for (int i = 0; i < this.icons.length; ++i)
             {
-                this.icons[i] = iconReg.registerIcon(AssemblyLine.PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
+                this.icons[i] = iconReg.registerIcon(ResonantInductionTransport.PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
             }
         }
     }

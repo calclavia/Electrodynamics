@@ -16,7 +16,7 @@ public class BlockScanner extends BlockMachine
 
     public BlockScanner()
     {
-        super(AssemblyLine.CONFIGURATION, "Machine_OreScanner", UniversalElectricity.machine);
+        super(ResonantInductionTransport.CONFIGURATION, "Machine_OreScanner", UniversalElectricity.machine);
     }
 
     @Override

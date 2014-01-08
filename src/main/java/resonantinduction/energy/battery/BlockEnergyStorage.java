@@ -5,7 +5,7 @@ import java.util.Set;
 
 import resonantinduction.AssemblyLine;
 import resonantinduction.CommonProxy;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,8 +30,8 @@ public class BlockEnergyStorage extends BlockMachine
 {
     public BlockEnergyStorage()
     {
-        super(AssemblyLine.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        super(ResonantInductionTransport.CONFIGURATION, "DMEnergyStorage", UniversalElectricity.machine);
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class BlockEnergyStorage extends BlockMachine
 
         if (!par1World.isRemote)
         {
-            par5EntityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
+            par5EntityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_BATTERY_BOX, par1World, x, y, z);
 
         }
         return true;

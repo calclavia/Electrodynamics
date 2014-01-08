@@ -14,7 +14,7 @@ public class RenderFrackingPipe extends TileEntitySpecialRenderer
 {
 
     public static final ModelFrackingPipe model = new ModelFrackingPipe();
-    public static final ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "frackingpipe.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "frackingpipe.png");
 
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)

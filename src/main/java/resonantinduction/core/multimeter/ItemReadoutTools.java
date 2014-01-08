@@ -42,7 +42,7 @@ public class ItemReadoutTools extends ItemBasic
 
     public ItemReadoutTools()
     {
-        super(DarkCore.getNextItemId(), "DMTools", AssemblyLine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "DMTools", ResonantInductionTransport.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
@@ -53,8 +53,8 @@ public class ItemReadoutTools extends ItemBasic
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
-        this.pipeGuage = iconRegister.registerIcon(AssemblyLine.PREFIX + "readout.PipeGauge");
-        this.multiMeter = iconRegister.registerIcon(AssemblyLine.PREFIX + "readout.multi-Meter");
+        this.pipeGuage = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "readout.PipeGauge");
+        this.multiMeter = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "readout.multi-Meter");
     }
 
     @SideOnly(Side.CLIENT)

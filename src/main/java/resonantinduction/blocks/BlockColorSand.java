@@ -15,7 +15,7 @@ public class BlockColorSand extends BlockColored
 {
     public BlockColorSand()
     {
-        super("colorSand", AssemblyLine.CONFIGURATION.getBlock("colorSand", DarkCore.getNextID()).getInt(), Material.sand);
+        super("colorSand", ResonantInductionTransport.CONFIGURATION.getBlock("colorSand", DarkCore.getNextID()).getInt(), Material.sand);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(1f);
         this.setResistance(.5f);

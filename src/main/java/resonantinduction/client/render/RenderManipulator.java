@@ -26,12 +26,12 @@ public class RenderManipulator extends RenderImprintable
 
         if (tileEntity.isOutput())
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator1.png");
+            ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "manipulator1.png");
             bindTexture(name);
         }
         else
         {
-            ResourceLocation name = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "manipulator2.png");
+            ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "manipulator2.png");
             bindTexture(name);
         }
 

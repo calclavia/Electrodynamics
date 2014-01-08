@@ -30,7 +30,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 {
     public ItemOreDirv()
     {
-        super(DarkCore.getNextItemId(), "Metal_Parts", AssemblyLine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "Metal_Parts", ResonantInductionTransport.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
         MinecraftForge.EVENT_BUS.register(this);
@@ -41,7 +41,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
     {
         if (itemStack != null)
         {
-            return "item." + AssemblyLine.PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
+            return "item." + ResonantInductionTransport.PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
         }
         else
         {
@@ -66,7 +66,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
             {
                 if (mat.shouldCreateItem(part))
                 {
-                    mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(AssemblyLine.PREFIX + mat.simpleName + part.simpleName);
+                    mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + mat.simpleName + part.simpleName);
                 }
             }
         }

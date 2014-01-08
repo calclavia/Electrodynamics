@@ -3,8 +3,8 @@ package resonantinduction.transport.fluid;
 import java.util.Random;
 import java.util.Set;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.blocks.BlockHydraulic;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -80,7 +80,7 @@ public class BlockReleaseValve extends BlockHydraulic
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(ALRecipeLoader.blockReleaseValve, 1, 0);
+        return new ItemStack(RecipeLoader.blockReleaseValve, 1, 0);
     }
 
     @Override

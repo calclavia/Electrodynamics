@@ -65,7 +65,7 @@ public class ItemMiningLaser extends ItemElectric implements IExtraItemInfo
 
     public ItemMiningLaser()
     {
-        super(AssemblyLine.CONFIGURATION.getItem("LaserMiningGun", DarkCore.getNextItemId()).getInt());
+        super(ResonantInductionTransport.CONFIGURATION.getItem("LaserMiningGun", DarkCore.getNextItemId()).getInt());
         this.setUnlocalizedName("MiningLaser");
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);

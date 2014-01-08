@@ -16,7 +16,7 @@ public class BlockApertureExcavator extends BlockMachine
 
     public BlockApertureExcavator()
     {
-        super(AssemblyLine.CONFIGURATION, "Machine_ApertureExcavator", UniversalElectricity.machine);
+        super(ResonantInductionTransport.CONFIGURATION, "Machine_ApertureExcavator", UniversalElectricity.machine);
     }
 
     @Override

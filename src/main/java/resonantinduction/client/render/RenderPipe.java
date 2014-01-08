@@ -27,7 +27,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
     public static ModelLargePipe MODEL_PIPE = new ModelLargePipe();
     public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     private static HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation>();
-    public static ResourceLocation TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "pipes/Pipe.png");
+    public static ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "pipes/Pipe.png");
 
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
@@ -168,7 +168,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
                 {
                     pipeName = EnumPipeType.get(pipeID).getName(pipeID);
                 }
-                TEXTURES.put(index, new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + pipeName + "Pipe.png"));
+                TEXTURES.put(index, new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + pipeName + "Pipe.png"));
             }
             return TEXTURES.get(index);
         }

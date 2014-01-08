@@ -1,6 +1,5 @@
 package resonantinduction.client;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.CommonProxy;
 import resonantinduction.client.gui.GuiBatteryBox;
 import resonantinduction.client.gui.GuiEncoderCoder;
@@ -21,6 +20,7 @@ import resonantinduction.client.render.RenderSink;
 import resonantinduction.client.render.RenderTank;
 import resonantinduction.client.render.RenderTestCar;
 import resonantinduction.client.render.RenderTurkey;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.energy.battery.TileEntityBatteryBox;
 import resonantinduction.fluid.pipes.TileEntityPipe;
 import resonantinduction.fluid.pump.TileEntityConstructionPump;
@@ -74,14 +74,14 @@ public class ClientProxy extends CommonProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
 
-        MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.blockPipe.blockID, new ItemPipeRenderer());
-        MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.blockTank.blockID, new ItemTankRenderer());
-        MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.blockReleaseValve.blockID, new ItemPipeRenderer());
+        MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockPipe.blockID, new ItemPipeRenderer());
+        MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockTank.blockID, new ItemTankRenderer());
+        MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockReleaseValve.blockID, new ItemPipeRenderer());
 
         RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
         RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-        if (ALRecipeLoader.itemFluidCan != null)
-            MinecraftForgeClient.registerItemRenderer(ALRecipeLoader.itemFluidCan.itemID, new ItemRenderFluidCan());
+        if (RecipeLoader.itemFluidCan != null)
+            MinecraftForgeClient.registerItemRenderer(RecipeLoader.itemFluidCan.itemID, new ItemRenderFluidCan());
     }
 
     @Override

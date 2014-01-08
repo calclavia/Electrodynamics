@@ -26,7 +26,7 @@ public class BlockCraftingTable extends BlockMachine
 
     public BlockCraftingTable()
     {
-        super(AssemblyLine.CONFIGURATION, "CraftingTable", Material.rock);
+        super(ResonantInductionTransport.CONFIGURATION, "CraftingTable", Material.rock);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class BlockFrackingPipe extends BlockMachine
 
     public BlockFrackingPipe()
     {
-        super(AssemblyLine.CONFIGURATION, "Fracking_Pipe", Material.wood);
+        super(ResonantInductionTransport.CONFIGURATION, "Fracking_Pipe", Material.wood);
     }
 
     @Override

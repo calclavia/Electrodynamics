@@ -3,9 +3,9 @@ package resonantinduction.fluid.pump;
 import java.util.List;
 import java.util.Set;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.client.render.BlockRenderHelper;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -69,7 +69,7 @@ public class BlockPumpMachine extends BlockHydraulic
 
         if (meta < 4)
         {
-            return new ItemStack(ALRecipeLoader.blockPumpMachine, 1, 0);
+            return new ItemStack(RecipeLoader.blockPumpMachine, 1, 0);
         }
 
         return null;

@@ -2,7 +2,7 @@ package resonantinduction.energy.battery;
 
 import java.util.List;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -94,7 +94,7 @@ public class ItemBlockEnergyStorage extends ItemBlock
 
     public static ItemStack getWrenchedBatteryBox(World world, Vector3 vec)
     {
-        ItemStack itemStack = new ItemStack(ALRecipeLoader.blockBatBox);
+        ItemStack itemStack = new ItemStack(RecipeLoader.blockBatBox);
         TileEntity entity = vec.getTileEntity(world);
         if (entity instanceof TileEntityBatteryBox)
         {

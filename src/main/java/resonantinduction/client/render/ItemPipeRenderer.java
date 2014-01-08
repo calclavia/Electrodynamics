@@ -6,9 +6,9 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.client.model.ModelReleaseValve;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.fluid.pipes.FluidPartsMaterial;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -38,7 +38,7 @@ public class ItemPipeRenderer implements IItemRenderer
         GL11.glRotatef(180f, 0f, 0f, 1f);
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(item.getItemDamage()));
         int meta = item.getItemDamage();
-        if (ALRecipeLoader.blockReleaseValve != null && item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
+        if (RecipeLoader.blockReleaseValve != null && item.itemID == RecipeLoader.blockReleaseValve.blockID)
         {
             meta = FluidPartsMaterial.IRON.getMeta();
         }
@@ -66,9 +66,9 @@ public class ItemPipeRenderer implements IItemRenderer
         {
             RenderPipe.render(item.getItemDamage(), new boolean[] { false, false, true, true, false, false });
         }
-        if (ALRecipeLoader.blockReleaseValve != null && item.itemID == ALRecipeLoader.blockReleaseValve.blockID)
+        if (RecipeLoader.blockReleaseValve != null && item.itemID == RecipeLoader.blockReleaseValve.blockID)
         {
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "ReleaseValve.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "ReleaseValve.png"));
             valve.render();
         }
         GL11.glPopMatrix();

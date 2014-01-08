@@ -2,9 +2,9 @@ package resonantinduction.energy.generator;
 
 import java.util.Set;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.client.render.BlockRenderHelper;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -90,7 +90,7 @@ public class BlockRod extends BlockHydraulic
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
     {
-        return new ItemStack(ALRecipeLoader.blockRod, 1, 0);
+        return new ItemStack(RecipeLoader.blockRod, 1, 0);
     }
 
     @Override

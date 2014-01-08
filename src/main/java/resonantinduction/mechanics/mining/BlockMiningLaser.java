@@ -20,7 +20,7 @@ public class BlockMiningLaser extends BlockMachine
 {
     public BlockMiningLaser()
     {
-        super(AssemblyLine.CONFIGURATION, "LaserMiner", Material.iron);
+        super(ResonantInductionTransport.CONFIGURATION, "LaserMiner", Material.iron);
     }
 
     @Override

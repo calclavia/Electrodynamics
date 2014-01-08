@@ -10,12 +10,12 @@ import net.minecraft.item.ItemStack;
  * @author Calclavia
  * 
  */
-public class TabRI extends CreativeTabs
+public class ResonantInductionTabs extends CreativeTabs
 {
-	public static final TabRI INSTANCE = new TabRI(CreativeTabs.getNextID(), ResonantInduction.ID);
+	public static final ResonantInductionTabs CORE = new ResonantInductionTabs(CreativeTabs.getNextID(), ResonantInduction.ID);
 	public static ItemStack ITEMSTACK;
 
-	public TabRI(int par1, String par2Str)
+	public ResonantInductionTabs(int par1, String par2Str)
 	{
 		super(par1, par2Str);
 

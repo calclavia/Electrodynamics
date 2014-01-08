@@ -1,6 +1,5 @@
 package resonantinduction.armbot;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.coding.IProgram;
@@ -10,6 +9,7 @@ import resonantinduction.armbot.command.TaskGOTO;
 import resonantinduction.armbot.command.TaskGrabItem;
 import resonantinduction.armbot.command.TaskReturn;
 import resonantinduction.armbot.command.TaskRotateTo;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.machine.TileEntityAssembly;
 import resonantinduction.transport.encoder.ItemDisk;
 import net.minecraft.entity.Entity;
@@ -300,18 +300,18 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public Packet getDescriptionPacket()
     {
-        return AssemblyLine.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
+        return ResonantInductionTransport.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
     }
 
     public void sendGrabItemToClient()
     {
         if (this.grabbedObject instanceof ItemStack)
         {
-            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+            PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
         }
         else
         {
-            PacketHandler.sendPacketToClients(AssemblyLine.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
+            PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
         }
     }
 
@@ -413,7 +413,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemstack)
     {
-        return itemstack != null && itemstack.itemID == ALRecipeLoader.itemDisk.itemID;
+        return itemstack != null && itemstack.itemID == RecipeLoader.itemDisk.itemID;
     }
 
     @Override

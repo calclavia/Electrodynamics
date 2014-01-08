@@ -1,7 +1,7 @@
 package resonantinduction.energy.battery;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -21,9 +21,9 @@ public class ItemBattery extends ItemElectric implements IExtraItemInfo
 {
     public ItemBattery()
     {
-        super(AssemblyLine.CONFIGURATION.getItem("Battery", DarkCore.getNextItemId()).getInt());
-        this.setUnlocalizedName(AssemblyLine.PREFIX + "Battery");
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        super(ResonantInductionTransport.CONFIGURATION.getItem("Battery", DarkCore.getNextItemId()).getInt());
+        this.setUnlocalizedName(ResonantInductionTransport.PREFIX + "Battery");
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @SideOnly(Side.CLIENT)

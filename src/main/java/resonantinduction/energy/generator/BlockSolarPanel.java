@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderBlockSolarPanel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -30,9 +30,9 @@ public class BlockSolarPanel extends BlockMachine
 
     public BlockSolarPanel()
     {
-        super(AssemblyLine.CONFIGURATION, "BlockSolarPanel", UniversalElectricity.machine);
+        super(ResonantInductionTransport.CONFIGURATION, "BlockSolarPanel", UniversalElectricity.machine);
         this.setBlockBounds(0, 0, 0, 1f, .6f, 1f);
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override

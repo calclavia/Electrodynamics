@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.client.render.RenderAdvancedHopper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -37,8 +37,8 @@ public class BlockAdvancedHopper extends BlockMachine
 
     public BlockAdvancedHopper()
     {
-        super(AssemblyLine.CONFIGURATION, "DMHopper", Material.iron);
-        this.setCreativeTab(IndustryTabs.tabAutomation());
+        super(ResonantInductionTransport.CONFIGURATION, "DMHopper", Material.iron);
+        this.setCreativeTab(ResonantInductionTabs.tabAutomation());
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 

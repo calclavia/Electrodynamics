@@ -9,9 +9,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.client.model.ModelTankSide;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.transport.fluid.BlockTank;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -37,7 +37,7 @@ public class ItemTankRenderer implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (item.itemID == ALRecipeLoader.blockTank.blockID)
+        if (item.itemID == RecipeLoader.blockTank.blockID)
         {
 
             GL11.glPushMatrix();
@@ -59,7 +59,7 @@ public class ItemTankRenderer implements IItemRenderer
                 GL11.glTranslatef(0.7F, .4F, 0.7F);
             }
 
-            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(AssemblyLine.DOMAIN, item.getItemDamage() == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
+            FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, item.getItemDamage() == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
             GL11.glTranslatef(0.0F, -0.9F, 0.0F);
             tank.render(0.0625F, false, false, false, false);
             GL11.glRotatef(90f, 0f, 1f, 0f);

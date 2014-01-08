@@ -35,7 +35,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
 
     public ItemFarmFood(int par1)
     {
-        super(AssemblyLine.CONFIGURATION.getItem("Food", DarkCore.getNextID()).getInt());
+        super(ResonantInductionTransport.CONFIGURATION.getItem("Food", DarkCore.getNextID()).getInt());
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabFood);
         this.setUnlocalizedName("FarmFood");
@@ -112,7 +112,7 @@ public class ItemFarmFood extends Item implements IExtraItemInfo
     {
         for (FarmFood food : FarmFood.values())
         {
-            food.icon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "food_" + food.name);
+            food.icon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "food_" + food.name);
         }
     }
 

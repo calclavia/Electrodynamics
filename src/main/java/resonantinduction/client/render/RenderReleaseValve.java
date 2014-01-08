@@ -20,7 +20,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
     private ModelReleaseValve valve;
     private TileEntity[] ents = new TileEntity[6];
 
-    public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "ReleaseValve.png");
+    public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "ReleaseValve.png");
 
     public RenderReleaseValve()
     {

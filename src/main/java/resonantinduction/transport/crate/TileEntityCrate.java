@@ -226,11 +226,11 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
         ItemStack stack = this.getSampleStack();
         if (stack != null)
         {
-            return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+            return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
         }
         else
         {
-            return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "InventoryItem", this, false);
+            return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, "InventoryItem", this, false);
         }
     }
 

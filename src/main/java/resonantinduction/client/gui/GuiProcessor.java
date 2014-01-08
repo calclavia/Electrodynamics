@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiProcessor extends GuiContainer
 {
-    private static final ResourceLocation gui_texture = new ResourceLocation(AssemblyLine.instance.PREFIX + AssemblyLine.GUI_DIRECTORY + "processor.png");
+    private static final ResourceLocation gui_texture = new ResourceLocation(ResonantInductionTransport.instance.PREFIX + ResonantInductionTransport.GUI_DIRECTORY + "processor.png");
     private TileEntityProcessor tileEntity;
 
     public GuiProcessor(InventoryPlayer par1InventoryPlayer, TileEntityProcessor par2TileEntityFurnace)

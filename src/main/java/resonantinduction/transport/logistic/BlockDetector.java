@@ -74,8 +74,8 @@ public class BlockDetector extends BlockImprintable
     public void registerIcons(IconRegister iconReg)
     {
         super.registerIcons(iconReg);
-        this.eye_green = iconReg.registerIcon(AssemblyLine.PREFIX + "detector_green");
-        this.eye_red = iconReg.registerIcon(AssemblyLine.PREFIX + "detector_red");
+        this.eye_green = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "detector_green");
+        this.eye_red = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "detector_red");
     }
 
     @Override

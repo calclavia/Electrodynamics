@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class GuiTask extends Gui
 {
     boolean isLeft = false;
-    private ResourceLocation gui_pic = new ResourceLocation(AssemblyLine.GUI_DIRECTORY + "gui@.png");
+    private ResourceLocation gui_pic = new ResourceLocation(ResonantInductionTransport.GUI_DIRECTORY + "gui@.png");
     /** Button width in pixels */
     protected int width;
 
@@ -53,16 +53,16 @@ public class GuiTask extends Gui
         switch (task.getType())
         {
             case DATA:
-                gui_pic = new ResourceLocation(AssemblyLine.GUI_DIRECTORY + "logic/DATA.png");
+                gui_pic = new ResourceLocation(ResonantInductionTransport.GUI_DIRECTORY + "logic/DATA.png");
                 break;
             case PROCESS:
-                gui_pic = new ResourceLocation(AssemblyLine.GUI_DIRECTORY + "logic/PROCESS.png");
+                gui_pic = new ResourceLocation(ResonantInductionTransport.GUI_DIRECTORY + "logic/PROCESS.png");
                 break;
             case DEFINEDPROCESS:
-                gui_pic = new ResourceLocation(AssemblyLine.GUI_DIRECTORY + "logic/DEFINEDPROCESS.png");
+                gui_pic = new ResourceLocation(ResonantInductionTransport.GUI_DIRECTORY + "logic/DEFINEDPROCESS.png");
                 break;
             case DECISION:
-                gui_pic = new ResourceLocation(AssemblyLine.GUI_DIRECTORY + "logic/IF.png");
+                gui_pic = new ResourceLocation(ResonantInductionTransport.GUI_DIRECTORY + "logic/IF.png");
                 break;
         }
     }

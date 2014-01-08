@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -24,7 +24,7 @@ public class ItemImprinter extends Item
     {
         super(id);
         this.setUnlocalizedName("imprint");
-        this.setCreativeTab(IndustryTabs.tabAutomation());
+        this.setCreativeTab(ResonantInductionTabs.tabAutomation());
         this.setHasSubtypes(true);
         this.maxStackSize = 1;
     }
@@ -33,7 +33,7 @@ public class ItemImprinter extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "imprint");
+        this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "imprint");
     }
 
     @Override

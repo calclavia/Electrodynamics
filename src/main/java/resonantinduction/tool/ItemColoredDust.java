@@ -22,7 +22,7 @@ public class ItemColoredDust extends ItemBasic
 
     public ItemColoredDust()
     {
-        super(DarkCore.getNextItemId(), "GlowRefinedSand", AssemblyLine.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "GlowRefinedSand", ResonantInductionTransport.CONFIGURATION);
         this.setMaxDamage(0);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabMaterials);
@@ -46,7 +46,7 @@ public class ItemColoredDust extends ItemBasic
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "dust");
+        this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "dust");
         this.theIcon = par1IconRegister.registerIcon("glowingPowder_overlay");
     }
 

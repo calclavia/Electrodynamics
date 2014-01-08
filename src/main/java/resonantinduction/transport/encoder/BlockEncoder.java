@@ -33,9 +33,9 @@ public class BlockEncoder extends BlockAssembly
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.encoder_side = iconReg.registerIcon(AssemblyLine.PREFIX + "encoder_side");
-        this.encoder_top = iconReg.registerIcon(AssemblyLine.PREFIX + "encoder_top");
-        this.encoder_bottom = iconReg.registerIcon(AssemblyLine.PREFIX + "encoder_bottom");
+        this.encoder_side = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "encoder_side");
+        this.encoder_top = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "encoder_top");
+        this.encoder_bottom = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "encoder_bottom");
     }
 
     /** Returns the block texture based on the side being looked at. Args: side */
@@ -71,7 +71,7 @@ public class BlockEncoder extends BlockAssembly
     {
         if (!world.isRemote)
         {
-            entityPlayer.openGui(AssemblyLine.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
+            entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
         }
 
         return true;

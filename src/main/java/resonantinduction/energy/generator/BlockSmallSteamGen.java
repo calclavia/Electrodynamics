@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Set;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderSteamGen;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -36,9 +36,9 @@ public class BlockSmallSteamGen extends BlockMachine
 
     public BlockSmallSteamGen()
     {
-        super(AssemblyLine.CONFIGURATION, "StarterSteamGen", UniversalElectricity.machine);
+        super(ResonantInductionTransport.CONFIGURATION, "StarterSteamGen", UniversalElectricity.machine);
         this.setStepSound(soundMetalFootstep);
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override

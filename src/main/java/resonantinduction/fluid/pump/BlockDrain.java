@@ -39,9 +39,9 @@ public class BlockDrain extends BlockHydraulic
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "ironMachineSide");
-        this.drainIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "drain");
-        this.fillIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "drain2");
+        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "ironMachineSide");
+        this.drainIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "drain");
+        this.fillIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "drain2");
     }
 
     @Override

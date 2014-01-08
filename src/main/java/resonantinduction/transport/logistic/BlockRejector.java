@@ -59,8 +59,8 @@ public class BlockRejector extends BlockImprintable
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "imprinter_bottom");
-        this.front = par1IconRegister.registerIcon(AssemblyLine.PREFIX + "disk_tray");
+        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_bottom");
+        this.front = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "disk_tray");
     }
 
     @Override

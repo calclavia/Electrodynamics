@@ -3,7 +3,7 @@ package resonantinduction.tool;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonantinduction.ALRecipeLoader;
+import resonantinduction.core.recipe.RecipeLoader;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -89,9 +89,9 @@ public enum EnumTool
     public ItemStack getTool(EnumMaterial mat)
     {
         ItemStack stack = null;
-        if (ALRecipeLoader.itemDiggingTool instanceof ItemCommonTool)
+        if (RecipeLoader.itemDiggingTool instanceof ItemCommonTool)
         {
-            stack = new ItemStack(ALRecipeLoader.itemDiggingTool.itemID, 1, (mat.ordinal() * toolCountPerMaterial) + this.ordinal());
+            stack = new ItemStack(RecipeLoader.itemDiggingTool.itemID, 1, (mat.ordinal() * toolCountPerMaterial) + this.ordinal());
         }
         return stack;
     }

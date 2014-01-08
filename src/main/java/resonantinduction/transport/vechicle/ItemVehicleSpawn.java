@@ -2,7 +2,7 @@ package resonantinduction.transport.vechicle;
 
 import java.util.List;
 
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +25,7 @@ public class ItemVehicleSpawn extends Item
     {
         super(DarkCore.getNextItemId());
         this.setUnlocalizedName("Vehicle");
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override

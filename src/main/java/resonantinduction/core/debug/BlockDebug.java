@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import resonantinduction.AssemblyLine;
-import resonantinduction.IndustryTabs;
+import resonantinduction.ResonantInductionTabs;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,8 +27,8 @@ public class BlockDebug extends BlockMachine
 
     public BlockDebug()
     {
-        super(AssemblyLine.CONFIGURATION, "DebugBlock", Material.clay);
-        this.setCreativeTab(IndustryTabs.tabIndustrial());
+        super(ResonantInductionTransport.CONFIGURATION, "DebugBlock", Material.clay);
+        this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BlockDebug extends BlockMachine
         {
             if (block.enabled)
             {
-                block.icon = iconReg.registerIcon(AssemblyLine.PREFIX + block.getTextureName());
+                block.icon = iconReg.registerIcon(ResonantInductionTransport.PREFIX + block.getTextureName());
             }
         }
     }

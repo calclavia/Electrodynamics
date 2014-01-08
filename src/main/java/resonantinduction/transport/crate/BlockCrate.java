@@ -42,9 +42,9 @@ public class BlockCrate extends BlockAssembly
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.blockIcon = iconReg.registerIcon(AssemblyLine.PREFIX + "crate");
-        this.adv = iconReg.registerIcon(AssemblyLine.PREFIX + "crate_adv");
-        this.elt = iconReg.registerIcon(AssemblyLine.PREFIX + "crate_elt");
+        this.blockIcon = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "crate");
+        this.adv = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "crate_adv");
+        this.elt = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "crate_elt");
     }
 
     @Override

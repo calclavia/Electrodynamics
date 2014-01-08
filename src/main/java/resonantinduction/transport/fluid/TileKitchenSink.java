@@ -45,7 +45,7 @@ public class TileKitchenSink extends TileEntityFluidStorage implements ISimplePa
         {
             stack = this.getTank().getFluid();
         }
-        return PacketHandler.instance().getTilePacket(AssemblyLine.CHANNEL, "FluidLevel", this, stack.writeToNBT(new NBTTagCompound()));
+        return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, "FluidLevel", this, stack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override

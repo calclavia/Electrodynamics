@@ -8,9 +8,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.ALRecipeLoader;
 import resonantinduction.AssemblyLine;
 import resonantinduction.client.model.ModelSmallFluidCan;
+import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.transport.fluid.ItemFluidCan;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +21,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 {
     public static final ModelSmallFluidCan CAN_MODEL = new ModelSmallFluidCan();
 
-    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.MODEL_DIRECTORY + "FluidCanA.png");
+    public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "FluidCanA.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)
@@ -38,9 +38,9 @@ public class ItemRenderFluidCan implements IItemRenderer
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data)
     {
-        if (ALRecipeLoader.itemFluidCan != null && item.itemID == ALRecipeLoader.itemFluidCan.itemID)
+        if (RecipeLoader.itemFluidCan != null && item.itemID == RecipeLoader.itemFluidCan.itemID)
         {
-            FluidStack liquid = ((ItemFluidCan) ALRecipeLoader.itemFluidCan).drain(item, Integer.MAX_VALUE, false);
+            FluidStack liquid = ((ItemFluidCan) RecipeLoader.itemFluidCan).drain(item, Integer.MAX_VALUE, false);
 
             if (liquid != null && liquid.amount > 100)
             {
@@ -75,7 +75,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture((RenderFluidHelper.getFluidSheet(liquid)));
 
-                int cap = ((ItemFluidCan) ALRecipeLoader.itemFluidCan).getCapacity(item);
+                int cap = ((ItemFluidCan) RecipeLoader.itemFluidCan).getCapacity(item);
                 if (liquid.getFluid().isGaseous())
                 {
                     cap = liquid.amount;

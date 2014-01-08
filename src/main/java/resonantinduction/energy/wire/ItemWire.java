@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.input.Keyboard;
 
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.TabRI;
+import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Utility;
 import resonantinduction.energy.wire.flat.PartFlatWire;
 import resonantinduction.energy.wire.flat.RenderFlatWire;
@@ -41,7 +41,7 @@ public class ItemWire extends JItemMultiPart
 	{
 		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
 		this.setUnlocalizedName(ResonantInduction.PREFIX + "wire");
-		this.setCreativeTab(TabRI.INSTANCE);
+		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}

@@ -38,7 +38,7 @@ public class BlockBasalt extends Block
 
     public BlockBasalt()
     {
-        super(AssemblyLine.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
+        super(ResonantInductionTransport.CONFIGURATION.getBlock("basalt", DarkCore.getNextID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(2f);
         this.setResistance(2f);
@@ -86,7 +86,7 @@ public class BlockBasalt extends Block
 
         for (int i = 0; i < BlockBasalt.blockNames.length; ++i)
         {
-            this.icons[i] = iconReg.registerIcon(AssemblyLine.PREFIX + BlockBasalt.blockNames[i]);
+            this.icons[i] = iconReg.registerIcon(ResonantInductionTransport.PREFIX + BlockBasalt.blockNames[i]);
         }
     }
 

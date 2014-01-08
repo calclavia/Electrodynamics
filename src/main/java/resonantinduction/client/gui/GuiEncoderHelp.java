@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiEncoderHelp extends GuiEncoderBase
 {
-    public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(AssemblyLine.DOMAIN, AssemblyLine.GUI_DIRECTORY + "gui_encoder_coder.png");
+    public static final ResourceLocation TEXTURE_CODE_BACK = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "gui_encoder_coder.png");
 
     public GuiEncoderHelp(InventoryPlayer player, TileEntityEncoder tileEntity)
     {
