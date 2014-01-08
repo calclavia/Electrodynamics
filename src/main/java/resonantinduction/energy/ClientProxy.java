@@ -1,4 +1,4 @@
-package resonantinduction.core;
+package resonantinduction.energy;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -6,6 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.SoundHandler;
 import resonantinduction.core.multimeter.PartMultimeter;
 import resonantinduction.core.render.BlockRenderingHandler;
 import resonantinduction.core.render.RenderRIItem;

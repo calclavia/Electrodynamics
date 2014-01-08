@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.core;
+package resonantinduction.energy;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
