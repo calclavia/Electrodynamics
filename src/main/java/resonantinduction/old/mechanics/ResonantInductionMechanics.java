@@ -19,10 +19,10 @@ import org.modstats.Modstats;
 
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.multipart.MultipartRI;
-import resonantinduction.core.multipart.PacketMultiPart;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.old.Reference;
+import resonantinduction.old.core.multipart.MultipartRI;
+import resonantinduction.old.core.multipart.PacketMultiPart;
 import resonantinduction.old.mechanics.furnace.BlockAdvancedFurnace;
 import resonantinduction.old.mechanics.furnace.TileAdvancedFurnace;
 import resonantinduction.old.mechanics.item.ItemDust;
@@ -81,8 +81,7 @@ public class ResonantInductionMechanics
 	/**
 	 * Machines
 	 */
-	public static Item itemDust;
-
+	
 	// Blocks
 	public static Block blockAdvancedFurnace, blockMachinePart, blockGrinderWheel, blockPurifier,
 			blockFluidMixture;
@@ -104,9 +103,6 @@ public class ResonantInductionMechanics
 		Modstats.instance().getReporter().registerMod(this);
 		Settings.CONFIGURATION.load();
 
-		// Items
-		itemDust = new ItemDust(Settings.getNextItemID());
-
 		// Blocks
 		blockMachinePart = new BlockMachinePart(Settings.getNextBlockID());
 		blockGrinderWheel = new BlockGrinderWheel(Settings.getNextBlockID());
@@ -124,7 +120,6 @@ public class ResonantInductionMechanics
 		}
 
 		Settings.CONFIGURATION.save();
-		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
 		GameRegistry.registerBlock(blockPurifier, blockPurifier.getUnlocalizedName());
@@ -137,7 +132,6 @@ public class ResonantInductionMechanics
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
 		ResonantInductionMechanics.proxy.preInit();
-		MinecraftForge.EVENT_BUS.register(itemDust);
 	}
 
 	@EventHandler

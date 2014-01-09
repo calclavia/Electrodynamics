@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.base.BlockRotatableBase;
+import resonantinduction.core.prefab.block.BlockRotatableBase;
 import universalelectricity.api.vector.VectorWorld;
 
 /**

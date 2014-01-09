@@ -6,9 +6,9 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.old.Reference;
 import resonantinduction.old.client.model.ModelReleaseValve;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;

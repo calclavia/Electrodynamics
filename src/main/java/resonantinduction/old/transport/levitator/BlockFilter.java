@@ -1,6 +1,6 @@
 package resonantinduction.old.transport.levitator;
 
-import resonantinduction.core.base.BlockRotatableBase;
+import resonantinduction.core.prefab.block.BlockRotatableBase;
 
 /**
  * A block that represents a filter for item transportation.

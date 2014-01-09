@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.fluid.TileEntityTank;
 import resonantinduction.old.transport.fluid.prefab.TileEntityFluidNetworkTile;
 import universalelectricity.api.vector.Vector3;

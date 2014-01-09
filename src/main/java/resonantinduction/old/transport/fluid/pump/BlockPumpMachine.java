@@ -11,8 +11,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
-import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.old.client.render.BlockRenderHelper;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.lib.prefab.BlockMachine;
 
 import com.builtbroken.common.Pair;

@@ -1,7 +1,7 @@
 package resonantinduction.old.transport.vechicle;
 
 import net.minecraft.world.World;
-import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.old.core.recipe.RecipeLoader;
 
 public class EntityTestCar extends EntityVehicle
 {

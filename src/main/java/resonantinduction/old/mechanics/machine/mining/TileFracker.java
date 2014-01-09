@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import resonantinduction.old.transport.fluid.EnumGas;
 import resonantinduction.old.transport.fluid.GasTank;

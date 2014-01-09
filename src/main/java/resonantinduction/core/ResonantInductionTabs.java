@@ -3,6 +3,7 @@
  */
 package resonantinduction.core;
 
+import resonantinduction.old.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
@@ -12,7 +13,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ResonantInductionTabs extends CreativeTabs
 {
-	public static final ResonantInductionTabs CORE = new ResonantInductionTabs(CreativeTabs.getNextID(), ResonantInduction.ID);
+	public static final ResonantInductionTabs CORE = new ResonantInductionTabs(CreativeTabs.getNextID(), Reference.DOMAIN);
 	public static ItemStack ITEMSTACK;
 
 	public ResonantInductionTabs(int par1, String par2Str)

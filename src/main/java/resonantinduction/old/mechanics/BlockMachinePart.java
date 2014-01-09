@@ -1,6 +1,6 @@
 package resonantinduction.old.mechanics;
 
-import resonantinduction.core.base.BlockBase;
+import resonantinduction.core.prefab.block.BlockBase;
 
 /**
  * A block used to build machines.

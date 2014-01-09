@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.lib.helpers.ColorCode;
 import resonantinduction.old.transport.fluid.prefab.TileEntityFluidNetworkTile;
 

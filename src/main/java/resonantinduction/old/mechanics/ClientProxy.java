@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.render.BlockRenderingHandler;
+import resonantinduction.old.core.render.BlockRenderingHandler;
 import resonantinduction.old.energy.fx.FXElectricBolt;
 import resonantinduction.old.energy.multimeter.GuiMultimeter;
 import resonantinduction.old.energy.multimeter.PartMultimeter;

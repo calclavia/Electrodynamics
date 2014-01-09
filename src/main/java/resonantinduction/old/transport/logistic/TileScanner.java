@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.base.BlockMapUtil;
+import resonantinduction.old.core.BlockMapUtil;
 import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;
 

@@ -7,13 +7,13 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.old.Reference;
 import resonantinduction.old.client.model.ModelConstructionPump;
 import resonantinduction.old.client.model.ModelGearRod;
 import resonantinduction.old.client.model.ModelGenerator;
 import resonantinduction.old.client.model.ModelPump;
 import resonantinduction.old.client.model.ModelSink;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;

@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.base.ItemMultipartBase;
+import resonantinduction.core.prefab.part.ItemMultipartBase;
 import resonantinduction.old.energy.multimeter.PartMultimeter;
 import resonantinduction.old.energy.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;

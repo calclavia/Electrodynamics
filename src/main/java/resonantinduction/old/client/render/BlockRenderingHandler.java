@@ -7,7 +7,6 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.old.Reference;
 import resonantinduction.old.client.model.ModelConveyorBelt;
 import resonantinduction.old.client.model.ModelCrusher;
@@ -16,6 +15,7 @@ import resonantinduction.old.client.model.ModelMachine;
 import resonantinduction.old.client.model.ModelManipulator;
 import resonantinduction.old.client.model.ModelRejectorPiston;
 import resonantinduction.old.client.model.ModelSolarPanel;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.hopper.BlockAdvancedHopper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;

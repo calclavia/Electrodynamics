@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import resonantinduction.core.base.ItemMultipartBase;
+import resonantinduction.core.prefab.part.ItemMultipartBase;
 import resonantinduction.old.energy.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;

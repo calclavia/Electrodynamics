@@ -16,11 +16,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.old.Reference;
-import resonantinduction.old.mechanics.item.ItemDust;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,8 +35,30 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ResourceGenerator
 {
+	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 	public static final Set<String> materialNames = new HashSet<String>();
 	public static final HashMap<String, Integer> materialColors = new HashMap<String, Integer>();
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void reloadTextures(TextureStitchEvent.Post e)
+	{
+		computeColors();
+	}
+
+	@ForgeSubscribe
+	public void oreRegisterEvent(OreRegisterEvent evt)
+	{
+		if (evt.Name.startsWith("ingot"))
+		{
+			String ingotName = evt.Name.replace("ingot", "");
+
+			if (OreDetectionBlackList.isIngotBlackListed("ingot" + ingotName) || OreDetectionBlackList.isOreBlackListed("ore" + ingotName))
+				return;
+
+			ResourceGenerator.materialNames.add(ingotName.toLowerCase());
+		}
+	}
 
 	public static void generateDusts()
 	{
@@ -42,15 +68,14 @@ public class ResourceGenerator
 
 			if (OreDictionary.getOres("ore" + name).size() > 0)
 			{
-				if (OreDictionary.getOres("dust" + name).size() == 0)
+				//if (OreDictionary.getOres("dust" + name).size() == 0)
 				{
-					ItemDust.dusts.add(ItemDust.getStackFromDust(materialName));
-					OreDictionary.registerOre("dust" + name, ItemDust.getStackFromDust(materialName));
+					ItemDust.dusts.add(ResonantInduction.itemDust.getStackFromDust(materialName));
+					OreDictionary.registerOre("dust" + name, ResonantInduction.itemDust.getStackFromDust(materialName));
 
 				}
 
 				// Add to machine recipes
-
 				ItemStack dust = OreDictionary.getOres("dust" + name).get(0).copy();
 				dust.stackSize = 2;
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, dust);

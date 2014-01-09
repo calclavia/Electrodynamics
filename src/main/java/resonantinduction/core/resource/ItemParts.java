@@ -9,7 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Settings;
-import resonantinduction.core.base.ItemBase;
+import resonantinduction.core.prefab.item.ItemBase;
 import resonantinduction.old.Reference;
 import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;

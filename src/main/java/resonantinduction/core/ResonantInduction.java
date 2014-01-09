@@ -2,11 +2,16 @@ package resonantinduction.core;
 
 import java.util.logging.Logger;
 
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.core.multipart.PacketMultiPart;
+import resonantinduction.core.resource.ItemDust;
+import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.old.Reference;
+import resonantinduction.old.core.multipart.PacketMultiPart;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;
@@ -20,6 +25,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * The core module of Resonant Induction
@@ -50,6 +56,11 @@ public class ResonantInduction
 	public static final PacketTile PACKET_TILE = new PacketTile(Reference.CHANNEL);
 	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
 
+	/**
+	 * Blocks and Items
+	 */
+	public static ItemDust itemDust;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
@@ -57,6 +68,17 @@ public class ResonantInduction
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		Modstats.instance().getReporter().registerMod(this);
 		Settings.load();
+
+		// Register Forge Events
+		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
+
+		Settings.CONFIGURATION.load();
+
+		// Items
+		itemDust = new ItemDust(Settings.getNextItemID());
+		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+
+		Settings.CONFIGURATION.save();
 	}
 
 	@EventHandler
@@ -66,6 +88,9 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
 		Settings.setModMetadata(metadata, ID, NAME);
+
+		// Generate Dusts
+		ResourceGenerator.generateDusts();
 	}
 
 }

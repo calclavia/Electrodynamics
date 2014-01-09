@@ -9,7 +9,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderEnd;
 import net.minecraft.world.gen.ChunkProviderHell;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.old.core.recipe.RecipeLoader;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class GasOreGenerator implements IWorldGenerator

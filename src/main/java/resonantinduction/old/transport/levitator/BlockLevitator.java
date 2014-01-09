@@ -7,9 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.base.BlockBase;
-import resonantinduction.core.render.BlockRenderingHandler;
+import resonantinduction.core.prefab.block.BlockBase;
 import resonantinduction.old.Reference;
+import resonantinduction.old.core.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

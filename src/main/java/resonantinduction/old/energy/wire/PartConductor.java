@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import resonantinduction.core.base.PartAdvanced;
+import resonantinduction.core.prefab.part.PartAdvanced;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyNetworkLoader;

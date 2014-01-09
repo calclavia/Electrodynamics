@@ -12,8 +12,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.render.InvertX;
 import resonantinduction.old.Reference;
+import resonantinduction.old.core.render.InvertX;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
