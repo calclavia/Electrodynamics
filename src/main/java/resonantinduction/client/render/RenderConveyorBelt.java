@@ -6,9 +6,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelAngledBelt;
 import resonantinduction.client.model.ModelConveyorBelt;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.belt.TileEntityConveyorBelt;
 import resonantinduction.transport.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
@@ -51,7 +51,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 			if (slantType == SlantType.UP)
 			{
-				ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
 
 				GL11.glTranslatef(0f, 0.8f, -0.8f);
@@ -73,7 +73,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else if (slantType == SlantType.DOWN)
 			{
-				ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
 				GL11.glRotatef(180f, 0f, 1f, 0f);
 				boolean slantAdjust = false;
@@ -94,7 +94,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else
 			{
-				ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
 				bindTexture(name);
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				GL11.glTranslatef(0f, -0.68f, 0f);
@@ -118,7 +118,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 					GL11.glRotatef(90f, 0f, 1f, 0f);
 					break;
 			}
-			ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
+			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
 			bindTexture(name);
 			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), false, false, false, true);
 

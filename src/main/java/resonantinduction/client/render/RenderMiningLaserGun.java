@@ -7,8 +7,8 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelMiningLaserGun;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,7 +18,7 @@ public class RenderMiningLaserGun implements IItemRenderer
 {
 
 	private static final ModelMiningLaserGun MODEL = new ModelMiningLaserGun();
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "LaserGun.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "LaserGun.png");
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)

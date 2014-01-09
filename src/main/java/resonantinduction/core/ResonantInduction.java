@@ -26,71 +26,64 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
-/**
- * The core module of Resonant Induction
+/** The core module of Resonant Induction
  * 
- * @author Calclavia
- * 
- */
+ * @author Calclavia */
 @Mod(modid = ResonantInduction.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:CalclaviaCore;before:ThermalExpansion;before:IC2")
 @NetworkMod(channels = ResonantInduction.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction
 {
-	/**
-	 * Mod Information
-	 */
-	public static final String ID = "ResonantInduction|Core";
-	public static final String CHANNEL = "RESIND";
+    /** Mod Information */
+    public static final String ID = "ResonantInduction|Core";
+    public static final String CHANNEL = "RESIND";
 
-	@Instance(ID)
-	public static ResonantInduction INSTANCE;
+    @Instance(ID)
+    public static ResonantInduction INSTANCE;
 
-	@SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
-	public static CommonProxy proxy;
+    @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
+    public static CommonProxy proxy;
 
-	@Mod.Metadata(ID)
-	public static ModMetadata metadata;
+    @Mod.Metadata(ID)
+    public static ModMetadata metadata;
 
-	public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
+    public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
 
-	/**
-	 * Packets
-	 */
-	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
-	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(CHANNEL);
-	public static final ColourRGBA[] DYE_COLORS = new ColourRGBA[] { new ColourRGBA(255, 255, 255, 255), new ColourRGBA(1, 0, 0, 1d), new ColourRGBA(0, 0.608, 0.232, 1d), new ColourRGBA(0.588, 0.294, 0, 1d), new ColourRGBA(0, 0, 1, 1d), new ColourRGBA(0.5, 0, 05, 1d), new ColourRGBA(0, 1, 1, 1d), new ColourRGBA(0.8, 0.8, 0.8, 1d), new ColourRGBA(0.3, 0.3, 0.3, 1d), new ColourRGBA(1, 0.412, 0.706, 1d), new ColourRGBA(0.616, 1, 0, 1d), new ColourRGBA(1, 1, 0, 1d), new ColourRGBA(0.46f, 0.932, 1, 1d), new ColourRGBA(0.5, 0.2, 0.5, 1d), new ColourRGBA(0.7, 0.5, 0.1, 1d), new ColourRGBA(1, 1, 1, 1d) };
+    /** Packets */
+    public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
+    public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(CHANNEL);
+    public static final ColourRGBA[] DYE_COLORS = new ColourRGBA[] { new ColourRGBA(255, 255, 255, 255), new ColourRGBA(1, 0, 0, 1d), new ColourRGBA(0, 0.608, 0.232, 1d), new ColourRGBA(0.588, 0.294, 0, 1d), new ColourRGBA(0, 0, 1, 1d), new ColourRGBA(0.5, 0, 05, 1d), new ColourRGBA(0, 1, 1, 1d), new ColourRGBA(0.8, 0.8, 0.8, 1d), new ColourRGBA(0.3, 0.3, 0.3, 1d), new ColourRGBA(1, 0.412, 0.706, 1d), new ColourRGBA(0.616, 1, 0, 1d), new ColourRGBA(1, 1, 0, 1d), new ColourRGBA(0.46f, 0.932, 1, 1d), new ColourRGBA(0.5, 0.2, 0.5, 1d), new ColourRGBA(0.7, 0.5, 0.1, 1d), new ColourRGBA(1, 1, 1, 1d) };
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent evt)
-	{
-		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
-		NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
-		Modstats.instance().getReporter().registerMod(this);
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent evt)
+    {
+        ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
+        NetworkRegistry.instance().registerGuiHandler(this, ResonantInduction.proxy);
+        Modstats.instance().getReporter().registerMod(this);
 
-		/**
-		 * Set reference itemstacks
-		 */
-		// ResonantInductionTabs.ITEMSTACK = new ItemStack(null);
-		MinecraftForge.EVENT_BUS.register(new LinkEvent());
-		Settings.init();
-	}
+        /** Set reference itemstacks */
+        // ResonantInductionTabs.ITEMSTACK = new ItemStack(null);
+        MinecraftForge.EVENT_BUS.register(new LinkEvent());
+        Settings.load();
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent evt)
-	{
-		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
+    @EventHandler
+    public void init(FMLInitializationEvent evt)
+    {
+        ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 
-		metadata.modId = ID;
-		metadata.name = Reference.NAME;
-		metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");
-		metadata.url = "http://calclavia.com/resonant-induction";
-		metadata.logoFile = "ri_logo.png";
-		metadata.version = Reference.VERSION + "." + Reference.BUILD_VERSION;
-		metadata.authorList = Arrays.asList(new String[] { "Calclavia", "DarkCow" });
-		metadata.credits = LanguageUtility.getLocal("meta.resonantinduction.credits");
-		metadata.autogenerated = false;
+        metadata.modId = ID;
+        metadata.name = Reference.NAME;
+        metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");
+        metadata.url = "http://calclavia.com/resonant-induction";
+        metadata.logoFile = "ri_logo.png";
+        metadata.version = Reference.VERSION + "." + Reference.BUILD_VERSION;
+        metadata.authorList = Arrays.asList(new String[] { "Calclavia", "DarkCow" });
+        metadata.credits = LanguageUtility.getLocal("meta.resonantinduction.credits");
+        metadata.autogenerated = false;
 
-		MultipartRI.INSTANCE = new MultipartRI();
-	}
+        MultipartRI.INSTANCE = new MultipartRI();
+        Settings.save();
+    }
+
 }

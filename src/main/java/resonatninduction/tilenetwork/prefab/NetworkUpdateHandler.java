@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.tilenetwork.prefab;
+package resonatninduction.tilenetwork.prefab;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -6,8 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
-
+import resonatninduction.tilenetwork.ITileNetwork;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 

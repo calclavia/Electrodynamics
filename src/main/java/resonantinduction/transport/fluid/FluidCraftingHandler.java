@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.transport.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
 import resonantinduction.transport.fluid.network.IFluidRecipeCrafter;
+import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
-import com.builtbroken.minecraft.FluidHelper;
 
 /**
  * Handles all kinds of process involving mixing Fluids with other fluids and/or Items, Blocks,

@@ -2,6 +2,7 @@ package com.builtbroken.minecraft.recipes;
 
 import java.util.Random;
 
+import resonantinduction.api.IProcessable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;

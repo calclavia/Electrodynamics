@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft;
+package resonantinduction.api.events;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.api.vector.Vector3;
-
-import com.builtbroken.minecraft.helpers.HelperMethods;
+import calclavia.lib.utility.HelperMethods;
 
 /**
  * An event triggered by entities or tiles that create lasers

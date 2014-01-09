@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.client.render.BlockRenderHelper;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.BlockMachine;
@@ -18,7 +18,7 @@ public class BlockFrackingPipe extends BlockMachine
 
 	public BlockFrackingPipe()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "Fracking_Pipe", Material.wood);
+		super(Settings.CONFIGURATION, "Fracking_Pipe", Material.wood);
 	}
 
 	@Override

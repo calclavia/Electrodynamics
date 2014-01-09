@@ -6,9 +6,9 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelReleaseValve;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -68,7 +68,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		}
 		if (RecipeLoader.blockReleaseValve != null && item.itemID == RecipeLoader.blockReleaseValve.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "ReleaseValve.png"));
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "ReleaseValve.png"));
 			valve.render();
 		}
 		GL11.glPopMatrix();

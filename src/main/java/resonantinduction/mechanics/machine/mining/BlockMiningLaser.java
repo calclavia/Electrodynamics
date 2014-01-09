@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.client.render.BlockRenderHelper;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.BlockMachine;
@@ -22,7 +22,7 @@ public class BlockMiningLaser extends BlockMachine
 {
 	public BlockMiningLaser()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "LaserMiner", Material.iron);
+		super(Settings.CONFIGURATION, "LaserMiner", Material.iron);
 	}
 
 	@Override

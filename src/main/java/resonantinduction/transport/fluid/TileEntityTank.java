@@ -5,9 +5,8 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.transport.fluid.network.NetworkFluidContainers;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidNetworkTile;
-
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.ITileNetwork;
 
 public class TileEntityTank extends TileEntityFluidNetworkTile
 {

@@ -8,10 +8,9 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkPipe;
-
-import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
+import calclavia.lib.utility.FluidHelper;
 
 /**
  * Extension on the fluid container network to provide a more advanced reaction to fluid passing

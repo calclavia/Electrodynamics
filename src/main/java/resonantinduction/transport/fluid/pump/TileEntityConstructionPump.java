@@ -18,11 +18,11 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.api.fluid.INetworkPipe;
 import resonantinduction.transport.fluid.network.NetworkFluidTiles;
+import resonatninduction.tilenetwork.ITileConnector;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.tilenetwork.ITileConnector;
 
 public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
 {

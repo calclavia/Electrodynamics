@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelFurnace;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -16,7 +16,7 @@ public class RenderFurnace extends TileEntitySpecialRenderer
 {
 	int type = 0;
 	private ModelFurnace model;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "Furnace.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "Furnace.png");
 
 	public RenderFurnace()
 	{

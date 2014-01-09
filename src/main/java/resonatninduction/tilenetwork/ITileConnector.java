@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.tilenetwork;
+package resonatninduction.tilenetwork;
 
 import net.minecraftforge.common.ForgeDirection;
 

@@ -1,4 +1,6 @@
-package com.builtbroken.minecraft.recipes;
+package resonantinduction.api;
+
+import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import net.minecraft.item.ItemStack;
 

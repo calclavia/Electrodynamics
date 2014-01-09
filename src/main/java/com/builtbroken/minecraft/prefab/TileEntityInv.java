@@ -3,6 +3,7 @@ package com.builtbroken.minecraft.prefab;
 import java.util.ArrayList;
 import java.util.List;
 
+import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -21,7 +22,6 @@ import calclavia.lib.prefab.tile.TileAdvanced;
 import com.builtbroken.minecraft.interfaces.IExternalInv;
 import com.builtbroken.minecraft.interfaces.IInvBox;
 import com.builtbroken.minecraft.prefab.invgui.InvChest;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
 
 /**
  * Prefab for simple object who only need basic inv support and nothing more

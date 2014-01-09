@@ -1,18 +1,17 @@
-package com.builtbroken.minecraft.tilenetwork.prefab;
+package resonatninduction.tilenetwork.prefab;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.ITileNetwork;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
-import com.builtbroken.minecraft.tilenetwork.Pathfinder;
+import calclavia.lib.path.Pathfinder;
 
 public class NetworkTileEntities implements ITileNetwork
 {

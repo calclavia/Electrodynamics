@@ -16,15 +16,16 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.Reference;
+import resonantinduction.core.Settings;
+import resonatninduction.tilenetwork.INetworkPart;
 import calclavia.lib.access.AccessUser;
 import calclavia.lib.access.ISpecialAccess;
+import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.prefab.block.BlockTile;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraBlockInfo;
-import com.builtbroken.minecraft.interfaces.IBlockActivated;
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,7 +47,7 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 
 	public BlockMachine(Configuration config, String blockName, Material material)
 	{
-		super(config.getBlock(blockName, DarkCore.getNextID()).getInt(), material);
+		super(config.getBlock(blockName, Settings.getNextBlockID()).getInt(), material);
 		this.setUnlocalizedName(blockName);
 		this.setResistance(100f);
 	}
@@ -55,9 +56,9 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.blockIcon = iconReg.registerIcon(DarkCore.PREFIX + "machine");
-		this.iconInput = iconReg.registerIcon(DarkCore.PREFIX + "machine_input");
-		this.iconOutput = iconReg.registerIcon(DarkCore.PREFIX + "machine_output");
+		this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "machine");
+		this.iconInput = iconReg.registerIcon(Reference.PREFIX + "machine_input");
+		this.iconOutput = iconReg.registerIcon(Reference.PREFIX + "machine_output");
 	}
 
 	@Override
@@ -175,7 +176,7 @@ public abstract class BlockMachine extends BlockTile implements IExtraBlockInfo
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if (entity instanceof IBlockActivated && ((IBlockActivated) entity).onActivated(entityPlayer))
+		if (entity instanceof IBlockActivate && ((IBlockActivate) entity).onActivated(entityPlayer))
 		{
 			return true;
 		}

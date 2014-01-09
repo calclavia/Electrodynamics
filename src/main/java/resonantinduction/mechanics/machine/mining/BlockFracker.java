@@ -5,7 +5,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
@@ -17,7 +17,7 @@ public class BlockFracker extends BlockMachine
 
 	public BlockFracker()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
+		super(Settings.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
 	}
 
 	@Override

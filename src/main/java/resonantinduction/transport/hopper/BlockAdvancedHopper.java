@@ -15,7 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.client.render.RenderAdvancedHopper;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.BlockMachine;
@@ -39,7 +39,7 @@ public class BlockAdvancedHopper extends BlockMachine
 
 	public BlockAdvancedHopper()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "DMHopper", Material.iron);
+		super(Settings.CONFIGURATION, "DMHopper", Material.iron);
 		this.setCreativeTab(ResonantInductionTabs.tabAutomation());
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 	}

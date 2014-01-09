@@ -7,10 +7,10 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelCrusher;
 import resonantinduction.client.model.ModelGrinder;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -79,11 +79,11 @@ public class RenderProcessor extends TileEntitySpecialRenderer
 		int g = meta / 4;
 		if (g == 0)
 		{
-			return new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "CrusherBlock.png");
+			return new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "CrusherBlock.png");
 		}
 		else if (g == 1)
 		{
-			return new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "GrinderBlock.png");
+			return new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "GrinderBlock.png");
 		}
 		return null;
 

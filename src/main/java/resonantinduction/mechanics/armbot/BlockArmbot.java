@@ -15,11 +15,9 @@ import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderArmbot;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.multiblock.link.IMultiBlock;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.DarkCore;
-import com.builtbroken.minecraft.interfaces.IBlockActivated;
-import com.builtbroken.minecraft.interfaces.IMultiBlock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

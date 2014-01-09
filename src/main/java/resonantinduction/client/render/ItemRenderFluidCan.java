@@ -8,9 +8,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelSmallFluidCan;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.fluid.ItemFluidCan;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +21,7 @@ public class ItemRenderFluidCan implements IItemRenderer
 {
 	public static final ModelSmallFluidCan CAN_MODEL = new ModelSmallFluidCan();
 
-	public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "FluidCanA.png");
+	public static final ResourceLocation CAN_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "FluidCanA.png");
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)

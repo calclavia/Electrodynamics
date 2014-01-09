@@ -2,8 +2,8 @@ package resonantinduction.core.base;
 
 import net.minecraftforge.common.Configuration;
 import resonantinduction.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.Settings;
 import codechicken.multipart.JItemMultiPart;
 
 /**
@@ -14,7 +14,7 @@ public abstract class ItemMultipartBase extends JItemMultiPart
 {
 	public ItemMultipartBase(String name, int id)
 	{
-		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setUnlocalizedName(Reference.PREFIX + name);
 		this.setTextureName(Reference.PREFIX + name);

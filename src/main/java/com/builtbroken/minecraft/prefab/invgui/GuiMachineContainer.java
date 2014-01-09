@@ -12,7 +12,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage.ButtonIcon;
 

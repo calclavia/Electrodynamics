@@ -18,9 +18,9 @@ import resonantinduction.energy.ResonantInductionEnergy;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.HelperMethods;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /**

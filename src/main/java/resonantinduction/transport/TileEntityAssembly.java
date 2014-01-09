@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import resonatninduction.tilenetwork.INetworkEnergyPart;
+import resonatninduction.tilenetwork.ITileNetwork;
+import resonatninduction.tilenetwork.prefab.NetworkSharedPower;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
-import com.builtbroken.minecraft.tilenetwork.INetworkEnergyPart;
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkSharedPower;
 
 /**
  * A class to be inherited by all machines on the assembly line. This class acts as a single peace

@@ -5,8 +5,8 @@ package resonantinduction.core.base;
 
 import net.minecraftforge.common.Configuration;
 import resonantinduction.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.Settings;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockRotatable;
 
@@ -18,7 +18,7 @@ public class BlockRotatableBase extends BlockRotatable
 {
 	public BlockRotatableBase(String name, int id)
 	{
-		super(ResonantInduction.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), UniversalElectricity.machine);
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), UniversalElectricity.machine);
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setUnlocalizedName(Reference.PREFIX + name);
 		this.setTextureName(Reference.PREFIX + name);

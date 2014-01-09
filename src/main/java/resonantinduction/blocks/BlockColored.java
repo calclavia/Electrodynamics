@@ -9,7 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.Reference;
 
 import com.builtbroken.minecraft.helpers.ColorCode;
 
@@ -68,7 +68,7 @@ public class BlockColored extends Block
 	{
 		if (colorized)
 		{
-			this.blockIcon = iconReg.registerIcon(ResonantInductionTransport.PREFIX + this.getUnlocalizedName().replace("tile.", ""));
+			this.blockIcon = iconReg.registerIcon(Reference.PREFIX + this.getUnlocalizedName().replace("tile.", ""));
 		}
 		else
 		{
@@ -76,7 +76,7 @@ public class BlockColored extends Block
 
 			for (int i = 0; i < this.icons.length; ++i)
 			{
-				this.icons[i] = iconReg.registerIcon(ResonantInductionTransport.PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
+				this.icons[i] = iconReg.registerIcon(Reference.PREFIX + ColorCode.get(~i & 15).name + this.getUnlocalizedName().replace("tile.", ""));
 			}
 		}
 	}

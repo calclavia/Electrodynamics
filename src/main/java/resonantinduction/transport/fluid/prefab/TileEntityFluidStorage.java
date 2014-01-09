@@ -10,8 +10,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import calclavia.lib.utility.FluidHelper;
 
-import com.builtbroken.minecraft.FluidHelper;
 import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded

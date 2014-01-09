@@ -6,16 +6,16 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelLaserTile;
 import resonantinduction.mechanics.machine.mining.TileMiningLaser;
-import resonantinduction.transport.ResonantInductionTransport;
 
 /** @author Darkguardsman */
 public class RenderMiningLaser extends TileEntitySpecialRenderer
 {
 
 	public static final ModelLaserTile model = new ModelLaserTile();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "LaserTile.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "LaserTile.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)

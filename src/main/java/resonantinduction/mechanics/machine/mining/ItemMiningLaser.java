@@ -23,16 +23,15 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.api.events.LaserEvent;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.RayTraceHelper;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.CoreRegistry;
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.LaserEvent;
-import com.builtbroken.minecraft.helpers.RayTraceHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

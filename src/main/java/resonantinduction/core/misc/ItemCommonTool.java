@@ -30,9 +30,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.Reference;
+import resonantinduction.core.Settings;
 
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
@@ -57,7 +57,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
 	public ItemCommonTool()
 	{
-		super(ResonantInductionTransport.CONFIGURATION.getItem("Items", "CommonTools", DarkCore.getNextItemId()).getInt());
+		super(Settings.CONFIGURATION.getItem("Items", "CommonTools", Settings.getNextItemID()).getInt());
 		this.maxStackSize = 1;
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
@@ -438,7 +438,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 	{
 		if (itemStack != null)
 		{
-			return "item." + ResonantInductionTransport.PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
+			return "item." + Reference.PREFIX + EnumTool.getFullName(itemStack.getItemDamage());
 		}
 		else
 		{
@@ -478,7 +478,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
 					if (tool.enabled)
 					{
-						tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "tool." + mat.simpleName + tool.name);
+						tool.toolIcons[mat.ordinal()] = iconRegister.registerIcon(Reference.PREFIX + "tool." + mat.simpleName + tool.name);
 					}
 				}
 			}

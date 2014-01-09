@@ -26,11 +26,11 @@ import resonantinduction.core.network.ISimplePacketReceiver;
 import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.fluid.network.NetworkFluidTiles;
 import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.ITileNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

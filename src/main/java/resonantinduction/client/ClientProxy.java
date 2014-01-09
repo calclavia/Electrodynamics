@@ -31,6 +31,7 @@ import resonantinduction.core.misc.EntityFarmEgg;
 import resonantinduction.core.misc.EntityTurkey;
 import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.energy.battery.TileBatteryBox;
+import resonantinduction.mechanics.CommonProxy;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
 import resonantinduction.transport.encoder.TileEntityEncoder;
 import resonantinduction.transport.fluid.TileEntityReleaseValve;
@@ -54,7 +55,6 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
-		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurkey.class, new RenderTurkey());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFarmEgg.class, new RenderSnowball(Item.egg));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTestCar.class, new RenderTestCar());

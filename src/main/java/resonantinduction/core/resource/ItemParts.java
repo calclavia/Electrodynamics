@@ -10,9 +10,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.transport.ResonantInductionTransport;
 
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

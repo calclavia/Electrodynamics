@@ -14,9 +14,9 @@ import resonantinduction.mechanics.armbot.TaskBaseArmbot;
 import resonantinduction.mechanics.armbot.TaskBaseProcess;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.InvInteractionHelper;
 
 import com.builtbroken.common.science.units.UnitHelper;
-import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 import com.builtbroken.minecraft.helpers.MathHelper;
 
 public class TaskTake extends TaskBaseArmbot

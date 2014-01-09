@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.Reference;
 import resonantinduction.transport.encoder.ContainerEncoder;
 import resonantinduction.transport.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiEncoderInventory extends GuiEncoderBase
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "gui_encoder_slot.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_encoder_slot.png");
 
 	public GuiEncoderInventory(InventoryPlayer inventoryPlayer, TileEntityEncoder tileEntity)
 	{

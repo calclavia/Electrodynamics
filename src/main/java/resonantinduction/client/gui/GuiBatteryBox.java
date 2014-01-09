@@ -7,9 +7,9 @@ import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.energy.battery.ContainerBatteryBox;
 import resonantinduction.energy.battery.TileBatteryBox;
-import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import cpw.mods.fml.relauncher.Side;
@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBatteryBox extends GuiContainer
 {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.GUI_DIRECTORY + "battery_box.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "battery_box.png");
 
 	private TileBatteryBox tileEntity;
 

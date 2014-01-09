@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.tilenetwork;
+package resonatninduction.tilenetwork;
 
 /**
  * Used on tiles that can contain more than one tile network. Currently WIP so don't use unless you

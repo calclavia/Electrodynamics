@@ -19,13 +19,11 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 import resonantinduction.transport.fluid.EnumGas;
 import universalelectricity.api.vector.Vector3;
-
-import com.builtbroken.minecraft.DarkCore;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,7 +42,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 
 	public BlockGasOre()
 	{
-		super(ResonantInductionTransport.CONFIGURATION.getBlock("GasBlock", DarkCore.getNextID()).getInt(), gas);
+		super(Settings.CONFIGURATION.getBlock("GasBlock", Settings.getNextBlockID()).getInt(), gas);
 		this.setUnlocalizedName("DMBlockGas");
 		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
 		this.setTickRandomly(true);
@@ -149,7 +147,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "gas");
+		this.blockIcon = par1IconRegister.registerIcon(Reference.PREFIX + "gas");
 	}
 
 	@Override

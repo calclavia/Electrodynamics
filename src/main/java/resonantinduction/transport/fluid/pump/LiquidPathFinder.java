@@ -13,8 +13,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-
-import com.builtbroken.minecraft.FluidHelper;
+import calclavia.lib.utility.FluidHelper;
 
 /**
  * A simpler path Finder used to find drainable or fillable tiles

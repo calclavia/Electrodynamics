@@ -13,9 +13,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ItemFluidContainer;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.transport.ResonantInductionTransport;
-
-import com.builtbroken.minecraft.DarkCore;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

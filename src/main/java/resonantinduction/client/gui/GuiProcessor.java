@@ -7,16 +7,16 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.mechanics.processor.ContainerProcessor;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiProcessor extends GuiContainer
 {
-	private static final ResourceLocation gui_texture = new ResourceLocation(ResonantInductionTransport.instance.PREFIX + ResonantInductionTransport.GUI_DIRECTORY + "processor.png");
+	private static final ResourceLocation gui_texture = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "processor.png");
 	private TileEntityProcessor tileEntity;
 
 	public GuiProcessor(InventoryPlayer par1InventoryPlayer, TileEntityProcessor par2TileEntityFurnace)

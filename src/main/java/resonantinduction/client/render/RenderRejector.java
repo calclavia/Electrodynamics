@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelRejectorPiston;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.logistic.TileEntityRejector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +26,7 @@ public class RenderRejector extends RenderImprintable
 		{
 			pos = 8;
 		}
-		ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "rejector.png");
+		ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "rejector.png");
 		bindTexture(name);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

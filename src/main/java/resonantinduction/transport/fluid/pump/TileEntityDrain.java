@@ -18,9 +18,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidDevice;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.FluidHelper;
 
 public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
 {

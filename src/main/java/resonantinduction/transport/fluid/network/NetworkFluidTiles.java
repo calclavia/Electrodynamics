@@ -14,12 +14,11 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.transport.fluid.FluidCraftingHandler;
-
-import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.ITileNetwork;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkTileEntities;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.ITileNetwork;
+import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
+import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
+import calclavia.lib.utility.FluidHelper;
 
 public class NetworkFluidTiles extends NetworkTileEntities
 {

@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelManipulator;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.logistic.TileEntityManipulator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,12 +26,12 @@ public class RenderManipulator extends RenderImprintable
 
 		if (tileEntity.isOutput())
 		{
-			ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "manipulator1.png");
+			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "manipulator1.png");
 			bindTexture(name);
 		}
 		else
 		{
-			ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "manipulator2.png");
+			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "manipulator2.png");
 			bindTexture(name);
 		}
 

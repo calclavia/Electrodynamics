@@ -13,8 +13,8 @@ import resonantinduction.transport.imprinter.ItemImprinter;
 import resonantinduction.transport.imprinter.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.utility.InvInteractionHelper;
 
-import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 import com.builtbroken.minecraft.interfaces.IRotatable;
 import com.google.common.io.ByteArrayDataInput;
 

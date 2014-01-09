@@ -1,11 +1,10 @@
 package resonantinduction.api.fluid;
 
+import resonatninduction.tilenetwork.INetworkPart;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 
 /**
  * Interface used by part that are members of a fluid tile network. Parts in the network will act as

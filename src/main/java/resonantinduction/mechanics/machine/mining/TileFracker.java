@@ -12,13 +12,13 @@ import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.transport.fluid.EnumGas;
 import resonantinduction.transport.fluid.GasTank;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.multiblock.link.IBlockActivate;
+import calclavia.lib.utility.FluidHelper;
 
-import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.interfaces.IBlockActivated;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 /** @author Archadia */
-public class TileFracker extends TileEntityEnergyMachine implements IFluidHandler, IBlockActivated
+public class TileFracker extends TileEntityEnergyMachine implements IFluidHandler, IBlockActivate
 {
 	public GasTank tank = new GasTank(10000);
 

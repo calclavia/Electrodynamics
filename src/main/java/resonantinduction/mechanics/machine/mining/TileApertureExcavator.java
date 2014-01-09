@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.MachineMiningEvent;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.InvInteractionHelper;
 
-import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 /** @author Archadia */

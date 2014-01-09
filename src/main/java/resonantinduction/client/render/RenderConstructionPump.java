@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelConstructionPump;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.fluid.pump.TileEntityConstructionPump;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +17,7 @@ public class RenderConstructionPump extends TileEntitySpecialRenderer
 {
 	int type = 0;
 	private ModelConstructionPump model;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "ConstructionPump.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "ConstructionPump.png");
 
 	public RenderConstructionPump()
 	{

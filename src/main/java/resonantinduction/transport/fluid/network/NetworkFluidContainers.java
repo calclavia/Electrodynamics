@@ -7,10 +7,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkFluidPart;
-
-import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
+import calclavia.lib.utility.FluidHelper;
 
 /**
  * Basically the same as network Fluid tiles class with the only difference being in how it stores

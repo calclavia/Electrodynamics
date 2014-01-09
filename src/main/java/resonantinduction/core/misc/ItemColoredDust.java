@@ -4,25 +4,25 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.Reference;
+import resonantinduction.core.Settings;
 
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemColoredDust extends ItemBasic
+public class ItemColoredDust extends Item
 {
 	@SideOnly(Side.CLIENT)
 	private Icon theIcon;
 
 	public ItemColoredDust()
 	{
-		super(DarkCore.getNextItemId(), "GlowRefinedSand", ResonantInductionTransport.CONFIGURATION);
+		super(Settings.CONFIGURATION.getItem("GlowingRefinedSand", Settings.getNextItemID()).getInt());
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(CreativeTabs.tabMaterials);
@@ -46,7 +46,7 @@ public class ItemColoredDust extends ItemBasic
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "dust");
+		this.itemIcon = par1IconRegister.registerIcon(Reference.PREFIX + "dust");
 		this.theIcon = par1IconRegister.registerIcon("glowingPowder_overlay");
 	}
 

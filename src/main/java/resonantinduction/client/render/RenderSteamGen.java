@@ -7,10 +7,10 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelMachine;
 import resonantinduction.client.model.ModelSteamGen;
 import resonantinduction.client.model.ModelSteamTurbine;
-import resonantinduction.transport.ResonantInductionTransport;
 
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 
@@ -23,8 +23,8 @@ public class RenderSteamGen extends TileEntitySpecialRenderer
 	public static final ModelSteamTurbine TURBINE_MODEL = new ModelSteamTurbine();
 	public static final ModelSteamGen STEAM_GEN_MODEL = new ModelSteamGen();
 
-	public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "SmallSteamFan.png");
-	public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "SteamGenerator.png");
+	public static final ResourceLocation TURBINE_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "SmallSteamFan.png");
+	public static final ResourceLocation STEAM_GEN_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "SteamGenerator.png");
 	private static float rot1 = 0;
 
 	@Override

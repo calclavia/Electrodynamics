@@ -1,8 +1,8 @@
 package resonantinduction.transport;
 
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkSharedPower;
-import com.builtbroken.minecraft.tilenetwork.prefab.NetworkUpdateHandler;
+import resonatninduction.tilenetwork.INetworkPart;
+import resonatninduction.tilenetwork.prefab.NetworkSharedPower;
+import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
 
 public class NetworkAssembly extends NetworkSharedPower
 {

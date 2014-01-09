@@ -1,4 +1,4 @@
-package com.builtbroken.minecraft.tilenetwork;
+package resonatninduction.tilenetwork;
 
 import java.util.Set;
 

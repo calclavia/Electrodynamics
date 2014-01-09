@@ -6,15 +6,15 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelFrackingPipe;
-import resonantinduction.transport.ResonantInductionTransport;
 
 /** @author Archadia */
 public class RenderFrackingPipe extends TileEntitySpecialRenderer
 {
 
 	public static final ModelFrackingPipe model = new ModelFrackingPipe();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "frackingpipe.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "frackingpipe.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double d, double d1, double d2, float f)

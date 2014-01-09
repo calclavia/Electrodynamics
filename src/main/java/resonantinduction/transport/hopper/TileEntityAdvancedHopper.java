@@ -9,9 +9,9 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.transport.imprinter.ItemImprinter;
 import resonantinduction.transport.imprinter.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.InvInteractionHelper;
 
 import com.builtbroken.minecraft.helpers.HelperMethods;
-import com.builtbroken.minecraft.helpers.InvInteractionHelper;
 
 /**
  * Advanced version of the hopper with features such as redstone control, sorting, filtering, and

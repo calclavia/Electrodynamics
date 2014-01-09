@@ -1,12 +1,11 @@
-package com.builtbroken.minecraft.tilenetwork.prefab;
+package resonatninduction.tilenetwork.prefab;
 
 import java.util.HashMap;
 import java.util.List;
 
+import resonatninduction.tilenetwork.INetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-
-import com.builtbroken.minecraft.tilenetwork.INetworkPart;
 
 /**
  * Network that supplies resources to tiles that demand a set resource

@@ -14,12 +14,12 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.multiblock.link.IBlockActivate;
+import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
-import com.builtbroken.minecraft.FluidHelper;
-import com.builtbroken.minecraft.interfaces.IBlockActivated;
 
-public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivated
+public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivate
 {
 	FluidTank tank = new FluidTank(Integer.MAX_VALUE);
 	boolean autoEmpty = false;

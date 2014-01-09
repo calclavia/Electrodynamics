@@ -6,9 +6,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelLargePipe;
 import resonantinduction.client.model.ModelReleaseValve;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonantinduction.transport.fluid.TileEntityReleaseValve;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 	private ModelReleaseValve valve;
 	private TileEntity[] ents = new TileEntity[6];
 
-	public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "ReleaseValve.png");
+	public static final ResourceLocation VALVE_TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "ReleaseValve.png");
 
 	public RenderReleaseValve()
 	{

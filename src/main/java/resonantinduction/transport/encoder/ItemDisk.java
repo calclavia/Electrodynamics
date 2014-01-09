@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
@@ -28,7 +29,7 @@ public class ItemDisk extends Item
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "disk");
+		this.itemIcon = par1IconRegister.registerIcon(Reference.PREFIX + "disk");
 	}
 
 	@Override

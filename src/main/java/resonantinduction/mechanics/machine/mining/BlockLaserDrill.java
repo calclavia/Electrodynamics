@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.BlockMachine;
@@ -17,7 +17,7 @@ public class BlockLaserDrill extends BlockMachine
 
 	public BlockLaserDrill()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "Machine_LaserDrill", Material.iron);
+		super(Settings.CONFIGURATION, "Machine_LaserDrill", Material.iron);
 	}
 
 	@Override

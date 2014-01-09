@@ -14,9 +14,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelArmbot;
 import resonantinduction.mechanics.armbot.TileEntityArmbot;
-import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,7 +46,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 					}
 				}
 			}
-			ResourceLocation name = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + TEXTURE);
+			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + TEXTURE);
 			bindTexture(name);
 
 			GL11.glPushMatrix();

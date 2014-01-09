@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import resonantinduction.client.model.ModelGearPiston;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderGearPiston extends TileEntitySpecialRenderer
 {
 	private ModelGearPiston model;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ResonantInductionTransport.DOMAIN, ResonantInductionTransport.MODEL_DIRECTORY + "GearShaftPiston.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "GearShaftPiston.png");
 
 	public RenderGearPiston()
 	{

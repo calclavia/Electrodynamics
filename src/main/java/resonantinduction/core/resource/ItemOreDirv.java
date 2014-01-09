@@ -11,14 +11,12 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.api.events.LaserEvent;
 import resonantinduction.transport.ResonantInductionTransport;
 
-import com.builtbroken.minecraft.DarkCore;
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-import com.builtbroken.minecraft.LaserEvent;
-import com.builtbroken.minecraft.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

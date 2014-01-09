@@ -14,8 +14,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import resonantinduction.core.ResonantInductionTabs;
 
-import com.builtbroken.minecraft.DarkCore;
-
 /**
  * Basic item used to spawn a vehicle
  * 

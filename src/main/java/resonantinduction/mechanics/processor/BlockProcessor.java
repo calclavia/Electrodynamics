@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderProcessor;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.Settings;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
 
@@ -32,7 +33,7 @@ public class BlockProcessor extends BlockMachine
 
 	public BlockProcessor()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
+		super(Settings.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
 		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
 	}
 

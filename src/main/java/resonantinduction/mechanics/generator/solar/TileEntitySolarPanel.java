@@ -47,7 +47,8 @@ public class TileEntitySolarPanel extends TileGenerator
 						this.setJoulesPerTick(BlockSolarPanel.wattNight);
 					}
 				}
-				this.setJoulesPerSecound(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
+				//TODO add GC support
+				//this.setJoulesPerSecound(this.JOULES_PER_TICK + this.JOULES_PER_TICK * (this.worldObj.provider instanceof ISolarLevel ? (int) ((ISolarLevel) this.worldObj.provider).getSolarEnergyMultiplier() : 0));
 			}
 		}
 	}

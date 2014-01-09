@@ -207,7 +207,7 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 				{
 					if (data.readBoolean())
 					{
-						this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.instance().readNBTTagCompound(data));
+						this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.readNBTTagCompound(data));
 						this.sampleStack.stackSize = data.readInt();
 					}
 					else

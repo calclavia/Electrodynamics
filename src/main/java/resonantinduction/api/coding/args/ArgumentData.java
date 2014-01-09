@@ -2,6 +2,7 @@ package resonantinduction.api.coding.args;
 
 import net.minecraft.nbt.NBTTagCompound;
 import calclavia.lib.utility.ISaveObj;
+import calclavia.lib.utility.NBTUtility;
 
 /**
  * Used to store arguments in a way that can be easier to read, limit, and understand
@@ -67,13 +68,13 @@ public class ArgumentData implements ISaveObj
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
-		NBTFileHelper.saveObject(nbt, "ObjectData", this.currentValue);
+		NBTUtility.saveObject(nbt, "ObjectData", this.currentValue);
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
-		this.currentValue = NBTFileHelper.loadObject(nbt, "ObjectData");
+		this.currentValue = NBTUtility.loadObject(nbt, "ObjectData");
 
 	}
 }

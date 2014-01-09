@@ -15,14 +15,14 @@ import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
 import resonantinduction.api.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
 import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.TranslationHelper;
 import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
 
-public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
+public class TileEntityImprinter extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -167,7 +167,7 @@ public class TileEntityImprinter extends TileEntityAdvanced implements ISidedInv
 	@Override
 	public String getInvName()
 	{
-		return TranslationHelper.getLocal("tile.imprinter.name");
+		return TranslationUtility.getLocal("tile.imprinter.name");
 	}
 
 	@Override
