@@ -13,10 +13,10 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonantinduction.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,7 +28,7 @@ public class BlockDebug extends BlockMachine
 	public BlockDebug()
 	{
 		super(ResonantInductionTransport.CONFIGURATION, "DebugBlock", Material.clay);
-		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
+		this.setCreativeTab(ResonantInductionTabs.CORE);
 	}
 
 	@Override

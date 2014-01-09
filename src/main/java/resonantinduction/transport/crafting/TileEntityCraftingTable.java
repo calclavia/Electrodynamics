@@ -1,6 +1,6 @@
 package resonantinduction.transport.crafting;
 
-import com.builtbroken.minecraft.prefab.TileEntityInv;
+import resonantinduction.lib.prefab.TileEntityInv;
 
 public class TileEntityCraftingTable extends TileEntityInv
 {

@@ -2,10 +2,9 @@ package resonantinduction.mechanics.generator.steam;
 
 import java.util.EnumSet;
 
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public class TileEntitySteamPiston extends TileEntityEnergyMachine
 {

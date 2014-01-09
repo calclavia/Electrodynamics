@@ -10,13 +10,13 @@ import net.minecraft.network.packet.Packet;
 import resonantinduction.api.coding.IProgram;
 import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.TaskRegistry;
+import resonantinduction.lib.prefab.TileEntityMachine;
 import resonantinduction.mechanics.armbot.Program;
 import resonantinduction.mechanics.armbot.command.TaskRotateTo;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.prefab.TileEntityMachine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;

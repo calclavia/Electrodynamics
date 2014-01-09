@@ -6,10 +6,10 @@ import java.util.Map.Entry;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.base.BlockMapUtil;
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 /** @author Archadia, DarkCow */
 public class TileScanner extends TileEntityEnergyMachine

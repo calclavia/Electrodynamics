@@ -5,11 +5,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.lib.interfaces.IExtendedStorage;
+import resonantinduction.lib.prefab.TileEntityInv;
 import resonantinduction.transport.ResonantInductionTransport;
 import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.interfaces.IExtendedStorage;
-import com.builtbroken.minecraft.prefab.TileEntityInv;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;

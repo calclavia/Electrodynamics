@@ -6,10 +6,8 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonantinduction.transport.ResonantInductionTransport;
-
-import com.builtbroken.minecraft.prefab.BlockMachine;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -9,13 +9,11 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.api.coding.IProgram;
 import resonantinduction.api.coding.IRedirectTask;
 import resonantinduction.api.coding.ITask;
+import resonantinduction.lib.interfaces.IScroll;
 import resonantinduction.mechanics.armbot.command.TaskEnd;
 import resonantinduction.mechanics.armbot.command.TaskIdle;
 import resonantinduction.mechanics.armbot.command.TaskStart;
 import resonantinduction.transport.encoder.TileEntityEncoder;
-
-import com.builtbroken.minecraft.interfaces.IScroll;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

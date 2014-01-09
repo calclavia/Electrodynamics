@@ -7,12 +7,11 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkPipe;
+import resonantinduction.lib.interfaces.IReadOut;
 import resonantinduction.transport.fluid.network.NetworkPipes;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidDevice;
 import resonatninduction.tilenetwork.ITileConnector;
 import calclavia.lib.utility.HelperMethods;
-
-import com.builtbroken.minecraft.interfaces.IReadOut;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {

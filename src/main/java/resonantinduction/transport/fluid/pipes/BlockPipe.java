@@ -17,13 +17,13 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.helpers.ColorCode;
+import resonantinduction.lib.helpers.ColorCode.IColorCoded;
+import resonantinduction.lib.prefab.BlockMachine;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -11,9 +11,7 @@ import resonantinduction.Reference;
 import resonantinduction.client.model.ModelMachine;
 import resonantinduction.client.model.ModelSteamGen;
 import resonantinduction.client.model.ModelSteamTurbine;
-
-import com.builtbroken.minecraft.prefab.TileEntityMachine;
-
+import resonantinduction.lib.prefab.TileEntityMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

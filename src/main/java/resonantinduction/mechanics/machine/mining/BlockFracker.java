@@ -6,10 +6,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /** @author Archadia */
 public class BlockFracker extends BlockMachine

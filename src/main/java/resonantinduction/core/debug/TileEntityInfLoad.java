@@ -1,8 +1,7 @@
 package resonantinduction.core.debug;
 
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import net.minecraftforge.common.ForgeDirection;
-
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public class TileEntityInfLoad extends TileEntityEnergyMachine
 {

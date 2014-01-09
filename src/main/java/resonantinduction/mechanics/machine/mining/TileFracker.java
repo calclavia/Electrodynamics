@@ -9,13 +9,12 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import resonantinduction.transport.fluid.EnumGas;
 import resonantinduction.transport.fluid.GasTank;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.utility.FluidHelper;
-
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 /** @author Archadia */
 public class TileFracker extends TileEntityEnergyMachine implements IFluidHandler, IBlockActivate

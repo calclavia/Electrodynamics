@@ -9,10 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.client.model.ModelTankSide;
+import resonantinduction.lib.helpers.ColorCode;
 import resonantinduction.transport.fluid.TileEntityTank;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

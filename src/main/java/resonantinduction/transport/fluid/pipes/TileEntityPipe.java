@@ -6,15 +6,14 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.INetworkPipe;
+import resonantinduction.lib.helpers.ColorCode;
+import resonantinduction.lib.helpers.ColorCode.IColorCoded;
 import resonantinduction.transport.fluid.network.NetworkPipes;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidNetworkTile;
 import resonatninduction.tilenetwork.ITileConnector;
 import resonatninduction.tilenetwork.ITileNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.helpers.ColorCode.IColorCoded;
 
 public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColorCoded, INetworkPipe
 {

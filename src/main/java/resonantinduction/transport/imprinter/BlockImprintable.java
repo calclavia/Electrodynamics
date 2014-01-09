@@ -10,8 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
 import resonantinduction.core.Settings;
-
-import com.builtbroken.minecraft.prefab.BlockMachine;
+import resonantinduction.lib.prefab.BlockMachine;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 

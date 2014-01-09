@@ -16,9 +16,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.client.render.RenderAdvancedHopper;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

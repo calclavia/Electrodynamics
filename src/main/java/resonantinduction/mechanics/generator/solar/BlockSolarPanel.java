@@ -12,11 +12,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderBlockSolarPanel;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

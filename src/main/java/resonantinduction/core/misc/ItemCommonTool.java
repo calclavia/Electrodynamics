@@ -32,9 +32,9 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.EnumMaterial;
+import resonantinduction.lib.IExtraInfo.IExtraItemInfo;
 
-import com.builtbroken.minecraft.EnumMaterial;
-import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;

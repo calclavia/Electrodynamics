@@ -4,15 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.lib.interfaces.IInvBox;
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
+import resonantinduction.lib.prefab.invgui.InvChest;
+import resonantinduction.lib.recipes.MachineRecipeHandler;
+import resonantinduction.lib.recipes.ProcessorType;
 import resonantinduction.mechanics.processor.BlockProcessor.ProcessorData;
 import universalelectricity.api.item.IEnergyItem;
 import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.interfaces.IInvBox;
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
-import com.builtbroken.minecraft.prefab.invgui.InvChest;
-import com.builtbroken.minecraft.recipes.MachineRecipeHandler;
-import com.builtbroken.minecraft.recipes.ProcessorType;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

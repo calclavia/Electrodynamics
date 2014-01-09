@@ -2,11 +2,10 @@ package resonantinduction.client.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import resonantinduction.lib.prefab.TileEntityMachine;
+import resonantinduction.lib.prefab.invgui.ContainerFake;
+import resonantinduction.lib.prefab.invgui.GuiMachineContainer;
 import resonantinduction.transport.ResonantInductionTransport;
-
-import com.builtbroken.minecraft.prefab.TileEntityMachine;
-import com.builtbroken.minecraft.prefab.invgui.ContainerFake;
-import com.builtbroken.minecraft.prefab.invgui.GuiMachineContainer;
 
 public class GuiEncoderBase extends GuiMachineContainer
 {

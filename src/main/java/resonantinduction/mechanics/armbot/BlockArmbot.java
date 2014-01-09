@@ -13,11 +13,11 @@ import net.minecraft.world.World;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderArmbot;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.multiblock.link.IMultiBlock;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -11,9 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.base.ItemBase;
-
-import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
-
+import resonantinduction.lib.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

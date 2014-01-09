@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import resonantinduction.Reference;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
-
+import resonantinduction.lib.helpers.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

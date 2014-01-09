@@ -19,11 +19,11 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderConveyorBelt;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonantinduction.transport.belt.TileEntityConveyorBelt.SlantType;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.client.render.BlockRenderHelper;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.transport.fluid.pipes.ItemBlockPipe;
 import resonantinduction.transport.fluid.pipes.TileEntityPipe;
@@ -22,7 +23,6 @@ import calclavia.lib.utility.FluidHelper;
 import calclavia.lib.utility.HelperMethods;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

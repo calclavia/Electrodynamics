@@ -17,12 +17,12 @@ import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderProcessor;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
+import resonantinduction.lib.recipes.ProcessorType;
 import resonantinduction.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
-import com.builtbroken.minecraft.recipes.ProcessorType;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;

@@ -12,8 +12,8 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.lib.interfaces.IControlReceiver;
 
-import com.builtbroken.minecraft.interfaces.IControlReceiver;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.client.FMLClientHandler;

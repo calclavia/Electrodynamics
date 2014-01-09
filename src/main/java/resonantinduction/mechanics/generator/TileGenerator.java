@@ -1,12 +1,11 @@
 package resonantinduction.mechanics.generator;
 
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public abstract class TileGenerator extends TileEntityEnergyMachine
 {

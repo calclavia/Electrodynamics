@@ -1,7 +1,7 @@
 package resonantinduction.transport.fluid.pipes;
 
-import com.builtbroken.minecraft.helpers.ColorCode;
-import com.builtbroken.minecraft.helpers.ColorCode.IColoredId;
+import resonantinduction.lib.helpers.ColorCode;
+import resonantinduction.lib.helpers.ColorCode.IColoredId;
 
 public enum EnumTankTypes implements IColoredId
 {

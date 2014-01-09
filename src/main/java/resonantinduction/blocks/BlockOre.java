@@ -17,11 +17,11 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.lib.EnumMaterial;
+import resonantinduction.lib.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.EnumMaterial;
-import com.builtbroken.minecraft.IExtraInfo.IExtraBlockInfo;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -12,11 +12,11 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IBelt;
 import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.lib.interfaces.IRotatable;
 import resonantinduction.transport.TileEntityAssembly;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 
-import com.builtbroken.minecraft.interfaces.IRotatable;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

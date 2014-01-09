@@ -16,6 +16,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.interfaces.IReadOut;
+import resonantinduction.lib.interfaces.IReadOut.EnumTools;
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import resonantinduction.mechanics.generator.TileGenerator;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -28,11 +31,6 @@ import buildcraft.api.power.IPowerReceptor;
 import calclavia.lib.prefab.item.ItemBase;
 import calclavia.lib.utility.FluidHelper;
 import cofh.api.energy.IEnergyStorage;
-
-import com.builtbroken.minecraft.interfaces.IReadOut;
-import com.builtbroken.minecraft.interfaces.IReadOut.EnumTools;
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

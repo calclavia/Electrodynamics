@@ -4,11 +4,10 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.lib.interfaces.IReadOut;
 import resonatninduction.tilenetwork.ITileConnector;
 import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import calclavia.lib.prefab.tile.TileAdvanced;
-
-import com.builtbroken.minecraft.interfaces.IReadOut;
 
 public abstract class TileEntityFluidDevice extends TileAdvanced implements IReadOut, ITileConnector
 {

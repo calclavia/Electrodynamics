@@ -8,9 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.lib.helpers.ColorCode;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidNetworkTile;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
 
 /**
  * Enum to hold info about each pipe material. Values are by default and some can change with pipe

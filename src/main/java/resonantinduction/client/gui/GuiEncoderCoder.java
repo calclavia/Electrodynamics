@@ -6,10 +6,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import resonantinduction.lib.prefab.invgui.GuiButtonImage;
+import resonantinduction.lib.prefab.invgui.GuiButtonImage.ButtonIcon;
 import resonantinduction.transport.encoder.TileEntityEncoder;
-
-import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage;
-import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {

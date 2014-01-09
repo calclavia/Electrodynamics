@@ -1,15 +1,14 @@
 package resonantinduction.transport.imprinter;
 
+import resonantinduction.lib.prefab.invgui.ISlotWatcher;
+import resonantinduction.lib.prefab.invgui.SlotCraftingResult;
+import resonantinduction.lib.prefab.invgui.SlotSpecific;
+import resonantinduction.lib.prefab.invgui.WatchedSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import com.builtbroken.minecraft.prefab.invgui.ISlotWatcher;
-import com.builtbroken.minecraft.prefab.invgui.SlotCraftingResult;
-import com.builtbroken.minecraft.prefab.invgui.SlotSpecific;
-import com.builtbroken.minecraft.prefab.invgui.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {

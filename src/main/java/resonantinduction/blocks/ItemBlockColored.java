@@ -1,10 +1,9 @@
 package resonantinduction.blocks;
 
+import resonantinduction.lib.helpers.ColorCode;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
 
 public class ItemBlockColored extends ItemBlock
 {

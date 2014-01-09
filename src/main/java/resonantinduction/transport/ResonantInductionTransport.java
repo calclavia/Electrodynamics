@@ -40,6 +40,10 @@ import resonantinduction.core.resource.ItemBlockOre;
 import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts;
 import resonantinduction.core.resource.ItemParts.Parts;
+import resonantinduction.lib.CoreRegistry;
+import resonantinduction.lib.EnumMaterial;
+import resonantinduction.lib.EnumOrePart;
+import resonantinduction.lib.LaserEntityDamageSource;
 import resonantinduction.mechanics.armbot.BlockArmbot;
 import resonantinduction.mechanics.armbot.command.TaskBreak;
 import resonantinduction.mechanics.armbot.command.TaskDrop;
@@ -97,12 +101,6 @@ import calclavia.lib.prefab.item.ItemBlockHolder;
 import calclavia.lib.utility.FluidHelper;
 import calclavia.lib.utility.PlayerKeyHandler;
 import calclavia.lib.utility.SaveManager;
-
-import com.builtbroken.minecraft.CoreRegistry;
-import com.builtbroken.minecraft.EnumMaterial;
-import com.builtbroken.minecraft.EnumOrePart;
-import com.builtbroken.minecraft.LaserEntityDamageSource;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

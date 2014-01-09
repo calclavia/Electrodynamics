@@ -9,12 +9,12 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.api.events.LaserEvent;
+import resonantinduction.lib.CoreRegistry;
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.utility.RayTraceHelper;
 
-import com.builtbroken.minecraft.CoreRegistry;
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

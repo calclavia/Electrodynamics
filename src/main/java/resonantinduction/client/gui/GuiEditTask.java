@@ -11,12 +11,10 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.Reference;
 import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.args.ArgumentData;
+import resonantinduction.lib.prefab.invgui.GuiBase;
+import resonantinduction.lib.prefab.invgui.GuiMessageBox;
+import resonantinduction.lib.prefab.invgui.IMessageBoxDialog;
 import universalelectricity.api.vector.Vector2;
-
-import com.builtbroken.minecraft.prefab.invgui.GuiBase;
-import com.builtbroken.minecraft.prefab.invgui.GuiMessageBox;
-import com.builtbroken.minecraft.prefab.invgui.IMessageBoxDialog;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

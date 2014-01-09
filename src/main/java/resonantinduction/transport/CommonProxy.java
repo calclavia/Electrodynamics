@@ -9,6 +9,7 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.lib.prefab.invgui.ContainerFake;
 import resonantinduction.mechanics.generator.steam.TileEntitySteamGen;
 import resonantinduction.mechanics.processor.ContainerProcessor;
 import resonantinduction.mechanics.processor.TileEntityProcessor;
@@ -16,9 +17,6 @@ import resonantinduction.transport.encoder.ContainerEncoder;
 import resonantinduction.transport.encoder.TileEntityEncoder;
 import resonantinduction.transport.imprinter.ContainerImprinter;
 import resonantinduction.transport.imprinter.TileEntityImprinter;
-
-import com.builtbroken.minecraft.prefab.invgui.ContainerFake;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 

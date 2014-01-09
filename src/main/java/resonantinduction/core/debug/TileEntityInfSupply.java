@@ -2,9 +2,8 @@ package resonantinduction.core.debug;
 
 import java.util.EnumSet;
 
+import resonantinduction.lib.prefab.TileEntityEnergyMachine;
 import net.minecraftforge.common.ForgeDirection;
-
-import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;
 
 public class TileEntityInfSupply extends TileEntityEnergyMachine
 {

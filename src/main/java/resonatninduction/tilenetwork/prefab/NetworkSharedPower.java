@@ -1,10 +1,9 @@
 package resonatninduction.tilenetwork.prefab;
 
 import net.minecraft.tileentity.TileEntity;
+import resonantinduction.lib.interfaces.IPowerLess;
 import resonatninduction.tilenetwork.INetworkEnergyPart;
 import resonatninduction.tilenetwork.INetworkPart;
-
-import com.builtbroken.minecraft.interfaces.IPowerLess;
 
 /**
  * Used for tile networks that only need to share power or act like a group battery that doesn't

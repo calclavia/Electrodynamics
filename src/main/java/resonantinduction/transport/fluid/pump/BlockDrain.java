@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 public class BlockDrain extends BlockMachine
 {

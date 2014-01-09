@@ -17,10 +17,10 @@ import resonantinduction.Reference;
 import resonantinduction.client.render.BlockRenderHelper;
 import resonantinduction.core.Settings;
 import resonantinduction.core.recipe.RecipeLoader;
+import resonantinduction.lib.prefab.BlockMachine;
 import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

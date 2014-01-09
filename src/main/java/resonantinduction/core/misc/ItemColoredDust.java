@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import resonantinduction.Reference;
 import resonantinduction.core.Settings;
-
-import com.builtbroken.minecraft.helpers.ColorCode;
-
+import resonantinduction.lib.helpers.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

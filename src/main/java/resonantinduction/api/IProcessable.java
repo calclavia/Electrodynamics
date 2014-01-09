@@ -1,8 +1,7 @@
 package resonantinduction.api;
 
+import resonantinduction.lib.recipes.ProcessorType;
 import net.minecraft.item.ItemStack;
-
-import com.builtbroken.minecraft.recipes.ProcessorType;
 
 /**
  * Simple interface that allows an item to control how its salvaged, processed, or refined by a

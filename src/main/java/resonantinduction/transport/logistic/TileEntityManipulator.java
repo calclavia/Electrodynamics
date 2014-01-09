@@ -9,13 +9,13 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IManipulator;
+import resonantinduction.lib.interfaces.IRotatable;
 import resonantinduction.transport.imprinter.ItemImprinter;
 import resonantinduction.transport.imprinter.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.utility.InvInteractionHelper;
 
-import com.builtbroken.minecraft.interfaces.IRotatable;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;

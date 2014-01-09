@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.client.render.BlockRenderHelper;
 import resonantinduction.core.Settings;
+import resonantinduction.lib.prefab.BlockMachine;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.prefab.BlockMachine;
 
 /**
  * Mining laser Prototype mainly used for crafting but can be used in the same way as Excavator.
