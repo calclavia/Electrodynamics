@@ -23,7 +23,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.old.api.events.LaserEvent;
+import resonantinduction.api.events.LaserEvent;
 import resonantinduction.old.lib.CoreRegistry;
 import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import resonantinduction.old.transport.ResonantInductionTransport;

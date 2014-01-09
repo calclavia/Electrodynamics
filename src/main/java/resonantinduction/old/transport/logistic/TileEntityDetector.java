@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.imprinter.TileEntityFilterable;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;

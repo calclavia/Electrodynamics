@@ -30,8 +30,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 import resonantinduction.old.lib.EnumMaterial;
 import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 

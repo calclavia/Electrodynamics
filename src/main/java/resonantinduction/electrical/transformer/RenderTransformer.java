@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.CalclaviaRenderHelper;
 import calclavia.lib.utility.LanguageUtility;

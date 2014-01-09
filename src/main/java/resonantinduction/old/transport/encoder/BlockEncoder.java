@@ -9,10 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 
@@ -72,7 +72,7 @@ public class BlockEncoder extends BlockMachine
     {
         if (!world.isRemote)
         {
-            entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
+            entityPlayer.openGui(ResonantInductionTransport.instance, MechCommonProxy.GUI_ENCODER, world, x, y, z);
         }
 
         return true;

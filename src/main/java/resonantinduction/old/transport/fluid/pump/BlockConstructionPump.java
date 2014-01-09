@@ -13,12 +13,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 import resonantinduction.old.client.render.BlockRenderHelper;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

@@ -13,9 +13,9 @@ import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderArmbot;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.multiblock.link.IMultiBlock;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

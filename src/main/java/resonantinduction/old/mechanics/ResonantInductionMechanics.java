@@ -17,17 +17,17 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import org.modstats.Modstats;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PacketMultiPart;
+import resonantinduction.core.resource.BlockFluidMixture;
 import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileFluidMixture;
 import resonantinduction.electrical.MultipartElectrical;
-import resonantinduction.old.Reference;
 import resonantinduction.old.mechanics.furnace.BlockAdvancedFurnace;
 import resonantinduction.old.mechanics.furnace.TileAdvancedFurnace;
 import resonantinduction.old.mechanics.item.ItemDust;
-import resonantinduction.old.mechanics.liquid.BlockFluidMixture;
-import resonantinduction.old.mechanics.liquid.TileFluidMixture;
 import resonantinduction.old.mechanics.machine.grinder.BlockGrinderWheel;
 import resonantinduction.old.mechanics.machine.grinder.TileGrinderWheel;
 import resonantinduction.old.mechanics.machine.grinder.TilePurifier;

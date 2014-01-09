@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.mechanics.processor.ContainerProcessor;
 import resonantinduction.old.mechanics.processor.TileEntityProcessor;
 import cpw.mods.fml.relauncher.Side;

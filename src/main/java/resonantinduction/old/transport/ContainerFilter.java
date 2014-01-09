@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import resonantinduction.old.transport.imprinter.TileEntityFilterable;
+import resonantinduction.core.prefab.tile.TileEntityFilterable;
 
 public class ContainerFilter extends Container
 {

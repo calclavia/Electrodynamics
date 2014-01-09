@@ -9,9 +9,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
+import resonantinduction.core.prefab.block.BlockImprintable;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderManipulator;
-import resonantinduction.old.transport.imprinter.BlockImprintable;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;

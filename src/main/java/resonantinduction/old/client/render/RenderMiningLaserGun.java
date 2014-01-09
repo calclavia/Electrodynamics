@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelMiningLaserGun;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;

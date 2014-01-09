@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import resonantinduction.core.Utility;
@@ -20,7 +21,6 @@ import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
 import resonantinduction.electrical.wire.framed.RenderPartWire;
-import resonantinduction.old.Reference;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.render.EnumColor;

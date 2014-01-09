@@ -17,6 +17,7 @@ import org.modstats.Modstats;
 
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
+import resonantinduction.core.debug.BlockDebug;
 import resonantinduction.core.network.PacketIDTile;
 import resonantinduction.core.resource.ItemBlockOre;
 import resonantinduction.core.resource.ItemParts;
@@ -32,7 +33,6 @@ import resonantinduction.old.blocks.GasOreGenerator;
 import resonantinduction.old.blocks.ItemBlockColored;
 import resonantinduction.old.blocks.BlockOre.OreData;
 import resonantinduction.old.core.ItemOreDirv;
-import resonantinduction.old.core.debug.BlockDebug;
 import resonantinduction.old.core.misc.BehaviorDispenseEgg;
 import resonantinduction.old.core.misc.EntityFarmEgg;
 import resonantinduction.old.core.misc.EnumBird;

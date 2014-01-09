@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import resonantinduction.old.api.AutoCraftEvent;
+import resonantinduction.api.events.AutoCraftEvent;
 import resonantinduction.old.api.IArmbot;
 import resonantinduction.old.api.IArmbotUseable;
 import resonantinduction.old.api.coding.args.ArgumentData;

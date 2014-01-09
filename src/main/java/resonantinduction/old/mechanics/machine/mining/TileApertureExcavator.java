@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.old.api.MachineMiningEvent;
+import resonantinduction.api.events.MachineMiningEvent;
 import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.InvInteractionHelper;

@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.transport.imprinter.ContainerImprinter;
 import resonantinduction.old.transport.imprinter.TileEntityImprinter;
 import calclavia.lib.utility.LanguageUtility;

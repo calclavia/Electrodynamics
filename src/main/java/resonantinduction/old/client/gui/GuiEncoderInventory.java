@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.transport.encoder.ContainerEncoder;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.FMLClientHandler;

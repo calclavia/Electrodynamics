@@ -2,7 +2,7 @@ package resonantinduction.old.client.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
 
 public class GuiEncoderHelp extends GuiEncoderBase

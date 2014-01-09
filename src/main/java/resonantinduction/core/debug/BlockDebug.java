@@ -1,4 +1,4 @@
-package resonantinduction.old.core.debug;
+package resonantinduction.core.debug;
 
 import java.util.List;
 import java.util.Set;
@@ -13,8 +13,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

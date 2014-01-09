@@ -1,4 +1,4 @@
-package resonantinduction.old.api.events;
+package resonantinduction.api.events;
 
 import java.util.ArrayList;
 import java.util.List;

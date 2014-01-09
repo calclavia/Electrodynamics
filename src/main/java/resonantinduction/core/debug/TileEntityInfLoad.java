@@ -1,4 +1,4 @@
-package resonantinduction.old.core.debug;
+package resonantinduction.core.debug;
 
 import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import net.minecraftforge.common.ForgeDirection;

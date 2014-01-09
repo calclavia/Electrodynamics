@@ -11,7 +11,6 @@ import resonantinduction.core.link.LinkEventHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.ItemDust;
 import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.old.Reference;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;

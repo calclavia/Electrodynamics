@@ -17,10 +17,10 @@ import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.lib.recipes.ProcessorType;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 
@@ -48,7 +48,7 @@ public class BlockProcessor extends BlockMachine
 			}
 			else
 			{
-				entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
+				entityPlayer.openGui(ResonantInductionTransport.instance, MechCommonProxy.GUI_PROCESSOR, world, x, y, z);
 				return true;
 			}
 		}

@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.imprinter;
+package resonantinduction.core.prefab.tile;
 
 import java.util.ArrayList;
 
@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.old.api.IFilterable;
 import resonantinduction.old.lib.interfaces.IRotatable;
 import resonantinduction.old.transport.TileEntityAssembly;
+import resonantinduction.old.transport.imprinter.ItemImprinter;
 
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
 {

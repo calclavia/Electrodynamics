@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.block.BlockImprintable;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderRejector;
-import resonantinduction.old.transport.imprinter.BlockImprintable;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;

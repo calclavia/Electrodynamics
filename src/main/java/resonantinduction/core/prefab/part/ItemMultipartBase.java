@@ -1,9 +1,9 @@
 package resonantinduction.core.prefab.part;
 
 import net.minecraftforge.common.Configuration;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 import codechicken.multipart.JItemMultiPart;
 
 /**

@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelAdvancedHopper;
 import resonantinduction.old.transport.hopper.TileEntityAdvancedHopper;
 import cpw.mods.fml.relauncher.Side;

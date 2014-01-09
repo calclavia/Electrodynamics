@@ -12,7 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.old.client.render.BlockRenderHelper;
-import resonantinduction.old.lib.prefab.BlockMachine;
+import calclavia.lib.prefab.block.BlockMachine;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;

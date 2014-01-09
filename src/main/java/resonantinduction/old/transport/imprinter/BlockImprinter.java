@@ -13,11 +13,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.mechanics.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

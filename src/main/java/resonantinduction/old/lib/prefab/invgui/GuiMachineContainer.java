@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.lib.prefab.TileEntityMachine;
 import resonantinduction.old.lib.prefab.invgui.GuiButtonImage.ButtonIcon;
 import cpw.mods.fml.client.FMLClientHandler;

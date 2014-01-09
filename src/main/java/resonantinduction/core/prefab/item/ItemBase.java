@@ -2,9 +2,9 @@ package resonantinduction.core.prefab.item;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 
 /**
  * 

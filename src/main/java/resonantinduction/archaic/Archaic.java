@@ -2,9 +2,9 @@ package resonantinduction.archaic;
 
 import java.util.logging.Logger;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -34,7 +34,7 @@ public class Archaic
 	public static Archaic INSTANCE;
 
 	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
-	public static CommonProxy proxy;
+	public static ArcCommonProxy proxy;
 
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;

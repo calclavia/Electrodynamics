@@ -8,7 +8,7 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import resonantinduction.old.api.events.LaserEvent;
+import resonantinduction.api.events.LaserEvent;
 import resonantinduction.old.lib.CoreRegistry;
 import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;

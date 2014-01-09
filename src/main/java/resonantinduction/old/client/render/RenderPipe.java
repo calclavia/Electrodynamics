@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelLargePipe;
 import resonantinduction.old.client.model.ModelOpenTrough;
 import resonantinduction.old.transport.fluid.pipes.EnumPipeType;

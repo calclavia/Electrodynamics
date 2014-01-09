@@ -8,7 +8,7 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileElectrical;

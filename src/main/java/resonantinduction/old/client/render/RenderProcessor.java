@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
 import resonantinduction.old.mechanics.processor.TileEntityProcessor;

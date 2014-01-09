@@ -12,9 +12,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import calclavia.lib.render.EnumColor;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.render.InvertX;
-import resonantinduction.old.Reference;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.lighting.LightModel;

@@ -5,9 +5,9 @@ package resonantinduction.core.prefab.block;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.Configuration;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
 import calclavia.lib.prefab.block.BlockSidedIO;
 
 /**

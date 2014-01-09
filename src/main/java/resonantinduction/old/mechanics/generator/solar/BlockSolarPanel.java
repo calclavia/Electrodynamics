@@ -12,9 +12,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderBlockSolarPanel;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

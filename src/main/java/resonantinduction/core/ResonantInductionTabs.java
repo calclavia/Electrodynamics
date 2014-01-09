@@ -3,7 +3,6 @@
  */
 package resonantinduction.core;
 
-import resonantinduction.old.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 

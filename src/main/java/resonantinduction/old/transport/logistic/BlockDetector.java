@@ -14,9 +14,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.block.BlockImprintable;
 import resonantinduction.old.client.render.RenderDetector;
-import resonantinduction.old.transport.imprinter.BlockImprintable;
 import universalelectricity.api.UniversalElectricity;
 
 import com.builtbroken.common.Pair;

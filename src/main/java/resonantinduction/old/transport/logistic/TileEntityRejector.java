@@ -9,8 +9,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import resonantinduction.old.api.IBelt;
-import resonantinduction.old.transport.imprinter.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 

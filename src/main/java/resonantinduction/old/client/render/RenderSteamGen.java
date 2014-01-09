@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelMachine;
 import resonantinduction.old.client.model.ModelSteamGen;
 import resonantinduction.old.client.model.ModelSteamTurbine;

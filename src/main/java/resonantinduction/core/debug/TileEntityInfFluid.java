@@ -1,4 +1,4 @@
-package resonantinduction.old.core.debug;
+package resonantinduction.core.debug;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

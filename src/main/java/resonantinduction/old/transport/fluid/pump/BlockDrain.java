@@ -14,9 +14,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.Reference;
-import resonantinduction.old.lib.prefab.BlockMachine;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

@@ -1,4 +1,4 @@
-package resonantinduction.old.mechanics.liquid;
+package resonantinduction.core.resource;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;

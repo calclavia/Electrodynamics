@@ -1,4 +1,4 @@
-package resonantinduction.old;
+package resonantinduction.core;
 
 /**
  * A class for static references.

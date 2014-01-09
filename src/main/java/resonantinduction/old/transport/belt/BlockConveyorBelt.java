@@ -19,9 +19,9 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderConveyorBelt;
-import resonantinduction.old.lib.prefab.BlockMachine;
 import resonantinduction.old.transport.belt.TileEntityConveyorBelt.SlantType;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

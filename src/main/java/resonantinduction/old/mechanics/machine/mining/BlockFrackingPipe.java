@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.old.client.render.BlockRenderHelper;
-import resonantinduction.old.lib.prefab.BlockMachine;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

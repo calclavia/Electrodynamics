@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.lib.prefab.BlockMachine;
+import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 

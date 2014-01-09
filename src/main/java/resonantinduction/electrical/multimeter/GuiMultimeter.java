@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import resonantinduction.old.Reference;
+import resonantinduction.core.Reference;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.render.EnumColor;

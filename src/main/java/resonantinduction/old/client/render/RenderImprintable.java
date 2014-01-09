@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import resonantinduction.old.transport.imprinter.ItemImprinter;
-import resonantinduction.old.transport.imprinter.TileEntityFilterable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
