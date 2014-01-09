@@ -2,7 +2,6 @@ package resonantinduction.core;
 
 import java.util.logging.Logger;
 
-import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.modstats.ModstatInfo;
@@ -22,6 +21,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -88,7 +88,11 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
 		Settings.setModMetadata(metadata, ID, NAME);
+	}
 
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent evt)
+	{
 		// Generate Dusts
 		ResourceGenerator.generateDusts();
 	}
