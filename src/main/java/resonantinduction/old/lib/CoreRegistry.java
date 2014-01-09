@@ -33,7 +33,7 @@ public class CoreRegistry
 	public static HashMap<Block, String> registredBlocks = new HashMap<Block, String>();
 	public static HashMap<Item, String> registredItems = new HashMap<Item, String>();
 
-	@SidedProxy(clientSide = "com.builtbroken.minecraft.ClientRegistryProxy", serverSide = "com.builtbroken.minecraft.RegistryProxy")
+	//@SidedProxy(clientSide = "com.builtbroken.minecraft.ClientRegistryProxy", serverSide = "com.builtbroken.minecraft.RegistryProxy")
 	public static RegistryProxy prox;
 
 	public static RegistryProxy proxy()

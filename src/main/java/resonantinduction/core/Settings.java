@@ -93,10 +93,10 @@ public class Settings
 		CONFIGURATION.save();
 	}
 
-	public static void setModMetadata(ModMetadata metadata, String ID)
+	public static void setModMetadata(ModMetadata metadata, String id, String name)
 	{
-		metadata.modId = ID;
-		metadata.name = Reference.NAME + " Archaic Tier";
+		metadata.modId = id;
+		metadata.name = name;
 		metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");
 		metadata.url = "http://calclavia.com/resonant-induction";
 		metadata.logoFile = "ri_logo.png";

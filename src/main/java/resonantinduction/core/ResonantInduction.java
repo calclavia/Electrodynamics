@@ -26,13 +26,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
  * 
  * @author Calclavia
  */
-@Mod(modid = ResonantInduction.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:CalclaviaCore;before:ThermalExpansion;before:IC2")
+@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:CalclaviaCore;before:ThermalExpansion;before:IC2")
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction
 {
 	/** Mod Information */
 	public static final String ID = "ResonantInduction|Core";
+	public static final String NAME = Reference.NAME + " Core";
 
 	@Instance(ID)
 	public static ResonantInduction INSTANCE;
@@ -64,7 +65,7 @@ public class ResonantInduction
 		// Load Languages
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
-		Settings.setModMetadata(metadata, ID);
+		Settings.setModMetadata(metadata, ID, NAME);
 	}
 
 }

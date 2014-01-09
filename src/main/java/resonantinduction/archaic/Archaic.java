@@ -22,11 +22,12 @@ import cpw.mods.fml.common.network.NetworkRegistry;
  * @author DarkCow, Calclavia
  * 
  */
-@Mod(modid = Archaic.ID, name = Reference.NAME + " Archaic", version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
+@Mod(modid = Archaic.ID, name = Archaic.NAME, version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
 public class Archaic
 {
 	/** Mod Information */
 	public static final String ID = "ResonantInduction|Archaic";
+	public static final String NAME = Reference.NAME + " Archaic";
 
 	@Instance(ID)
 	public static Archaic INSTANCE;
@@ -48,6 +49,6 @@ public class Archaic
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		Settings.setModMetadata(metadata, ID);
+		Settings.setModMetadata(metadata, ID, NAME);
 	}
 }
