@@ -38,9 +38,9 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 		/**
 		 * Packet Update for Client only when GUI is open.
 		 */
-		if (!Settings.CONSERVE_PACKETS && this.ticks % 60 == 0)
+		if (this.ticks % 60 == 0)
 		{
-			PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 30);
+			PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 25);
 		}
 	}
 

@@ -68,7 +68,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 	@Override
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
 	{
-		if (!world.isRemote)
+		if (!world.isRemote && player.isSneaking())
 		{
 			VectorWorld vector = new VectorWorld(world, x, y, z);
 			this.setLink(itemStack, vector);
