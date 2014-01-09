@@ -23,8 +23,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.old.energy.ILinkable;
-import resonantinduction.old.energy.tesla.TileTesla;
+import resonantinduction.core.link.ILinkable;
+import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.IPacketReceiver;
@@ -143,7 +143,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 				}
 			}
 
-			final int renderFrequency = ResonantInduction.proxy.isFancy() ? 1 + worldObj.rand.nextInt(2) : 10 + worldObj.rand.nextInt(2);
+			final int renderFrequency = ResonantInduction.proxy.isGraphicsFancy() ? 1 + worldObj.rand.nextInt(2) : 10 + worldObj.rand.nextInt(2);
 			final boolean renderBeam = ticks % renderFrequency == 0 && hasLink() && linked.suck != suck;
 
 			if (hasLink())

@@ -7,10 +7,11 @@ import net.minecraftforge.common.MinecraftForge;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonantinduction.core.link.LinkEventHandler;
+import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.ItemDust;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.old.Reference;
-import resonantinduction.old.core.multipart.PacketMultiPart;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;
@@ -71,6 +72,7 @@ public class ResonantInduction
 
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 
 		Settings.CONFIGURATION.load();
 

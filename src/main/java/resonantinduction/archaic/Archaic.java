@@ -1,12 +1,11 @@
 package resonantinduction.archaic;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.old.Reference;
-import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -14,6 +13,7 @@ import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
 /**
@@ -23,6 +23,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
  * 
  */
 @Mod(modid = Archaic.ID, name = Archaic.NAME, version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
+@NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Archaic
 {
 	/** Mod Information */
@@ -37,8 +38,6 @@ public class Archaic
 
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
-
-	public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)

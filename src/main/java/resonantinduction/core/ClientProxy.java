@@ -44,7 +44,7 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public boolean isFancy()
+	public boolean isGraphicsFancy()
 	{
 		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
 	}

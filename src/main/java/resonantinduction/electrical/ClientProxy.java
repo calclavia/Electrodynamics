@@ -1,17 +1,25 @@
-package resonantinduction.old.mechanics;
+package resonantinduction.electrical;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import resonantinduction.electrical.battery.RenderBattery;
+import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.fx.FXElectricBolt;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
+import resonantinduction.electrical.tesla.RenderTesla;
+import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.old.core.render.BlockRenderingHandler;
+import resonantinduction.old.core.render.RenderRIItem;
+import resonantinduction.old.transport.levitator.RenderLevitator;
+import resonantinduction.old.transport.levitator.TileEMLevitator;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,6 +35,11 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		RenderingRegistry.registerBlockHandler(BlockRenderingHandler.INSTANCE);
+		MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
+		MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 	}
 
 	@Override
@@ -50,31 +63,6 @@ public class ClientProxy extends CommonProxy
 		}
 
 		return null;
-	}
-
-	@Override
-	public boolean isPaused()
-	{
-		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
-		{
-			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
-
-			if (screen != null)
-			{
-				if (screen.doesGuiPauseGame())
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean isFancy()
-	{
-		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
 	}
 
 	@Override
