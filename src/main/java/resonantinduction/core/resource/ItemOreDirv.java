@@ -11,13 +11,13 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.Reference;
-import resonantinduction.api.events.LaserEvent;
 import resonantinduction.core.Settings;
 import resonantinduction.core.base.ItemBase;
-import resonantinduction.lib.EnumMaterial;
-import resonantinduction.lib.EnumOrePart;
-import resonantinduction.lib.IExtraInfo.IExtraItemInfo;
+import resonantinduction.old.Reference;
+import resonantinduction.old.api.events.LaserEvent;
+import resonantinduction.old.lib.EnumMaterial;
+import resonantinduction.old.lib.EnumOrePart;
+import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

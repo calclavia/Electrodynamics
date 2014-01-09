@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.base.ItemBase;
-import resonantinduction.lib.IExtraInfo.IExtraItemInfo;
+import resonantinduction.old.Reference;
+import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

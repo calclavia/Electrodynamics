@@ -7,7 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.lib.EnumMaterial;
+import resonantinduction.old.lib.EnumMaterial;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

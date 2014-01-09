@@ -13,15 +13,15 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.core.misc.EnumTool;
 import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts.Parts;
-import resonantinduction.lib.EnumMaterial;
-import resonantinduction.lib.EnumOrePart;
-import resonantinduction.lib.helpers.ColorCode;
-import resonantinduction.lib.interfaces.IReadOut.EnumTools;
-import resonantinduction.lib.recipes.MachineRecipeHandler;
-import resonantinduction.lib.recipes.ProcessorType;
-import resonantinduction.mechanics.processor.BlockProcessor;
-import resonantinduction.transport.crate.BlockCrate;
-import resonantinduction.transport.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.old.lib.EnumMaterial;
+import resonantinduction.old.lib.EnumOrePart;
+import resonantinduction.old.lib.helpers.ColorCode;
+import resonantinduction.old.lib.interfaces.IReadOut.EnumTools;
+import resonantinduction.old.lib.recipes.MachineRecipeHandler;
+import resonantinduction.old.lib.recipes.ProcessorType;
+import resonantinduction.old.mechanics.processor.BlockProcessor;
+import resonantinduction.old.transport.crate.BlockCrate;
+import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class RecipeLoader

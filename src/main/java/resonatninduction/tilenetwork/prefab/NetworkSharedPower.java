@@ -1,7 +1,7 @@
 package resonatninduction.tilenetwork.prefab;
 
 import net.minecraft.tileentity.TileEntity;
-import resonantinduction.lib.interfaces.IPowerLess;
+import resonantinduction.old.lib.interfaces.IPowerLess;
 import resonatninduction.tilenetwork.INetworkEnergyPart;
 import resonatninduction.tilenetwork.INetworkPart;
 

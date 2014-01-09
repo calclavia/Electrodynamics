@@ -5,10 +5,10 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.multimeter.ItemMultimeter;
-import resonantinduction.core.multimeter.RenderMultimeter;
-import resonantinduction.energy.transformer.ItemTransformer;
-import resonantinduction.energy.transformer.RenderTransformer;
+import resonantinduction.old.electrical.multimeter.ItemMultimeter;
+import resonantinduction.old.electrical.multimeter.RenderMultimeter;
+import resonantinduction.old.energy.transformer.ItemTransformer;
+import resonantinduction.old.energy.transformer.RenderTransformer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

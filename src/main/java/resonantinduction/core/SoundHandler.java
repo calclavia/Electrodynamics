@@ -5,7 +5,7 @@ package resonantinduction.core;
 
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import resonantinduction.Reference;
+import resonantinduction.old.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

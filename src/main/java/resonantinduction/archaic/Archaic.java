@@ -3,9 +3,9 @@ package resonantinduction.archaic;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import resonantinduction.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.old.Reference;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -29,7 +29,7 @@ public class Archaic
 	public static final String ID = "ResonantInduction|Archaic";
 
 	@Instance(ID)
-	public static ResonantInduction INSTANCE;
+	public static Archaic INSTANCE;
 
 	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
 	public static CommonProxy proxy;

@@ -11,6 +11,8 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.multipart.TileMultipart;
 
 /**
+ * General Utilities
+ * 
  * @author Calclavia
  * 
  */

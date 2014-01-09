@@ -7,9 +7,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import resonantinduction.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.lib.helpers.ColorCode;
+import resonantinduction.old.Reference;
+import resonantinduction.old.lib.helpers.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
