@@ -13,6 +13,7 @@ import resonantinduction.api.coding.IProgrammableMachine;
 import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.TaskRegistry;
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.utility.NBTUtility;
 
 public class Program implements IProgram
 {
@@ -282,7 +283,7 @@ public class Program implements IProgram
 		taskList = new NBTTagList();
 		for (Entry<String, Object> var : this.varables.entrySet())
 		{
-			taskList.appendTag(NBTFileHelper.saveObject(var.getKey(), var.getValue()));
+			taskList.appendTag(NBTUtility.saveObject(var.getKey(), var.getValue()));
 		}
 		nbt.setTag("vars", taskList);
 		return nbt;
@@ -332,7 +333,7 @@ public class Program implements IProgram
 		for (int s = 0; s < taskList.tagCount(); ++s)
 		{
 			NBTTagCompound tag = (NBTTagCompound) taskList.tagAt(s);
-			this.varables.put(tag.getName(), NBTFileHelper.loadObject(tag, tag.getName()));
+			this.varables.put(tag.getName(), NBTUtility.loadObject(tag, tag.getName()));
 		}
 	}
 

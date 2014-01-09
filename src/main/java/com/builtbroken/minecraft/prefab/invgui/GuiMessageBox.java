@@ -5,12 +5,13 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class GuiMessageBox extends GuiBase
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_message_box.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_message_box.png");
 
 	GuiBase returnGuiYes, returnGuiNo;
 	int id;

@@ -2,12 +2,12 @@ package com.builtbroken.minecraft.recipes;
 
 import java.util.Random;
 
-import resonantinduction.api.IProcessable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import resonantinduction.api.IProcessable;
 import calclavia.lib.utility.AutoCraftingManager;
 
 import com.builtbroken.common.Pair;

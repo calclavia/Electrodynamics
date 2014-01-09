@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonantinduction.Reference;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,7 +20,7 @@ public class ItemDisk extends Item
 	{
 		super(id);
 		this.setUnlocalizedName("disk");
-		this.setCreativeTab(ResonantInductionTabs.tabAutomation());
+		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);
 	}
 

@@ -13,9 +13,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonantinduction.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -25,7 +25,7 @@ public class ItemImprinter extends Item
     {
         super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
         this.setUnlocalizedName("imprint");
-        this.setCreativeTab(ResonantInductionTabs.tabAutomation());
+        this.setCreativeTab(ResonantInductionTabs.CORE);
         this.setHasSubtypes(true);
         this.maxStackSize = 1;
     }
@@ -34,7 +34,7 @@ public class ItemImprinter extends Item
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.itemIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "imprint");
+        this.itemIcon = par1IconRegister.registerIcon(Reference.PREFIX + "imprint");
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,7 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiButtonImage extends GuiButton
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_button.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_button.png");
 
 	private ButtonIcon buttonIcon = ButtonIcon.BLANK;
 

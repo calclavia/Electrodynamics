@@ -11,8 +11,10 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.Reference;
 import resonantinduction.api.events.LaserEvent;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
+import resonantinduction.core.base.ItemBase;
 
 import com.builtbroken.minecraft.EnumMaterial;
 import com.builtbroken.minecraft.EnumOrePart;
@@ -26,11 +28,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
+public class ItemOreDirv extends ItemBase implements IExtraItemInfo
 {
 	public ItemOreDirv()
 	{
-		super(DarkCore.getNextItemId(), "Metal_Parts", ResonantInductionTransport.CONFIGURATION);
+		super("Metal_Parts", Settings.getNextItemID());
 		this.setHasSubtypes(true);
 		this.setCreativeTab(CreativeTabs.tabMaterials);
 		MinecraftForge.EVENT_BUS.register(this);
@@ -41,7 +43,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 	{
 		if (itemStack != null)
 		{
-			return "item." + ResonantInductionTransport.PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
+			return "item." + Reference.PREFIX + EnumOrePart.getFullName(itemStack.getItemDamage());
 		}
 		else
 		{
@@ -66,7 +68,7 @@ public class ItemOreDirv extends ItemBasic implements IExtraItemInfo
 			{
 				if (mat.shouldCreateItem(part))
 				{
-					mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + mat.simpleName + part.simpleName);
+					mat.itemIcons[part.ordinal()] = iconRegister.registerIcon(Reference.PREFIX + mat.simpleName + part.simpleName);
 				}
 			}
 		}

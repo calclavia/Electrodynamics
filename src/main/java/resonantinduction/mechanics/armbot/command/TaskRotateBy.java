@@ -10,7 +10,6 @@ import resonantinduction.mechanics.armbot.TaskBaseProcess;
 import universalelectricity.api.vector.Vector2;
 
 import com.builtbroken.common.science.units.UnitHelper;
-import com.builtbroken.minecraft.helpers.MathHelper;
 
 /**
  * Rotates an armbot by a set amount

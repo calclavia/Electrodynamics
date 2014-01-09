@@ -123,7 +123,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 						if (dis.readBoolean())
 						{
 							Program program = new Program();
-							program.load(PacketHandler.instance().readNBTTagCompound(dis));
+							program.load(PacketHandler.readNBTTagCompound(dis));
 							this.program = program;
 						}
 						else
@@ -139,7 +139,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 					{
 						ITask task = TaskRegistry.getCommand(dis.readUTF());
 						task.setPosition(dis.readInt(), dis.readInt());
-						task.load(PacketHandler.instance().readNBTTagCompound(dis));
+						task.load(PacketHandler.readNBTTagCompound(dis));
 						this.getProgram().setTaskAt(task.getCol(), task.getRow(), task);
 						this.sendGUIPacket();
 						return true;
@@ -148,7 +148,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 					{
 						ITask task = TaskRegistry.getCommand(dis.readUTF());
 						task.setPosition(dis.readInt(), dis.readInt());
-						task.load(PacketHandler.instance().readNBTTagCompound(dis));
+						task.load(PacketHandler.readNBTTagCompound(dis));
 						this.getProgram().insertTask(task.getCol(), task.getRow(), task);
 						this.sendGUIPacket();
 						return true;

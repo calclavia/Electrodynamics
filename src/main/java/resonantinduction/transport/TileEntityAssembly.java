@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import resonatninduction.tilenetwork.INetworkEnergyPart;
-import resonatninduction.tilenetwork.ITileNetwork;
-import resonatninduction.tilenetwork.prefab.NetworkSharedPower;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonatninduction.tilenetwork.INetworkEnergyPart;
+import resonatninduction.tilenetwork.ITileNetwork;
+import resonatninduction.tilenetwork.prefab.NetworkSharedPower;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.prefab.TileEntityEnergyMachine;

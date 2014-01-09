@@ -20,7 +20,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.Reference;
-import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import resonantinduction.transport.fluid.EnumGas;
 import universalelectricity.api.vector.Vector3;
@@ -43,8 +42,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 	public BlockGasOre()
 	{
 		super(Settings.CONFIGURATION.getBlock("GasBlock", Settings.getNextBlockID()).getInt(), gas);
-		this.setUnlocalizedName("DMBlockGas");
-		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
+		this.setUnlocalizedName("BlockGas");
 		this.setTickRandomly(true);
 	}
 

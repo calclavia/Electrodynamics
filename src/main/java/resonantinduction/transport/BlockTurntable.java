@@ -13,7 +13,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.blocks.BlockAssembly;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.minecraft.interfaces.IRotatable;

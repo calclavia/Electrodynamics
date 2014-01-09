@@ -8,7 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.Reference;
+import resonantinduction.core.Settings;
+import resonantinduction.core.base.ItemBase;
 
 import com.builtbroken.minecraft.IExtraInfo.IExtraItemInfo;
 
@@ -21,11 +23,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public class ItemParts extends ItemBasic implements IExtraItemInfo
+public class ItemParts extends ItemBase implements IExtraItemInfo
 {
 	public ItemParts()
 	{
-		super(DarkCore.getNextItemId(), "DMParts", ResonantInductionTransport.CONFIGURATION);
+		super("DMParts", Settings.getNextItemID());
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 		this.setMaxStackSize(64);
@@ -60,7 +62,7 @@ public class ItemParts extends ItemBasic implements IExtraItemInfo
 		super.registerIcons(iconRegister);
 		for (Parts part : Parts.values())
 		{
-			part.icon = iconRegister.registerIcon(ResonantInductionTransport.PREFIX + "part." + part.name);
+			part.icon = iconRegister.registerIcon(Reference.PREFIX + "part." + part.name);
 		}
 	}
 

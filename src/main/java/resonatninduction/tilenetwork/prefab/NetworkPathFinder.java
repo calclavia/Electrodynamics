@@ -3,9 +3,9 @@ package resonatninduction.tilenetwork.prefab;
 import java.util.HashSet;
 import java.util.Set;
 
-import resonatninduction.tilenetwork.INetworkPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonatninduction.tilenetwork.INetworkPart;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.path.IPathCallBack;
 import calclavia.lib.path.Pathfinder;

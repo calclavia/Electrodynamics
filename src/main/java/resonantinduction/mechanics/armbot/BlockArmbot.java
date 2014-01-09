@@ -10,24 +10,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import resonantinduction.blocks.BlockAssembly;
 import resonantinduction.client.render.BlockRenderingHandler;
 import resonantinduction.client.render.RenderArmbot;
-import resonantinduction.transport.ResonantInductionTransport;
+import resonantinduction.core.Settings;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.multiblock.link.IMultiBlock;
 
 import com.builtbroken.common.Pair;
+import com.builtbroken.minecraft.prefab.BlockMachine;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockAssembly
+public class BlockArmbot extends BlockMachine
 {
 	public BlockArmbot()
 	{
-		super("armbot", UniversalElectricity.machine);
-		DarkCore.requestMultiBlock(ResonantInductionTransport.MOD_ID);
+		super(Settings.CONFIGURATION,"armbot", UniversalElectricity.machine);
 	}
 
 	@Override

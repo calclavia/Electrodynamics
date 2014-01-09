@@ -10,6 +10,7 @@ import resonantinduction.api.coding.IProgrammableMachine;
 import resonantinduction.api.coding.ITask;
 import resonantinduction.api.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.utility.NBTUtility;
 
 /** @author DarkGuardsman */
 public abstract class TaskBase implements ITask
@@ -137,7 +138,7 @@ public abstract class TaskBase implements ITask
 			NBTTagCompound parms = nbt.getCompoundTag("args");
 			for (ArgumentData arg : this.getArgs())
 			{
-				Object obj = NBTFileHelper.loadObject(parms, arg.getName());
+				Object obj = NBTUtility.loadObject(parms, arg.getName());
 				if (arg.isValid(obj))
 				{
 					arg.setData(obj);
@@ -154,7 +155,7 @@ public abstract class TaskBase implements ITask
 		NBTTagCompound parms = new NBTTagCompound();
 		for (ArgumentData arg : this.getArgs())
 		{
-			NBTFileHelper.saveObject(parms, arg.getName(), arg.getData());
+			NBTUtility.saveObject(parms, arg.getName(), arg.getData());
 		}
 		nbt.setCompoundTag("args", parms);
 	}

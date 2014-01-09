@@ -10,8 +10,8 @@ import resonantinduction.api.fluid.INetworkPipe;
 import resonantinduction.transport.fluid.network.NetworkPipes;
 import resonantinduction.transport.fluid.prefab.TileEntityFluidDevice;
 import resonatninduction.tilenetwork.ITileConnector;
+import calclavia.lib.utility.HelperMethods;
 
-import com.builtbroken.minecraft.helpers.HelperMethods;
 import com.builtbroken.minecraft.interfaces.IReadOut;
 
 public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut

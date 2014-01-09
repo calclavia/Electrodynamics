@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.Reference;
 import resonantinduction.transport.imprinter.ContainerImprinter;
 import resonantinduction.transport.imprinter.TileEntityImprinter;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,7 +33,7 @@ public class GuiImprinter extends GuiContainer
     {
         this.fontRenderer.drawString("Use Inventories:", 70, 58, 4210752);
         this.fontRenderer.drawString("" + this.tileEntity.searchInventories, 105, 67, 4210752);
-        this.fontRenderer.drawString(TranslationHelper.getLocal("tile.imprinter.name"), 68, 6, 4210752);
+        this.fontRenderer.drawString(LanguageUtility.getLocal("tile.imprinter.name"), 68, 6, 4210752);
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */

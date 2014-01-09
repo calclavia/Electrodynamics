@@ -23,8 +23,6 @@ import cpw.mods.fml.common.network.Player;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, ISimplePacketReceiver, IExtraTileEntityInfo
 {
-	/** Tick by which this machine stops working */
-	protected int disabledTicks = 0;
 	/** Number of players with the machine's gui container open */
 	protected int playersUsingMachine = 0;
 	/** Is the machine functioning normally */
@@ -80,12 +78,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 				this.sendPowerUpdate();
 			}
 			this.sendGUIPacket();
-		}
-
-		if (this.disabledTicks > 0)
-		{
-			this.disabledTicks--;
-			this.whileDisable();
 		}
 	}
 
@@ -155,20 +147,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 					this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, (this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord) / 4) + 3, 3);
 			}
 		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.disabledTicks = nbt.getInteger("disabledTicks");
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("disabledTicks", this.disabledTicks);
 	}
 
 	@Override

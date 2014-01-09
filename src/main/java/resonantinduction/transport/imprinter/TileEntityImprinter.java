@@ -18,6 +18,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
 import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
+import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.invgui.ISlotPickResult;
@@ -167,7 +168,7 @@ public class TileEntityImprinter extends TileAdvanced implements ISidedInventory
 	@Override
 	public String getInvName()
 	{
-		return TranslationUtility.getLocal("tile.imprinter.name");
+		return LanguageUtility.getLocal("tile.imprinter.name");
 	}
 
 	@Override

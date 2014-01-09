@@ -16,7 +16,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.modstats.Modstats;
 
 import resonantinduction.api.coding.TaskRegistry;
-import resonantinduction.blocks.BlockBasalt;
 import resonantinduction.blocks.BlockColorGlass;
 import resonantinduction.blocks.BlockColorGlowGlass;
 import resonantinduction.blocks.BlockColorSand;
@@ -41,8 +40,6 @@ import resonantinduction.core.resource.ItemBlockOre;
 import resonantinduction.core.resource.ItemOreDirv;
 import resonantinduction.core.resource.ItemParts;
 import resonantinduction.core.resource.ItemParts.Parts;
-import resonantinduction.energy.battery.BlockBatteryBox;
-import resonantinduction.energy.battery.ItemBlockEnergyStorage;
 import resonantinduction.mechanics.armbot.BlockArmbot;
 import resonantinduction.mechanics.armbot.command.TaskBreak;
 import resonantinduction.mechanics.armbot.command.TaskDrop;

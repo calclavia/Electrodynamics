@@ -2,10 +2,10 @@ package resonantinduction.transport.fluid.prefab;
 
 import java.util.Random;
 
-import resonatninduction.tilenetwork.ITileConnector;
-import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;
+import resonatninduction.tilenetwork.ITileConnector;
+import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.builtbroken.minecraft.interfaces.IReadOut;

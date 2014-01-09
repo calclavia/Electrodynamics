@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonantinduction.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanics.CommonProxy;
 import resonantinduction.transport.ResonantInductionTransport;
@@ -38,9 +39,9 @@ public class BlockImprinter extends BlockMachine
     @Override
     public void registerIcons(IconRegister iconReg)
     {
-        this.imprinter_side = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_side");
-        this.imprinter_top = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_top");
-        this.imprinter_bottom = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "imprinter_bottom");
+        this.imprinter_side = iconReg.registerIcon(Reference.PREFIX + "imprinter_side");
+        this.imprinter_top = iconReg.registerIcon(Reference.PREFIX + "imprinter_top");
+        this.imprinter_bottom = iconReg.registerIcon(Reference.PREFIX + "imprinter_bottom");
     }
 
     @Override

@@ -14,8 +14,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.minecraft.prefab.BlockMachine;
@@ -40,9 +40,9 @@ public class BlockDrain extends BlockMachine
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "ironMachineSide");
-        this.drainIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "drain");
-        this.fillIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "drain2");
+        this.blockIcon = par1IconRegister.registerIcon(Reference.PREFIX + "ironMachineSide");
+        this.drainIcon = par1IconRegister.registerIcon(Reference.PREFIX + "drain");
+        this.fillIcon = par1IconRegister.registerIcon(Reference.PREFIX + "drain2");
     }
 
     @Override

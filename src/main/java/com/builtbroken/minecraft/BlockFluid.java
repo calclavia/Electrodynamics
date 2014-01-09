@@ -6,6 +6,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
+import resonantinduction.core.Settings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +19,7 @@ public class BlockFluid extends BlockFluidFinite
 
 	public BlockFluid(String prefix, Fluid fluid, Configuration config)
 	{
-		this(prefix, DarkCore.getNextID(), fluid, config);
+		this(prefix, Settings.getNextBlockID(), fluid, config);
 	}
 
 	public BlockFluid(String prefix, int id, Fluid fluid, Configuration config)

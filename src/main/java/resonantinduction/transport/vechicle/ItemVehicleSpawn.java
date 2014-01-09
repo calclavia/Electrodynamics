@@ -12,7 +12,7 @@ import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.Settings;
 
 /**
  * Basic item used to spawn a vehicle
@@ -23,9 +23,8 @@ public class ItemVehicleSpawn extends Item
 {
 	public ItemVehicleSpawn()
 	{
-		super(DarkCore.getNextItemId());
+		super(Settings.CONFIGURATION.getItem("ItemCar",Settings.getNextItemID()).getInt());
 		this.setUnlocalizedName("Vehicle");
-		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
 	}
 
 	@Override

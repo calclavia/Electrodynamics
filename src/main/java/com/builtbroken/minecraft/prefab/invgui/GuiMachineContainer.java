@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import resonantinduction.Reference;
+
 import com.builtbroken.minecraft.prefab.TileEntityMachine;
 import com.builtbroken.minecraft.prefab.invgui.GuiButtonImage.ButtonIcon;
 
@@ -31,7 +33,7 @@ public abstract class GuiMachineContainer extends GuiContainer
 			guiIcon3 = ButtonIcon.BLANK;
 	protected String invName = "Home", invName2 = "2", invName3 = "3";
 
-	public ResourceLocation TEXTURE = new ResourceLocation(DarkCore.DOMAIN, DarkCore.GUI_DIRECTORY + "gui_grey.png");
+	public ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_grey.png");
 
 	protected int containerWidth;
 	protected int containerHeight;

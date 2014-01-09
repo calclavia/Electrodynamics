@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.coding.IProgram;
 import resonantinduction.api.coding.ProgramHelper;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.recipe.RecipeLoader;
 import resonantinduction.mechanics.armbot.command.TaskDrop;
 import resonantinduction.mechanics.armbot.command.TaskGOTO;
@@ -23,19 +24,21 @@ import resonantinduction.transport.TileEntityAssembly;
 import resonantinduction.transport.encoder.ItemDisk;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.utility.HelperMethods;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.MathHelper;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.helpers.HelperMethods;
-import com.builtbroken.minecraft.helpers.MathHelper;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IBlockActivated
+public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IBlockActivate
 {
 	protected int ROTATION_SPEED = 6;
 
@@ -194,7 +197,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	@Override
 	public String getInvName()
 	{
-		return TranslationHelper.getLocal("tile.armbot.name");
+		return LanguageUtility.getLocal("tile.armbot.name");
 	}
 
 	public String getCommandDisplayText()
@@ -298,7 +301,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInductionTransport.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
+		return ResonantInduction.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
 	}
 
 	public void sendGrabItemToClient()

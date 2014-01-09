@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -14,7 +15,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.client.render.RenderAdvancedHopper;
-import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 
 import com.builtbroken.common.Pair;
@@ -40,7 +40,7 @@ public class BlockAdvancedHopper extends BlockMachine
 	public BlockAdvancedHopper()
 	{
 		super(Settings.CONFIGURATION, "DMHopper", Material.iron);
-		this.setCreativeTab(ResonantInductionTabs.tabAutomation());
+		this.setCreativeTab(CreativeTabs.tabRedstone);
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 	}
 

@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import resonantinduction.blocks.BlockHydraulic;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanics.generator.steam.TileEntitySteamPiston;
 

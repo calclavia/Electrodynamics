@@ -2,8 +2,8 @@ package resonantinduction.core.resource;
 
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import resonantinduction.Reference;
 import resonantinduction.blocks.BlockOre.OreData;
-import resonantinduction.transport.ResonantInductionTransport;
 
 public class ItemBlockOre extends ItemBlock
 {
@@ -26,7 +26,7 @@ public class ItemBlockOre extends ItemBlock
 	{
 		if (par1ItemStack != null && par1ItemStack.getItemDamage() < OreData.values().length)
 		{
-			return "tile." + ResonantInductionTransport.PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
+			return "tile." + Reference.PREFIX + OreData.values()[par1ItemStack.getItemDamage()].name + "Ore";
 		}
 		return super.getUnlocalizedName();
 	}

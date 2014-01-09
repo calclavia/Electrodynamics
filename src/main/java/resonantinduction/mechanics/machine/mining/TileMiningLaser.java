@@ -2,13 +2,13 @@ package resonantinduction.mechanics.machine.mining;
 
 import java.awt.Color;
 
-import resonantinduction.api.events.LaserEvent;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import resonantinduction.api.events.LaserEvent;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.utility.RayTraceHelper;

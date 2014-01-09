@@ -12,9 +12,9 @@ import resonantinduction.api.coding.ITask;
 import resonantinduction.mechanics.armbot.TaskBaseArmbot;
 import resonantinduction.mechanics.armbot.TaskBaseProcess;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.HelperMethods;
 
 import com.builtbroken.common.Pair;
-import com.builtbroken.minecraft.helpers.HelperMethods;
 
 /**
  * Used by arms to break a specific block in a position.

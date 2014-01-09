@@ -76,7 +76,7 @@ public class TileEntityDetector extends TileEntityFilterable
 					}
 				}
 
-				PacketHandler.instance().sendPacketToClients(getDescriptionPacket());
+				PacketHandler.sendPacketToClients(getDescriptionPacket());
 			}
 		}
 	}

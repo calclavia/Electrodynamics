@@ -3,7 +3,6 @@ package com.builtbroken.minecraft.prefab;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
+import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.access.AccessGroup;
 import calclavia.lib.access.AccessUser;

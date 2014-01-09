@@ -13,10 +13,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import resonantinduction.Reference;
 import resonantinduction.client.render.BlockRenderHelper;
 import resonantinduction.core.Settings;
 import resonantinduction.core.recipe.RecipeLoader;
-import resonantinduction.transport.ResonantInductionTransport;
 import resonatninduction.tilenetwork.prefab.NetworkTileEntities;
 
 import com.builtbroken.common.Pair;
@@ -40,7 +40,7 @@ public class BlockConstructionPump extends BlockMachine
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon(ResonantInductionTransport.PREFIX + "ironMachineSide");
+        this.blockIcon = par1IconRegister.registerIcon(Reference.PREFIX + "ironMachineSide");
     }
 
     @Override
