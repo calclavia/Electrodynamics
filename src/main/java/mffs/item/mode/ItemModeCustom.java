@@ -146,7 +146,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 									for (int z = minPoint.intZ(); z <= maxPoint.intZ(); z++)
 									{
 										Vector3 position = new Vector3(x, y, z);
-										Vector3 targetCheck = Vector3.translate(midPoint, position);
+										Vector3 targetCheck = midPoint.clone().translate(position);
 										int blockID = targetCheck.getBlockID(world);
 
 										if (blockID > 0)
