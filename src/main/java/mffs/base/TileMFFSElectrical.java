@@ -27,7 +27,7 @@ public abstract class TileMFFSElectrical extends TileModuleAcceptor implements I
 	 */
 	public void recharge(ItemStack itemStack)
 	{
-		this.energy.extractEnergy(CompatibilityModule.chargeItem(itemStack, this.energy.getEmptySpace(), true), true);
+		this.energy.extractEnergy(CompatibilityModule.chargeItem(itemStack, this.energy.getEnergy(), true), true);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public abstract class TileMFFSElectrical extends TileModuleAcceptor implements I
 	 */
 	public void discharge(ItemStack itemStack)
 	{
-		this.energy.receiveEnergy(CompatibilityModule.dischargeItem(itemStack, this.energy.getEnergy(), true), true);
+		this.energy.receiveEnergy(CompatibilityModule.dischargeItem(itemStack, this.energy.getEmptySpace(), true), true);
 	}
 
 	/**

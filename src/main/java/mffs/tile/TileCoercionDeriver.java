@@ -78,7 +78,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 					{
 						// Convert Electricity to Fortron
 						this.discharge(this.getStackInSlot(SLOT_BATTERY));
-
+						
 						if (this.energy.extractEnergy(getWattage(), false) >= getWattage() || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
 							// Fill Fortron
