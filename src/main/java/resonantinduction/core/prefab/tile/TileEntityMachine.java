@@ -9,7 +9,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;

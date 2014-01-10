@@ -1,8 +1,9 @@
 package resonantinduction.electrical;
 
+import ic2.api.item.Items;
+
 import java.util.Map;
 
-import ic2.api.item.Items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,10 +16,11 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import resonantinduction.core.part.BlockMachinePart;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
+import resonantinduction.electrical.generator.solar.BlockSolarPanel;
+import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
 import resonantinduction.electrical.tesla.TileTesla;
@@ -38,10 +40,10 @@ import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -56,7 +58,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Calclavia
  * 
  */
-@Mod(modid = Electrical.ID, name = Electrical.NAME, version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
+@Mod(modid = Electrical.ID, name = Electrical.NAME, version = Reference.VERSION, dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID)
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Electrical
 {
@@ -80,11 +82,14 @@ public class Electrical
 	public static Block blockTesla;
 	public static Block blockBattery;
 
-	// Transport
-	public static Block blockEMContractor;
+	// Generators
+	public static Block blockSolarPanel;
 
 	// Machines
 	public static Block blockAdvancedFurnace, blockMachinePart, blockGrinderWheel, blockPurifier;
+
+	// Transport
+	public static Block blockEMContractor;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -108,6 +113,9 @@ public class Electrical
 		blockGrinderWheel = new BlockGrinderWheel(Settings.getNextBlockID());
 		blockPurifier = new BlockPurifier(Settings.getNextBlockID());
 
+		// Generator
+		blockSolarPanel = new BlockSolarPanel();
+
 		if (Settings.REPLACE_FURNACE)
 		{
 			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
@@ -120,6 +128,7 @@ public class Electrical
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
 
+		GameRegistry.registerBlock(blockSolarPanel, blockSolarPanel.getUnlocalizedName());
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
 		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
@@ -130,8 +139,7 @@ public class Electrical
 		// Tiles
 		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());
-
-		// Tiles
+		GameRegistry.registerTileEntity(TileSolarPanel.class, blockSolarPanel.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TilePurifier.class, blockPurifier.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileGrinderWheel.class, blockGrinderWheel.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());

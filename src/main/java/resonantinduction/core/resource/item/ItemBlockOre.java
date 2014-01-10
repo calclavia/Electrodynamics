@@ -3,7 +3,6 @@ package resonantinduction.core.resource.item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.BlockOre;
 import resonantinduction.core.resource.BlockOre.OreData;
 
 public class ItemBlockOre extends ItemBlock

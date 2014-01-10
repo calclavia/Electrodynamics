@@ -15,7 +15,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.mechanics.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;

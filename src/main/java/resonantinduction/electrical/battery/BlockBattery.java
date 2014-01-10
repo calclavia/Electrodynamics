@@ -12,7 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockIOBase;
-import resonantinduction.old.core.render.BlockRenderingHandler;
+import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import universalelectricity.api.CompatibilityModule;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -70,7 +70,7 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return BlockRenderingHandler.INSTANCE.getRenderId();
+		return ElectricalBlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override

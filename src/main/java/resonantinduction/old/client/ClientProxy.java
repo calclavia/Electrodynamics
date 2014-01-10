@@ -28,7 +28,6 @@ import resonantinduction.old.client.render.RenderTurkey;
 import resonantinduction.old.core.misc.EntityFarmEgg;
 import resonantinduction.old.core.misc.EntityTurkey;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.mechanics.CommonProxy;
 import resonantinduction.old.mechanics.processor.TileEntityProcessor;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
 import resonantinduction.old.transport.fluid.TileEntityReleaseValve;

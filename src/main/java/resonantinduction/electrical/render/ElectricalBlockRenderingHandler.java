@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.old.core.render;
+package resonantinduction.electrical.render;
 
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
@@ -12,8 +12,13 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
+
+import org.lwjgl.opengl.GL11;
+
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.RenderBattery;
+import resonantinduction.electrical.generator.solar.BlockSolarPanel;
+import resonantinduction.electrical.generator.solar.RenderSolarPanel;
 import resonantinduction.electrical.tesla.BlockTesla;
 import resonantinduction.electrical.tesla.RenderTesla;
 import resonantinduction.old.transport.levitator.BlockLevitator;
@@ -29,10 +34,10 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
+public class ElectricalBlockRenderingHandler implements ISimpleBlockRenderingHandler
 {
-	public static final BlockRenderingHandler INSTANCE = new BlockRenderingHandler();
-	private static final int ID = RenderingRegistry.getNextAvailableRenderId();
+	public static final ElectricalBlockRenderingHandler INSTANCE = new ElectricalBlockRenderingHandler();
+	public static final int ID = RenderingRegistry.getNextAvailableRenderId();
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
@@ -64,6 +69,13 @@ public class BlockRenderingHandler implements ISimpleBlockRenderingHandler
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
 			RenderBattery.MODEL.renderAll();
 			glPopMatrix();
+		}
+		else if (block instanceof BlockSolarPanel)
+		{
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderSolarPanel.TEXTURE);
+			GL11.glTranslatef(0.0F, 1.1F, 0.0F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
+			RenderSolarPanel.MODEL.render(0.0625F);
 		}
 	}
 

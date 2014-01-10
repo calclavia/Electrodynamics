@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Utility;
 import resonantinduction.core.prefab.block.BlockIOBase;
-import resonantinduction.old.core.render.BlockRenderingHandler;
+import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -107,7 +107,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 	@Override
 	public int getRenderType()
 	{
-		return BlockRenderingHandler.INSTANCE.getRenderId();
+		return ElectricalBlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override
