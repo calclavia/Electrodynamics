@@ -29,7 +29,7 @@ import calclavia.lib.multiblock.link.IMultiBlock;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.utility.HelperMethods;
 import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.MathHelper;
+import calclavia.lib.utility.MathUtility;
 
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
@@ -120,7 +120,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	public void updateRotation()
 	{
 		// Clamp target angles
-		this.targetYaw = (int) MathHelper.clampAngleTo360(this.targetYaw);
+		this.targetYaw = (int) MathUtility.clampAngleTo360(this.targetYaw);
 		if (this.targetPitch < 0)
 			this.targetPitch = 0;
 		if (this.targetPitch > 60)
@@ -179,7 +179,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 			this.playRotationSound();
 		}
 		// Clamp actual angles angles
-		this.actualYaw = (int) MathHelper.clampAngleTo360(this.actualYaw);
+		this.actualYaw = (int) MathUtility.clampAngleTo360(this.actualYaw);
 		if (this.actualPitch < 0)
 			this.actualPitch = 0;
 		if (this.actualPitch > 60)

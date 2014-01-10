@@ -41,8 +41,8 @@ public class TaskRotateBy extends TaskBaseArmbot
 	{
 		if (super.onMethodCalled() == ProcessReturn.CONTINUE)
 		{
-			this.targetRotationYaw = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
-			this.targetRotationPitch = (int) MathHelper.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
+			this.targetRotationYaw = (int) MathUtility.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
+			this.targetRotationPitch = (int) MathUtility.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
 			return ProcessReturn.CONTINUE;
 		}
 		return ProcessReturn.GENERAL_ERROR;

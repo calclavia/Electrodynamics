@@ -63,7 +63,7 @@ public class TaskGive extends TaskBaseArmbot
 
 			if (targetTile != null && ((IArmbot) this.program.getMachine()).getHeldObject() instanceof ItemStack)
 			{
-				ForgeDirection direction = MathHelper.getFacingDirectionFromAngle((float) ((IArmbot) this.program.getMachine()).getRotation().x);
+				ForgeDirection direction = MathUtility.getFacingDirectionFromAngle((float) ((IArmbot) this.program.getMachine()).getRotation().x);
 				ItemStack itemStack = (ItemStack) ((IArmbot) this.program.getMachine()).getHeldObject();
 				List<ItemStack> stacks = new ArrayList<ItemStack>();
 				if (this.stack != null)

@@ -43,8 +43,8 @@ public class TaskRotateTo extends TaskBaseArmbot
 	{
 		if (super.onMethodCalled() == ProcessReturn.CONTINUE)
 		{
-			this.targetRotationYaw = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
-			this.targetRotationPitch = (int) MathHelper.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
+			this.targetRotationYaw = (int) MathUtility.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
+			this.targetRotationPitch = (int) MathUtility.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
 			return ProcessReturn.CONTINUE;
 		}
 		return ProcessReturn.GENERAL_ERROR;
