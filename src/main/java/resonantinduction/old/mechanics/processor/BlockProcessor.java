@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.mechanical.MechCommonProxy;
+import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
 import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
@@ -46,7 +46,7 @@ public class BlockProcessor extends BlockMachine implements IExtraBlockInfo
 			}
 			else
 			{
-				entityPlayer.openGui(ResonantInductionTransport.instance, MechCommonProxy.GUI_PROCESSOR, world, x, y, z);
+				entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
 				return true;
 			}
 		}

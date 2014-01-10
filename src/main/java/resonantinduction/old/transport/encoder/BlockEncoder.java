@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.mechanical.MechCommonProxy;
+import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
@@ -73,7 +73,7 @@ public class BlockEncoder extends BlockMachine
     {
         if (!world.isRemote)
         {
-            entityPlayer.openGui(ResonantInductionTransport.instance, MechCommonProxy.GUI_ENCODER, world, x, y, z);
+            entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
         }
 
         return true;

@@ -32,7 +32,7 @@ public class Archaic
 	public static Archaic INSTANCE;
 
 	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
-	public static ArcCommonProxy proxy;
+	public static CommonProxy proxy;
 
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;

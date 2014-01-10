@@ -25,14 +25,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 public class Mechanical
 {
 	/** Mod Information */
-	public static final String ID = "ResonantInduction|Archaic";
-	public static final String NAME = Reference.NAME + " Archaic";
+	public static final String ID = "ResonantInduction|Mechanical";
+	public static final String NAME = Reference.NAME + " Mechanical";
 
 	@Instance(ID)
 	public static Mechanical INSTANCE;
 
-	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
-	public static MechCommonProxy proxy;
+	@SidedProxy(clientSide = "resonantinduction.mechanical.ClientProxy", serverSide = "resonantinduction.mechanical.CommonProxy")
+	public static CommonProxy proxy;
 
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
