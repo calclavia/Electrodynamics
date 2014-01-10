@@ -2,15 +2,21 @@ package resonantinduction.core;
 
 import java.util.logging.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.core.link.LinkEventHandler;
+import resonantinduction.core.handler.FluidEventHandler;
+import resonantinduction.core.handler.LinkEventHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
-import resonantinduction.core.resource.ItemDust;
 import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
+import resonantinduction.core.resource.item.ItemDust;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;
@@ -60,6 +66,9 @@ public class ResonantInduction
 	 * Blocks and Items
 	 */
 	public static ItemDust itemDust;
+	public static Block blockFluidMixture;
+
+	public static Fluid MIXTURE = null;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -72,12 +81,20 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
+		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
 		Settings.CONFIGURATION.load();
+
+		MIXTURE = new Fluid("mixture");
+		FluidRegistry.registerFluid(MIXTURE);
+		blockFluidMixture = new BlockFluidMixture(Settings.getNextBlockID(), MIXTURE);
 
 		// Items
 		itemDust = new ItemDust(Settings.getNextItemID());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+
+		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
 		Settings.CONFIGURATION.save();
 	}

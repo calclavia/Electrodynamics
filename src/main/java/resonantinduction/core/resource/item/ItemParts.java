@@ -1,4 +1,4 @@
-package resonantinduction.core.resource;
+package resonantinduction.core.resource.item;
 
 import java.util.List;
 

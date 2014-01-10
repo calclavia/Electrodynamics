@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.core.link;
+package resonantinduction.core.handler;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

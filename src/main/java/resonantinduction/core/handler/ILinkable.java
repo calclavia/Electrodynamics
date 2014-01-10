@@ -1,4 +1,4 @@
-package resonantinduction.core.link;
+package resonantinduction.core.handler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.vector.VectorWorld;

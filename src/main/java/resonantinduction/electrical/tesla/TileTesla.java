@@ -22,7 +22,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.link.ILinkable;
+import resonantinduction.core.handler.ILinkable;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;

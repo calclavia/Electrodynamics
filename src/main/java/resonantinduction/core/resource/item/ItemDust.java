@@ -1,4 +1,4 @@
-package resonantinduction.core.resource;
+package resonantinduction.core.resource.item;
 
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemBase;
+import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.NBTUtility;
 import cpw.mods.fml.relauncher.Side;

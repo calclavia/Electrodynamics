@@ -17,6 +17,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.item.ItemDust;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.render.TextureUtils;

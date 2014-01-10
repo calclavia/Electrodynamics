@@ -1,4 +1,4 @@
-package resonantinduction.old.mechanics;
+package resonantinduction.core.part;
 
 import resonantinduction.core.prefab.block.BlockBase;
 
@@ -10,8 +10,8 @@ import resonantinduction.core.prefab.block.BlockBase;
  */
 public class BlockMachinePart extends BlockBase
 {
-	public BlockMachinePart(int id)
+	public BlockMachinePart()
 	{
-		super("machinePart", id);
+		super("machinePart");
 	}
 }

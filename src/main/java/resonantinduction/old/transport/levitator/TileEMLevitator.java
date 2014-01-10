@@ -23,7 +23,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.link.ILinkable;
+import resonantinduction.core.handler.ILinkable;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;

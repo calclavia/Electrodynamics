@@ -9,6 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
@@ -191,7 +192,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 	{
 		if (!this.worldObj.isRemote)
 		{
-			PacketHandler.instance().sendPacketToClients(PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(PacketHandler.getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning), worldObj, new Vector3(this), 64);
 		}
 	}
 
@@ -224,7 +225,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return PacketHandler.instance().getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning);
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.functioning);
 	}
 
 	@Override

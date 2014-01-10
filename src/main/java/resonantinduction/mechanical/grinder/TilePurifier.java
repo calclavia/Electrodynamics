@@ -8,7 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.ItemDust;
+import resonantinduction.core.resource.item.ItemDust;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileElectrical;

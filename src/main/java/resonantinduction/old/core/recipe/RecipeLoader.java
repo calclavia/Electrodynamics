@@ -10,7 +10,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-import resonantinduction.core.resource.ItemParts.Parts;
+import resonantinduction.core.resource.item.ItemParts.Parts;
 import resonantinduction.old.core.ItemOreDirv;
 import resonantinduction.old.core.misc.EnumTool;
 import resonantinduction.old.mechanics.processor.BlockProcessor;

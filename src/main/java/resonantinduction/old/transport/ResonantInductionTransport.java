@@ -28,9 +28,9 @@ import resonantinduction.core.resource.BlockGasOre;
 import resonantinduction.core.resource.BlockOre;
 import resonantinduction.core.resource.BlockOre.OreData;
 import resonantinduction.core.resource.GasOreGenerator;
-import resonantinduction.core.resource.ItemBlockOre;
-import resonantinduction.core.resource.ItemParts;
-import resonantinduction.core.resource.ItemParts.Parts;
+import resonantinduction.core.resource.item.ItemBlockOre;
+import resonantinduction.core.resource.item.ItemParts;
+import resonantinduction.core.resource.item.ItemParts.Parts;
 import resonantinduction.core.tilenetwork.prefab.NetworkUpdateHandler;
 import resonantinduction.electrical.armbot.BlockArmbot;
 import resonantinduction.electrical.armbot.command.TaskBreak;
@@ -135,7 +135,8 @@ public class ResonantInductionTransport
 	public static String LANGUAGE_PATH = DIRECTORY + "languages/";
 	public static String SOUND_PATH = DIRECTORY + "audio/";
 
-	//@SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide = "com.builtbroken.assemblyline.CommonProxy")
+	// @SidedProxy(clientSide = "com.builtbroken.assemblyline.client.ClientProxy", serverSide =
+	// "com.builtbroken.assemblyline.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Instance(ResonantInductionTransport.MOD_ID)
@@ -156,8 +157,6 @@ public class ResonantInductionTransport
 
 	private static PacketIDTile tilePacket;
 
-	public static Block blockEMContractor;
-
 	public static PacketIDTile getTilePacket()
 	{
 		if (tilePacket == null)
@@ -171,10 +170,6 @@ public class ResonantInductionTransport
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		CONFIGURATION.load();
-
-		blockEMContractor = new BlockLevitator(Settings.getNextBlockID());
-		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 
 		DarkCore.instance().preLoad();
 		Modstats.instance().getReporter().registerMod(this);

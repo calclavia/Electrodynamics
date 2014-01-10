@@ -1,15 +1,21 @@
 package resonantinduction.electrical;
 
+import java.util.Map;
+
 import ic2.api.item.Items;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
+import resonantinduction.core.part.BlockMachinePart;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
@@ -19,10 +25,20 @@ import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
+import resonantinduction.mechanical.grinder.BlockGrinderWheel;
+import resonantinduction.mechanical.grinder.TileGrinderWheel;
+import resonantinduction.mechanical.grinder.TilePurifier;
+import resonantinduction.old.mechanics.furnace.BlockAdvancedFurnace;
+import resonantinduction.old.mechanics.furnace.TileAdvancedFurnace;
+import resonantinduction.old.mechanics.purifier.BlockPurifier;
+import resonantinduction.old.transport.levitator.BlockLevitator;
+import resonantinduction.old.transport.levitator.ItemBlockContractor;
+import resonantinduction.old.transport.levitator.TileEMLevitator;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
@@ -57,14 +73,18 @@ public class Electrical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
-	// Items
+	// Energy
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
 	public static Item itemTransformer;
-
-	// Blocks
 	public static Block blockTesla;
 	public static Block blockBattery;
+
+	// Transport
+	public static Block blockEMContractor;
+
+	// Machines
+	public static Block blockAdvancedFurnace, blockMachinePart, blockGrinderWheel, blockPurifier;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -73,25 +93,48 @@ public class Electrical
 
 		Settings.CONFIGURATION.load();
 
-		// Items
+		// Energy
 		itemPartWire = new ItemWire(Settings.getNextItemID());
 		itemMultimeter = new ItemMultimeter(Settings.getNextItemID());
 		itemTransformer = new ItemTransformer(Settings.getNextItemID());
-
-		// Blocks
 		blockTesla = new BlockTesla(Settings.getNextBlockID());
 		blockBattery = new BlockBattery(Settings.getNextBlockID());
+
+		// Transport
+		blockEMContractor = new BlockLevitator();
+
+		// Machines
+		blockMachinePart = new BlockMachinePart();
+		blockGrinderWheel = new BlockGrinderWheel(Settings.getNextBlockID());
+		blockPurifier = new BlockPurifier(Settings.getNextBlockID());
+
+		if (Settings.REPLACE_FURNACE)
+		{
+			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
+			GameRegistry.registerBlock(blockAdvancedFurnace, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
+			GameRegistry.registerTileEntity(TileAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
+		}
 
 		Settings.CONFIGURATION.save();
 
 		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
 		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
+
 		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
 		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
+		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
+		GameRegistry.registerBlock(blockPurifier, blockPurifier.getUnlocalizedName());
+		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
+		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
 
 		// Tiles
 		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());
+
+		// Tiles
+		GameRegistry.registerTileEntity(TilePurifier.class, blockPurifier.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileGrinderWheel.class, blockGrinderWheel.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 
 		/**
 		 * Set reference itemstacks
@@ -102,7 +145,9 @@ public class Electrical
 		{
 			material.setWire(itemPartWire);
 		}
+
 		proxy.preInit();
+		Settings.CONFIGURATION.save();
 	}
 
 	@EventHandler
@@ -154,5 +199,35 @@ public class Electrical
 		}
 
 		proxy.postInit();
+		/** Inject new furnace tile class */
+		replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
+	}
+
+	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)
+	{
+		try
+		{
+			Map<String, Class> nameToClassMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_a", "nameToClassMap", "a");
+			Map<Class, String> classToNameMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_b", "classToNameMap", "b");
+
+			String findTileID = classToNameMap.get(findTile);
+
+			if (findTileID != null)
+			{
+				nameToClassMap.put(findTileID, replaceTile);
+				classToNameMap.put(replaceTile, findTileID);
+				classToNameMap.remove(findTile);
+				ResonantInduction.LOGGER.fine("Replaced TileEntity: " + findTile);
+			}
+			else
+			{
+				ResonantInduction.LOGGER.severe("Failed to replace TileEntity: " + findTile);
+			}
+		}
+		catch (Exception e)
+		{
+			ResonantInduction.LOGGER.severe("Failed to replace TileEntity: " + findTile);
+			e.printStackTrace();
+		}
 	}
 }
