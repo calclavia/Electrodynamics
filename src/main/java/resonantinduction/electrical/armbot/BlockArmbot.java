@@ -11,9 +11,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderArmbot;
+import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
 
 import com.builtbroken.common.Pair;
@@ -42,7 +44,7 @@ public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
 
 		if (tileEntity instanceof IMultiBlock)
 		{
-			DarkCore.multiBlock.createMultiBlockStructure((IMultiBlock) tileEntity);
+			ResonantInduction.blockMulti.createMultiBlockStructure((IMultiBlock) tileEntity);
 		}
 	}
 
@@ -51,9 +53,9 @@ public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof IBlockActivated)
+		if (tileEntity instanceof IBlockActivate)
 		{
-			return ((IBlockActivated) tileEntity).onActivated(player);
+			return ((IBlockActivate) tileEntity).onActivated(player);
 		}
 
 		return false;
@@ -67,7 +69,7 @@ public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
 		if (tileEntity instanceof TileEntityArmbot)
 		{
 			((TileEntityArmbot) tileEntity).dropHeldObject();
-			DarkCore.multiBlock.destroyMultiBlockStructure((TileEntityArmbot) tileEntity);
+			ResonantInduction.blockMulti.destroyMultiBlockStructure((TileEntityArmbot) tileEntity);
 		}
 		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 		super.breakBlock(world, x, y, z, par5, par6);
@@ -117,24 +119,24 @@ public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
 		return false;
 	}
 
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean hasExtraConfigs()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    public void loadExtraConfigs(Configuration config)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+	@Override
+	public void loadExtraConfigs(Configuration config)
+	{
+		// TODO Auto-generated method stub
 
-    @Override
-    public void loadOreNames()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+	}
+
+	@Override
+	public void loadOreNames()
+	{
+		// TODO Auto-generated method stub
+
+	}
 }

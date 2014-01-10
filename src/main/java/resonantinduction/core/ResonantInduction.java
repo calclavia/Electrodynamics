@@ -17,6 +17,8 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemDust;
+import calclavia.lib.multiblock.link.BlockMulti;
+import calclavia.lib.multiblock.link.TileMultiBlockPart;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;
@@ -65,6 +67,8 @@ public class ResonantInduction
 	/**
 	 * Blocks and Items
 	 */
+	public static BlockMulti blockMulti;
+
 	public static ItemDust itemDust;
 	public static Block blockFluidMixture;
 
@@ -85,6 +89,8 @@ public class ResonantInduction
 
 		Settings.CONFIGURATION.load();
 
+		blockMulti = new BlockMulti(Settings.getNextBlockID()).setPacketType(PACKET_TILE);
+
 		MIXTURE = new Fluid("mixture");
 		FluidRegistry.registerFluid(MIXTURE);
 		blockFluidMixture = new BlockFluidMixture(Settings.getNextBlockID(), MIXTURE);
@@ -92,6 +98,9 @@ public class ResonantInduction
 		// Items
 		itemDust = new ItemDust(Settings.getNextItemID());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+
+		GameRegistry.registerTileEntity(TileMultiBlockPart.class, "TileEntityMultiBlockPart");
+		GameRegistry.registerBlock(blockMulti, "blockMulti");
 
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());

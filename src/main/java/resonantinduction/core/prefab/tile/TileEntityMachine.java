@@ -9,6 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
@@ -183,7 +184,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			this.writeToNBT(tag);
-			PacketHandler.sendPacketToClients(PacketHandler.getTilePacket(this.getChannel(), SimplePacketTypes.NBT.name, this, tag), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, SimplePacketTypes.NBT.name, this, tag), worldObj, new Vector3(this), 64);
 		}
 	}
 
@@ -192,7 +193,7 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 	{
 		if (!this.worldObj.isRemote)
 		{
-			PacketHandler.sendPacketToClients(PacketHandler.getTilePacket(this.getChannel(), SimplePacketTypes.RUNNING.name, this, this.functioning), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, SimplePacketTypes.RUNNING.name, this, this.functioning), worldObj, new Vector3(this), 64);
 		}
 	}
 

@@ -301,7 +301,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.getTilePacket().getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
+		return ResonantInduction.PACKET_TILE.getPacket(this, "armbot", this.functioning, this.targetYaw, this.targetPitch, this.actualYaw, this.actualPitch);
 	}
 
 	public void sendGrabItemToClient()

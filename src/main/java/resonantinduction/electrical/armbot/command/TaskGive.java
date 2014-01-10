@@ -16,6 +16,7 @@ import resonantinduction.old.api.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.InvInteractionHelper;
+import calclavia.lib.utility.MathUtility;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
