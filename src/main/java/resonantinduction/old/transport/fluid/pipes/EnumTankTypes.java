@@ -1,7 +1,7 @@
 package resonantinduction.old.transport.fluid.pipes;
 
-import resonantinduction.old.lib.helpers.ColorCode;
-import resonantinduction.old.lib.helpers.ColorCode.IColoredId;
+import dark.lib.helpers.ColorCode;
+import dark.lib.helpers.ColorCode.IColoredId;
 
 public enum EnumTankTypes implements IColoredId
 {

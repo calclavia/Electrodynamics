@@ -13,11 +13,12 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.old.api.fluid.IDrain;
-import resonantinduction.old.lib.interfaces.IReadOut;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
+
+import dark.lib.interfaces.IReadOut;
 
 public class TileEntityStarterPump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
 {

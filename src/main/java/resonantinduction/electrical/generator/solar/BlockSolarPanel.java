@@ -12,12 +12,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderBlockSolarPanel;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 public class BlockSolarPanel extends BlockMachine implements IExtraBlockInfo
 {

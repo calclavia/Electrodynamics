@@ -10,7 +10,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.mechanics.generator.steam.TileEntitySteamPiston;
 
 import com.builtbroken.common.Pair;
 

@@ -14,13 +14,13 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderArmbot;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.link.IMultiBlock;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
 {

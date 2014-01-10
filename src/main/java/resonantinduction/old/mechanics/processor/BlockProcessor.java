@@ -17,8 +17,6 @@ import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
-import resonantinduction.old.lib.recipes.ProcessorType;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
@@ -26,6 +24,8 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.IExtraInfo.IExtraBlockInfo;
+import dark.lib.recipes.ProcessorType;
 
 public class BlockProcessor extends BlockMachine implements IExtraBlockInfo
 {

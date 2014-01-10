@@ -11,9 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.tilenetwork.prefab.NetworkTileEntities;
-import resonantinduction.old.lib.interfaces.IExternalInv;
-import resonantinduction.old.lib.interfaces.IInvBox;
-import resonantinduction.old.lib.prefab.invgui.InvChest;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.access.AccessGroup;
 import calclavia.lib.access.AccessUser;
@@ -21,6 +18,9 @@ import calclavia.lib.access.GroupRegistry;
 import calclavia.lib.access.ISpecialAccess;
 import calclavia.lib.access.Nodes;
 import calclavia.lib.prefab.tile.TileAdvanced;
+import dark.lib.interfaces.IExternalInv;
+import dark.lib.interfaces.IInvBox;
+import dark.lib.prefab.invgui.InvChest;
 
 /**
  * Prefab for simple object who only need basic inv support and nothing more

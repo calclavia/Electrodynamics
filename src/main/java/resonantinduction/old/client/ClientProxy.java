@@ -38,7 +38,6 @@ import resonantinduction.old.transport.fluid.pipes.TileEntityPipe;
 import resonantinduction.old.transport.fluid.pump.TileEntityConstructionPump;
 import resonantinduction.old.transport.fluid.pump.TileEntityStarterPump;
 import resonantinduction.old.transport.imprinter.TileEntityImprinter;
-import resonantinduction.old.transport.vechicle.EntityTestCar;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;

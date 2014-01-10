@@ -14,13 +14,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 public class BlockDebug extends BlockMachine implements IExtraBlockInfo
 {

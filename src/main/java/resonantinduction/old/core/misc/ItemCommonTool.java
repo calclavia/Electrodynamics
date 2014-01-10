@@ -32,13 +32,13 @@ import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.lib.EnumMaterial;
-import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 
 import com.google.common.collect.Multimap;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.EnumMaterial;
+import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * Flexible tool class that uses NBT to store damage and effect rather than metadata. Metadata

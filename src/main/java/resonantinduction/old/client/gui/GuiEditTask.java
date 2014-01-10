@@ -11,12 +11,12 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.Reference;
 import resonantinduction.old.api.coding.ITask;
 import resonantinduction.old.api.coding.args.ArgumentData;
-import resonantinduction.old.lib.prefab.invgui.GuiBase;
-import resonantinduction.old.lib.prefab.invgui.GuiMessageBox;
-import resonantinduction.old.lib.prefab.invgui.IMessageBoxDialog;
 import universalelectricity.api.vector.Vector2;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import dark.lib.prefab.invgui.GuiBase;
+import dark.lib.prefab.invgui.GuiMessageBox;
+import dark.lib.prefab.invgui.IMessageBoxDialog;
 
 public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 {

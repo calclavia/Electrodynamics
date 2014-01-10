@@ -18,8 +18,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.lib.helpers.ColorCode;
-import resonantinduction.old.lib.helpers.ColorCode.IColorCoded;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 
@@ -27,6 +25,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.helpers.ColorCode;
+import dark.lib.helpers.ColorCode.IColorCoded;
 
 public class BlockPipe extends BlockMachine
 {

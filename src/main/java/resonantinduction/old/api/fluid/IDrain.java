@@ -4,8 +4,8 @@ import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.old.lib.interfaces.IRotatable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.IRotatable;
 
 /**
  * Interface to make or use the TileEntityDrain. This is mostly a dummy interface to help the

@@ -9,9 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
+
+import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 /** @author Archadia */
 public class BlockFracker extends BlockMachine implements IExtraBlockInfo

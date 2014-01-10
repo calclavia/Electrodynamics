@@ -21,12 +21,12 @@ import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.mechanical.belt.TileEntityConveyorBelt.SlantType;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderConveyorBelt;
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 /** The block for the actual conveyor belt!
  * 

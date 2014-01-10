@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.old.lib.interfaces.IPowerLess;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -19,6 +18,7 @@ import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import dark.lib.interfaces.IPowerLess;
 
 /**
  * Basic energy tile that can consume power

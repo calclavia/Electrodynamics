@@ -3,7 +3,7 @@ package resonantinduction.archaic.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import resonantinduction.old.lib.helpers.ColorCode;
+import dark.lib.helpers.ColorCode;
 
 public class ItemBlockColored extends ItemBlock
 {

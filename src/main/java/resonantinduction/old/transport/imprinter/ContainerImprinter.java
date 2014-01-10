@@ -5,10 +5,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import resonantinduction.old.lib.prefab.invgui.ISlotWatcher;
-import resonantinduction.old.lib.prefab.invgui.SlotCraftingResult;
-import resonantinduction.old.lib.prefab.invgui.SlotSpecific;
-import resonantinduction.old.lib.prefab.invgui.WatchedSlot;
+import dark.lib.prefab.invgui.ISlotWatcher;
+import dark.lib.prefab.invgui.SlotCraftingResult;
+import dark.lib.prefab.invgui.SlotSpecific;
+import dark.lib.prefab.invgui.WatchedSlot;
 
 public class ContainerImprinter extends Container implements ISlotWatcher
 {

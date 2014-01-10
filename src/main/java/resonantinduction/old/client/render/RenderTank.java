@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.old.client.model.ModelTankSide;
-import resonantinduction.old.lib.helpers.ColorCode;
 import resonantinduction.old.transport.fluid.TileEntityTank;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.helpers.ColorCode;
 
 @SideOnly(Side.CLIENT)
 public class RenderTank extends TileEntitySpecialRenderer

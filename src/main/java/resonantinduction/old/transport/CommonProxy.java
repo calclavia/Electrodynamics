@@ -9,8 +9,6 @@ import java.util.zip.ZipInputStream;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.old.lib.prefab.invgui.ContainerFake;
-import resonantinduction.old.mechanics.generator.steam.TileEntitySteamGen;
 import resonantinduction.old.mechanics.processor.ContainerProcessor;
 import resonantinduction.old.mechanics.processor.TileEntityProcessor;
 import resonantinduction.old.transport.encoder.ContainerEncoder;
@@ -19,6 +17,7 @@ import resonantinduction.old.transport.imprinter.ContainerImprinter;
 import resonantinduction.old.transport.imprinter.TileEntityImprinter;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
+import dark.lib.prefab.invgui.ContainerFake;
 
 public class CommonProxy implements IGuiHandler
 {

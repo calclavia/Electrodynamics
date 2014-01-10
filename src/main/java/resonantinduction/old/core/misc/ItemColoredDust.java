@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.lib.helpers.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.helpers.ColorCode;
 
 public class ItemColoredDust extends Item
 {

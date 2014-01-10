@@ -14,12 +14,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.old.lib.interfaces.IRotatable;
-import resonantinduction.old.lib.interfaces.IRotatableBlock;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.interfaces.IRotatableBlock;
 
 public class BlockTurntable extends BlockMachine
 {

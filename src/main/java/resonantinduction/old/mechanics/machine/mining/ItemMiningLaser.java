@@ -24,8 +24,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.events.LaserEvent;
-import resonantinduction.old.lib.CoreRegistry;
-import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.Vector3;
@@ -35,6 +33,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.CoreRegistry;
+import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * Stream laser mining tool, When held down it will slowly mine away at the block in front of it.

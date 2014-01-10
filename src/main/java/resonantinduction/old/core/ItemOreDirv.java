@@ -15,11 +15,11 @@ import resonantinduction.api.events.LaserEvent;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
-import resonantinduction.old.lib.EnumMaterial;
-import resonantinduction.old.lib.EnumOrePart;
-import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.EnumMaterial;
+import dark.lib.EnumOrePart;
+import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * A series of items that are derived from a basic material

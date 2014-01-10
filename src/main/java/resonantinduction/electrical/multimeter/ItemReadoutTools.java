@@ -18,8 +18,6 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import resonantinduction.core.prefab.tile.TileGenerator;
-import resonantinduction.old.lib.interfaces.IReadOut;
-import resonantinduction.old.lib.interfaces.IReadOut.EnumTools;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.IConductor;
@@ -33,6 +31,8 @@ import calclavia.lib.utility.FluidHelper;
 import cofh.api.energy.IEnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.interfaces.IReadOut;
+import dark.lib.interfaces.IReadOut.EnumTools;
 
 public class ItemReadoutTools extends ItemBase
 {

@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.network.ISimplePacketReceiver;
-import resonantinduction.old.lib.helpers.ColorCode;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import resonantinduction.old.transport.fluid.prefab.TileEntityFluidStorage;
 import calclavia.lib.network.PacketHandler;
@@ -16,6 +15,7 @@ import calclavia.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
+import dark.lib.helpers.ColorCode;
 
 public class TileKitchenSink extends TileEntityFluidStorage implements ISimplePacketReceiver
 {

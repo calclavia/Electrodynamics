@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.old.client.model.ModelTestCar;
-import resonantinduction.old.transport.vechicle.EntityAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

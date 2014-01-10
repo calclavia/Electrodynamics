@@ -10,9 +10,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.network.ISimplePacketReceiver;
-import resonantinduction.old.lib.IExtraInfo.IExtraTileEntityInfo;
-import resonantinduction.old.lib.interfaces.IExternalInv;
-import resonantinduction.old.lib.interfaces.IInvBox;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 
@@ -20,6 +17,9 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import dark.lib.IExtraInfo.IExtraTileEntityInfo;
+import dark.lib.interfaces.IExternalInv;
+import dark.lib.interfaces.IInvBox;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, ISimplePacketReceiver, IExtraTileEntityInfo
 {

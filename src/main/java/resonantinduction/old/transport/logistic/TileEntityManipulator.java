@@ -10,10 +10,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import resonantinduction.old.api.IManipulator;
-import resonantinduction.old.lib.interfaces.IRotatable;
 import resonantinduction.old.transport.imprinter.ItemImprinter;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.InvInteractionHelper;
 
 import com.google.common.io.ByteArrayDataInput;

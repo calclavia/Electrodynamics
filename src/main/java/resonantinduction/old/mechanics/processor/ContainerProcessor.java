@@ -7,8 +7,8 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
-import resonantinduction.old.lib.recipes.MachineRecipeHandler;
 import universalelectricity.api.item.IEnergyItem;
+import dark.lib.recipes.MachineRecipeHandler;
 
 public class ContainerProcessor extends Container
 {

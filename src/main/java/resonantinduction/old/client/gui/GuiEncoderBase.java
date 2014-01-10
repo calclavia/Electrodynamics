@@ -4,9 +4,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import resonantinduction.core.prefab.tile.TileEntityMachine;
 import resonantinduction.mechanical.CommonProxy;
-import resonantinduction.old.lib.prefab.invgui.ContainerFake;
-import resonantinduction.old.lib.prefab.invgui.GuiMachineContainer;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import dark.lib.prefab.invgui.ContainerFake;
+import dark.lib.prefab.invgui.GuiMachineContainer;
 
 public class GuiEncoderBase extends GuiMachineContainer
 {

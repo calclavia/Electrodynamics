@@ -63,11 +63,6 @@ import resonantinduction.old.core.misc.ItemColoredDust;
 import resonantinduction.old.core.misc.ItemCommonTool;
 import resonantinduction.old.core.misc.ItemFarmEgg;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.lib.CoreRegistry;
-import resonantinduction.old.lib.EnumMaterial;
-import resonantinduction.old.lib.EnumOrePart;
-import resonantinduction.old.lib.LaserEntityDamageSource;
-import resonantinduction.old.mechanics.generator.steam.BlockSmallSteamGen;
 import resonantinduction.old.mechanics.processor.BlockProcessor;
 import resonantinduction.old.transport.crate.BlockCrate;
 import resonantinduction.old.transport.crate.ItemBlockCrate;
@@ -93,8 +88,6 @@ import resonantinduction.old.transport.levitator.TileEMLevitator;
 import resonantinduction.old.transport.logistic.BlockDetector;
 import resonantinduction.old.transport.logistic.BlockManipulator;
 import resonantinduction.old.transport.logistic.BlockRejector;
-import resonantinduction.old.transport.vechicle.EntityTestCar;
-import resonantinduction.old.transport.vechicle.ItemVehicleSpawn;
 import calclavia.lib.ore.OreGenReplaceStone;
 import calclavia.lib.ore.OreGenerator;
 import calclavia.lib.prefab.item.ItemBlockHolder;
@@ -114,6 +107,10 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dark.lib.CoreRegistry;
+import dark.lib.EnumMaterial;
+import dark.lib.EnumOrePart;
+import dark.lib.LaserEntityDamageSource;
 
 //@Mod(modid = ResonantInductionTransport.MOD_ID, name = ResonantInductionTransport.MOD_NAME, version = ResonantInductionTransport.VERSION, useMetadata = true)
 //@NetworkMod(channels = { ResonantInductionTransport.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)

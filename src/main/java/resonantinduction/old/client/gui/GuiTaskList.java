@@ -12,8 +12,8 @@ import resonantinduction.electrical.armbot.command.TaskStart;
 import resonantinduction.old.api.coding.IProgram;
 import resonantinduction.old.api.coding.IRedirectTask;
 import resonantinduction.old.api.coding.ITask;
-import resonantinduction.old.lib.interfaces.IScroll;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
+import calclavia.lib.terminal.IScroll;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

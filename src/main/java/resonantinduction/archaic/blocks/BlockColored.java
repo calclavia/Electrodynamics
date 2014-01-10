@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import resonantinduction.core.Reference;
-import resonantinduction.old.lib.helpers.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.lib.helpers.ColorCode;
 
 /**
  * Prefab class to make any block have 16 separate color instances similar to wool block

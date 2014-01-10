@@ -5,10 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
-import resonantinduction.old.lib.interfaces.IInvBox;
-import resonantinduction.old.lib.prefab.invgui.InvChest;
-import resonantinduction.old.lib.recipes.MachineRecipeHandler;
-import resonantinduction.old.lib.recipes.ProcessorType;
 import resonantinduction.old.mechanics.processor.BlockProcessor.ProcessorData;
 import universalelectricity.api.item.IEnergyItem;
 import calclavia.lib.network.PacketHandler;
@@ -16,6 +12,10 @@ import calclavia.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
+import dark.lib.interfaces.IInvBox;
+import dark.lib.prefab.invgui.InvChest;
+import dark.lib.recipes.MachineRecipeHandler;
+import dark.lib.recipes.ProcessorType;
 
 /**
  * Basic A -> B recipe processor machine designed mainly to handle ore blocks

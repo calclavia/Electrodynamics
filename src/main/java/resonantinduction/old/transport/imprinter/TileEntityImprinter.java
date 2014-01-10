@@ -14,7 +14,6 @@ import resonantinduction.api.events.AutoCraftEvent;
 import resonantinduction.old.api.IArmbot;
 import resonantinduction.old.api.IArmbotUseable;
 import resonantinduction.old.api.coding.args.ArgumentData;
-import resonantinduction.old.lib.prefab.invgui.ISlotPickResult;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
@@ -22,6 +21,8 @@ import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
+
+import dark.lib.prefab.invgui.ISlotPickResult;
 
 public class TileEntityImprinter extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {

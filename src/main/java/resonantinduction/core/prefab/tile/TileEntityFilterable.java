@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.old.api.IFilterable;
-import resonantinduction.old.lib.interfaces.IRotatable;
 import resonantinduction.old.transport.TileEntityAssembly;
 import resonantinduction.old.transport.imprinter.ItemImprinter;
+import calclavia.lib.prefab.tile.IRotatable;
 
 public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
 {
