@@ -1,9 +1,15 @@
 package resonantinduction.core.resource;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -18,9 +24,6 @@ import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.item.ItemDust;
-import codechicken.lib.colour.Colour;
-import codechicken.lib.colour.ColourRGBA;
-import codechicken.lib.render.TextureUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -101,18 +104,27 @@ public class ResourceGenerator
 
 					if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
 					{
+						iconString = iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) + ".png" : "minecraft:" + Reference.ITEM_TEXTURE_DIRECTORY + iconString;
 						System.out.println("LOAD:" + iconString);
-						iconString = iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) + ".png" : Reference.ITEM_TEXTURE_DIRECTORY + iconString;
 						System.out.println(iconString);
 						ResourceLocation textureLocation = new ResourceLocation(iconString);
-						Colour[] colors = TextureUtils.loadTextureColours(textureLocation);
 
-						for (Colour color : colors)
+						InputStream inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
+						BufferedImage bufferedimage = ImageIO.read(inputstream);
+
+						int width = bufferedimage.getWidth();
+						int height = bufferedimage.getWidth();
+
+						for (int x = 0; x < width; x++)
 						{
-							totalR += color.r;
-							totalG += color.g;
-							totalB += color.b;
-							colorCount++;
+							for (int y = 0; y < height; y++)
+							{
+								Color rgb = new Color(bufferedimage.getRGB(x, y));
+								totalR += rgb.getRed();
+								totalG += rgb.getGreen();
+								totalB += rgb.getBlue();
+								colorCount++;
+							}
 						}
 					}
 				}
@@ -128,7 +140,7 @@ public class ResourceGenerator
 				totalR /= colorCount;
 				totalG /= colorCount;
 				totalB /= colorCount;
-				int resultantColor = new ColourRGBA(totalR, totalG, totalB, 0).rgb();
+				int resultantColor = new Color(totalR, totalG, totalB).getRGB();
 				materialColors.put(ingotName, resultantColor);
 			}
 
