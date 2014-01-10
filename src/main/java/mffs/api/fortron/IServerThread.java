@@ -1,4 +1,4 @@
-package mffs;
+package mffs.api.fortron;
 
 /**
  * Implemented by threads that exist server side.

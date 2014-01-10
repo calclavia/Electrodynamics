@@ -3,7 +3,7 @@ package mffs.tile;
 import java.util.HashSet;
 import java.util.Set;
 
-import mffs.IServerThread;
+import mffs.api.fortron.IServerThread;
 import universalelectricity.api.vector.Vector3;
 
 /**

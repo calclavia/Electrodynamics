@@ -2,9 +2,9 @@ package mffs.tile;
 
 import java.util.Set;
 
-import mffs.IServerThread;
 import mffs.ModularForceFieldSystem;
 import mffs.api.IFieldInteraction;
+import mffs.api.fortron.IServerThread;
 import mffs.api.modules.IModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
