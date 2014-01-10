@@ -8,10 +8,10 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.tile.TileEntityMachine;
 import resonantinduction.old.client.model.ModelMachine;
 import resonantinduction.old.client.model.ModelSteamGen;
 import resonantinduction.old.client.model.ModelSteamTurbine;
-import resonantinduction.old.lib.prefab.TileEntityMachine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

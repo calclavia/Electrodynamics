@@ -21,13 +21,13 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import org.bouncycastle.util.Arrays;
 
 import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.core.tilenetwork.INetworkPart;
+import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.old.api.fluid.FluidMasterList;
 import resonantinduction.old.api.fluid.INetworkFluidPart;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import resonantinduction.old.transport.fluid.network.NetworkFluidTiles;
 import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
-import resonatninduction.tilenetwork.INetworkPart;
-import resonatninduction.tilenetwork.ITileNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 

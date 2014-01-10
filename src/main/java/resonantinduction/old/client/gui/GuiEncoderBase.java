@@ -2,7 +2,8 @@ package resonantinduction.old.client.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import resonantinduction.old.lib.prefab.TileEntityMachine;
+import resonantinduction.core.prefab.tile.TileEntityMachine;
+import resonantinduction.mechanical.MechCommonProxy;
 import resonantinduction.old.lib.prefab.invgui.ContainerFake;
 import resonantinduction.old.lib.prefab.invgui.GuiMachineContainer;
 import resonantinduction.old.transport.ResonantInductionTransport;

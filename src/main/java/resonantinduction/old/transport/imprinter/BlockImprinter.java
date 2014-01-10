@@ -14,10 +14,9 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.mechanics.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
-import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 
@@ -32,7 +31,7 @@ public class BlockImprinter extends BlockMachine
 
     public BlockImprinter()
     {
-        super(Settings.CONFIGURATION, "imprinter", Material.wood);
+        super("imprinter", Material.wood);
     }
 
     @SideOnly(Side.CLIENT)

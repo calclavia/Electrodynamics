@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import resonantinduction.core.Reference;
-import resonantinduction.old.lib.prefab.TileEntityMachine;
+import resonantinduction.core.prefab.tile.TileEntityMachine;
 import resonantinduction.old.lib.prefab.invgui.GuiButtonImage.ButtonIcon;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;

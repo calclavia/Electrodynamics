@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
-import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -15,12 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
+import resonantinduction.old.lib.IExtraInfo.IExtraItemInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**

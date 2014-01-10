@@ -6,13 +6,13 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.electrical.armbot.command.TaskEnd;
+import resonantinduction.electrical.armbot.command.TaskIdle;
+import resonantinduction.electrical.armbot.command.TaskStart;
 import resonantinduction.old.api.coding.IProgram;
 import resonantinduction.old.api.coding.IRedirectTask;
 import resonantinduction.old.api.coding.ITask;
 import resonantinduction.old.lib.interfaces.IScroll;
-import resonantinduction.old.mechanics.armbot.command.TaskEnd;
-import resonantinduction.old.mechanics.armbot.command.TaskIdle;
-import resonantinduction.old.mechanics.armbot.command.TaskStart;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;

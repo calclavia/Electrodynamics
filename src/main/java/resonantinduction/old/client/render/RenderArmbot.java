@@ -15,8 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.electrical.armbot.TileEntityArmbot;
 import resonantinduction.old.client.model.ModelArmbot;
-import resonantinduction.old.mechanics.armbot.TileEntityArmbot;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

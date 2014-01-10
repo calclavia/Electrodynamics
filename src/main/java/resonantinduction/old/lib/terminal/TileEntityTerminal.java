@@ -3,13 +3,13 @@ package resonantinduction.old.lib.terminal;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonantinduction.old.lib.interfaces.IScroll;
-import resonantinduction.old.lib.interfaces.ITerminal;
-import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
+import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
+import resonantinduction.old.lib.interfaces.IScroll;
+import resonantinduction.old.lib.interfaces.ITerminal;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;

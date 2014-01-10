@@ -13,12 +13,12 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.client.render.BlockRenderHelper;
 import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.old.transport.fluid.pipes.ItemBlockPipe;
 import resonantinduction.old.transport.fluid.pipes.TileEntityPipe;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.block.BlockMachine;
 import calclavia.lib.utility.FluidHelper;
 import calclavia.lib.utility.HelperMethods;
 

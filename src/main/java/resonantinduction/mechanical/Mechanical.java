@@ -1,7 +1,5 @@
 package resonantinduction.mechanical;
 
-import java.util.logging.Logger;
-
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;

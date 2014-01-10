@@ -3,8 +3,8 @@ package resonantinduction.core.debug;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,21 +13,22 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 import resonantinduction.old.transport.ResonantInductionTransport;
-import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockDebug extends BlockMachine
+public class BlockDebug extends BlockMachine implements IExtraBlockInfo
 {
 	public static float DebugWattOut, DebugWattDemand;
 
 	public BlockDebug()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "DebugBlock", Material.clay);
+		super("DebugBlock");
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 	}
 
@@ -117,7 +118,6 @@ public class BlockDebug extends BlockMachine
 	@Override
 	public void loadExtraConfigs(Configuration config)
 	{
-		super.loadExtraConfigs(config);
 		for (DebugBlocks block : DebugBlocks.values())
 		{
 			block.enabled = config.get("Blocks", "Enable" + block.name + "Block", true).getBoolean(true);
@@ -183,5 +183,26 @@ public class BlockDebug extends BlockMachine
 		}
 
 	}
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

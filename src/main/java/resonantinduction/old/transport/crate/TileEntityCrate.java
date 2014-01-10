@@ -5,8 +5,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.core.prefab.tile.TileEntityInv;
 import resonantinduction.old.lib.interfaces.IExtendedStorage;
-import resonantinduction.old.lib.prefab.TileEntityInv;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import calclavia.lib.network.PacketHandler;
 

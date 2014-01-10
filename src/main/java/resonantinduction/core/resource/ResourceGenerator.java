@@ -1,7 +1,5 @@
 package resonantinduction.core.resource;
 
-import java.awt.Color;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +20,6 @@ import resonantinduction.core.ResonantInduction;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.render.TextureUtils;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

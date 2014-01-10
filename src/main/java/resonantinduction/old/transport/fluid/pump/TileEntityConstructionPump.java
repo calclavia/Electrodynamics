@@ -15,10 +15,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.old.api.fluid.IDrain;
 import resonantinduction.old.api.fluid.INetworkPipe;
 import resonantinduction.old.transport.fluid.network.NetworkFluidTiles;
-import resonatninduction.tilenetwork.ITileConnector;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 

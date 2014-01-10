@@ -1,23 +1,25 @@
 package resonantinduction.old.mechanics.machine.mining;
 
+import java.util.List;
 import java.util.Set;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.Settings;
-import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockMachine;
+import net.minecraftforge.common.Configuration;
+import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 /** @author Archadia */
-public class BlockFracker extends BlockMachine
+public class BlockFracker extends BlockMachine implements IExtraBlockInfo
 {
 
 	public BlockFracker()
 	{
-		super(Settings.CONFIGURATION, "Machine_Fracker", UniversalElectricity.machine);
+		super("Machine_Fracker");
 	}
 
 	@Override
@@ -41,4 +43,32 @@ public class BlockFracker extends BlockMachine
 	{
 		list.add(new Pair<String, Class<? extends TileEntity>>("TileFracker", TileFracker.class));
 	}
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

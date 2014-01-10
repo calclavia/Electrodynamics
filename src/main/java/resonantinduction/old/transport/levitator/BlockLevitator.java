@@ -1,6 +1,5 @@
 package resonantinduction.old.transport.levitator;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -8,16 +7,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockBase;
+import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.core.render.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockLevitator extends BlockBase implements ITileEntityProvider
+public class BlockLevitator extends BlockMachine
 {
-	public BlockLevitator(int id)
+	public BlockLevitator()
 	{
-		super("levitator", id);
+		super("levitator");
 		this.setTextureName(Reference.PREFIX + "machine");
 	}
 

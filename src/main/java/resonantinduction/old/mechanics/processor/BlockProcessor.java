@@ -13,14 +13,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.mechanical.MechCommonProxy;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 import resonantinduction.old.lib.recipes.ProcessorType;
 import resonantinduction.old.transport.ResonantInductionTransport;
-import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockMachine;
 
 import com.builtbroken.common.Pair;
 
@@ -28,13 +27,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockProcessor extends BlockMachine
+public class BlockProcessor extends BlockMachine implements IExtraBlockInfo
 {
 
 	public BlockProcessor()
 	{
-		super(Settings.CONFIGURATION, "OreProcessor", UniversalElectricity.machine);
-		this.setCreativeTab(ResonantInductionTabs.tabIndustrial());
+		super("OreProcessor");
 	}
 
 	@Override
@@ -98,7 +96,6 @@ public class BlockProcessor extends BlockMachine
 	@Override
 	public void loadExtraConfigs(Configuration config)
 	{
-		super.loadExtraConfigs(config);
 		for (ProcessorData data : ProcessorData.values())
 		{
 			data.enabled = config.get(data.unlocalizedName, "Enabled", true).getBoolean(true);

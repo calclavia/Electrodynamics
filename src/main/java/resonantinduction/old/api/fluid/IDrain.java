@@ -2,9 +2,9 @@ package resonantinduction.old.api.fluid;
 
 import java.util.Set;
 
-import resonantinduction.old.lib.interfaces.IRotatable;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.old.lib.interfaces.IRotatable;
 import universalelectricity.api.vector.Vector3;
 
 /**

@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.events.MachineMiningEvent;
-import resonantinduction.old.lib.prefab.TileEntityEnergyMachine;
+import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.InvInteractionHelper;
 
@@ -66,7 +66,7 @@ public class TileApertureExcavator extends TileEntityEnergyMachine
 				Block block = Block.blocksList[target.getBlockID(this.worldObj)];
 				if (MachineMiningEvent.doMachineMiningCheck(this.worldObj, target, this))
 				{
-					List<ItemStack> items = MachineMiningEvent.getItemsMined(this.worldObj, target, this);
+					List<ItemStack> items = MachineMiningEvent.getItemsMined(this, target);
 					if (items != null)
 					{
 						for (ItemStack stack : items)

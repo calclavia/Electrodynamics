@@ -74,14 +74,6 @@ public class BlockRenderHelper implements ISimpleBlockRenderingHandler
 			GL11.glScalef(1.0F, -1F, -1F);
 			RenderFrackingPipe.model.renderAll();
 		}
-		else if (RecipeLoader.laserSentry != null && block.blockID == RecipeLoader.laserSentry.blockID)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderMiningLaser.TEXTURE);
-			GL11.glTranslatef(0, 1.7F, 0);
-			GL11.glScalef(1.0F, -1F, -1F);
-			GL11.glRotatef(180, 0, 1, 0);
-			RenderMiningLaser.model.renderAll();
-		}
 		GL11.glPopMatrix();
 	}
 

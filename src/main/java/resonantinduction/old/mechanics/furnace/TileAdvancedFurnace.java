@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.Settings;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyStorageHandler;
@@ -32,7 +33,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 {
 	private static final float WATTAGE = 5;
 
-	private EnergyStorageHandler energy = new EnergyStorageHandler(ResonantInduction.FURNACE_WATTAGE * 5);
+	private EnergyStorageHandler energy = new EnergyStorageHandler(Settings.FURNACE_WATTAGE * 5);
 
 	@Override
 	public void updateEntity()
@@ -53,7 +54,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 
 			if (this.furnaceBurnTime > 0)
 			{
-				this.energy.receiveEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+				this.energy.receiveEnergy(Settings.FURNACE_WATTAGE / 20, true);
 				this.furnaceBurnTime--;
 			}
 
@@ -70,7 +71,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 		 */
 		if (this.canSmelt())
 		{
-			if (this.energy.checkExtract(ResonantInduction.FURNACE_WATTAGE / 20))
+			if (this.energy.checkExtract(Settings.FURNACE_WATTAGE / 20))
 			{
 				this.furnaceCookTime++;
 
@@ -80,7 +81,7 @@ public class TileAdvancedFurnace extends TileEntityFurnace implements IEnergyInt
 					this.smeltItem();
 				}
 
-				this.energy.extractEnergy(ResonantInduction.FURNACE_WATTAGE / 20, true);
+				this.energy.extractEnergy(Settings.FURNACE_WATTAGE / 20, true);
 			}
 		}
 		else

@@ -1,12 +1,12 @@
 package resonantinduction.old.transport.crafting;
 
-import calclavia.lib.prefab.block.BlockMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

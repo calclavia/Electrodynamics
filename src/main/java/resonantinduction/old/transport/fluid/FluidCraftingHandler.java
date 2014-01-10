@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.old.transport.fluid.network.IFluidRecipeCrafter;
 import resonantinduction.old.transport.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
+import resonantinduction.old.transport.fluid.network.IFluidRecipeCrafter;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;

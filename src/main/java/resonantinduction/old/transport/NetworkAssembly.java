@@ -1,8 +1,8 @@
 package resonantinduction.old.transport;
 
-import resonatninduction.tilenetwork.INetworkPart;
-import resonatninduction.tilenetwork.prefab.NetworkSharedPower;
-import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
+import resonantinduction.core.tilenetwork.INetworkPart;
+import resonantinduction.core.tilenetwork.prefab.NetworkSharedPower;
+import resonantinduction.core.tilenetwork.prefab.NetworkUpdateHandler;
 
 public class NetworkAssembly extends NetworkSharedPower
 {

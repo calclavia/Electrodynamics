@@ -3,13 +3,13 @@ package resonantinduction.electrical;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import codechicken.lib.colour.ColourRGBA;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 import resonantinduction.core.prefab.ProxyBase;
 import resonantinduction.electrical.multimeter.ContainerMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import universalelectricity.api.vector.Vector3;
+import codechicken.lib.colour.ColourRGBA;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class CommonProxy extends ProxyBase
 {

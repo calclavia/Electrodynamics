@@ -1,24 +1,25 @@
 package resonantinduction.old.mechanics.machine.mining;
 
 import java.util.List;
+import java.util.Set;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.Settings;
+import net.minecraftforge.common.Configuration;
+import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.old.client.render.BlockRenderHelper;
-import calclavia.lib.prefab.block.BlockMachine;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 /** @author Archadia */
-public class BlockFrackingPipe extends BlockMachine
+public class BlockFrackingPipe extends BlockMachine implements IExtraBlockInfo
 {
 
 	public BlockFrackingPipe()
 	{
-		super(Settings.CONFIGURATION, "Fracking_Pipe", Material.wood);
+		super("Fracking_Pipe");
 	}
 
 	@Override
@@ -50,4 +51,32 @@ public class BlockFrackingPipe extends BlockMachine
 	{
 		return new TileFrackingPipe();
 	}
+
+    @Override
+    public boolean hasExtraConfigs()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void loadExtraConfigs(Configuration config)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void loadOreNames()
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

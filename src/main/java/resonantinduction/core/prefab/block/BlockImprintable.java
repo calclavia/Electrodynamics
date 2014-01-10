@@ -8,11 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import resonantinduction.old.api.IFilterable;
 import resonantinduction.old.transport.imprinter.ItemImprinter;
-import calclavia.lib.prefab.block.BlockMachine;
 
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 
@@ -22,7 +20,7 @@ public abstract class BlockImprintable extends BlockMachine
 
     public BlockImprintable(String blockName, Material material)
     {
-        super(Settings.getNextBlockID(),Settings.CONFIGURATION, blockName, material);
+        super(blockName, material);
     }
 
     /** Allows filters to be placed inside of this block. */

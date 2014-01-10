@@ -3,11 +3,11 @@ package resonantinduction.old.lib;
 import java.util.ArrayList;
 import java.util.List;
 
-import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
+import resonantinduction.old.lib.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 

@@ -7,9 +7,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.core.tilenetwork.INetworkPart;
+import resonantinduction.core.tilenetwork.prefab.NetworkUpdateHandler;
 import resonantinduction.old.api.fluid.INetworkPipe;
-import resonatninduction.tilenetwork.INetworkPart;
-import resonatninduction.tilenetwork.prefab.NetworkUpdateHandler;
 import calclavia.lib.utility.FluidHelper;
 
 /**

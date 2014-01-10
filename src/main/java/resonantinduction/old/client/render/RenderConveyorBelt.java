@@ -7,10 +7,10 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.belt.TileEntityConveyorBelt;
+import resonantinduction.mechanical.belt.TileEntityConveyorBelt.SlantType;
 import resonantinduction.old.client.model.ModelAngledBelt;
 import resonantinduction.old.client.model.ModelConveyorBelt;
-import resonantinduction.old.transport.belt.TileEntityConveyorBelt;
-import resonantinduction.old.transport.belt.TileEntityConveyorBelt.SlantType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -1,6 +1,5 @@
 package resonantinduction.old.transport.fluid.prefab;
 
-import resonantinduction.old.lib.helpers.ColorCode.IColorCoded;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
@@ -11,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.old.lib.helpers.ColorCode.IColorCoded;
 import calclavia.lib.utility.FluidHelper;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded

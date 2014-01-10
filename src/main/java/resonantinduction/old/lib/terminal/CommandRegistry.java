@@ -3,9 +3,9 @@ package resonantinduction.old.lib.terminal;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import resonantinduction.old.lib.interfaces.ITerminal;
 import resonantinduction.old.lib.interfaces.ITerminalCommand;
-import net.minecraft.entity.player.EntityPlayer;
 import calclavia.lib.access.GroupRegistry;
 
 public class CommandRegistry

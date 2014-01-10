@@ -1,9 +1,9 @@
 package resonantinduction.old.transport.crate;
 
-import resonantinduction.old.lib.prefab.invgui.InvChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import resonantinduction.old.lib.prefab.invgui.InvChest;
 
 public class InventoryCrate extends InvChest
 {

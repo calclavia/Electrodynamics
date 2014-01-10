@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockRotatableBase;
-import resonantinduction.old.mechanics.machine.grinder.TilePurifier;
+import resonantinduction.mechanical.grinder.TilePurifier;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
