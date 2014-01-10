@@ -3,9 +3,9 @@ package mffs;
 import java.io.File;
 
 import mffs.api.Blacklist;
-import net.minecraft.block.Block;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import calclavia.lib.prefab.block.IDManager;
 import cpw.mods.fml.common.Loader;
 
 /**
@@ -21,22 +21,16 @@ public class Settings
 	/**
 	 * Auto-incrementing configuration IDs. Use this to make sure no config ID is the same.
 	 */
-	public static final int BLOCK_ID_PREFIX = 1680;
-	public static final int ITEM_ID_PREFIX = 11130;
-
-	private static int NEXT_BLOCK_ID = BLOCK_ID_PREFIX;
-	private static int NEXT_ITEM_ID = ITEM_ID_PREFIX;
+	public static final IDManager idManager = new IDManager(1680, 11130);
 
 	public static int getNextBlockID()
 	{
-		NEXT_BLOCK_ID++;
-		return NEXT_BLOCK_ID;
+		return idManager.getNextBlockID();
 	}
 
 	public static int getNextItemID()
 	{
-		NEXT_ITEM_ID++;
-		return NEXT_ITEM_ID;
+		return idManager.getNextItemID();
 	}
 
 	/**
