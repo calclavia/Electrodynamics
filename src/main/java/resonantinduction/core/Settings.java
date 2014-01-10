@@ -3,10 +3,9 @@ package resonantinduction.core;
 import java.io.File;
 import java.util.Arrays;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
+import calclavia.lib.prefab.block.IDManager;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -15,46 +14,17 @@ import cpw.mods.fml.common.ModMetadata;
 /** @author Calclavia */
 public class Settings
 {
-	/** Auto ID Management */
-	/** Block ID by Jyzarc */
-	private static final int BLOCK_ID_PREFIX = 3200;
-	/** Item ID by Horfius */
-	private static final int ITEM_ID_PREFIX = 20150;
-
-	private static int NEXT_BLOCK_ID = BLOCK_ID_PREFIX;
-	private static int NEXT_ITEM_ID = ITEM_ID_PREFIX;
+	/** IDs suggested by Jyzarc and Horfius */
+	public static final IDManager idManager = new IDManager(3200, 20150);
 
 	public static int getNextBlockID()
 	{
-		int id = NEXT_BLOCK_ID;
-
-		while (id > 255 && id < (Block.blocksList.length - 1))
-		{
-			Block block = Block.blocksList[id];
-			if (block == null)
-			{
-				break;
-			}
-			id++;
-		}
-		NEXT_BLOCK_ID = id + 1;
-		return id;
+		return idManager.getNextBlockID();
 	}
 
 	public static int getNextItemID()
 	{
-		int id = NEXT_ITEM_ID;
-		while (id > 255 && id < (Item.itemsList.length - 1))
-		{
-			Item item = Item.itemsList[id];
-			if (item == null)
-			{
-				break;
-			}
-			id++;
-		}
-		NEXT_ITEM_ID = id + 1;
-		return id;
+		return idManager.getNextItemID();
 	}
 
 	/** Settings */
@@ -81,10 +51,10 @@ public class Settings
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 		REPLACE_FURNACE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Replace vanilla furnace", REPLACE_FURNACE).getBoolean(REPLACE_FURNACE);
 
-		Settings.LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
-		Settings.LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
-		Settings.LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
-		Settings.LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
+		LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
+		LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
+		LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
+		LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
 	}
 
 	public static void save()
