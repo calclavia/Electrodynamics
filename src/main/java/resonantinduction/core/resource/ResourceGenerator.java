@@ -104,9 +104,7 @@ public class ResourceGenerator
 
 					if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
 					{
-						iconString = iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) + ".png" : "minecraft:" + Reference.ITEM_TEXTURE_DIRECTORY + iconString;
-						System.out.println("LOAD:" + iconString);
-						System.out.println(iconString);
+						iconString = (iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) : Reference.ITEM_TEXTURE_DIRECTORY + iconString) + ".png";
 						ResourceLocation textureLocation = new ResourceLocation(iconString);
 
 						InputStream inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
@@ -140,7 +138,7 @@ public class ResourceGenerator
 				totalR /= colorCount;
 				totalG /= colorCount;
 				totalB /= colorCount;
-				int resultantColor = new Color(totalR, totalG, totalB).getRGB();
+				int resultantColor = new Color(totalR, totalG, totalB).brighter().getRGB();
 				materialColors.put(ingotName, resultantColor);
 			}
 
