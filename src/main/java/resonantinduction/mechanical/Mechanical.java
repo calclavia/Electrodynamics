@@ -64,6 +64,7 @@ public class Mechanical
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
+	    Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 
@@ -72,6 +73,7 @@ public class Mechanical
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 		proxy.preInit();
+		Settings.save();
 	}
 
 	@EventHandler

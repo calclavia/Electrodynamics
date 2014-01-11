@@ -105,7 +105,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
-		
+		Settings.save();
 	}
 
 	@EventHandler
@@ -122,7 +122,7 @@ public class ResonantInduction
 	{
 		// Generate Dusts
 		ResourceGenerator.generateDusts();
-		Settings.save();
+		
 	}
 
 }
