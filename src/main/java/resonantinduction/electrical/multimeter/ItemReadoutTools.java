@@ -14,6 +14,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.IReadOut;
+import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
@@ -31,8 +33,6 @@ import calclavia.lib.utility.FluidHelper;
 import cofh.api.energy.IEnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.interfaces.IReadOut;
-import dark.lib.interfaces.IReadOut.EnumTools;
 
 public class ItemReadoutTools extends ItemBase
 {

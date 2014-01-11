@@ -64,34 +64,38 @@ public class TilePipe extends TileFluidNetworkTile implements IColorCoded, INetw
 				{
 					this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
 					connectedBlocks.add(tileEntity);
-					this.renderConnection[side.ordinal()] = true;
-				}// Wood and stone pipes can connect to each other but not other pipe types since
-					// they are more like a trough than a pipe
+					setRenderSide(side, true);
+				}
 				else if ((pipeMat == FluidContainerMaterial.WOOD || pipeMat == FluidContainerMaterial.STONE) && (pipeMatOther == FluidContainerMaterial.WOOD || pipeMatOther == FluidContainerMaterial.STONE))
 				{
+					// Wood and stone pipes can connect to each other but not other pipe types since
+					// they are more like a trough than a pipe
 					this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
 					connectedBlocks.add(tileEntity);
-					this.renderConnection[side.ordinal()] = true;
-				}// Any other pipe can connect to each other as long as the color matches except for
-					// glass which only works with itself at the moment
+					setRenderSide(side, true);
+				}
 				else if (pipeMat != FluidContainerMaterial.WOOD && pipeMat != FluidContainerMaterial.STONE && pipeMatOther != FluidContainerMaterial.WOOD && pipeMatOther != FluidContainerMaterial.STONE && pipeMat != FluidContainerMaterial.GLASS && pipeMatOther != FluidContainerMaterial.GLASS)
 				{
+					/*
+					 * Any other pipe can connect to each other as long as the color matches except
+					 * for glass which only works with itself at the moment
+					 */
 					this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
 					connectedBlocks.add(tileEntity);
-					this.renderConnection[side.ordinal()] = true;
+					setRenderSide(side, true);
 				}
 			}
 		}
 		else if (tileEntity instanceof IFluidHandler)
 		{
 			connectedBlocks.add(tileEntity);
-			this.renderConnection[side.ordinal()] = true;
+			setRenderSide(side, true);
 			this.getTileNetwork().addTank(side.getOpposite(), (IFluidHandler) tileEntity);
 		}
 		else if (tileEntity instanceof ITileConnector && ((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
 		{
 			connectedBlocks.add(tileEntity);
-			this.renderConnection[side.ordinal()] = true;
+			setRenderSide(side, true);
 		}
 
 	}

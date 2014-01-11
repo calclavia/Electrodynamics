@@ -1,4 +1,4 @@
-package dark.lib.interfaces;
+package resonantinduction.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.ForgeDirection;

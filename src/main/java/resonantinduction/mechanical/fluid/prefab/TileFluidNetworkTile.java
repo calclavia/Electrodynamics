@@ -17,9 +17,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-
-import org.bouncycastle.util.Arrays;
-
 import resonantinduction.api.fluid.FluidMasterList;
 import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.core.ResonantInduction;
@@ -34,7 +31,6 @@ import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -57,7 +53,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	public static final int PACKET_TANK = Mechanical.contentRegistry.getNextPacketID();
 
 	/** Bitmask **/
-	private byte renderSides = 0b0;
+	public byte renderSides = 0b0;
 
 	public TileFluidNetworkTile()
 	{
@@ -234,6 +230,11 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 		}
 	}
 
+	public boolean canRenderSide(ForgeDirection direction)
+	{
+		return (renderSides & (1 << direction.ordinal())) != 0;
+	}
+
 	@Override
 	public NetworkFluidTiles getTileNetwork()
 	{
@@ -396,30 +397,26 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 		{
 			if (this.worldObj.isRemote)
 			{
-				switch (data.readInt())
+				int readInt = data.readInt();
+
+				if (readInt == PACKET_DESCRIPTION)
 				{
-					case PACKET_DESCRIPTION:
-					{
-						this.subID = data.readInt();
-						this.renderSides = data.readByte();
-						this.tank = new FluidTank(data.readInt());
-						this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-						this.internalTanksInfo[0] = this.getTank().getInfo();
-						break;
-					}
-					case PACKET_RENDER:
-					{
-						this.subID = data.readInt();
-						this.renderSides = data.readByte();
-						break;
-					}
-					case PACKET_TANK:
-					{
-						this.tank = new FluidTank(data.readInt());
-						this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-						this.internalTanksInfo[0] = this.getTank().getInfo();
-						break;
-					}
+					this.subID = data.readInt();
+					this.renderSides = data.readByte();
+					this.tank = new FluidTank(data.readInt());
+					this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+					this.internalTanksInfo[0] = this.getTank().getInfo();
+				}
+				else if (readInt == PACKET_RENDER)
+				{
+					this.subID = data.readInt();
+					this.renderSides = data.readByte();
+				}
+				else if (readInt == PACKET_TANK)
+				{
+					this.tank = new FluidTank(data.readInt());
+					this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+					this.internalTanksInfo[0] = this.getTank().getInfo();
 				}
 			}
 		}
@@ -461,13 +458,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	{
 		if (tool == EnumTools.PIPE_GUAGE)
 		{
-			String out = "Debug: " + this.getTileNetwork().toString();
-			out += "   ";
-			for (boolean b : this.renderConnection)
-			{
-				out += "|" + (b ? "T" : "F");
-			}
-			return out + "   Vol: " + this.getTileNetwork().getNetworkTank().getFluidAmount();
+			return "Volume: " + this.getTileNetwork().getNetworkTank().getFluidAmount();
 		}
 		return null;
 	}
@@ -487,6 +478,11 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	public void setSubID(int id)
 	{
 		this.subID = id;
+	}
+
+	public static boolean canRenderSide(byte renderSides, ForgeDirection direction)
+	{
+		return (renderSides & (1 << direction.ordinal())) != 0;
 	}
 
 }

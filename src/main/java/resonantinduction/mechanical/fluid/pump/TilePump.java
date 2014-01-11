@@ -10,6 +10,8 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.IReadOut;
+import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;
@@ -17,8 +19,6 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
-
-import dark.lib.interfaces.IReadOut;
 
 public class TilePump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
 {

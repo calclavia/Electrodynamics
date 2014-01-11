@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.render.RenderFluidHelper;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.old.client.model.ModelTankSide;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,10 +30,11 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
 	{
-		boolean[] render = new boolean[6];
+		byte renderSudes = 0;
+
 		if (tileEntity instanceof TileTank)
 		{
-			render = ((TileTank) tileEntity).renderConnection;
+			renderSudes = ((TileTank) tileEntity).renderSides;
 		}
 		if (liquid != null && liquid.amount > 100)
 		{
@@ -57,16 +59,18 @@ public class RenderTank extends TileEntitySpecialRenderer
 			GL11.glPopMatrix();
 		}
 
-		boolean bot = render[1];
-		boolean top = render[0];
-		boolean north = render[2];
-		boolean south = render[3];
-		boolean east = render[5];
-		boolean west = render[4];
+		boolean bot = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(1));
+		boolean top = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(0));
+		boolean north = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(2));
+		boolean south = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(3));
+		boolean east = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(5));
+		boolean west = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(4));
+
 		for (int i = 0; i < 4; i++)
 		{
 			ForgeDirection dir = ForgeDirection.getOrientation(i + 2);
-			if (!render[dir.getOpposite().ordinal()])
+
+			if (!TileFluidNetworkTile.canRenderSide(renderSudes, dir.getOpposite()))
 			{
 				GL11.glPushMatrix();
 
@@ -74,6 +78,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 				GL11.glScalef(1.0F, -1F, -1F);
 				boolean left = false;
 				boolean right = false;
+
 				switch (dir)
 				{
 					case NORTH:
@@ -97,6 +102,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 						right = south;
 						break;
 				}
+
 				bindTexture(RenderTank.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
 				MODEL.render(0.0625F, left, right, top, bot);
 				GL11.glPopMatrix();
