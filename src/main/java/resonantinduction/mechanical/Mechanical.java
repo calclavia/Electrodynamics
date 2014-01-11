@@ -57,6 +57,7 @@ public class Mechanical
 	// #Fluids
 	public static Block blockTank;
 	public static Block blockPipe;
+	public static Block blockReleaseValve;
 	public static Block blockGrate;
 	public static Block blockPump;
 
