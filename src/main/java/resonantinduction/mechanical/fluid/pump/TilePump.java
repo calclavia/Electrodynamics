@@ -20,7 +20,7 @@ import com.builtbroken.common.Pair;
 
 import dark.lib.interfaces.IReadOut;
 
-public class TileEntityStarterPump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
+public class TilePump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
 {
 	private int currentWorldEdits, MAX_WORLD_EDITS_PER_PROCESS;
 
@@ -31,7 +31,7 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IR
 
 	public int rotation = 0;
 
-	public TileEntityStarterPump()
+	public TilePump()
 	{
 		this(10, 50, 5);
 	}
@@ -41,7 +41,7 @@ public class TileEntityStarterPump extends TileEntityEnergyMachine implements IR
 	 * @param wattDrain - cost in watts to drain or fill one block
 	 * @param maxEdits - max world edits per update (1/2 second)
 	 */
-	public TileEntityStarterPump(long wattTick, long wattDrain, int maxEdits)
+	public TilePump(long wattTick, long wattDrain, int maxEdits)
 	{
 		// Power calculation for max power (worldEdits * watts per edit) + (watts per tick * one
 		// second)

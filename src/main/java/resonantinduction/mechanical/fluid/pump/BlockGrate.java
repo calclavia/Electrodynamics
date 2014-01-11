@@ -124,12 +124,4 @@ public class BlockGrate extends BlockRI
 		}
 		return true;
 	}
-
-	@Override
-	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-	{
-		list.add(new Pair<String, Class<? extends TileEntity>>("FluidDrain", TileGrate.class));
-
-	}
-
 }

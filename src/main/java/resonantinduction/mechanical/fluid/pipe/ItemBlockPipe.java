@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.old.core.recipe.RecipeLoader;
@@ -21,7 +22,6 @@ import universalelectricity.api.vector.Vector3;
 
 public class ItemBlockPipe extends ItemBlock
 {
-
 	public ItemBlockPipe(int id)
 	{
 		super(id);
@@ -32,7 +32,7 @@ public class ItemBlockPipe extends ItemBlock
 	@Override
 	public int getMetadata(int damage)
 	{
-		return 0;
+		return damage;
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class ItemBlockPipe extends ItemBlock
 		TileEntity entity = vec.getTileEntity(world);
 		if (entity instanceof TileTank && ((TileTank) entity).getTankInfo() != null && ((TileTank) entity).getTankInfo()[0] != null)
 		{
-			ItemStack itemStack = new ItemStack(RecipeLoader.blockTank);
+			ItemStack itemStack = new ItemStack(Mechanical.blockTank);
 			FluidStack stack = ((TileTank) entity).getTankInfo()[0].fluid;
 
 			if (itemStack.getTagCompound() == null)

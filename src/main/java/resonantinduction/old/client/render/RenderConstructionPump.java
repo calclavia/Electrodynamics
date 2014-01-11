@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.pump.TileEntityConstructionPump;
+import resonantinduction.mechanical.fluid.pump.TileConstructionPump;
 import resonantinduction.old.client.model.ModelConstructionPump;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -48,7 +48,7 @@ public class RenderConstructionPump extends TileEntitySpecialRenderer
 				break;
 		}
 		model.render(0.0625F);
-		if (tileEntity instanceof TileEntityConstructionPump)
+		if (tileEntity instanceof TileConstructionPump)
 		{
 			// TODO animation life
 		}

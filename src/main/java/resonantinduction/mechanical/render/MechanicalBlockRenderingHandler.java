@@ -10,12 +10,14 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
+import resonantinduction.mechanical.fluid.pump.RenderPump;
 import resonantinduction.mechanical.fluid.tank.RenderTank;
 import resonantinduction.old.client.model.ModelConveyorBelt;
 import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
 import resonantinduction.old.client.model.ModelManipulator;
 import resonantinduction.old.client.model.ModelRejectorPiston;
+import resonantinduction.old.client.render.RenderFrackingPipe;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.hopper.BlockAdvancedHopper;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -59,13 +61,22 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 		else if (block == Mechanical.blockPipe)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslatef(0.0F, 1.3F, 0.0F);
+			GL11.glTranslatef(0.0F, 1F, 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(metadata));
 			RenderPipe.MODEL_PIPE.renderFront();
 			RenderPipe.MODEL_PIPE.renderMiddle();
 			RenderPipe.MODEL_PIPE.renderBack();
 			GL11.glPopMatrix();
+		}
+		else if (Mechanical.blockPump != null)
+		{
+			GL11.glTranslatef(0.0F, 1.3F, 0.0F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
+
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPump.TEXTURE);
+			RenderPump.MODEL.render(0.0725F);
+			RenderPump.MODEL.renderMotion(0.0725F, 0);
 		}
 		else if (RecipeLoader.blockRejector != null && block.blockID == RecipeLoader.blockRejector.blockID)
 		{
@@ -88,6 +99,57 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 			modelInjector.render(0.0625F, true, 0);
 			GL11.glPopMatrix();
 		}
+
+		/*
+		 * if (RecipeLoader.blockPumpMachine != null && block.blockID ==
+		 * RecipeLoader.blockPumpMachine.blockID && metadata < 4)
+		 * {
+		 * GL11.glTranslatef(0.0F, 1.1F, 0.0F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pumps/WaterPump.png"));
+		 * modelPump.render(0.0725F);
+		 * modelPump.renderMotion(0.0725F, 0);
+		 * }
+		 * else if (RecipeLoader.blockSink != null && block.blockID ==
+		 * RecipeLoader.blockSink.blockID)
+		 * {
+		 * GL11.glTranslatef(0.0F, .8F, 0.0F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "Sink.png"));
+		 * sink.render(0.0565F);
+		 * }
+		 * else if (RecipeLoader.blockRod != null && block.blockID == RecipeLoader.blockRod.blockID)
+		 * {
+		 * GL11.glTranslatef(0.0F, 1.5F, 0.0F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY +
+		 * "mechanical/GearRod.png"));
+		 * modelRod.render(0.0825F, 0);
+		 * }
+		 * else if (RecipeLoader.blockConPump != null && block.blockID ==
+		 * RecipeLoader.blockConPump.blockID && metadata < 4)
+		 * {
+		 * GL11.glTranslatef(0.0F, 1.2F, 0.0F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "ConstructionPump.png"));
+		 * conPump.render(0.0725F);
+		 * conPump.renderMotor(0.0725F);
+		 * }
+		 * else if (RecipeLoader.frackingPipe != null && block.blockID ==
+		 * RecipeLoader.frackingPipe.blockID)
+		 * {
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderFrackingPipe.TEXTURE
+		 * );
+		 * GL11.glTranslatef(0, 1F, 0);
+		 * GL11.glScalef(1.0F, -1F, -1F);
+		 * RenderFrackingPipe.model.renderAll();
+		 * }
+		 * GL11.glPopMatrix();
+		 */
 		/*
 		 * else if (RecipeLoader.blockArmbot != null && block.blockID ==
 		 * RecipeLoader.blockArmbot.blockID)

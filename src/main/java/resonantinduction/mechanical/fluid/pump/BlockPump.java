@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.BlockRenderHelper;
 import resonantinduction.old.core.recipe.RecipeLoader;
 
@@ -20,9 +22,9 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPumpMachine extends BlockRI
+public class BlockPump extends BlockRI
 {
-	public BlockPumpMachine()
+	public BlockPump()
 	{
 		super("pump", Material.iron);
 		this.setHardness(1f);
@@ -46,7 +48,7 @@ public class BlockPumpMachine extends BlockRI
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return BlockRenderHelper.renderID;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class BlockPumpMachine extends BlockRI
 
 		if (meta < 4)
 		{
-			return new ItemStack(RecipeLoader.blockPumpMachine, 1, 0);
+			return new ItemStack(Mechanical.blockPump, 1, 0);
 		}
 
 		return null;
@@ -78,19 +80,12 @@ public class BlockPumpMachine extends BlockRI
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityStarterPump();
+		return new TilePump();
 	}
 
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
 		par3List.add(new ItemStack(par1, 1, 0));
-	}
-
-	@Override
-	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-	{
-		list.add(new Pair<String, Class<? extends TileEntity>>("starterPump", TileEntityStarterPump.class));
-
 	}
 }

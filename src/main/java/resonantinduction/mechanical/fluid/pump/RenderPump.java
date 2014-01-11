@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.mechanical.fluid.pump;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -7,7 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.pump.TileEntityStarterPump;
 import resonantinduction.old.client.model.ModelPump;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,19 +14,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPump extends TileEntitySpecialRenderer
 {
-	int type = 0;
-	private ModelPump model;
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pumps/WaterPump.png");
-
-	public RenderPump()
-	{
-		model = new ModelPump();
-	}
+	public static final ModelPump MODEL = new ModelPump();
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pump.png");
 
 	@Override
-	public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
+	public void renderTileEntityAt(TileEntity t, double d, double d1, double d2, float f)
 	{
-		int meta = te.worldObj.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
+		int meta = t.worldObj.getBlockMetadata(t.xCoord, t.yCoord, t.zCoord);
 
 		bindTexture(TEXTURE);
 		GL11.glPushMatrix();
@@ -48,11 +41,13 @@ public class RenderPump extends TileEntitySpecialRenderer
 				GL11.glRotatef(270f, 0f, 1f, 0f);
 				break;
 		}
-		model.render(0.0625F);
-		if (te instanceof TileEntityStarterPump)
+		MODEL.render(0.0625F);
+
+		if (t instanceof TilePump)
 		{
-			model.renderMotion(0.0625F, ((TileEntityStarterPump) te).rotation);
+			MODEL.renderMotion(0.0625F, ((TilePump) t).rotation);
 		}
+
 		GL11.glPopMatrix();
 
 	}

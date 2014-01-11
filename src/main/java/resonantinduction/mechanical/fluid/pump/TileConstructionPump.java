@@ -24,7 +24,7 @@ import universalelectricity.api.vector.VectorHelper;
 
 import com.builtbroken.common.Pair;
 
-public class TileEntityConstructionPump extends TileEntityStarterPump implements IFluidHandler, ITileConnector
+public class TileConstructionPump extends TilePump implements IFluidHandler, ITileConnector
 {
 	/* LIQUID FLOW CONNECTION SIDES */
 	/** Internal tank for interaction but not real storage */
@@ -32,7 +32,7 @@ public class TileEntityConstructionPump extends TileEntityStarterPump implements
 
 	List<IDrain> drainsUsed = new ArrayList<IDrain>();
 
-	public TileEntityConstructionPump()
+	public TileConstructionPump()
 	{
 		super(50, 50, 30);
 	}
