@@ -1,4 +1,4 @@
-package resonantinduction.electrical.armbot.command;
+package resonantinduction.electrical.armbot.task;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;

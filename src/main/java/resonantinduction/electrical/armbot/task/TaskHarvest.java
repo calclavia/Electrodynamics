@@ -1,4 +1,4 @@
-package resonantinduction.electrical.armbot.command;
+package resonantinduction.electrical.armbot.task;
 
 /**
  * Used by arms to break a specific block in a position.

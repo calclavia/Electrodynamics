@@ -65,10 +65,10 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEntityArmbot)
+		if (tileEntity instanceof TileArmbot)
 		{
-			((TileEntityArmbot) tileEntity).dropHeldObject();
-			ResonantInduction.blockMulti.destroyMultiBlockStructure((TileEntityArmbot) tileEntity);
+			((TileArmbot) tileEntity).dropHeldObject();
+			ResonantInduction.blockMulti.destroyMultiBlockStructure((TileArmbot) tileEntity);
 		}
 		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 		super.breakBlock(world, x, y, z, par5, par6);
@@ -89,20 +89,20 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	@Override
 	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
 	{
-		list.add(new Pair("ALArmbot", TileEntityArmbot.class));
+		list.add(new Pair("ALArmbot", TileArmbot.class));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
 	{
-		list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityArmbot.class, new RenderArmbot()));
+		list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileArmbot.class, new RenderArmbot()));
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEntityArmbot();
+		return new TileArmbot();
 	}
 
 	@SideOnly(Side.CLIENT)

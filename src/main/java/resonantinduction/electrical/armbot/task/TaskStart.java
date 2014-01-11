@@ -1,4 +1,4 @@
-package resonantinduction.electrical.armbot.command;
+package resonantinduction.electrical.armbot.task;
 
 import resonantinduction.electrical.armbot.TaskBase;
 

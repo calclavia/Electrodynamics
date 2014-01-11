@@ -13,11 +13,11 @@ import resonantinduction.api.IArmbot;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileAssembly;
 import resonantinduction.electrical.Electrical;
-import resonantinduction.electrical.armbot.command.TaskDrop;
-import resonantinduction.electrical.armbot.command.TaskGOTO;
-import resonantinduction.electrical.armbot.command.TaskGrabItem;
-import resonantinduction.electrical.armbot.command.TaskReturn;
-import resonantinduction.electrical.armbot.command.TaskRotateTo;
+import resonantinduction.electrical.armbot.task.TaskDrop;
+import resonantinduction.electrical.armbot.task.TaskGOTO;
+import resonantinduction.electrical.armbot.task.TaskGrabItem;
+import resonantinduction.electrical.armbot.task.TaskReturn;
+import resonantinduction.electrical.armbot.task.TaskRotateTo;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import resonantinduction.mechanical.encoder.ItemDisk;
@@ -37,7 +37,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityArmbot extends TileAssembly implements IMultiBlock, IArmbot, IBlockActivate
+public class TileArmbot extends TileAssembly implements IMultiBlock, IArmbot, IBlockActivate
 {
 	protected int ROTATION_SPEED = 6;
 
@@ -58,7 +58,7 @@ public class TileEntityArmbot extends TileAssembly implements IMultiBlock, IArmb
 	/** Var used by the armbot renderer */
 	public EntityItem renderEntityItem;
 
-	public TileEntityArmbot()
+	public TileArmbot()
 	{
 		super(20);
 		programHelper = new ProgramHelper(this).setMemoryLimit(20);

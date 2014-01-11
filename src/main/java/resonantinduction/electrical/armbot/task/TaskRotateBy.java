@@ -1,4 +1,4 @@
-package resonantinduction.electrical.armbot.command;
+package resonantinduction.electrical.armbot.task;
 
 import java.util.List;
 
@@ -13,30 +13,28 @@ import calclavia.lib.utility.MathUtility;
 import com.builtbroken.common.science.units.UnitHelper;
 
 /**
- * Rotates the armbot to a specific direction.
+ * Rotates an armbot by a set amount
  * 
  * @author DarkGuardsman
  */
-public class TaskRotateTo extends TaskBaseArmbot
+public class TaskRotateBy extends TaskBaseArmbot
 {
-	int targetRotationYaw = 0, targetRotationPitch = 0;
 
-	public TaskRotateTo()
-	{
-		this(0, 0);
-	}
+	int targetRotationYaw = 0, targetRotationPitch = 0, deltaPitch = 0, deltaYaw = 0;
 
-	public TaskRotateTo(int yaw, int pitch)
-	{
-		this("RotateTo", yaw, pitch);
-	}
+	private TaskRotateTo rotateToCommand;
 
-	public TaskRotateTo(String string, int yaw, int pitch)
+	public TaskRotateBy(int yaw, int pitch)
 	{
-		super(string);
+		super("RotateBy");
 		this.args.add(new ArgumentIntData("yaw", yaw, 360, 0));
 		this.args.add(new ArgumentIntData("pitch", pitch, 360, 0));
-		this.UV = new Vector2(100, 80);
+		this.UV = new Vector2(80, 80);
+	}
+
+	public TaskRotateBy()
+	{
+		this(0, 0);
 	}
 
 	@Override
@@ -44,8 +42,8 @@ public class TaskRotateTo extends TaskBaseArmbot
 	{
 		if (super.onMethodCalled() == ProcessReturn.CONTINUE)
 		{
-			this.targetRotationYaw = (int) MathUtility.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("yaw")));
-			this.targetRotationPitch = (int) MathUtility.clampAngleTo360(UnitHelper.tryToParseInt(this.getArg("pitch")));
+			this.targetRotationYaw = (int) MathUtility.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("yaw"))));
+			this.targetRotationPitch = (int) MathUtility.clampAngleTo360((float) (((IArmbot) this.program.getMachine()).getRotation().x + UnitHelper.tryToParseInt(this.getArg("pitch"))));
 			return ProcessReturn.CONTINUE;
 		}
 		return ProcessReturn.GENERAL_ERROR;
@@ -54,12 +52,32 @@ public class TaskRotateTo extends TaskBaseArmbot
 	@Override
 	public ProcessReturn onUpdate()
 	{
-		if (super.onUpdate() == ProcessReturn.CONTINUE)
+		if (this.rotateToCommand == null)
 		{
-			((IArmbot) this.program.getMachine()).moveArmTo(this.targetRotationYaw, this.targetRotationPitch);
-			return ((IArmbot) this.program.getMachine()).getRotation().intX() != this.targetRotationYaw || ((IArmbot) this.program.getMachine()).getRotation().intY() != this.targetRotationPitch ? ProcessReturn.CONTINUE : ProcessReturn.DONE;
+			this.rotateToCommand = new TaskRotateTo(this.targetRotationYaw, this.targetRotationPitch);
+			this.rotateToCommand.setProgram(this.program);
+			this.rotateToCommand.onMethodCalled();
 		}
-		return ProcessReturn.GENERAL_ERROR;
+
+		return this.rotateToCommand.onUpdate();
+	}
+
+	@Override
+	public void load(NBTTagCompound taskCompound)
+	{
+		super.loadProgress(taskCompound);
+		this.targetRotationPitch = taskCompound.getInteger("rotPitch");
+		this.targetRotationYaw = taskCompound.getInteger("rotYaw");
+
+	}
+
+	@Override
+	public void save(NBTTagCompound taskCompound)
+	{
+		super.saveProgress(taskCompound);
+		taskCompound.setInteger("rotPitch", this.targetRotationPitch);
+		taskCompound.setInteger("rotYaw", this.targetRotationYaw);
+
 	}
 
 	@Override
@@ -69,25 +87,9 @@ public class TaskRotateTo extends TaskBaseArmbot
 	}
 
 	@Override
-	public void load(NBTTagCompound taskCompound)
-	{
-		super.load(taskCompound);
-		this.targetRotationPitch = taskCompound.getInteger("rotPitch");
-		this.targetRotationYaw = taskCompound.getInteger("rotYaw");
-	}
-
-	@Override
-	public void save(NBTTagCompound taskCompound)
-	{
-		super.save(taskCompound);
-		taskCompound.setInteger("rotPitch", this.targetRotationPitch);
-		taskCompound.setInteger("rotYaw", this.targetRotationYaw);
-	}
-
-	@Override
 	public TaskBaseProcess clone()
 	{
-		return new TaskRotateTo();
+		return new TaskRotateBy();
 	}
 
 	@Override

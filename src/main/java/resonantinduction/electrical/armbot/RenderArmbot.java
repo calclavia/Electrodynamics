@@ -30,9 +30,9 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
 	{
-		if (tileEntity instanceof TileEntityArmbot)
+		if (tileEntity instanceof TileArmbot)
 		{
-			String cmdText = ((TileEntityArmbot) tileEntity).getCommandDisplayText();
+			String cmdText = ((TileArmbot) tileEntity).getCommandDisplayText();
 			if (cmdText != null && !cmdText.isEmpty())
 			{
 				EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -53,11 +53,11 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);
 
-			MODEL.render(0.0625f, (float) ((TileEntityArmbot) tileEntity).getRotation().x, (float) ((TileEntityArmbot) tileEntity).getRotation().y);
+			MODEL.render(0.0625f, (float) ((TileArmbot) tileEntity).getRotation().x, (float) ((TileArmbot) tileEntity).getRotation().y);
 
 			GL11.glPopMatrix();
 
-			Vector3 handPosition = ((TileEntityArmbot) tileEntity).getDeltaHandPosition();
+			Vector3 handPosition = ((TileArmbot) tileEntity).getDeltaHandPosition();
 			handPosition.add(0.5);
 			handPosition.add(new Vector3(x, y, z));
 			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
@@ -65,18 +65,18 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 
 			// Items don't move right, so we render them manually. Client side this can only be one
 			// object so the bot should return its preferred render item client side
-			if (((TileEntityArmbot) tileEntity).getHeldObject() instanceof ItemStack)
+			if (((TileArmbot) tileEntity).getHeldObject() instanceof ItemStack)
 			{
-				ItemStack itemStack = (ItemStack) ((TileEntityArmbot) tileEntity).getHeldObject();
-				if (((TileEntityArmbot) tileEntity).renderEntityItem == null)
+				ItemStack itemStack = (ItemStack) ((TileArmbot) tileEntity).getHeldObject();
+				if (((TileArmbot) tileEntity).renderEntityItem == null)
 				{
-					((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
+					((TileArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
 				}
-				else if (!itemStack.isItemEqual(((TileEntityArmbot) tileEntity).renderEntityItem.getEntityItem()))
+				else if (!itemStack.isItemEqual(((TileArmbot) tileEntity).renderEntityItem.getEntityItem()))
 				{
-					((TileEntityArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
+					((TileArmbot) tileEntity).renderEntityItem = new EntityItem(tileEntity.worldObj, 0, 0, 0, itemStack);
 				}
-				renderItem.doRenderItem(((TileEntityArmbot) tileEntity).renderEntityItem, handPosition.x, handPosition.y, handPosition.z, 0, f);
+				renderItem.doRenderItem(((TileArmbot) tileEntity).renderEntityItem, handPosition.x, handPosition.y, handPosition.z, 0, f);
 			}
 		}
 	}

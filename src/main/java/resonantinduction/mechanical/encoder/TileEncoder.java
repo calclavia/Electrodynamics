@@ -10,7 +10,7 @@ import net.minecraft.network.packet.Packet;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileEntityMachine;
 import resonantinduction.electrical.armbot.Program;
-import resonantinduction.electrical.armbot.command.TaskRotateTo;
+import resonantinduction.electrical.armbot.task.TaskRotateTo;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.TaskRegistry;
