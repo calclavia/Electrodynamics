@@ -5,7 +5,7 @@ import java.io.File;
 import mffs.api.Blacklist;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
-import calclavia.lib.prefab.block.IDManager;
+import calclavia.lib.content.IDManager;
 import cpw.mods.fml.common.Loader;
 
 /**
