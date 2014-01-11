@@ -89,7 +89,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 
 			if (confiscationCount > 0 && entityLiving instanceof EntityPlayer)
 			{
-				((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replace("%p", "" + confiscationCount));
+				((EntityPlayer) entityLiving).addChatMessage("[" + interdictionMatrix.getInvName() + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("%p", "" + confiscationCount));
 			}
 
 			interdictionMatrix.requestFortron(confiscationCount, true);
