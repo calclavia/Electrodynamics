@@ -23,12 +23,13 @@ import org.bouncycastle.util.Arrays;
 import resonantinduction.api.fluid.FluidMasterList;
 import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.network.ISimplePacketReceiver;
 import resonantinduction.core.tilenetwork.INetworkPart;
 import resonantinduction.core.tilenetwork.ITileNetwork;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.NetworkFluidTiles;
 import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -37,21 +38,26 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class TileFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
+public abstract class TileFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, IPacketReceiver
 {
 	private int updateTick = 1;
 	public static int refreshRate = 10;
 	protected FluidTank tank;
 	protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
 	protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
-	public boolean[] renderConnection = new boolean[6];
 	protected int heat = 0, maxHeat = 20000;
 	protected int damage = 0, maxDamage = 1000;
 	protected int subID = 0;
 	protected int tankCap;
 	protected FluidStack prevStack = null;
-
 	protected NetworkFluidTiles network;
+
+	public static final int PACKET_DESCRIPTION = Mechanical.contentRegistry.getNextPacketID();
+	public static final int PACKET_RENDER = Mechanical.contentRegistry.getNextPacketID();
+	public static final int PACKET_TANK = Mechanical.contentRegistry.getNextPacketID();
+
+	/** Bitmask **/
+	private byte renderSides = 0b0;
 
 	public TileFluidNetworkTile()
 	{
@@ -175,9 +181,9 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	{
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
-			boolean[] previousConnections = this.renderConnection.clone();
+			byte previousConnections = renderSides;
 			this.connectedBlocks.clear();
-			this.renderConnection = new boolean[6];
+			this.renderSides = 0;
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
@@ -185,7 +191,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 
 			}
 			/** Only send packet updates if visuallyConnected changed. */
-			if (!Arrays.areEqual(previousConnections, this.renderConnection))
+			if (previousConnections == renderSides)
 			{
 				this.sendRenderUpdate();
 			}
@@ -208,10 +214,23 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 				if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
 				{
 					this.getTileNetwork().mergeNetwork(((INetworkFluidPart) tileEntity).getTileNetwork(), (INetworkPart) tileEntity);
-					this.renderConnection[side.ordinal()] = true;
+					this.setRenderSide(side, true);
 					connectedBlocks.add(tileEntity);
 				}
 			}
+		}
+	}
+
+	public void setRenderSide(ForgeDirection direction, boolean doRender)
+	{
+		if (doRender)
+		{
+			renderSides = (byte) (renderSides | (1 << direction.ordinal()));
+		}
+		else
+		{
+			renderSides = (byte) (renderSides & ~(1 << direction.ordinal()));
+
 		}
 	}
 
@@ -371,53 +390,43 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	}
 
 	@Override
-	public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		try
 		{
 			if (this.worldObj.isRemote)
 			{
-				if (id.equalsIgnoreCase("DescriptionPacket"))
+				switch (data.readInt())
 				{
-					this.subID = data.readInt();
-					this.renderConnection[0] = data.readBoolean();
-					this.renderConnection[1] = data.readBoolean();
-					this.renderConnection[2] = data.readBoolean();
-					this.renderConnection[3] = data.readBoolean();
-					this.renderConnection[4] = data.readBoolean();
-					this.renderConnection[5] = data.readBoolean();
-					this.tank = new FluidTank(data.readInt());
-					this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-					this.internalTanksInfo[0] = this.getTank().getInfo();
-					return true;
-				}
-				else if (id.equalsIgnoreCase("RenderPacket"))
-				{
-					this.subID = data.readInt();
-					this.renderConnection[0] = data.readBoolean();
-					this.renderConnection[1] = data.readBoolean();
-					this.renderConnection[2] = data.readBoolean();
-					this.renderConnection[3] = data.readBoolean();
-					this.renderConnection[4] = data.readBoolean();
-					this.renderConnection[5] = data.readBoolean();
-					return true;
-				}
-				else if (id.equalsIgnoreCase("SingleTank"))
-				{
-					this.tank = new FluidTank(data.readInt());
-					this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-					this.internalTanksInfo[0] = this.getTank().getInfo();
-					return true;
+					case PACKET_DESCRIPTION:
+					{
+						this.subID = data.readInt();
+						this.renderSides = data.readByte();
+						this.tank = new FluidTank(data.readInt());
+						this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+						this.internalTanksInfo[0] = this.getTank().getInfo();
+						break;
+					}
+					case PACKET_RENDER:
+					{
+						this.subID = data.readInt();
+						this.renderSides = data.readByte();
+						break;
+					}
+					case PACKET_TANK:
+					{
+						this.tank = new FluidTank(data.readInt());
+						this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+						this.internalTanksInfo[0] = this.getTank().getInfo();
+						break;
+					}
 				}
 			}
 		}
 		catch (IOException e)
 		{
-			System.out.println("// Fluid Mechanics Tank packet read error");
 			e.printStackTrace();
-			return true;
 		}
-		return false;
 	}
 
 	@Override
@@ -425,12 +434,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	{
 		Object[] data = new Object[9];
 		data[0] = this.subID;
-		data[1] = this.renderConnection[0];
-		data[2] = this.renderConnection[1];
-		data[3] = this.renderConnection[2];
-		data[4] = this.renderConnection[3];
-		data[5] = this.renderConnection[4];
-		data[6] = this.renderConnection[5];
+		data[1] = this.renderSides;
 		data[7] = this.getTank().getCapacity();
 		data[8] = this.getTank().writeToNBT(new NBTTagCompound());
 		return ResonantInduction.PACKET_TILE.getPacket(this, "DescriptionPacket", data);
@@ -440,12 +444,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	{
 		Object[] data = new Object[7];
 		data[0] = this.subID;
-		data[1] = this.renderConnection[0];
-		data[2] = this.renderConnection[1];
-		data[3] = this.renderConnection[2];
-		data[4] = this.renderConnection[3];
-		data[5] = this.renderConnection[4];
-		data[6] = this.renderConnection[5];
+		data[1] = this.renderSides;
 		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "RenderPacket", data));
 	}
 
