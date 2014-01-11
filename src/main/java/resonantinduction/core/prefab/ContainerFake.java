@@ -1,4 +1,4 @@
-package dark.lib.prefab.invgui;
+package resonantinduction.core.prefab;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

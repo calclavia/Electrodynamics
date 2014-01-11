@@ -13,14 +13,14 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.IExtraInfo.IExtraTileEntityInfo;
+import calclavia.lib.inventory.IExternalInv;
+import calclavia.lib.inventory.IInvBox;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dark.lib.interfaces.IExternalInv;
-import dark.lib.interfaces.IInvBox;
 
 public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, ISimplePacketReceiver, IExtraTileEntityInfo
 {

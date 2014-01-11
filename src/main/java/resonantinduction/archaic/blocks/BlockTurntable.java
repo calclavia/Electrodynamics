@@ -16,10 +16,10 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.IRotatableBlock;
 import calclavia.lib.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.interfaces.IRotatableBlock;
 
 public class BlockTurntable extends BlockRI
 {

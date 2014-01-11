@@ -3,9 +3,9 @@ package resonantinduction.archaic.crate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import dark.lib.prefab.invgui.InvChest;
+import calclavia.lib.inventory.TileInventory;
 
-public class InventoryCrate extends InvChest
+public class InventoryCrate extends TileInventory
 {
 	public InventoryCrate(TileEntity crate)
 	{

@@ -1,4 +1,4 @@
-package dark.lib.interfaces;
+package resonantinduction.core;
 
 import net.minecraft.item.ItemStack;
 

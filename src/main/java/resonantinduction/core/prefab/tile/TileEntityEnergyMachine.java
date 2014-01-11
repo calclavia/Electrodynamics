@@ -18,7 +18,6 @@ import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import dark.lib.interfaces.IPowerLess;
 
 /**
  * Basic energy tile that can consume power

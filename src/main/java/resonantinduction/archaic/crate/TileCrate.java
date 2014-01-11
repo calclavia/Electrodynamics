@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.IExtendedStorage;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileEntityInv;
 import calclavia.lib.network.IPacketReceiver;
@@ -14,7 +15,6 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import dark.lib.interfaces.IExtendedStorage;
 
 /**
  * Basic single stack inventory
