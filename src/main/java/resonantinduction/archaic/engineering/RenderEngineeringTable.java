@@ -58,6 +58,8 @@ public class RenderEngineeringTable extends TileEntitySpecialRenderer
 					GL11.glPushMatrix();
 					GL11.glTranslated(x + (double) (i / 3) / 3d + (0.5 / 3d), y + 1.1, z + (double) (i % 3) / 3d + (0.5 / 3d));
 					GL11.glScalef(0.7f, 0.7f, 0.7f);
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+
 					this.renderItem(tileEntity.worldObj, ForgeDirection.UP, tile.craftingMatrix[i], new Vector3(), 0, 0);
 					GL11.glPopMatrix();
 				}

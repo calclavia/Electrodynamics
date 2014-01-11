@@ -1,5 +1,6 @@
 package resonantinduction.archaic.engineering;
 
+import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
@@ -35,15 +36,16 @@ public class BlockEngineeringTable extends BlockRI
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
-		if (hitSide == 1)
-		{
-			if (!world.isRemote)
-			{
-				TileEntity te = world.getBlockTileEntity(x, y, z);
+		TileEntity te = world.getBlockTileEntity(x, y, z);
 
-				if (te instanceof TileEngineeringTable)
+		if (te instanceof TileEngineeringTable)
+		{
+			TileEngineeringTable tile = (TileEngineeringTable) te;
+
+			if (hitSide == 1)
+			{
+				if (!world.isRemote)
 				{
-					TileEngineeringTable tile = (TileEngineeringTable) te;
 
 					ItemStack current = player.inventory.getCurrentItem();
 
@@ -64,7 +66,7 @@ public class BlockEngineeringTable extends BlockRI
 							{
 								int slotID = j * 3 + k;
 								ItemStack checkStack = tile.craftingMatrix[slotID];
-								System.out.println(slotID);
+
 								if (checkStack != null)
 								{
 									EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, checkStack);
@@ -74,8 +76,20 @@ public class BlockEngineeringTable extends BlockRI
 								}
 								else if (current != null)
 								{
-									tile.craftingMatrix[slotID] = current;
-									player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+									if (ControlKeyModifer.isControlDown(player))
+									{
+										tile.craftingMatrix[slotID] = current.splitStack(1);
+									}
+									else
+									{
+										tile.craftingMatrix[slotID] = current;
+										current = null;
+									}
+
+									if (current == null || current.stackSize <= 0)
+									{
+										player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+									}
 								}
 
 								break matrix;
@@ -84,10 +98,24 @@ public class BlockEngineeringTable extends BlockRI
 					}
 
 					tile.onInventoryChanged();
+
+				}
+
+				return true;
+			}
+			else if (hitSide != 0)
+			{
+				ItemStack output = tile.getStackInSlot(9);
+
+				if (output != null)
+				{
+					EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, output);
+					entityItem.delayBeforeCanPickup = 0;
+					world.spawnEntityInWorld(entityItem);
+					tile.onPickUpFromSlot(player, 9, output);
+					tile.setInventorySlotContents(9, null);
 				}
 			}
-
-			return true;
 		}
 
 		return false;

@@ -13,6 +13,7 @@ import net.minecraft.network.packet.Packet;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.ContainerFake;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
@@ -245,17 +246,19 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 			boolean didCraft = false;
 
 			/** Simulate an Inventory Crafting Instance */
-			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+			InventoryCrafting inventoryCrafting = new InventoryCrafting(new ContainerFake(this), 3, 3);
 
-			if (inventoryCrafting != null)
+			for (int i = 0; i < this.craftingMatrix.length; i++)
 			{
-				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+				inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
+			}
 
-				if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
-				{
-					this.output[craftingOutputSlot] = matrixOutput;
-					didCraft = true;
-				}
+			ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+
+			if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
+			{
+				this.output[craftingOutputSlot] = matrixOutput;
+				didCraft = true;
 			}
 
 			PacketDispatcher.sendPacketToAllPlayers(this.getDescriptionPacket());
@@ -404,4 +407,5 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	{
 		return craftingSlots;
 	}
+
 }
