@@ -26,7 +26,7 @@ import universalelectricity.api.vector.VectorHelper;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IPowerLess, IVoltageInput, IVoltageOutput
+public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IVoltageInput, IVoltageOutput
 {
 	/** Forge Ore Directory name of the item to toggle infinite power mode */
 	public static String powerToggleItemID = "battery";
@@ -78,7 +78,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 	@Override
 	public boolean canFunction()
 	{
-		return super.canFunction() && (this.runPowerLess() || this.consumePower(this.JOULES_PER_TICK, false));
+		return super.canFunction() && (this.consumePower(this.JOULES_PER_TICK, false));
 	}
 
 	/** Called when a player activates the tile's block */
@@ -118,7 +118,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		if (!this.runPowerLess() && this.getInputDirections().contains(from) && receive > 0)
+		if (this.getInputDirections().contains(from) && receive > 0)
 		{
 			long prevEnergyStored = Math.max(this.getEnergy(from), 0);
 			long newStoredEnergy = Math.min(this.getEnergy(from) + receive, this.getEnergyCapacity(from));
@@ -139,7 +139,8 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 		{
 			return true;
 		}
-		if (!this.runPowerLess() && this.getEnergy(ForgeDirection.UNKNOWN) >= watts)
+
+		if (this.getEnergy(ForgeDirection.UNKNOWN) >= watts)
 		{
 			if (doDrain)
 			{
@@ -147,7 +148,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 			}
 			return true;
 		}
-		return this.runPowerLess();
+		return false;
 	}
 
 	@Override
@@ -323,21 +324,8 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 		return 0;
 	}
 
-	@Override
-	public boolean runPowerLess()
-	{
-		return !runWithoutPower;
-	}
-
-	@Override
-	public void setPowerLess(boolean bool)
-	{
-		runWithoutPower = !bool;
-	}
-
 	public void togglePowerMode()
 	{
-		this.setPowerLess(!this.runPowerLess());
 	}
 
 	public long getJoulesPerTick()

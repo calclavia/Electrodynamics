@@ -10,7 +10,7 @@ import resonantinduction.core.tilenetwork.INetworkPart;
  * 
  * @author DarkGuardsman
  */
-public class NetworkSharedPower extends NetworkTileEntities implements IPowerLess
+public class NetworkSharedPower extends NetworkTileEntities
 {
 	private long energy, energyMax;
 	private boolean runPowerLess;
@@ -28,7 +28,7 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
 
 	public long addPower(TileEntity entity, long receive, boolean doReceive)
 	{
-		if (!this.runPowerLess() && receive > 0)
+		if (receive > 0)
 		{
 			long prevEnergyStored = this.getEnergy();
 			long newStoredEnergy = Math.min(this.getEnergy() + receive, this.getEnergyCapacity());
@@ -65,37 +65,13 @@ public class NetworkSharedPower extends NetworkTileEntities implements IPowerLes
 		this.energyMax = 0;
 		for (INetworkPart part : this.networkMembers)
 		{
-			if (!set && part instanceof IPowerLess && ((IPowerLess) part).runPowerLess())
-			{
-				this.setPowerLess(((IPowerLess) part).runPowerLess());
-				set = true;
-			}
+
 			if (part instanceof INetworkEnergyPart)
 			{
 				this.energyMax += ((INetworkEnergyPart) part).getPartMaxEnergy();
 			}
 		}
 
-	}
-
-	@Override
-	public boolean runPowerLess()
-	{
-		return this.runPowerLess;
-	}
-
-	@Override
-	public void setPowerLess(boolean bool)
-	{
-		this.runPowerLess = bool;
-		for (INetworkPart part : this.networkMembers)
-		{
-			if (part instanceof IPowerLess)
-			{
-				((IPowerLess) part).setPowerLess(bool);
-			}
-
-		}
 	}
 
 	public void setEnergy(long energy)

@@ -144,13 +144,6 @@ public abstract class TileAssembly extends TileEntityEnergyMachine implements IN
 	}
 
 	@Override
-	public void togglePowerMode()
-	{
-		super.togglePowerMode();
-		((NetworkSharedPower) this.getTileNetwork()).setPowerLess(!this.runPowerLess());
-	}
-
-	@Override
 	public long getEnergyStored()
 	{
 		return ((NetworkSharedPower) this.getTileNetwork()).getEnergy();
