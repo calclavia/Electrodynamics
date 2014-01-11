@@ -4,30 +4,23 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureCompass;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,17 +44,30 @@ public class RenderEngineeringTable extends TileEntitySpecialRenderer
 			/**
 			 * Render the Crafting Matrix
 			 */
+
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+			boolean isLooking = false;
+
+			if (objectPosition != null)
+			{
+				isLooking |= objectPosition.blockX == tile.xCoord && objectPosition.blockY == tile.yCoord && objectPosition.blockZ == tile.zCoord;
+			}
+
 			for (int i = 0; i < tile.craftingMatrix.length; i++)
 			{
 				if (tile.craftingMatrix[i] != null)
 				{
+					Vector3 translation = new Vector3(x + (double) (i / 3) / 3d + (0.5 / 3d), y + 1.1, z + (double) (i % 3) / 3d + (0.5 / 3d));
 					GL11.glPushMatrix();
-					GL11.glTranslated(x + (double) (i / 3) / 3d + (0.5 / 3d), y + 1.1, z + (double) (i % 3) / 3d + (0.5 / 3d));
+					GL11.glTranslated(translation.x, translation.y, translation.z);
 					GL11.glScalef(0.7f, 0.7f, 0.7f);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-
 					this.renderItem(tileEntity.worldObj, ForgeDirection.UP, tile.craftingMatrix[i], new Vector3(), 0, 0);
 					GL11.glPopMatrix();
+
+					if (isLooking)
+						RenderUtility.renderFloatingText("" + tile.craftingMatrix[i].stackSize, (float) translation.x, (float) translation.y - 2f, (float) translation.z);
 				}
 			}
 

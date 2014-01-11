@@ -1,6 +1,5 @@
 package resonantinduction.archaic.engineering;
 
-import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
@@ -11,14 +10,18 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.InventoryUtility;
+import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * Advanced tiering of a crafting table adding advanced features such as visual crafting, and auto
- * crafting. Original idea by Infinite
+ * A world-based crafting table.
  * 
- * @author DarkGuardsman
+ * TODO: Filter support, inventory seek support.
+ * 
+ * @author Calclavia
  */
 public class BlockEngineeringTable extends BlockRI
 {
@@ -69,9 +72,7 @@ public class BlockEngineeringTable extends BlockRI
 
 								if (checkStack != null)
 								{
-									EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, checkStack);
-									entityItem.delayBeforeCanPickup = 0;
-									world.spawnEntityInWorld(entityItem);
+									InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0);
 									tile.craftingMatrix[slotID] = null;
 								}
 								else if (current != null)
@@ -109,9 +110,7 @@ public class BlockEngineeringTable extends BlockRI
 
 				if (output != null)
 				{
-					EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, output);
-					entityItem.delayBeforeCanPickup = 0;
-					world.spawnEntityInWorld(entityItem);
+					InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 					tile.onPickUpFromSlot(player, 9, output);
 					tile.setInventorySlotContents(9, null);
 				}
