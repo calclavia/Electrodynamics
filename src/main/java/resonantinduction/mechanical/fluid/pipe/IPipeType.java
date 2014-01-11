@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipes;
+package resonantinduction.mechanical.fluid.pipe;
 
 import dark.lib.helpers.ColorCode.IColoredId;
 

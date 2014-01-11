@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.old.client.model.ModelReleaseValve;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -40,7 +40,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		int meta = item.getItemDamage();
 		if (RecipeLoader.blockReleaseValve != null && item.itemID == RecipeLoader.blockReleaseValve.blockID)
 		{
-			meta = FluidPartsMaterial.IRON.getMeta();
+			meta = FluidContainerMaterial.IRON.getMeta();
 		}
 		if (type == ItemRenderType.ENTITY)
 		{

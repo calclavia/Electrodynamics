@@ -27,10 +27,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockConstructionPump extends BlockRI
 {
-
     public BlockConstructionPump()
     {
-        super(Settings.CONFIGURATION, "ConstructionPump", Material.iron);
+        super("constructionPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
 

@@ -21,7 +21,7 @@ public class BlockReleaseValve extends BlockRI
     @Override
     public TileEntity createNewTileEntity(World var1)
     {
-        return new TileEntityReleaseValve();
+        return new TileReleaseValve();
     }
 
     @Override

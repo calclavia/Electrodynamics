@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipes;
+package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,7 +15,7 @@ import calclavia.lib.utility.FluidHelper;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
-public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded, INetworkPipe
+public class TilePipe extends TileFluidNetworkTile implements IColorCoded, INetworkPipe
 {
 	/** gets the current color mark of the pipe */
 	@Override
@@ -41,10 +41,10 @@ public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded,
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		int meta = new Vector3(this).getBlockMetadata(this.worldObj);
-		if (meta < FluidPartsMaterial.values().length)
+		if (meta < FluidContainerMaterial.values().length)
 		{
-			FluidPartsMaterial pipeMat = FluidPartsMaterial.values()[meta];
-			if (pipeMat == FluidPartsMaterial.WOOD || pipeMat == FluidPartsMaterial.STONE)
+			FluidContainerMaterial pipeMat = FluidContainerMaterial.values()[meta];
+			if (pipeMat == FluidContainerMaterial.WOOD || pipeMat == FluidContainerMaterial.STONE)
 			{
 				if (side == ForgeDirection.UP)
 				{
@@ -52,13 +52,13 @@ public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded,
 				}
 			}
 		}
-		if (tileEntity instanceof TileEntityPipe)
+		if (tileEntity instanceof TilePipe)
 		{
 			int metaOther = new Vector3(tileEntity).getBlockMetadata(this.worldObj);
-			if (meta < FluidPartsMaterial.values().length && metaOther < FluidPartsMaterial.values().length)
+			if (meta < FluidContainerMaterial.values().length && metaOther < FluidContainerMaterial.values().length)
 			{
-				FluidPartsMaterial pipeMat = FluidPartsMaterial.values()[meta];
-				FluidPartsMaterial pipeMatOther = FluidPartsMaterial.values()[metaOther];
+				FluidContainerMaterial pipeMat = FluidContainerMaterial.values()[meta];
+				FluidContainerMaterial pipeMatOther = FluidContainerMaterial.values()[metaOther];
 				// Same pipe types can connect
 				if (pipeMat == pipeMatOther)
 				{
@@ -67,14 +67,14 @@ public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded,
 					this.renderConnection[side.ordinal()] = true;
 				}// Wood and stone pipes can connect to each other but not other pipe types since
 					// they are more like a trough than a pipe
-				else if ((pipeMat == FluidPartsMaterial.WOOD || pipeMat == FluidPartsMaterial.STONE) && (pipeMatOther == FluidPartsMaterial.WOOD || pipeMatOther == FluidPartsMaterial.STONE))
+				else if ((pipeMat == FluidContainerMaterial.WOOD || pipeMat == FluidContainerMaterial.STONE) && (pipeMatOther == FluidContainerMaterial.WOOD || pipeMatOther == FluidContainerMaterial.STONE))
 				{
 					this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
 					connectedBlocks.add(tileEntity);
 					this.renderConnection[side.ordinal()] = true;
 				}// Any other pipe can connect to each other as long as the color matches except for
 					// glass which only works with itself at the moment
-				else if (pipeMat != FluidPartsMaterial.WOOD && pipeMat != FluidPartsMaterial.STONE && pipeMatOther != FluidPartsMaterial.WOOD && pipeMatOther != FluidPartsMaterial.STONE && pipeMat != FluidPartsMaterial.GLASS && pipeMatOther != FluidPartsMaterial.GLASS)
+				else if (pipeMat != FluidContainerMaterial.WOOD && pipeMat != FluidContainerMaterial.STONE && pipeMatOther != FluidContainerMaterial.WOOD && pipeMatOther != FluidContainerMaterial.STONE && pipeMat != FluidContainerMaterial.GLASS && pipeMatOther != FluidContainerMaterial.GLASS)
 				{
 					this.getTileNetwork().mergeNetwork(((INetworkPipe) tileEntity).getTileNetwork(), this);
 					connectedBlocks.add(tileEntity);
@@ -108,9 +108,9 @@ public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded,
 	public double getMaxPressure(ForgeDirection side)
 	{
 		int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-		if (meta < FluidPartsMaterial.values().length)
+		if (meta < FluidContainerMaterial.values().length)
 		{
-			return FluidPartsMaterial.values()[meta].maxPressure;
+			return FluidContainerMaterial.values()[meta].maxPressure;
 		}
 		return 350;
 	}
@@ -185,7 +185,7 @@ public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded,
 	@Override
 	public void sendTankUpdate(int index)
 	{
-		if (this.getBlockMetadata() == FluidPartsMaterial.WOOD.ordinal() || this.getBlockMetadata() == FluidPartsMaterial.STONE.ordinal())
+		if (this.getBlockMetadata() == FluidContainerMaterial.WOOD.ordinal() || this.getBlockMetadata() == FluidContainerMaterial.STONE.ordinal())
 		{
 			super.sendTankUpdate(index);
 		}

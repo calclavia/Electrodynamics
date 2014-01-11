@@ -13,7 +13,7 @@ import resonantinduction.old.api.fluid.INetworkPipe;
 import calclavia.lib.utility.HelperMethods;
 import dark.lib.interfaces.IReadOut;
 
-public class TileEntityReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
+public class TileReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {
 	public TileEntity[] connected = new TileEntity[6];
 

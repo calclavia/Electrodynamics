@@ -7,8 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import resonantinduction.mechanical.fluid.TileEntityReleaseValve;
-import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
+import resonantinduction.mechanical.fluid.TileReleaseValve;
+import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.pump.TileEntityConstructionPump;
 import resonantinduction.mechanical.fluid.pump.TileEntityStarterPump;
 import resonantinduction.mechanical.fluid.tank.RenderTank;
@@ -58,12 +58,12 @@ public class ClientProxy extends CommonProxy
 	public void init()
 	{
 		super.init();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPipe.class, new RenderPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TilePipe.class, new RenderPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStarterPump.class, new RenderPump());
 		// ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRod.class, new RenderGearRod());
 		// ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenerator.class, new
 		// RenderGenerator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReleaseValve.class, new RenderReleaseValve());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileReleaseValve.class, new RenderReleaseValve());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileKitchenSink.class, new RenderSink());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, new RenderTank());

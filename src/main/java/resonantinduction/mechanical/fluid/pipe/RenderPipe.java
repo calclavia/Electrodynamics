@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.HashMap;
 
@@ -11,11 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
-import resonantinduction.mechanical.fluid.pipes.EnumPipeType;
-import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
-import resonantinduction.old.client.model.ModelLargePipe;
 import resonantinduction.old.client.model.ModelOpenTrough;
+import resonantinduction.old.client.model.ModelPipe;
 
 import com.builtbroken.common.Pair;
 
@@ -25,28 +22,28 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPipe extends TileEntitySpecialRenderer
 {
-	public static ModelLargePipe MODEL_PIPE = new ModelLargePipe();
+	public static ModelPipe MODEL_PIPE = new ModelPipe();
 	public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
-	private static HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidPartsMaterial, Integer>, ResourceLocation>();
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pipes/Pipe.png");
+	private static HashMap<Pair<FluidContainerMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidContainerMaterial, Integer>, ResourceLocation>();
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pipe.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
 	{
 		// Texture file
 
-		FluidPartsMaterial mat = FluidPartsMaterial.IRON;
-		if (te.getBlockMetadata() < FluidPartsMaterial.values().length)
+		FluidContainerMaterial mat = FluidContainerMaterial.IRON;
+		if (te.getBlockMetadata() < FluidContainerMaterial.values().length)
 		{
-			mat = FluidPartsMaterial.values()[te.getBlockMetadata()];
+			mat = FluidContainerMaterial.values()[te.getBlockMetadata()];
 		}
-		if (te instanceof TileEntityPipe)
+		if (te instanceof TilePipe)
 		{
-			boolean[] sides = ((TileEntityPipe) te).renderConnection;
-			if (mat == FluidPartsMaterial.WOOD || mat == FluidPartsMaterial.STONE)
+			boolean[] sides = ((TilePipe) te).renderConnection;
+			if (mat == FluidContainerMaterial.WOOD || mat == FluidContainerMaterial.STONE)
 			{
-				FluidStack liquid = ((TileEntityPipe) te).getTank().getFluid();
-				int cap = ((TileEntityPipe) te).getTankInfo()[0].capacity;
+				FluidStack liquid = ((TilePipe) te).getTank().getFluid();
+				int cap = ((TilePipe) te).getTankInfo()[0].capacity;
 				// FluidStack liquid = new FluidStack(FluidRegistry.WATER, cap);
 				if (liquid != null && liquid.amount > 100)
 				{
@@ -143,7 +140,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 			GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 			GL11.glScalef(1.0F, -1F, -1F);
 			bindTexture(RenderPipe.getTexture(mat, 0));
-			RenderPipe.render(mat, ((TileEntityPipe) te).getSubID(), sides);
+			RenderPipe.render(mat, ((TilePipe) te).getSubID(), sides);
 			GL11.glPopMatrix();
 		}
 		else
@@ -157,11 +154,12 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
 	}
 
-	public static ResourceLocation getTexture(FluidPartsMaterial mat, int pipeID)
+	public static ResourceLocation getTexture(FluidContainerMaterial mat, int pipeID)
 	{
 		if (mat != null)
 		{
-			Pair<FluidPartsMaterial, Integer> index = new Pair<FluidPartsMaterial, Integer>(mat, pipeID);
+			Pair<FluidContainerMaterial, Integer> index = new Pair<FluidContainerMaterial, Integer>(mat, pipeID);
+
 			if (!TEXTURES.containsKey(index))
 			{
 				String pipeName = "";
@@ -169,7 +167,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 				{
 					pipeName = EnumPipeType.get(pipeID).getName(pipeID);
 				}
-				TEXTURES.put(index, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pipes/" + mat.matName + "/" + pipeName + "Pipe.png"));
+				TEXTURES.put(index, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/" + mat.matName + ".png"));
 			}
 			return TEXTURES.get(index);
 		}
@@ -178,16 +176,16 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
 	public static ResourceLocation getTexture(int meta)
 	{
-		return getTexture(FluidPartsMaterial.getFromItemMeta(meta), FluidPartsMaterial.getType(meta));
+		return getTexture(FluidContainerMaterial.getFromItemMeta(meta), FluidContainerMaterial.getType(meta));
 	}
 
-	public static void render(FluidPartsMaterial mat, int pipeID, boolean[] side)
+	public static void render(FluidContainerMaterial mat, int pipeID, boolean[] side)
 	{
-		if (mat == FluidPartsMaterial.WOOD)
+		if (mat == FluidContainerMaterial.WOOD)
 		{
 			MODEL_TROUGH_PIPE.render(side, false);
 		}
-		else if (mat == FluidPartsMaterial.STONE)
+		else if (mat == FluidContainerMaterial.STONE)
 		{
 			MODEL_TROUGH_PIPE.render(side, true);
 		}
@@ -199,7 +197,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
 	public static void render(int meta, boolean[] bs)
 	{
-		render(FluidPartsMaterial.getFromItemMeta(meta), FluidPartsMaterial.getType(meta), bs);
+		render(FluidContainerMaterial.getFromItemMeta(meta), FluidContainerMaterial.getType(meta), bs);
 	}
 
 }

@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.TileEntityReleaseValve;
-import resonantinduction.old.client.model.ModelLargePipe;
+import resonantinduction.mechanical.fluid.TileReleaseValve;
+import resonantinduction.old.client.model.ModelPipe;
 import resonantinduction.old.client.model.ModelReleaseValve;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderReleaseValve extends TileEntitySpecialRenderer
 {
-	private ModelLargePipe SixPipe;
+	private ModelPipe SixPipe;
 	private ModelReleaseValve valve;
 	private TileEntity[] ents = new TileEntity[6];
 
@@ -24,7 +24,7 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 
 	public RenderReleaseValve()
 	{
-		SixPipe = new ModelLargePipe();
+		SixPipe = new ModelPipe();
 		valve = new ModelReleaseValve();
 	}
 
@@ -35,9 +35,9 @@ public class RenderReleaseValve extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		if (te instanceof TileEntityReleaseValve)
+		if (te instanceof TileReleaseValve)
 		{
-			ents = ((TileEntityReleaseValve) te).connected;
+			ents = ((TileReleaseValve) te).connected;
 		}
 		bindTexture(RenderPipe.TEXTURE);
 		if (ents[0] != null)

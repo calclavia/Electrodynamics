@@ -1,4 +1,4 @@
-package resonantinduction.old.mechanics.furnace;
+package resonantinduction.electrical.furnace;
 
 import java.util.ArrayList;
 

@@ -22,7 +22,7 @@ import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
 
-public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHandler, IDrain
+public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, IDrain
 {
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_WORLD_EDITS_PER_PROCESS = 50;
@@ -81,14 +81,14 @@ public class TileEntityDrain extends TileEntityFluidDevice implements IFluidHand
 			this.currentWorldEdits = 0;
 
 			/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
-			if (this.getLiquidFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+			if (this.getLiquidFinder().results.size() < TileGrate.MAX_WORLD_EDITS_PER_PROCESS + 10)
 			{
-				this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS, false);
+				this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, false);
 			}
 
-			if (this.getFillFinder().results.size() < TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS + 10)
+			if (this.getFillFinder().results.size() < TileGrate.MAX_WORLD_EDITS_PER_PROCESS + 10)
 			{
-				this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileEntityDrain.MAX_WORLD_EDITS_PER_PROCESS, true);
+				this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, true);
 			}
 
 		}

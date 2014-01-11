@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipes;
+package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -35,11 +36,13 @@ public class BlockPipe extends BlockRI
 
 	}
 
+	//Use Vanilla Couldron to fill it.
+	@Deprecated
 	@Override
 	public void fillWithRain(World world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
-		if (meta == FluidPartsMaterial.WOOD.ordinal() || meta == FluidPartsMaterial.STONE.ordinal())
+		if (meta == FluidContainerMaterial.WOOD.ordinal() || meta == FluidContainerMaterial.STONE.ordinal())
 		{
 			// TODO fill pipe since it will have an open top and can gather rain
 		}
@@ -50,9 +53,9 @@ public class BlockPipe extends BlockRI
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if (entity instanceof TileEntityPipe)
+		if (entity instanceof TilePipe)
 		{
-			ret.add(new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z)));
+			ret.add(new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z)));
 		}
 		return ret;
 	}
@@ -73,19 +76,19 @@ public class BlockPipe extends BlockRI
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return -1;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEntityPipe();
+		return new TilePipe();
 	}
 
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		return new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z));
+		return new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z));
 	}
 
 	@Override
@@ -97,7 +100,7 @@ public class BlockPipe extends BlockRI
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-		if (world.getBlockMetadata(x, y, z) == FluidPartsMaterial.HELL.ordinal())
+		if (world.getBlockMetadata(x, y, z) == FluidContainerMaterial.HELL.ordinal())
 		{
 			return 5;
 		}
@@ -113,7 +116,7 @@ public class BlockPipe extends BlockRI
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (FluidPartsMaterial data : FluidPartsMaterial.values())
+		for (FluidContainerMaterial data : FluidContainerMaterial.values())
 		{
 			par3List.add(data.getStack());
 		}
@@ -123,12 +126,12 @@ public class BlockPipe extends BlockRI
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
 	{
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if (entity instanceof TileEntityPipe)
+		if (entity instanceof TilePipe)
 		{
-			FluidTankInfo tank = ((TileEntityPipe) entity).getTankInfo()[0];
+			FluidTankInfo tank = ((TilePipe) entity).getTankInfo()[0];
 			if (tank != null && tank.fluid != null && tank.fluid.getFluid() != null && tank.fluid.amount > 0)
 			{
-				((TileEntityPipe) entity).getTileNetwork().drainNetworkTank(world, FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.fluid, true), true);
+				((TilePipe) entity).getTileNetwork().drainNetworkTank(world, FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.fluid, true), true);
 			}
 		}
 		super.breakBlock(world, x, y, z, par5, par6);

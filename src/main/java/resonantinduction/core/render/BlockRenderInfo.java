@@ -1,4 +1,4 @@
-package resonantinduction.render;
+package resonantinduction.core.render;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

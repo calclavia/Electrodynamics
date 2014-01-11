@@ -11,7 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.core.resource.item.ItemParts.Parts;
-import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.old.core.ItemOreDirv;
 import resonantinduction.old.core.misc.EnumTool;
 import resonantinduction.old.mechanics.processor.BlockProcessor;
@@ -23,7 +23,7 @@ import dark.lib.helpers.ColorCode;
 import dark.lib.interfaces.IReadOut.EnumTools;
 import dark.lib.recipes.MachineRecipeHandler;
 import dark.lib.recipes.ProcessorType;
-
+@Deprecated
 public class RecipeLoader
 {
 
@@ -334,19 +334,19 @@ public class RecipeLoader
 	{
 		if (blockTank != null)
 		{
-			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GLASS.getMeta()), "SXS", "X X", "SXS", 's', Item.silk, 'X', Block.glass);
-			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.WOOD.getMeta()), "LXL", "X X", "LXL", 'L', Block.wood, 'X', Block.glass);
-			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STONE.getMeta()), "SXS", "X X", "SXS", 'S', Block.stone, 'X', Block.glass);
-			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.IRON.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass);
+			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.GLASS.getMeta()), "SXS", "X X", "SXS", 's', Item.silk, 'X', Block.glass);
+			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.WOOD.getMeta()), "LXL", "X X", "LXL", 'L', Block.wood, 'X', Block.glass);
+			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.STONE.getMeta()), "SXS", "X X", "SXS", 'S', Block.stone, 'X', Block.glass);
+			GameRegistry.addRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.IRON.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotIron, 'X', Block.glass);
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.TIN.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.TIN.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.COPPER.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.BRONZE.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.BRONZE.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.GOLD.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotGold, 'X', Block.glass));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.STEEL.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.STEEL.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.TIN.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.TIN.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.COPPER.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.COPPER.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.BRONZE.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.BRONZE.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.GOLD.getMeta()), "IXI", "X X", "IXI", 'I', Item.ingotGold, 'X', Block.glass));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.STEEL.getMeta()), "IXI", "X X", "IXI", 'I', EnumMaterial.STEEL.getOreName(EnumOrePart.INGOTS), 'X', Block.glass));
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.OBBY.getMeta()), "IXI", "XEX", "IXI", 'I', Block.obsidian, 'X', Block.glass, 'E', Item.enderPearl));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidPartsMaterial.HELL.getMeta()), "IXI", "XBX", "IXI", 'I', Block.obsidian, 'X', Block.netherBrick, 'B', Item.blazePowder));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.OBSIDIAN.getMeta()), "IXI", "XEX", "IXI", 'I', Block.obsidian, 'X', Block.glass, 'E', Item.enderPearl));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockTank, 1, FluidContainerMaterial.HELL.getMeta()), "IXI", "XBX", "IXI", 'I', Block.obsidian, 'X', Block.netherBrick, 'B', Item.blazePowder));
 		}
 	}
 
@@ -354,18 +354,18 @@ public class RecipeLoader
 	{
 		if (blockPipe != null)
 		{
-			GameRegistry.addRecipe(FluidPartsMaterial.WOOD.getStack(2), "LLL", "WWW", "LLL", 'W', Block.planks, 'L', Block.wood);
-			GameRegistry.addRecipe(FluidPartsMaterial.STONE.getStack(2), "SSS", "CCC", "SSS", 'S', Block.stone, 'C', Block.cobblestone);
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.IRON.getStack(2), EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.GOLD.getStack(2), EnumMaterial.GOLD.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.TIN.getStack(2), EnumMaterial.TIN.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.COPPER.getStack(2), EnumMaterial.COPPER.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.BRONZE.getStack(2), EnumMaterial.BRONZE.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.STEEL.getStack(2), EnumMaterial.STEEL.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidPartsMaterial.OBBY.getStack(2), new Object[] { EnumMaterial.OBBY.getOreName(EnumOrePart.TUBE), Block.netherBrick, Block.netherBrick }));
-			GameRegistry.addRecipe(new ShapedOreRecipe(FluidPartsMaterial.HELL.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
+			GameRegistry.addRecipe(FluidContainerMaterial.WOOD.getStack(2), "LLL", "WWW", "LLL", 'W', Block.planks, 'L', Block.wood);
+			GameRegistry.addRecipe(FluidContainerMaterial.STONE.getStack(2), "SSS", "CCC", "SSS", 'S', Block.stone, 'C', Block.cobblestone);
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.IRON.getStack(2), EnumMaterial.IRON.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.GOLD.getStack(2), EnumMaterial.GOLD.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.TIN.getStack(2), EnumMaterial.TIN.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.COPPER.getStack(2), EnumMaterial.COPPER.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.BRONZE.getStack(2), EnumMaterial.BRONZE.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.STEEL.getStack(2), EnumMaterial.STEEL.getOreName(EnumOrePart.TUBE), Parts.Seal.name));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(FluidContainerMaterial.OBSIDIAN.getStack(2), new Object[] { EnumMaterial.OBBY.getOreName(EnumOrePart.TUBE), Block.netherBrick, Block.netherBrick }));
+			GameRegistry.addRecipe(new ShapedOreRecipe(FluidContainerMaterial.HELL.getStack(4), new Object[] { "OOO", "BNB", "OOO", 'N', Block.netherBrick, 'B', Item.blazeRod, 'O', Block.obsidian }));
 
-			for (FluidPartsMaterial mat : FluidPartsMaterial.values())
+			for (FluidContainerMaterial mat : FluidContainerMaterial.values())
 			{
 				for (ColorCode color : ColorCode.values())
 				{

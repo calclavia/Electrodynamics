@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipes;
+package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class ItemBlockPipe extends ItemBlock
 	@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, (stack.getItemDamage() / FluidPartsMaterial.spacing)))
+		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, (stack.getItemDamage() / FluidContainerMaterial.spacing)))
 		{
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
 			if (tile instanceof TileFluidNetworkTile)

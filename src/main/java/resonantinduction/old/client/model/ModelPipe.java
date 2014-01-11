@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelLargePipe extends ModelBase
+public class ModelPipe extends ModelBase
 {
 	// fields
 	ModelRenderer Mid;
@@ -35,7 +35,7 @@ public class ModelLargePipe extends ModelBase
 	ModelRenderer FrontPipe;
 	ModelRenderer FrontConnect;
 
-	public ModelLargePipe()
+	public ModelPipe()
 	{
 		textureWidth = 128;
 		textureHeight = 32;
@@ -183,6 +183,18 @@ public class ModelLargePipe extends ModelBase
 			renderLeft();
 		}
 		renderMiddle();
+	}
+
+	public void renderAll()
+	{
+		this.renderMiddle();
+		this.renderBottom();
+		this.renderTop();
+		this.renderLeft();
+		this.renderRight();
+		this.renderBack();
+		this.renderFront();
+
 	}
 
 	public void renderMiddle()

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.render.BlockRenderInfo;
+import resonantinduction.core.render.BlockRenderInfo;
 import universalelectricity.api.vector.Vector3;
 
 public class RenderBlockEntity extends Render

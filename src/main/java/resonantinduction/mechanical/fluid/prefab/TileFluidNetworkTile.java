@@ -25,7 +25,7 @@ import resonantinduction.core.network.ISimplePacketReceiver;
 import resonantinduction.core.tilenetwork.INetworkPart;
 import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.mechanical.fluid.network.NetworkFluidTiles;
-import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.old.api.fluid.FluidMasterList;
 import resonantinduction.old.api.fluid.INetworkFluidPart;
 import universalelectricity.api.vector.Vector3;
@@ -296,7 +296,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	@Override
 	public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
 	{
-		FluidPartsMaterial mat = FluidPartsMaterial.get(this.getBlockMetadata());
+		FluidContainerMaterial mat = FluidContainerMaterial.get(this.getBlockMetadata());
 		if (fluid != null && fluid.getFluid() != null && mat != null)
 		{
 			if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)

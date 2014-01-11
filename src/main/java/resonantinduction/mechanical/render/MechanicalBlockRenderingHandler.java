@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import resonantinduction.mechanical.fluid.tank.RenderTank;
 import resonantinduction.old.client.model.ModelConveyorBelt;
 import resonantinduction.old.client.model.ModelCrusher;
@@ -55,6 +56,17 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 			RenderTank.MODEL.render(0.0625F, false, false, false, false);
 			GL11.glPopMatrix();
 		}
+		else if (block == Mechanical.blockPipe)
+		{
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.0F, 1.3F, 0.0F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(metadata));
+			RenderPipe.MODEL_PIPE.renderFront();
+			RenderPipe.MODEL_PIPE.renderMiddle();
+			RenderPipe.MODEL_PIPE.renderBack();
+			GL11.glPopMatrix();
+		}
 		else if (RecipeLoader.blockRejector != null && block.blockID == RecipeLoader.blockRejector.blockID)
 		{
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "rejector.png"));
@@ -91,28 +103,6 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 		 * GL11.glPopMatrix();
 		 * }
 		 */
-		else if (RecipeLoader.processorMachine != null && block.blockID == RecipeLoader.processorMachine.blockID && metadata == 0)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "CrusherBlock.png"));
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0f, 1f, 0f);
-			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			this.modelCrushor.renderBody(0.0625f);
-			this.modelCrushor.renderPiston(0.0625f, 4);
-			GL11.glPopMatrix();
-		}
-		else if (RecipeLoader.processorMachine != null && block.blockID == RecipeLoader.processorMachine.blockID && metadata == 4)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "GrinderBlock.png"));
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0f, 1f, 0f);
-			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			this.grinderModel.renderBody(0.0625f);
-			this.grinderModel.renderRotation(0.0625f, 0);
-			GL11.glPopMatrix();
-		}
 		/*
 		 * else if (RecipeLoader.blockSteamGen != null && block.blockID ==
 		 * RecipeLoader.blockSteamGen.blockID)

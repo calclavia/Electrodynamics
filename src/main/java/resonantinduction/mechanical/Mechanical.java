@@ -6,6 +6,8 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
+import resonantinduction.mechanical.fluid.pipe.BlockPipe;
+import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import calclavia.lib.content.ContentRegistry;
@@ -44,8 +46,11 @@ public class Mechanical
 	public static ModMetadata metadata;
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+
+	// Transport
 	public static Block blockConveyorBelt;
 	public static Block blockTank;
+	public static Block blockPipe;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -53,6 +58,7 @@ public class Mechanical
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockTank = contentRegistry.createTile(BlockTank.class, TileTank.class);
+		blockPipe = contentRegistry.createTile(BlockPipe.class, TilePipe.class);
 		proxy.preInit();
 	}
 

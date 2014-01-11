@@ -10,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.armbot.command.TaskDrop;
 import resonantinduction.electrical.armbot.command.TaskGOTO;
 import resonantinduction.electrical.armbot.command.TaskGrabItem;
@@ -308,11 +309,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	{
 		if (this.grabbedObject instanceof ItemStack)
 		{
-			PacketHandler.sendPacketToClients(Mechanical.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
 		}
 		else
 		{
-			PacketHandler.sendPacketToClients(Mechanical.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
 		}
 	}
 

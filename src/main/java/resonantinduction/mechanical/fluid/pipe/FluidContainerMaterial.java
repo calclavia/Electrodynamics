@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipes;
+package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
-import resonantinduction.old.core.recipe.RecipeLoader;
 import dark.lib.helpers.ColorCode;
 
 /**
@@ -21,7 +21,7 @@ import dark.lib.helpers.ColorCode;
  * 
  * @author DarkGuardsman
  */
-public enum FluidPartsMaterial
+public enum FluidContainerMaterial
 {
 	/** Simple water only pipe. Should render open toped when it can */
 	WOOD("wood", false, true, false, -1, 200),
@@ -38,7 +38,7 @@ public enum FluidPartsMaterial
 	/** Fluid movement pipe that doesn't work well with pressure */
 	GOLD("gold", true, true, false, 200, 2000),
 	/** Cheap molten metal pipe */
-	OBBY("obby", false, true, true, 1000, 1000),
+	OBSIDIAN("obsidian", false, true, true, 1000, 1000),
 	/**
 	 * Very strong fluid and gas support pipe. Should also support molten metal as long as they
 	 * don't stay in the pipe too long.
@@ -65,14 +65,14 @@ public enum FluidPartsMaterial
 	 */
 	public static int spacing = 1000;
 
-	private FluidPartsMaterial()
+	private FluidContainerMaterial()
 	{
 		this.canSupportGas = true;
 		this.canSupportFluids = true;
 		canSupportMoltenFluids = true;
 	}
 
-	private FluidPartsMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
+	private FluidContainerMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
 	{
 		this.matName = name;
 		this.canSupportGas = gas;
@@ -80,28 +80,28 @@ public enum FluidPartsMaterial
 		this.canSupportMoltenFluids = molten;
 	}
 
-	private FluidPartsMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
+	private FluidContainerMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
 	{
 		this(name, gas, fluid, molten, strings);
 		this.maxPressure = pressure;
 		this.maxVolume = volume;
 	}
 
-	public static FluidPartsMaterial get(World world, int x, int y, int z)
+	public static FluidContainerMaterial get(World world, int x, int y, int z)
 	{
 		return get(world.getBlockMetadata(x, y, z));
 	}
 
-	public static FluidPartsMaterial get(int i)
+	public static FluidContainerMaterial get(int i)
 	{
-		if (i < FluidPartsMaterial.values().length)
+		if (i < FluidContainerMaterial.values().length)
 		{
-			return FluidPartsMaterial.values()[i];
+			return FluidContainerMaterial.values()[i];
 		}
 		return null;
 	}
 
-	public static FluidPartsMaterial get(ItemStack stack)
+	public static FluidContainerMaterial get(ItemStack stack)
 	{
 		if (stack != null)
 		{
@@ -110,14 +110,14 @@ public enum FluidPartsMaterial
 		return null;
 	}
 
-	public static FluidPartsMaterial getFromItemMeta(int meta)
+	public static FluidContainerMaterial getFromItemMeta(int meta)
 	{
 		meta = meta / spacing;
-		if (meta < FluidPartsMaterial.values().length)
+		if (meta < FluidContainerMaterial.values().length)
 		{
-			return FluidPartsMaterial.values()[meta];
+			return FluidContainerMaterial.values()[meta];
 		}
-		return FluidPartsMaterial.WOOD;
+		return FluidContainerMaterial.WOOD;
 	}
 
 	public ItemStack getStack()
@@ -132,12 +132,12 @@ public enum FluidPartsMaterial
 
 	public ItemStack getStack(int s)
 	{
-		return new ItemStack(RecipeLoader.blockPipe, s, (this.ordinal() * spacing));
+		return new ItemStack(Mechanical.blockPipe, s, (this.ordinal() * spacing));
 	}
 
 	public ItemStack getStack(int s, ColorCode color)
 	{
-		return new ItemStack(RecipeLoader.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
+		return new ItemStack(Mechanical.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
 	}
 
 	public int getMeta(int typeID)

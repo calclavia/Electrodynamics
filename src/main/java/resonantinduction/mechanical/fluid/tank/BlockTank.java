@@ -10,9 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.mechanical.fluid.pipes.ItemBlockPipe;
-import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
+import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
+import resonantinduction.mechanical.fluid.pipe.ItemBlockPipe;
+import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
@@ -83,7 +83,7 @@ public class BlockTank extends BlockRI
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		return new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z));
+		return new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z));
 	}
 
 	@Override
@@ -91,9 +91,9 @@ public class BlockTank extends BlockRI
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if (entity instanceof TileEntityPipe)
+		if (entity instanceof TilePipe)
 		{
-			ret.add(new ItemStack(this, 1, FluidPartsMaterial.getDropItemMeta(world, x, y, z)));
+			ret.add(new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z)));
 		}
 		return ret;
 	}
@@ -102,9 +102,9 @@ public class BlockTank extends BlockRI
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (FluidPartsMaterial data : FluidPartsMaterial.values())
+		for (FluidContainerMaterial data : FluidContainerMaterial.values())
 		{
-			par3List.add(new ItemStack(this, 1, data.ordinal() * FluidPartsMaterial.spacing));
+			par3List.add(new ItemStack(this, 1, data.ordinal() * FluidContainerMaterial.spacing));
 			break;
 		}
 	}
