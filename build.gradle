@@ -21,8 +21,8 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-sourceCompatability = 1.7
-targetCompatability = 1.7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
 group = "resonantinduction"
 archivesBaseName = "Resonant-Induction"
