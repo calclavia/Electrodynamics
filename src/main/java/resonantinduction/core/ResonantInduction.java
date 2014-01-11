@@ -89,8 +89,6 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
-		Settings.CONFIGURATION.load();
-
 		blockMulti = new BlockMulti(Settings.getNextBlockID()).setPacketType(PACKET_TILE);
 
 		MIXTURE = new Fluid("mixture");
@@ -107,7 +105,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
-		Settings.CONFIGURATION.save();
+		
 	}
 
 	@EventHandler
@@ -124,6 +122,7 @@ public class ResonantInduction
 	{
 		// Generate Dusts
 		ResourceGenerator.generateDusts();
+		Settings.save();
 	}
 
 }
