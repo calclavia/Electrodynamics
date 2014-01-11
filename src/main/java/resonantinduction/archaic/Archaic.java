@@ -1,8 +1,12 @@
 package resonantinduction.archaic;
 
+import net.minecraft.block.Block;
+import resonantinduction.archaic.crate.BlockCrate;
+import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -37,15 +41,22 @@ public class Archaic
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+
+	public static Block blockCrate;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		blockCrate = contentRegistry.createTile(BlockCrate.class, TileCrate.class);
+		proxy.preInit();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
 		Settings.setModMetadata(metadata, ID, NAME);
+		proxy.init();
 	}
 }

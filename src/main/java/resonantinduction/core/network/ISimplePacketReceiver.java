@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.Player;
  * 
  * @author DarkGuardsman
  */
+@Deprecated
 public interface ISimplePacketReceiver
 {
 	/**

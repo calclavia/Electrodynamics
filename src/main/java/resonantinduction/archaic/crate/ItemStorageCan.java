@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.crate;
+package resonantinduction.archaic.crate;
 
 /**
  * Can that is used to store items such as food, parts, or solid fuels.

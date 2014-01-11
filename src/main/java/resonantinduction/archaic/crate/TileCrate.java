@@ -1,18 +1,18 @@
-package resonantinduction.old.transport.crate;
+package resonantinduction.archaic.crate;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.network.ISimplePacketReceiver;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileEntityInv;
-import resonantinduction.mechanical.Mechanical;
+import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import dark.lib.interfaces.IExtendedStorage;
 
@@ -21,7 +21,7 @@ import dark.lib.interfaces.IExtendedStorage;
  * 
  * @author DarkGuardsman
  */
-public class TileEntityCrate extends TileEntityInv implements ISimplePacketReceiver, IExtendedStorage
+public class TileCrate extends TileEntityInv implements IPacketReceiver, IExtendedStorage
 {
 	/*
 	 * TODO
@@ -155,7 +155,7 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 		{
 			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
 			{
-				PacketHandler.instance().sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
+				PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
 			}
 		}
 	}
@@ -171,9 +171,9 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 	{
 		if (this.worldObj == null)
 		{
-			return TileEntityCrate.getSlotCount(TileEntityCrate.maxSize);
+			return TileCrate.getSlotCount(TileCrate.maxSize);
 		}
-		return TileEntityCrate.getSlotCount(this.getBlockMetadata());
+		return TileCrate.getSlotCount(this.getBlockMetadata());
 	}
 
 	/** Gets the slot count for the crate meta */
@@ -197,32 +197,27 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 	}
 
 	@Override
-	public boolean simplePacket(String id, ByteArrayDataInput data, Player player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		if (this.worldObj.isRemote)
 		{
 			try
 			{
-				if (id.equalsIgnoreCase("InventoryItem"))
+				if (data.readBoolean())
 				{
-					if (data.readBoolean())
-					{
-						this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.readNBTTagCompound(data));
-						this.sampleStack.stackSize = data.readInt();
-					}
-					else
-					{
-						this.sampleStack = null;
-					}
+					this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.readNBTTagCompound(data));
+					this.sampleStack.stackSize = data.readInt();
+				}
+				else
+				{
+					this.sampleStack = null;
 				}
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				return true;
 			}
 		}
-		return false;
 	}
 
 	@Override
@@ -232,11 +227,11 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
-			return PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+			return ResonantInduction.PACKET_TILE.getPacket(this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
 		}
 		else
 		{
-			return PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, "InventoryItem", this, false);
+			return ResonantInduction.PACKET_TILE.getPacket(this, false);
 		}
 	}
 

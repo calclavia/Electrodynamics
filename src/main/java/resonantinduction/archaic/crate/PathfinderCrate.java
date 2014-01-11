@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.crate;
+package resonantinduction.archaic.crate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class PathfinderCrate
 			@Override
 			public boolean isValidNode(PathfinderCrate finder, ForgeDirection direction, TileEntity provider, TileEntity node)
 			{
-				return node instanceof TileEntityCrate;
+				return node instanceof TileCrate;
 			}
 
 			@Override

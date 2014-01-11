@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.crate;
+package resonantinduction.archaic.crate;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class ItemBlockCrate extends ItemBlock
 
 			if (containingStack != null && !player.capabilities.isCreativeMode)
 			{
-				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileEntityCrate.getSlotCount(itemStack.getItemDamage())) * 5));
+				player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, (int) ((float) containingStack.stackSize / (float) TileCrate.getSlotCount(itemStack.getItemDamage())) * 5));
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public class ItemBlockCrate extends ItemBlock
 			{
 				if (containingItem.stackSize > 0)
 				{
-					TileEntityCrate tileEntity = (TileEntityCrate) world.getBlockTileEntity(x, y, z);
+					TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
 					int count = containingItem.stackSize;
 
 					for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)

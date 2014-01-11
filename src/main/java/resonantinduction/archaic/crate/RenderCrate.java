@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.archaic.crate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.transport.crate.TileEntityCrate;
+import resonantinduction.archaic.crate.TileCrate;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -32,10 +32,10 @@ public class RenderCrate extends TileEntitySpecialRenderer
 	{
 		Vector3 vec = new Vector3(x, y, z);
 		double distance = vec.distance(new Vector3(0, 0, 0));
-		if (tileEntity instanceof TileEntityCrate)
+		if (tileEntity instanceof TileCrate)
 		{
 
-			TileEntityCrate tileCrate = (TileEntityCrate) tileEntity;
+			TileCrate tileCrate = (TileCrate) tileEntity;
 
 			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
 

@@ -28,7 +28,7 @@ public class BlockEncoder extends BlockRI
 
     public BlockEncoder()
     {
-        super(Settings.CONFIGURATION, "encoder", Material.wood);
+        super("encoder");
     }
 
     @SideOnly(Side.CLIENT)

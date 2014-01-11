@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.crate;
+package resonantinduction.archaic.crate;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,9 +39,9 @@ public class InventoryCrate extends InvChest
 	@Override
 	public int getSizeInventory()
 	{
-		if (this.hostTile instanceof TileEntityCrate)
+		if (this.hostTile instanceof TileCrate)
 		{
-			return ((TileEntityCrate) this.hostTile).getSlotCount();
+			return ((TileCrate) this.hostTile).getSlotCount();
 		}
 		return 512;
 	}
