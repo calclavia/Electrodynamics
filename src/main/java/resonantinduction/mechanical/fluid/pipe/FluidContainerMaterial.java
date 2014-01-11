@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import dark.lib.helpers.ColorCode;
 
 /**
@@ -160,9 +160,9 @@ public enum FluidContainerMaterial
 		int meta = world.getBlockMetadata(x, y, z);
 		TileEntity ent = world.getBlockTileEntity(x, y, z);
 		meta *= spacing;
-		if (ent instanceof TileFluidNetworkTile)
+		if (ent instanceof TileFluidNetwork)
 		{
-			meta += ((TileFluidNetworkTile) ent).getSubID();
+			meta += ((TileFluidNetwork) ent).getSubID();
 		}
 		return meta;
 	}

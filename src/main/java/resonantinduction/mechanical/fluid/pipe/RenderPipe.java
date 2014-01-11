@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import resonantinduction.old.client.model.ModelOpenTrough;
 import resonantinduction.old.client.model.ModelPipe;
 
@@ -34,8 +34,6 @@ public class RenderPipe extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)
 	{
-		// Texture file
-
 		FluidContainerMaterial mat = FluidContainerMaterial.IRON;
 		if (te.getBlockMetadata() < FluidContainerMaterial.values().length)
 		{
@@ -165,28 +163,27 @@ public class RenderPipe extends TileEntitySpecialRenderer
 		}
 		else
 		{
-			System.out.println(Integer.toBinaryString(side));
-			if (TileFluidNetworkTile.canRenderSide(side,ForgeDirection.DOWN))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.DOWN))
 			{
 				MODEL_PIPE.renderBottom();
 			}
-			if (TileFluidNetworkTile.canRenderSide(side,ForgeDirection.UP))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.UP))
 			{
 				MODEL_PIPE.renderTop();
 			}
-			if (TileFluidNetworkTile.canRenderSide(side,ForgeDirection.NORTH))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.NORTH))
 			{
 				MODEL_PIPE.renderBack();
 			}
-			if (TileFluidNetworkTile.canRenderSide(side,ForgeDirection.SOUTH))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.SOUTH))
 			{
 				MODEL_PIPE.renderFront();
 			}
-			if (TileFluidNetworkTile.canRenderSide(side, ForgeDirection.WEST))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.WEST))
 			{
 				MODEL_PIPE.renderLeft();
 			}
-			if (TileFluidNetworkTile.canRenderSide(side, ForgeDirection.EAST))
+			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.EAST))
 			{
 				MODEL_PIPE.renderRight();
 			}

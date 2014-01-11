@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
@@ -23,13 +23,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
-public class BlockPipe extends BlockRI
+public class BlockPipe extends BlockFluidNetwork
 {
 	public static int waterFlowRate = 3000;
 
 	public BlockPipe()
 	{
-		super("fluidPipe", Material.iron);
+		super("fluidPipe");
 		this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
 		this.setHardness(1f);
 		this.setResistance(3f);

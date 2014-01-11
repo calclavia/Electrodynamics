@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.render.RenderFluidHelper;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import resonantinduction.old.client.model.ModelTankSide;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,15 +30,15 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
 	{
-		byte renderSudes = 0;
+		byte renderSides = 0;
 
 		if (tileEntity instanceof TileTank)
 		{
-			renderSudes = ((TileTank) tileEntity).renderSides;
+			renderSides = ((TileTank) tileEntity).renderSides;
 		}
+		
 		if (liquid != null && liquid.amount > 100)
 		{
-
 			int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
 
 			GL11.glPushMatrix();
@@ -59,18 +59,11 @@ public class RenderTank extends TileEntitySpecialRenderer
 			GL11.glPopMatrix();
 		}
 
-		boolean bot = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(1));
-		boolean top = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(0));
-		boolean north = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(2));
-		boolean south = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(3));
-		boolean east = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(5));
-		boolean west = TileFluidNetworkTile.canRenderSide(renderSudes, ForgeDirection.getOrientation(4));
-
 		for (int i = 0; i < 4; i++)
 		{
 			ForgeDirection dir = ForgeDirection.getOrientation(i + 2);
 
-			if (!TileFluidNetworkTile.canRenderSide(renderSudes, dir.getOpposite()))
+			if (!TileFluidNetwork.canRenderSide(renderSides, dir.getOpposite()))
 			{
 				GL11.glPushMatrix();
 
@@ -83,28 +76,23 @@ public class RenderTank extends TileEntitySpecialRenderer
 				{
 					case NORTH:
 						GL11.glRotatef(180f, 0f, 1f, 0f);
-						left = west;
-						right = east;
 						break;
 					case SOUTH:
 						GL11.glRotatef(0f, 0f, 1f, 0f);
-						left = east;
-						right = west;
 						break;
 					case WEST:
 						GL11.glRotatef(90f, 0f, 1f, 0f);
-						left = south;
-						right = north;
 						break;
 					case EAST:
 						GL11.glRotatef(270f, 0f, 1f, 0f);
-						left = north;
-						right = south;
 						break;
 				}
 
+				left = TileFluidNetwork.canRenderSide(renderSides, dir.getRotation(ForgeDirection.UP));
+				right = TileFluidNetwork.canRenderSide(renderSides, dir.getRotation(ForgeDirection.DOWN));
+
 				bindTexture(RenderTank.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
-				MODEL.render(0.0625F, left, right, top, bot);
+				MODEL.render(0.0625F, left, right, TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.UP), TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.DOWN));
 				GL11.glPopMatrix();
 			}
 		}

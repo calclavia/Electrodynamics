@@ -9,10 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.TilePipe;
+import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
@@ -20,7 +20,7 @@ import calclavia.lib.utility.HelperMethods;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTank extends BlockRI
+public class BlockTank extends BlockFluidNetwork
 {
 	public static int tankVolume = 16;
 

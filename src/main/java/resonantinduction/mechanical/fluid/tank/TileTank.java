@@ -6,9 +6,9 @@ import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.core.tilenetwork.INetworkPart;
 import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.mechanical.fluid.network.NetworkFluidContainers;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
-public class TileTank extends TileFluidNetworkTile
+public class TileTank extends TileFluidNetwork
 {
 	public TileTank()
 	{

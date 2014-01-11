@@ -9,19 +9,19 @@ import resonantinduction.api.fluid.INetworkPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.mechanical.fluid.network.NetworkPipes;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
-public class TilePipe extends TileFluidNetworkTile implements IColorCoded, INetworkPipe
+public class TilePipe extends TileFluidNetwork implements IColorCoded, INetworkPipe
 {
 	/** gets the current color mark of the pipe */
 	@Override
 	public ColorCode getColor()
 	{
-		return EnumPipeType.getColorCode(this.subID);
+		return EnumPipeType.getColorCode(this.colorID);
 	}
 
 	/** sets the current color mark of the pipe */
@@ -30,9 +30,9 @@ public class TilePipe extends TileFluidNetworkTile implements IColorCoded, INetw
 	{
 		if (!worldObj.isRemote)
 		{
-			int p = this.subID;
-			this.subID = EnumPipeType.getUpdatedID(subID, ColorCode.get(cc));
-			return p != this.subID;
+			int p = this.colorID;
+			this.colorID = EnumPipeType.getUpdatedID(colorID, ColorCode.get(cc));
+			return p != this.colorID;
 		}
 		return false;
 	}

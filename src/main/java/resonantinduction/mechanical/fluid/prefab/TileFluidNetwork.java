@@ -34,7 +34,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class TileFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, IPacketReceiver
+public abstract class TileFluidNetwork extends TileEntityFluidDevice implements INetworkFluidPart, IPacketReceiver
 {
 	private int updateTick = 1;
 	public static int refreshRate = 10;
@@ -43,7 +43,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	protected List<TileEntity> connectedBlocks = new ArrayList<TileEntity>();
 	protected int heat = 0, maxHeat = 20000;
 	protected int damage = 0, maxDamage = 1000;
-	protected int subID = 0;
+	protected int colorID = 0;
 	protected int tankCap;
 	protected FluidStack prevStack = null;
 	protected NetworkFluidTiles network;
@@ -55,12 +55,12 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	/** Bitmask **/
 	public byte renderSides = 0b0;
 
-	public TileFluidNetworkTile()
+	public TileFluidNetwork()
 	{
 		this(1);
 	}
 
-	public TileFluidNetworkTile(int tankCap)
+	public TileFluidNetwork(int tankCap)
 	{
 		if (tankCap <= 0)
 		{
@@ -85,14 +85,10 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	public void updateEntity()
 	{
 		super.updateEntity();
+
 		if (!worldObj.isRemote)
 		{
-			if (ticks % this.updateTick == 0)
-			{
-				this.updateTick = this.worldObj.rand.nextInt(5) * 40 + 20;
-				this.refresh();
-			}
-			if (ticks % TileFluidNetworkTile.refreshRate == 0)
+			if (ticks % TileFluidNetwork.refreshRate == 0)
 			{
 				if (this.getTank().getFluid() == null && this.prevStack == null)
 				{
@@ -102,6 +98,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 				{
 					this.sendTankUpdate(0);
 				}
+
 				this.prevStack = this.tank.getFluid();
 			}
 		}
@@ -187,7 +184,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 
 			}
 			/** Only send packet updates if visuallyConnected changed. */
-			if (previousConnections == renderSides)
+			if (previousConnections != renderSides)
 			{
 				this.sendRenderUpdate();
 			}
@@ -359,7 +356,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 		super.readFromNBT(nbt);
 		this.damage = nbt.getInteger("damage");
 		this.heat = nbt.getInteger("heat");
-		this.subID = nbt.getInteger("subID");
+		this.colorID = nbt.getInteger("subID");
 		if (nbt.hasKey("stored"))
 		{
 			NBTTagCompound tag = nbt.getCompoundTag("stored");
@@ -386,7 +383,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 		super.writeToNBT(nbt);
 		nbt.setInteger("damage", this.damage);
 		nbt.setInteger("heat", this.heat);
-		nbt.setInteger("subID", this.subID);
+		nbt.setInteger("subID", this.colorID);
 		nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
 	}
 
@@ -401,7 +398,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 
 				if (readInt == PACKET_DESCRIPTION)
 				{
-					this.subID = data.readInt();
+					this.colorID = data.readInt();
 					this.renderSides = data.readByte();
 					this.tank = new FluidTank(data.readInt());
 					this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
@@ -409,7 +406,7 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 				}
 				else if (readInt == PACKET_RENDER)
 				{
-					this.subID = data.readInt();
+					this.colorID = data.readInt();
 					this.renderSides = data.readByte();
 				}
 				else if (readInt == PACKET_TANK)
@@ -429,27 +426,19 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		Object[] data = new Object[9];
-		data[0] = this.subID;
-		data[1] = this.renderSides;
-		data[7] = this.getTank().getCapacity();
-		data[8] = this.getTank().writeToNBT(new NBTTagCompound());
-		return ResonantInduction.PACKET_TILE.getPacket(this, "DescriptionPacket", data);
+		return ResonantInduction.PACKET_TILE.getPacket(this, PACKET_DESCRIPTION, this.colorID, this.renderSides, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound()));
 	}
 
 	public void sendRenderUpdate()
 	{
-		Object[] data = new Object[7];
-		data[0] = this.subID;
-		data[1] = this.renderSides;
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "RenderPacket", data));
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_RENDER, this.colorID, this.renderSides));
 	}
 
 	public void sendTankUpdate(int index)
 	{
 		if (this.getTank() != null && index == 0)
 		{
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_TANK, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
 		}
 	}
 
@@ -472,12 +461,12 @@ public abstract class TileFluidNetworkTile extends TileEntityFluidDevice impleme
 
 	public int getSubID()
 	{
-		return this.subID;
+		return this.colorID;
 	}
 
 	public void setSubID(int id)
 	{
-		this.subID = id;
+		this.colorID = id;
 	}
 
 	public static boolean canRenderSide(byte renderSides, ForgeDirection direction)
