@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.render.CalclaviaRenderHelper;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -112,10 +112,10 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 					FMLClientHandler.instance().getClient().renderEngine.bindTexture(FORCE_CUBE);
 
 					// Enable Blending
-					CalclaviaRenderHelper.enableBlending();
+					RenderUtility.enableBlending();
 
 					// Disable Lighting/Glow On
-					CalclaviaRenderHelper.disableLighting();
+					RenderUtility.disableLighting();
 
 					GL11.glPushMatrix();
 					GL11.glColor4f(1, 1, 1, (float) Math.sin((double) tileEntity.getTicks() / 10) / 2 + 1);
@@ -126,10 +126,10 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 					GL11.glPopMatrix();
 
 					// Enable Lighting/Glow Off
-					CalclaviaRenderHelper.enableLighting();
+					RenderUtility.enableLighting();
 
 					// Disable Blending
-					CalclaviaRenderHelper.disableBlending();
+					RenderUtility.disableBlending();
 
 					GL11.glPopMatrix();
 				}

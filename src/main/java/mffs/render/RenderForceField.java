@@ -7,7 +7,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import calclavia.lib.render.CalclaviaRenderHelper;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +21,7 @@ public class RenderForceField implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		CalclaviaRenderHelper.renderNormalBlockAsItem(block, metadata, renderer);
+		RenderUtility.renderNormalBlockAsItem(block, metadata, renderer);
 	}
 
 	@Override

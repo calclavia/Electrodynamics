@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.CalclaviaRenderHelper;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -204,6 +204,6 @@ public class FXBeam extends EntityFX
 		tessellator.startDrawingQuads();
 		this.prevSize = size;
 
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(CalclaviaRenderHelper.PARTICLE_RESOURCE);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderUtility.PARTICLE_RESOURCE);
 	}
 }
