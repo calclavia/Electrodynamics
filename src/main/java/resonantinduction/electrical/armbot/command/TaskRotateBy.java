@@ -3,10 +3,10 @@ package resonantinduction.electrical.armbot.command;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
-import resonantinduction.old.api.IArmbot;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.utility.MathUtility;
 

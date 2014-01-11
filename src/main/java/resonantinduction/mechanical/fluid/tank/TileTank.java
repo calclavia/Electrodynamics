@@ -2,11 +2,11 @@ package resonantinduction.mechanical.fluid.tank;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.fluid.INetworkFluidPart;
 import resonantinduction.core.tilenetwork.INetworkPart;
 import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.mechanical.fluid.network.NetworkFluidContainers;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
-import resonantinduction.old.api.fluid.INetworkFluidPart;
 
 public class TileTank extends TileFluidNetworkTile
 {

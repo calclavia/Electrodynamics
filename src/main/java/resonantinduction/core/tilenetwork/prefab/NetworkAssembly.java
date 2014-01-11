@@ -1,6 +1,6 @@
 package resonantinduction.core.tilenetwork.prefab;
 
-import resonantinduction.core.prefab.tile.TileEntityAssembly;
+import resonantinduction.core.prefab.tile.TileAssembly;
 import resonantinduction.core.tilenetwork.INetworkPart;
 
 public class NetworkAssembly extends NetworkSharedPower
@@ -31,10 +31,10 @@ public class NetworkAssembly extends NetworkSharedPower
 			this.lastUpdateTime = System.currentTimeMillis();
 			for (INetworkPart part : this.getMembers())
 			{
-				if (part instanceof TileEntityAssembly)
+				if (part instanceof TileAssembly)
 				{
-					networkPartEnergyRequest += ((TileEntityAssembly) part).getWattLoad();
-					networkPartEnergyRequest += ((TileEntityAssembly) part).getExtraLoad();
+					networkPartEnergyRequest += ((TileAssembly) part).getWattLoad();
+					networkPartEnergyRequest += ((TileAssembly) part).getExtraLoad();
 				}
 			}
 		}
@@ -44,7 +44,7 @@ public class NetworkAssembly extends NetworkSharedPower
 	@Override
 	public boolean isValidMember(INetworkPart part)
 	{
-		return super.isValidMember(part) && part instanceof TileEntityAssembly;
+		return super.isValidMember(part) && part instanceof TileAssembly;
 	}
 
 }

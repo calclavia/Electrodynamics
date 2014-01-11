@@ -9,10 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentFloatData;
-import resonantinduction.old.api.IArmbot;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;

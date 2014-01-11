@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import resonantinduction.api.IFilterable;
 import resonantinduction.archaic.engineering.ItemBlockFilter;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
-import resonantinduction.old.api.IFilterable;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.

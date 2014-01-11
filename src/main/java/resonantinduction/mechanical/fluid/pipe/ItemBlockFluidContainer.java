@@ -17,11 +17,14 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.mechanical.fluid.tank.TileTank;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector3;
 
-public class ItemBlockPipe extends ItemBlock
+public class ItemBlockFluidContainer extends ItemBlock
 {
-	public ItemBlockPipe(int id)
+	public ItemBlockFluidContainer(int id)
 	{
 		super(id);
 		this.setMaxDamage(0);
@@ -40,10 +43,11 @@ public class ItemBlockPipe extends ItemBlock
 		if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
 		{
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid"));
+
 			if (fluid != null)
 			{
 				list.add("Fluid: " + fluid.getFluid().getName());
-				list.add("Vol: " + fluid.amount);
+				list.add("Volume: " + UnitDisplay.getDisplay(fluid.amount, Unit.LITER, UnitPrefix.MILLI));
 			}
 		}
 	}
@@ -91,7 +95,8 @@ public class ItemBlockPipe extends ItemBlock
 		{
 			return 1;
 		}
-		return this.getItemStackLimit();
+
+		return this.maxStackSize;
 	}
 
 	@Override

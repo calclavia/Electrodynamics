@@ -10,9 +10,9 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.fluid.IDrain;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;
-import resonantinduction.old.api.fluid.IDrain;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 

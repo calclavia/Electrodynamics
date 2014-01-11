@@ -1,4 +1,4 @@
-package resonantinduction.old.api;
+package resonantinduction.api;
 
 import net.minecraft.item.ItemStack;
 

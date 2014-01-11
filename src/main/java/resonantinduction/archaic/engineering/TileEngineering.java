@@ -10,19 +10,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonantinduction.api.IArmbot;
+import resonantinduction.api.IArmbotUseable;
 import resonantinduction.api.events.AutoCraftEvent;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
-import resonantinduction.old.api.IArmbot;
-import resonantinduction.old.api.IArmbotUseable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
 import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
-
-import dark.lib.prefab.invgui.ISlotPickResult;
 
 public class TileEngineering extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {

@@ -1,4 +1,4 @@
-package resonantinduction.old.api;
+package resonantinduction.api;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.electrical.encoder.coding.IProgrammableMachine;

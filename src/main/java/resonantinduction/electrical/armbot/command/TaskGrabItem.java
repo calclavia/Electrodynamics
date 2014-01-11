@@ -6,9 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
-import resonantinduction.old.api.IArmbot;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

@@ -6,10 +6,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.fluid.INetworkPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.mechanical.fluid.network.NetworkPipes;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
-import resonantinduction.old.api.fluid.INetworkPipe;
 import calclavia.lib.utility.HelperMethods;
 import dark.lib.interfaces.IReadOut;
 

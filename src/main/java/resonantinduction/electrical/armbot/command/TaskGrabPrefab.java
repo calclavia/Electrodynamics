@@ -2,9 +2,9 @@ package resonantinduction.electrical.armbot.command;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IArmbot;
+import resonantinduction.api.IBelt;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
-import resonantinduction.old.api.IArmbot;
-import resonantinduction.old.api.IBelt;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 

@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import resonantinduction.api.EntityDictionary;
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
-import resonantinduction.old.api.EntityDictionary;
-import resonantinduction.old.api.IArmbot;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {

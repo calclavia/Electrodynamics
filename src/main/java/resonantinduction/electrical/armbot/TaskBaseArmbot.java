@@ -1,7 +1,7 @@
 package resonantinduction.electrical.armbot;
 
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
-import resonantinduction.old.api.IArmbot;
 
 public abstract class TaskBaseArmbot extends TaskBaseProcess
 {

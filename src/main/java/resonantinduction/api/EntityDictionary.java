@@ -1,4 +1,4 @@
-package resonantinduction.old.api;
+package resonantinduction.api;
 
 import java.util.HashMap;
 import java.util.List;

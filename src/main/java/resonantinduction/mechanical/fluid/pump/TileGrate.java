@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.fluid.IDrain;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
-import resonantinduction.old.api.fluid.IDrain;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 

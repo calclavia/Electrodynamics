@@ -1,4 +1,4 @@
-package resonantinduction.old.api.fluid;
+package resonantinduction.api.fluid;
 
 import java.util.Set;
 

@@ -10,10 +10,10 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IBelt;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityAssembly;
+import resonantinduction.core.prefab.tile.TileAssembly;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.old.api.IBelt;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.Player;
  * 
  * @author DarkGuardsman
  */
-public class TileConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
+public class TileConveyorBelt extends TileAssembly implements IBelt, IRotatable
 {
 
 	public enum SlantType
@@ -231,14 +231,14 @@ public class TileConveyorBelt extends TileEntityAssembly implements IBelt, IRota
 			}
 			front = face.getTileEntity(this.worldObj);
 			rear = back.getTileEntity(this.worldObj);
-			if (front instanceof TileEntityAssembly)
+			if (front instanceof TileAssembly)
 			{
-				this.getTileNetwork().mergeNetwork(((TileEntityAssembly) front).getTileNetwork(), this);
+				this.getTileNetwork().mergeNetwork(((TileAssembly) front).getTileNetwork(), this);
 				this.connectedTiles.add(front);
 			}
-			if (rear instanceof TileEntityAssembly)
+			if (rear instanceof TileAssembly)
 			{
-				this.getTileNetwork().mergeNetwork(((TileEntityAssembly) rear).getTileNetwork(), this);
+				this.getTileNetwork().mergeNetwork(((TileAssembly) rear).getTileNetwork(), this);
 				this.connectedTiles.add(rear);
 			}
 

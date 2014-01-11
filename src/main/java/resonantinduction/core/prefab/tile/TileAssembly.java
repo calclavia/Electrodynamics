@@ -19,7 +19,7 @@ import universalelectricity.api.vector.Vector3;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileEntityAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
+public abstract class TileAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
 {
 	/** lowest value the network can update at */
 	public static int refresh_min_rate = 20;
@@ -34,12 +34,12 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
 	/** Random rate by which this tile updates its network connections */
 	private int updateTick = 1;
 
-	public TileEntityAssembly(long wattsPerTick)
+	public TileAssembly(long wattsPerTick)
 	{
 		super(wattsPerTick);
 	}
 
-	public TileEntityAssembly(long wattsPerTick, long maxEnergy)
+	public TileAssembly(long wattsPerTick, long maxEnergy)
 	{
 		super(wattsPerTick, maxEnergy);
 	}
@@ -81,9 +81,9 @@ public abstract class TileEntityAssembly extends TileEntityEnergyMachine impleme
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
 				TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
-				if (tileEntity instanceof TileEntityAssembly && ((TileEntityAssembly) tileEntity).canTileConnect(Connection.NETWORK, dir.getOpposite()))
+				if (tileEntity instanceof TileAssembly && ((TileAssembly) tileEntity).canTileConnect(Connection.NETWORK, dir.getOpposite()))
 				{
-					this.getTileNetwork().mergeNetwork(((TileEntityAssembly) tileEntity).getTileNetwork(), this);
+					this.getTileNetwork().mergeNetwork(((TileAssembly) tileEntity).getTileNetwork(), this);
 					connectedTiles.add(tileEntity);
 				}
 			}

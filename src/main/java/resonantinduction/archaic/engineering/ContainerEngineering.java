@@ -5,10 +5,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import dark.lib.prefab.invgui.ISlotWatcher;
-import dark.lib.prefab.invgui.SlotCraftingResult;
-import dark.lib.prefab.invgui.SlotSpecific;
-import dark.lib.prefab.invgui.WatchedSlot;
+import calclavia.lib.prefab.slot.ISlotWatcher;
+import calclavia.lib.prefab.slot.SlotCraftingResult;
+import calclavia.lib.prefab.slot.SlotSpecific;
+import calclavia.lib.prefab.slot.SlotWatched;
 
 public class ContainerEngineering extends Container implements ISlotWatcher
 {
@@ -26,14 +26,14 @@ public class ContainerEngineering extends Container implements ISlotWatcher
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				this.addSlotToContainer(new WatchedSlot(this.tileEntity, y + x * 3, 9 + y * 18, 16 + x * 18, this));
+				this.addSlotToContainer(new SlotWatched(this.tileEntity, y + x * 3, 9 + y * 18, 16 + x * 18, this));
 			}
 		}
 
 		// Imprint Input for Imprinting
 		this.addSlotToContainer(new SlotSpecific(this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START, 68, 34, ItemBlockFilter.class));
 		// Item to be imprinted
-		this.addSlotToContainer(new WatchedSlot(this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START + 1, 92, 34, this));
+		this.addSlotToContainer(new SlotWatched(this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START + 1, 92, 34, this));
 		// Result of Crafting/Imprinting
 		this.addSlotToContainer(new SlotCraftingResult(this.tileEntity, this, this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START + 2, 148, 34));
 
@@ -42,7 +42,7 @@ public class ContainerEngineering extends Container implements ISlotWatcher
 		{
 			for (int i = 0; i < 9; i++)
 			{
-				this.addSlotToContainer(new WatchedSlot(this.tileEntity, (i + ii * 9) + TileEngineering.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
+				this.addSlotToContainer(new SlotWatched(this.tileEntity, (i + ii * 9) + TileEngineering.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
 			}
 		}
 
@@ -53,13 +53,13 @@ public class ContainerEngineering extends Container implements ISlotWatcher
 		{
 			for (int var4 = 0; var4 < 9; ++var4)
 			{
-				this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 120 + var3 * 18, this));
+				this.addSlotToContainer(new SlotWatched(inventoryPlayer, var4 + var3 * 9 + 9, 8 + var4 * 18, 120 + var3 * 18, this));
 			}
 		}
 
 		for (var3 = 0; var3 < 9; ++var3)
 		{
-			this.addSlotToContainer(new WatchedSlot(inventoryPlayer, var3, 8 + var3 * 18, 178, this));
+			this.addSlotToContainer(new SlotWatched(inventoryPlayer, var3, 8 + var3 * 18, 178, this));
 		}
 
 		this.tileEntity.openChest();

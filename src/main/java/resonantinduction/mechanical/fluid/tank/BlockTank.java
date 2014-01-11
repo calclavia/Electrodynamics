@@ -11,7 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
-import resonantinduction.mechanical.fluid.pipe.ItemBlockPipe;
+import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
@@ -114,7 +114,7 @@ public class BlockTank extends BlockRI
 	{
 		if (!world.isRemote)
 		{
-			ItemStack dropStack = ItemBlockPipe.getWrenchedItem(world, new Vector3(x, y, z));
+			ItemStack dropStack = ItemBlockFluidContainer.getWrenchedItem(world, new Vector3(x, y, z));
 			if (dropStack != null)
 			{
 				if (entityPlayer.getHeldItem() == null)

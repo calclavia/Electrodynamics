@@ -6,9 +6,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import resonantinduction.old.api.IArmbot;
 import universalelectricity.api.vector.Vector3;
 
 /**

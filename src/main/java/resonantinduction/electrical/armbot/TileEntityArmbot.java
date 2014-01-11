@@ -9,8 +9,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IArmbot;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityAssembly;
+import resonantinduction.core.prefab.tile.TileAssembly;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.armbot.command.TaskDrop;
 import resonantinduction.electrical.armbot.command.TaskGOTO;
@@ -20,7 +21,6 @@ import resonantinduction.electrical.armbot.command.TaskRotateTo;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import resonantinduction.mechanical.encoder.ItemDisk;
-import resonantinduction.old.api.IArmbot;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
@@ -37,7 +37,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
-public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock, IArmbot, IBlockActivate
+public class TileEntityArmbot extends TileAssembly implements IMultiBlock, IArmbot, IBlockActivate
 {
 	protected int ROTATION_SPEED = 6;
 

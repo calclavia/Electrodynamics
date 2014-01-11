@@ -1,8 +1,8 @@
 package resonantinduction.electrical.armbot.command;
 
+import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import resonantinduction.old.api.IArmbot;
 import universalelectricity.api.vector.Vector2;
 
 public class TaskDrop extends TaskBaseArmbot

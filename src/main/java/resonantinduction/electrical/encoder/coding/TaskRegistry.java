@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import resonantinduction.old.api.IArmbot;
+import resonantinduction.api.IArmbot;
 
 /**
  * Used to both register task and fake machines for the encoder to use to create new programs.

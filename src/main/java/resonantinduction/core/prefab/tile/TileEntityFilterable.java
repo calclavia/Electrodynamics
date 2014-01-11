@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IFilterable;
 import resonantinduction.archaic.engineering.ItemBlockFilter;
-import resonantinduction.old.api.IFilterable;
 import calclavia.lib.prefab.tile.IRotatable;
 
-public abstract class TileEntityFilterable extends TileEntityAssembly implements IRotatable, IFilterable
+public abstract class TileEntityFilterable extends TileAssembly implements IRotatable, IFilterable
 {
 	private ItemStack filterItem;
 	private boolean inverted;

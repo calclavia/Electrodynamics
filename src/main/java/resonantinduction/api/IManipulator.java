@@ -1,4 +1,4 @@
-package resonantinduction.old.api;
+package resonantinduction.api;
 
 /**
  * Interface applied to the manipulator.

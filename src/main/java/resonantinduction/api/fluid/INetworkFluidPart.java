@@ -1,4 +1,4 @@
-package resonantinduction.old.api.fluid;
+package resonantinduction.api.fluid;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
