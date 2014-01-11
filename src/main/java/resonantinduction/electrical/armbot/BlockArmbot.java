@@ -12,9 +12,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderArmbot;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
 
@@ -22,9 +23,8 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.IExtraInfo.IExtraBlockInfo;
 
-public class BlockArmbot extends BlockMachine implements IExtraBlockInfo
+public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 {
 	public BlockArmbot()
 	{

@@ -14,8 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.mechanical.fluid.TileEntityTank;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidNetworkTile;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import universalelectricity.api.vector.Vector3;
 
@@ -52,10 +52,10 @@ public class ItemBlockPipe extends ItemBlock
 	public static ItemStack getWrenchedItem(World world, Vector3 vec)
 	{
 		TileEntity entity = vec.getTileEntity(world);
-		if (entity instanceof TileEntityTank && ((TileEntityTank) entity).getTankInfo() != null && ((TileEntityTank) entity).getTankInfo()[0] != null)
+		if (entity instanceof TileTank && ((TileTank) entity).getTankInfo() != null && ((TileTank) entity).getTankInfo()[0] != null)
 		{
 			ItemStack itemStack = new ItemStack(RecipeLoader.blockTank);
-			FluidStack stack = ((TileEntityTank) entity).getTankInfo()[0].fluid;
+			FluidStack stack = ((TileTank) entity).getTankInfo()[0].fluid;
 
 			if (itemStack.getTagCompound() == null)
 			{
@@ -63,7 +63,7 @@ public class ItemBlockPipe extends ItemBlock
 			}
 			if (stack != null)
 			{
-				((TileEntityTank) entity).drain(ForgeDirection.UNKNOWN, stack.amount, true);
+				((TileTank) entity).drain(ForgeDirection.UNKNOWN, stack.amount, true);
 				itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
 			}
 			return itemStack;

@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.core.render;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +14,9 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
+
+import resonantinduction.old.client.render.RenderBlockEntity;
+import resonantinduction.render.BlockRenderInfo;
 
 public class RenderFluidHelper
 {

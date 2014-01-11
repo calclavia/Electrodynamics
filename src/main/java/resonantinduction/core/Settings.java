@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
-import calclavia.lib.prefab.block.IDManager;
+import calclavia.lib.content.IDManager;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;

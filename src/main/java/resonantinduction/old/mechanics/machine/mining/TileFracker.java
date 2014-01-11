@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
 import resonantinduction.mechanical.fluid.EnumGas;
-import resonantinduction.mechanical.fluid.GasTank;
+import resonantinduction.mechanical.fluid.tank.GasTank;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;

@@ -15,7 +15,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.client.render.RenderAdvancedHopper;
 
 import com.builtbroken.common.Pair;
@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public class BlockAdvancedHopper extends BlockMachine
+public class BlockAdvancedHopper extends BlockRI
 {
 	@SideOnly(Side.CLIENT)
 	public static Icon hopperIcon;

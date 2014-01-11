@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
@@ -20,7 +20,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEncoder extends BlockMachine
+public class BlockEncoder extends BlockRI
 {
     Icon encoder_side;
     Icon encoder_top;

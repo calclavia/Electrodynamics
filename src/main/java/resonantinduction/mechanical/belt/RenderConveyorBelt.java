@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.mechanical.belt;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

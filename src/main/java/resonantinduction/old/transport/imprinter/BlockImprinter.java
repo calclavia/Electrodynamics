@@ -14,7 +14,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.transport.ResonantInductionTransport;
 
 import com.builtbroken.common.Pair;
@@ -22,7 +22,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockImprinter extends BlockMachine
+public class BlockImprinter extends BlockRI
 {
     Icon imprinter_side;
     Icon imprinter_top;

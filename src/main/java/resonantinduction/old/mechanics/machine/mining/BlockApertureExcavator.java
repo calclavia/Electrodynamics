@@ -7,14 +7,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
-import dark.lib.IExtraInfo.IExtraBlockInfo;
-
 /** @author Archadia */
-public class BlockApertureExcavator extends BlockMachine implements IExtraBlockInfo
+public class BlockApertureExcavator extends BlockRI implements IExtraBlockInfo
 {
 
     public BlockApertureExcavator()

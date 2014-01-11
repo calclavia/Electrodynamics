@@ -13,7 +13,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.interfaces.IRotatableBlock;
 
-public class BlockTurntable extends BlockMachine
+public class BlockTurntable extends BlockRI
 {
 	private Icon top;
 

@@ -7,15 +7,14 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.client.render.BlockRenderHelper;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
-import dark.lib.IExtraInfo.IExtraBlockInfo;
-
 /** @author Archadia */
-public class BlockFrackingPipe extends BlockMachine implements IExtraBlockInfo
+public class BlockFrackingPipe extends BlockRI implements IExtraBlockInfo
 {
 
 	public BlockFrackingPipe()

@@ -13,21 +13,21 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.CommonProxy;
 import resonantinduction.old.client.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.IExtraInfo.IExtraBlockInfo;
 import dark.lib.recipes.ProcessorType;
 
-public class BlockProcessor extends BlockMachine implements IExtraBlockInfo
+public class BlockProcessor extends BlockRI implements IExtraBlockInfo
 {
 
 	public BlockProcessor()

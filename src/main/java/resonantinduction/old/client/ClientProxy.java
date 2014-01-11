@@ -8,11 +8,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import resonantinduction.mechanical.fluid.TileEntityReleaseValve;
-import resonantinduction.mechanical.fluid.TileEntityTank;
 import resonantinduction.mechanical.fluid.TileKitchenSink;
 import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
 import resonantinduction.mechanical.fluid.pump.TileEntityConstructionPump;
 import resonantinduction.mechanical.fluid.pump.TileEntityStarterPump;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.old.client.gui.GuiEncoderCoder;
 import resonantinduction.old.client.gui.GuiEncoderHelp;
 import resonantinduction.old.client.gui.GuiEncoderInventory;
@@ -67,7 +67,7 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReleaseValve.class, new RenderReleaseValve());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileKitchenSink.class, new RenderSink());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConstructionPump.class, new RenderConstructionPump());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTank.class, new RenderTank());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, new RenderTank());
 
 		MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockPipe.blockID, new ItemPipeRenderer());
 		MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockTank.blockID, new ItemTankRenderer());

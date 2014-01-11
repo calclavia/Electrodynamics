@@ -55,7 +55,6 @@ import resonantinduction.electrical.multimeter.ItemReadoutTools;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.fluid.BlockKitchenSink;
 import resonantinduction.mechanical.fluid.BlockReleaseValve;
-import resonantinduction.mechanical.fluid.BlockTank;
 import resonantinduction.mechanical.fluid.EnumGas;
 import resonantinduction.mechanical.fluid.ItemFluidCan;
 import resonantinduction.mechanical.fluid.pipes.BlockPipe;
@@ -64,6 +63,7 @@ import resonantinduction.mechanical.fluid.pipes.ItemBlockPipe;
 import resonantinduction.mechanical.fluid.pump.BlockConstructionPump;
 import resonantinduction.mechanical.fluid.pump.BlockDrain;
 import resonantinduction.mechanical.fluid.pump.BlockPumpMachine;
+import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.old.api.coding.TaskRegistry;
 import resonantinduction.old.core.ItemOreDirv;
 import resonantinduction.old.core.misc.BehaviorDispenseEgg;
@@ -84,6 +84,7 @@ import resonantinduction.old.transport.imprinter.ItemImprinter;
 import resonantinduction.old.transport.logistic.BlockDetector;
 import resonantinduction.old.transport.logistic.BlockManipulator;
 import resonantinduction.old.transport.logistic.BlockRejector;
+import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.ore.OreGenReplaceStone;
 import calclavia.lib.ore.OreGenerator;
 import calclavia.lib.prefab.item.ItemBlockHolder;
@@ -103,7 +104,6 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.lib.CoreRegistry;
 import dark.lib.EnumMaterial;
 import dark.lib.EnumOrePart;
 import dark.lib.LaserEntityDamageSource;
@@ -257,54 +257,54 @@ public class ResonantInductionTransport
 	{
 
 		/* BLOCKS */
-		RecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", ResonantInductionTransport.MOD_ID, BlockManipulator.class);
-		RecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", ResonantInductionTransport.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
-		RecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", ResonantInductionTransport.MOD_ID, BlockImprinter.class);
-		RecipeLoader.blockDetector = CoreRegistry.createNewBlock("Detector", ResonantInductionTransport.MOD_ID, BlockDetector.class);
+		RecipeLoader.blockManipulator = ContentRegistry.createNewBlock("Manipulator", ResonantInductionTransport.MOD_ID, BlockManipulator.class);
+		RecipeLoader.blockCrate = (BlockCrate) ContentRegistry.createNewBlock("Crate", ResonantInductionTransport.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
+		RecipeLoader.blockImprinter = ContentRegistry.createNewBlock("Imprinter", ResonantInductionTransport.MOD_ID, BlockImprinter.class);
+		RecipeLoader.blockDetector = ContentRegistry.createNewBlock("Detector", ResonantInductionTransport.MOD_ID, BlockDetector.class);
 
-		RecipeLoader.blockRejector = CoreRegistry.createNewBlock("Rejector", ResonantInductionTransport.MOD_ID, BlockRejector.class);
-		RecipeLoader.blockEncoder = CoreRegistry.createNewBlock("Encoder", ResonantInductionTransport.MOD_ID, BlockEncoder.class);
-		RecipeLoader.blockArmbot = CoreRegistry.createNewBlock("Armbot", ResonantInductionTransport.MOD_ID, BlockArmbot.class);
-		RecipeLoader.blockTurntable = CoreRegistry.createNewBlock("Turntable", ResonantInductionTransport.MOD_ID, BlockTurntable.class);
-		RecipeLoader.processorMachine = CoreRegistry.createNewBlock("ALBlockProcessor", ResonantInductionTransport.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
+		RecipeLoader.blockRejector = ContentRegistry.createNewBlock("Rejector", ResonantInductionTransport.MOD_ID, BlockRejector.class);
+		RecipeLoader.blockEncoder = ContentRegistry.createNewBlock("Encoder", ResonantInductionTransport.MOD_ID, BlockEncoder.class);
+		RecipeLoader.blockArmbot = ContentRegistry.createNewBlock("Armbot", ResonantInductionTransport.MOD_ID, BlockArmbot.class);
+		RecipeLoader.blockTurntable = ContentRegistry.createNewBlock("Turntable", ResonantInductionTransport.MOD_ID, BlockTurntable.class);
+		RecipeLoader.processorMachine = ContentRegistry.createNewBlock("ALBlockProcessor", ResonantInductionTransport.MOD_ID, BlockProcessor.class, ItemBlockHolder.class);
 
-		RecipeLoader.blockAdvancedHopper = CoreRegistry.createNewBlock("ALBlockHopper", ResonantInductionTransport.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
-		RecipeLoader.blockPipe = CoreRegistry.createNewBlock("FMBlockPipe", ResonantInductionTransport.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
-		RecipeLoader.blockPumpMachine = CoreRegistry.createNewBlock("FMBlockPump", ResonantInductionTransport.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
-		RecipeLoader.blockReleaseValve = CoreRegistry.createNewBlock("FMBlockReleaseValve", ResonantInductionTransport.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
-		RecipeLoader.blockTank = CoreRegistry.createNewBlock("FMBlockTank", ResonantInductionTransport.MOD_ID, BlockTank.class, ItemBlockPipe.class);
+		RecipeLoader.blockAdvancedHopper = ContentRegistry.createNewBlock("ALBlockHopper", ResonantInductionTransport.MOD_ID, BlockAdvancedHopper.class, ItemBlockHolder.class);
+		RecipeLoader.blockPipe = ContentRegistry.createNewBlock("FMBlockPipe", ResonantInductionTransport.MOD_ID, BlockPipe.class, ItemBlockPipe.class);
+		RecipeLoader.blockPumpMachine = ContentRegistry.createNewBlock("FMBlockPump", ResonantInductionTransport.MOD_ID, BlockPumpMachine.class, ItemBlockHolder.class);
+		RecipeLoader.blockReleaseValve = ContentRegistry.createNewBlock("FMBlockReleaseValve", ResonantInductionTransport.MOD_ID, BlockReleaseValve.class, ItemBlockHolder.class);
+		RecipeLoader.blockTank = ContentRegistry.createNewBlock("FMBlockTank", ResonantInductionTransport.MOD_ID, BlockTank.class, ItemBlockPipe.class);
 
-		RecipeLoader.blockSink = CoreRegistry.createNewBlock("FMBlockSink", ResonantInductionTransport.MOD_ID, BlockKitchenSink.class, ItemBlockHolder.class);
-		RecipeLoader.blockDrain = CoreRegistry.createNewBlock("FMBlockDrain", ResonantInductionTransport.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
-		RecipeLoader.blockConPump = CoreRegistry.createNewBlock("FMBlockConstructionPump", ResonantInductionTransport.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
-		RecipeLoader.blockSteamGen = CoreRegistry.createNewBlock("DMBlockSteamMachine", ResonantInductionTransport.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
-		RecipeLoader.blockOre = CoreRegistry.createNewBlock("DMBlockOre", ResonantInductionTransport.MOD_ID, BlockOre.class, ItemBlockOre.class);
+		RecipeLoader.blockSink = ContentRegistry.createNewBlock("FMBlockSink", ResonantInductionTransport.MOD_ID, BlockKitchenSink.class, ItemBlockHolder.class);
+		RecipeLoader.blockDrain = ContentRegistry.createNewBlock("FMBlockDrain", ResonantInductionTransport.MOD_ID, BlockDrain.class, ItemBlockHolder.class);
+		RecipeLoader.blockConPump = ContentRegistry.createNewBlock("FMBlockConstructionPump", ResonantInductionTransport.MOD_ID, BlockConstructionPump.class, ItemBlockHolder.class);
+		RecipeLoader.blockSteamGen = ContentRegistry.createNewBlock("DMBlockSteamMachine", ResonantInductionTransport.MOD_ID, BlockSmallSteamGen.class, ItemBlockHolder.class);
+		RecipeLoader.blockOre = ContentRegistry.createNewBlock("DMBlockOre", ResonantInductionTransport.MOD_ID, BlockOre.class, ItemBlockOre.class);
 
-		RecipeLoader.blockWire = CoreRegistry.createNewBlock("DMBlockWire", ResonantInductionTransport.MOD_ID, BlockWire.class, ItemBlockWire.class);
-		RecipeLoader.blockDebug = CoreRegistry.createNewBlock("DMBlockDebug", ResonantInductionTransport.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
-		RecipeLoader.blockStainGlass = CoreRegistry.createNewBlock("DMBlockStainedGlass", ResonantInductionTransport.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
-		RecipeLoader.blockColorSand = CoreRegistry.createNewBlock("DMBlockColorSand", ResonantInductionTransport.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
-		RecipeLoader.blockBasalt = CoreRegistry.createNewBlock("DMBlockBasalt", ResonantInductionTransport.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
+		RecipeLoader.blockWire = ContentRegistry.createNewBlock("DMBlockWire", ResonantInductionTransport.MOD_ID, BlockWire.class, ItemBlockWire.class);
+		RecipeLoader.blockDebug = ContentRegistry.createNewBlock("DMBlockDebug", ResonantInductionTransport.MOD_ID, BlockDebug.class, ItemBlockHolder.class);
+		RecipeLoader.blockStainGlass = ContentRegistry.createNewBlock("DMBlockStainedGlass", ResonantInductionTransport.MOD_ID, BlockColorGlass.class, ItemBlockColored.class);
+		RecipeLoader.blockColorSand = ContentRegistry.createNewBlock("DMBlockColorSand", ResonantInductionTransport.MOD_ID, BlockColorSand.class, ItemBlockColored.class);
+		RecipeLoader.blockBasalt = ContentRegistry.createNewBlock("DMBlockBasalt", ResonantInductionTransport.MOD_ID, BlockBasalt.class, ItemBlockColored.class);
 
-		RecipeLoader.blockGlowGlass = CoreRegistry.createNewBlock("DMBlockGlowGlass", ResonantInductionTransport.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
-		RecipeLoader.blockSolar = CoreRegistry.createNewBlock("DMBlockSolar", ResonantInductionTransport.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
-		RecipeLoader.blockGas = CoreRegistry.createNewBlock("DMBlockGas", ResonantInductionTransport.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
-		RecipeLoader.blockBatBox = CoreRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockBatteryBox.class, ItemBlockEnergyStorage.class);
+		RecipeLoader.blockGlowGlass = ContentRegistry.createNewBlock("DMBlockGlowGlass", ResonantInductionTransport.MOD_ID, BlockColorGlowGlass.class, ItemBlockColored.class);
+		RecipeLoader.blockSolar = ContentRegistry.createNewBlock("DMBlockSolar", ResonantInductionTransport.MOD_ID, BlockSolarPanel.class, ItemBlockHolder.class);
+		RecipeLoader.blockGas = ContentRegistry.createNewBlock("DMBlockGas", ResonantInductionTransport.MOD_ID, BlockGasOre.class, ItemBlockHolder.class);
+		RecipeLoader.blockBatBox = ContentRegistry.createNewBlock("DMBlockBatBox", ResonantInductionTransport.MOD_ID, BlockBatteryBox.class, ItemBlockEnergyStorage.class);
 
 		/* ITEMS */
-		RecipeLoader.itemTool = CoreRegistry.createNewItem("DMReadoutTools", ResonantInductionTransport.MOD_ID, ItemReadoutTools.class, true);
-		RecipeLoader.battery = CoreRegistry.createNewItem("DMItemBattery", ResonantInductionTransport.MOD_ID, ItemBattery.class, true);
-		RecipeLoader.wrench = CoreRegistry.createNewItem("DMWrench", ResonantInductionTransport.MOD_ID, ItemWrench.class, true);
-		RecipeLoader.itemGlowingSand = CoreRegistry.createNewItem("DMItemGlowingSand", ResonantInductionTransport.MOD_ID, ItemColoredDust.class, true);
-		RecipeLoader.itemDiggingTool = CoreRegistry.createNewItem("ItemDiggingTools", ResonantInductionTransport.MOD_ID, ItemCommonTool.class, true);
+		RecipeLoader.itemTool = ContentRegistry.createNewItem("DMReadoutTools", ResonantInductionTransport.MOD_ID, ItemReadoutTools.class, true);
+		RecipeLoader.battery = ContentRegistry.createNewItem("DMItemBattery", ResonantInductionTransport.MOD_ID, ItemBattery.class, true);
+		RecipeLoader.wrench = ContentRegistry.createNewItem("DMWrench", ResonantInductionTransport.MOD_ID, ItemWrench.class, true);
+		RecipeLoader.itemGlowingSand = ContentRegistry.createNewItem("DMItemGlowingSand", ResonantInductionTransport.MOD_ID, ItemColoredDust.class, true);
+		RecipeLoader.itemDiggingTool = ContentRegistry.createNewItem("ItemDiggingTools", ResonantInductionTransport.MOD_ID, ItemCommonTool.class, true);
 
-		RecipeLoader.itemVehicleTest = CoreRegistry.createNewItem("ItemVehicleTest", ResonantInductionTransport.MOD_ID, ItemVehicleSpawn.class, true);
+		RecipeLoader.itemVehicleTest = ContentRegistry.createNewItem("ItemVehicleTest", ResonantInductionTransport.MOD_ID, ItemVehicleSpawn.class, true);
 		RecipeLoader.itemImprint = new ItemImprinter(CONFIGURATION.getItem("Imprint", DarkCore.getNextItemId()).getInt());
 		RecipeLoader.itemDisk = new ItemDisk(CONFIGURATION.getItem("Disk", DarkCore.getNextItemId()).getInt());
-		RecipeLoader.itemFluidCan = CoreRegistry.createNewItem("ItemFluidCan", ResonantInductionTransport.MOD_ID, ItemFluidCan.class, true);
-		RecipeLoader.itemParts = CoreRegistry.createNewItem("DMCraftingParts", ResonantInductionTransport.MOD_ID, ItemParts.class, true);
+		RecipeLoader.itemFluidCan = ContentRegistry.createNewItem("ItemFluidCan", ResonantInductionTransport.MOD_ID, ItemFluidCan.class, true);
+		RecipeLoader.itemParts = ContentRegistry.createNewItem("DMCraftingParts", ResonantInductionTransport.MOD_ID, ItemParts.class, true);
 
-		RecipeLoader.itemMetals = CoreRegistry.createNewItem("DMOreDirvParts", ResonantInductionTransport.MOD_ID, ItemOreDirv.class, true);
+		RecipeLoader.itemMetals = ContentRegistry.createNewItem("DMOreDirvParts", ResonantInductionTransport.MOD_ID, ItemOreDirv.class, true);
 		// ALRecipeLoader.itemMPWire = CoreRegistry.createNewItem("DMMPWire", AssemblyLine.MOD_ID,
 		// ItemWire.class, true);
 

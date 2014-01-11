@@ -2,6 +2,7 @@ package resonantinduction.old.core;
 
 import java.util.List;
 
+import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,7 +20,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.EnumMaterial;
 import dark.lib.EnumOrePart;
-import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * A series of items that are derived from a basic material

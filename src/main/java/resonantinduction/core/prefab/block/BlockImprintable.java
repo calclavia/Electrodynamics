@@ -15,7 +15,7 @@ import resonantinduction.old.transport.imprinter.ItemImprinter;
 /** Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia */
-public abstract class BlockImprintable extends BlockMachine
+public abstract class BlockImprintable extends BlockRI
 {
 
     public BlockImprintable(String blockName, Material material)

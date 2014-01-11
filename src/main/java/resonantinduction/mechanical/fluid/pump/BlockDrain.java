@@ -16,11 +16,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 
 import com.builtbroken.common.Pair;
 
-public class BlockDrain extends BlockMachine
+public class BlockDrain extends BlockRI
 {
     private Icon blockIcon;
     private Icon drainIcon;

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid;
+package resonantinduction.mechanical.fluid.tank;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,9 +8,9 @@ import resonantinduction.mechanical.fluid.network.NetworkFluidContainers;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidNetworkTile;
 import resonantinduction.old.api.fluid.INetworkFluidPart;
 
-public class TileEntityTank extends TileEntityFluidNetworkTile
+public class TileTank extends TileEntityFluidNetworkTile
 {
-	public TileEntityTank()
+	public TileTank()
 	{
 		super(BlockTank.tankVolume);
 	}
@@ -39,7 +39,7 @@ public class TileEntityTank extends TileEntityFluidNetworkTile
 	{
 		if (!this.worldObj.isRemote)
 		{
-			if (tileEntity instanceof TileEntityTank)
+			if (tileEntity instanceof TileTank)
 			{
 				if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
 				{

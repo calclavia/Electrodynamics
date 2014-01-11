@@ -1,4 +1,4 @@
-package resonantinduction.old.client.render;
+package resonantinduction.mechanical.fluid.tank;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.mechanical.fluid.TileEntityTank;
+import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.old.client.model.ModelTankSide;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -28,16 +28,16 @@ public class RenderTank extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		FluidStack liquid = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTankInfo()[0].fluid : null;
+		FluidStack liquid = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTankInfo()[0].fluid : null;
 		this.renderTank(tileEntity, x, y, z, 0, liquid);
 	}
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
 	{
 		boolean[] render = new boolean[6];
-		if (tileEntity instanceof TileEntityTank)
+		if (tileEntity instanceof TileTank)
 		{
-			render = ((TileEntityTank) tileEntity).renderConnection;
+			render = ((TileTank) tileEntity).renderConnection;
 		}
 		if (liquid != null && liquid.amount > 100)
 		{
@@ -55,7 +55,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 			GL11.glTranslatef((float) x, (float) y, (float) z);
 			GL11.glScalef(1.01F, 1.01F, 1.01F);
-			int cap = tileEntity instanceof TileEntityTank ? ((TileEntityTank) tileEntity).getTankInfo()[0].capacity : liquid.amount;
+			int cap = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTankInfo()[0].capacity : liquid.amount;
 			GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
 
 			GL11.glPopAttrib();

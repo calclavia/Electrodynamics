@@ -17,7 +17,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.client.render.RenderCrate;
 import universalelectricity.api.UniversalElectricity;
 
@@ -30,7 +30,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * to go on Conveyor Belts
  * 
  * @author DarkGuardsman */
-public class BlockCrate extends BlockMachine
+public class BlockCrate extends BlockRI
 {
     Icon adv, elt;
 

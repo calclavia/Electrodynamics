@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid;
+package resonantinduction.mechanical.fluid.tank;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;

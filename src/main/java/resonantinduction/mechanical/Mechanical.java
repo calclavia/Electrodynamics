@@ -5,8 +5,10 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
-import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.belt.TileConveyorBelt;
+import resonantinduction.mechanical.fluid.tank.BlockTank;
+import resonantinduction.mechanical.fluid.tank.TileTank;
+import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -17,7 +19,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import dark.lib.CoreRegistry;
 
 /**
  * Resonant Induction Archaic Module
@@ -42,13 +43,16 @@ public class Mechanical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 	public static Block blockConveyorBelt;
+	public static Block blockTank;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		blockConveyorBelt = CoreRegistry.createNewBlock("RIConveyorBelt", ID, BlockConveyorBelt.class);
+		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
+		blockTank = contentRegistry.createTile(BlockTank.class, TileTank.class);
 		proxy.preInit();
 	}
 

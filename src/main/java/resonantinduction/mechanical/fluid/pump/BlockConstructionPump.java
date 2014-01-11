@@ -15,7 +15,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.tilenetwork.prefab.NetworkTileEntities;
 import resonantinduction.old.client.render.BlockRenderHelper;
 import resonantinduction.old.core.recipe.RecipeLoader;
@@ -25,7 +25,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockConstructionPump extends BlockMachine
+public class BlockConstructionPump extends BlockRI
 {
 
     public BlockConstructionPump()

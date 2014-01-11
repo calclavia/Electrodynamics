@@ -27,14 +27,14 @@ import resonantinduction.api.events.LaserEvent;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import calclavia.lib.utility.RayTraceHelper;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.CoreRegistry;
-import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * Stream laser mining tool, When held down it will slowly mine away at the block in front of it.
@@ -184,8 +184,8 @@ public class ItemMiningLaser extends ItemElectric implements IExtraItemInfo
 			// TODO adjust the laser for the end of the gun
 			float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
 			float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-			CoreRegistry.proxy().renderBeam(player.worldObj, new Vector3(p).translate(new Vector3(x, -.25, z)), new Vector3(playerViewOffset), Color.ORANGE, 1);
-			CoreRegistry.proxy().renderBeam(player.worldObj, new Vector3(p).translate(new Vector3(x, -.45, z)), new Vector3(playerViewOffset), Color.ORANGE, 1);
+			ContentRegistry.proxy().renderBeam(player.worldObj, new Vector3(p).translate(new Vector3(x, -.25, z)), new Vector3(playerViewOffset), Color.ORANGE, 1);
+			ContentRegistry.proxy().renderBeam(player.worldObj, new Vector3(p).translate(new Vector3(x, -.45, z)), new Vector3(playerViewOffset), Color.ORANGE, 1);
 		}
 
 	}

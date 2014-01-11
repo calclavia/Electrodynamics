@@ -2,6 +2,7 @@ package resonantinduction.core.resource.item;
 
 import java.util.List;
 
+import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,6 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.IExtraInfo.IExtraItemInfo;
 
 /**
  * A meta data item containing parts of various crafting recipes. These parts do not do anything but

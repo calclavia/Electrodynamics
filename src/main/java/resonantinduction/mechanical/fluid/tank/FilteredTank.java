@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid;
+package resonantinduction.mechanical.fluid.tank;
 
 import java.util.ArrayList;
 import java.util.List;

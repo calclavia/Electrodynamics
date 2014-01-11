@@ -11,7 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.client.render.BlockRenderHelper;
 import resonantinduction.old.core.recipe.RecipeLoader;
 
@@ -20,7 +20,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPumpMachine extends BlockMachine
+public class BlockPumpMachine extends BlockRI
 {
 
     public BlockPumpMachine()

@@ -17,6 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.old.core.recipe.RecipeLoader;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
@@ -24,7 +25,6 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.EnumMaterial;
-import dark.lib.IExtraInfo.IExtraBlockInfo;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {

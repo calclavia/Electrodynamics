@@ -10,7 +10,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.core.recipe.RecipeLoader;
 
 import com.builtbroken.common.Pair;
@@ -18,11 +18,11 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockReleaseValve extends BlockMachine
+public class BlockReleaseValve extends BlockRI
 {
     public BlockReleaseValve()
     {
-        super(Settings.CONFIGURATION, "ReleaseValve", Material.iron);
+        super("ReleaseValve");
         this.setHardness(1f);
         this.setResistance(5f);
     }
@@ -75,19 +75,6 @@ public class BlockReleaseValve extends BlockMachine
     public void onNeighborBlockChange(World par1World, int x, int y, int z, int side)
     {
         super.onNeighborBlockChange(par1World, x, y, z, side);
-
-    }
-
-    @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
-    {
-        return new ItemStack(RecipeLoader.blockReleaseValve, 1, 0);
-    }
-
-    @Override
-    public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-    {
-        list.add(new Pair<String, Class<? extends TileEntity>>("ReleaseValve", TileEntityReleaseValve.class));
 
     }
 }

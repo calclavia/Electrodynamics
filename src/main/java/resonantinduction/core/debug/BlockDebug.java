@@ -13,16 +13,16 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.core.prefab.block.BlockMachine;
+import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.old.transport.ResonantInductionTransport;
+import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.IExtraInfo.IExtraBlockInfo;
 
-public class BlockDebug extends BlockMachine implements IExtraBlockInfo
+public class BlockDebug extends BlockRI implements IExtraBlockInfo
 {
 	public static float DebugWattOut, DebugWattDemand;
 
