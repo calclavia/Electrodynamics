@@ -15,9 +15,9 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.CommonProxy;
-import resonantinduction.old.client.render.MechanicalBlockRenderingHandler;
+import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderProcessor;
-import resonantinduction.old.transport.ResonantInductionTransport;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
@@ -46,7 +46,7 @@ public class BlockProcessor extends BlockRI implements IExtraBlockInfo
 			}
 			else
 			{
-				entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
+				entityPlayer.openGui(Mechanical.instance, CommonProxy.GUI_PROCESSOR, world, x, y, z);
 				return true;
 			}
 		}
@@ -135,7 +135,7 @@ public class BlockProcessor extends BlockRI implements IExtraBlockInfo
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.BLOCK_RENDER_ID;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override

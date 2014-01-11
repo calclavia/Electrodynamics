@@ -2,7 +2,6 @@ package resonantinduction.core.resource.item;
 
 import java.util.List;
 
-import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -12,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
+import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -2,7 +2,6 @@ package resonantinduction.mechanical.fluid.pipes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,16 +12,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
-
-import com.builtbroken.common.Pair;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.helpers.ColorCode;

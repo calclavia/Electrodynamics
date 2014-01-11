@@ -10,10 +10,10 @@ import net.minecraft.network.packet.Packet;
 import resonantinduction.core.prefab.tile.TileEntityMachine;
 import resonantinduction.electrical.armbot.Program;
 import resonantinduction.electrical.armbot.command.TaskRotateTo;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.api.coding.IProgram;
 import resonantinduction.old.api.coding.ITask;
 import resonantinduction.old.api.coding.TaskRegistry;
-import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.network.PacketHandler;
 
@@ -186,7 +186,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 		{
 			this.program.save(tag);
 		}
-		return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, TileEntityEncoder.PROGRAM_PACKET_ID, this, exists, tag);
+		return PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, TileEntityEncoder.PROGRAM_PACKET_ID, this, exists, tag);
 
 	}
 
@@ -196,7 +196,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 		{
 			if (this.worldObj.isRemote)
 			{
-				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, TileEntityEncoder.REMOVE_TASK_PACKET_ID, this, vec.intX(), vec.intY()));
+				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, TileEntityEncoder.REMOVE_TASK_PACKET_ID, this, vec.intX(), vec.intY()));
 			}
 			else
 			{
@@ -214,7 +214,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
 				editTask.save(nbt);
-				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
+				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, TileEntityEncoder.PROGRAM_CHANGE_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
 			}
 			else
 			{
@@ -232,7 +232,7 @@ public class TileEntityEncoder extends TileEntityMachine implements ISidedInvent
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
 				editTask.save(nbt);
-				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, TileEntityEncoder.NEW_TASK_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
+				PacketDispatcher.sendPacketToServer(PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, TileEntityEncoder.NEW_TASK_PACKET_ID, this, editTask.getMethodName(), editTask.getCol(), editTask.getRow(), nbt));
 			}
 			else
 			{

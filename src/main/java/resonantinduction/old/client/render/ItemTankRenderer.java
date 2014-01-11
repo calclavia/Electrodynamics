@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.old.client.model.ModelTankSide;
 import resonantinduction.old.core.recipe.RecipeLoader;

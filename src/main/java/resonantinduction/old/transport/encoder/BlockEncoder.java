@@ -13,7 +13,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.CommonProxy;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 
 import com.builtbroken.common.Pair;
 
@@ -73,7 +73,7 @@ public class BlockEncoder extends BlockRI
     {
         if (!world.isRemote)
         {
-            entityPlayer.openGui(ResonantInductionTransport.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
+            entityPlayer.openGui(Mechanical.instance, CommonProxy.GUI_ENCODER, world, x, y, z);
         }
 
         return true;

@@ -110,7 +110,7 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.BLOCK_RENDER_ID;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override

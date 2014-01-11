@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +26,7 @@ public class BlockCraftingTable extends BlockRI
 
 	public BlockCraftingTable()
 	{
-		super(ResonantInductionTransport.CONFIGURATION, "CraftingTable", Material.rock);
+		super(Mechanical.CONFIGURATION, "CraftingTable", Material.rock);
 	}
 
 	@Override

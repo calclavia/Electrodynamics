@@ -7,7 +7,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 /**
@@ -38,7 +38,7 @@ public enum EnumBird
 		public void register()
 		{
 			EntityRegistry.registerGlobalEntityID(EntityTurkey.class, "FTTurkey", EntityRegistry.findGlobalUniqueEntityId(), 5651507, Color.red.getRGB());
-			EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", ResonantInductionTransport.entitiesIds++, ResonantInductionTransport.instance, 64, 1, true);
+			EntityRegistry.registerModEntity(EntityTurkey.class, "FTTurkey", Mechanical.entitiesIds++, Mechanical.instance, 64, 1, true);
 			EntityRegistry.addSpawn(EntityTurkey.class, 3, 1, 10, EnumCreatureType.creature, BiomeGenBase.forest, BiomeGenBase.river);
 		}
 

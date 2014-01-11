@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 
 import org.bouncycastle.util.Arrays;
 
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import resonantinduction.core.tilenetwork.INetworkPart;
 import resonantinduction.core.tilenetwork.ITileNetwork;
@@ -27,7 +28,6 @@ import resonantinduction.mechanical.fluid.network.NetworkFluidTiles;
 import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.old.api.fluid.FluidMasterList;
 import resonantinduction.old.api.fluid.INetworkFluidPart;
-import resonantinduction.old.transport.ResonantInductionTransport;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
 
@@ -37,7 +37,7 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
+public abstract class TileFluidNetworkTile extends TileEntityFluidDevice implements INetworkFluidPart, ISimplePacketReceiver
 {
 	private int updateTick = 1;
 	public static int refreshRate = 10;
@@ -53,12 +53,12 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
 
 	protected NetworkFluidTiles network;
 
-	public TileEntityFluidNetworkTile()
+	public TileFluidNetworkTile()
 	{
 		this(1);
 	}
 
-	public TileEntityFluidNetworkTile(int tankCap)
+	public TileFluidNetworkTile(int tankCap)
 	{
 		if (tankCap <= 0)
 		{
@@ -90,7 +90,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
 				this.updateTick = this.worldObj.rand.nextInt(5) * 40 + 20;
 				this.refresh();
 			}
-			if (ticks % TileEntityFluidNetworkTile.refreshRate == 0)
+			if (ticks % TileFluidNetworkTile.refreshRate == 0)
 			{
 				if (this.getTank().getFluid() == null && this.prevStack == null)
 				{
@@ -433,7 +433,7 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
 		data[6] = this.renderConnection[5];
 		data[7] = this.getTank().getCapacity();
 		data[8] = this.getTank().writeToNBT(new NBTTagCompound());
-		return ResonantInductionTransport.getTilePacket().getPacket(this, "DescriptionPacket", data);
+		return ResonantInduction.PACKET_TILE.getPacket(this, "DescriptionPacket", data);
 	}
 
 	public void sendRenderUpdate()
@@ -446,14 +446,14 @@ public abstract class TileEntityFluidNetworkTile extends TileEntityFluidDevice i
 		data[4] = this.renderConnection[3];
 		data[5] = this.renderConnection[4];
 		data[6] = this.renderConnection[5];
-		PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "RenderPacket", data));
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "RenderPacket", data));
 	}
 
 	public void sendTankUpdate(int index)
 	{
 		if (this.getTank() != null && index == 0)
 		{
-			PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, "SingleTank", this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
 		}
 	}
 

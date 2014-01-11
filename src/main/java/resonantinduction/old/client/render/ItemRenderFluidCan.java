@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.ItemFluidCan;
+import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.old.client.model.ModelSmallFluidCan;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import cpw.mods.fml.client.FMLClientHandler;

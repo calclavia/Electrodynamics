@@ -14,7 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
@@ -42,7 +42,7 @@ public class BlockTurntable extends BlockRI
 	public void registerIcons(IconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
-		this.top = iconReg.registerIcon(ResonantInductionTransport.PREFIX + "turntable");
+		this.top = iconReg.registerIcon(Mechanical.PREFIX + "turntable");
 	}
 
 	@Override

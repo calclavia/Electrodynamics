@@ -2,28 +2,21 @@ package resonantinduction.mechanical.fluid.tank;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.mechanical.fluid.pipes.ItemBlockPipe;
 import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
-import resonantinduction.old.client.render.BlockRenderHelper;
+import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 import calclavia.lib.utility.HelperMethods;
-
-import com.builtbroken.common.Pair;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -55,7 +48,7 @@ public class BlockTank extends BlockRI
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return BlockRenderHelper.renderID;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override
@@ -112,6 +105,7 @@ public class BlockTank extends BlockRI
 		for (FluidPartsMaterial data : FluidPartsMaterial.values())
 		{
 			par3List.add(new ItemStack(this, 1, data.ordinal() * FluidPartsMaterial.spacing));
+			break;
 		}
 	}
 

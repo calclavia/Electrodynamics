@@ -335,7 +335,7 @@ public class BlockConveyorBelt extends BlockRI
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.BLOCK_RENDER_ID;
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override

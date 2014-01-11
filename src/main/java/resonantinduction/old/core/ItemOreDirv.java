@@ -2,7 +2,6 @@ package resonantinduction.old.core;
 
 import java.util.List;
 
-import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,6 +15,7 @@ import resonantinduction.api.events.LaserEvent;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
+import calclavia.lib.content.IExtraInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.EnumMaterial;

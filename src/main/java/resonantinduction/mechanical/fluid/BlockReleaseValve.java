@@ -1,20 +1,11 @@
 package resonantinduction.mechanical.fluid;
 
 import java.util.Random;
-import java.util.Set;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.old.core.recipe.RecipeLoader;
-
-import com.builtbroken.common.Pair;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

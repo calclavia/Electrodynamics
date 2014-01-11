@@ -6,7 +6,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import resonantinduction.core.prefab.tile.TileEntityInv;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -232,11 +232,11 @@ public class TileEntityCrate extends TileEntityInv implements ISimplePacketRecei
 		ItemStack stack = this.getSampleStack();
 		if (stack != null)
 		{
-			return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
+			return PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, "InventoryItem", this, true, stack.writeToNBT(new NBTTagCompound()), stack.stackSize);
 		}
 		else
 		{
-			return PacketHandler.instance().getTilePacket(ResonantInductionTransport.CHANNEL, "InventoryItem", this, false);
+			return PacketHandler.instance().getTilePacket(Mechanical.CHANNEL, "InventoryItem", this, false);
 		}
 	}
 

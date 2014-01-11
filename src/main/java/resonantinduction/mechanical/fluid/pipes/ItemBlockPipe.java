@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.mechanical.fluid.prefab.TileEntityFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import universalelectricity.api.vector.Vector3;
@@ -107,12 +107,12 @@ public class ItemBlockPipe extends ItemBlock
 		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, (stack.getItemDamage() / FluidPartsMaterial.spacing)))
 		{
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
-			if (tile instanceof TileEntityFluidNetworkTile)
+			if (tile instanceof TileFluidNetworkTile)
 			{
-				((TileEntityFluidNetworkTile) tile).setSubID(stack.getItemDamage());
+				((TileFluidNetworkTile) tile).setSubID(stack.getItemDamage());
 				if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
 				{
-					((TileEntityFluidNetworkTile) tile).fill(ForgeDirection.UNKNOWN, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
+					((TileFluidNetworkTile) tile).fill(ForgeDirection.UNKNOWN, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
 				}
 			}
 			return true;

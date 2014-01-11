@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
@@ -41,7 +41,7 @@ public class BlockDebug extends BlockRI implements IExtraBlockInfo
 		{
 			if (block.enabled)
 			{
-				block.icon = iconReg.registerIcon(ResonantInductionTransport.PREFIX + block.getTextureName());
+				block.icon = iconReg.registerIcon(Mechanical.PREFIX + block.getTextureName());
 			}
 		}
 	}

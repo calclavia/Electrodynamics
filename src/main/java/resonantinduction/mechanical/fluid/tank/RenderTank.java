@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.old.client.model.ModelTankSide;
 import cpw.mods.fml.relauncher.Side;
@@ -17,14 +18,9 @@ import dark.lib.helpers.ColorCode;
 @SideOnly(Side.CLIENT)
 public class RenderTank extends TileEntitySpecialRenderer
 {
-	private ModelTankSide model;
+	public static final ModelTankSide MODEL = new ModelTankSide();
 
 	// TODO https://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml <- fix z fighting
-	public RenderTank()
-	{
-		model = new ModelTankSide();
-	}
-
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
@@ -103,16 +99,17 @@ public class RenderTank extends TileEntitySpecialRenderer
 						break;
 				}
 				bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
-				model.render(0.0625F, left, right, top, bot);
+				MODEL.render(0.0625F, left, right, top, bot);
 				GL11.glPopMatrix();
 			}
 		}
 
 	}
 
-	public ResourceLocation getTexture(int block, int meta)
+	public static ResourceLocation getTexture(int block, int meta)
 	{
 		String texture = "";
+		
 		if (ColorCode.get(meta) == ColorCode.RED)
 		{
 			texture = "textures/blocks/obsidian.png";
@@ -121,6 +118,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 		{
 			texture = "textures/blocks/iron_block.png";
 		}
+		
 		return new ResourceLocation(texture);
 	}
 }

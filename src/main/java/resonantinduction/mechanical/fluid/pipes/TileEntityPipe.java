@@ -8,14 +8,14 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.core.tilenetwork.ITileNetwork;
 import resonantinduction.mechanical.fluid.network.NetworkPipes;
-import resonantinduction.mechanical.fluid.prefab.TileEntityFluidNetworkTile;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.old.api.fluid.INetworkPipe;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
-public class TileEntityPipe extends TileEntityFluidNetworkTile implements IColorCoded, INetworkPipe
+public class TileEntityPipe extends TileFluidNetworkTile implements IColorCoded, INetworkPipe
 {
 	/** gets the current color mark of the pipe */
 	@Override

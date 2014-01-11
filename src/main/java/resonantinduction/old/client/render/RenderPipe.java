@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.fluid.pipes.EnumPipeType;
 import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
 import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;

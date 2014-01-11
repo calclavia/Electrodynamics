@@ -15,7 +15,6 @@ import resonantinduction.old.api.IBelt;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.TileEntityAssembly;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;

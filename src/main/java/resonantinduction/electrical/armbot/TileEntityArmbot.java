@@ -15,11 +15,11 @@ import resonantinduction.electrical.armbot.command.TaskGOTO;
 import resonantinduction.electrical.armbot.command.TaskGrabItem;
 import resonantinduction.electrical.armbot.command.TaskReturn;
 import resonantinduction.electrical.armbot.command.TaskRotateTo;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.api.IArmbot;
 import resonantinduction.old.api.coding.IProgram;
 import resonantinduction.old.api.coding.ProgramHelper;
 import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.ResonantInductionTransport;
 import resonantinduction.old.transport.TileEntityAssembly;
 import resonantinduction.old.transport.encoder.ItemDisk;
 import universalelectricity.api.vector.Vector2;
@@ -308,11 +308,11 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	{
 		if (this.grabbedObject instanceof ItemStack)
 		{
-			PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(Mechanical.getTilePacket().getPacket(this, "armbotItem", true, ((ItemStack) this.grabbedObject).writeToNBT(new NBTTagCompound())), worldObj, new Vector3(this), 64);
 		}
 		else
 		{
-			PacketHandler.sendPacketToClients(ResonantInductionTransport.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
+			PacketHandler.sendPacketToClients(Mechanical.getTilePacket().getPacket(this, "armbotItem", false), worldObj, new Vector3(this), 64);
 		}
 	}
 

@@ -24,7 +24,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.events.LaserEvent;
-import resonantinduction.old.transport.ResonantInductionTransport;
+import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.ContentRegistry;
@@ -66,7 +66,7 @@ public class ItemMiningLaser extends ItemElectric implements IExtraItemInfo
 
 	public ItemMiningLaser()
 	{
-		super(ResonantInductionTransport.CONFIGURATION.getItem("LaserMiningGun", DarkCore.getNextItemId()).getInt());
+		super(Mechanical.CONFIGURATION.getItem("LaserMiningGun", DarkCore.getNextItemId()).getInt());
 		this.setUnlocalizedName("MiningLaser");
 		this.setMaxStackSize(1);
 		this.setCreativeTab(CreativeTabs.tabTools);

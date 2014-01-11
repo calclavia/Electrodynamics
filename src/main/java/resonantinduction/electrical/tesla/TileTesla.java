@@ -33,7 +33,6 @@ import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
-import codechicken.lib.colour.ColourRGBA;
 
 import com.google.common.io.ByteArrayDataInput;
 
