@@ -241,86 +241,90 @@ public class BlockConveyorBelt extends BlockRI
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
-		if (tileEntity.IgnoreList.contains(entity))
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		
+		if (tileEntity instanceof TileConveyorBelt)
 		{
-			return;
-		}
-		if (tileEntity.isFunctioning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
-		{
-			float acceleration = tileEntity.acceleration;
-			float maxSpeed = tileEntity.maxSpeed;
-
-			SlantType slantType = tileEntity.getSlant();
-			ForgeDirection direction = tileEntity.getDirection();
-
-			if (entity instanceof EntityLiving)
+			TileConveyorBelt tile = (TileConveyorBelt) tileEntity;
+			if (tile.IgnoreList.contains(entity))
 			{
-				acceleration *= 5;
-				maxSpeed *= 10;
+				return;
 			}
-			if (slantType == SlantType.UP)
+			if (tile.isFunctioning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
 			{
-				if (entity.motionY < 0.2)
+				float acceleration = tile.acceleration;
+				float maxSpeed = tile.maxSpeed;
+
+				SlantType slantType = tile.getSlant();
+				ForgeDirection direction = tile.getDirection();
+
+				if (entity instanceof EntityLiving)
 				{
-					entity.addVelocity(0, 0.2, 0);
+					acceleration *= 5;
+					maxSpeed *= 10;
 				}
-			}
-			else if (slantType == SlantType.DOWN)
-			{
-				if (entity.motionY > -0.1)
+				if (slantType == SlantType.UP)
 				{
-					entity.addVelocity(0, -0.1, 0);
+					if (entity.motionY < 0.2)
+					{
+						entity.addVelocity(0, 0.2, 0);
+					}
 				}
-			}
-			// Move the entity based on the conveyor belt's direction.
-			entity.addVelocity(direction.offsetX * acceleration, 0, direction.offsetZ * acceleration);
-
-			if (direction.offsetX != 0 && Math.abs(entity.motionX) > maxSpeed)
-			{
-				entity.motionX = direction.offsetX * maxSpeed;
-				entity.motionZ = 0;
-			}
-
-			if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > maxSpeed)
-			{
-				entity.motionZ = direction.offsetZ * maxSpeed;
-				entity.motionX = 0;
-			}
-
-			entity.motionY += 0.0125f;
-
-			if (entity instanceof EntityItem)
-			{
-				if (direction.offsetX != 0)
+				else if (slantType == SlantType.DOWN)
 				{
-					double difference = (z + 0.5) - entity.posZ;
-					entity.motionZ += difference * 0.1;
-					// entity.posZ = z + 0.5;
+					if (entity.motionY > -0.1)
+					{
+						entity.addVelocity(0, -0.1, 0);
+					}
 				}
-				else if (direction.offsetZ != 0)
+				// Move the entity based on the conveyor belt's direction.
+				entity.addVelocity(direction.offsetX * acceleration, 0, direction.offsetZ * acceleration);
+
+				if (direction.offsetX != 0 && Math.abs(entity.motionX) > maxSpeed)
 				{
-					double difference = (x + 0.5) - entity.posX;
-					entity.motionX += difference * 0.1;
-					// /entity.posX = x + 0.5;
+					entity.motionX = direction.offsetX * maxSpeed;
+					entity.motionZ = 0;
 				}
 
-				((EntityItem) entity).age++;
-
-				boolean foundSneaking = false;
-				for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
+				if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > maxSpeed)
 				{
-					if (player.isSneaking())
-						foundSneaking = true;
+					entity.motionZ = direction.offsetZ * maxSpeed;
+					entity.motionX = 0;
 				}
 
-				if (foundSneaking)
-					((EntityItem) entity).delayBeforeCanPickup = 0;
-				else
-					((EntityItem) entity).delayBeforeCanPickup = 20;
-				entity.onGround = false;
-			}
+				entity.motionY += 0.0125f;
 
+				if (entity instanceof EntityItem)
+				{
+					if (direction.offsetX != 0)
+					{
+						double difference = (z + 0.5) - entity.posZ;
+						entity.motionZ += difference * 0.1;
+						// entity.posZ = z + 0.5;
+					}
+					else if (direction.offsetZ != 0)
+					{
+						double difference = (x + 0.5) - entity.posX;
+						entity.motionX += difference * 0.1;
+						// /entity.posX = x + 0.5;
+					}
+
+					((EntityItem) entity).age++;
+
+					boolean foundSneaking = false;
+					for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
+					{
+						if (player.isSneaking())
+							foundSneaking = true;
+					}
+
+					if (foundSneaking)
+						((EntityItem) entity).delayBeforeCanPickup = 0;
+					else
+						((EntityItem) entity).delayBeforeCanPickup = 20;
+					entity.onGround = false;
+				}
+			}
 		}
 	}
 

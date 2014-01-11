@@ -25,7 +25,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderArmbot extends TileEntitySpecialRenderer
 {
 	public static final ModelArmbot MODEL = new ModelArmbot();
-	public static final String TEXTURE = "armbot.png";
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "armbot.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
@@ -46,8 +46,8 @@ public class RenderArmbot extends TileEntitySpecialRenderer
 					}
 				}
 			}
-			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + TEXTURE);
-			bindTexture(name);
+
+			bindTexture(TEXTURE);
 
 			GL11.glPushMatrix();
 			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

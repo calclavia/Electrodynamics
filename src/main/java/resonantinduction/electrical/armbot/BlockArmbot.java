@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
+import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
@@ -109,7 +109,7 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return ElectricalBlockRenderingHandler.ID;
 	}
 
 	@Override

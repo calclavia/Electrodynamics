@@ -15,6 +15,8 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.electrical.armbot.BlockArmbot;
+import resonantinduction.electrical.armbot.RenderArmbot;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
@@ -76,6 +78,14 @@ public class ElectricalBlockRenderingHandler implements ISimpleBlockRenderingHan
 			GL11.glTranslatef(0.0F, 1.1F, 0.0F);
 			GL11.glRotatef(180f, 0f, 0f, 1f);
 			RenderSolarPanel.MODEL.render(0.0625F);
+		}
+		else if (block instanceof BlockArmbot)
+		{
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderArmbot.TEXTURE);
+			GL11.glTranslatef(0.0F, 0.7F, 0.0F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
+			GL11.glScalef(0.8f, 0.8f, 0.8f);
+			RenderArmbot.MODEL.render(0.0625F, 0, 0);
 		}
 	}
 

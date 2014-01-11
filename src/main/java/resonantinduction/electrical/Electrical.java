@@ -94,7 +94,7 @@ public class Electrical
 	public static Block blockAdvancedFurnace, blockMachinePart, blockGrinderWheel, blockPurifier;
 
 	// Transport
-	public static Block blockEMContractor;
+	public static Block blockEMLevitator;
 	public static Block blockArmbot;
 	public static Item itemDisk;
 
@@ -111,10 +111,9 @@ public class Electrical
 		itemTransformer = contentRegistry.createItem(ItemTransformer.class);
 		blockTesla = contentRegistry.createTile(BlockTesla.class, TileTesla.class);
 		blockBattery = contentRegistry.createTile(BlockBattery.class, TileBattery.class);
-		blockEMContractor = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 
 		// Transport
-		blockEMContractor = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
+		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 		blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 
 		// Machines

@@ -65,40 +65,45 @@ public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntity
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		TileGrinderWheel tile = (TileGrinderWheel) world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tile.canWork())
+		if (tileEntity instanceof TileGrinderWheel)
 		{
-			if (entity instanceof EntityItem)
-			{
-				if (tile.canGrind(((EntityItem) entity).getEntityItem()))
-				{
-					if (tile.grindingItem == null)
-					{
-						tile.grindingItem = (EntityItem) entity;
-					}
+			TileGrinderWheel tile = (TileGrinderWheel) tileEntity;
 
-					if (!TileGrinderWheel.getTimer().containsKey(entity))
+			if (tile.canWork())
+			{
+				if (entity instanceof EntityItem)
+				{
+					if (tile.canGrind(((EntityItem) entity).getEntityItem()))
 					{
-						TileGrinderWheel.getTimer().put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
+						if (tile.grindingItem == null)
+						{
+							tile.grindingItem = (EntityItem) entity;
+						}
+
+						if (!TileGrinderWheel.getTimer().containsKey(entity))
+						{
+							TileGrinderWheel.getTimer().put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
+						}
+					}
+					else
+					{
+						entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 					}
 				}
 				else
 				{
-					entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
+					entity.attackEntityFrom(DamageSource.cactus, 2);
 				}
-			}
-			else
-			{
-				entity.attackEntityFrom(DamageSource.cactus, 2);
-			}
 
-			// Move entity based on the direction of the block.
-			ForgeDirection dir = this.getDirection(world, x, y, z);
-			entity.motionX += dir.offsetX * 0.1;
-			entity.motionZ += dir.offsetZ * 0.1;
-			entity.motionY += 0.1;
-			entity.isAirBorne = true;
+				// Move entity based on the direction of the block.
+				ForgeDirection dir = this.getDirection(world, x, y, z);
+				entity.motionX += dir.offsetX * 0.1;
+				entity.motionZ += dir.offsetZ * 0.1;
+				entity.motionY += 0.1;
+				entity.isAirBorne = true;
+			}
 		}
 	}
 
