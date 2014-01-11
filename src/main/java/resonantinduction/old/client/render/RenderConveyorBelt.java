@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.belt.TileEntityConveyorBelt;
-import resonantinduction.mechanical.belt.TileEntityConveyorBelt.SlantType;
+import resonantinduction.mechanical.belt.TileConveyorBelt;
+import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
 import resonantinduction.old.client.model.ModelAngledBelt;
 import resonantinduction.old.client.model.ModelConveyorBelt;
 import cpw.mods.fml.relauncher.Side;
@@ -20,7 +20,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 	public static final ModelConveyorBelt MODEL = new ModelConveyorBelt();
 	public static final ModelAngledBelt MODEL2 = new ModelAngledBelt();
 
-	private void renderAModelAt(TileEntityConveyorBelt tileEntity, double x, double y, double z, float f)
+	private void renderAModelAt(TileConveyorBelt tileEntity, double x, double y, double z, float f)
 	{
 		SlantType slantType = tileEntity.getSlant();
 		int face = tileEntity.getDirection().ordinal();
@@ -60,9 +60,9 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 				TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord + tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord + tileEntity.getDirection().offsetZ);
 				if (test != null)
 				{
-					if (test instanceof TileEntityConveyorBelt)
+					if (test instanceof TileConveyorBelt)
 					{
-						if (((TileEntityConveyorBelt) test).getSlant() == SlantType.TOP)
+						if (((TileConveyorBelt) test).getSlant() == SlantType.TOP)
 						{
 							GL11.glRotatef(10f, 1f, 0f, 0f);
 							slantAdjust = true;
@@ -80,9 +80,9 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 				TileEntity test = tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord - tileEntity.getDirection().offsetX, tileEntity.yCoord, tileEntity.zCoord - tileEntity.getDirection().offsetZ);
 				if (test != null)
 				{
-					if (test instanceof TileEntityConveyorBelt)
+					if (test instanceof TileConveyorBelt)
 					{
-						if (((TileEntityConveyorBelt) test).getSlant() == SlantType.TOP)
+						if (((TileConveyorBelt) test).getSlant() == SlantType.TOP)
 						{
 							GL11.glRotatef(-10f, 1f, 0f, 0f);
 							GL11.glTranslatef(0f, 0.25f, 0f);
@@ -133,7 +133,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
 	{
-		this.renderAModelAt((TileEntityConveyorBelt) tileEntity, var2, var4, var6, var8);
+		this.renderAModelAt((TileConveyorBelt) tileEntity, var2, var4, var6, var8);
 	}
 
 }

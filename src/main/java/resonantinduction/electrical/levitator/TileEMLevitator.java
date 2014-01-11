@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,12 +24,14 @@ import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.handler.ILinkable;
+import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileAdvanced;
+import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -152,7 +154,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 				{
 					if (renderBeam)
 					{
-						ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+						Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
 					}
 
 					// Push entity along path.
@@ -174,7 +176,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 
 									if (renderBeam)
 									{
-										ResonantInduction.proxy.renderElectricShock(worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+										Electrical.proxy.renderElectricShock(worldObj, prevResult.clone().translate(0.5), result.clone().translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
 									}
 
 									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
@@ -203,7 +205,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 				{
 					if (renderBeam)
 					{
-						ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), ResonantInduction.DYE_COLORS[dyeID], false);
+						Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
 					}
 
 					pathfinder = null;
@@ -217,7 +219,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 						{
 							if (renderBeam)
 							{
-								ResonantInduction.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), ResonantInduction.DYE_COLORS[dyeID], false);
+								Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), EnumColor.DYES[dyeID].toColor(), false);
 							}
 
 							moveEntity(entityItem, getDirection(), new Vector3(this));
@@ -577,7 +579,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 			Vector3 start = new Vector3(this).modifyPositionFromSide(getDirection());
 			Vector3 target = new Vector3(linked).modifyPositionFromSide(linked.getDirection());
 
-			if (start.distance(target) < ResonantInduction.MAX_CONTRACTOR_DISTANCE)
+			if (start.distance(target) < Settings.MAX_CONTRACTOR_DISTANCE)
 			{
 				if (TileEMLevitator.canBePath(worldObj, start) && TileEMLevitator.canBePath(worldObj, target))
 				{

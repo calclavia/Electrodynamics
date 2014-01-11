@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

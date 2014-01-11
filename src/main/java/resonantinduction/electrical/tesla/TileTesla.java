@@ -221,8 +221,8 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
-							//TODO: Fix color.
-							Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), new ColourRGBA(EnumColor.DYES[this.dyeID].toColor().getRGB()));
+							// TODO: Fix color.
+							Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 

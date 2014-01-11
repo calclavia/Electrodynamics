@@ -1,5 +1,7 @@
 package resonantinduction.electrical;
 
+import java.awt.Color;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -7,7 +9,6 @@ import resonantinduction.core.prefab.ProxyBase;
 import resonantinduction.electrical.multimeter.ContainerMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import universalelectricity.api.vector.Vector3;
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -40,14 +41,14 @@ public class CommonProxy extends ProxyBase
 		this.renderElectricShock(world, start, target, r, g, b, true);
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, Color color)
 	{
-		this.renderElectricShock(world, start, target, color.r / 255f, color.g / 255f, color.b / 255f);
+		this.renderElectricShock(world, start, target, color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
 	}
 
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, ColourRGBA color, boolean split)
+	public void renderElectricShock(World world, Vector3 start, Vector3 target, Color color, boolean split)
 	{
-		this.renderElectricShock(world, start, target, color.r / 255f, color.g / 255f, color.b / 255f, split);
+		this.renderElectricShock(world, start, target, color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, split);
 	}
 
 	public void renderElectricShock(World world, Vector3 start, Vector3 target)

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockMachine;
-import resonantinduction.mechanical.belt.TileEntityConveyorBelt.SlantType;
+import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
 import resonantinduction.old.client.render.BlockRenderingHandler;
 import resonantinduction.old.client.render.RenderConveyorBelt;
 
@@ -42,9 +42,9 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
     {
-        if (world.getBlockTileEntity(x, y, z) instanceof TileEntityConveyorBelt)
+        if (world.getBlockTileEntity(x, y, z) instanceof TileConveyorBelt)
         {
-            TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
+            TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
 
             if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
             {
@@ -66,9 +66,9 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     {
         TileEntity t = world.getBlockTileEntity(x, y, z);
 
-        if (t != null && t instanceof TileEntityConveyorBelt)
+        if (t != null && t instanceof TileConveyorBelt)
         {
-            TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+            TileConveyorBelt tileEntity = (TileConveyorBelt) t;
 
             if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
             {
@@ -89,9 +89,9 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
 
         TileEntity t = world.getBlockTileEntity(x, y, z);
 
-        if (t != null && t instanceof TileEntityConveyorBelt)
+        if (t != null && t instanceof TileConveyorBelt)
         {
-            TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) t;
+            TileConveyorBelt tileEntity = (TileConveyorBelt) t;
 
             if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
             {
@@ -229,7 +229,7 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     @Override
     public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
     {
-        TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
+        TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
 
         int slantOrdinal = tileEntity.getSlant().ordinal() + 1;
 
@@ -247,7 +247,7 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
-        TileEntityConveyorBelt tileEntity = (TileEntityConveyorBelt) world.getBlockTileEntity(x, y, z);
+        TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
         if (tileEntity.IgnoreList.contains(entity))
         {
             return;
@@ -334,20 +334,20 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     @SideOnly(Side.CLIENT)
     public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
     {
-        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileEntityConveyorBelt.class, new RenderConveyorBelt()));
+        list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileConveyorBelt.class, new RenderConveyorBelt()));
     }
 
     @Override
     public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
     {
-        list.add(new Pair<String, Class<? extends TileEntity>>("ALConveyorBelt", TileEntityConveyorBelt.class));
+        list.add(new Pair<String, Class<? extends TileEntity>>("ALConveyorBelt", TileConveyorBelt.class));
     }
 
     /** Returns the TileEntity used by this block. */
     @Override
     public TileEntity createNewTileEntity(World var1)
     {
-        return new TileEntityConveyorBelt();
+        return new TileConveyorBelt();
     }
 
     @SideOnly(Side.CLIENT)

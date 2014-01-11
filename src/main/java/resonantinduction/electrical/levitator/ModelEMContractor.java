@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

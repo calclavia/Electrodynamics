@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import universalelectricity.api.vector.Vector3;
 

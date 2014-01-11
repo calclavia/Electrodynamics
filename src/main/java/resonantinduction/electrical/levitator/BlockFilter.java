@@ -1,4 +1,4 @@
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import resonantinduction.core.prefab.block.BlockRotatableBase;
 

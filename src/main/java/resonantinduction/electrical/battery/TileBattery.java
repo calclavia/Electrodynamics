@@ -74,6 +74,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 			}
 
 			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().get().size());
+			this.getNetwork().redistribute();
 		}
 	}
 
@@ -95,10 +96,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
 		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
-
-		if (doReceive)
-			this.getNetwork().redistribute();
-
+		this.getNetwork().redistribute();
 		return returnValue;
 	}
 
@@ -106,10 +104,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
 	{
 		long returnValue = super.onExtractEnergy(from, extract, doExtract);
-
-		if (doExtract)
-			this.getNetwork().redistribute();
-
+		this.getNetwork().redistribute();
 		return returnValue;
 	}
 

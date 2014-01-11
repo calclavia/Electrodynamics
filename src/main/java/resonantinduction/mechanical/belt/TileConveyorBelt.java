@@ -10,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.old.api.IBelt;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.TileEntityAssembly;
@@ -26,7 +27,7 @@ import cpw.mods.fml.common.network.Player;
  * 
  * @author DarkGuardsman
  */
-public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
+public class TileConveyorBelt extends TileEntityAssembly implements IBelt, IRotatable
 {
 
 	public enum SlantType
@@ -50,7 +51,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
 	/** Entities that are ignored allowing for other tiles to interact with them */
 	public List<Entity> IgnoreList = new ArrayList<Entity>();
 
-	public TileEntityConveyorBelt()
+	public TileConveyorBelt()
 	{
 		super(1);
 	}
@@ -110,7 +111,7 @@ public class TileEntityConveyorBelt extends TileEntityAssembly implements IBelt,
 	{
 		if (this.slantType != SlantType.NONE)
 		{
-			return PacketHandler.instance().getTilePacket(this.getChannel(), slantPacketID, this, this.isFunctioning(), this.slantType.ordinal());
+			return ResonantInduction.PACKET_TILE.getPacket(this, slantPacketID, this.isFunctioning(), this.slantType.ordinal());
 		}
 		return super.getDescriptionPacket();
 	}

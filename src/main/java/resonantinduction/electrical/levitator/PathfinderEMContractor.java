@@ -1,7 +1,7 @@
 /**
  * 
  */
-package resonantinduction.old.transport.levitator;
+package resonantinduction.electrical.levitator;
 
 import java.util.HashSet;
 import java.util.Set;
