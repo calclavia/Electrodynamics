@@ -7,10 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
+import resonantinduction.electrical.encoder.coding.IProcessTask;
+import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import resonantinduction.old.api.IArmbot;
 import resonantinduction.old.api.IArmbotUseable;
-import resonantinduction.old.api.coding.IProcessTask;
-import resonantinduction.old.api.coding.args.ArgumentIntData;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

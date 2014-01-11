@@ -5,10 +5,10 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import resonantinduction.old.api.coding.IProgram;
-import resonantinduction.old.api.coding.IProgrammableMachine;
-import resonantinduction.old.api.coding.ITask;
-import resonantinduction.old.api.coding.args.ArgumentData;
+import resonantinduction.electrical.encoder.coding.IProgram;
+import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
+import resonantinduction.electrical.encoder.coding.ITask;
+import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.utility.NBTUtility;
 

@@ -15,8 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.old.client.render.RenderBlockEntity;
-
 public class RenderFluidHelper
 {
 

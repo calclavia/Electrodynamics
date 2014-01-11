@@ -17,9 +17,6 @@ import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
 import resonantinduction.old.client.model.ModelManipulator;
 import resonantinduction.old.client.model.ModelRejectorPiston;
-import resonantinduction.old.client.render.RenderFrackingPipe;
-import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.hopper.BlockAdvancedHopper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -77,30 +74,32 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPump.TEXTURE);
 			RenderPump.MODEL.render(0.0725F);
 			RenderPump.MODEL.renderMotion(0.0725F, 0);
-		}
-		else if (RecipeLoader.blockRejector != null && block.blockID == RecipeLoader.blockRejector.blockID)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "rejector.png"));
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0.6F, 1.5F, 0.6F);
-			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			modelEjector.render(0.0625F);
-			modelEjector.renderPiston(0.0625F, 1);
-			GL11.glPopMatrix();
-		}
-		else if (RecipeLoader.blockManipulator != null && block.blockID == RecipeLoader.blockManipulator.blockID)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "manipulator1.png"));
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0.6F, 1.5F, 0.6F);
-			GL11.glRotatef(180f, 0f, 0f, 1f);
-			GL11.glRotatef(-90f, 0f, 1f, 0f);
-			modelInjector.render(0.0625F, true, 0);
-			GL11.glPopMatrix();
-		}
-
-		/*
+		}/*
+		 * else if (RecipeLoader.blockRejector != null && block.blockID ==
+		 * RecipeLoader.blockRejector.blockID)
+		 * {
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "rejector.png"));
+		 * GL11.glPushMatrix();
+		 * GL11.glTranslatef(0.6F, 1.5F, 0.6F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * GL11.glRotatef(-90f, 0f, 1f, 0f);
+		 * modelEjector.render(0.0625F);
+		 * modelEjector.renderPiston(0.0625F, 1);
+		 * GL11.glPopMatrix();
+		 * }
+		 * else if (RecipeLoader.blockManipulator != null && block.blockID ==
+		 * RecipeLoader.blockManipulator.blockID)
+		 * {
+		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
+		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "manipulator1.png"));
+		 * GL11.glPushMatrix();
+		 * GL11.glTranslatef(0.6F, 1.5F, 0.6F);
+		 * GL11.glRotatef(180f, 0f, 0f, 1f);
+		 * GL11.glRotatef(-90f, 0f, 1f, 0f);
+		 * modelInjector.render(0.0625F, true, 0);
+		 * GL11.glPopMatrix();
+		 * }
 		 * if (RecipeLoader.blockPumpMachine != null && block.blockID ==
 		 * RecipeLoader.blockPumpMachine.blockID && metadata < 4)
 		 * {
@@ -182,10 +181,6 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		if (block instanceof BlockAdvancedHopper)
-		{
-			return true;
-		}
 		return false;
 	}
 

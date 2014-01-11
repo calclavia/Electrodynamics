@@ -10,19 +10,17 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.tile.TileEntityAssembly;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.armbot.command.TaskDrop;
 import resonantinduction.electrical.armbot.command.TaskGOTO;
 import resonantinduction.electrical.armbot.command.TaskGrabItem;
 import resonantinduction.electrical.armbot.command.TaskReturn;
 import resonantinduction.electrical.armbot.command.TaskRotateTo;
-import resonantinduction.mechanical.Mechanical;
+import resonantinduction.electrical.encoder.coding.IProgram;
+import resonantinduction.electrical.encoder.coding.ProgramHelper;
+import resonantinduction.mechanical.encoder.ItemDisk;
 import resonantinduction.old.api.IArmbot;
-import resonantinduction.old.api.coding.IProgram;
-import resonantinduction.old.api.coding.ProgramHelper;
-import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.TileEntityAssembly;
-import resonantinduction.old.transport.encoder.ItemDisk;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
@@ -415,7 +413,7 @@ public class TileEntityArmbot extends TileEntityAssembly implements IMultiBlock,
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return itemstack != null && itemstack.itemID == RecipeLoader.itemDisk.itemID;
+		return itemstack != null && itemstack.itemID == Electrical.itemDisk.itemID;
 	}
 
 	@Override

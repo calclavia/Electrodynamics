@@ -33,6 +33,7 @@ import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
 //TODO: AUTO COLOR WIRES!
 public class ItemWire extends JItemMultiPart
 {

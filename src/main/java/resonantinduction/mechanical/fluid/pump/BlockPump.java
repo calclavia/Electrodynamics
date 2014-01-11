@@ -1,7 +1,6 @@
 package resonantinduction.mechanical.fluid.pump;
 
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,15 +9,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
-import resonantinduction.old.client.render.BlockRenderHelper;
-import resonantinduction.old.core.recipe.RecipeLoader;
-
-import com.builtbroken.common.Pair;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

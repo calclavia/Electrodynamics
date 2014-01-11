@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import resonantinduction.electrical.armbot.TaskBaseLogic;
-import resonantinduction.old.api.coding.IProgrammableMachine;
-import resonantinduction.old.api.coding.ITask;
-import resonantinduction.old.api.coding.args.ArgumentData;
+import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
+import resonantinduction.electrical.encoder.coding.ITask;
+import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
 
 /** @author DarkGuardsman */

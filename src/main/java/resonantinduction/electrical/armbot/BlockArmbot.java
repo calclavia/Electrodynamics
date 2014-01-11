@@ -14,7 +14,6 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
-import resonantinduction.old.client.render.RenderArmbot;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;

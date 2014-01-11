@@ -1,7 +1,7 @@
 package resonantinduction.electrical.armbot;
 
 import net.minecraft.item.ItemStack;
-import resonantinduction.old.api.coding.IProcessTask;
+import resonantinduction.electrical.encoder.coding.IProcessTask;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

@@ -1,7 +1,7 @@
 package resonantinduction.old.api;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.old.api.coding.IProgrammableMachine;
+import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 

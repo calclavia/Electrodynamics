@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.old.client.model.ModelTankSide;
 import cpw.mods.fml.relauncher.Side;
@@ -98,7 +97,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 						right = south;
 						break;
 				}
-				bindTexture(this.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
+				bindTexture(RenderTank.getTexture(tileEntity.getBlockType().blockID, tileEntity.getBlockMetadata()));
 				MODEL.render(0.0625F, left, right, top, bot);
 				GL11.glPopMatrix();
 			}
@@ -109,7 +108,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 	public static ResourceLocation getTexture(int block, int meta)
 	{
 		String texture = "";
-		
+
 		if (ColorCode.get(meta) == ColorCode.RED)
 		{
 			texture = "textures/blocks/obsidian.png";
@@ -118,7 +117,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 		{
 			texture = "textures/blocks/iron_block.png";
 		}
-		
+
 		return new ResourceLocation(texture);
 	}
 }

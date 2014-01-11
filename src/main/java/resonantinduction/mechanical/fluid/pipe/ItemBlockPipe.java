@@ -17,7 +17,6 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetworkTile;
 import resonantinduction.mechanical.fluid.tank.TileTank;
-import resonantinduction.old.core.recipe.RecipeLoader;
 import universalelectricity.api.vector.Vector3;
 
 public class ItemBlockPipe extends ItemBlock

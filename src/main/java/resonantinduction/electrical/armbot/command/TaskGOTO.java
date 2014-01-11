@@ -5,8 +5,8 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import resonantinduction.electrical.armbot.TaskBase;
-import resonantinduction.old.api.coding.IRedirectTask;
-import resonantinduction.old.api.coding.ITask;
+import resonantinduction.electrical.encoder.coding.IRedirectTask;
+import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector2;
 
 /** @author DarkGuardsman */

@@ -11,9 +11,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.tile.TileEntityAssembly;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.api.IBelt;
-import resonantinduction.old.core.recipe.RecipeLoader;
-import resonantinduction.old.transport.TileEntityAssembly;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
@@ -70,7 +70,7 @@ public class TileConveyorBelt extends TileEntityAssembly implements IBelt, IRota
 		}
 		if (this.worldObj.isRemote && this.isFunctioning())
 		{
-			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != RecipeLoader.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != RecipeLoader.blockConveyorBelt.blockID)
+			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
 			}

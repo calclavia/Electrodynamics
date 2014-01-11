@@ -27,6 +27,7 @@ import resonantinduction.electrical.levitator.BlockLevitator;
 import resonantinduction.electrical.levitator.ItemBlockContractor;
 import resonantinduction.electrical.levitator.TileEMLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
+import resonantinduction.electrical.purifier.BlockPurifier;
 import resonantinduction.electrical.tesla.BlockTesla;
 import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;
@@ -35,7 +36,6 @@ import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.mechanical.grinder.BlockGrinderWheel;
 import resonantinduction.mechanical.grinder.TileGrinderWheel;
 import resonantinduction.mechanical.grinder.TilePurifier;
-import resonantinduction.old.mechanics.purifier.BlockPurifier;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
@@ -90,6 +90,7 @@ public class Electrical
 
 	// Transport
 	public static Block blockEMContractor;
+	public static Item itemDisk;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)

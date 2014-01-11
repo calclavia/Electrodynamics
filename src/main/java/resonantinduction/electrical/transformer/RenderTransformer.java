@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.CalclaviaRenderHelper;
+import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -32,7 +32,7 @@ public class RenderTransformer
 		{
 			if (new Vector3(part.x(), part.y(), part.z()).equals(new Vector3(movingPosition)))
 			{
-				CalclaviaRenderHelper.renderFloatingText(status, (float) (x + 0.5), (float) (y - 1), (float) (z + 0.5));
+				RenderUtility.renderFloatingText(status, (float) (x + 0.5), (float) (y - 1), (float) (z + 0.5));
 			}
 		}
 

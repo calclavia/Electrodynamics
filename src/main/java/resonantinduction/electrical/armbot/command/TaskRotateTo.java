@@ -5,8 +5,8 @@ import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
+import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import resonantinduction.old.api.IArmbot;
-import resonantinduction.old.api.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.utility.MathUtility;
 

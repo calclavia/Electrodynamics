@@ -184,25 +184,25 @@ public class BlockDebug extends BlockRI implements IExtraBlockInfo
 
 	}
 
-    @Override
-    public boolean hasExtraConfigs()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean hasExtraConfigs()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    @Override
-    public void loadOreNames()
-    {
-        // TODO Auto-generated method stub
-        
-    }
+	@Override
+	public void loadOreNames()
+	{
+		// TODO Auto-generated method stub
 
-    @Override
-    public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
-    {
-        // TODO Auto-generated method stub
-        
-    }
+	}
+
+	@Override
+	public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
+	{
+		// TODO Auto-generated method stub
+
+	}
 
 }

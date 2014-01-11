@@ -1,7 +1,5 @@
 package resonantinduction.mechanical.fluid.pump;
 
-import java.util.Set;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,10 +13,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRI;
-
-import com.builtbroken.common.Pair;
 
 public class BlockGrate extends BlockRI
 {

@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
+import resonantinduction.electrical.encoder.coding.args.ArgumentFloatData;
 import resonantinduction.old.api.IArmbot;
-import resonantinduction.old.api.coding.args.ArgumentFloatData;
 import universalelectricity.api.vector.Vector3;
 
 import com.builtbroken.common.Pair;

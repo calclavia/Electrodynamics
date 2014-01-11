@@ -4,8 +4,8 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import resonantinduction.old.api.coding.IProgrammableMachine;
-import resonantinduction.old.api.coding.args.ArgumentData;
+import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
+import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 
 import com.builtbroken.common.science.units.UnitHelper;
 

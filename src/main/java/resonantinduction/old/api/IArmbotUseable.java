@@ -2,7 +2,7 @@ package resonantinduction.old.api;
 
 import java.util.List;
 
-import resonantinduction.old.api.coding.args.ArgumentData;
+import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 
 /**
  * The IUseable inteface is used by the ArmBot so that it may interact with Tile Entities. onUse

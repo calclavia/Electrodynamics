@@ -129,7 +129,7 @@ public class ResourceGenerator
 				catch (Exception e)
 				{
 					ResonantInduction.LOGGER.fine("Failed to compute colors for: " + theIngot);
-					//e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
 

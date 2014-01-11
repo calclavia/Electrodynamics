@@ -69,8 +69,10 @@ public class ResonantInduction
 	 */
 	public static BlockMulti blockMulti;
 
+	public static Block blockOre;
 	public static ItemDust itemDust;
 	public static Block blockFluidMixture;
+	public static Block blockGas;
 
 	public static Fluid MIXTURE = null;
 
