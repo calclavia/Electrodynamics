@@ -9,7 +9,7 @@ import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.generator.solar.RenderSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.RenderLevitator;
-import resonantinduction.electrical.levitator.TileEMLevitator;
+import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
@@ -40,7 +40,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEMLevitator.class, new RenderLevitator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
 	}

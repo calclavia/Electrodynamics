@@ -41,7 +41,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IPacketSender, ILinkable
+public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPacketSender, ILinkable
 {
 	private int pushDelay;
 
@@ -59,7 +59,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 	private ThreadEMPathfinding thread;
 	private PathfinderEMContractor pathfinder;
 	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
-	private TileEMLevitator linked;
+	private TileLevitator linked;
 	private int lastCalcTime = 0;
 
 	/** Color of beam */
@@ -82,9 +82,9 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 
 		if (tempLinkVector != null)
 		{
-			if (tempLinkVector.getTileEntity(worldObj) instanceof TileEMLevitator)
+			if (tempLinkVector.getTileEntity(worldObj) instanceof TileLevitator)
 			{
-				setLink((TileEMLevitator) tempLinkVector.getTileEntity(worldObj), true);
+				setLink((TileLevitator) tempLinkVector.getTileEntity(worldObj), true);
 			}
 
 			tempLinkVector = null;
@@ -165,7 +165,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 						{
 							Vector3 result = results.get(i).clone();
 
-							if (TileEMLevitator.canBePath(worldObj, result))
+							if (TileLevitator.canBePath(worldObj, result))
 							{
 								if (i - 1 >= 0)
 								{
@@ -553,7 +553,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 	/**
 	 * Link between two TileEntities, do pathfinding operation.
 	 */
-	public void setLink(TileEMLevitator tileEntity, boolean setOpponent)
+	public void setLink(TileLevitator tileEntity, boolean setOpponent)
 	{
 		if (linked != null && setOpponent)
 		{
@@ -581,7 +581,7 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 
 			if (start.distance(target) < Settings.MAX_CONTRACTOR_DISTANCE)
 			{
-				if (TileEMLevitator.canBePath(worldObj, start) && TileEMLevitator.canBePath(worldObj, target))
+				if (TileLevitator.canBePath(worldObj, start) && TileLevitator.canBePath(worldObj, target))
 				{
 					thread = new ThreadEMPathfinding(new PathfinderEMContractor(worldObj, target), start);
 					thread.start();
@@ -602,9 +602,9 @@ public class TileEMLevitator extends TileAdvanced implements IPacketReceiver, IP
 	{
 		if (vector != null)
 		{
-			if (vector.getTileEntity(this.worldObj) instanceof TileEMLevitator)
+			if (vector.getTileEntity(this.worldObj) instanceof TileLevitator)
 			{
-				this.setLink((TileEMLevitator) vector.getTileEntity(this.worldObj), true);
+				this.setLink((TileLevitator) vector.getTileEntity(this.worldObj), true);
 
 				if (this.worldObj.isRemote)
 				{

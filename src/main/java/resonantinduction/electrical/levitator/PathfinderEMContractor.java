@@ -38,7 +38,7 @@ public class PathfinderEMContractor extends PathfinderAStar
 				{
 					Vector3 neighbor = currentNode.clone().modifyPositionFromSide(ForgeDirection.getOrientation(i));
 
-					if (TileEMLevitator.canBePath(world, neighbor))
+					if (TileLevitator.canBePath(world, neighbor))
 					{
 						neighbors.add(neighbor);
 					}
@@ -67,7 +67,7 @@ public class PathfinderEMContractor extends PathfinderAStar
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			Vector3 neighbor = this.goal.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-			if (!TileEMLevitator.canBePath(this.world, neighbor))
+			if (!TileLevitator.canBePath(this.world, neighbor))
 			{
 				blockCount++;
 			}

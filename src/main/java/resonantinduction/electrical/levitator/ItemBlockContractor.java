@@ -22,7 +22,7 @@ public class ItemBlockContractor extends ItemBlock
 
 		if (place)
 		{
-			TileEMLevitator tileContractor = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
+			TileLevitator tileContractor = (TileLevitator) world.getBlockTileEntity(x, y, z);
 			tileContractor.setDirection(ForgeDirection.getOrientation(side));
 
 			if (!tileContractor.isLatched())

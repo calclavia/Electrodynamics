@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
+import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockIOBase;
 import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import universalelectricity.api.CompatibilityModule;
@@ -25,9 +26,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 {
-	public BlockBattery(int id)
+	public BlockBattery()
 	{
-		super("battery", id);
+		super("battery", Settings.getNextBlockID());
 		this.setTextureName(Reference.PREFIX + "machine");
 	}
 

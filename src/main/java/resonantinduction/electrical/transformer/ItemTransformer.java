@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.ItemMultipartBase;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
@@ -15,9 +16,9 @@ public class ItemTransformer extends ItemMultipartBase
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
-	public ItemTransformer(int id)
+	public ItemTransformer()
 	{
-		super("transformer", id);
+		super("transformer", Settings.getNextItemID());
 	}
 
 	@Override

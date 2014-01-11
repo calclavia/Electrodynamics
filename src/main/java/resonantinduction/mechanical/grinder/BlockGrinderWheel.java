@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRotatableBase;
 import universalelectricity.api.vector.VectorWorld;
 
@@ -18,9 +19,9 @@ import universalelectricity.api.vector.VectorWorld;
  */
 public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntityProvider
 {
-	public BlockGrinderWheel(int id)
+	public BlockGrinderWheel()
 	{
-		super("grindingWheel", id);
+		super("grindingWheel", Settings.getNextBlockID());
 		this.setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
 	}
 

@@ -27,7 +27,7 @@ import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.BlockLevitator;
 import resonantinduction.electrical.levitator.ItemBlockContractor;
-import resonantinduction.electrical.levitator.TileEMLevitator;
+import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.purifier.BlockPurifier;
 import resonantinduction.electrical.tesla.BlockTesla;
@@ -106,23 +106,24 @@ public class Electrical
 		Settings.CONFIGURATION.load();
 
 		// Energy
-		itemPartWire = new ItemWire(Settings.getNextItemID());
-		itemMultimeter = new ItemMultimeter(Settings.getNextItemID());
-		itemTransformer = new ItemTransformer(Settings.getNextItemID());
-		blockTesla = new BlockTesla(Settings.getNextBlockID());
-		blockBattery = new BlockBattery(Settings.getNextBlockID());
+		itemPartWire = contentRegistry.createItem(ItemWire.class);
+		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
+		itemTransformer = contentRegistry.createItem(ItemTransformer.class);
+		blockTesla = contentRegistry.createTile(BlockTesla.class, TileTesla.class);
+		blockBattery = contentRegistry.createTile(BlockBattery.class, TileBattery.class);
+		blockEMContractor = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 
 		// Transport
-		blockEMContractor = new BlockLevitator();
+		blockEMContractor = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 		blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 
 		// Machines
-		blockMachinePart = new BlockMachinePart();
-		blockGrinderWheel = new BlockGrinderWheel(Settings.getNextBlockID());
-		blockPurifier = new BlockPurifier(Settings.getNextBlockID());
+		blockMachinePart = contentRegistry.createBlock(BlockMachinePart.class);
+		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
+		blockPurifier = contentRegistry.createTile(BlockPurifier.class, TilePurifier.class);
 
 		// Generator
-		blockSolarPanel = new BlockSolarPanel();
+		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 
 		if (Settings.REPLACE_FURNACE)
 		{
@@ -132,25 +133,6 @@ public class Electrical
 		}
 
 		Settings.CONFIGURATION.save();
-
-		GameRegistry.registerItem(itemMultimeter, itemMultimeter.getUnlocalizedName());
-		GameRegistry.registerItem(itemTransformer, itemTransformer.getUnlocalizedName());
-
-		GameRegistry.registerBlock(blockSolarPanel, blockSolarPanel.getUnlocalizedName());
-		GameRegistry.registerBlock(blockTesla, blockTesla.getUnlocalizedName());
-		GameRegistry.registerBlock(blockBattery, ItemBlockBattery.class, blockBattery.getUnlocalizedName());
-		GameRegistry.registerBlock(blockGrinderWheel, blockGrinderWheel.getUnlocalizedName());
-		GameRegistry.registerBlock(blockPurifier, blockPurifier.getUnlocalizedName());
-		GameRegistry.registerBlock(blockMachinePart, blockMachinePart.getUnlocalizedName());
-		GameRegistry.registerBlock(blockEMContractor, ItemBlockContractor.class, blockEMContractor.getUnlocalizedName());
-
-		// Tiles
-		GameRegistry.registerTileEntity(TileTesla.class, blockTesla.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileBattery.class, blockBattery.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileSolarPanel.class, blockSolarPanel.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TilePurifier.class, blockPurifier.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileGrinderWheel.class, blockGrinderWheel.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileEMLevitator.class, blockEMContractor.getUnlocalizedName());
 
 		/**
 		 * Set reference itemstacks

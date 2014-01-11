@@ -39,6 +39,11 @@ public class ItemWire extends JItemMultiPart
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
+	public ItemWire()
+	{
+		this(Settings.getNextItemID());
+	}
+
 	public ItemWire(int id)
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));

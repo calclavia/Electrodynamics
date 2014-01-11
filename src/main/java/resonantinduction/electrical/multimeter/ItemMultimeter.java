@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.ItemMultipartBase;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
@@ -21,9 +22,9 @@ public class ItemMultimeter extends ItemMultipartBase
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
-	public ItemMultimeter(int id)
+	public ItemMultimeter()
 	{
-		super("multimeter", id);
+		super("multimeter", Settings.getNextItemID());
 	}
 
 	@Override

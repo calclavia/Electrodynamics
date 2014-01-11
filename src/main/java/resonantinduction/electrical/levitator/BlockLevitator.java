@@ -30,7 +30,7 @@ public class BlockLevitator extends BlockRI
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
 	{
-		TileEMLevitator levitator = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
+		TileLevitator levitator = (TileLevitator) world.getBlockTileEntity(x, y, z);
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
@@ -58,7 +58,7 @@ public class BlockLevitator extends BlockRI
 	{
 		if (!entityPlayer.isSneaking())
 		{
-			TileEMLevitator levitator = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
+			TileLevitator levitator = (TileLevitator) world.getBlockTileEntity(x, y, z);
 			levitator.incrementFacing();
 			return true;
 		}
@@ -69,7 +69,7 @@ public class BlockLevitator extends BlockRI
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
-		TileEMLevitator tileContractor = (TileEMLevitator) world.getBlockTileEntity(x, y, z);
+		TileLevitator tileContractor = (TileLevitator) world.getBlockTileEntity(x, y, z);
 
 		if (!world.isRemote && !tileContractor.isLatched())
 		{
@@ -89,7 +89,7 @@ public class BlockLevitator extends BlockRI
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEMLevitator();
+		return new TileLevitator();
 	}
 
 	@Override
