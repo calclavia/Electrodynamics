@@ -13,9 +13,9 @@ import calclavia.lib.prefab.slot.SlotWatched;
 public class ContainerEngineering extends Container implements ISlotWatcher
 {
 	public InventoryPlayer inventoryPlayer;
-	public TileEngineering tileEntity;
+	public TileImprinter tileEntity;
 
-	public ContainerEngineering(InventoryPlayer inventoryPlayer, TileEngineering tileEntity)
+	public ContainerEngineering(InventoryPlayer inventoryPlayer, TileImprinter tileEntity)
 	{
 		this.tileEntity = tileEntity;
 		this.tileEntity.container = this;
@@ -31,18 +31,18 @@ public class ContainerEngineering extends Container implements ISlotWatcher
 		}
 
 		// Imprint Input for Imprinting
-		this.addSlotToContainer(new SlotSpecific(this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START, 68, 34, ItemBlockFilter.class));
+		this.addSlotToContainer(new SlotSpecific(this.tileEntity, TileImprinter.IMPRINTER_MATRIX_START, 68, 34, ItemBlockFilter.class));
 		// Item to be imprinted
-		this.addSlotToContainer(new SlotWatched(this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START + 1, 92, 34, this));
+		this.addSlotToContainer(new SlotWatched(this.tileEntity, TileImprinter.IMPRINTER_MATRIX_START + 1, 92, 34, this));
 		// Result of Crafting/Imprinting
-		this.addSlotToContainer(new SlotCraftingResult(this.tileEntity, this, this.tileEntity, TileEngineering.IMPRINTER_MATRIX_START + 2, 148, 34));
+		this.addSlotToContainer(new SlotCraftingResult(this.tileEntity, this, this.tileEntity, TileImprinter.IMPRINTER_MATRIX_START + 2, 148, 34));
 
 		// Imprinter Inventory
 		for (int ii = 0; ii < 2; ii++)
 		{
 			for (int i = 0; i < 9; i++)
 			{
-				this.addSlotToContainer(new SlotWatched(this.tileEntity, (i + ii * 9) + TileEngineering.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
+				this.addSlotToContainer(new SlotWatched(this.tileEntity, (i + ii * 9) + TileImprinter.INVENTORY_START, 8 + i * 18, 80 + ii * 18, this));
 			}
 		}
 
@@ -90,22 +90,22 @@ public class ContainerEngineering extends Container implements ISlotWatcher
 			ItemStack slotStack = slotObj.getStack();
 			copyStack = slotStack.copy();
 
-			if (slot == TileEngineering.INVENTORY_START - 1)
+			if (slot == TileImprinter.INVENTORY_START - 1)
 			{
 				// Prevents filter from being duplicated
-				this.tileEntity.setInventorySlotContents(TileEngineering.INVENTORY_START - 1, null);
+				this.tileEntity.setInventorySlotContents(TileImprinter.INVENTORY_START - 1, null);
 			}
 
 			if (slot > this.tileEntity.getSizeInventory() - 1)
 			{
-				if (this.getSlot(TileEngineering.IMPRINTER_MATRIX_START).isItemValid(slotStack))
+				if (this.getSlot(TileImprinter.IMPRINTER_MATRIX_START).isItemValid(slotStack))
 				{
-					if (!this.mergeItemStack(slotStack, TileEngineering.IMPRINTER_MATRIX_START, TileEngineering.IMPRINTER_MATRIX_START + 1, true))
+					if (!this.mergeItemStack(slotStack, TileImprinter.IMPRINTER_MATRIX_START, TileImprinter.IMPRINTER_MATRIX_START + 1, true))
 					{
 						return null;
 					}
 				}
-				else if (!this.mergeItemStack(slotStack, TileEngineering.INVENTORY_START, this.tileEntity.getSizeInventory(), false))
+				else if (!this.mergeItemStack(slotStack, TileImprinter.INVENTORY_START, this.tileEntity.getSizeInventory(), false))
 				{
 					return null;
 				}

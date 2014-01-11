@@ -18,13 +18,13 @@ import resonantinduction.core.prefab.block.BlockRI;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEngineering extends BlockRI
+public class BlockImprinter extends BlockRI
 {
 	Icon imprinter_side;
 	Icon imprinter_top;
 	Icon imprinter_bottom;
 
-	public BlockEngineering()
+	public BlockImprinter()
 	{
 		super("engineeringTable", Material.wood);
 	}
@@ -84,9 +84,9 @@ public class BlockEngineering extends BlockRI
 
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEngineering)
+			if (tileEntity instanceof TileImprinter)
 			{
-				TileEngineering inventory = (TileEngineering) tileEntity;
+				TileImprinter inventory = (TileImprinter) tileEntity;
 
 				for (int i = 0; i < inventory.getSizeInventory(); ++i)
 				{
@@ -137,9 +137,9 @@ public class BlockEngineering extends BlockRI
 	{
 		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileEngineering)
+		if (tileEntity instanceof TileImprinter)
 		{
-			((TileEngineering) tileEntity).searchInventories = !((TileEngineering) tileEntity).searchInventories;
+			((TileImprinter) tileEntity).searchInventories = !((TileImprinter) tileEntity).searchInventories;
 			par1World.markBlockForUpdate(x, y, z);
 			return true;
 		}
@@ -150,6 +150,6 @@ public class BlockEngineering extends BlockRI
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileEngineering();
+		return new TileImprinter();
 	}
 }

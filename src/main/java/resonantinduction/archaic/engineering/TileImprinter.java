@@ -23,7 +23,7 @@ import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
 
-public class TileEngineering extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
+public class TileImprinter extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
 	public static final int IMPRINTER_MATRIX_START = 9;
 	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
@@ -469,14 +469,14 @@ public class TileEngineering extends TileAdvanced implements ISidedInventory, IA
 	@Override
 	public int[] getCraftingInv()
 	{
-		if (TileEngineering.inventorySlots == null)
+		if (TileImprinter.inventorySlots == null)
 		{
-			TileEngineering.inventorySlots = new int[18];
+			TileImprinter.inventorySlots = new int[18];
 			for (int i = 0; i < inventorySlots.length; i++)
 			{
-				inventorySlots[i] = TileEngineering.INVENTORY_START + i;
+				inventorySlots[i] = TileImprinter.INVENTORY_START + i;
 			}
 		}
-		return TileEngineering.inventorySlots;
+		return TileImprinter.inventorySlots;
 	}
 }

@@ -16,6 +16,8 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import resonantinduction.core.part.BlockMachinePart;
+import resonantinduction.electrical.armbot.BlockArmbot;
+import resonantinduction.electrical.armbot.TileArmbot;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
@@ -36,6 +38,7 @@ import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.mechanical.grinder.BlockGrinderWheel;
 import resonantinduction.mechanical.grinder.TileGrinderWheel;
 import resonantinduction.mechanical.grinder.TilePurifier;
+import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
@@ -75,6 +78,8 @@ public class Electrical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+
 	// Energy
 	private static Item itemPartWire;
 	public static Item itemMultimeter;
@@ -90,6 +95,7 @@ public class Electrical
 
 	// Transport
 	public static Block blockEMContractor;
+	public static Block blockArmbot;
 	public static Item itemDisk;
 
 	@EventHandler
@@ -108,6 +114,7 @@ public class Electrical
 
 		// Transport
 		blockEMContractor = new BlockLevitator();
+		blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 
 		// Machines
 		blockMachinePart = new BlockMachinePart();

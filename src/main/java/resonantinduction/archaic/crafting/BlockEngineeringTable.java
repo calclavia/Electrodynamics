@@ -15,14 +15,14 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public class BlockCraftingDesk extends BlockRI
+public class BlockEngineeringTable extends BlockRI
 {
 	@SideOnly(Side.CLIENT)
 	private Icon workbenchIconTop;
 	@SideOnly(Side.CLIENT)
 	private Icon workbenchIconFront;
 
-	public BlockCraftingDesk()
+	public BlockEngineeringTable()
 	{
 		super("craftingDesk");
 	}
@@ -46,7 +46,7 @@ public class BlockCraftingDesk extends BlockRI
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityCraftingTable();
+		return new TileEngineeringTable();
 	}
 
 	@Override
