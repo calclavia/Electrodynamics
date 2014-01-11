@@ -75,7 +75,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 			if (Block.blocksList[vector.getBlockID(world)] != null)
 			{
-				player.addChatMessage(LanguageUtility.getLocal("message.remoteController.linked").replace("%p", x + ", " + y + ", " + z).replace("%q", Block.blocksList[vector.getBlockID(world)].getLocalizedName()));
+				player.addChatMessage(LanguageUtility.getLocal("message.remoteController.linked").replaceAll("%p", x + ", " + y + ", " + z).replaceAll("%q", Block.blocksList[vector.getBlockID(world)].getLocalizedName()));
 			}
 		}
 
@@ -167,7 +167,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.remoteController.fail").replace("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
+							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
 						}
 					}
 				}

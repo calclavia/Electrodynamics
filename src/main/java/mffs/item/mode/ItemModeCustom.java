@@ -197,7 +197,7 @@ public class ItemModeCustom extends ItemMode implements ICache
 				if (nbt != null)
 				{
 					nbt.setBoolean(NBT_MODE, !nbt.getBoolean(NBT_MODE));
-					entityPlayer.addChatMessage(LanguageUtility.getLocal("message.modeCustom.modeChange").replace("%p", (nbt.getBoolean(NBT_MODE) ? LanguageUtility.getLocal("info.modeCustom.substraction") : LanguageUtility.getLocal("info.modeCustom.additive"))));
+					entityPlayer.addChatMessage(LanguageUtility.getLocal("message.modeCustom.modeChange").replaceAll("%p", (nbt.getBoolean(NBT_MODE) ? LanguageUtility.getLocal("info.modeCustom.substraction") : LanguageUtility.getLocal("info.modeCustom.additive"))));
 				}
 			}
 		}
