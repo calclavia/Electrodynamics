@@ -82,6 +82,13 @@ public abstract class TileFluidNetwork extends TileEntityFluidDevice implements 
 	}
 
 	@Override
+	public void initiate()
+	{
+		super.initiate();
+		this.refresh();
+	}
+
+	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();

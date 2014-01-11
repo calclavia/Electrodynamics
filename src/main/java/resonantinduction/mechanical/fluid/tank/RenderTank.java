@@ -37,6 +37,9 @@ public class RenderTank extends TileEntitySpecialRenderer
 			renderSides = ((TileTank) tileEntity).renderSides;
 		}
 		
+		/**
+		 * Render Fluid
+		 */
 		if (liquid != null && liquid.amount > 100)
 		{
 			int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
@@ -59,6 +62,9 @@ public class RenderTank extends TileEntitySpecialRenderer
 			GL11.glPopMatrix();
 		}
 
+		/**
+		 * Render the faces of the tank.
+		 */
 		for (int i = 0; i < 4; i++)
 		{
 			ForgeDirection dir = ForgeDirection.getOrientation(i + 2);

@@ -39,9 +39,9 @@ public class ItemTankRenderer implements IItemRenderer
     {
         if (item.itemID == Mechanical.blockTank.blockID)
         {
-
             GL11.glPushMatrix();
             GL11.glScalef(1.0F, 1.0F, 1.0F);
+            
             if (type == ItemRenderType.ENTITY)
             {
                 GL11.glTranslatef(0F, 0.2F, 0F);
@@ -56,7 +56,7 @@ public class ItemTankRenderer implements IItemRenderer
             }
             else
             {
-                GL11.glTranslatef(0.7F, .4F, 0.7F);
+                GL11.glTranslatef(0.7F, .45F, 0.7F);
             }
 
             FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, item.getItemDamage() == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
