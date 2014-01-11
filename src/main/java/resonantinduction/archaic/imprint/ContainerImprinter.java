@@ -1,23 +1,21 @@
-package resonantinduction.archaic.engineering;
+package resonantinduction.archaic.imprint;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
-import resonantinduction.archaic.imprint.TileImprinter;
 import calclavia.lib.prefab.slot.ISlotWatcher;
 import calclavia.lib.prefab.slot.SlotCraftingResult;
 import calclavia.lib.prefab.slot.SlotSpecific;
 import calclavia.lib.prefab.slot.SlotWatched;
 
-public class ContainerEngineering extends Container implements ISlotWatcher
+public class ContainerImprinter extends Container implements ISlotWatcher
 {
 	public InventoryPlayer inventoryPlayer;
-	public TileEngineeringTable tileEntity;
+	public TileImprinter tileEntity;
 
-	public ContainerEngineering(InventoryPlayer inventoryPlayer, TileEngineeringTable tileEntity)
+	public ContainerImprinter(InventoryPlayer inventoryPlayer, TileImprinter tileEntity)
 	{
 		this.tileEntity = tileEntity;
 		this.tileEntity.container = this;

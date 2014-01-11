@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.engineering.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockFilter;
 import calclavia.lib.prefab.tile.IRotatable;
 
 public abstract class TileEntityFilterable extends TileAssembly implements IRotatable, IFilterable

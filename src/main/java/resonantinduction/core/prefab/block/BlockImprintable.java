@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.engineering.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockFilter;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 
 /**

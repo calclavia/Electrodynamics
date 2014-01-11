@@ -1,4 +1,4 @@
-package resonantinduction.archaic.engineering;
+package resonantinduction.archaic.imprint;
 
 import resonantinduction.core.prefab.block.BlockRotatableBase;
 

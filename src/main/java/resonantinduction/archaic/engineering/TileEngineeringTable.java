@@ -10,9 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
 import resonantinduction.api.events.AutoCraftEvent;
+import resonantinduction.archaic.imprint.ItemBlockFilter;
+import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.slot.ISlotPickResult;
@@ -23,31 +26,23 @@ import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
 
-public class TileImprinter extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
+public class TileEngineeringTable extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
-	public static final int IMPRINTER_MATRIX_START = 9;
-	public static final int INVENTORY_START = IMPRINTER_MATRIX_START + 3;
+	public static final int CRAFTING_MATRIX_END = 9;
 
 	private AutoCraftingManager craftManager;
-	/** 9 slots for crafting, 1 slot for an imprint, 1 slot for an item */
+
+	/** 9 slots for crafting, 1 slot for a output. */
 	public ItemStack[] craftingMatrix = new ItemStack[9];
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-	public ItemStack[] imprinterMatrix = new ItemStack[3];
-	public static final int[] imprinterSlots = { IMPRINTER_MATRIX_START, IMPRINTER_MATRIX_START + 1, IMPRINTER_MATRIX_START + 2 };
-	int imprintInputSlot = 0;
-	int imprintOutputSlot = 1;
-	int craftingOutputSlot = 2;
-
-	/** The Imprinter inventory containing slots. */
-	public ItemStack[] containingItems = new ItemStack[18];
+	/** The output inventory containing slots. */
+	public ItemStack[] output = new ItemStack[1];
+	public final int craftingOutputSlot = 0;
 	public static int[] inventorySlots;
 
 	/** The containing currently used by the imprinter. */
 	public ContainerEngineering container;
-
-	/** Is the current crafting result a result of an imprint? */
-	private boolean isImprinting = false;
 
 	/** The ability for the imprinter to serach nearby inventories. */
 	public boolean searchInventories = true;
@@ -71,7 +66,7 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	@Override
 	public int getSizeInventory()
 	{
-		return this.craftingMatrix.length + this.imprinterMatrix.length + this.containingItems.length;
+		return 10;
 	}
 
 	/**
@@ -83,17 +78,13 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	{
 		if (slot < this.getSizeInventory())
 		{
-			if (slot < IMPRINTER_MATRIX_START)
+			if (slot < CRAFTING_MATRIX_END)
 			{
 				this.craftingMatrix[slot] = itemStack;
 			}
-			else if (slot < INVENTORY_START)
-			{
-				this.imprinterMatrix[slot - IMPRINTER_MATRIX_START] = itemStack;
-			}
 			else
 			{
-				this.containingItems[slot - INVENTORY_START] = itemStack;
+				this.output[slot - CRAFTING_MATRIX_END] = itemStack;
 			}
 		}
 	}
@@ -132,17 +123,13 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot < IMPRINTER_MATRIX_START)
+		if (slot < CRAFTING_MATRIX_END)
 		{
 			return this.craftingMatrix[slot];
 		}
-		else if (slot < INVENTORY_START)
-		{
-			return this.imprinterMatrix[slot - IMPRINTER_MATRIX_START];
-		}
 		else
 		{
-			return this.containingItems[slot - INVENTORY_START];
+			return this.output[slot - CRAFTING_MATRIX_END];
 		}
 	}
 
@@ -224,103 +211,58 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 		return true;
 	}
 
-	/** Updates all the output slots. Call this to update the Imprinter. */
+	/** Updates all the output slots. Call this to update the Engineering Table. */
 	@Override
 	public void onInventoryChanged()
 	{
 		if (!this.worldObj.isRemote)
 		{
-			/** Makes the stamping recipe for filters */
-			this.isImprinting = false;
+			this.output[craftingOutputSlot] = null;
 
-			if (this.isMatrixEmpty() && this.imprinterMatrix[imprintInputSlot] != null && this.imprinterMatrix[1] != null)
+			/** Try to craft from crafting grid. If not possible, then craft from imprint. */
+			boolean didCraft = false;
+
+			/** Simulate an Inventory Crafting Instance */
+			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+
+			if (inventoryCrafting != null)
 			{
-				if (this.imprinterMatrix[imprintInputSlot].getItem() instanceof ItemBlockFilter)
+				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+
+				if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 				{
-					ItemStack outputStack = this.imprinterMatrix[imprintInputSlot].copy();
-					outputStack.stackSize = 1;
-					ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(outputStack);
-					boolean filteringItemExists = false;
-
-					for (ItemStack filteredStack : filters)
-					{
-						if (filteredStack.isItemEqual(this.imprinterMatrix[imprintOutputSlot]))
-						{
-							filters.remove(filteredStack);
-							filteringItemExists = true;
-							break;
-						}
-					}
-
-					if (!filteringItemExists)
-					{
-						filters.add(this.imprinterMatrix[imprintOutputSlot]);
-					}
-
-					ItemBlockFilter.setFilters(outputStack, filters);
-					this.imprinterMatrix[craftingOutputSlot] = outputStack;
-					this.isImprinting = true;
+					this.output[craftingOutputSlot] = matrixOutput;
+					didCraft = true;
 				}
 			}
 
-			if (!this.isImprinting)
+			/*
+			if (this.output[imprintInputSlot] != null && !didCraft)
 			{
-				this.imprinterMatrix[craftingOutputSlot] = null;
-
-				/** Try to craft from crafting grid. If not possible, then craft from imprint. */
-				boolean didCraft = false;
-
-				/** Simulate an Inventory Crafting Instance */
-				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-
-				if (inventoryCrafting != null)
+				if (this.output[imprintInputSlot].getItem() instanceof ItemBlockFilter)
 				{
-					ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+					ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(this.output[0]);
 
-					if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
+					for (ItemStack outputStack : filters)
 					{
-						this.imprinterMatrix[craftingOutputSlot] = matrixOutput;
-						didCraft = true;
-					}
-				}
-
-				if (this.imprinterMatrix[imprintInputSlot] != null && !didCraft)
-				{
-					if (this.imprinterMatrix[imprintInputSlot].getItem() instanceof ItemBlockFilter)
-					{
-
-						ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(this.imprinterMatrix[0]);
-
-						for (ItemStack outputStack : filters)
+						if (outputStack != null)
 						{
-							if (outputStack != null)
-							{
-								// System.out.println("Imprint: Geting recipe for " +
-								// outputStack.toString());
-								Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
+							Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
 
-								if (idealRecipe != null)
+							if (idealRecipe != null)
+							{
+								ItemStack recipeOutput = idealRecipe.left();
+								if (recipeOutput != null & recipeOutput.stackSize > 0)
 								{
-									// System.out.println("Imprint: found ideal recipe for  " +
-									// idealRecipe.getKey().toString());
-									ItemStack recipeOutput = idealRecipe.left();
-									if (recipeOutput != null & recipeOutput.stackSize > 0)
-									{
-										this.imprinterMatrix[craftingOutputSlot] = recipeOutput;
-										didCraft = true;
-										break;
-									}
+									this.output[craftingOutputSlot] = recipeOutput;
+									didCraft = true;
+									break;
 								}
 							}
 						}
 					}
 				}
-
-				if (!didCraft)
-				{
-					this.imprinterMatrix[craftingOutputSlot] = null;
-				}
-			}
+			}*/
 		}
 	}
 
@@ -329,19 +271,14 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	{
 		if (itemStack != null)
 		{
-			if (this.isImprinting)
-			{
-				this.imprinterMatrix[0] = null;
-			}
-			else
-			{
-				Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
 
-				if (idealRecipeItem != null)
-				{
-					this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
-				}
+			Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
+
+			if (idealRecipeItem != null)
+			{
+				this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
 			}
+
 		}
 	}
 
@@ -351,9 +288,12 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	{
 		this.onInventoryChanged();
 
+		/*
 		if (this.imprinterMatrix[craftingOutputSlot] != null)
 		{
 			AutoCraftEvent.PreCraft event = new AutoCraftEvent.PreCraft(this.worldObj, new Vector3(this), this, this.imprinterMatrix[craftingOutputSlot]);
+			MinecraftForge.EVENT_BUS.post(event);
+			
 			if (!event.isCanceled())
 			{
 				armbot.grabObject(this.imprinterMatrix[craftingOutputSlot].copy());
@@ -362,14 +302,13 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 				return true;
 			}
 		}
-
+*/
 		return false;
 	}
 
 	// ///////////////////////////////////////
 	// // Save And Data processing //////
 	// ///////////////////////////////////////
-
 	/** NBT Data */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -378,8 +317,7 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 
 		NBTTagList var2 = nbt.getTagList("Items");
 		this.craftingMatrix = new ItemStack[9];
-		this.imprinterMatrix = new ItemStack[3];
-		this.containingItems = new ItemStack[18];
+		this.output = new ItemStack[1];
 
 		for (int i = 0; i < var2.tagCount(); ++i)
 		{
@@ -469,14 +407,6 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IArm
 	@Override
 	public int[] getCraftingInv()
 	{
-		if (TileImprinter.inventorySlots == null)
-		{
-			TileImprinter.inventorySlots = new int[18];
-			for (int i = 0; i < inventorySlots.length; i++)
-			{
-				inventorySlots[i] = TileImprinter.INVENTORY_START + i;
-			}
-		}
-		return TileImprinter.inventorySlots;
+		return craftingSlots;
 	}
 }

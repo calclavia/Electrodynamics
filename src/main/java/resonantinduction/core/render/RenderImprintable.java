@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.archaic.engineering.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockFilter;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;

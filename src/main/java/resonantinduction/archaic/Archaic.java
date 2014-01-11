@@ -3,6 +3,8 @@ package resonantinduction.archaic;
 import net.minecraft.block.Block;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
+import resonantinduction.archaic.engineering.BlockEngineeringTable;
+import resonantinduction.archaic.engineering.TileEngineeringTable;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -43,12 +45,14 @@ public class Archaic
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
+	public static Block blockEngineeringTable;
 	public static Block blockCrate;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
 		blockCrate = contentRegistry.createTile(BlockCrate.class, TileCrate.class);
 		proxy.preInit();
 	}
