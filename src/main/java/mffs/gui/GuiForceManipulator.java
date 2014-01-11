@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.prefab.vector.Region2;
 import calclavia.lib.utility.LanguageUtility;
@@ -90,8 +91,8 @@ public class GuiForceManipulator extends GuiMFFS
 
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", LanguageUtility.getLocal("gui.manipulator.fortron") + " " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 30, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost(), Unit.JOULES), 9, 121, 4210752);
+		this.drawTextWithTooltip("fortron", LanguageUtility.getLocal("gui.manipulator.fortron") + " " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER, UnitPrefix.MILLI) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 30, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost(), Unit.LITER, UnitPrefix.MILLI), 9, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

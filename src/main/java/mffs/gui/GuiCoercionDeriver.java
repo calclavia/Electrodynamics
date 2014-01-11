@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -65,9 +66,9 @@ public class GuiCoercionDeriver extends GuiMFFS
 		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(UniversalElectricity.DEFAULT_VOLTAGE, Unit.VOLTAGE), 85, 40, 4210752);
 
 		this.drawTextWithTooltip("progress", "%1: " + (this.tileEntity.isActive() ? LanguageUtility.getLocal("gui.deriver.running") : LanguageUtility.getLocal("gui.deriver.idle")), 8, 70, x, y);
-		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES), 8, 105, x, y);
+		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER, UnitPrefix.MILLI), 8, 105, x, y);
 
-		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + UnitDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, Unit.JOULES), 120, 117, 4210752);
+		this.fontRenderer.drawString((this.tileEntity.isInversed ? "\u00a74-" : "\u00a72+") + UnitDisplay.getDisplayShort(this.tileEntity.getProductionRate() * 20, Unit.LITER, UnitPrefix.MILLI), 120, 117, 4210752);
 
 		super.drawGuiContainerForegroundLayer(x, y);
 	}

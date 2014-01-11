@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.prefab.vector.Region2;
 import calclavia.lib.utility.LanguageUtility;
@@ -92,8 +93,8 @@ public class GuiForceFieldProjector extends GuiMFFS
 		this.drawTextWithTooltip("matrix", 40, 20, x, y);
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.JOULES), 120, 121, 4210752);
+		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER, UnitPrefix.MILLI) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER, UnitPrefix.MILLI), 120, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

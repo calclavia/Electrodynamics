@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
@@ -71,8 +72,8 @@ public class GuiInterdictionMatrix extends GuiMFFS
 		this.drawTextWithTooltip("frequency", "%1:", 8, 93, x, y);
 		this.textFieldFrequency.drawTextBox();
 
-		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.JOULES) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.JOULES), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.JOULES), 120, 121, 4210752);
+		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER, UnitPrefix.MILLI) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 110, x, y);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER, UnitPrefix.MILLI), 120, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
