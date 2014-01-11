@@ -20,8 +20,10 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 	public static final ModelConveyorBelt MODEL = new ModelConveyorBelt();
 	public static final ModelAngledBelt MODEL2 = new ModelAngledBelt();
 
-	private void renderAModelAt(TileConveyorBelt tileEntity, double x, double y, double z, float f)
+	@Override
+	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
+		TileConveyorBelt tileEntity = (TileConveyorBelt) t;
 		SlantType slantType = tileEntity.getSlant();
 		int face = tileEntity.getDirection().ordinal();
 
@@ -51,7 +53,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 
 			if (slantType == SlantType.UP)
 			{
-				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
 
 				GL11.glTranslatef(0f, 0.8f, -0.8f);
@@ -73,7 +75,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else if (slantType == SlantType.DOWN)
 			{
-				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "slantedbelt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
 				GL11.glRotatef(180f, 0f, 1f, 0f);
 				boolean slantAdjust = false;
@@ -94,7 +96,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 			}
 			else
 			{
-				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
+				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "belt/frame" + frame + ".png");
 				bindTexture(name);
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				GL11.glTranslatef(0f, -0.68f, 0f);
@@ -118,7 +120,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 					GL11.glRotatef(90f, 0f, 1f, 0f);
 					break;
 			}
-			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "belt/frame" + frame + ".png");
+			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "belt/frame" + frame + ".png");
 			bindTexture(name);
 			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.wheelRotation), false, false, false, true);
 
@@ -129,11 +131,4 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer
 		GL11.glPopMatrix();
 
 	}
-
-	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double var2, double var4, double var6, float var8)
-	{
-		this.renderAModelAt((TileConveyorBelt) tileEntity, var2, var4, var6, var8);
-	}
-
 }

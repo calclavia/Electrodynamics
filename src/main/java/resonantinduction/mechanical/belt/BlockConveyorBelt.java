@@ -19,7 +19,7 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
-import resonantinduction.old.client.render.BlockRenderingHandler;
+import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderConveyorBelt;
 
 import com.builtbroken.common.Pair;
@@ -354,7 +354,7 @@ public class BlockConveyorBelt extends BlockMachine implements IExtraBlockInfo
     @Override
     public int getRenderType()
     {
-        return BlockRenderingHandler.BLOCK_RENDER_ID;
+        return MechanicalBlockRenderingHandler.BLOCK_RENDER_ID;
     }
 
     @Override

@@ -10,7 +10,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockImprintable;
-import resonantinduction.old.client.render.BlockRenderingHandler;
+import resonantinduction.old.client.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.RenderManipulator;
 import universalelectricity.api.UniversalElectricity;
 
@@ -110,7 +110,7 @@ public class BlockManipulator extends BlockImprintable
 	@Override
 	public int getRenderType()
 	{
-		return BlockRenderingHandler.BLOCK_RENDER_ID;
+		return MechanicalBlockRenderingHandler.BLOCK_RENDER_ID;
 	}
 
 	@Override

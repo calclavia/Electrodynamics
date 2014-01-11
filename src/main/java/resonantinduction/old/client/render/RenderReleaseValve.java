@@ -7,9 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.fluid.TileEntityReleaseValve;
 import resonantinduction.old.client.model.ModelLargePipe;
 import resonantinduction.old.client.model.ModelReleaseValve;
-import resonantinduction.old.transport.fluid.TileEntityReleaseValve;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

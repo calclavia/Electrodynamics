@@ -53,6 +53,17 @@ import resonantinduction.electrical.armbot.command.TaskUse;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.multimeter.ItemReadoutTools;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
+import resonantinduction.mechanical.fluid.BlockKitchenSink;
+import resonantinduction.mechanical.fluid.BlockReleaseValve;
+import resonantinduction.mechanical.fluid.BlockTank;
+import resonantinduction.mechanical.fluid.EnumGas;
+import resonantinduction.mechanical.fluid.ItemFluidCan;
+import resonantinduction.mechanical.fluid.pipes.BlockPipe;
+import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.mechanical.fluid.pipes.ItemBlockPipe;
+import resonantinduction.mechanical.fluid.pump.BlockConstructionPump;
+import resonantinduction.mechanical.fluid.pump.BlockDrain;
+import resonantinduction.mechanical.fluid.pump.BlockPumpMachine;
 import resonantinduction.old.api.coding.TaskRegistry;
 import resonantinduction.old.core.ItemOreDirv;
 import resonantinduction.old.core.misc.BehaviorDispenseEgg;
@@ -67,17 +78,6 @@ import resonantinduction.old.transport.crate.BlockCrate;
 import resonantinduction.old.transport.crate.ItemBlockCrate;
 import resonantinduction.old.transport.encoder.BlockEncoder;
 import resonantinduction.old.transport.encoder.ItemDisk;
-import resonantinduction.old.transport.fluid.BlockKitchenSink;
-import resonantinduction.old.transport.fluid.BlockReleaseValve;
-import resonantinduction.old.transport.fluid.BlockTank;
-import resonantinduction.old.transport.fluid.EnumGas;
-import resonantinduction.old.transport.fluid.ItemFluidCan;
-import resonantinduction.old.transport.fluid.pipes.BlockPipe;
-import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.old.transport.fluid.pipes.ItemBlockPipe;
-import resonantinduction.old.transport.fluid.pump.BlockConstructionPump;
-import resonantinduction.old.transport.fluid.pump.BlockDrain;
-import resonantinduction.old.transport.fluid.pump.BlockPumpMachine;
 import resonantinduction.old.transport.hopper.BlockAdvancedHopper;
 import resonantinduction.old.transport.imprinter.BlockImprinter;
 import resonantinduction.old.transport.imprinter.ItemImprinter;
@@ -257,7 +257,6 @@ public class ResonantInductionTransport
 	{
 
 		/* BLOCKS */
-		RecipeLoader.blockConveyorBelt = CoreRegistry.createNewBlock("ALBlockConveyor", ResonantInductionTransport.MOD_ID, BlockConveyorBelt.class);
 		RecipeLoader.blockManipulator = CoreRegistry.createNewBlock("Manipulator", ResonantInductionTransport.MOD_ID, BlockManipulator.class);
 		RecipeLoader.blockCrate = (BlockCrate) CoreRegistry.createNewBlock("Crate", ResonantInductionTransport.MOD_ID, BlockCrate.class, ItemBlockCrate.class);
 		RecipeLoader.blockImprinter = CoreRegistry.createNewBlock("Imprinter", ResonantInductionTransport.MOD_ID, BlockImprinter.class);

@@ -10,11 +10,11 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.fluid.pipes.EnumPipeType;
+import resonantinduction.mechanical.fluid.pipes.FluidPartsMaterial;
+import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
 import resonantinduction.old.client.model.ModelLargePipe;
 import resonantinduction.old.client.model.ModelOpenTrough;
-import resonantinduction.old.transport.fluid.pipes.EnumPipeType;
-import resonantinduction.old.transport.fluid.pipes.FluidPartsMaterial;
-import resonantinduction.old.transport.fluid.pipes.TileEntityPipe;
 
 import com.builtbroken.common.Pair;
 

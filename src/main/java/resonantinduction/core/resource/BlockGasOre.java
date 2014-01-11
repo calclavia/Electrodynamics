@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.old.transport.fluid.EnumGas;
+import resonantinduction.mechanical.fluid.EnumGas;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

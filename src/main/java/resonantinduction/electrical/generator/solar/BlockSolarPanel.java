@@ -1,12 +1,11 @@
 package resonantinduction.electrical.generator.solar;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockMachine;
 import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
-import resonantinduction.old.client.render.BlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockSolarPanel extends BlockMachine
 {

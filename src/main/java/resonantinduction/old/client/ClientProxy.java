@@ -7,13 +7,19 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import resonantinduction.mechanical.fluid.TileEntityReleaseValve;
+import resonantinduction.mechanical.fluid.TileEntityTank;
+import resonantinduction.mechanical.fluid.TileKitchenSink;
+import resonantinduction.mechanical.fluid.pipes.TileEntityPipe;
+import resonantinduction.mechanical.fluid.pump.TileEntityConstructionPump;
+import resonantinduction.mechanical.fluid.pump.TileEntityStarterPump;
 import resonantinduction.old.client.gui.GuiEncoderCoder;
 import resonantinduction.old.client.gui.GuiEncoderHelp;
 import resonantinduction.old.client.gui.GuiEncoderInventory;
 import resonantinduction.old.client.gui.GuiImprinter;
 import resonantinduction.old.client.gui.GuiProcessor;
 import resonantinduction.old.client.render.BlockRenderHelper;
-import resonantinduction.old.client.render.BlockRenderingHandler;
+import resonantinduction.old.client.render.MechanicalBlockRenderingHandler;
 import resonantinduction.old.client.render.ItemPipeRenderer;
 import resonantinduction.old.client.render.ItemRenderFluidCan;
 import resonantinduction.old.client.render.ItemTankRenderer;
@@ -30,12 +36,6 @@ import resonantinduction.old.core.misc.EntityTurkey;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.mechanics.processor.TileEntityProcessor;
 import resonantinduction.old.transport.encoder.TileEntityEncoder;
-import resonantinduction.old.transport.fluid.TileEntityReleaseValve;
-import resonantinduction.old.transport.fluid.TileEntityTank;
-import resonantinduction.old.transport.fluid.TileKitchenSink;
-import resonantinduction.old.transport.fluid.pipes.TileEntityPipe;
-import resonantinduction.old.transport.fluid.pump.TileEntityConstructionPump;
-import resonantinduction.old.transport.fluid.pump.TileEntityStarterPump;
 import resonantinduction.old.transport.imprinter.TileEntityImprinter;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
+		RenderingRegistry.registerBlockHandler(new MechanicalBlockRenderingHandler());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTurkey.class, new RenderTurkey());
 		RenderingRegistry.registerEntityRenderingHandler(EntityFarmEgg.class, new RenderSnowball(Item.egg));
 		RenderingRegistry.registerEntityRenderingHandler(EntityTestCar.class, new RenderTestCar());
@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForgeClient.registerItemRenderer(RecipeLoader.blockReleaseValve.blockID, new ItemPipeRenderer());
 
 		RenderingRegistry.registerBlockHandler(new BlockRenderHelper());
-		RenderingRegistry.registerBlockHandler(new BlockRenderingHandler());
+		RenderingRegistry.registerBlockHandler(new MechanicalBlockRenderingHandler());
 		if (RecipeLoader.itemFluidCan != null)
 			MinecraftForgeClient.registerItemRenderer(RecipeLoader.itemFluidCan.itemID, new ItemRenderFluidCan());
 	}
