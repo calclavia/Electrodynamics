@@ -30,7 +30,7 @@ archivesBaseName = "Resonant-Induction"
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
 	
-	replaceIn "ResonantInduction.java"
+	replaceIn "Reference.java"
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
