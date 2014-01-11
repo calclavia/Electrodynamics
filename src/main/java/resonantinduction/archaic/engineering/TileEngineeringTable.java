@@ -1,6 +1,5 @@
 package resonantinduction.archaic.engineering;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,14 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.network.packet.Packet;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
-import resonantinduction.api.events.AutoCraftEvent;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
-import resonantinduction.archaic.imprint.TileImprinter;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
-import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
@@ -25,8 +23,11 @@ import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 import calclavia.lib.utility.LanguageUtility;
 
 import com.builtbroken.common.Pair;
+import com.google.common.io.ByteArrayDataInput;
 
-public class TileEngineeringTable extends TileAdvanced implements ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
+import cpw.mods.fml.common.network.PacketDispatcher;
+
+public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
 	public static final int CRAFTING_MATRIX_END = 9;
 
@@ -61,6 +62,27 @@ public class TileEngineeringTable extends TileAdvanced implements ISidedInventor
 			craftManager = new AutoCraftingManager(this);
 		}
 		return craftManager;
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		try
+		{
+			this.readFromNBT(PacketHandler.readNBTTagCompound(data));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -236,33 +258,7 @@ public class TileEngineeringTable extends TileAdvanced implements ISidedInventor
 				}
 			}
 
-			/*
-			if (this.output[imprintInputSlot] != null && !didCraft)
-			{
-				if (this.output[imprintInputSlot].getItem() instanceof ItemBlockFilter)
-				{
-					ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(this.output[0]);
-
-					for (ItemStack outputStack : filters)
-					{
-						if (outputStack != null)
-						{
-							Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
-
-							if (idealRecipe != null)
-							{
-								ItemStack recipeOutput = idealRecipe.left();
-								if (recipeOutput != null & recipeOutput.stackSize > 0)
-								{
-									this.output[craftingOutputSlot] = recipeOutput;
-									didCraft = true;
-									break;
-								}
-							}
-						}
-					}
-				}
-			}*/
+			PacketDispatcher.sendPacketToAllPlayers(this.getDescriptionPacket());
 		}
 	}
 
@@ -289,20 +285,20 @@ public class TileEngineeringTable extends TileAdvanced implements ISidedInventor
 		this.onInventoryChanged();
 
 		/*
-		if (this.imprinterMatrix[craftingOutputSlot] != null)
-		{
-			AutoCraftEvent.PreCraft event = new AutoCraftEvent.PreCraft(this.worldObj, new Vector3(this), this, this.imprinterMatrix[craftingOutputSlot]);
-			MinecraftForge.EVENT_BUS.post(event);
-			
-			if (!event.isCanceled())
-			{
-				armbot.grabObject(this.imprinterMatrix[craftingOutputSlot].copy());
-				this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
-				this.imprinterMatrix[craftingOutputSlot] = null;
-				return true;
-			}
-		}
-*/
+		 * if (this.imprinterMatrix[craftingOutputSlot] != null)
+		 * {
+		 * AutoCraftEvent.PreCraft event = new AutoCraftEvent.PreCraft(this.worldObj, new
+		 * Vector3(this), this, this.imprinterMatrix[craftingOutputSlot]);
+		 * MinecraftForge.EVENT_BUS.post(event);
+		 * if (!event.isCanceled())
+		 * {
+		 * armbot.grabObject(this.imprinterMatrix[craftingOutputSlot].copy());
+		 * this.onPickUpFromSlot(null, 2, this.imprinterMatrix[craftingOutputSlot]);
+		 * this.imprinterMatrix[craftingOutputSlot] = null;
+		 * return true;
+		 * }
+		 * }
+		 */
 		return false;
 	}
 
@@ -322,11 +318,11 @@ public class TileEngineeringTable extends TileAdvanced implements ISidedInventor
 		for (int i = 0; i < var2.tagCount(); ++i)
 		{
 			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(i);
-			byte var5 = var4.getByte("Slot");
+			byte id = var4.getByte("Slot");
 
-			if (var5 >= 0 && var5 < this.getSizeInventory())
+			if (id >= 0 && id < this.getSizeInventory())
 			{
-				this.setInventorySlotContents(var5, ItemStack.loadItemStackFromNBT(var4));
+				this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(var4));
 			}
 		}
 
@@ -353,7 +349,6 @@ public class TileEngineeringTable extends TileAdvanced implements ISidedInventor
 		}
 
 		nbt.setTag("Items", var2);
-
 		nbt.setBoolean("searchInventories", this.searchInventories);
 	}
 

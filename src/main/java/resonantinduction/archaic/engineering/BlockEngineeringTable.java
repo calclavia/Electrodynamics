@@ -2,11 +2,14 @@ package resonantinduction.archaic.engineering;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
+import universalelectricity.api.vector.Vector2;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,11 +29,67 @@ public class BlockEngineeringTable extends BlockRI
 	public BlockEngineeringTable()
 	{
 		super("engineeringTable");
+		setTextureName("crafting_table");
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
+		if (hitSide == 1)
+		{
+			if (!world.isRemote)
+			{
+				TileEntity te = world.getBlockTileEntity(x, y, z);
+
+				if (te instanceof TileEngineeringTable)
+				{
+					TileEngineeringTable tile = (TileEngineeringTable) te;
+
+					ItemStack current = player.inventory.getCurrentItem();
+
+					Vector2 hitVector = new Vector2(hitX, hitZ);
+					double regionLength = 1d / 3d;
+
+					/**
+					 * Crafting Matrix
+					 */
+					matrix:
+					for (int j = 0; j < 3; j++)
+					{
+						for (int k = 0; k < 3; k++)
+						{
+							Vector2 check = new Vector2(j, k).scale(regionLength);
+
+							if (check.distance(hitVector) < regionLength)
+							{
+								int slotID = j * 3 + k;
+								ItemStack checkStack = tile.craftingMatrix[slotID];
+								System.out.println(slotID);
+								if (checkStack != null)
+								{
+									EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, checkStack);
+									entityItem.delayBeforeCanPickup = 0;
+									world.spawnEntityInWorld(entityItem);
+									tile.craftingMatrix[slotID] = null;
+								}
+								else if (current != null)
+								{
+									tile.craftingMatrix[slotID] = current;
+									player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+								}
+
+								break matrix;
+							}
+						}
+					}
+
+					tile.onInventoryChanged();
+				}
+			}
+
+			return true;
+		}
+
 		return false;
 	}
 
