@@ -103,7 +103,7 @@ public class Electrical
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
-		Settings.CONFIGURATION.load();
+		Settings.load();
 
 		// Energy
 		itemPartWire = contentRegistry.createItem(ItemWire.class);
@@ -131,7 +131,7 @@ public class Electrical
 			GameRegistry.registerTileEntity(TileAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
 		}
 
-		Settings.CONFIGURATION.save();
+		Settings.save();
 
 		/**
 		 * Set reference itemstacks
@@ -144,7 +144,6 @@ public class Electrical
 		}
 
 		proxy.preInit();
-		Settings.CONFIGURATION.save();
 	}
 
 	@EventHandler
