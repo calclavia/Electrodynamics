@@ -11,6 +11,7 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiInterdictionMatrix extends GuiMFFS
@@ -30,7 +31,7 @@ public class GuiInterdictionMatrix extends GuiMFFS
 		super.initGui();
 
 		// Inverse Button
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 80, this.height / 2 - 65, 50, 20, "Banned"));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 80, this.height / 2 - 65, 50, 20, LanguageUtility.getLocal("gui.matrix.banned")));
 	}
 
 	@Override
@@ -58,14 +59,14 @@ public class GuiInterdictionMatrix extends GuiMFFS
 		{
 			if (this.buttonList.get(1) instanceof GuiButton)
 			{
-				((GuiButton) this.buttonList.get(1)).displayString = "Allowed";
+				((GuiButton) this.buttonList.get(1)).displayString = LanguageUtility.getLocal("gui.matrix.allowed");
 			}
 		}
 		else
 		{
 			if (this.buttonList.get(1) instanceof GuiButton)
 			{
-				((GuiButton) this.buttonList.get(1)).displayString = "Banned";
+				((GuiButton) this.buttonList.get(1)).displayString = LanguageUtility.getLocal("gui.matrix.banned");
 			}
 		}
 

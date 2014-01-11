@@ -41,13 +41,13 @@ public class GuiForceManipulator extends GuiMFFS
 		this.buttonList.add(new GuiIcon(3, this.width / 2 - 82, this.height / 2 - 60, null, new ItemStack(Block.anvil)));
 		this.buttonList.add(new GuiIcon(4, this.width / 2 - 82, this.height / 2 - 38, null, new ItemStack(Item.compass)));
 
-		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), "Mode");
+		this.tooltips.put(new Region2(new Vector2(117, 44), new Vector2(117, 44).add(18)), LanguageUtility.getLocal("gui.projector.mode"));
 
-		this.tooltips.put(new Region2(new Vector2(90, 17), new Vector2(90, 17).add(18)), "Up");
-		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17), new Vector2(90 + 18 * 3, 17).add(18)), "Up");
+		this.tooltips.put(new Region2(new Vector2(90, 17), new Vector2(90, 17).add(18)), LanguageUtility.getLocal("gui.projector.up"));
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17), new Vector2(90 + 18 * 3, 17).add(18)), LanguageUtility.getLocal("gui.projector.up"));
 
-		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 3), new Vector2(90, 17 + 18 * 3).add(18)), "Down");
-		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 3), new Vector2(90 + 18 * 3, 17 + 18 * 3).add(18)), "Down");
+		this.tooltips.put(new Region2(new Vector2(90, 17 + 18 * 3), new Vector2(90, 17 + 18 * 3).add(18)), LanguageUtility.getLocal("gui.projector.down"));
+		this.tooltips.put(new Region2(new Vector2(90 + 18 * 3, 17 + 18 * 3), new Vector2(90 + 18 * 3, 17 + 18 * 3).add(18)), LanguageUtility.getLocal("gui.projector.down"));
 
 		String north = LanguageUtility.getLocal("gui.projector.north");
 		String south = LanguageUtility.getLocal("gui.projector.south");
