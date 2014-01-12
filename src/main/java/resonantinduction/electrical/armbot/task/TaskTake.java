@@ -1,7 +1,7 @@
 package resonantinduction.electrical.armbot.task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,7 @@ import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.InvInteractionHelper;
+import calclavia.lib.utility.InventoryInteractionHelper;
 import calclavia.lib.utility.MathUtility;
 
 import com.builtbroken.common.science.units.UnitHelper;
@@ -63,12 +63,12 @@ public class TaskTake extends TaskBaseArmbot
 			if (targetTile != null && ((IArmbot) this.program.getMachine()).getHeldObject() instanceof ItemStack)
 			{
 				ForgeDirection direction = MathUtility.getFacingDirectionFromAngle(((IArmbot) this.program.getMachine()).getRotation().x);
-				List<ItemStack> stacks = new ArrayList<ItemStack>();
+				Set<ItemStack> stacks = new HashSet<ItemStack>();
 				if (this.stack != null)
 				{
 					stacks.add(stack);
 				}
-				InvInteractionHelper invEx = new InvInteractionHelper(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
+				InventoryInteractionHelper invEx = new InventoryInteractionHelper(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
 				((IArmbot) this.program.getMachine()).grabObject(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
 				return ((IArmbot) this.program.getMachine()).getHeldObject() != null ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
 
