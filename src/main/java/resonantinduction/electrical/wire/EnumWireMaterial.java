@@ -40,7 +40,7 @@ public enum EnumWireMaterial
 	{
 		this.name = name;
 		/** Multiply the realistic resistance by a factor for game balance. */
-		this.resistance = resistance;
+		this.resistance = resistance / 100;
 		this.damage = electrocutionDamage;
 		this.maxAmps = maxAmps;
 		this.color = new ColourRGBA(r, g, b, 255);
