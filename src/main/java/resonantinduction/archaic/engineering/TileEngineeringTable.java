@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
+import resonantinduction.archaic.imprint.ItemBlockFilter;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.ContainerFake;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
@@ -271,6 +272,39 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 			{
 				this.output[CRAFTING_OUTPUT_SLOT] = matrixOutput;
 				didCraft = true;
+			}
+
+			// TODO: Change this later.
+			int imprintInputSlot = 4;
+
+			if (!didCraft)
+			{
+				ItemStack filterStack = this.craftingMatrix[imprintInputSlot];
+
+				if (filterStack != null && filterStack.getItem() instanceof ItemBlockFilter)
+				{
+					ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(filterStack);
+
+					for (ItemStack outputStack : filters)
+					{
+						if (outputStack != null)
+						{
+							Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
+
+							if (idealRecipe != null)
+							{
+								ItemStack recipeOutput = idealRecipe.left();
+
+								if (recipeOutput != null & recipeOutput.stackSize > 0)
+								{
+									this.output[CRAFTING_OUTPUT_SLOT] = recipeOutput;
+									didCraft = true;
+									break;
+								}
+							}
+						}
+					}
+				}
 			}
 
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
