@@ -38,7 +38,7 @@ public class ItemDust extends ItemBase
 		String dustName = getDustFromStack(is);
 		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
 
-		String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "");
+		String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
 		return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
 	}
 
