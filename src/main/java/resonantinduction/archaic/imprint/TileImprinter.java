@@ -1,28 +1,20 @@
 package resonantinduction.archaic.imprint;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
-import resonantinduction.api.IArmbot;
-import resonantinduction.api.IArmbotUseable;
-import resonantinduction.api.events.AutoCraftEvent;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.electrical.encoder.coding.args.ArgumentData;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
 public class TileImprinter extends TileAdvanced implements ISidedInventory, IPacketReceiver
@@ -152,29 +144,57 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 			/** Makes the stamping recipe for filters */
 			ItemStack fitlerStack = this.inventory[9];
 
-			if (fitlerStack != null && fitlerStack.getItem() instanceof ItemBlockFilter)
+			if (fitlerStack != null && fitlerStack.getItem() instanceof ItemBlockImprint)
 			{
 				ItemStack outputStack = fitlerStack.copy();
 				outputStack.stackSize = 1;
-				ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(outputStack);
-				boolean filteringItemExists = false;
+				Set<ItemStack> filters = ItemBlockImprint.getFilters(outputStack);
+				Set<ItemStack> toAdd = new HashSet<ItemStack>();
 
-				for (ItemStack filteredStack : filters)
+				/** A hashset of to be imprinted items containing NO repeats. */
+				Set<ItemStack> toBeImprinted = new HashSet<ItemStack>();
+
+				check:
+				for (int i = 0; i < 9; i++)
 				{
-					if (filteredStack.isItemEqual(fitlerStack))
+					ItemStack stackInInventory = inventory[i];
+
+					if (stackInInventory != null)
 					{
-						filters.remove(filteredStack);
-						filteringItemExists = true;
-						break;
+						for (ItemStack check : toBeImprinted)
+						{
+							if (check.isItemEqual(stackInInventory))
+								continue check;
+						}
+
+						toBeImprinted.add(stackInInventory);
 					}
 				}
 
-				if (!filteringItemExists)
+				for (ItemStack stackInInventory : toBeImprinted)
 				{
-					filters.add(fitlerStack);
+					Iterator<ItemStack> it = filters.iterator();
+
+					boolean removed = false;
+
+					while (it.hasNext())
+					{
+						ItemStack filteredStack = it.next();
+
+						if (filteredStack.isItemEqual(stackInInventory))
+						{
+							it.remove();
+							removed = true;
+						}
+					}
+
+					if (!removed)
+						toAdd.add(stackInInventory);
 				}
 
-				ItemBlockFilter.setFilters(outputStack, filters);
+				filters.addAll(toAdd);
+
+				ItemBlockImprint.setFilters(outputStack, filters);
 				this.inventory[9] = outputStack;
 			}
 		}

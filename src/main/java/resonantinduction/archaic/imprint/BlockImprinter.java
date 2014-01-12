@@ -1,5 +1,6 @@
 package resonantinduction.archaic.imprint;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +9,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.utility.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
@@ -64,6 +67,23 @@ public class BlockImprinter extends BlockRI
 	}
 
 	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	{
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+
+		if (te instanceof TileImprinter)
+		{
+			TileImprinter tile = (TileImprinter) te;
+			int idOnTop = ((VectorWorld) new VectorWorld(world, x, y, z).modifyPositionFromSide(ForgeDirection.getOrientation(1))).getBlockID();
+
+			if (Block.pistonMoving.blockID == blockID)
+			{
+				tile.onInventoryChanged();
+			}
+		}
+	}
+
+	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -71,13 +91,12 @@ public class BlockImprinter extends BlockRI
 		if (te instanceof TileImprinter)
 		{
 			TileImprinter tile = (TileImprinter) te;
+			ItemStack current = player.inventory.getCurrentItem();
 
 			if (hitSide == 1)
 			{
 				if (!world.isRemote)
 				{
-					ItemStack current = player.inventory.getCurrentItem();
-
 					Vector2 hitVector = new Vector2(hitX, hitZ);
 					double regionLength = 1d / 3d;
 
@@ -148,19 +167,25 @@ public class BlockImprinter extends BlockRI
 						}
 					}
 
-					tile.onInventoryChanged();
+					world.markBlockForUpdate(x, y, z);
 				}
 
 				return true;
 			}
 			else if (hitSide != 0)
 			{
-				if (!world.isRemote)
+
+				ItemStack output = tile.getStackInSlot(9);
+
+				if (output != null)
 				{
-					ItemStack output = tile.getStackInSlot(9);
 					InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 					tile.setInventorySlotContents(9, null);
-					tile.onInventoryChanged();
+				}
+				else if (current != null && current.getItem() instanceof ItemBlockImprint)
+				{
+					tile.setInventorySlotContents(9, current);
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 				}
 			}
 		}

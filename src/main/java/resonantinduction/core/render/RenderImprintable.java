@@ -1,6 +1,6 @@
 package resonantinduction.core.render;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -40,17 +40,20 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 					{
 						if (objectPosition.blockX == tileFilterable.xCoord && objectPosition.blockY == tileFilterable.yCoord && objectPosition.blockZ == tileFilterable.zCoord)
 						{
-							ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(filter);
-							for (int i = 0; i < filters.size(); i++)
+							Set<ItemStack> filters = ItemBlockImprint.getFilters(filter);
+							
+							int i = 0;
+							for (ItemStack filterStack : filters)
 							{
 								if (((TileEntityFilterable) tileEntity).isInverted())
 								{
-									RenderUtility.renderFloatingText(filters.get(i).getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f, 0xFF8888);
+									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f, 0xFF8888);
 								}
 								else
 								{
-									RenderUtility.renderFloatingText(filters.get(i).getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f, 0x88FF88);
+									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), (float) x + 0.5f, ((float) y + (i * 0.25f)) - 1f, (float) z + 0.5f, 0x88FF88);
 								}
+								i++;
 							}
 						}
 					}
@@ -58,5 +61,4 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 			}
 		}
 	}
-
 }
