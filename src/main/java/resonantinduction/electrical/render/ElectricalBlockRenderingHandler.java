@@ -64,13 +64,16 @@ public class ElectricalBlockRenderingHandler implements ISimpleBlockRenderingHan
 		}
 		else if (block instanceof BlockBattery)
 		{
-			glPushMatrix();
-			glTranslatef(0.5f, 0.9f, 0.5f);
-			glScalef(0.5f, 0.5f, 0.5f);
-			glRotatef(180F, 0.0F, 0.0F, 1.0F);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE);
-			RenderBattery.MODEL.renderAll();
-			glPopMatrix();
+			for (int i = 2; i < 6; i++)
+			{
+				glPushMatrix();
+				glTranslatef(0.5f, 0, 0.5f);
+				GL11.glRotatef(90 * i, 0, 1, 0);
+				glScalef(0.5f, 0.5f, 0.5f);
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderBattery.TEXTURE_CAP);
+				RenderBattery.MODEL.renderAll();
+				glPopMatrix();
+			}
 		}
 		else if (block instanceof BlockSolarPanel)
 		{
