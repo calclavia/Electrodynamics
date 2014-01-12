@@ -11,6 +11,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.pump.RenderPump;
 import resonantinduction.mechanical.logistic.RenderManipulator;
+import resonantinduction.mechanical.logistic.RenderRejector;
 import resonantinduction.old.client.model.ModelConveyorBelt;
 import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
@@ -28,7 +29,6 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 	public static MechanicalBlockRenderingHandler INSTANCE = new MechanicalBlockRenderingHandler();
 	public static final int ID = RenderingRegistry.getNextAvailableRenderId();
 	private ModelConveyorBelt modelConveyorBelt = new ModelConveyorBelt();
-	private ModelRejectorPiston modelEjector = new ModelRejectorPiston();
 	private ModelCrusher modelCrushor = new ModelCrusher();
 	private ModelGrinder grinderModel = new ModelGrinder();
 
@@ -63,22 +63,19 @@ public class MechanicalBlockRenderingHandler implements ISimpleBlockRenderingHan
 			RenderManipulator.MODEL.render(0.0625F, true, 0);
 			GL11.glPopMatrix();
 		}
-		
+		if (block == Mechanical.blockRejector)
+		{
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderRejector.TEXTURE);
+			GL11.glPushMatrix();
+			GL11.glTranslatef(0.6F, 1.5F, 0.6F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
+			GL11.glRotatef(-90f, 0f, 1f, 0f);
+			RenderRejector.MODEL.render(0.0625F);
+			RenderRejector.MODEL.renderPiston(0.0625F, 1);
+			GL11.glPopMatrix();
+		}
+
 		/*
-		 * else if (RecipeLoader.blockRejector != null && block.blockID ==
-		 * RecipeLoader.blockRejector.blockID)
-		 * {
-		 * FMLClientHandler.instance().getClient().renderEngine.bindTexture(new
-		 * ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "rejector.png"));
-		 * GL11.glPushMatrix();
-		 * GL11.glTranslatef(0.6F, 1.5F, 0.6F);
-		 * GL11.glRotatef(180f, 0f, 0f, 1f);
-		 * GL11.glRotatef(-90f, 0f, 1f, 0f);
-		 * modelEjector.render(0.0625F);
-		 * modelEjector.renderPiston(0.0625F, 1);
-		 * GL11.glPopMatrix();
-		 * }
-		 * else
 		 * if (RecipeLoader.blockPumpMachine != null && block.blockID ==
 		 * RecipeLoader.blockPumpMachine.blockID && metadata < 4)
 		 * {

@@ -15,8 +15,12 @@ import resonantinduction.mechanical.fluid.pump.TileGrate;
 import resonantinduction.mechanical.fluid.pump.TilePump;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
+import resonantinduction.mechanical.logistic.BlockDetector;
 import resonantinduction.mechanical.logistic.BlockManipulator;
+import resonantinduction.mechanical.logistic.BlockRejector;
+import resonantinduction.mechanical.logistic.TileDetector;
 import resonantinduction.mechanical.logistic.TileManipulator;
+import resonantinduction.mechanical.logistic.TileRejector;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
@@ -57,6 +61,7 @@ public class Mechanical
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
 	public static Block blockDetector;
+	public static Block blockRejector;
 
 	// Fluids
 	public static Block blockTank;
@@ -72,6 +77,8 @@ public class Mechanical
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);
+		blockDetector = contentRegistry.createTile(BlockDetector.class, TileDetector.class);
+		blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
 
 		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
 		blockPipe = contentRegistry.createBlock(BlockPipe.class, ItemBlockFluidContainer.class, TilePipe.class);

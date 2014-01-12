@@ -34,6 +34,25 @@ public class BlockRejector extends BlockImprintable
 		return MechanicalBlockRenderingHandler.ID;
 	}
 
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return 0;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)

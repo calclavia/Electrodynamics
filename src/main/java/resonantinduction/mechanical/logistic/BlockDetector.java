@@ -68,6 +68,7 @@ public class BlockDetector extends BlockImprintable
 		super.registerIcons(iconReg);
 		this.eye_green = iconReg.registerIcon(Reference.PREFIX + "detector_green");
 		this.eye_red = iconReg.registerIcon(Reference.PREFIX + "detector_red");
+		this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "machine");
 	}
 
 	@Override

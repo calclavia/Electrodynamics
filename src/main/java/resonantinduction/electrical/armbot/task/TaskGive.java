@@ -1,7 +1,7 @@
 package resonantinduction.electrical.armbot.task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -66,7 +66,7 @@ public class TaskGive extends TaskBaseArmbot
 			{
 				ForgeDirection direction = MathUtility.getFacingDirectionFromAngle((float) ((IArmbot) this.program.getMachine()).getRotation().x);
 				ItemStack itemStack = (ItemStack) ((IArmbot) this.program.getMachine()).getHeldObject();
-				List<ItemStack> stacks = new ArrayList<ItemStack>();
+				Set<ItemStack> stacks = new HashSet<ItemStack>();
 				if (this.stack != null)
 				{
 					stacks.add(stack);
