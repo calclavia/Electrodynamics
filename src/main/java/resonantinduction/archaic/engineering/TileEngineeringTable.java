@@ -104,6 +104,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 			if (slot < CRAFTING_MATRIX_END)
 			{
 				this.craftingMatrix[slot] = itemStack;
+				System.out.println(worldObj.isRemote+"SET"+this.craftingMatrix[slot]);
 			}
 			else
 			{
@@ -238,7 +239,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public void onInventoryChanged()
 	{
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
 			this.output[craftingOutputSlot] = null;
 
@@ -261,23 +262,25 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				didCraft = true;
 			}
 
-			PacketDispatcher.sendPacketToAllPlayers(this.getDescriptionPacket());
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
 	@Override
 	public void onPickUpFromSlot(EntityPlayer entityPlayer, int s, ItemStack itemStack)
 	{
-		if (itemStack != null)
+		if (!worldObj.isRemote)
 		{
-
-			Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
-
-			if (idealRecipeItem != null)
+			if (itemStack != null)
 			{
-				this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
-			}
+				Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
 
+				if (idealRecipeItem != null)
+				{
+					this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
+				}
+
+			}
 		}
 	}
 
@@ -314,18 +317,18 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	{
 		super.readFromNBT(nbt);
 
-		NBTTagList var2 = nbt.getTagList("Items");
+		NBTTagList nbtList = nbt.getTagList("Items");
 		this.craftingMatrix = new ItemStack[9];
 		this.output = new ItemStack[1];
 
-		for (int i = 0; i < var2.tagCount(); ++i)
+		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound var4 = (NBTTagCompound) var2.tagAt(i);
-			byte id = var4.getByte("Slot");
+			NBTTagCompound stackTag = (NBTTagCompound) nbtList.tagAt(i);
+			byte id = stackTag.getByte("Slot");
 
 			if (id >= 0 && id < this.getSizeInventory())
 			{
-				this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(var4));
+				this.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(stackTag));
 			}
 		}
 
@@ -338,7 +341,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	{
 		super.writeToNBT(nbt);
 
-		NBTTagList var2 = new NBTTagList();
+		NBTTagList nbtList = new NBTTagList();
 
 		for (int i = 0; i < this.getSizeInventory(); ++i)
 		{
@@ -347,11 +350,11 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				NBTTagCompound var4 = new NBTTagCompound();
 				var4.setByte("Slot", (byte) i);
 				this.getStackInSlot(i).writeToNBT(var4);
-				var2.appendTag(var4);
+				nbtList.appendTag(var4);
 			}
 		}
 
-		nbt.setTag("Items", var2);
+		nbt.setTag("Items", nbtList);
 		nbt.setBoolean("searchInventories", this.searchInventories);
 	}
 
