@@ -68,29 +68,35 @@ public class BlockEngineeringTable extends BlockRI
 							if (check.distance(hitVector) < regionLength)
 							{
 								int slotID = j * 3 + k;
+								boolean didInsert = false;
 								ItemStack checkStack = tile.craftingMatrix[slotID];
 
-								if (checkStack != null)
+								if (current != null)
+								{
+									if (checkStack == null || checkStack.isItemEqual(current))
+									{
+										if (ControlKeyModifer.isControlDown(player))
+										{
+											tile.craftingMatrix[slotID] = current;
+											current = null;
+										}
+										else
+										{
+											tile.craftingMatrix[slotID] = current.splitStack(1);
+										}
+
+										if (current == null || current.stackSize <= 0)
+										{
+											player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+										}
+
+									}
+								}
+
+								if (!didInsert && checkStack != null)
 								{
 									InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0);
 									tile.craftingMatrix[slotID] = null;
-								}
-								else if (current != null)
-								{
-									if (ControlKeyModifer.isControlDown(player))
-									{
-										tile.craftingMatrix[slotID] = current.splitStack(1);
-									}
-									else
-									{
-										tile.craftingMatrix[slotID] = current;
-										current = null;
-									}
-
-									if (current == null || current.stackSize <= 0)
-									{
-										player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-									}
 								}
 
 								break matrix;
@@ -108,11 +114,12 @@ public class BlockEngineeringTable extends BlockRI
 			{
 				ItemStack output = tile.getStackInSlot(9);
 
-				if (output != null)
+				while (output != null && ControlKeyModifer.isControlDown(player))
 				{
 					InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 					tile.onPickUpFromSlot(player, 9, output);
 					tile.setInventorySlotContents(9, null);
+					output = tile.getStackInSlot(9);
 				}
 			}
 		}

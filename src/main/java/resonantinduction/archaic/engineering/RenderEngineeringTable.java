@@ -65,7 +65,7 @@ public class RenderEngineeringTable extends TileEntitySpecialRenderer
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 					this.renderItem(tileEntity.worldObj, ForgeDirection.UP, tile.craftingMatrix[i], new Vector3(), 0, 0);
 					GL11.glPopMatrix();
-
+System.out.println(tile.craftingMatrix[i].stackSize);
 					if (isLooking)
 						RenderUtility.renderFloatingText("" + tile.craftingMatrix[i].stackSize, (float) translation.x, (float) translation.y - 2f, (float) translation.z);
 				}
