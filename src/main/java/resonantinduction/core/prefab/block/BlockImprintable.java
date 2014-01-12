@@ -9,7 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 
 /**
@@ -53,7 +53,7 @@ public abstract class BlockImprintable extends BlockRI
 				{
 					if (player.getCurrentEquippedItem() != null)
 					{
-						if (player.getCurrentEquippedItem().getItem() instanceof ItemBlockFilter)
+						if (player.getCurrentEquippedItem().getItem() instanceof ItemBlockImprint)
 						{
 							((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
 							player.inventory.setInventorySlotContents(player.inventory.currentItem, null);

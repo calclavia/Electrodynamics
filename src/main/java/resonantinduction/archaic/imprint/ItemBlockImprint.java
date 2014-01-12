@@ -1,7 +1,8 @@
 package resonantinduction.archaic.imprint;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
@@ -19,9 +20,14 @@ import resonantinduction.core.Settings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemBlockFilter extends Item
+public class ItemBlockImprint extends Item
 {
-	public ItemBlockFilter(int id)
+	public ItemBlockImprint()
+	{
+		this(Settings.getNextItemID());
+	}
+
+	public ItemBlockImprint(int id)
 	{
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
 		this.setUnlocalizedName("imprint");
@@ -64,7 +70,7 @@ public class ItemBlockFilter extends Item
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		List<ItemStack> filterItems = getFilters(itemStack);
+		Set<ItemStack> filterItems = getFilters(itemStack);
 
 		if (filterItems.size() > 0)
 		{
@@ -80,7 +86,7 @@ public class ItemBlockFilter extends Item
 	}
 
 	/** Saves the list of items to filter out inside. */
-	public static void setFilters(ItemStack itemStack, ArrayList<ItemStack> filterStacks)
+	public static void setFilters(ItemStack itemStack, Set<ItemStack> filterStacks)
 	{
 		if (itemStack.getTagCompound() == null)
 		{
@@ -89,23 +95,19 @@ public class ItemBlockFilter extends Item
 
 		NBTTagList nbt = new NBTTagList();
 
-		for (int i = 0; i < filterStacks.size(); ++i)
+		for (ItemStack filterStack : filterStacks)
 		{
-			if (filterStacks.get(i) != null)
-			{
-				NBTTagCompound newCompound = new NBTTagCompound();
-				newCompound.setByte("Slot", (byte) i);
-				filterStacks.get(i).writeToNBT(newCompound);
-				nbt.appendTag(newCompound);
-			}
+			NBTTagCompound newCompound = new NBTTagCompound();
+			filterStack.writeToNBT(newCompound);
+			nbt.appendTag(newCompound);
 		}
 
 		itemStack.getTagCompound().setTag("Items", nbt);
 	}
 
-	public static ArrayList<ItemStack> getFilters(ItemStack itemStack)
+	public static HashSet<ItemStack> getFilters(ItemStack itemStack)
 	{
-		ArrayList<ItemStack> filterStacks = new ArrayList<ItemStack>();
+		HashSet<ItemStack> filterStacks = new HashSet<ItemStack>();
 
 		if (itemStack.getTagCompound() == null)
 		{
@@ -118,7 +120,6 @@ public class ItemBlockFilter extends Item
 		for (int i = 0; i < tagList.tagCount(); ++i)
 		{
 			NBTTagCompound var4 = (NBTTagCompound) tagList.tagAt(i);
-			byte var5 = var4.getByte("Slot");
 			filterStacks.add(ItemStack.loadItemStackFromNBT(var4));
 		}
 

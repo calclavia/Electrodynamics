@@ -1,11 +1,13 @@
 package resonantinduction.archaic;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.BlockEngineeringTable;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
 import resonantinduction.archaic.imprint.BlockImprinter;
+import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -51,6 +53,8 @@ public class Archaic
 	public static Block blockCrate;
 	public static Block blockImprinter;
 
+	public static Item itemImprint;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
@@ -58,6 +62,8 @@ public class Archaic
 		blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
 		blockCrate = contentRegistry.createTile(BlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
+
+		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
 		proxy.preInit();
 	}
 

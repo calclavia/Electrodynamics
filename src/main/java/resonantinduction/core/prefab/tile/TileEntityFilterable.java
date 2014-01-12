@@ -1,12 +1,12 @@
 package resonantinduction.core.prefab.tile;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockImprint;
 import calclavia.lib.prefab.tile.IRotatable;
 
 public abstract class TileEntityFilterable extends TileAssembly implements IRotatable, IFilterable
@@ -41,7 +41,7 @@ public abstract class TileEntityFilterable extends TileAssembly implements IRota
 	{
 		if (this.getFilter() != null && itemStack != null)
 		{
-			ArrayList<ItemStack> checkStacks = ItemBlockFilter.getFilters(getFilter());
+			Set<ItemStack> checkStacks = ItemBlockImprint.getFilters(getFilter());
 
 			if (checkStacks != null)
 			{

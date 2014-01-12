@@ -1,10 +1,7 @@
 package resonantinduction.archaic.engineering;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,9 +13,12 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
-import resonantinduction.archaic.imprint.ItemBlockFilter;
+import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.ContainerFake;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
@@ -28,11 +28,8 @@ import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
 import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.ListUtility;
 
 import com.builtbroken.common.Pair;
-import com.google.common.collect.Lists;
 import com.google.common.io.ByteArrayDataInput;
 
 public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
@@ -281,9 +278,9 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 			{
 				ItemStack filterStack = this.craftingMatrix[imprintInputSlot];
 
-				if (filterStack != null && filterStack.getItem() instanceof ItemBlockFilter)
+				if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
 				{
-					ArrayList<ItemStack> filters = ItemBlockFilter.getFilters(filterStack);
+					Set<ItemStack> filters = ItemBlockImprint.getFilters(filterStack);
 
 					for (ItemStack outputStack : filters)
 					{
