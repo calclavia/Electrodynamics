@@ -36,7 +36,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class TileFluidNetwork extends TileEntityFluidDevice implements INetworkFluidPart, IPacketReceiver
 {
-	private int updateTick = 1;
 	public static int refreshRate = 10;
 	protected FluidTank tank;
 	protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
