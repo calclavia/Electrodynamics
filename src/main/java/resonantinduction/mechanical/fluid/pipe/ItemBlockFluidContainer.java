@@ -46,7 +46,7 @@ public class ItemBlockFluidContainer extends ItemBlock
 
 			if (fluid != null)
 			{
-				list.add("Fluid: " + fluid.getFluid().getName());
+				list.add("Fluid: " + fluid.getFluid().getLocalizedName());
 				list.add("Volume: " + UnitDisplay.getDisplay(fluid.amount, Unit.LITER, UnitPrefix.MILLI));
 			}
 		}
