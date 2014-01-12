@@ -1,20 +1,19 @@
 package resonantinduction.archaic.imprint;
 
-import java.util.Random;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
+import universalelectricity.api.vector.Vector2;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.InventoryUtility;
+import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +25,7 @@ public class BlockImprinter extends BlockRI
 
 	public BlockImprinter()
 	{
-		super("engineeringTable", Material.wood);
+		super("imprinter", Material.wood);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -64,84 +63,106 @@ public class BlockImprinter extends BlockRI
 		return this.imprinter_side;
 	}
 
-	/** Called upon block activation (right click on the block.) */
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
-		if (!world.isRemote)
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+
+		if (te instanceof TileImprinter)
 		{
-			entityPlayer.openGui(Archaic.INSTANCE, 0, world, x, y, z);
-		}
+			TileImprinter tile = (TileImprinter) te;
 
-		return true;
-
-	}
-
-	@Override
-	public void dropEntireInventory(World par1World, int x, int y, int z, int par5, int par6)
-	{
-		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
-
-		if (tileEntity != null)
-		{
-			if (tileEntity instanceof TileImprinter)
+			if (hitSide == 1)
 			{
-				TileImprinter inventory = (TileImprinter) tileEntity;
-
-				for (int i = 0; i < inventory.getSizeInventory(); ++i)
+				if (!world.isRemote)
 				{
-					ItemStack itemStack = inventory.getStackInSlot(i);
+					ItemStack current = player.inventory.getCurrentItem();
 
-					if (itemStack != null)
+					Vector2 hitVector = new Vector2(hitX, hitZ);
+					double regionLength = 1d / 3d;
+
+					/**
+					 * Crafting Matrix
+					 */
+					matrix:
+					for (int j = 0; j < 3; j++)
 					{
-						Random random = new Random();
-						float var8 = random.nextFloat() * 0.8F + 0.1F;
-						float var9 = random.nextFloat() * 0.8F + 0.1F;
-						float var10 = random.nextFloat() * 0.8F + 0.1F;
-
-						while (itemStack.stackSize > 0)
+						for (int k = 0; k < 3; k++)
 						{
-							int var11 = random.nextInt(21) + 10;
+							Vector2 check = new Vector2(j, k).scale(regionLength);
 
-							if (var11 > itemStack.stackSize)
+							if (check.distance(hitVector) < regionLength)
 							{
-								var11 = itemStack.stackSize;
-							}
+								int slotID = j * 3 + k;
+								boolean didInsert = false;
+								ItemStack checkStack = tile.inventory[slotID];
 
-							itemStack.stackSize -= var11;
-
-							if (i != inventory.craftingOutputSlot)
-							{
-								EntityItem entityItem = new EntityItem(par1World, (x + var8), (y + var9), (z + var10), new ItemStack(itemStack.itemID, var11, itemStack.getItemDamage()));
-
-								if (itemStack.hasTagCompound())
+								if (current != null)
 								{
-									entityItem.getEntityItem().setTagCompound((NBTTagCompound) itemStack.getTagCompound().copy());
+									if (checkStack == null || checkStack.isItemEqual(current))
+									{
+										if (ControlKeyModifer.isControlDown(player))
+										{
+											if (checkStack == null)
+											{
+												tile.inventory[slotID] = current;
+											}
+											else
+											{
+												tile.inventory[slotID].stackSize += current.stackSize;
+												current.stackSize = 0;
+											}
+
+											current = null;
+										}
+										else
+										{
+											if (checkStack == null)
+											{
+												tile.inventory[slotID] = current.splitStack(1);
+											}
+											else
+											{
+												tile.inventory[slotID].stackSize++;
+												current.stackSize--;
+											}
+										}
+
+										if (current == null || current.stackSize <= 0)
+										{
+											player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+										}
+
+										didInsert = true;
+									}
 								}
 
-								float var13 = 0.05F;
-								entityItem.motionX = ((float) random.nextGaussian() * var13);
-								entityItem.motionY = ((float) random.nextGaussian() * var13 + 0.2F);
-								entityItem.motionZ = ((float) random.nextGaussian() * var13);
-								par1World.spawnEntityInWorld(entityItem);
+								if (!didInsert && checkStack != null)
+								{
+									InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0);
+									tile.inventory[slotID] = null;
+								}
+
+								break matrix;
 							}
 						}
 					}
+
+					tile.onInventoryChanged();
+				}
+
+				return true;
+			}
+			else if (hitSide != 0)
+			{
+				if (!world.isRemote)
+				{
+					ItemStack output = tile.getStackInSlot(9);
+					InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
+					tile.setInventorySlotContents(9, null);
+					tile.onInventoryChanged();
 				}
 			}
-		}
-	}
-
-	@Override
-	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileImprinter)
-		{
-			((TileImprinter) tileEntity).searchInventories = !((TileImprinter) tileEntity).searchInventories;
-			par1World.markBlockForUpdate(x, y, z);
-			return true;
 		}
 
 		return false;

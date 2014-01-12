@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
@@ -103,7 +102,7 @@ public class BlockEngineeringTable extends BlockRI
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 
@@ -197,7 +196,7 @@ public class BlockEngineeringTable extends BlockRI
 				if (!world.isRemote)
 				{
 					tile.setPlayerInventory(player.inventory);
-					
+
 					ItemStack output = tile.getStackInSlot(9);
 					boolean firstLoop = true;
 
@@ -212,7 +211,7 @@ public class BlockEngineeringTable extends BlockRI
 						output = tile.getStackInSlot(9);
 						firstLoop = false;
 					}
-					
+
 					tile.setPlayerInventory(null);
 				}
 			}
@@ -222,14 +221,15 @@ public class BlockEngineeringTable extends BlockRI
 	}
 
 	@Override
-	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onUseWrench(World worldorld, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = worldorld.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileImprinter)
+		if (tileEntity instanceof TileEngineeringTable)
 		{
-			((TileImprinter) tileEntity).searchInventories = !((TileImprinter) tileEntity).searchInventories;
-			par1World.markBlockForUpdate(x, y, z);
+			TileEngineeringTable tile = (TileEngineeringTable) tileEntity;
+			tile.searchInventories = !tile.searchInventories;
+			worldorld.markBlockForUpdate(x, y, z);
 			return true;
 		}
 

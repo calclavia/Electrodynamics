@@ -5,6 +5,8 @@ import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.BlockEngineeringTable;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
+import resonantinduction.archaic.imprint.BlockImprinter;
+import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -47,6 +49,7 @@ public class Archaic
 
 	public static Block blockEngineeringTable;
 	public static Block blockCrate;
+	public static Block blockImprinter;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -54,6 +57,7 @@ public class Archaic
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
 		blockCrate = contentRegistry.createTile(BlockCrate.class, TileCrate.class);
+		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
 		proxy.preInit();
 	}
 

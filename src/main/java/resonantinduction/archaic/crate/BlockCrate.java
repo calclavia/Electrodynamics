@@ -1,6 +1,9 @@
 package resonantinduction.archaic.crate;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -413,5 +416,13 @@ public class BlockCrate extends BlockRI
 	public TileEntity createNewTileEntity(World var1)
 	{
 		return new TileCrate();
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		par3List.add(new ItemStack(par1, 1, 0));
+		par3List.add(new ItemStack(par1, 1, 1));
+		par3List.add(new ItemStack(par1, 1, 2));
 	}
 }
