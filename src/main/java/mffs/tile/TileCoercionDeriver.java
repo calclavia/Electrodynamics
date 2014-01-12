@@ -29,11 +29,11 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	/**
 	 * The amount of KiloWatts this machine uses.
 	 */
-	private static final int DEFAULT_WATTAGE = 50000;
+	private static final int DEFAULT_WATTAGE = 500000;
 	public static final int FUEL_PROCESS_TIME = 10 * 20;
 	public static final int MULTIPLE_PRODUCTION = 4;
 	/** Ration from UE to Fortron. Multiply J by this value to convert to Fortron. */
-	public static final float UE_FORTRON_RATIO = 0.0001f;
+	public static final float UE_FORTRON_RATIO = 0.001f;
 	public static final int ENERGY_LOSS = 1;
 
 	public static final int SLOT_FREQUENCY = 0;
@@ -48,7 +48,21 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 		super();
 		this.capacityBase = 30;
 		this.startModuleIndex = 3;
-		this.energy = new EnergyStorageHandler(this.getWattage() * 2);
+		this.energy = new EnergyStorageHandler();
+		updateEnergyInfo();
+	}
+
+	private void updateEnergyInfo()
+	{
+		this.energy.setCapacity(getWattage());
+		this.energy.setMaxTransfer(getWattage() / 20);
+	}
+
+	@Override
+	public void initiate()
+	{
+		super.initiate();
+		updateEnergyInfo();
 	}
 
 	@Override
@@ -74,16 +88,16 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 				}
 				else
 				{
-					if (this.fortronTank.getFluidAmount() < this.fortronTank.getCapacity())
+					if (this.getFortronEnergy() < this.getFortronCapacity())
 					{
 						// Convert Electricity to Fortron
 						this.discharge(this.getStackInSlot(SLOT_BATTERY));
-						
-						if (this.energy.extractEnergy(getWattage(), false) >= getWattage() || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+
+						if (this.energy.checkExtract() || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
 						{
 							// Fill Fortron
 							this.fortronTank.fill(FortronHelper.getFortron(this.getProductionRate()), true);
-							this.energy.extractEnergy(getWattage(), true);
+							this.energy.extractEnergy();
 
 							// Use fuel
 							if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
@@ -119,16 +133,14 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 
 	public long getWattage()
 	{
-		return (long) (DEFAULT_WATTAGE + (DEFAULT_WATTAGE * ((float) this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / (float) 10)));
+		return (long) (DEFAULT_WATTAGE + (DEFAULT_WATTAGE * ((float) this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / (float) 8)));
 	}
 
 	@Override
 	public void onInventoryChanged()
 	{
 		super.onInventoryChanged();
-		this.energy.setCapacity(this.getWattage() * 2);
-		this.energy.setMaxReceive(this.getWattage() * 2);
-		this.energy.setMaxExtract(this.getWattage() * 2);
+		updateEnergyInfo();
 	}
 
 	@Override
@@ -144,7 +156,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	{
 		if (this.isActive())
 		{
-			int production = (int) (getWattage() * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
+			int production = (int) ((float) getWattage() / 20f * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER);
 
 			if (this.processTime > 0)
 			{
