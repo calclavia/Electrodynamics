@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
@@ -187,7 +188,6 @@ public class BlockEngineeringTable extends BlockRI
 					}
 
 					tile.onInventoryChanged();
-
 				}
 
 				return true;
@@ -196,19 +196,41 @@ public class BlockEngineeringTable extends BlockRI
 			{
 				if (!world.isRemote)
 				{
+					tile.setPlayerInventory(player.inventory);
+					
 					ItemStack output = tile.getStackInSlot(9);
 					boolean firstLoop = true;
 
 					while (output != null && (firstLoop || ControlKeyModifer.isControlDown(player)))
 					{
 						InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
+
 						tile.onPickUpFromSlot(player, 9, output);
 						tile.setInventorySlotContents(9, null);
+						tile.onInventoryChanged();
+
 						output = tile.getStackInSlot(9);
 						firstLoop = false;
 					}
+					
+					tile.setPlayerInventory(null);
 				}
 			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean onUseWrench(World par1World, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = par1World.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileImprinter)
+		{
+			((TileImprinter) tileEntity).searchInventories = !((TileImprinter) tileEntity).searchInventories;
+			par1World.markBlockForUpdate(x, y, z);
+			return true;
 		}
 
 		return false;

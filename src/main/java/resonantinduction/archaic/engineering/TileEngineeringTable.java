@@ -1,8 +1,14 @@
 package resonantinduction.archaic.engineering;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -22,15 +28,17 @@ import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.AutoCraftingManager;
 import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.ListUtility;
 
 import com.builtbroken.common.Pair;
+import com.google.common.collect.Lists;
 import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
 	public static final int CRAFTING_MATRIX_END = 9;
+	public static final int CRAFTING_OUTPUT_END = CRAFTING_MATRIX_END + 1;
+	public static final int CRAFTING_OUTPUT_SLOT = 0;
 
 	private AutoCraftingManager craftManager;
 
@@ -40,14 +48,35 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 	/** The output inventory containing slots. */
 	public ItemStack[] output = new ItemStack[1];
-	public final int craftingOutputSlot = 0;
 	public static int[] inventorySlots;
 
-	/** The containing currently used by the imprinter. */
-	public ContainerEngineering container;
-
-	/** The ability for the imprinter to serach nearby inventories. */
+	/** The ability for the engineering table to serach nearby inventories. */
 	public boolean searchInventories = true;
+
+	private InventoryPlayer invPlayer = null;
+	private int[] playerSlots;
+
+	/**
+	 * Creates a "fake inventory" and hook the player up to the crafter to use the player's items.
+	 */
+	public void setPlayerInventory(InventoryPlayer invPlayer)
+	{
+		if (searchInventories)
+		{
+			if (invPlayer != null)
+			{
+				playerSlots = new int[invPlayer.getSizeInventory()];
+				for (int i = 0; i < playerSlots.length; i++)
+					playerSlots[i] = i + CRAFTING_OUTPUT_END;
+			}
+			else
+			{
+				playerSlots = null;
+			}
+
+			this.invPlayer = invPlayer;
+		}
+	}
 
 	@Override
 	public boolean canUpdate()
@@ -89,28 +118,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public int getSizeInventory()
 	{
-		return 10;
-	}
-
-	/**
-	 * Sets the given item stack to the specified slot in the inventory (can be crafting or armor
-	 * sections).
-	 */
-	@Override
-	public void setInventorySlotContents(int slot, ItemStack itemStack)
-	{
-		if (slot < this.getSizeInventory())
-		{
-			if (slot < CRAFTING_MATRIX_END)
-			{
-				this.craftingMatrix[slot] = itemStack;
-				System.out.println(worldObj.isRemote+"SET"+this.craftingMatrix[slot]);
-			}
-			else
-			{
-				this.output[slot - CRAFTING_MATRIX_END] = itemStack;
-			}
-		}
+		return 10 + (this.invPlayer != null ? this.invPlayer.getSizeInventory() : 0);
 	}
 
 	@Override
@@ -151,9 +159,41 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		{
 			return this.craftingMatrix[slot];
 		}
-		else
+		else if (slot < CRAFTING_OUTPUT_END)
 		{
 			return this.output[slot - CRAFTING_MATRIX_END];
+		}
+		else if (this.invPlayer != null)
+		{
+			return this.invPlayer.getStackInSlot(slot - CRAFTING_OUTPUT_END);
+		}
+
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack itemStack)
+	{
+		if (slot < this.getSizeInventory())
+		{
+			if (slot < CRAFTING_MATRIX_END)
+			{
+				this.craftingMatrix[slot] = itemStack;
+			}
+			else if (slot < CRAFTING_OUTPUT_END)
+			{
+				this.output[slot - CRAFTING_MATRIX_END] = itemStack;
+			}
+			else if (this.invPlayer != null)
+			{
+				this.invPlayer.setInventorySlotContents(slot - CRAFTING_OUTPUT_END, itemStack);
+				EntityPlayer player = this.invPlayer.player;
+
+				if (player instanceof EntityPlayerMP)
+				{
+					((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+				}
+			}
 		}
 	}
 
@@ -179,7 +219,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public String getInvName()
 	{
-		return LanguageUtility.getLocal("tile.imprinter.name");
+		return this.getBlockType().getLocalizedName();
 	}
 
 	@Override
@@ -201,38 +241,14 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	 */
 	public InventoryCrafting getCraftingMatrix()
 	{
-		if (this.container != null)
-		{
-			InventoryCrafting inventoryCrafting = new InventoryCrafting(this.container, 3, 3);
+		InventoryCrafting inventoryCrafting = new InventoryCrafting(new ContainerFake(this), 3, 3);
 
-			for (int i = 0; i < this.craftingMatrix.length; i++)
-			{
-				inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
-			}
-
-			return inventoryCrafting;
-		}
-
-		return null;
-	}
-
-	public void replaceCraftingMatrix(InventoryCrafting inventoryCrafting)
-	{
 		for (int i = 0; i < this.craftingMatrix.length; i++)
 		{
-			this.craftingMatrix[i] = inventoryCrafting.getStackInSlot(i);
-		}
-	}
-
-	public boolean isMatrixEmpty()
-	{
-		for (int i = 0; i < 9; i++)
-		{
-			if (this.craftingMatrix[i] != null)
-				return false;
+			inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
 		}
 
-		return true;
+		return inventoryCrafting;
 	}
 
 	/** Updates all the output slots. Call this to update the Engineering Table. */
@@ -241,24 +257,19 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	{
 		if (!worldObj.isRemote)
 		{
-			this.output[craftingOutputSlot] = null;
+			this.output[CRAFTING_OUTPUT_SLOT] = null;
 
 			/** Try to craft from crafting grid. If not possible, then craft from imprint. */
 			boolean didCraft = false;
 
 			/** Simulate an Inventory Crafting Instance */
-			InventoryCrafting inventoryCrafting = new InventoryCrafting(new ContainerFake(this), 3, 3);
-
-			for (int i = 0; i < this.craftingMatrix.length; i++)
-			{
-				inventoryCrafting.setInventorySlotContents(i, this.craftingMatrix[i]);
-			}
+			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
 
 			ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
 
 			if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 			{
-				this.output[craftingOutputSlot] = matrixOutput;
+				this.output[CRAFTING_OUTPUT_SLOT] = matrixOutput;
 				didCraft = true;
 			}
 
@@ -408,6 +419,11 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public int[] getCraftingInv()
 	{
+		if (playerSlots != null)
+		{
+			return ArrayUtils.addAll(playerSlots, craftingSlots);
+		}
+
 		return craftingSlots;
 	}
 
