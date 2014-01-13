@@ -48,6 +48,9 @@ public class RenderTank extends TileEntitySpecialRenderer
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
+			/**
+			 * Render faces
+			 */
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
@@ -56,20 +59,36 @@ public class RenderTank extends TileEntitySpecialRenderer
 				{
 					GL11.glPushMatrix();
 
-					if (i < 2)
+					switch (i)
 					{
-						GL11.glRotatef(180 * i + 90, 0, 0, 1);
+						case 0:
+							GL11.glRotatef(0, 0, 0, 1);
+							break;
+						case 1:
+							GL11.glRotatef(180, 0, 0, 1);
+							break;
+						case 2:
+							GL11.glRotatef(90, 1, 0, 0);
+							break;
+						case 3:
+							GL11.glRotatef(-90, 1, 0, 0);
+							break;
+						case 4:
+							GL11.glRotatef(-90, 0, 0, 1);
+							break;
+						case 5:
+							GL11.glRotatef(90, 0, 0, 1);
+							break;
 					}
-					else
-					{
-						GL11.glRotatef(90 * i, 1, 0, 0);
-					}
-					
+
 					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, 0.501, Mechanical.blockTank);
 					GL11.glPopMatrix();
 				}
 			}
 
+			/**
+			 * Render edges
+			 */
 			GL11.glPushMatrix();
 
 			if (!east)
@@ -151,9 +170,6 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
-
-			// TODO: Remove
-			fluid = new FluidStack(FluidRegistry.WATER, 8000);
 
 			if (fluid != null && fluid.amount > 100)
 			{
