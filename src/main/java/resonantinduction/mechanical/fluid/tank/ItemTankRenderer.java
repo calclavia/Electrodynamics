@@ -16,7 +16,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ItemTankRenderer implements IItemRenderer
 {
-	private ModelTankSide tank = new ModelTankSide();
 	private final TileTank tileTank = new TileTank();
 
 	@Override
