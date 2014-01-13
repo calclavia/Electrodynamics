@@ -33,14 +33,8 @@ public class RenderTank extends TileEntitySpecialRenderer
 
     public void renderTank(TileEntity tileEntity, double x, double y, double z, int meta, FluidStack liquid)
     {
-        byte renderSides = 0;
-        if (tileEntity instanceof TileTank)
-        {
-            renderSides = ((TileTank) tileEntity).renderSides;
-        }
         if (liquid != null && liquid.amount > 100)
         {
-
             int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, tileEntity.worldObj, false);
 
             GL11.glPushMatrix();
@@ -61,6 +55,13 @@ public class RenderTank extends TileEntitySpecialRenderer
             GL11.glPopMatrix();
         }
 
+        /*
+        byte renderSides = 0;
+        if (tileEntity instanceof TileTank)
+        {
+            renderSides = ((TileTank) tileEntity).renderSides;
+        }
+        
         boolean bot = TileTank.canRenderSide(renderSides, ForgeDirection.UP);
         boolean top = TileTank.canRenderSide(renderSides, ForgeDirection.DOWN);
         boolean north = TileTank.canRenderSide(renderSides, ForgeDirection.NORTH);
@@ -106,7 +107,7 @@ public class RenderTank extends TileEntitySpecialRenderer
                 model.render(0.0625F, left, right, top, bot);
                 GL11.glPopMatrix();
             }
-        }
+        }*/
 
     }
 

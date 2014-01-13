@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
@@ -38,17 +39,30 @@ public class BlockTank extends BlockFluidNetwork
 	}
 
 	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
+
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		int checkBlockID = blockAccess.getBlockId(x, y, z);
+		return checkBlockID == this.blockID ? false : super.shouldSideBeRendered(blockAccess, x, y, z, side);
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean renderAsNormalBlock()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return 0;
 	}
 
 	@Override
