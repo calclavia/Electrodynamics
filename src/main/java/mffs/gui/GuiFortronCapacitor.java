@@ -47,12 +47,12 @@ public class GuiFortronCapacitor extends GuiMFFS
 		GL11.glPopMatrix();
 
 		this.drawTextWithTooltip("linkedDevice", "%1: " + this.tileEntity.getLinkedDevices().size(), 8, 28, x, y);
-		this.drawTextWithTooltip("transmissionRate", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), Unit.LITER, UnitPrefix.MILLI), 8, 40, x, y);
+		this.drawTextWithTooltip("transmissionRate", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getTransmissionRate(), Unit.LITER), 8, 40, x, y);
 		this.drawTextWithTooltip("range", "%1: " + this.tileEntity.getTransmissionRange(), 8, 52, x, y);
 		this.drawTextWithTooltip("frequency", "%1:", 8, 63, x, y);
 		this.textFieldFrequency.drawTextBox();
 		this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y);
-		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER, UnitPrefix.MILLI) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 105, 4210752);
+		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 105, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

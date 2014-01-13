@@ -71,9 +71,12 @@ jar {
 }
 
 repositories {
-    maven { url 'file://var/www/maven/' }
+    maven {
+		name 'Calclavia Maven'
+		url 'http://calclavia.com/maven'
+	}
 }
 dependencies {
-    compile 'universalelectricity:Universal-Electricity:3.0.+:dev'
-    compile 'calclaviacore:calclavia-core:1.1.+:dev'
+	compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${config.version.universalelectricity}", classifier: "dev"
+	compile group: 'calclaviacore', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
 }
