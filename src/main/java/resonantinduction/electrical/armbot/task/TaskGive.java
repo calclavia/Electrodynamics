@@ -115,11 +115,4 @@ public class TaskGive extends TaskBaseArmbot
 	{
 		return new TaskGive();
 	}
-
-	@Override
-	public boolean canUseTask(IProgrammableMachine device)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
 }
