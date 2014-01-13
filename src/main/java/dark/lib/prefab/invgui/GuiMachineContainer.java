@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.tile.TileEntityMachine;
+import resonantinduction.core.prefab.tile.TileMachine;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,7 +23,7 @@ import dark.lib.prefab.invgui.GuiButtonImage.ButtonIcon;
 public abstract class GuiMachineContainer extends GuiContainer
 {
 	protected static final int MAX_BUTTON_ID = 3;
-	protected TileEntityMachine tileEntity;
+	protected TileMachine tileEntity;
 	protected EntityPlayer entityPlayer;
 	protected Object mod;
 	protected int guiID = -1, guiID2 = -1, guiID3 = -1;
@@ -36,7 +36,7 @@ public abstract class GuiMachineContainer extends GuiContainer
 	protected int containerWidth;
 	protected int containerHeight;
 
-	public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileEntityMachine tileEntity)
+	public GuiMachineContainer(Object mod, Container container, InventoryPlayer inventoryPlayer, TileMachine tileEntity)
 	{
 		super(container);
 		this.tileEntity = tileEntity;

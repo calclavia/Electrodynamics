@@ -1,9 +1,9 @@
 package resonantinduction.core.debug;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
+import resonantinduction.core.prefab.tile.TileEnergyMachine;
 
-public class TileEntityInfLoad extends TileEntityEnergyMachine
+public class TileEntityInfLoad extends TileEnergyMachine
 {
 
 	@Override

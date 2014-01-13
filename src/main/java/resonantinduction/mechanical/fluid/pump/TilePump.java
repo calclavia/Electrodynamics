@@ -13,14 +13,14 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.api.fluid.IDrain;
-import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
+import resonantinduction.core.prefab.tile.TileEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidHelper;
 
 import com.builtbroken.common.Pair;
 
-public class TilePump extends TileEntityEnergyMachine implements IReadOut, ITileConnector
+public class TilePump extends TileEnergyMachine implements IReadOut, ITileConnector
 {
 	private int currentWorldEdits, MAX_WORLD_EDITS_PER_PROCESS;
 

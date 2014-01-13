@@ -6,7 +6,7 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
-public abstract class TileGenerator extends TileEntityEnergyMachine
+public abstract class TileGenerator extends TileEnergyMachine
 {
 	public TileGenerator()
 	{

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.encoder;
+package resonantinduction.electrical.encoder;
 
 import java.util.ArrayList;
 import java.util.List;

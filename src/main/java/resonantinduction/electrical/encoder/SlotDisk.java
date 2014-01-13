@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.encoder;
+package resonantinduction.electrical.encoder;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

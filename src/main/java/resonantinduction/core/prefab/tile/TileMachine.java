@@ -22,7 +22,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileEntityMachine extends TileEntityInv implements ISidedInventory, IExternalInv, ISimplePacketReceiver, IExtraTileEntityInfo
+public abstract class TileMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IExtraTileEntityInfo
 {
 	/** Number of players with the machine's gui container open */
 	protected int playersUsingMachine = 0;
@@ -150,7 +150,6 @@ public abstract class TileEntityMachine extends TileEntityInv implements ISidedI
 		}
 	}
 
-	@Override
 	public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
 	{
 		try

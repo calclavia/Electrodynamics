@@ -18,7 +18,7 @@ import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.tile.TileEntityEnergyMachine;
+import resonantinduction.core.prefab.tile.TileEnergyMachine;
 import resonantinduction.core.prefab.tile.TileGenerator;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -163,15 +163,15 @@ public class ItemReadoutTools extends ItemBase
 						{
 							player.sendChatToPlayer(ChatMessageComponent.createFromText("E~:" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergy(hitSide), Unit.JOULES, 2, false) + "/" + UnitDisplay.getDisplay(((IEnergyContainer) tileEntity).getEnergyCapacity(hitSide), Unit.JOULES, 2, false)));
 						}
-						if (tileEntity instanceof TileEntityEnergyMachine)
+						if (tileEntity instanceof TileEnergyMachine)
 						{
 							if (tileEntity instanceof TileGenerator)
 							{
-								player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(((TileEntityEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
+								player.sendChatToPlayer(ChatMessageComponent.createFromText("E~Out:" + UnitDisplay.getDisplay(((TileEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
 							}
 							else
 							{
-								player.sendChatToPlayer(ChatMessageComponent.createFromText("E~In:" + UnitDisplay.getDisplay(((TileEntityEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
+								player.sendChatToPlayer(ChatMessageComponent.createFromText("E~In:" + UnitDisplay.getDisplay(((TileEnergyMachine) tileEntity).getJoulesPerTick(), Unit.JOULES, 2, true) + "/tick"));
 
 							}
 						}

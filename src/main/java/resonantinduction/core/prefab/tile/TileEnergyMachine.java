@@ -26,7 +26,7 @@ import universalelectricity.api.vector.VectorHelper;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileEntityEnergyMachine extends TileEntityMachine implements IEnergyInterface, IEnergyContainer, IVoltageInput, IVoltageOutput
+public abstract class TileEnergyMachine extends TileMachine implements IEnergyInterface, IEnergyContainer, IVoltageInput, IVoltageOutput
 {
 	/** Forge Ore Directory name of the item to toggle infinite power mode */
 	public static String powerToggleItemID = "battery";
@@ -45,20 +45,20 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 	/** Voltage by which the machine was designed and rated for */
 	protected long ratedVoltage = 240;
 
-	public TileEntityEnergyMachine()
+	public TileEnergyMachine()
 	{
 		this.brownOutVoltage = this.getVoltage() / 2;
 		this.shortOutVoltage = (long) ((Math.sqrt(2) * this.getVoltage()) + 0.05 * this.getVoltage());
 	}
 
-	public TileEntityEnergyMachine(long wattsPerTick)
+	public TileEnergyMachine(long wattsPerTick)
 	{
 		this();
 		this.JOULES_PER_TICK = wattsPerTick;
 		this.MAX_JOULES_STORED = wattsPerTick * 20;
 	}
 
-	public TileEntityEnergyMachine(long wattsPerTick, long maxEnergy)
+	public TileEnergyMachine(long wattsPerTick, long maxEnergy)
 	{
 		this(wattsPerTick);
 		this.MAX_JOULES_STORED = maxEnergy;
@@ -274,7 +274,7 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 		return this.ratedVoltage;
 	}
 
-	public TileEntityEnergyMachine setVoltage(long volts)
+	public TileEnergyMachine setVoltage(long volts)
 	{
 		this.ratedVoltage = volts;
 		return this;
@@ -348,25 +348,25 @@ public abstract class TileEntityEnergyMachine extends TileEntityMachine implemen
 		return getJoulesPerMin() * 60;
 	}
 
-	public TileEntityEnergyMachine setJoulesPerTick(long energy)
+	public TileEnergyMachine setJoulesPerTick(long energy)
 	{
 		this.JOULES_PER_TICK = energy;
 		return this;
 	}
 
-	public TileEntityEnergyMachine setJoulesPerSecound(long energy)
+	public TileEnergyMachine setJoulesPerSecound(long energy)
 	{
 		this.JOULES_PER_TICK = energy / 20;
 		return this;
 	}
 
-	public TileEntityEnergyMachine setJoulesPerMin(long energy)
+	public TileEnergyMachine setJoulesPerMin(long energy)
 	{
 		this.JOULES_PER_TICK = energy / 1200;
 		return this;
 	}
 
-	public TileEntityEnergyMachine setJoulesPerHour(long energy)
+	public TileEnergyMachine setJoulesPerHour(long energy)
 	{
 		this.JOULES_PER_TICK = energy / 72000;
 		return this;

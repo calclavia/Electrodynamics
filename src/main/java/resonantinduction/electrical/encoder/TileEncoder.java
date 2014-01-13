@@ -1,20 +1,23 @@
-package resonantinduction.mechanical.encoder;
+package resonantinduction.electrical.encoder;
 
 import java.io.IOException;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityMachine;
+import resonantinduction.core.prefab.tile.TileMachine;
+import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.armbot.Program;
 import resonantinduction.electrical.armbot.task.TaskRotateTo;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.TaskRegistry;
 import universalelectricity.api.vector.Vector2;
+import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -22,13 +25,15 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public class TileEncoder extends TileEntityMachine implements ISidedInventory
+public class TileEncoder extends TileMachine implements ISidedInventory, IPacketReceiver
 {
 	private ItemStack disk;
 	private IInventoryWatcher watcher;
-	public static final String PROGRAM_PACKET_ID = "program",
-			PROGRAM_CHANGE_PACKET_ID = "programChange", REMOVE_TASK_PACKET_ID = "removeTask",
-			NEW_TASK_PACKET_ID = "newTask";
+	public static final int PROGRAM_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
+	public static final int PROGRAM_CHANGE_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
+	public static final int REMOVE_TASK_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
+	public static final int NEW_TASK_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
+
 	protected IProgram program;
 
 	public TileEncoder()
@@ -108,65 +113,50 @@ public class TileEncoder extends TileEntityMachine implements ISidedInventory
 	}
 
 	@Override
-	public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		try
 		{
-			boolean su = super.simplePacket(id, dis, player);
-			if (!su)
-			{
-				if (this.worldObj.isRemote)
-				{
-					if (id.equalsIgnoreCase(TileEncoder.PROGRAM_PACKET_ID))
-					{
+			int readInt = data.readInt();
 
-						if (dis.readBoolean())
-						{
-							Program program = new Program();
-							program.load(PacketHandler.readNBTTagCompound(dis));
-							this.program = program;
-						}
-						else
-						{
-							this.program = null;
-						}
-						return true;
-					}
+			if (readInt == PROGRAM_PACKET_ID)
+			{
+				if (data.readBoolean())
+				{
+					Program program = new Program();
+					program.load(PacketHandler.readNBTTagCompound(data));
+					this.program = program;
 				}
 				else
 				{
-					if (id.equalsIgnoreCase(TileEncoder.PROGRAM_CHANGE_PACKET_ID))
-					{
-						ITask task = TaskRegistry.getCommand(dis.readUTF());
-						task.setPosition(dis.readInt(), dis.readInt());
-						task.load(PacketHandler.readNBTTagCompound(dis));
-						this.getProgram().setTaskAt(task.getCol(), task.getRow(), task);
-						this.sendGUIPacket();
-						return true;
-					}
-					else if (id.equalsIgnoreCase(TileEncoder.NEW_TASK_PACKET_ID))
-					{
-						ITask task = TaskRegistry.getCommand(dis.readUTF());
-						task.setPosition(dis.readInt(), dis.readInt());
-						task.load(PacketHandler.readNBTTagCompound(dis));
-						this.getProgram().insertTask(task.getCol(), task.getRow(), task);
-						this.sendGUIPacket();
-						return true;
-					}
-					else if (id.equalsIgnoreCase(TileEncoder.REMOVE_TASK_PACKET_ID))
-					{
-						this.getProgram().setTaskAt(dis.readInt(), dis.readInt(), null);
-						this.sendGUIPacket();
-						return true;
-					}
+					this.program = null;
 				}
 			}
-			return su;
+			else if (readInt == PROGRAM_CHANGE_PACKET_ID)
+			{
+				ITask task = TaskRegistry.getCommand(data.readUTF());
+				task.setPosition(data.readInt(), data.readInt());
+				task.load(PacketHandler.readNBTTagCompound(data));
+				this.getProgram().setTaskAt(task.getCol(), task.getRow(), task);
+				this.sendGUIPacket();
+			}
+			else if (readInt == NEW_TASK_PACKET_ID)
+			{
+				ITask task = TaskRegistry.getCommand(data.readUTF());
+				task.setPosition(data.readInt(), data.readInt());
+				task.load(PacketHandler.readNBTTagCompound(data));
+				this.getProgram().insertTask(task.getCol(), task.getRow(), task);
+				this.sendGUIPacket();
+			}
+			else if (readInt == REMOVE_TASK_PACKET_ID)
+			{
+				this.getProgram().setTaskAt(data.readInt(), data.readInt(), null);
+				this.sendGUIPacket();
+			}
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
-			return true;
 		}
 	}
 

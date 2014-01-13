@@ -6,6 +6,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.battery.TileBattery;
+import resonantinduction.electrical.encoder.TileEncoder;
+import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
 import resonantinduction.electrical.generator.solar.RenderSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.RenderLevitator;
@@ -63,6 +65,10 @@ public class ClientProxy extends CommonProxy
 			{
 				return new GuiMultimeter(player.inventory, (PartMultimeter) part);
 			}
+		}
+		else if (tileEntity instanceof TileEncoder)
+		{
+			return new GuiEncoderInventory(player.inventory, (TileEncoder) tileEntity);
 		}
 
 		return null;

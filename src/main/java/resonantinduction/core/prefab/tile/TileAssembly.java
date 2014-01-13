@@ -19,7 +19,7 @@ import universalelectricity.api.vector.Vector3;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileAssembly extends TileEntityEnergyMachine implements INetworkEnergyPart
+public abstract class TileAssembly extends TileEnergyMachine implements INetworkEnergyPart
 {
 	/** lowest value the network can update at */
 	public static int refresh_min_rate = 20;

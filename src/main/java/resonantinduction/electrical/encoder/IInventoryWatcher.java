@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.encoder;
+package resonantinduction.electrical.encoder;
 
 public interface IInventoryWatcher
 {
