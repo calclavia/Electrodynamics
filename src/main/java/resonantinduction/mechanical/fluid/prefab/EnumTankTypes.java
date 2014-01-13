@@ -1,5 +1,7 @@
-package resonantinduction.mechanical.fluid.pipe;
+package resonantinduction.mechanical.fluid.prefab;
 
+import resonantinduction.mechanical.fluid.pipe.EnumPipeType;
+import resonantinduction.mechanical.fluid.pipe.IPipeType;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColoredId;
 
