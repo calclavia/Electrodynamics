@@ -3,15 +3,12 @@ package resonantinduction.mechanical.fluid.pipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
-import resonantinduction.mechanical.fluid.network.NetworkPipes;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
 import dark.lib.helpers.ColorCode;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
