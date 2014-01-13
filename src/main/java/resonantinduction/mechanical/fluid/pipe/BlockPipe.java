@@ -3,7 +3,6 @@ package resonantinduction.mechanical.fluid.pipe;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +12,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
@@ -128,10 +128,10 @@ public class BlockPipe extends BlockFluidNetwork
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
 		if (entity instanceof TilePipe)
 		{
-			FluidTankInfo tank = ((TilePipe) entity).getTankInfo()[0];
-			if (tank != null && tank.fluid != null && tank.fluid.getFluid() != null && tank.fluid.amount > 0)
+			FluidTank tank = ((TilePipe) entity).getTank();
+			if (tank != null && tank.getFluid() != null)
 			{
-				((TilePipe) entity).getTileNetwork().drainNetworkTank(world, FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.fluid, true), true);
+				FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.getFluid(), true);
 			}
 		}
 		super.breakBlock(world, x, y, z, par5, par6);

@@ -1,11 +1,8 @@
 package resonantinduction.mechanical.fluid.pump;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Map.Entry;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,11 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.api.fluid.IDrain;
-import resonantinduction.api.fluid.INetworkPipe;
+import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
-import resonantinduction.mechanical.fluid.network.NetworkFluidTiles;
+import resonantinduction.mechanical.fluid.pipe.PipeNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
@@ -87,16 +83,16 @@ public class TileConstructionPump extends TilePump implements IFluidHandler, ITi
 			ignoreList = new ArrayList<IDrain>();
 		}
 
-		if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
+		if (inputTile instanceof IFluidPipe && ((IFluidPipe) inputTile).getNetwork() instanceof PipeNetwork)
 		{
 			if (outputTile instanceof IFluidHandler)
 			{
-				for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connctedFluidHandlers.entrySet())
+				for (IFluidHandler fluidHandler : ((PipeNetwork) ((IFluidPipe) inputTile).getNetwork()).getNodes())
 				{
 
-					if (entry.getKey() instanceof IDrain && !ignoreList.contains(entry.getKey()))
+					if (fluidHandler instanceof IDrain && !ignoreList.contains(fluidHandler))
 					{
-						drain = (IDrain) entry.getKey();
+						drain = (IDrain) fluidHandler;
 						break;
 					}
 				}
@@ -168,28 +164,6 @@ public class TileConstructionPump extends TilePump implements IFluidHandler, ITi
 	public void invalidate()
 	{
 		super.invalidate();
-	}
-
-	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-	{
-		if (tool == EnumTools.PIPE_GUAGE)
-		{
-			TileEntity inputTile = VectorHelper.getTileEntityFromSide(worldObj, new Vector3(this), getFacing(true));
-			if (inputTile instanceof INetworkPipe && ((INetworkPipe) inputTile).getTileNetwork() instanceof NetworkFluidTiles)
-			{
-				int count = 0;
-				for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : ((NetworkFluidTiles) ((INetworkPipe) inputTile).getTileNetwork()).connctedFluidHandlers.entrySet())
-				{
-					if (entry.getKey() instanceof IDrain)
-					{
-						count++;
-					}
-				}
-				return "Drains conencted to input : " + count;
-			}
-		}
-		return null;
 	}
 
 }

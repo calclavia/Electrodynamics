@@ -27,7 +27,7 @@ public class RenderTank extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
     {
-        FluidStack liquid = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTankInfo()[0].fluid : null;
+        FluidStack liquid = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTank().getFluid(): null;
         this.renderTank(tileEntity, x, y, z, 0, liquid);
     }
 
@@ -54,7 +54,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 
             GL11.glTranslatef((float) x, (float) y, (float) z);
             GL11.glScalef(1.01F, 1.01F, 1.01F);
-            int cap = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTankInfo()[0].capacity : liquid.amount;
+            int cap = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getTank().getCapacity() : liquid.amount;
             GL11.glCallList(displayList[(int) ((float) liquid.amount / (float) (cap) * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
 
             GL11.glPopAttrib();

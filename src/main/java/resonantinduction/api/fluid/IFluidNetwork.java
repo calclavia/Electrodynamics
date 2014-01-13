@@ -33,6 +33,15 @@ public interface IFluidNetwork extends INetwork<IFluidNetwork, IFluidPart, IFlui
      * @return FluidStack that contains the fluid drained from the network */
     FluidStack drain(IFluidPart source, ForgeDirection from, FluidStack resource, boolean doDrain);
 
+    /** Called to remove fluid from a network, not supported by all networks
+     * 
+     * @param source - part that is receiving the fluid for the network
+     * @param from - direction of this connection
+     * @param resource - fluid stack that is being filled into the network
+     * @param doDrain - true causes the action to be taken, false simulates the action
+     * @return FluidStack that contains the fluid drained from the network */
+    FluidStack drain(IFluidPart source, ForgeDirection from, int resource, boolean doDrain);
+
     /** Fluid tank that represents the entire network */
     FluidTank getTank();
 

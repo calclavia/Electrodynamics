@@ -73,9 +73,9 @@ public class BlockTank extends BlockFluidNetwork
 	public int getComparatorInputOverride(World world, int x, int y, int z, int par5)
 	{
 		TileTank tileEntity = (TileTank) world.getBlockTileEntity(x, y, z);
-		if (tileEntity != null && tileEntity.getTileNetwork().getNetworkTankInfo().fluid != null)
+		if (tileEntity != null && tileEntity.getNetwork().getTank().getFluid() != null)
 		{
-			return 15 * (tileEntity.getTileNetwork().getNetworkTankInfo().fluid.amount / tileEntity.getTileNetwork().getNetworkTankInfo().capacity);
+			return 15 * (tileEntity.getNetwork().getTank().getFluidAmount() / tileEntity.getNetwork().getTank().getCapacity());
 		}
 		return 0;
 	}
