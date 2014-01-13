@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
-import resonantinduction.api.fluid.INetworkPipe;
+import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.mechanical.fluid.network.NetworkPipes;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
@@ -29,16 +29,16 @@ public class TileReleaseValve extends TileEntityFluidDevice implements ITileConn
 			{
 				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
-					if (connected[dir.ordinal()] instanceof IFluidHandler && !(connected[dir.ordinal()] instanceof INetworkPipe))
+					if (connected[dir.ordinal()] instanceof IFluidHandler && !(connected[dir.ordinal()] instanceof IFluidPipe))
 					{
 						IFluidHandler drainedTank = (IFluidHandler) connected[dir.ordinal()];
 						FluidStack stack = drainedTank.drain(dir.getOpposite(), FluidContainerRegistry.BUCKET_VOLUME, false);
 						if (stack != null && stack.amount > 0)
 						{
-							INetworkPipe inputPipe = this.findValidPipe(stack);
+							IFluidPipe inputPipe = this.findValidPipe(stack);
 							if (inputPipe != null)
 							{
-								int ammountFilled = ((NetworkPipes) inputPipe.getTileNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
+								int ammountFilled = ((NetworkPipes) inputPipe.getNetwork()).addFluidToNetwork((TileEntity) drainedTank, stack, true);
 								drainedTank.drain(dir.getOpposite(), ammountFilled, true);
 							}
 						}
@@ -49,15 +49,15 @@ public class TileReleaseValve extends TileEntityFluidDevice implements ITileConn
 	}
 
 	/** used to find a valid pipe for filling of the liquid type */
-	public INetworkPipe findValidPipe(FluidStack stack)
+	public IFluidPipe findValidPipe(FluidStack stack)
 	{
 		// find normal color selective pipe first
 		for (int i = 0; i < connected.length; i++)
 		{
 			TileEntity tile = connected[i];
-			if (tile instanceof INetworkPipe && ((INetworkPipe) tile).fill(ForgeDirection.getOrientation(i), stack, false) > 0)
+			if (tile instanceof IFluidPipe && ((IFluidPipe) tile).fill(ForgeDirection.getOrientation(i), stack, false) > 0)
 			{
-				return (INetworkPipe) tile;
+				return (IFluidPipe) tile;
 			}
 		}
 		return null;
