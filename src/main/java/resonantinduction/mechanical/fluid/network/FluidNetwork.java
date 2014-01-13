@@ -92,7 +92,17 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public FluidStack drain(IFluidPart source, ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        // TODO Auto-generated method stub
+        if (resource != null && resource.isFluidEqual(this.getTank().getFluid()))
+        {
+            FluidStack before = this.getTank().getFluid();
+            FluidStack after = this.getTank().drain(resource.amount, doDrain);
+            if (before != after || after == null || after.amount != before.amount)
+            {
+                this.loadPart = true;
+            }
+
+            return after;
+        }
         return null;
     }
 
