@@ -7,7 +7,11 @@ import resonantinduction.mechanical.fluid.network.FluidNetwork;
 public class PipeNetwork extends FluidNetwork
 {
     //TODO implements pressure for future hydraulic machines
-    
+    public PipeNetwork()
+    {
+        super();
+    }
+
     public PipeNetwork(IFluidPipe... pipes)
     {
         super(pipes);

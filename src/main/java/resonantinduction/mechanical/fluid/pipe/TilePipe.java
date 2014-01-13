@@ -146,14 +146,12 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
     @Override
     public int getMaxPressure()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return 10000;
     }
 
     @Override
     public int getMaxFlowRate()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return 1000;
     }
 }
