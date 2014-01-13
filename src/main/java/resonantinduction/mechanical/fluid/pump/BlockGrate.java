@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.pump;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,13 +19,12 @@ import resonantinduction.core.prefab.block.BlockRI;
 
 public class BlockGrate extends BlockRI
 {
-	private Icon blockIcon;
 	private Icon drainIcon;
 	private Icon fillIcon;
 
 	public BlockGrate()
 	{
-		super("grate", Material.iron);
+		super("grate");
 	}
 
 	@Override
@@ -33,11 +34,24 @@ public class BlockGrate extends BlockRI
 	}
 
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(Reference.PREFIX + "ironMachineSide");
-		this.drainIcon = par1IconRegister.registerIcon(Reference.PREFIX + "drain");
-		this.fillIcon = par1IconRegister.registerIcon(Reference.PREFIX + "drain2");
+		this.drainIcon = iconRegister.registerIcon(Reference.PREFIX + "grate_drain");
+		this.fillIcon = iconRegister.registerIcon(Reference.PREFIX + "grate_fill");
+		super.registerIcons(iconRegister);
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean renderAsNormalBlock()
+	{
+		return false;
 	}
 
 	@Override
@@ -51,9 +65,9 @@ public class BlockGrate extends BlockRI
 	{
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
+
 		if (entity instanceof TileGrate)
 		{
-
 			if (dir == ((TileGrate) entity).getDirection())
 			{
 				if (((TileGrate) entity).canDrain())
@@ -67,6 +81,7 @@ public class BlockGrate extends BlockRI
 
 			}
 		}
+
 		return this.blockIcon;
 	}
 
@@ -84,6 +99,7 @@ public class BlockGrate extends BlockRI
 		if (!world.isRemote)
 		{
 			int meta = world.getBlockMetadata(x, y, z);
+
 			if (world.getBlockMetadata(x, y, z) < 6)
 			{
 				meta += 6;
@@ -92,8 +108,10 @@ public class BlockGrate extends BlockRI
 			{
 				meta -= 6;
 			}
+
 			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
 			TileEntity entity = world.getBlockTileEntity(x, y, z);
+
 			if (entity instanceof TileGrate)
 			{
 				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Draining Sources? " + ((TileGrate) entity).canDrain()));
