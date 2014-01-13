@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.tank;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -10,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.render.RenderFluidHelper;
+import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.client.model.ModelTankSide;
 import calclavia.lib.render.RenderUtility;
@@ -31,21 +33,43 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
 	{
-		byte renderSides = 0;
-
 		if (tileEntity instanceof TileTank)
 		{
-			renderSides = ((TileTank) tileEntity).renderSides;
+			byte renderSides = ((TileTank) tileEntity).renderSides;
 
-			boolean down = TileTank.canRenderSide(renderSides, ForgeDirection.UP);
-			boolean up = TileTank.canRenderSide(renderSides, ForgeDirection.DOWN);
+			boolean down = TileTank.canRenderSide(renderSides, ForgeDirection.DOWN);
+			boolean up = TileTank.canRenderSide(renderSides, ForgeDirection.UP);
 			boolean north = TileTank.canRenderSide(renderSides, ForgeDirection.NORTH);
 			boolean south = TileTank.canRenderSide(renderSides, ForgeDirection.SOUTH);
 			boolean east = TileTank.canRenderSide(renderSides, ForgeDirection.EAST);
 			boolean west = TileTank.canRenderSide(renderSides, ForgeDirection.WEST);
 
+			bindTexture(TextureMap.locationBlocksTexture);
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+
+				if (!TileTank.canRenderSide(renderSides, dir))
+				{
+					GL11.glPushMatrix();
+
+					if (i < 2)
+					{
+						GL11.glRotatef(180 * i + 90, 0, 0, 1);
+					}
+					else
+					{
+						GL11.glRotatef(90 * i, 1, 0, 0);
+					}
+					
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, 0.501, Mechanical.blockTank);
+					GL11.glPopMatrix();
+				}
+			}
+
 			GL11.glPushMatrix();
 
 			if (!east)
@@ -53,24 +77,24 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!north)
 				{
 					// north east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, 0.501, -0.475, Mechanical.blockTank, null);
+					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, 0.501, -0.475, Electrical.blockMachinePart);
 				}
 				if (!south)
 				{
 					// south east
-					RenderUtility.renderCube(0.475, -0.501, 0.475, 0.501, 0.501, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(0.475, -0.501, 0.475, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
 				}
 
 				if (!down)
 				{
 					// bottom east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, -0.475, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, -0.475, 0.501, Electrical.blockMachinePart);
 				}
 
 				if (!up)
 				{
 					// top east
-					RenderUtility.renderCube(0.475, 0.475, -0.501, 0.501, 0.501, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(0.475, 0.475, -0.501, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
 				}
 			}
 
@@ -79,22 +103,22 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!north)
 				{
 					// north west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, 0.501, -0.475, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, 0.501, -0.475, Electrical.blockMachinePart);
 				}
 				if (!south)
 				{
 					// south west
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, -0.475, 0.501, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, -0.501, 0.475, -0.475, 0.501, 0.501, Electrical.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, -0.475, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, -0.475, 0.501, Electrical.blockMachinePart);
 				}
 				if (!up)
 				{
 					// top west
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, -0.475, 0.501, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, 0.475, -0.501, -0.475, 0.501, 0.501, Electrical.blockMachinePart);
 				}
 			}
 			if (!north)
@@ -102,12 +126,12 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!up)
 				{
 					// top north
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, 0.501, 0.501, -0.475, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, 0.475, -0.501, 0.501, 0.501, -0.475, Electrical.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom north
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, -0.475, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, -0.475, Electrical.blockMachinePart);
 				}
 			}
 
@@ -116,19 +140,19 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!up)
 				{
 					// top south
-					RenderUtility.renderCube(-0.501, 0.475, 0.475, 0.501, 0.501, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, 0.475, 0.475, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom south
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, 0.501, -0.475, 0.501, Mechanical.blockTank, null);
+					RenderUtility.renderCube(-0.501, -0.501, 0.475, 0.501, -0.475, 0.501, Electrical.blockMachinePart);
 				}
 			}
 
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
-			
-			//TODO: Remove
+
+			// TODO: Remove
 			fluid = new FluidStack(FluidRegistry.WATER, 8000);
 
 			if (fluid != null && fluid.amount > 100)

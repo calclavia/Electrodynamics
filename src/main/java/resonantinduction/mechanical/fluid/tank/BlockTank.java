@@ -54,7 +54,7 @@ public class BlockTank extends BlockFluidNetwork
 	public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side)
 	{
 		int checkBlockID = blockAccess.getBlockId(x, y, z);
-		return checkBlockID == this.blockID ? false : super.shouldSideBeRendered(blockAccess, x, y, z, side);
+		return super.shouldSideBeRendered(blockAccess, x, y, z, side);
 	}
 
 	@Override
