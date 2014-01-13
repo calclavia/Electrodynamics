@@ -8,44 +8,46 @@ import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
 public class TileTank extends TileFluidNetwork
 {
-    public TileTank()
-    {
-        super(BlockTank.tankVolume);
-    }
+	public static final int VOLUME = 16;
 
-    @Override
-    public TankNetwork getNetwork()
-    {
-        if (!(this.network instanceof TankNetwork))
-        {
-            this.setNetwork(new TankNetwork(this));
-        }
-        return (TankNetwork) this.network;
-    }
+	public TileTank()
+	{
+		super(VOLUME);
+	}
 
-    @Override
-    public void setNetwork(IFluidNetwork network)
-    {
-        if (network instanceof TankNetwork)
-        {
-            this.network = (TankNetwork) network;
-        }
-    }
+	@Override
+	public TankNetwork getNetwork()
+	{
+		if (!(this.network instanceof TankNetwork))
+		{
+			this.setNetwork(new TankNetwork(this));
+		}
+		return (TankNetwork) this.network;
+	}
 
-    @Override
-    public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-    {
-        if (!this.worldObj.isRemote)
-        {
-            if (tileEntity instanceof TileTank)
-            {
-                if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
-                {
-                    this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
-                    this.setRenderSide(side, true);
-                    connectedBlocks[side.ordinal()] = tileEntity;
-                }
-            }
-        }
-    }
+	@Override
+	public void setNetwork(IFluidNetwork network)
+	{
+		if (network instanceof TankNetwork)
+		{
+			this.network = (TankNetwork) network;
+		}
+	}
+
+	@Override
+	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
+	{
+		if (!this.worldObj.isRemote)
+		{
+			if (tileEntity instanceof TileTank)
+			{
+				if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
+				{
+					this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
+					this.setRenderSide(side, true);
+					connectedBlocks[side.ordinal()] = tileEntity;
+				}
+			}
+		}
+	}
 }

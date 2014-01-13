@@ -23,8 +23,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTank extends BlockFluidNetwork
 {
-	public static int tankVolume = 16;
-
 	public BlockTank()
 	{
 		super("tank");
@@ -39,9 +37,17 @@ public class BlockTank extends BlockFluidNetwork
 	}
 
 	@Override
-	public int getRenderBlockPass()
+	@SideOnly(Side.CLIENT)
+	public boolean renderAsNormalBlock()
 	{
-		return 1;
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getRenderType()
+	{
+		return MechanicalBlockRenderingHandler.ID;
 	}
 
 	@Override
@@ -49,20 +55,6 @@ public class BlockTank extends BlockFluidNetwork
 	{
 		int checkBlockID = blockAccess.getBlockId(x, y, z);
 		return checkBlockID == this.blockID ? false : super.shouldSideBeRendered(blockAccess, x, y, z, side);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean renderAsNormalBlock()
-	{
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderType()
-	{
-		return 0;
 	}
 
 	@Override
