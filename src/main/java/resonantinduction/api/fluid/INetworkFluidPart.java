@@ -1,6 +1,5 @@
 package resonantinduction.api.fluid;
 
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -30,30 +29,4 @@ public interface INetworkFluidPart extends IFluidHandler, INetworkPart
 	 * is used so the network has a direct method to access the pipes internal fluid storage
 	 */
 	public FluidStack drainTankContent(int index, int volume, boolean doDrain);
-
-	/**
-	 * Can the fluid pass from one side to the next. Used by path finder to see if the fluid can
-	 * move threw the pipes.
-	 * 
-	 * @param fluid - fluid that is trying to pass threw
-	 * @param from - direction the fluid is coming from
-	 * @param to - direction the fluid is going to
-	 * 
-	 * @Note only do logic in the method as it may be called many times and expect no change from
-	 * the pipes or world.
-	 * @return true will let the fluid pass.
-	 */
-	public boolean canPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to);
-
-	/**
-	 * Called while the fluid is passing threw the pipe. This is the pipes chance to modify the
-	 * fluid or react to the fluid
-	 * 
-	 * @param fluid - fluid that is trying to pass threw
-	 * @param from - direction the fluid is coming from
-	 * @param to - direction the fluid is going to
-	 * @return true if something happened to completely stop the fluid from moving. Eg. pipe blew
-	 * up, or jammed
-	 */
-	public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to);
 }

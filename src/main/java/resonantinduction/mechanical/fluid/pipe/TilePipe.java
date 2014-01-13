@@ -101,14 +101,6 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, INetworkP
 	}
 
 	@Override
-	public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
-	{
-		// TODO do checks for molten pipe so that fluids like water turn into steam, oils and fuels
-		// burn
-		return super.onPassThrew(fluid, from, to);
-	}
-
-	@Override
 	public double getMaxPressure(ForgeDirection side)
 	{
 		int meta = this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord);

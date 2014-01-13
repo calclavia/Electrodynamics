@@ -1,4 +1,4 @@
-package resonantinduction.api.fluid;
+package resonantinduction.api.events;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;

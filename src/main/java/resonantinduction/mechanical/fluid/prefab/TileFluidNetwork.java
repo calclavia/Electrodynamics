@@ -311,52 +311,6 @@ public abstract class TileFluidNetwork extends TileEntityFluidDevice implements 
 	}
 
 	@Override
-	public boolean canPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
-	{
-		return this.connectedBlocks.get(from.ordinal()) != null && this.connectedBlocks.get(to.ordinal()) != null && this.damage < this.maxDamage;
-	}
-
-	@Override
-	public boolean onPassThrew(FluidStack fluid, ForgeDirection from, ForgeDirection to)
-	{
-		FluidContainerMaterial mat = FluidContainerMaterial.get(this.getBlockMetadata());
-		if (fluid != null && fluid.getFluid() != null && mat != null)
-		{
-			if (fluid.getFluid().isGaseous(fluid) && !mat.canSupportGas)
-			{
-				// TODO lose 25% of the gas, and render the escaping gas as a particle effect
-				this.getTileNetwork().drainNetworkTank(this.worldObj, (int) (fluid.amount * .05), true);
-			}
-			else if (FluidMasterList.isMolten(fluid.getFluid()) && !mat.canSupportMoltenFluids)
-			{
-				// TODO start to heat up the pipe to melting point. When it hits melting point turn
-				// the pipe to its molten metal equal
-				// TODO also once it reaches a set heat level start burning up blocks around the
-				// pipe such as wood
-				// this.heat += FluidMasterList.getHeatPerPass(fluid.getFluid());
-				if (heat >= this.maxHeat)
-				{
-					this.worldObj.setBlock(xCoord, yCoord, zCoord, Block.fire.blockID);
-					return true;
-				}
-			}
-			else if (!fluid.getFluid().isGaseous(fluid) && !mat.canSupportFluids)
-			{
-				this.damage += 1;
-				if (this.damage >= this.maxDamage)
-				{
-					// TODO test this and make sure its right, as well black fluid block in some
-					// cases
-					this.getBlockType().dropBlockAsItem(worldObj, xCoord, yCoord, zCoord, 0, 0);
-					this.worldObj.setBlock(xCoord, yCoord, zCoord, 0);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
