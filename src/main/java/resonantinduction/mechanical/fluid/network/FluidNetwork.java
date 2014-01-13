@@ -15,7 +15,7 @@ import calclavia.lib.utility.FluidHelper;
 
 public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandler> implements IFluidNetwork
 {
-    protected FluidTank tank;
+    protected FluidTank tank = new FluidTank(0);
     protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
     protected boolean loadPart = false;
     protected long ticks = 0;
@@ -281,6 +281,10 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public FluidTank getTank()
     {
+        if (this.tank == null)
+        {
+            this.tank = new FluidTank(0);
+        }
         return this.tank;
     }
 
