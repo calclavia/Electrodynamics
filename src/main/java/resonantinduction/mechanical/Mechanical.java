@@ -15,6 +15,8 @@ import resonantinduction.mechanical.fluid.pump.TileGrate;
 import resonantinduction.mechanical.fluid.pump.TilePump;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
+import resonantinduction.mechanical.gear.BlockGear;
+import resonantinduction.mechanical.gear.TileGear;
 import resonantinduction.mechanical.logistic.BlockDetector;
 import resonantinduction.mechanical.logistic.BlockManipulator;
 import resonantinduction.mechanical.logistic.BlockRejector;
@@ -57,6 +59,10 @@ public class Mechanical
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
+	// Energy
+	public static Block blockGear;
+	public static Block blockGearShaft;
+
 	// Transport
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
@@ -75,6 +81,9 @@ public class Mechanical
 	{
 		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		blockGear = contentRegistry.createTile(BlockGear.class, TileGear.class);
+		//blockGearShaft = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
+		
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);
 		blockDetector = contentRegistry.createTile(BlockDetector.class, TileDetector.class);
