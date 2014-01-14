@@ -6,18 +6,19 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 
-/**
- * 
- * @author AidanBrady
- * 
- */
+/** @author AidanBrady */
 public class ItemBase extends Item
 {
-	public ItemBase(String name, int id)
-	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
-		this.setCreativeTab(ResonantInductionTabs.CORE);
-		this.setUnlocalizedName(Reference.PREFIX + name);
-		this.setTextureName(Reference.PREFIX + name);
-	}
+    public ItemBase(String name)
+    {
+        this(name, Settings.getNextItemID());
+    }
+
+    public ItemBase(String name, int id)
+    {
+        super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
+        this.setCreativeTab(ResonantInductionTabs.CORE);
+        this.setUnlocalizedName(Reference.PREFIX + name);
+        this.setTextureName(Reference.PREFIX + name);
+    }
 }

@@ -23,53 +23,18 @@ import calclavia.lib.utility.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemReadoutTools extends ItemBase
+public class ItemPipeGauge extends ItemBase
 {
     Icon pipeGuage;
 
-    public ItemReadoutTools()
+    public ItemPipeGauge()
     {
-        super("PipeGuage", Settings.getNextItemID());
+        super("PipeGuage");
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabTools);
         this.setMaxStackSize(1);
+        this.setTextureName(Reference.PREFIX + "readout.PipeGauge");
 
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerIcons(IconRegister iconRegister)
-    {
-        this.pipeGuage = iconRegister.registerIcon(Reference.PREFIX + "readout.PipeGauge");
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public Icon getIconFromDamage(int meta)
-    {
-        if (meta == 0)
-        {
-            return pipeGuage;
-        }
-        return null;
-    }
-
-    @Override
-    public String getUnlocalizedName(ItemStack itemStack)
-    {
-        int meta = itemStack.getItemDamage();
-        if (meta == 0)
-        {
-            return "item." + "PipeGauge";
-        }
-        return "item." + this.getUnlocalizedName() + "." + meta;
-    }
-
-    @Override
-    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
-    {
-        par3List.add(new ItemStack(this, 1, 0));
-        par3List.add(new ItemStack(this, 1, 1));
     }
 
     @Override
