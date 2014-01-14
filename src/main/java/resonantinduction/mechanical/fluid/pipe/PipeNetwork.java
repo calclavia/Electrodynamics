@@ -24,31 +24,40 @@ public class PipeNetwork extends FluidNetwork
     {
         super.update();
         //Slight delay to allow visual effect to take place before draining the pipe tanks
-        if (this.ticks % 3 == 0 && this.getTank().getFluid() != null)
+        if (this.ticks % 2 == 0 && this.getTank().getFluid() != null)
         {
             FluidStack stack = this.getTank().getFluid().copy();
             int count = this.connectionMap.size();
             for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
             {
                 int volPer = stack.amount / count;
+                int sideCount = entry.getValue().size();
                 for (ForgeDirection dir : entry.getValue())
                 {
-                    int maxFill = 10000;
+                    int volPerSide = volPer / sideCount;
+                    int maxFill = 1000;
                     TileEntity entity = new Vector3((TileEntity) entry.getKey()).modifyPositionFromSide(dir).getTileEntity(((TileEntity) entry.getKey()).worldObj);
                     if (entity instanceof IFluidPipe)
                     {
                         maxFill = ((IFluidPipe) entity).getMaxFlowRate();
                     }
-                    int fill = entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPer, maxFill)), true);
+                    int fill = entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
                     volPer -= fill;
                     stack.amount -= fill;
+                    if (sideCount > 1)
+                        --sideCount;
+
+                    if (volPer <= 0)
+                        break;
                 }
                 if (count > 1)
                     count--;
-
+                if (stack == null || stack.amount <= 0)
+                    break;
             }
-            if (stack != null && stack.amount > 0)
-                this.getTank().setFluid(stack);
+            this.getTank().setFluid(stack);
+            //TODO check for change before rebuilding
+            this.rebuildTank();
         }
     }
 

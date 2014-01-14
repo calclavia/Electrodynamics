@@ -44,8 +44,8 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
             if (mat == FluidContainerMaterial.WOOD || mat == FluidContainerMaterial.STONE)
             {
-                FluidStack liquid = tile.getTank().getFluid();
-                int cap = tile.getTank().getCapacity();
+                FluidStack liquid = tile.getInternalTank().getFluid();
+                int cap = tile.getInternalTank().getCapacity();
 
                 // FluidStack liquid = new FluidStack(FluidRegistry.WATER, cap);
                 if (liquid != null && liquid.amount > 100)

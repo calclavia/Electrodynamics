@@ -128,7 +128,7 @@ public class BlockPipe extends BlockFluidNetwork
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
 		if (entity instanceof TilePipe)
 		{
-			FluidTank tank = ((TilePipe) entity).getTank();
+			FluidTank tank = ((TilePipe) entity).getInternalTank();
 			if (tank != null && tank.getFluid() != null)
 			{
 				FluidUtility.fillBlock(world, new Vector3(x, y, z), tank.getFluid(), true);

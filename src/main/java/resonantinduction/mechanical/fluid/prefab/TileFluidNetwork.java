@@ -1,7 +1,5 @@
 package resonantinduction.mechanical.fluid.prefab;
 
-import java.io.IOException;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -21,7 +19,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.utility.FluidUtility;
 
@@ -30,7 +28,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPart, IPacketReceiver, IReadOut
+public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPart, IPacketReceiverWithID, IReadOut
 {
     public static int refreshRate = 10;
     protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
@@ -53,15 +51,6 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     /** Tells the tank that on next update to check if it should update the client render data */
     public boolean updateFluidRender = false;
 
-    public FluidTank getTank()
-    {
-        if (tank == null)
-        {
-            this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-        }
-        return tank;
-    }
-
     @Override
     public void initiate()
     {
@@ -78,7 +67,7 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
         {
             if (this.updateFluidRender && ticks % TileFluidNetwork.refreshRate == 0)
             {
-                if (!FluidUtility.matchExact(prevStack, this.getTank().getFluid()))
+                if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
                 {
                     this.sendTankUpdate(0);
                 }
@@ -244,12 +233,12 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
             if (fluid != null)
             {
                 FluidStack liquid = new FluidStack(fluid, amount);
-                this.getTank().setFluid(liquid);
+                this.getInternalTank().setFluid(liquid);
             }
         }
         else
         {
-            this.getTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
+            this.getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
         }
     }
 
@@ -258,59 +247,62 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     {
         super.writeToNBT(nbt);
         nbt.setInteger("subID", this.colorID);
-        nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
+        nbt.setCompoundTag("FluidTank", this.getInternalTank().writeToNBT(new NBTTagCompound()));
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
         try
         {
             if (this.worldObj.isRemote)
             {
-                int readInt = data.readInt();
-
-                if (readInt == PACKET_DESCRIPTION)
+                if (id == PACKET_DESCRIPTION)
                 {
                     this.colorID = data.readInt();
                     this.renderSides = data.readByte();
                     this.tank = new FluidTank(data.readInt());
-                    this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    this.getInternalTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    return true;
                 }
-                else if (readInt == PACKET_RENDER)
+                else if (id == PACKET_RENDER)
                 {
                     this.colorID = data.readInt();
                     this.renderSides = data.readByte();
+                    return true;
                 }
-                else if (readInt == PACKET_TANK)
+                else if (id == PACKET_TANK)
                 {
                     this.tank = new FluidTank(data.readInt());
-                    this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    this.getInternalTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    return true;
                 }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
+            return true;
         }
+        return false;
     }
 
     @Override
     public Packet getDescriptionPacket()
     {
-        return ResonantInduction.PACKET_TILE.getPacket(this, PACKET_DESCRIPTION, this.colorID, this.renderSides, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound()));
+        return ResonantInduction.PACKET_TILE.getPacket(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
     }
 
     public void sendRenderUpdate()
     {
-        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_RENDER, this.colorID, this.renderSides));
+        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(PACKET_RENDER, this, this.colorID, this.renderSides));
     }
 
     public void sendTankUpdate(int index)
     {
-        if (this.getTank() != null && index == 0)
+        if (this.getInternalTank() != null && index == 0)
         {
-            PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_TANK, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(PACKET_TANK, this, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 
@@ -345,6 +337,10 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     @Override
     public FluidTank getInternalTank()
     {
+        if (this.tank == null)
+        {
+            this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+        }
         return this.tank;
     }
 

@@ -58,10 +58,10 @@ public class ItemBlockFluidContainer extends ItemBlock
 	public static ItemStack getWrenchedItem(World world, Vector3 vec)
 	{
 		TileEntity entity = vec.getTileEntity(world);
-		if (entity instanceof TileTank && ((TileTank) entity).getTank() != null && ((TileTank) entity).getTank().getFluid() != null)
+		if (entity instanceof TileTank && ((TileTank) entity).getInternalTank() != null && ((TileTank) entity).getInternalTank().getFluid() != null)
 		{
 			ItemStack itemStack = new ItemStack(Mechanical.blockTank);
-			FluidStack stack = ((TileTank) entity).getTank().getFluid();
+			FluidStack stack = ((TileTank) entity).getInternalTank().getFluid();
 
 			if (itemStack.getTagCompound() == null)
 			{

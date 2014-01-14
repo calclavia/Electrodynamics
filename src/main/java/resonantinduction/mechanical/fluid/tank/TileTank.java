@@ -13,7 +13,7 @@ public class TileTank extends TileFluidNetwork
 
     public TileTank()
     {
-        this.getTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+        this.getInternalTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
     }
 
     @Override
