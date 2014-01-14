@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.NBTUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

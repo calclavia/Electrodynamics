@@ -1,7 +1,11 @@
 package mffs.base;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import mffs.MFFSHelper;
-import mffs.Settings;
+import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
 import mffs.api.card.ICard;
 import mffs.api.fortron.FrequencyGrid;
@@ -18,6 +22,8 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.PacketHandler;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -40,7 +46,7 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 		 */
 		if (this.ticks % 60 == 0)
 		{
-			PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj, new Vector3(this), 25);
+			sendFortronToClients(25);
 		}
 	}
 
@@ -52,7 +58,54 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 			// Let remaining Fortron escape.
 			MFFSHelper.transferFortron(this, FrequencyGrid.instance().getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency()), TransferMode.DRAIN, Integer.MAX_VALUE);
 		}
+
 		super.invalidate();
+	}
+
+	/**
+	 * Packets
+	 */
+	@Override
+	public ArrayList getPacketData(int packetID)
+	{
+		if (packetID == TilePacketType.FORTRON.ordinal())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+
+			if (this.fortronTank.getFluid() != null)
+			{
+				nbt.setTag("fortron", this.fortronTank.getFluid().writeToNBT(new NBTTagCompound()));
+			}
+
+			ArrayList list = new ArrayList();
+			list.add(TilePacketType.FORTRON.ordinal());
+			list.add(nbt);
+
+			return list;
+		}
+
+		return super.getPacketData(packetID);
+	}
+
+	@Override
+	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
+	{
+		super.onReceivePacket(packetID, dataStream);
+
+		if (packetID == TilePacketType.FORTRON.ordinal())
+		{
+			NBTTagCompound nbt = PacketHandler.readNBTTagCompound(dataStream);
+
+			if (nbt != null)
+			{
+				this.fortronTank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fortron")));
+			}
+		}
+	}
+
+	public void sendFortronToClients(int range)
+	{
+		PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.getPacketData(TilePacketType.FORTRON.ordinal()).toArray()), this.worldObj, new Vector3(this), range);
 	}
 
 	/**
@@ -74,7 +127,6 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 		{
 			nbt.setTag("fortron", this.fortronTank.getFluid().writeToNBT(new NBTTagCompound()));
 		}
-
 	}
 
 	/**

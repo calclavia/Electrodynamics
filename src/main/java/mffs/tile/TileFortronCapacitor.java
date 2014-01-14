@@ -95,9 +95,14 @@ public class TileFortronCapacitor extends TileModuleAcceptor implements IFortron
 	@Override
 	public ArrayList getPacketData(int packetID)
 	{
-		ArrayList objects = super.getPacketData(packetID);
-		objects.add(this.transferMode.ordinal());
-		return objects;
+		ArrayList data = super.getPacketData(packetID);
+
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
+		{
+			data.add(this.transferMode.ordinal());
+		}
+
+		return data;
 	}
 
 	@Override

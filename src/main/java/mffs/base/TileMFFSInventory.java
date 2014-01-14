@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
+import mffs.base.TileMFFS.TilePacketType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -41,11 +42,16 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 	@Override
 	public ArrayList getPacketData(int packetID)
 	{
-		ArrayList objects = super.getPacketData(packetID);
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		objects.add(nbt);
-		return objects;
+		ArrayList data = super.getPacketData(packetID);
+
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			this.writeToNBT(nbt);
+			data.add(nbt);
+		}
+		
+		return data;
 	}
 
 	@Override

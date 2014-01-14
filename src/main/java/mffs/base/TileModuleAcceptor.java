@@ -12,6 +12,7 @@ import mffs.Settings;
 import mffs.api.ICache;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
+import mffs.base.TileMFFS.TilePacketType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -39,9 +40,14 @@ public abstract class TileModuleAcceptor extends TileFortron implements IModuleA
 	@Override
 	public ArrayList getPacketData(int packetID)
 	{
-		ArrayList objects = super.getPacketData(packetID);
-		objects.add(this.getFortronCost());
-		return objects;
+		ArrayList data = super.getPacketData(packetID);
+
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
+		{
+			data.add(this.getFortronCost());
+		}
+
+		return data;
 	}
 
 	@Override
@@ -49,12 +55,9 @@ public abstract class TileModuleAcceptor extends TileFortron implements IModuleA
 	{
 		super.onReceivePacket(packetID, dataStream);
 
-		if (this.worldObj.isRemote)
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
-			if (packetID == TilePacketType.DESCRIPTION.ordinal())
-			{
-				this.clientFortronCost = dataStream.readInt();
-			}
+			this.clientFortronCost = dataStream.readInt();
 		}
 	}
 

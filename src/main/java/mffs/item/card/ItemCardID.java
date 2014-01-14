@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.NBTUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 
 public class ItemCardID extends ItemCard implements ICardIdentification
 {

@@ -27,8 +27,8 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 {
 	public enum TilePacketType
 	{
-		NONE, DESCRIPTION, FREQUENCY, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS,
-		TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER;
+		NONE, DESCRIPTION, FREQUENCY, FORTRON, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING,
+		FXS, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER;
 	}
 
 	/**
@@ -55,12 +55,17 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 	 * Override this for packet updating list.
 	 */
 	@Override
-	public ArrayList getPacketData(int type)
+	public ArrayList getPacketData(int packetID)
 	{
-		ArrayList objects = new ArrayList();
-		objects.add(TilePacketType.DESCRIPTION.ordinal());
-		objects.add(this.isActive);
-		return objects;
+		ArrayList data = new ArrayList();
+
+		if (packetID == TilePacketType.DESCRIPTION.ordinal())
+		{
+			data.add(TilePacketType.DESCRIPTION.ordinal());
+			data.add(this.isActive);
+		}
+
+		return data;
 	}
 
 	@Override
@@ -83,7 +88,7 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
+		return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.getPacketData(TilePacketType.DESCRIPTION.ordinal()).toArray());
 	}
 
 	@Override
