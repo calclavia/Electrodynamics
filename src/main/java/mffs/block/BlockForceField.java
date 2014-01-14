@@ -245,16 +245,11 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 				{
 					Block block = Block.blocksList[((ItemBlock) checkStack.getItem()).getBlockID()];
 
-					// final Integer[] allowedRenderTypes = { 0, 1, 4, 31, 20, 39, 5, 13, 23, 6, 8,
-					// 7, 12, 29, 30, 14, 16, 17 };
-					// if (Arrays.asList(allowedRenderTypes).contains(block.getRenderType()))
-					{
-						Icon icon = block.getIcon(side, checkStack.getItemDamage());
+					Icon icon = block.getIcon(side, checkStack.getItemDamage());
 
-						if (icon != null)
-						{
-							return icon;
-						}
+					if (icon != null)
+					{
+						return icon;
 					}
 				}
 				catch (Exception e)
