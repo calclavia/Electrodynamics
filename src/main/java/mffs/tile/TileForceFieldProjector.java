@@ -339,8 +339,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	{
 		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
 		{
-			HashSet<Vector3> copiedSet = new HashSet<Vector3>();
-			copiedSet.addAll(this.calculatedField);
+			HashSet<Vector3> copiedSet = new HashSet<Vector3>(this.calculatedField);
 			Iterator<Vector3> it = copiedSet.iterator();
 
 			for (IModule module : this.getModules(this.getModuleSlots()))
