@@ -1,10 +1,14 @@
 package resonantinduction.mechanical.network;
 
 /**
+ * For the mechanical network.
+ * 
  * @author Calclavia
  * 
  */
 public interface IMechanical
 {
-	public void setKineticEnergy(long energy);
+	public long getTorque();
+
+	public void setTorque(long torque);
 }

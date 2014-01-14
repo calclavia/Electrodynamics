@@ -46,6 +46,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
 		}
 	}
+
 	/** Side of the block this is placed on */
 	public ForgeDirection placementSide;
 	/** Direction this block faces */
@@ -77,6 +78,12 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	public boolean stepUp()
 	{
 		return this.stepUp;
+	}
+
+	@Override
+	public boolean doesTick()
+	{
+		return false;
 	}
 
 	@Override

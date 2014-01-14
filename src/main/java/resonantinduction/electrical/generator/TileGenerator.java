@@ -45,8 +45,14 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	}
 
 	@Override
-	public void setKineticEnergy(long energy)
+	public long getTorque()
 	{
-		this.power = energy;
+		return this.power;
+	}
+
+	@Override
+	public void setTorque(long torque)
+	{
+		this.power = torque;
 	}
 }
