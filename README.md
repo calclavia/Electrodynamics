@@ -25,7 +25,7 @@ Please submit a pull request if you would be willing to translate this mod into 
 Join *#mffs* or *#universalelectricity* on EsperNet (irc.esper.net:5555). Remember to follow the rules and respect others as with any other channel.
 
 ### License
-Modular Force Field System is licensed under Calclavia's Restricted Public License (http://calclavia.com/license/rpl).
+Modular Force Field System is licensed under Calclavia's Educational Public License (http://calclavia.com/educational-public-license/).
 By using or interacting with this software in any way shape or form, you agree to the license of this software.
 
 The original Modular Force Field System 2.0 is licensed under GPL v3.0. Because MFFS 3.0 is a complete rewrite and not a derived work, it is under a different license.
