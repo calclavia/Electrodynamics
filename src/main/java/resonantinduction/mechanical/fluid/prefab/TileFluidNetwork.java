@@ -236,7 +236,8 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     {
         if (this.network != null)
         {
-            this.network = new FluidNetwork(this);
+            this.network = new FluidNetwork();
+            this.network.addConnector(this);
         }
         return this.network;
     }

@@ -99,9 +99,10 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
     @Override
     public PipeNetwork getNetwork()
     {
-        if (!(this.network instanceof PipeNetwork))
+        if (this.network == null)
         {
-            this.setNetwork(new PipeNetwork(this));
+            this.network = new PipeNetwork();
+            this.network.addConnector(this);
         }
         return (PipeNetwork) this.network;
     }
@@ -140,7 +141,7 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
     public void onWrongPressure(ForgeDirection side, int pressure)
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

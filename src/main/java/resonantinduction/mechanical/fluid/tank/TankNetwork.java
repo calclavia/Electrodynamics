@@ -14,20 +14,11 @@ import calclavia.lib.utility.FluidHelper;
  * @author DarkGuardsman */
 public class TankNetwork extends FluidNetwork
 {
-    public TankNetwork()
-    {
-        super();
-    }
-
-    public TankNetwork(TileTank... tanks)
-    {
-        super(tanks);
-    }
 
     @Override
     public void reloadTanks()
     {
-        FluidStack fillStack = this.getTank().getFluid().copy();
+        FluidStack fillStack = this.getTank().getFluid();
         int lowestY = 255, highestY = 0;
 
         if (fillStack == null || fillStack.getFluid().isGaseous())
@@ -36,6 +27,7 @@ public class TankNetwork extends FluidNetwork
         }
         else if (this.getNodes().size() > 0)
         {
+            fillStack = fillStack.copy();
             for (IFluidPart part : this.getConnectors())
             {
                 part.getInternalTank().setFluid(null);
