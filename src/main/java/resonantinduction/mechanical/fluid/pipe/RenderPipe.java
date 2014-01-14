@@ -15,8 +15,6 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
-import resonantinduction.old.client.model.ModelOpenTrough;
-import resonantinduction.old.client.model.ModelPipe;
 
 import com.builtbroken.common.Pair;
 
@@ -29,7 +27,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
     public static ModelPipe MODEL_PIPE = new ModelPipe();
     public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     private static HashMap<Pair<FluidContainerMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<FluidContainerMaterial, Integer>, ResourceLocation>();
-    public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pipe.png");
+    public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "pipe/iron.png");
 
     @Override
     public void renderTileEntityAt(TileEntity te, double d, double d1, double d2, float f)

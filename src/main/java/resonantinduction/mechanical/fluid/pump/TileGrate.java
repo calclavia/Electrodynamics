@@ -191,12 +191,6 @@ public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, I
 	}
 
 	@Override
-	public boolean canTileConnect(Connection type, ForgeDirection dir)
-	{
-		return dir != this.getDirection();
-	}
-
-	@Override
 	public ForgeDirection getDirection()
 	{
 		int meta = 0;

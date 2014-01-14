@@ -88,11 +88,6 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
             connectedBlocks[side.ordinal()] = tileEntity;
             setRenderSide(side, true);
         }
-        else if (tileEntity instanceof ITileConnector && ((ITileConnector) tileEntity).canTileConnect(Connection.FLUIDS, side.getOpposite()))
-        {
-            connectedBlocks[side.ordinal()] = tileEntity;
-            setRenderSide(side, true);
-        }
 
     }
 

@@ -60,6 +60,7 @@ public class TankNetwork extends FluidNetwork
                     for (IFluidPart part : parts)
                     {
                         fillStack.amount -= part.getInternalTank().fill(FluidUtility.getStack(fillStack, fillStack.amount / partCount), true);
+                        part.onFluidChanged();
                         if (partCount > 1)
                             partCount--;
                     }

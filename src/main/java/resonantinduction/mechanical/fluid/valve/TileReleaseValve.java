@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid;
+package resonantinduction.mechanical.fluid.valve;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

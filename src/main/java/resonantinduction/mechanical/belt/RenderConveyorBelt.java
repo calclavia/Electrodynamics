@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
-import resonantinduction.old.client.model.ModelAngledBelt;
-import resonantinduction.old.client.model.ModelConveyorBelt;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

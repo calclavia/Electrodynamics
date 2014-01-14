@@ -4,7 +4,7 @@
 // Keep in mind that you still need to fill in some blanks
 // - ZeuX
 
-package resonantinduction.old.client.model;
+package resonantinduction.mechanical.fluid.pipe;
 
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import net.minecraft.client.model.ModelBase;

@@ -9,7 +9,7 @@ import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.core.tilenetwork.prefab.NetworkTileEntities;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public abstract class TileEntityFluidDevice extends TileAdvanced implements ITileConnector
+public abstract class TileEntityFluidDevice extends TileAdvanced
 {
 	public Random random = new Random();
 

@@ -1,20 +1,19 @@
 package resonantinduction.mechanical.fluid.tank;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.IReadOut;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
-public class TileTank extends TileFluidNetwork implements IReadOut
+public class TileTank extends TileFluidNetwork
 {
     public static final int VOLUME = 16;
 
     public TileTank()
     {
-        super(VOLUME);
+        this.getTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
     }
 
     @Override
@@ -44,23 +43,11 @@ public class TileTank extends TileFluidNetwork implements IReadOut
         {
             if (tileEntity instanceof TileTank)
             {
-                if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
-                {
-                    this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
-                    this.setRenderSide(side, true);
-                    connectedBlocks[side.ordinal()] = tileEntity;
-                }
+                this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
+                this.setRenderSide(side, true);
+                connectedBlocks[side.ordinal()] = tileEntity;
             }
         }
     }
 
-    @Override
-    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-    {
-        if (tool == EnumTools.PIPE_GUAGE)
-        {
-            return this.getNetwork().toString();
-        }
-        return null;
-    }
 }

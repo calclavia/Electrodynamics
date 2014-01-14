@@ -47,7 +47,8 @@ public class PipeNetwork extends FluidNetwork
                     count--;
 
             }
-
+            if (stack != null && stack.amount > 0)
+                this.getTank().setFluid(stack);
         }
     }
 

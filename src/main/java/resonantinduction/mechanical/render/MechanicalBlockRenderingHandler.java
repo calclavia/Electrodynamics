@@ -9,10 +9,10 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.belt.ModelConveyorBelt;
 import resonantinduction.mechanical.fluid.pump.RenderPump;
 import resonantinduction.mechanical.logistic.RenderManipulator;
 import resonantinduction.mechanical.logistic.RenderRejector;
-import resonantinduction.old.client.model.ModelConveyorBelt;
 import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
 import resonantinduction.old.client.model.ModelManipulator;

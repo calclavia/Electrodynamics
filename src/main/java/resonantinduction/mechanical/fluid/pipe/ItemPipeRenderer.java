@@ -8,7 +8,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.old.client.model.ModelReleaseValve;
+import resonantinduction.mechanical.fluid.valve.ModelReleaseValve;
+import resonantinduction.mechanical.fluid.valve.RenderReleaseValve;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,7 +69,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		}
 		if (Mechanical.blockReleaseValve != null && item.itemID == Mechanical.blockReleaseValve.blockID)
 		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "ReleaseValve.png"));
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderReleaseValve.VALVE_TEXTURE);
 			valve.render();
 		}
 		

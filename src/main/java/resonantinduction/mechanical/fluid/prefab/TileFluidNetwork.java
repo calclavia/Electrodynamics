@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import resonantinduction.api.IReadOut;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.core.ResonantInduction;
@@ -29,50 +30,34 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPart, IPacketReceiver
+public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPart, IPacketReceiver, IReadOut
 {
     public static int refreshRate = 10;
-    protected FluidTank tank;
-    protected FluidTankInfo[] internalTanksInfo = new FluidTankInfo[1];
+    protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
     protected Object[] connectedBlocks = new Object[6];
-    protected int heat = 0, maxHeat = 20000;
-    protected int damage = 0, maxDamage = 1000;
     protected int colorID = 0;
-    protected int tankCap;
+
+    /** Copy of the tank's content last time it updated */
     protected FluidStack prevStack = null;
+
+    /** Network used to link all parts together */
     protected IFluidNetwork network;
 
     public static final int PACKET_DESCRIPTION = Mechanical.contentRegistry.getNextPacketID();
     public static final int PACKET_RENDER = Mechanical.contentRegistry.getNextPacketID();
     public static final int PACKET_TANK = Mechanical.contentRegistry.getNextPacketID();
 
-    /** Bitmask **/
+    /** Bitmask that handles connections for the renderer **/
     public byte renderSides = 0b0;
 
+    /** Tells the tank that on next update to check if it should update the client render data */
     public boolean updateFluidRender = false;
-
-    public TileFluidNetwork()
-    {
-        this(1);
-    }
-
-    public TileFluidNetwork(int tankCap)
-    {
-        if (tankCap <= 0)
-        {
-            tankCap = 1;
-        }
-        this.tankCap = tankCap;
-        this.tank = new FluidTank(this.tankCap * FluidContainerRegistry.BUCKET_VOLUME);
-        this.internalTanksInfo[0] = this.tank.getInfo();
-    }
 
     public FluidTank getTank()
     {
         if (tank == null)
         {
-            this.tank = new FluidTank(this.tankCap * FluidContainerRegistry.BUCKET_VOLUME);
-            this.internalTanksInfo[0] = this.tank.getInfo();
+            this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
         }
         return tank;
     }
@@ -203,12 +188,9 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
         {
             if (tileEntity instanceof IFluidPart)
             {
-                if (this.canTileConnect(Connection.NETWORK, side.getOpposite()))
-                {
-                    this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
-                    this.setRenderSide(side, true);
-                    connectedBlocks[side.ordinal()] = tileEntity;
-                }
+                this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
+                this.setRenderSide(side, true);
+                connectedBlocks[side.ordinal()] = tileEntity;
             }
         }
     }
@@ -249,21 +231,9 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     }
 
     @Override
-    public boolean canTileConnect(Connection type, ForgeDirection dir)
-    {
-        if (this.damage >= this.maxDamage)
-        {
-            return false;
-        }
-        return type == Connection.FLUIDS || type == Connection.NETWORK;
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
-        this.damage = nbt.getInteger("damage");
-        this.heat = nbt.getInteger("heat");
         this.colorID = nbt.getInteger("subID");
         if (nbt.hasKey("stored"))
         {
@@ -275,13 +245,11 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
             {
                 FluidStack liquid = new FluidStack(fluid, amount);
                 this.getTank().setFluid(liquid);
-                internalTanksInfo[0] = this.getTank().getInfo();
             }
         }
         else
         {
             this.getTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
-            internalTanksInfo[0] = this.getTank().getInfo();
         }
     }
 
@@ -289,8 +257,6 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);
-        nbt.setInteger("damage", this.damage);
-        nbt.setInteger("heat", this.heat);
         nbt.setInteger("subID", this.colorID);
         nbt.setCompoundTag("FluidTank", this.getTank().writeToNBT(new NBTTagCompound()));
     }
@@ -310,7 +276,6 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
                     this.renderSides = data.readByte();
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-                    this.internalTanksInfo[0] = this.getTank().getInfo();
                 }
                 else if (readInt == PACKET_RENDER)
                 {
@@ -321,7 +286,6 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
                 {
                     this.tank = new FluidTank(data.readInt());
                     this.getTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-                    this.internalTanksInfo[0] = this.getTank().getInfo();
                 }
             }
         }
@@ -382,6 +346,16 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     public FluidTank getInternalTank()
     {
         return this.tank;
+    }
+
+    @Override
+    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
+    {
+        if (tool == EnumTools.PIPE_GUAGE)
+        {
+            return this.getNetwork().toString();
+        }
+        return null;
     }
 
 }

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid;
+package resonantinduction.mechanical.fluid.valve;
 
 import java.util.Random;
 

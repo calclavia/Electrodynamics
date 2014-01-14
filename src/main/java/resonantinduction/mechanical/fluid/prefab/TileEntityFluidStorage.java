@@ -16,11 +16,6 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 
 	public FluidTank fluidTank;
 
-	@Override
-	public boolean canTileConnect(Connection type, ForgeDirection dir)
-	{
-		return type == Connection.FLUIDS;
-	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
