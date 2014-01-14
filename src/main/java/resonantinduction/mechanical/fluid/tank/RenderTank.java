@@ -14,10 +14,10 @@ import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.client.model.ModelTankSide;
+import calclavia.lib.render.ColorCode;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.helpers.ColorCode;
 
 @SideOnly(Side.CLIENT)
 public class RenderTank extends TileEntitySpecialRenderer

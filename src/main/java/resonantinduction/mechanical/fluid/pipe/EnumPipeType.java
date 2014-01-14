@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.fluid.pipe;
 
-import dark.lib.helpers.ColorCode;
-import dark.lib.helpers.ColorCode.IColoredId;
+import calclavia.lib.render.ColorCode;
+import calclavia.lib.render.ColorCode.IColoredId;
 
 public enum EnumPipeType implements IColoredId
 {

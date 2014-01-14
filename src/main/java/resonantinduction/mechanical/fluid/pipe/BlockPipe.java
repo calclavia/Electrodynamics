@@ -17,11 +17,11 @@ import net.minecraftforge.fluids.FluidTank;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.ColorCode;
+import calclavia.lib.render.ColorCode.IColorCoded;
 import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.helpers.ColorCode;
-import dark.lib.helpers.ColorCode.IColorCoded;
 
 public class BlockPipe extends BlockFluidNetwork
 {

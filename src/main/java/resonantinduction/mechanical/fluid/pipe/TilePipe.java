@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import calclavia.lib.render.ColorCode;
+import calclavia.lib.render.ColorCode.IColorCoded;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -9,8 +11,6 @@ import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import universalelectricity.api.vector.Vector3;
-import dark.lib.helpers.ColorCode;
-import dark.lib.helpers.ColorCode.IColorCoded;
 
 public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPipe
 {

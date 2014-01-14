@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
-import dark.lib.helpers.ColorCode.IColoredId;
+import calclavia.lib.render.ColorCode.IColoredId;
 
 public interface IPipeType extends IColoredId
 {

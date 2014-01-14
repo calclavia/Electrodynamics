@@ -1,4 +1,4 @@
-package dark.lib;
+package resonantinduction.core.damage;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;

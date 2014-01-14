@@ -24,11 +24,10 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.EnumMaterial;
 
 public class BlockOre extends Block implements IExtraBlockInfo
 {
-	Icon[] icons = new Icon[EnumMaterial.values().length];
+	Icon[] icons = new Icon[EnumTierMaterial.values().length];
 
 	public BlockOre()
 	{
@@ -91,15 +90,15 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
 	public static enum OreData
 	{
-		TIN(EnumMaterial.TIN, "tin", "oreTin", 20, 8, 128),
-		COPPER(EnumMaterial.COPPER, "copper", "copperOre", 20, 8, 128),
-		SILVER(EnumMaterial.SILVER, "silver", "silverOre", 3, 8, 45),
-		LEAD(EnumMaterial.LEAD, "lead", "leadOre", 1, 6, 30),
-		Bauxite(EnumMaterial.ALUMINIUM, "bauxite", "bauxiteOre", 4, 6, 128);
+		TIN(EnumTierMaterial.TIN, "tin", "oreTin", 20, 8, 128),
+		COPPER(EnumTierMaterial.COPPER, "copper", "copperOre", 20, 8, 128),
+		SILVER(EnumTierMaterial.SILVER, "silver", "silverOre", 3, 8, 45),
+		LEAD(EnumTierMaterial.LEAD, "lead", "leadOre", 1, 6, 30),
+		Bauxite(EnumTierMaterial.ALUMINIUM, "bauxite", "bauxiteOre", 4, 6, 128);
 
 		public String name, oreName;
 		public ItemStack stack;
-		public EnumMaterial mat;
+		public EnumTierMaterial mat;
 
 		@SideOnly(Side.CLIENT)
 		public Icon oreIcon;
@@ -108,7 +107,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
 		public boolean doWorldGen = true;
 		public int ammount, branch, maxY;
 
-		private OreData(EnumMaterial mat, String name, String oreName, int ammount, int branch, int maxY)
+		private OreData(EnumTierMaterial mat, String name, String oreName, int ammount, int branch, int maxY)
 		{
 			this.name = name;
 			this.oreName = oreName;

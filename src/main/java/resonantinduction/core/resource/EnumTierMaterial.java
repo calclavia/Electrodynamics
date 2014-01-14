@@ -1,4 +1,4 @@
-package dark.lib;
+package resonantinduction.core.resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,27 +16,27 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public enum EnumMaterial
+public enum EnumTierMaterial
 {
-	WOOD("Wood", EnumToolMaterial.WOOD, EnumOrePart.INGOTS, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.ROD, EnumOrePart.MOLTEN),
-	STONE("Stone", EnumToolMaterial.STONE, EnumOrePart.INGOTS, EnumOrePart.SCRAPS, EnumOrePart.MOLTEN),
-	IRON("Iron", EnumToolMaterial.IRON, EnumOrePart.INGOTS),
-	OBBY("Obby", true, 7.0f, 500, 4, EnumOrePart.INGOTS, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.PLATES, EnumOrePart.MOLTEN),
-	GOLD("Gold", EnumToolMaterial.GOLD, EnumOrePart.GEARS, EnumOrePart.INGOTS),
-	COAL("Coal", EnumToolMaterial.WOOD, EnumOrePart.GEARS, EnumOrePart.TUBE, EnumOrePart.PLATES, EnumOrePart.RUBBLE, EnumOrePart.SCRAPS, EnumOrePart.MOLTEN),
+	WOOD("Wood", EnumToolMaterial.WOOD, EnumRecipePart.INGOTS, EnumRecipePart.PLATES, EnumRecipePart.RUBBLE, EnumRecipePart.ROD, EnumRecipePart.MOLTEN),
+	STONE("Stone", EnumToolMaterial.STONE, EnumRecipePart.INGOTS, EnumRecipePart.SCRAPS, EnumRecipePart.MOLTEN),
+	IRON("Iron", EnumToolMaterial.IRON, EnumRecipePart.INGOTS),
+	OBBY("Obby", true, 7.0f, 500, 4, EnumRecipePart.INGOTS, EnumRecipePart.RUBBLE, EnumRecipePart.SCRAPS, EnumRecipePart.PLATES, EnumRecipePart.MOLTEN),
+	GOLD("Gold", EnumToolMaterial.GOLD, EnumRecipePart.GEARS, EnumRecipePart.INGOTS),
+	COAL("Coal", EnumToolMaterial.WOOD, EnumRecipePart.GEARS, EnumRecipePart.TUBE, EnumRecipePart.PLATES, EnumRecipePart.RUBBLE, EnumRecipePart.SCRAPS, EnumRecipePart.MOLTEN),
 
 	COPPER("Copper", true, 3.5f, 79, 1),
-	TIN("Tin", true, 2.0f, 50, 1, EnumOrePart.GEARS, EnumOrePart.TUBE),
-	LEAD("Lead", false, 0, 0, 1, EnumOrePart.GEARS, EnumOrePart.TUBE),
-	ALUMINIUM("Aluminum", true, 5.0f, 100, 2, EnumOrePart.GEARS, EnumOrePart.TUBE),
-	SILVER("Silver", true, 11.0f, 30, 0, EnumOrePart.GEARS),
-	STEEL("Steel", true, 7.0f, 4, 1000, EnumOrePart.RUBBLE),
-	BRONZE("Bronze", true, 6.5f, 3, 560, EnumOrePart.RUBBLE);
+	TIN("Tin", true, 2.0f, 50, 1, EnumRecipePart.GEARS, EnumRecipePart.TUBE),
+	LEAD("Lead", false, 0, 0, 1, EnumRecipePart.GEARS, EnumRecipePart.TUBE),
+	ALUMINIUM("Aluminum", true, 5.0f, 100, 2, EnumRecipePart.GEARS, EnumRecipePart.TUBE),
+	SILVER("Silver", true, 11.0f, 30, 0, EnumRecipePart.GEARS),
+	STEEL("Steel", true, 7.0f, 4, 1000, EnumRecipePart.RUBBLE),
+	BRONZE("Bronze", true, 6.5f, 3, 560, EnumRecipePart.RUBBLE);
 
 	/** Name of the material */
 	public String simpleName;
 	/** List of ore parts that to not be created for the material */
-	public List<EnumOrePart> unneedItems;
+	public List<EnumRecipePart> unneedItems;
 
 	public boolean hasTools = false;
 
@@ -51,19 +51,19 @@ public enum EnumMaterial
 	public int maxUses = 100;
 	public float damageBoost = 0;
 
-	private EnumMaterial(String name, EnumToolMaterial material, EnumOrePart... enumOreParts)
+	private EnumTierMaterial(String name, EnumToolMaterial material, EnumRecipePart... enumOreParts)
 	{
 		this(name, false, material.getEfficiencyOnProperMaterial(), material.getMaxUses(), material.getDamageVsEntity(), enumOreParts);
 	}
 
-	private EnumMaterial(String name, boolean tool, float effectiveness, int toolUses, float damage, EnumOrePart... enumOreParts)
+	private EnumTierMaterial(String name, boolean tool, float effectiveness, int toolUses, float damage, EnumRecipePart... enumOreParts)
 	{
 		this.simpleName = name;
 		this.hasTools = tool;
 		this.materialEffectiveness = effectiveness;
 		this.maxUses = toolUses;
 		this.damageBoost = damage;
-		unneedItems = new ArrayList<EnumOrePart>();
+		unneedItems = new ArrayList<EnumRecipePart>();
 		for (int i = 0; enumOreParts != null && i < enumOreParts.length; i++)
 		{
 			unneedItems.add(enumOreParts[i]);
@@ -78,18 +78,18 @@ public enum EnumMaterial
 	 * @param part - part
 	 * @return new ItemStack created from the two enums as long as everything goes right
 	 */
-	public static ItemStack getStack(Item item, EnumMaterial mat, EnumOrePart part, int ammount)
+	public static ItemStack getStack(Item item, EnumTierMaterial mat, EnumRecipePart part, int ammount)
 	{
 		ItemStack reStack = null;
 		if (mat != null && part != null)
 		{
-			if (part == EnumOrePart.INGOTS)
+			if (part == EnumRecipePart.INGOTS)
 			{
-				if (mat == EnumMaterial.IRON)
+				if (mat == EnumTierMaterial.IRON)
 				{
 					return new ItemStack(Item.ingotIron, 1);
 				}
-				else if (mat == EnumMaterial.GOLD)
+				else if (mat == EnumTierMaterial.GOLD)
 				{
 					return new ItemStack(Item.ingotGold, 1);
 				}
@@ -101,37 +101,37 @@ public enum EnumMaterial
 		return reStack;
 	}
 
-	public ItemStack getStack(Item item, EnumOrePart part)
+	public ItemStack getStack(Item item, EnumRecipePart part)
 	{
 		return this.getStack(item, part, 1);
 	}
 
-	public ItemStack getStack(Item item, EnumOrePart part, int ammount)
+	public ItemStack getStack(Item item, EnumRecipePart part, int ammount)
 	{
 		return getStack(item, this, part, ammount);
 	}
 
 	public static Icon getIcon(int metadata)
 	{
-		int mat = metadata / EnumMaterial.itemCountPerMaterial;
-		if (mat < EnumMaterial.values().length)
+		int mat = metadata / EnumTierMaterial.itemCountPerMaterial;
+		if (mat < EnumTierMaterial.values().length)
 		{
-			return EnumMaterial.values()[metadata / EnumMaterial.itemCountPerMaterial].itemIcons[metadata % EnumMaterial.itemCountPerMaterial];
+			return EnumTierMaterial.values()[metadata / EnumTierMaterial.itemCountPerMaterial].itemIcons[metadata % EnumTierMaterial.itemCountPerMaterial];
 		}
 		return null;
 	}
 
-	public static String getOreName(EnumMaterial mat, EnumOrePart part)
+	public static String getOreName(EnumTierMaterial mat, EnumRecipePart part)
 	{
 		return mat.getOreName(part);
 	}
 
-	public String getOreName(EnumOrePart part)
+	public String getOreName(EnumRecipePart part)
 	{
 		return part.simpleName.toLowerCase() + this.simpleName;
 	}
 
-	public boolean shouldCreateItem(EnumOrePart part)
+	public boolean shouldCreateItem(EnumRecipePart part)
 	{
 		return this.unneedItems == null || !this.unneedItems.contains(part);
 	}

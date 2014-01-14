@@ -1,4 +1,4 @@
-package dark.lib.prefab.invgui;
+package resonantinduction.core.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,11 +13,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.gui.GuiButtonImage.ButtonIcon;
 import resonantinduction.core.prefab.tile.TileMachine;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.prefab.invgui.GuiButtonImage.ButtonIcon;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiMachineContainer extends GuiContainer

@@ -1,4 +1,4 @@
-package dark.lib.prefab.invgui;
+package resonantinduction.core.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

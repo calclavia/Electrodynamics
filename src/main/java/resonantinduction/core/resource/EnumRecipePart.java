@@ -1,14 +1,13 @@
-package dark.lib;
+package resonantinduction.core.resource;
 
-public enum EnumOrePart
+public enum EnumRecipePart
 {
-
 	RUBBLE("Rubble"), DUST("Dust"), INGOTS("Ingot"), PLATES("Plate"), GEARS("Gears"), TUBE("Tube"),
 	ROD("Rod"), SCRAPS("Scraps"), MOLTEN("Molten");
 
 	public String simpleName;
 
-	private EnumOrePart(String name)
+	private EnumRecipePart(String name)
 	{
 		this.simpleName = name;
 	}
@@ -19,10 +18,10 @@ public enum EnumOrePart
 	 */
 	public static String getPartName(int meta)
 	{
-		int partID = meta % EnumMaterial.itemCountPerMaterial;
-		if (partID < EnumOrePart.values().length)
+		int partID = meta % EnumTierMaterial.itemCountPerMaterial;
+		if (partID < EnumRecipePart.values().length)
 		{
-			return EnumOrePart.values()[partID].simpleName;
+			return EnumRecipePart.values()[partID].simpleName;
 		}
 		return "Part[" + partID + "]";
 	}
@@ -30,11 +29,11 @@ public enum EnumOrePart
 	/** This gets the full name based on the metadata of the ore dirv item */
 	public static String getFullName(int itemMetaData)
 	{
-		int matID = itemMetaData / EnumMaterial.itemCountPerMaterial;
-		int partID = itemMetaData % EnumMaterial.itemCountPerMaterial;
-		if (matID < EnumMaterial.values().length && partID < EnumOrePart.values().length)
+		int matID = itemMetaData / EnumTierMaterial.itemCountPerMaterial;
+		int partID = itemMetaData % EnumTierMaterial.itemCountPerMaterial;
+		if (matID < EnumTierMaterial.values().length && partID < EnumRecipePart.values().length)
 		{
-			return EnumMaterial.values()[matID].simpleName + EnumOrePart.values()[partID].simpleName;
+			return EnumTierMaterial.values()[matID].simpleName + EnumRecipePart.values()[partID].simpleName;
 		}
 		return "OrePart[" + matID + "][" + partID + "]";
 	}

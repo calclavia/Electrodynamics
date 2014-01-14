@@ -2,6 +2,7 @@ package resonantinduction.archaic.blocks;
 
 import java.util.List;
 
+import calclavia.lib.render.ColorCode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -12,7 +13,6 @@ import net.minecraft.world.IBlockAccess;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.lib.helpers.ColorCode;
 
 /**
  * Prefab class to make any block have 16 separate color instances similar to wool block
