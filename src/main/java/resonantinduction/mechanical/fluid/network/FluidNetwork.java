@@ -40,7 +40,6 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
         }
         this.rebuildTank();
         this.reloadTanks();
-
     }
 
     public void buildPart(IFluidPart part)
@@ -75,6 +74,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
             this.tankInfo[0] = null;
         }
         this.reloadTanks = true;
+        NetworkTickHandler.addNetwork(this);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     {
         int prev = this.getTank().getFluidAmount();
         int fill = this.getTank().fill(resource, doFill);
-        if (prev != this.getTank().getFluid().amount)
+        if (prev != this.getTank().getFluidAmount())
         {
             this.rebuildTank();
         }
