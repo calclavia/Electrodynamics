@@ -250,7 +250,7 @@ public class BlockConveyorBelt extends BlockRI
 			{
 				return;
 			}
-			if (tile.isFunctioning() && !world.isBlockIndirectlyGettingPowered(x, y, z))
+			if (!world.isBlockIndirectlyGettingPowered(x, y, z))
 			{
 				float acceleration = tile.acceleration;
 				float maxSpeed = tile.maxSpeed;

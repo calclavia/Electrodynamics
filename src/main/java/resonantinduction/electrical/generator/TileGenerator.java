@@ -11,6 +11,7 @@ import calclavia.lib.prefab.tile.TileElectrical;
  * @author Calclavia */
 public class TileGenerator extends TileElectrical implements IMechMachine
 {
+    //P = \tau \times 2 \pi \times \omega
     private long power;
 
     /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
@@ -40,12 +41,19 @@ public class TileGenerator extends TileElectrical implements IMechMachine
 
     private boolean isFunctioning()
     {
-        return true;
+        return this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
     }
 
     @Override
     public void onTorqueChange(ForgeDirection side, int speed)
     {
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public int getForceSide(ForgeDirection side)
+    {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

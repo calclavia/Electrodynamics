@@ -7,9 +7,12 @@ import universalelectricity.api.net.INetwork;
  * @author DarkGuardsman */
 public interface IMechNetwork extends INetwork<IMechNetwork, IMechConnector, IMechMachine>
 {
-    public int getForce();
-
-    public int getRotSpeed();
-
+    /** Power applied by the network at the given speed */
     public int getTorque();
+
+    /** Rotation of the the network in a single update */
+    public int getRotationPerTick();
+
+    /** Called to rebuild the network */
+    public void reconstruct();
 }

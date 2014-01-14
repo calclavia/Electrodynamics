@@ -218,18 +218,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
     }
 
     @Override
-    public long getTorque()
-    {
-        return this.torque;
-    }
-
-    @Override
-    public void setTorque(long torque)
-    {
-        this.torque = torque;
-    }
-
-    @Override
     public Object[] getConnections()
     {
         return null;
@@ -256,6 +244,13 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
     public boolean canConnect(ForgeDirection direction)
     {
         return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechConnector;
+    }
+
+    @Override
+    public int getResistance()
+    {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

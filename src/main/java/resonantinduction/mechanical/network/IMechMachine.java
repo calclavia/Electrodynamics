@@ -8,7 +8,9 @@ import universalelectricity.api.net.IConnectable;
  * @author Darkguardsman */
 public interface IMechMachine extends IConnectable
 {
-    /** Called by the network when its torque value changes. Force is not given since the network
-     * operates on a can move or can't move setup. Speed is given as a represent */
+    /** Called by the network when its torque value changes. */
     public void onTorqueChange(ForgeDirection side, int speed);
+
+    /** Gets the force on the side, zero is ignored, neg is input force, pos is output force */
+    public int getForceSide(ForgeDirection side);
 }
