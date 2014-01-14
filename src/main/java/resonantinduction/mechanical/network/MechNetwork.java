@@ -1,13 +1,9 @@
 package resonantinduction.mechanical.network;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.core.net.ConnectionPathfinder;
 import universalelectricity.core.net.Network;
@@ -21,7 +17,7 @@ public class MechNetwork extends Network<IMechNetwork, IMechConnector, IMechMach
     private int force = 0;
     private int speed = 0;
     private int resistance = 0;
-
+    
     private HashMap<IMechMachine, ForceWrapper[]> forceMap = new HashMap<IMechMachine, ForceWrapper[]>();
 
     @Override

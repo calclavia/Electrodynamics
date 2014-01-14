@@ -28,7 +28,6 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public void reconstruct()
     {
-        System.out.println("Rebuilding network");
         if (this.reloadTanks)
         {
             this.reloadTanks();
@@ -81,7 +80,6 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public int fill(IFluidPart source, ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        System.out.println("Filling network tank");
         int prev = this.getTank().getFluidAmount();
         int fill = this.getTank().fill(resource, doFill);
         if (prev != this.getTank().getFluid().amount)
@@ -94,7 +92,6 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public FluidStack drain(IFluidPart source, ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        System.out.println("Draining network tank");
         if (resource != null && resource.isFluidEqual(this.getTank().getFluid()))
         {
             FluidStack before = this.getTank().getFluid();
@@ -149,7 +146,6 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     public void reloadTanks()
     {
         this.reloadTanks = false;
-        System.out.println("Reloading fluids");
         FluidStack stack = this.getTank().getFluid();
 
         if (stack != null)
