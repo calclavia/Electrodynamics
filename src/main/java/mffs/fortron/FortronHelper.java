@@ -1,6 +1,7 @@
 package mffs.fortron;
 
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
@@ -17,8 +18,7 @@ public class FortronHelper
 
 	public static FluidStack getFortron(int amount)
 	{
-		FluidStack stack = FortronHelper.FLUIDSTACK_FORTRON.copy();
-		stack.amount = amount;
+		FluidStack stack = new FluidStack(FLUID_FORTRON, amount);
 		return stack;
 	}
 

@@ -175,6 +175,7 @@ public class MFFSHelper
 				// Take energy from receiver.
 				joules = Math.min(Math.abs(joules), limit);
 				int toBeEjected = transferer.provideFortron(receiver.requestFortron(joules, false), false);
+
 				toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true);
 
 				// Draw Beam Effect
