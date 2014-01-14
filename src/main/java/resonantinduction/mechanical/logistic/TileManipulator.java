@@ -16,7 +16,7 @@ import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.utility.InventoryInteractionHelper;
+import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -29,7 +29,7 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	/** True if is currently powered by redstone */
 	private boolean isRedstonePowered = false;
 	/** The class that interacts with inventories for this machine */
-	private InventoryInteractionHelper invExtractionHelper;
+	private InternalInventoryHandler invExtractionHelper;
 
 	public TileManipulator()
 	{
@@ -225,11 +225,11 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	}
 
 	/** Gets the class that managed extracting and placing items into inventories */
-	public InventoryInteractionHelper invHelper()
+	public InternalInventoryHandler invHelper()
 	{
 		if (invExtractionHelper == null || invExtractionHelper.world != this.worldObj)
 		{
-			this.invExtractionHelper = new InventoryInteractionHelper(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemBlockImprint.getFilters(getFilter()) : null, this.isInverted());
+			this.invExtractionHelper = new InternalInventoryHandler(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemBlockImprint.getFilters(getFilter()) : null, this.isInverted());
 		}
 		return invExtractionHelper;
 	}

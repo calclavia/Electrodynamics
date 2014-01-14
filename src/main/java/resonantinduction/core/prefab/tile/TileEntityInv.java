@@ -17,10 +17,10 @@ import calclavia.lib.access.AccessUser;
 import calclavia.lib.access.GroupRegistry;
 import calclavia.lib.access.ISpecialAccess;
 import calclavia.lib.access.Nodes;
-import calclavia.lib.inventory.IExternalInv;
-import calclavia.lib.inventory.IInvBox;
-import calclavia.lib.inventory.TileInventory;
 import calclavia.lib.prefab.tile.TileAdvanced;
+import calclavia.lib.utility.inventory.IExternalInv;
+import calclavia.lib.utility.inventory.IInvBox;
+import calclavia.lib.utility.inventory.TileInventory;
 
 /**
  * Prefab for simple object who only need basic inv support and nothing more

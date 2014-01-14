@@ -16,7 +16,7 @@ import resonantinduction.api.fluid.IDrain;
 import resonantinduction.core.prefab.tile.TileEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.Pair;
 
@@ -132,9 +132,9 @@ public class TilePump extends TileEnergyMachine implements IReadOut, ITileConnec
 			{
 				FluidStack draStack = ((IFluidHandler) entity).drain(ForgeDirection.UP, MAX_WORLD_EDITS_PER_PROCESS * FluidContainerRegistry.BUCKET_VOLUME, false);
 
-				if (draStack != null && FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), draStack, false, ForgeDirection.DOWN) > 0)
+				if (draStack != null && FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), draStack, false, ForgeDirection.DOWN) > 0)
 				{
-					((IFluidHandler) entity).drain(ForgeDirection.UP, FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), draStack, true, ForgeDirection.DOWN), true);
+					((IFluidHandler) entity).drain(ForgeDirection.UP, FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), draStack, true, ForgeDirection.DOWN), true);
 
 				}
 				return;// TODO check why return is here
@@ -169,7 +169,7 @@ public class TilePump extends TileEnergyMachine implements IReadOut, ITileConnec
 				}
 
 				Vector3 drainLocation = fluidList.next();
-				FluidStack drainStack = FluidHelper.drainBlock(world, drainLocation, false, 3);
+				FluidStack drainStack = FluidUtility.drainBlock(world, drainLocation, false, 3);
 				// System.out.println("StartPump>>DrainArea>>Draining>>NextFluidBlock>" +
 				// (drainStack == null ? "Null" : drainStack.amount + "mb of " +
 				// drainStack.getFluid().getName()));
@@ -184,7 +184,7 @@ public class TilePump extends TileEnergyMachine implements IReadOut, ITileConnec
 					// System.out.println("StartPump>>DrainArea>>Draining>>Fluid>" +
 					// drainLocation.toString());
 					/* REMOVE BLOCK */
-					FluidHelper.drainBlock(this.worldObj, drainLocation, true, update);
+					FluidUtility.drainBlock(this.worldObj, drainLocation, true, update);
 					this.fill(drainStack, true);
 					this.currentWorldEdits++;
 					fluidList.remove();
@@ -200,7 +200,7 @@ public class TilePump extends TileEnergyMachine implements IReadOut, ITileConnec
 
 	public int fill(FluidStack stack, boolean doFill)
 	{
-		return FluidHelper.fillTanksAllSides(worldObj, new Vector3(this), stack, doFill, ForgeDirection.DOWN);
+		return FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), stack, doFill, ForgeDirection.DOWN);
 	}
 
 	@Override

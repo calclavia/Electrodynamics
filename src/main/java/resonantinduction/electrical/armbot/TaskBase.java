@@ -10,7 +10,7 @@ import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.NBTUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 
 /** @author DarkGuardsman */
 public abstract class TaskBase implements ITask

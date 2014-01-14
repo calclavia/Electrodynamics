@@ -32,7 +32,7 @@ import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.InventoryUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 

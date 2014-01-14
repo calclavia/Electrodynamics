@@ -10,7 +10,7 @@ import resonantinduction.api.IReadOut;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
-import calclavia.lib.utility.HelperMethods;
+import calclavia.lib.utility.WorldUtility;
 
 public class TileReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
 {
@@ -67,7 +67,7 @@ public class TileReleaseValve extends TileEntityFluidDevice implements ITileConn
     public void refresh()
     {
         // cleanup
-        this.connected = HelperMethods.getSurroundingTileEntities(this);
+        this.connected = WorldUtility.getSurroundingTileEntities(this);
         // read surroundings
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {

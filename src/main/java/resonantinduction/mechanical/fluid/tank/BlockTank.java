@@ -16,8 +16,8 @@ import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
-import calclavia.lib.utility.HelperMethods;
+import calclavia.lib.utility.FluidUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -60,7 +60,7 @@ public class BlockTank extends BlockFluidNetwork
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
 	{
-		return FluidHelper.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
+		return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class BlockTank extends BlockFluidNetwork
 				}
 				else
 				{
-					HelperMethods.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
+					WorldUtility.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
 				}
 				world.setBlockToAir(x, y, z);
 			}

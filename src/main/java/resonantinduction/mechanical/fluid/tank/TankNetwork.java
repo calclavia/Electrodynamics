@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 /** Network that handles connected tanks
  * 
@@ -59,7 +59,7 @@ public class TankNetwork extends FluidNetwork
                     int partCount = parts.size();
                     for (IFluidPart part : parts)
                     {
-                        fillStack.amount -= part.getInternalTank().fill(FluidHelper.getStack(fillStack, fillStack.amount / partCount), true);
+                        fillStack.amount -= part.getInternalTank().fill(FluidUtility.getStack(fillStack, fillStack.amount / partCount), true);
                         if (partCount > 1)
                             partCount--;
                     }

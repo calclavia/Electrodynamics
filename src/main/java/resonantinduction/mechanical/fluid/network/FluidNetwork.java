@@ -11,7 +11,7 @@ import universalelectricity.api.net.IConnector;
 import universalelectricity.core.net.ConnectionPathfinder;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandler> implements IFluidNetwork
 {
@@ -114,7 +114,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     {
         if (this.getTank().getFluid() != null)
         {
-            return this.drain(source, from, FluidHelper.getStack(this.getTank().getFluid(), resource), doDrain);
+            return this.drain(source, from, FluidUtility.getStack(this.getTank().getFluid(), resource), doDrain);
         }
         return null;
     }
@@ -164,7 +164,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
             if (stack != null)
             {
                 int fillPer = stack.amount / parts;
-                part.getInternalTank().fill(FluidHelper.getStack(stack, fillPer), true);
+                part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
                 part.onFluidChanged();
                 if (parts > 1)
                     parts--;

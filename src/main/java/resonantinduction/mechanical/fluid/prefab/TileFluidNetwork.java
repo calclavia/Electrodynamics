@@ -22,7 +22,7 @@ import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -93,7 +93,7 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
         {
             if (this.updateFluidRender && ticks % TileFluidNetwork.refreshRate == 0)
             {
-                if (!FluidHelper.matchExact(prevStack, this.getTank().getFluid()))
+                if (!FluidUtility.matchExact(prevStack, this.getTank().getFluid()))
                 {
                     this.sendTankUpdate(0);
                 }

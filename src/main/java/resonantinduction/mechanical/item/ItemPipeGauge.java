@@ -15,7 +15,7 @@ import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemBase;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 public class ItemPipeGauge extends ItemBase
 {
@@ -58,7 +58,7 @@ public class ItemPipeGauge extends ItemBase
                 if (tanks != null)
                 {
                     player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
-                    for (FluidStack stack : FluidHelper.getFluidList(tanks))
+                    for (FluidStack stack : FluidUtility.getFluidList(tanks))
                     {
                         player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
                     }

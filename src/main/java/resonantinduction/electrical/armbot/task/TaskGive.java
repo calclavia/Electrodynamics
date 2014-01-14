@@ -15,8 +15,8 @@ import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.InventoryInteractionHelper;
 import calclavia.lib.utility.MathUtility;
+import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
@@ -71,7 +71,7 @@ public class TaskGive extends TaskBaseArmbot
 				{
 					stacks.add(stack);
 				}
-				InventoryInteractionHelper invEx = new InventoryInteractionHelper(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
+				InternalInventoryHandler invEx = new InternalInventoryHandler(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
 				ItemStack insertStack = invEx.tryPlaceInPosition(itemStack, new Vector3(targetTile), direction.getOpposite());
 				if (((IArmbot) this.program.getMachine()).clear(itemStack))
 				{

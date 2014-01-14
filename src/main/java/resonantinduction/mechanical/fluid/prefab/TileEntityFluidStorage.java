@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 import dark.lib.helpers.ColorCode.IColorCoded;
 
 public abstract class TileEntityFluidStorage extends TileEntityFluidDevice implements IFluidHandler, IColorCoded
@@ -46,7 +46,7 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 		FluidStack stack = this.getTank().getFluid();
 		if (maxDrain < stack.amount)
 		{
-			stack = FluidHelper.getStack(stack, maxDrain);
+			stack = FluidUtility.getStack(stack, maxDrain);
 		}
 		return this.getTank().drain(maxDrain, doDrain);
 	}

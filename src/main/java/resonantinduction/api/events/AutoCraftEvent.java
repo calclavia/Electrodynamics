@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
+import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
 
 /**
  * Events called when an automated crafter is working on crafting an item

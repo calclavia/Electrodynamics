@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.Pair;
 
@@ -118,11 +118,11 @@ public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, I
 			while (it.hasNext())
 			{
 				Vector3 vec = it.next();
-				if (FluidHelper.isFillableFluid(worldObj, vec) && !fluids.contains(vec) && !blocks.contains(vec))
+				if (FluidUtility.isFillableFluid(worldObj, vec) && !fluids.contains(vec) && !blocks.contains(vec))
 				{
 					fluids.add(vec);
 				}
-				else if (FluidHelper.isFillableBlock(worldObj, vec) && !blocks.contains(vec) && !fluids.contains(vec))
+				else if (FluidUtility.isFillableBlock(worldObj, vec) && !blocks.contains(vec) && !fluids.contains(vec))
 				{
 					blocks.add(vec);
 				}
@@ -138,10 +138,10 @@ public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, I
 				{
 					break;
 				}
-				if (FluidHelper.isFillableFluid(worldObj, loc))
+				if (FluidUtility.isFillableFluid(worldObj, loc))
 				{
 
-					fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
+					fillVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, fillVolume), doFill);
 					// System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") +
 					// ">>Fluid>" + loc.toString());
 
@@ -165,9 +165,9 @@ public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, I
 				{
 					break;
 				}
-				if (FluidHelper.isFillableBlock(worldObj, loc))
+				if (FluidUtility.isFillableBlock(worldObj, loc))
 				{
-					fillVolume -= FluidHelper.fillBlock(worldObj, loc, FluidHelper.getStack(resource, fillVolume), doFill);
+					fillVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, fillVolume), doFill);
 					System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Block>" + loc.toString());
 
 					if (doFill)

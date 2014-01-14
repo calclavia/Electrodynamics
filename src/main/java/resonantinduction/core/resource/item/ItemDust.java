@@ -12,7 +12,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemBase;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.NBTUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

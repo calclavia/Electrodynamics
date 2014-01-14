@@ -13,7 +13,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 /**
  * A simpler path Finder used to find drainable or fillable tiles
@@ -147,12 +147,12 @@ public class LiquidPathFinder
 		double distance = vec.toVector2().distance(this.Start.toVector2());
 		if (distance <= this.range && this.isValidNode(vec))
 		{
-			if (this.fill && FluidHelper.drainBlock(world, vec, false) != null || FluidHelper.isFillableFluid(world, vec))
+			if (this.fill && FluidUtility.drainBlock(world, vec, false) != null || FluidUtility.isFillableFluid(world, vec))
 			{
 				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
 					Vector3 veb = vec.clone().modifyPositionFromSide(dir);
-					if (FluidHelper.isFillableBlock(world, veb))
+					if (FluidUtility.isFillableBlock(world, veb))
 					{
 						this.addNode(veb);
 						if (this.isValidResult(veb))
@@ -183,18 +183,18 @@ public class LiquidPathFinder
 		{
 			return false;
 		}
-		return FluidHelper.drainBlock(world, pos, false) != null || FluidHelper.isFillableFluid(world, pos);
+		return FluidUtility.drainBlock(world, pos, false) != null || FluidUtility.isFillableFluid(world, pos);
 	}
 
 	public boolean isValidResult(Vector3 node)
 	{
 		if (this.fill)
 		{
-			return FluidHelper.isFillableBlock(world, node) || FluidHelper.isFillableFluid(world, node);
+			return FluidUtility.isFillableBlock(world, node) || FluidUtility.isFillableFluid(world, node);
 		}
 		else
 		{
-			return FluidHelper.drainBlock(world, node, false) != null;
+			return FluidUtility.drainBlock(world, node, false) != null;
 		}
 	}
 

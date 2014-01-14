@@ -14,8 +14,8 @@ import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.InventoryInteractionHelper;
 import calclavia.lib.utility.MathUtility;
+import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.builtbroken.common.science.units.UnitHelper;
 
@@ -68,7 +68,7 @@ public class TaskTake extends TaskBaseArmbot
 				{
 					stacks.add(stack);
 				}
-				InventoryInteractionHelper invEx = new InventoryInteractionHelper(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
+				InternalInventoryHandler invEx = new InternalInventoryHandler(this.program.getMachine().getLocation().left(), this.program.getMachine().getLocation().right(), stacks, false);
 				((IArmbot) this.program.getMachine()).grabObject(invEx.tryGrabFromPosition(new Vector3(targetTile), direction, this.stack != null ? stack.stackSize : 1));
 				return ((IArmbot) this.program.getMachine()).getHeldObject() != null ? ProcessReturn.DONE : ProcessReturn.CONTINUE;
 

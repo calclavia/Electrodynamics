@@ -26,7 +26,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.utility.HelperMethods;
+import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.MathUtility;
 
@@ -401,7 +401,7 @@ public class TileArmbot extends TileAssembly implements IMultiBlock, IArmbot, IB
 			if (this.getHeldObject() instanceof ItemStack)
 			{
 				Vector3 handPosition = this.getHandPos();
-				HelperMethods.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject(), false);
+				WorldUtility.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject(), false);
 			}
 			this.grabbedObject = null;
 			this.sendGrabItemToClient();

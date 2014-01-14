@@ -13,9 +13,9 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.IExtraInfo.IExtraTileEntityInfo;
-import calclavia.lib.inventory.IExternalInv;
-import calclavia.lib.inventory.IInvBox;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.utility.inventory.IExternalInv;
+import calclavia.lib.utility.inventory.IInvBox;
 
 import com.google.common.io.ByteArrayDataInput;
 

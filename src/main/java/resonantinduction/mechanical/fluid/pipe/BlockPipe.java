@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidTank;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.lib.helpers.ColorCode;
@@ -131,7 +131,7 @@ public class BlockPipe extends BlockFluidNetwork
 			FluidTank tank = ((TilePipe) entity).getTank();
 			if (tank != null && tank.getFluid() != null)
 			{
-				FluidHelper.fillBlock(world, new Vector3(x, y, z), tank.getFluid(), true);
+				FluidUtility.fillBlock(world, new Vector3(x, y, z), tank.getFluid(), true);
 			}
 		}
 		super.breakBlock(world, x, y, z, par5, par6);

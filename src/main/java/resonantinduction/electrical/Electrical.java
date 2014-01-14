@@ -24,6 +24,8 @@ import resonantinduction.electrical.encoder.BlockEncoder;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.furnace.BlockAdvancedFurnace;
 import resonantinduction.electrical.furnace.TileAdvancedFurnace;
+import resonantinduction.electrical.generator.BlockGenerator;
+import resonantinduction.electrical.generator.TileGenerator;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.BlockLevitator;
@@ -90,6 +92,7 @@ public class Electrical
 
 	// Generators
 	public static Block blockSolarPanel;
+	public static Block blockGenerator;
 
 	// Machines
 	public static Block blockAdvancedFurnace, blockMachinePart, blockGrinderWheel, blockPurifier;
@@ -125,6 +128,7 @@ public class Electrical
 
 		// Generator
 		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
+		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 
 		if (Settings.REPLACE_FURNACE)
 		{

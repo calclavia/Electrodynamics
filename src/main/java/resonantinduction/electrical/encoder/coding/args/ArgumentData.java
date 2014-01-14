@@ -1,8 +1,8 @@
 package resonantinduction.electrical.encoder.coding.args;
 
 import net.minecraft.nbt.NBTTagCompound;
-import calclavia.lib.utility.ISaveObj;
-import calclavia.lib.utility.NBTUtility;
+import calclavia.lib.utility.nbt.ISaveObj;
+import calclavia.lib.utility.nbt.NBTUtility;
 
 /**
  * Used to store arguments in a way that can be easier to read, limit, and understand

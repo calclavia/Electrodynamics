@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.mechanical.fluid.network.FluidRecipeInfo.SimpleFluidRecipe;
 import resonantinduction.mechanical.fluid.network.IFluidRecipeCrafter;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.Pair;
 import com.builtbroken.common.Triple;
@@ -92,7 +92,7 @@ public class FluidCraftingHandler
 			if (received instanceof FluidStack)
 			{
 				receivedVolume = ((FluidStack) received).amount;
-				received = FluidHelper.getStack((FluidStack) received, 1);
+				received = FluidUtility.getStack((FluidStack) received, 1);
 			}
 			if (received instanceof ItemStack)
 			{
@@ -102,7 +102,7 @@ public class FluidCraftingHandler
 			if (input instanceof FluidStack)
 			{
 				inputVolume = ((FluidStack) input).amount;
-				input = FluidHelper.getStack((FluidStack) input, 1);
+				input = FluidUtility.getStack((FluidStack) input, 1);
 			}
 			if (input instanceof ItemStack)
 			{
@@ -186,7 +186,7 @@ public class FluidCraftingHandler
 					Triple<Integer, Integer, Pair<Object, Integer>> re = ((SimpleFluidRecipe) result).mix(stackOne, stackTwo);
 					if (re.getC().left() instanceof FluidStack)
 					{
-						resultStack = FluidHelper.getStack((FluidStack) re.getC().left(), re.getC().right());
+						resultStack = FluidUtility.getStack((FluidStack) re.getC().left(), re.getC().right());
 					}
 					else if (re.getC().left() instanceof FluidStack)
 					{
@@ -286,8 +286,8 @@ public class FluidCraftingHandler
 		FluidStack sampleStackOne, sampleStackTwo;
 		if (stackOne != null && stackTwo != null && !stackOne.equals(stackTwo))
 		{
-			sampleStackOne = FluidHelper.getStack(stackOne, 1);
-			sampleStackTwo = FluidHelper.getStack(stackTwo, 1);
+			sampleStackOne = FluidUtility.getStack(stackOne, 1);
+			sampleStackTwo = FluidUtility.getStack(stackTwo, 1);
 			if (fluidMergeResults.containsKey(new Pair<Object, Object>(sampleStackOne, sampleStackTwo)))
 			{
 				return fluidMergeResults.get(new Pair<Object, Object>(sampleStackOne, sampleStackTwo));

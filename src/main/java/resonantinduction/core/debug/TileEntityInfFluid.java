@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
-import calclavia.lib.utility.FluidHelper;
+import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
 
@@ -29,7 +29,7 @@ public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBl
 	{
 		if (!this.worldObj.isRemote && autoEmpty && this.tank != null && this.tank.getFluid() != null)
 		{
-			FluidHelper.fillTanksAllSides(this.worldObj, new Vector3(this), FluidHelper.getStack(this.tank.getFluid(), 600), true);
+			FluidUtility.fillTanksAllSides(this.worldObj, new Vector3(this), FluidUtility.getStack(this.tank.getFluid(), 600), true);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBl
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return this.tank != null && this.tank.getFluid() != null ? this.drain(from, FluidHelper.getStack(this.tank.getFluid(), maxDrain), doDrain) : null;
+		return this.tank != null && this.tank.getFluid() != null ? this.drain(from, FluidUtility.getStack(this.tank.getFluid(), maxDrain), doDrain) : null;
 	}
 
 	@Override

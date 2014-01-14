@@ -26,8 +26,8 @@ import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.TileAdvanced;
-import calclavia.lib.utility.AutoCraftingManager;
-import calclavia.lib.utility.AutoCraftingManager.IAutoCrafter;
+import calclavia.lib.utility.inventory.AutoCraftingManager;
+import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
 
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
