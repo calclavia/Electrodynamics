@@ -38,9 +38,9 @@ public class BlockCrate extends BlockRI
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate");
-		this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_adv");
-		this.elite = iconReg.registerIcon(Reference.PREFIX + "crate_elt");
+		this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate_wood");
+		this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_iron");
+		this.elite = iconReg.registerIcon(Reference.PREFIX + "crate_steel");
 	}
 
 	@Override

@@ -30,14 +30,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockEngineeringTable extends BlockRI
 {
 	@SideOnly(Side.CLIENT)
-	private Icon workbenchIconTop;
+	private Icon iconTop;
 	@SideOnly(Side.CLIENT)
-	private Icon workbenchIconFront;
+	private Icon iconFront;
 
 	public BlockEngineeringTable()
 	{
 		super("engineeringTable");
-		setTextureName("crafting_table");
 	}
 
 	@Override
@@ -240,7 +239,7 @@ public class BlockEngineeringTable extends BlockRI
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int par1, int par2)
 	{
-		return par1 == 1 ? this.workbenchIconTop : (par1 == 0 ? Block.planks.getBlockTextureFromSide(par1) : (par1 != 2 && par1 != 4 ? this.blockIcon : this.workbenchIconFront));
+		return par1 == 1 ? this.iconTop : (par1 == 0 ? this.blockIcon : (par1 != 2 && par1 != 4 ? this.blockIcon : this.iconFront));
 	}
 
 	@Override
@@ -248,8 +247,8 @@ public class BlockEngineeringTable extends BlockRI
 	public void registerIcons(IconRegister par1IconRegister)
 	{
 		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName() + "_side");
-		this.workbenchIconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
-		this.workbenchIconFront = par1IconRegister.registerIcon(this.getTextureName() + "_front");
+		this.iconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
+		this.iconFront = par1IconRegister.registerIcon(this.getTextureName() + "_front");
 	}
 
 	@Override
