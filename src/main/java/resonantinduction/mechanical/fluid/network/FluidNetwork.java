@@ -17,7 +17,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
 {
     protected FluidTank tank = new FluidTank(0);
     protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
-    protected boolean loadPart = false;
+    protected boolean reloadTanks = false;
     protected long ticks = 0;
 
     public FluidNetwork()
@@ -37,11 +37,18 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public void reconstruct()
     {
+        if (this.reloadTanks)
+        {
+            this.reloadTanks();
+        }
         this.tank = new FluidTank(0);
         for (IFluidPart part : this.getConnectors())
         {
             this.buildPart(part);
         }
+        this.rebuildTank();
+        this.reloadTanks();
+
     }
 
     public void buildPart(IFluidPart part)
@@ -75,6 +82,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
         {
             this.tankInfo[0] = null;
         }
+        this.reloadTanks = true;
     }
 
     @Override
@@ -82,9 +90,9 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     {
         int prev = this.getTank().getFluidAmount();
         int fill = this.getTank().fill(resource, doFill);
-        if (prev != fill)
+        if (prev != this.getTank().getFluid().amount)
         {
-            this.loadPart = true;
+            this.rebuildTank();
         }
         return fill;
     }
@@ -95,13 +103,13 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
         if (resource != null && resource.isFluidEqual(this.getTank().getFluid()))
         {
             FluidStack before = this.getTank().getFluid();
-            FluidStack after = this.getTank().drain(resource.amount, doDrain);
-            if (before != after || after == null || after.amount != before.amount)
+            FluidStack drain = this.getTank().drain(resource.amount, doDrain);
+            if (before != this.getTank().getFluid() || this.getTank().getFluid() == null || this.getTank().getFluid().amount != before.amount)
             {
-                this.loadPart = true;
+                this.rebuildTank();
             }
 
-            return after;
+            return drain;
         }
         return null;
     }
@@ -119,14 +127,13 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     @Override
     public boolean canUpdate()
     {
-
-        return false;
+        return this.reloadTanks;
     }
 
     @Override
     public boolean continueUpdate()
     {
-        return false;
+        return this.reloadTanks;
     }
 
     @Override
@@ -137,25 +144,30 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
         {
             ticks = 1;
         }
-        if (this.loadPart && ticks % 10 == 0)
+        if (this.reloadTanks && ticks % 10 == 0)
         {
-            this.loadPart = false;
-            FluidStack stack = this.getTank().getFluid();
+            this.reloadTanks = false;
+            this.reloadTanks();
+        }
+    }
 
-            if (stack != null)
+    public void reloadTanks()
+    {
+        FluidStack stack = this.getTank().getFluid().copy();
+
+        if (stack != null)
+        {
+            int parts = this.getConnectors().size();
+            for (IFluidPart part : this.getConnectors())
             {
-                int parts = this.getConnectors().size();
-                for (IFluidPart part : this.getConnectors())
-                {
-                    int fillPer = stack.amount / parts;
-                    part.getInternalTank().setFluid(null);
-                    part.getInternalTank().fill(FluidHelper.getStack(stack, fillPer), true);
-                    if (parts > 1)
-                        parts--;
-                }
+                int fillPer = stack.amount / parts;
+                part.getInternalTank().setFluid(null);
+                part.getInternalTank().fill(FluidHelper.getStack(stack, fillPer), true);
+                part.onFluidChanged();
+                if (parts > 1)
+                    parts--;
             }
         }
-
     }
 
     @Override

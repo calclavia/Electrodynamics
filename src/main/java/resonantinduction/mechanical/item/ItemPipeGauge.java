@@ -1,8 +1,5 @@
 package resonantinduction.mechanical.item;
 
-import java.util.List;
-
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,11 +14,8 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
 import calclavia.lib.utility.FluidHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemPipeGauge extends ItemBase
 {
@@ -43,40 +37,32 @@ public class ItemPipeGauge extends ItemBase
         if (!world.isRemote)
         {
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-            EnumTools tool = EnumTools.get(itemStack.getItemDamage());
-
-            if (tool != null)
+            ForgeDirection hitSide = ForgeDirection.getOrientation(side);
+            if (tileEntity instanceof IReadOut)
             {
-                ForgeDirection hitSide = ForgeDirection.getOrientation(side);
-                if (tileEntity instanceof IReadOut)
+                String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, EnumTools.PIPE_GUAGE);
+                if (output != null && !output.isEmpty())
                 {
-                    String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, tool);
-                    if (output != null && !output.isEmpty())
+                    if (output.length() > 100)
                     {
-                        if (output.length() > 100)
-                        {
-                            output = output.substring(0, 100);
-                        }
-                        output.trim();
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("ReadOut> " + output));
-                        return true;
+                        output = output.substring(0, 100);
                     }
+                    output.trim();
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("ReadOut> " + output));
+                    return true;
                 }
-                if (tool == EnumTools.PIPE_GUAGE)
+            }
+            if (tileEntity instanceof IFluidHandler)
+            {
+                FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
+                if (tanks != null)
                 {
-                    if (tileEntity instanceof IFluidHandler)
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
+                    for (FluidStack stack : FluidHelper.getFluidList(tanks))
                     {
-                        FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
-                        if (tanks != null)
-                        {
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
-                            for (FluidStack stack : FluidHelper.getFluidList(tanks))
-                            {
-                                player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
-                            }
-                            return true;
-                        }
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
                     }
+                    return true;
                 }
             }
 

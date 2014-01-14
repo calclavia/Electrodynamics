@@ -1,10 +1,8 @@
 package resonantinduction.mechanical.fluid.prefab;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -17,20 +15,6 @@ public abstract class TileEntityFluidStorage extends TileEntityFluidDevice imple
 {
 
 	public FluidTank fluidTank;
-
-	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-	{
-		if (tool != EnumTools.PIPE_GUAGE)
-		{
-			return null;
-		}
-		if (this.getTank().getFluid() == null)
-		{
-			return "Empty";
-		}
-		return String.format("%d/%d %S Stored", getTank().getFluid().amount / FluidContainerRegistry.BUCKET_VOLUME, this.getTank().getCapacity() / FluidContainerRegistry.BUCKET_VOLUME, getTank().getFluid().getFluid().getLocalizedName());
-	}
 
 	@Override
 	public boolean canTileConnect(Connection type, ForgeDirection dir)

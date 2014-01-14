@@ -274,15 +274,4 @@ public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, I
 	{
 		this.currentWorldEdits++;
 	}
-
-	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-	{
-		if (tool != null && tool == EnumTools.PIPE_GUAGE)
-		{
-			return " F:" + this.getFillList().size() + "  D:" + this.getFluidList().size();
-		}
-		return super.getMeterReading(user, side, tool);
-	}
-
 }

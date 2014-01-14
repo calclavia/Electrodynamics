@@ -1,8 +1,6 @@
 package resonantinduction.mechanical.fluid.prefab;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +22,7 @@ import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.utility.FluidHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -49,6 +48,8 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
 
     /** Bitmask **/
     public byte renderSides = 0b0;
+
+    public boolean updateFluidRender = false;
 
     public TileFluidNetwork()
     {
@@ -90,20 +91,23 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
 
         if (!worldObj.isRemote)
         {
-            if (ticks % TileFluidNetwork.refreshRate == 0)
+            if (this.updateFluidRender && ticks % TileFluidNetwork.refreshRate == 0)
             {
-                if (this.getTank().getFluid() == null && this.prevStack == null)
-                {
-                    // Do nothing
-                }
-                else if ((this.getTank().getFluid() == null && this.prevStack != null) || (this.getTank().getFluid() != null && this.prevStack == null) || (this.getTank().getFluid().amount != this.prevStack.amount))
+                if (!FluidHelper.matchExact(prevStack, this.getTank().getFluid()))
                 {
                     this.sendTankUpdate(0);
                 }
 
                 this.prevStack = this.tank.getFluid();
+                this.updateFluidRender = false;
             }
         }
+    }
+
+    @Override
+    public void onFluidChanged()
+    {
+        this.updateFluidRender = true;
     }
 
     @Override
@@ -343,16 +347,6 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
         {
             PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_TANK, this.getTank().getCapacity(), this.getTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
-    }
-
-    @Override
-    public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-    {
-        if (tool == EnumTools.PIPE_GUAGE)
-        {
-            return "Volume: " + this.getNetwork().getTank().getFluidAmount();
-        }
-        return null;
     }
 
     @Override

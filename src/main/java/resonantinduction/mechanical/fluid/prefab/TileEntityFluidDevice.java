@@ -9,7 +9,7 @@ import resonantinduction.core.tilenetwork.ITileConnector;
 import resonantinduction.core.tilenetwork.prefab.NetworkTileEntities;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public abstract class TileEntityFluidDevice extends TileAdvanced implements IReadOut, ITileConnector
+public abstract class TileEntityFluidDevice extends TileAdvanced implements ITileConnector
 {
 	public Random random = new Random();
 
@@ -18,15 +18,5 @@ public abstract class TileEntityFluidDevice extends TileAdvanced implements IRea
 	{
 		super.invalidate();
 		NetworkTileEntities.invalidate(this);
-	}
-
-	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
-	{
-		if (tool != null && tool == EnumTools.PIPE_GUAGE)
-		{
-			return " IndirectlyPower:" + this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
-		}
-		return null;
 	}
 }

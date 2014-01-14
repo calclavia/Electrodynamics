@@ -12,4 +12,6 @@ public interface IFluidPart extends IConnector<IFluidNetwork>, IFluidHandler
 {
     /** FluidTank that the network will have access to fill or drain */
     public FluidTank getInternalTank();
+    
+    public void onFluidChanged();
 }
