@@ -69,7 +69,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
 
                     for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
                     {
-                        if (tile.canRenderSide(direction))
+                        if (tile.canRenderSide(direction) && direction != ForgeDirection.UP && direction != ForgeDirection.DOWN)
                         {
                             GL11.glPushMatrix();
                             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -79,7 +79,7 @@ public class RenderPipe extends TileEntitySpecialRenderer
                             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
                             switch (direction.ordinal())
-                            {
+                            {                                    
                                 case 4:
                                     GL11.glTranslatef((float) d + 0F, (float) d1 + 0.1F, (float) d2 + 0.3F);
                                     break;
