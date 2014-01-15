@@ -1,9 +1,9 @@
 package resonantinduction.mechanical.fluid.prefab;
 
-import calclavia.lib.render.ColorCode;
-import calclavia.lib.render.ColorCode.IColoredId;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeType;
 import resonantinduction.mechanical.fluid.pipe.IPipeType;
+import calclavia.lib.render.ColorCode;
+import calclavia.lib.render.ColorCode.IColoredId;
 
 public enum EnumTankTypes implements IColoredId
 {

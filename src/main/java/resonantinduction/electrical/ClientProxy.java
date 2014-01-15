@@ -14,7 +14,6 @@ import resonantinduction.electrical.levitator.RenderLevitator;
 import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
-import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import resonantinduction.electrical.render.FXElectricBolt;
 import resonantinduction.electrical.render.RenderRIItem;
 import resonantinduction.electrical.tesla.RenderTesla;
@@ -24,7 +23,6 @@ import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -38,7 +36,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		RenderingRegistry.registerBlockHandler(ElectricalBlockRenderingHandler.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
 		MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());

@@ -2,10 +2,7 @@ package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.List;
 
-import calclavia.lib.utility.LanguageUtility;
-import codechicken.lib.vec.Translation;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.Language;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -24,6 +21,7 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.LanguageUtility;
 
 public class ItemBlockFluidContainer extends ItemBlock
 {

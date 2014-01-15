@@ -2,7 +2,6 @@ package resonantinduction.archaic.engineering;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

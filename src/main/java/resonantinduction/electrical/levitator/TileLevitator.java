@@ -464,7 +464,7 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 
 	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
+		return ForgeDirection.getOrientation(getBlockType() != null ? getBlockMetadata() : 0);
 	}
 
 	public void setDirection(ForgeDirection side)

@@ -11,7 +11,6 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import resonantinduction.electrical.encoder.coding.args.ArgumentIntData;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;

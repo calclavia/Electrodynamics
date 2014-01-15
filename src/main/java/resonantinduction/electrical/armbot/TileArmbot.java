@@ -26,9 +26,9 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.MathUtility;
+import calclavia.lib.utility.WorldUtility;
 
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;

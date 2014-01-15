@@ -3,7 +3,6 @@ package resonantinduction.archaic.engineering;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.core.render.RenderItemOverlayTile;
-import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

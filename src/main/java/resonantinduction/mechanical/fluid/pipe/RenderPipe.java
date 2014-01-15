@@ -2,8 +2,6 @@ package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.HashMap;
 
-import javax.rmi.CORBA.Tie;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;

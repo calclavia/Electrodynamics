@@ -1,7 +1,6 @@
 package resonantinduction.electrical.generator;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.TileElectrical;

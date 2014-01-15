@@ -2,7 +2,9 @@ package resonantinduction.core;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.MinecraftForge;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,6 +19,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
+		RenderingRegistry.registerBlockHandler(RIBlockRenderingHandler.INSTANCE);
 	}
 
 	@Override

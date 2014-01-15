@@ -15,8 +15,6 @@ import resonantinduction.mechanical.logistic.RenderManipulator;
 import resonantinduction.mechanical.logistic.RenderRejector;
 import resonantinduction.old.client.model.ModelCrusher;
 import resonantinduction.old.client.model.ModelGrinder;
-import resonantinduction.old.client.model.ModelManipulator;
-import resonantinduction.old.client.model.ModelRejectorPiston;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;

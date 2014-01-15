@@ -12,7 +12,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;

@@ -3,9 +3,7 @@ package resonantinduction.mechanical.fluid.tank;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
@@ -14,7 +12,6 @@ import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.old.client.model.ModelTankSide;
-import calclavia.lib.render.ColorCode;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

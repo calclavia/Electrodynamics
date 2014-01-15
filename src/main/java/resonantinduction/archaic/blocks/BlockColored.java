@@ -2,7 +2,6 @@ package resonantinduction.archaic.blocks;
 
 import java.util.List;
 
-import calclavia.lib.render.ColorCode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import resonantinduction.core.Reference;
+import calclavia.lib.render.ColorCode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

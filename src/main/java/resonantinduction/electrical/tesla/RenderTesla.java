@@ -34,7 +34,9 @@ public class RenderTesla extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 
-		switch (t.getBlockMetadata())
+		int facing = t.getBlockType() != null ? t.getBlockMetadata() : 0;
+
+		switch (facing)
 		{
 			default:
 				this.bindTexture(TEXTURE_BOTTOM);

@@ -7,7 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.pipe.ModelPipe;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

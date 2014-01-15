@@ -10,7 +10,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.network.ISimplePacketReceiver;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.IExtraInfo.IExtraTileEntityInfo;
 import calclavia.lib.network.PacketHandler;

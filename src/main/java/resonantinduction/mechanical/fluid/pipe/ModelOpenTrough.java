@@ -6,10 +6,10 @@
 
 package resonantinduction.mechanical.fluid.pipe;
 
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
 public class ModelOpenTrough extends ModelBase
 {

@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
-import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.core.prefab.tile.TileEnergyMachine;
 import resonantinduction.core.tilenetwork.ITileConnector;

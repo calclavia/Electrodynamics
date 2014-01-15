@@ -23,7 +23,6 @@ import calclavia.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
 public class TileEncoder extends TileMachine implements ISidedInventory, IPacketReceiver
 {

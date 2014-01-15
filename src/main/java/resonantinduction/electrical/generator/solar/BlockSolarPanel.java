@@ -3,7 +3,7 @@ package resonantinduction.electrical.generator.solar;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,6 +37,6 @@ public class BlockSolarPanel extends BlockRI
 	@Override
 	public int getRenderType()
 	{
-		return ElectricalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +24,7 @@ public class BlockLevitator extends BlockRI
 	@Override
 	public int getRenderType()
 	{
-		return ElectricalBlockRenderingHandler.INSTANCE.getRenderId();
+		return RIBlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override

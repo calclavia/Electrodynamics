@@ -1,9 +1,9 @@
 package resonantinduction.archaic.blocks;
 
-import calclavia.lib.render.ColorCode;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import calclavia.lib.render.ColorCode;
 
 public class ItemBlockColored extends ItemBlock
 {

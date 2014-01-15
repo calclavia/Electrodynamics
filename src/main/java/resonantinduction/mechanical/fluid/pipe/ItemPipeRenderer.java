@@ -1,12 +1,10 @@
 package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.valve.ModelReleaseValve;
 import resonantinduction.mechanical.fluid.valve.RenderReleaseValve;

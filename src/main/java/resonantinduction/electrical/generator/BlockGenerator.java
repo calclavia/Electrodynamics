@@ -3,7 +3,7 @@ package resonantinduction.electrical.generator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
-import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,6 +36,6 @@ public class BlockGenerator extends BlockRIRotatable
 	@Override
 	public int getRenderType()
 	{
-		return ElectricalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 }
