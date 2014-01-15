@@ -111,11 +111,11 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
     }
 
     @Override
-    public void sendTankUpdate(int index)
+    public void sendTankUpdate()
     {
         if (this.getBlockMetadata() == FluidContainerMaterial.WOOD.ordinal() || this.getBlockMetadata() == FluidContainerMaterial.STONE.ordinal())
         {
-            super.sendTankUpdate(index);
+            super.sendTankUpdate();
         }
     }
 
