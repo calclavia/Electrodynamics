@@ -28,8 +28,8 @@ public class ItemDust extends ItemBase
 
 	public ItemDust(int id)
 	{
-		super("dust", id);
-		this.setTextureName(Reference.PREFIX + "dust");
+		super("oreDust", id);
+		this.setTextureName(Reference.PREFIX + "oreDust");
 	}
 
 	@Override

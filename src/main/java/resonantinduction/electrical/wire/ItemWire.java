@@ -34,11 +34,8 @@ import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-//TODO: AUTO COLOR WIRES!
 public class ItemWire extends JItemMultiPart
 {
-	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
-
 	public ItemWire()
 	{
 		this(Settings.getNextItemID());
@@ -127,11 +124,6 @@ public class ItemWire extends JItemMultiPart
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister register)
 	{
-		for (EnumWireMaterial material : EnumWireMaterial.values())
-		{
-			icons[material.ordinal()] = register.registerIcon(Reference.PREFIX + "wire." + EnumWireMaterial.values()[material.ordinal()].getName().toLowerCase());
-		}
-
 		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
 		RenderPartWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
 		RenderPartWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation" + (Settings.LO_FI_INSULATION ? "tiny" : ""));
@@ -139,9 +131,9 @@ public class ItemWire extends JItemMultiPart
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIconFromDamage(int meta)
+	public int getColorFromItemStack(ItemStack itemStack, int par2)
 	{
-		return icons[meta];
+		return EnumWireMaterial.values()[itemStack.getItemDamage()].color.rgb();
 	}
 
 	@Override

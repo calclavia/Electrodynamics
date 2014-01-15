@@ -58,6 +58,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!TileTank.canRenderSide(renderSides, dir))
 				{
 					GL11.glPushMatrix();
+					GL11.glScalef(0.99f, 0.99f, 0.99f);
 
 					switch (i)
 					{
@@ -190,19 +191,5 @@ public class RenderTank extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 			}
 		}
-	}
-
-	public ResourceLocation getTexture(int block, int meta)
-	{
-		String texture = "";
-		if (ColorCode.get(meta) == ColorCode.RED)
-		{
-			texture = "textures/blocks/obsidian.png";
-		}
-		else
-		{
-			texture = "textures/blocks/iron_block.png";
-		}
-		return new ResourceLocation(texture);
 	}
 }

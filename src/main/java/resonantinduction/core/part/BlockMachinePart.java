@@ -14,6 +14,6 @@ public class BlockMachinePart extends BlockBase
 	public BlockMachinePart()
 	{
 		super("machinePart");
-		setTextureName(Reference.PREFIX + "blockSteel");
+		setTextureName(Reference.PREFIX + "material_stone_brick");
 	}
 }
