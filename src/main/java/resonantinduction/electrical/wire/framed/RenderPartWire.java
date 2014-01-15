@@ -35,7 +35,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderPartWire
 {
-	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "white.png");
+	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "white.png");
 	public static final Map<String, CCModel> models;
 	public static final Map<String, CCModel> shinyModels;
 	public static Icon wireIcon;

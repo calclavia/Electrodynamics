@@ -20,9 +20,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderTesla extends TileEntitySpecialRenderer
 {
-	public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "tesla_bottom.png");
-	public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "tesla_middle.png");
-	public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "tesla_top.png");
+	public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_bottom.png");
+	public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_middle.png");
+	public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_top.png");
 	public static final ModelTeslaBottom MODEL_BOTTOM = new ModelTeslaBottom();
 	public static final ModelTeslaMiddle MODEL_MIDDLE = new ModelTeslaMiddle();
 	public static final ModelTeslaTop MODEL_TOP = new ModelTeslaTop();

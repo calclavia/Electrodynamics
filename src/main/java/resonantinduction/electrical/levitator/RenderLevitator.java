@@ -18,8 +18,8 @@ public class RenderLevitator extends TileEntitySpecialRenderer implements ICusto
 {
 	public static final ModelEMContractor MODEL = new ModelEMContractor(false);
 	public static final ModelEMContractor MODEL_SPIN = new ModelEMContractor(true);
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "em_contractor.png");
-	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "em_contractor_push.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "em_contractor.png");
+	public static final ResourceLocation TEXTURE_PUSH = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "em_contractor_push.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

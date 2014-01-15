@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderMultimeter
 {
 	public static final ModelMultimeter MODEL = new ModelMultimeter();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "multimeter.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "multimeter.png");
 
 	@SuppressWarnings("incomplete-switch")
 	public static void render(PartMultimeter tileEntity, double x, double y, double z)

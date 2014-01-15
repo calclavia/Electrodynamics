@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderTransformer
 {
 	public static final ModelTransformer MODEL = new ModelTransformer();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_TEXTURE_DIRECTORY + "transformer.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "transformer.png");
 
 	public static void render(PartTransformer part, double x, double y, double z)
 	{
