@@ -160,7 +160,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
             part.getInternalTank().setFluid(null);
             if (stack != null)
             {
-                int fillPer = stack.amount / parts;
+                int fillPer = (stack.amount / parts) + (stack.amount % parts);
                 stack.amount -= part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
                 part.onFluidChanged();
                 if (parts > 1)
