@@ -12,7 +12,6 @@ import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.utility.FluidUtility;
 
 /** @author DarkGuardsman */
@@ -20,14 +19,12 @@ public class PipeNetwork extends FluidNetwork
 {
     public HashMap<IFluidHandler, EnumSet<ForgeDirection>> connectionMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
 
-    public PipeNetwork()
-    {
-        NetworkTickHandler.addNetwork(this);
-    }
-
     @Override
     public void update()
     {
+        System.out.println("PipeNetwork:" + this.toString());
+        System.out.println("FluidVol: " + this.getTank().getFluidAmount());
+
         super.update();
         //Slight delay to allow visual effect to take place before draining the pipe's internal tank
         if (this.ticks % 2 == 0 && this.getTank().getFluidAmount() > 0)
@@ -36,23 +33,20 @@ public class PipeNetwork extends FluidNetwork
             int count = this.connectionMap.size();
             for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
             {
-                int volPer = stack.amount / count;
                 int sideCount = entry.getValue().size();
                 for (ForgeDirection dir : entry.getValue())
                 {
-                    int volPerSide = volPer / sideCount;
+                    int volPer = (stack.amount / count) + (stack.amount % count);
+                    int volPerSide = (volPer / sideCount) + (volPer % count);
                     int maxFill = 1000;
                     TileEntity entity = new Vector3((TileEntity) entry.getKey()).modifyPositionFromSide(dir).getTileEntity(((TileEntity) entry.getKey()).worldObj);
                     if (entity instanceof IFluidPipe)
                     {
                         maxFill = ((IFluidPipe) entity).getMaxFlowRate();
                     }
-                    int fill = entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
-                    volPer -= fill;
-                    stack.amount -= fill;
+                    stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
                     if (sideCount > 1)
                         --sideCount;
-
                     if (volPer <= 0)
                         break;
                 }
@@ -76,7 +70,7 @@ public class PipeNetwork extends FluidNetwork
     @Override
     public boolean continueUpdate()
     {
-        return true;
+        return this.getConnectors().size() > 0;
     }
 
     @Override

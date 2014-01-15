@@ -13,11 +13,7 @@ import universalelectricity.core.net.NetworkTickHandler;
  * 
  * @author DarkGuardsman */
 public class TankNetwork extends FluidNetwork
-{
-    public TankNetwork()
-    {
-        NetworkTickHandler.addNetwork(this);
-    }
+{    
 
     @Override
     public void reloadTanks()

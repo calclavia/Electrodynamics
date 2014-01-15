@@ -3,6 +3,9 @@ package resonantinduction.mechanical.fluid.network;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -25,6 +28,7 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     public FluidNetwork()
     {
         NetworkTickHandler.addNetwork(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -140,9 +144,14 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
         }
         if (this.reloadTanks && ticks % 10 == 0)
         {
-            this.reloadTanks = false;
             this.reloadTanks();
         }
+    }
+
+    @ForgeSubscribe
+    public void onWorldSave(Save event)
+    {
+        this.reloadTanks();
     }
 
     public void reloadTanks()

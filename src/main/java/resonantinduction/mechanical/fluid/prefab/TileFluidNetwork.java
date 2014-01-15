@@ -162,6 +162,7 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
             if (previousConnections != renderSides)
             {
                 this.sendRenderUpdate();
+                this.getNetwork().reconstruct();
             }
         }
 
