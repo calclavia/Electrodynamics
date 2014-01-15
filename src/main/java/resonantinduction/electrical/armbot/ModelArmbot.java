@@ -1,4 +1,4 @@
-package resonantinduction.old.client.model;
+package resonantinduction.electrical.armbot;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

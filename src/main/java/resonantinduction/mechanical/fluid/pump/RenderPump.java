@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.old.client.model.ModelPump;
+import resonantinduction.mechanical.fluid.tank.ModelPump;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,12 +20,13 @@ public class RenderPump extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double d, double d1, double d2, float f)
 	{
-		int meta = t.worldObj.getBlockMetadata(t.xCoord, t.yCoord, t.zCoord);
+		int meta = t.getBlockType() != null ? t.getBlockMetadata() : 0;
 
 		bindTexture(TEXTURE);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
+
 		switch (meta)
 		{
 			case 2:
@@ -41,6 +42,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 				GL11.glRotatef(270f, 0f, 1f, 0f);
 				break;
 		}
+
 		MODEL.render(0.0625F);
 
 		if (t instanceof TilePump)
@@ -51,5 +53,4 @@ public class RenderPump extends TileEntitySpecialRenderer
 		GL11.glPopMatrix();
 
 	}
-
 }

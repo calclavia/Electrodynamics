@@ -13,8 +13,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTank;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.ColorCode;
 import calclavia.lib.render.ColorCode.IColorCoded;
@@ -75,7 +75,7 @@ public class BlockPipe extends BlockFluidNetwork
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

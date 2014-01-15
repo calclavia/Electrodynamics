@@ -90,7 +90,7 @@ public abstract class TileEntityFilterable extends TileAssembly implements IRota
 	@Override
 	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
+		return ForgeDirection.getOrientation(getBlockType() != null ? getBlockMetadata() : 0);
 	}
 
 	@Override

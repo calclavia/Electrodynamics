@@ -6,7 +6,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockImprintable;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +31,7 @@ public class BlockRejector extends BlockImprintable
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

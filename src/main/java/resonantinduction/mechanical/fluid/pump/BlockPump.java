@@ -10,8 +10,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -41,7 +41,7 @@ public class BlockPump extends BlockRI
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

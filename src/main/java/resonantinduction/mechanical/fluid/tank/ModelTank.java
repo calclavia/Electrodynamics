@@ -4,7 +4,7 @@
 // Keep in mind that you still need to fill in some blanks
 // - ZeuX
 
-package resonantinduction.old.client.model;
+package resonantinduction.mechanical.fluid.tank;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelTankSide extends ModelBase
+public class ModelTank extends ModelBase
 {
 
 	ModelRenderer botSiding;
@@ -33,7 +33,7 @@ public class ModelTankSide extends ModelBase
 	ModelRenderer rightTopSide;
 	ModelRenderer rightSide;
 
-	public ModelTankSide()
+	public ModelTank()
 	{
 		textureWidth = 128;
 		textureHeight = 128;

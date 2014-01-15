@@ -10,11 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
@@ -47,7 +47,7 @@ public class BlockTank extends BlockFluidNetwork
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

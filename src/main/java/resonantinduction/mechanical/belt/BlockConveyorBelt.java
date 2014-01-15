@@ -15,8 +15,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
-import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -242,7 +242,7 @@ public class BlockConveyorBelt extends BlockRI
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tile = (TileConveyorBelt) tileEntity;
@@ -339,7 +339,7 @@ public class BlockConveyorBelt extends BlockRI
 	@Override
 	public int getRenderType()
 	{
-		return MechanicalBlockRenderingHandler.ID;
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

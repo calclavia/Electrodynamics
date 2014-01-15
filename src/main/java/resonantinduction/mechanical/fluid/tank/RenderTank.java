@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.old.client.model.ModelTankSide;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderTank extends TileEntitySpecialRenderer
 {
 	public static final RenderTank INSTANCE = new RenderTank();
-	public final ModelTankSide model = new ModelTankSide();
+	public final ModelTank model = new ModelTank();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
