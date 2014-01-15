@@ -8,7 +8,6 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.core.net.NetworkTickHandler;
-import calclavia.lib.utility.FluidUtility;
 
 /** Network that handles connected tanks
  * 
@@ -23,13 +22,11 @@ public class TankNetwork extends FluidNetwork
     @Override
     public void reloadTanks()
     {
-        System.out.println("TankNetwork: Balancing fluid");
         FluidStack fillStack = this.getTank().getFluid();
         int lowestY = 255, highestY = 0;
 
         if (fillStack == null || fillStack.getFluid().isGaseous())
         {
-            System.out.println("TankNetwork: Stack is null or a gas");
             super.reloadTanks();
         }
         else if (this.getConnectors().size() > 0)
@@ -62,7 +59,6 @@ public class TankNetwork extends FluidNetwork
                 }
                 if (!parts.isEmpty())
                 {
-                    System.out.println("TankNetwork: balancing level: " + y);
                     this.fillTankSet(fillStack, parts);
                 }
 

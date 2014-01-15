@@ -29,8 +29,8 @@ public class PipeNetwork extends FluidNetwork
     public void update()
     {
         super.update();
-        //Slight delay to allow visual effect to take place before draining the pipe tanks
-        if (this.ticks % 2 == 0 && this.getTank().getFluid() != null)
+        //Slight delay to allow visual effect to take place before draining the pipe's internal tank
+        if (this.ticks % 2 == 0 && this.getTank().getFluidAmount() > 0)
         {
             FluidStack stack = this.getTank().getFluid().copy();
             int count = this.connectionMap.size();
