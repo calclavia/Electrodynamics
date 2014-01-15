@@ -20,6 +20,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	public TileGenerator()
 	{
 		energy = new EnergyStorageHandler(10000);
+		this.ioMap = 728;
 	}
 
 	@Override
@@ -41,13 +42,13 @@ public class TileGenerator extends TileElectrical implements IMechanical
 
 	private boolean isFunctioning()
 	{
-		return this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		return true;
 	}
 
 	@Override
 	public void setPower(long torque, float speed)
 	{
-
+		this.power = (long) Math.abs(torque * speed);
 	}
 
 	@Override

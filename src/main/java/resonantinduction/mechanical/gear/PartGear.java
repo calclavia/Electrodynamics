@@ -63,10 +63,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	/** The size of the gear */
 	private float radius = 0.5f;
-	
+
 	/** The angular velocity, radians per second. */
 	private float angularVelocity = 0;
-	
+
 	/** The current angle the gear is on. In radians. */
 	private float angle = 0;
 
@@ -99,9 +99,9 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 				((PartGear) part).torque = torque;
 			}
 		}
-		else if(tile instanceof IMechanical)
+		else if (tile instanceof IMechanical)
 		{
-			((IMechanical)tile).setPower(torque, angularVelocity);
+			((IMechanical) tile).setPower(torque, angularVelocity);
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
@@ -149,6 +149,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		if (player.isSneaking())
 		{
 			this.torque += 10;
+			this.angularVelocity += 1;
 		}
 
 		return false;
