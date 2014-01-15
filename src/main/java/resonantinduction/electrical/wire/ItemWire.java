@@ -1,12 +1,12 @@
 package resonantinduction.electrical.wire;
 
+import java.awt.Color;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
@@ -45,6 +45,7 @@ public class ItemWire extends JItemMultiPart
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
 		this.setUnlocalizedName(Reference.PREFIX + "wire");
+		this.setTextureName(Reference.PREFIX + "wire");
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -126,14 +127,15 @@ public class ItemWire extends JItemMultiPart
 	{
 		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
 		RenderPartWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
-		RenderPartWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation" + (Settings.LO_FI_INSULATION ? "tiny" : ""));
+		RenderPartWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation");
+		super.registerIcons(register);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack itemStack, int par2)
 	{
-		return EnumWireMaterial.values()[itemStack.getItemDamage()].color.rgb();
+		return new Color(EnumWireMaterial.values()[itemStack.getItemDamage()].color.rgb()).darker().getRGB();
 	}
 
 	@Override
