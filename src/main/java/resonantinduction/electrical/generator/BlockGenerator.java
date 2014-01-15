@@ -2,17 +2,16 @@ package resonantinduction.electrical.generator;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.electrical.render.ElectricalBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGenerator extends BlockRI
+public class BlockGenerator extends BlockRIRotatable
 {
 	public BlockGenerator()
 	{
 		super("generator");
-		this.setBlockBounds(0, 0, 0, 1, 0.5f, 1);
 	}
 
 	@Override

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package resonantinduction.core.prefab.block;
 
 import net.minecraftforge.common.Configuration;
@@ -14,9 +11,14 @@ import calclavia.lib.prefab.block.BlockRotatable;
  * @author Calclavia
  * 
  */
-public class BlockRotatableBase extends BlockRotatable
+public class BlockRIRotatable extends BlockRotatable
 {
-	public BlockRotatableBase(String name, int id)
+	public BlockRIRotatable(String name)
+	{
+		this(name, Settings.getNextItemID());
+	}
+
+	public BlockRIRotatable(String name, int id)
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), UniversalElectricity.machine);
 		this.setCreativeTab(ResonantInductionTabs.CORE);

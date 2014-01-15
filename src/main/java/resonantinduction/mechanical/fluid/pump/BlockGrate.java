@@ -1,8 +1,5 @@
 package resonantinduction.mechanical.fluid.pump;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,9 +12,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGrate extends BlockRI
+public class BlockGrate extends BlockRIRotatable
 {
 	private Icon drainIcon;
 	private Icon fillIcon;
@@ -55,9 +54,14 @@ public class BlockGrate extends BlockRI
 	}
 
 	@Override
-	public Icon getIcon(int par1, int par2)
+	public Icon getIcon(int side, int metadata)
 	{
-		return par1 != 1 && par1 != 0 ? this.blockIcon : this.drainIcon;
+		if (side == metadata)
+		{
+			return this.drainIcon;
+		}
+
+		return this.blockIcon;
 	}
 
 	@Override
@@ -78,7 +82,6 @@ public class BlockGrate extends BlockRI
 				{
 					return this.fillIcon;
 				}
-
 			}
 		}
 

@@ -1,6 +1,6 @@
 package resonantinduction.archaic.imprint;
 
-import resonantinduction.core.prefab.block.BlockRotatableBase;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 
 /**
  * A block that represents a filter for item transportation.
@@ -8,7 +8,7 @@ import resonantinduction.core.prefab.block.BlockRotatableBase;
  * @author Calclavia
  * 
  */
-public class BlockFilter extends BlockRotatableBase
+public class BlockFilter extends BlockRIRotatable
 {
 	public BlockFilter(int id)
 	{

@@ -27,11 +27,11 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork
 {
-	private int force = 0;
+	private int torque = 0;
 	private int speed = 0;
 	private int resistance = 0;
 
-	private HashMap<IMechanical, ForceWrapper[]> forceMap = new HashMap<IMechanical, ForceWrapper[]>();
+	private HashMap<IMechanical, ForceWrapper[]> torqueMap = new HashMap<IMechanical, ForceWrapper[]>();
 
 	@Override
 	public void update()
@@ -46,9 +46,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		{
 			// Reset all values related to wires
 			this.getNodes().clear();
-			this.forceMap.clear();
+			this.torqueMap.clear();
 			this.resistance = 0;
-			this.force = 0;
+			this.torque = 0;
 			this.speed = 0;
 
 			// Iterate threw list of wires
@@ -95,14 +95,14 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		{
 			if (obj instanceof IMechanical)
 			{
-				ForceWrapper[] set = this.forceMap.get((IMechanical) obj);
+				ForceWrapper[] set = this.torqueMap.get((IMechanical) obj);
 				if (set == null)
 				{
 					set = new ForceWrapper[6];
 				}
 				this.getNodes().add((IMechanical) obj);
 				set[side.ordinal()] = new ForceWrapper(((IMechanical) obj).getForceSide(side.getOpposite()), ((IMechanical) obj).getForceSide(side.getOpposite()));
-				this.forceMap.put((IMechanical) obj, set);
+				this.torqueMap.put((IMechanical) obj, set);
 			}
 		}
 	}
@@ -229,7 +229,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	@Override
 	public int getTorque()
 	{
-		return this.force;
+		return this.torque;
 	}
 
 	@Override

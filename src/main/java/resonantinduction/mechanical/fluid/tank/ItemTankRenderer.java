@@ -53,7 +53,6 @@ public class ItemTankRenderer implements IItemRenderer
 			GL11.glTranslatef(0.7F, .45F, 0.7F);
 		}
 
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, item.getItemDamage() == 1 ? "textures/blocks/obsidian.png" : "textures/blocks/iron_block.png"));
 		FluidStack fluid = null;
 		if (item.getTagCompound() != null && item.getTagCompound().hasKey("fluid"))
 		{

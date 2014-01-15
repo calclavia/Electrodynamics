@@ -8,7 +8,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockRotatableBase;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -17,7 +17,7 @@ import universalelectricity.api.vector.VectorWorld;
  * @author Calclavia
  * 
  */
-public class BlockGrinderWheel extends BlockRotatableBase implements ITileEntityProvider
+public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityProvider
 {
 	public BlockGrinderWheel()
 	{

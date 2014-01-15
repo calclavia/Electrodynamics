@@ -11,10 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.MechanicalNetwork;
-import universalelectricity.api.UniversalElectricity;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -98,6 +98,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 				torque = (torque + ((PartGear) part).torque) / 2;
 				((PartGear) part).torque = torque;
 			}
+		}
+		else if(tile instanceof IMechanical)
+		{
+			((IMechanical)tile).setPower(torque, angularVelocity);
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */

@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockRotatableBase;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.mechanical.grinder.TilePurifier;
 import universalelectricity.api.vector.VectorWorld;
 
@@ -15,7 +15,7 @@ import universalelectricity.api.vector.VectorWorld;
  * @author Calclavia
  * 
  */
-public class BlockPurifier extends BlockRotatableBase implements ITileEntityProvider
+public class BlockPurifier extends BlockRIRotatable implements ITileEntityProvider
 {
 	public BlockPurifier()
 	{
