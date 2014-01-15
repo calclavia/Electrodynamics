@@ -149,7 +149,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ICu
 	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0.0F, 1.3F, 0.0F);
+		GL11.glTranslatef(0.5f, 1.7F, 0.5f);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "belt/frame0.png"));
 		MODEL.render(0.0625F, 0, false, false, false, false);

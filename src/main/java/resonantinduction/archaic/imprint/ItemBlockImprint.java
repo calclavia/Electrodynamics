@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,8 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBlockImprint extends Item
 {
@@ -30,17 +27,11 @@ public class ItemBlockImprint extends Item
 	public ItemBlockImprint(int id)
 	{
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
-		this.setUnlocalizedName("imprint");
+		this.setUnlocalizedName(Reference.PREFIX + "imprint");
+		this.setTextureName(Reference.PREFIX + "imprint");
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);
 		this.maxStackSize = 1;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister par1IconRegister)
-	{
-		this.itemIcon = par1IconRegister.registerIcon(Reference.PREFIX + "imprint");
 	}
 
 	@Override

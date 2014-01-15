@@ -100,10 +100,12 @@ public class RenderArmbot extends TileEntitySpecialRenderer implements ICustomBl
 	@Override
 	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
+		GL11.glPushMatrix();
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderArmbot.TEXTURE);
-		GL11.glTranslatef(0.0F, 0.7F, 0.0F);
+		GL11.glTranslatef(0.5f, 1.3f, 0.5f);
 		GL11.glRotatef(180f, 0f, 0f, 1f);
 		GL11.glScalef(0.8f, 0.8f, 0.8f);
 		RenderArmbot.MODEL.render(0.0625F, 0, 0);
+		GL11.glPopMatrix();
 	}
 }

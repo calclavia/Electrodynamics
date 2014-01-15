@@ -1,15 +1,20 @@
 package resonantinduction.electrical.levitator;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import calclavia.lib.render.block.ICustomBlockRenderer;
+import cpw.mods.fml.client.FMLClientHandler;
 
-public class RenderLevitator extends TileEntitySpecialRenderer
+public class RenderLevitator extends TileEntitySpecialRenderer implements ICustomBlockRenderer
 {
 	public static final ModelEMContractor MODEL = new ModelEMContractor(false);
 	public static final ModelEMContractor MODEL_SPIN = new ModelEMContractor(true);
@@ -68,6 +73,29 @@ public class RenderLevitator extends TileEntitySpecialRenderer
 			MODEL.render(0.0625f);
 		}
 
+		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
+	{
+
+	}
+
+	@Override
+	public boolean renderStatic(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	{
+		return false;
+	}
+
+	@Override
+	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0.5f, 1.7f, 0.5f);
+		GL11.glRotatef(180f, 0f, 0f, 1f);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
+		MODEL.render(0.0725F);
 		GL11.glPopMatrix();
 	}
 }

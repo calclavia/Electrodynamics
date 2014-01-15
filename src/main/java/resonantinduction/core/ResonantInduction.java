@@ -35,90 +35,93 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-/** The core module of Resonant Induction
+/**
+ * The core module of Resonant Induction
  * 
- * @author Calclavia */
+ * @author Calclavia
+ */
 @Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:CalclaviaCore;before:IC2")
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction
 {
-    /** Mod Information */
-    public static final String ID = "ResonantInduction|Core";
-    public static final String NAME = Reference.NAME + " Core";
+	/** Mod Information */
+	public static final String ID = "ResonantInduction|Core";
+	public static final String NAME = Reference.NAME + " Core";
 
-    @Instance(ID)
-    public static ResonantInduction INSTANCE;
+	@Instance(ID)
+	public static ResonantInduction INSTANCE;
 
-    @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
-    public static CommonProxy proxy;
+	@SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
+	public static CommonProxy proxy;
 
-    @Mod.Metadata(ID)
-    public static ModMetadata metadata;
+	@Mod.Metadata(ID)
+	public static ModMetadata metadata;
 
-    public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
+	public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
 
-    /** Packets */
-    public static final PacketTile PACKET_TILE = new PacketTile(Reference.CHANNEL);
-    public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
+	/** Packets */
+	public static final PacketTile PACKET_TILE = new PacketTile(Reference.CHANNEL);
+	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
 
-    /** Blocks and Items */
-    public static BlockMulti blockMulti;
+	/** Blocks and Items */
+	public static BlockMulti blockMulti;
 
-    public static Block blockOre;
-    public static ItemDust itemDust;
-    public static Block blockFluidMixture;
-    public static Block blockGas;
+	public static Block blockOre;
+	public static ItemDust itemDust;
+	public static Block blockFluidMixture;
+	public static Block blockGas;
 
-    public static Fluid MIXTURE = null;
+	public static Fluid MIXTURE = null;
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent evt)
-    {
-        ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
-        NetworkRegistry.instance().registerGuiHandler(this, proxy);
-        Modstats.instance().getReporter().registerMod(this);
-        Settings.load();
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent evt)
+	{
+		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
+		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		Modstats.instance().getReporter().registerMod(this);
+		Settings.load();
 
-        // Register Forge Events
-        MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
-        MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
+		// Register Forge Events
+		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
+		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
-        blockMulti = new BlockMulti(Settings.CONFIGURATION.getBlock("blockMulti", Settings.getNextBlockID()).getInt()).setPacketType(PACKET_TILE);
+		blockMulti = new BlockMulti(Settings.CONFIGURATION.getBlock("blockMulti", Settings.getNextBlockID()).getInt()).setPacketType(PACKET_TILE);
 
-        MIXTURE = new Fluid("mixture");
-        FluidRegistry.registerFluid(MIXTURE);
-        blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), MIXTURE);
+		MIXTURE = new Fluid("mixture");
+		FluidRegistry.registerFluid(MIXTURE);
+		blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), MIXTURE);
 
-        // Items
-        itemDust = new ItemDust(Settings.getNextItemID());
-        GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+		// Items
+		itemDust = new ItemDust(Settings.getNextItemID());
+		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 
-        GameRegistry.registerTileEntity(TileMultiBlockPart.class, "TileEntityMultiBlockPart");
-        GameRegistry.registerBlock(blockMulti, "blockMulti");
+		GameRegistry.registerTileEntity(TileMultiBlockPart.class, "TileEntityMultiBlockPart");
+		GameRegistry.registerBlock(blockMulti, "blockMulti");
 
-        GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
-        GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
+		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
-        Settings.save();
-    }
+		Settings.save();
+		proxy.preInit();
+	}
 
-    @EventHandler
-    public void init(FMLInitializationEvent evt)
-    {
-        // Load Languages
-        ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
-        // Set Mod Metadata
-        Settings.setModMetadata(metadata, ID, NAME);
-    }
+	@EventHandler
+	public void init(FMLInitializationEvent evt)
+	{
+		// Load Languages
+		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
+		// Set Mod Metadata
+		Settings.setModMetadata(metadata, ID, NAME);
+	}
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent evt)
-    {
-        // Generate Dusts
-        ResourceGenerator.generateDusts();
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent evt)
+	{
+		// Generate Dusts
+		ResourceGenerator.generateDusts();
 
-    }
+	}
 
 }
