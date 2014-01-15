@@ -144,12 +144,12 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println("Torque" + this.torque);
+		System.out.println("Torque" + this.torque + " Angular Velocity" + this.angularVelocity);
 
 		if (player.isSneaking())
 		{
 			this.torque += 10;
-			this.angularVelocity += 1;
+			this.angularVelocity += 0.1f;
 		}
 
 		return false;

@@ -1,5 +1,6 @@
 package resonantinduction.electrical.generator;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
@@ -12,6 +13,19 @@ public class BlockGenerator extends BlockRIRotatable
 	public BlockGenerator()
 	{
 		super("generator");
+	}
+
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileGenerator)
+		{
+			((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
+			return true;
+		}
+		return false;
 	}
 
 	@Override

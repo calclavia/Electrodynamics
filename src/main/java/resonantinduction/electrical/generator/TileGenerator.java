@@ -15,7 +15,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	private long power;
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
-	private boolean isInversed = false;
+	public boolean isInversed = false;
 
 	public TileGenerator()
 	{
