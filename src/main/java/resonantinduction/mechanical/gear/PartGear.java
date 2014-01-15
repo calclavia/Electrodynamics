@@ -11,9 +11,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.IMechConnector;
-import resonantinduction.mechanical.network.IMechNetwork;
-import resonantinduction.mechanical.network.MechNetwork;
+import resonantinduction.mechanical.network.IMechanicalConnector;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
+import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.UniversalElectricity;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -30,227 +30,249 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechConnector
+/**
+ * We assume all the force acting on the gear is 90 degrees.
+ * 
+ * @author Calclavia
+ * 
+ */
+public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalConnector
 {
-    public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
+	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
 
-    private IMechNetwork network;
+	private IMechanicalNetwork network;
 
-    static
-    {
-        oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
-        oBoxes[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
-        for (int s = 1; s < 6; s++)
-        {
-            Transformation t = Rotation.sideRotations[s].at(Vector3.center);
-            oBoxes[s][0] = oBoxes[0][0].copy().apply(t);
-            oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
-        }
-    }
-    /** Side of the block this is placed on */
-    private ForgeDirection placementSide;
+	static
+	{
+		oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
+		oBoxes[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
+		for (int s = 1; s < 6; s++)
+		{
+			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
+			oBoxes[s][0] = oBoxes[0][0].copy().apply(t);
+			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
+		}
+	}
+	/** Side of the block this is placed on */
+	private ForgeDirection placementSide;
 
-    /** Positive torque means it is spinning clockwise */
-    private long torque = 0;
+	/** Positive torque means it is spinning clockwise */
+	private long torque = 0;
 
-    public void preparePlacement(int side, int itemDamage)
-    {
-        this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
-    }
+	private long force = 0;
 
-    @Override
-    public void update()
-    {
-        // TODO: Should we average the torque?
-        /** Look for gears that are back-to-back with this gear. Equate torque. */
-        universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(placementSide);
+	/** The size of the gear */
+	private float radius = 0.5f;
+	
+	/** The angular velocity, radians per second. */
+	private float angularVelocity = 0;
+	
+	/** The current angle the gear is on. In radians. */
+	private float angle = 0;
 
-        TileEntity tile = vec.getTileEntity(world());
+	public void preparePlacement(int side, int itemDamage)
+	{
+		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+	}
 
-        if (tile instanceof TileMultipart)
-        {
-            TMultiPart part = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
+	public long getTorque()
+	{
+		return (long) (force * radius);
+	}
 
-            if (part instanceof PartGear)
-            {
-                torque = (torque + ((PartGear) part).torque) / 2;
-                ((PartGear) part).torque = torque;
-            }
-        }
+	@Override
+	public void update()
+	{
+		// TODO: Should we average the torque?
+		/** Look for gears that are back-to-back with this gear. Equate torque. */
+		universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(placementSide);
 
-        /** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
-        for (int i = 0; i < 4; i++)
-        {
-            ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
-            universalelectricity.api.vector.Vector3 checkVec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(checkDir);
+		TileEntity tile = vec.getTileEntity(world());
 
-            TileEntity checkTile = checkVec.getTileEntity(world());
+		if (tile instanceof TileMultipart)
+		{
+			TMultiPart part = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
 
-            if (checkTile instanceof TileMultipart)
-            {
-                TMultiPart neighbor = ((TileMultipart) checkTile).partMap(this.placementSide.ordinal());
+			if (part instanceof PartGear)
+			{
+				torque = (torque + ((PartGear) part).torque) / 2;
+				((PartGear) part).torque = torque;
+			}
+		}
 
-                if (neighbor instanceof PartGear)
-                {
-                    torque = (torque - ((PartGear) neighbor).torque) / 2;
-                    ((PartGear) neighbor).torque = -torque;
-                }
-            }
-        }
+		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
+		for (int i = 0; i < 4; i++)
+		{
+			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
+			universalelectricity.api.vector.Vector3 checkVec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(checkDir);
 
-        /** Look for gears that are internal and adjacent to this gear. (The 2 sides) */
-        for (int i = 0; i < 6; i++)
-        {
-            // TODO: Make it work with UP-DOWN
-            if (i < 2)
-            {
-                TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(ForgeDirection.getOrientation(i)).ordinal());
+			TileEntity checkTile = checkVec.getTileEntity(world());
 
-                if (neighbor instanceof PartGear)
-                {
-                    torque = (torque - ((PartGear) neighbor).torque) / 2;
-                    ((PartGear) neighbor).torque = -torque;
-                }
-            }
-        }
-    }
+			if (checkTile instanceof TileMultipart)
+			{
+				TMultiPart neighbor = ((TileMultipart) checkTile).partMap(this.placementSide.ordinal());
 
-    @Override
-    public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
-    {
-        System.out.println("Torque" + this.torque);
+				if (neighbor instanceof PartGear)
+				{
+					torque = (torque - ((PartGear) neighbor).torque) / 2;
+					((PartGear) neighbor).torque = -torque;
+				}
+			}
+		}
 
-        if (player.isSneaking())
-        {
-            this.torque += 10;
-        }
+		/** Look for gears that are internal and adjacent to this gear. (The 2 sides) */
+		for (int i = 0; i < 6; i++)
+		{
+			// TODO: Make it work with UP-DOWN
+			if (i < 2)
+			{
+				TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(ForgeDirection.getOrientation(i)).ordinal());
 
-        return false;
-    }
+				if (neighbor instanceof PartGear)
+				{
+					torque = (torque - ((PartGear) neighbor).torque) / 2;
+					((PartGear) neighbor).torque = -torque;
+				}
+			}
+		}
+	}
 
-    /** Packet Code. */
-    @Override
-    public void readDesc(MCDataInput packet)
-    {
-        this.placementSide = ForgeDirection.getOrientation(packet.readByte());
-    }
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
+	{
+		System.out.println("Torque" + this.torque);
 
-    @Override
-    public void writeDesc(MCDataOutput packet)
-    {
-        packet.writeByte(this.placementSide.ordinal());
-    }
+		if (player.isSneaking())
+		{
+			this.torque += 10;
+		}
 
-    @Override
-    public int getSlotMask()
-    {
-        return 1 << this.placementSide.ordinal();
-    }
+		return false;
+	}
 
-    @Override
-    public Cuboid6 getBounds()
-    {
-        return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
-    }
+	/** Packet Code. */
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		this.placementSide = ForgeDirection.getOrientation(packet.readByte());
+	}
 
-    @Override
-    public int redstoneConductionMap()
-    {
-        return 0;
-    }
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		packet.writeByte(this.placementSide.ordinal());
+	}
 
-    @Override
-    public boolean solid(int arg0)
-    {
-        return true;
-    }
+	@Override
+	public int getSlotMask()
+	{
+		return 1 << this.placementSide.ordinal();
+	}
 
-    @Override
-    public Iterable<Cuboid6> getOcclusionBoxes()
-    {
-        return Arrays.asList(oBoxes[this.placementSide.ordinal()]);
-    }
+	@Override
+	public Cuboid6 getBounds()
+	{
+		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
+	}
 
-    protected ItemStack getItem()
-    {
-        return new ItemStack(Mechanical.itemGear);
-    }
+	@Override
+	public int redstoneConductionMap()
+	{
+		return 0;
+	}
 
-    @Override
-    public Iterable<ItemStack> getDrops()
-    {
-        List<ItemStack> drops = new ArrayList<ItemStack>();
-        drops.add(getItem());
-        return drops;
-    }
+	@Override
+	public boolean solid(int arg0)
+	{
+		return true;
+	}
 
-    @Override
-    public ItemStack pickItem(MovingObjectPosition hit)
-    {
-        return getItem();
-    }
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		return Arrays.asList(oBoxes[this.placementSide.ordinal()]);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void renderDynamic(Vector3 pos, float frame, int pass)
-    {
+	protected ItemStack getItem()
+	{
+		return new ItemStack(Mechanical.itemGear);
+	}
 
-    }
+	@Override
+	public Iterable<ItemStack> getDrops()
+	{
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(getItem());
+		return drops;
+	}
 
-    @Override
-    public void load(NBTTagCompound nbt)
-    {
-        super.load(nbt);
-        this.placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
-    }
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		return getItem();
+	}
 
-    @Override
-    public void save(NBTTagCompound nbt)
-    {
-        super.save(nbt);
-        nbt.setByte("side", (byte) this.placementSide.ordinal());
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void renderDynamic(Vector3 pos, float frame, int pass)
+	{
 
-    @Override
-    public String getType()
-    {
-        return "resonant_induction_gear";
-    }
+	}
 
-    @Override
-    public Object[] getConnections()
-    {
-        return null;
-    }
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		this.placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
+	}
 
-    @Override
-    public IMechNetwork getNetwork()
-    {
-        if (this.network == null)
-        {
-            this.network = new MechNetwork();
-            this.network.addConnector(this);
-        }
-        return this.network;
-    }
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setByte("side", (byte) this.placementSide.ordinal());
+	}
 
-    @Override
-    public void setNetwork(IMechNetwork network)
-    {
-        this.network = network;
-    }
+	@Override
+	public String getType()
+	{
+		return "resonant_induction_gear";
+	}
 
-    @Override
-    public boolean canConnect(ForgeDirection direction)
-    {
-        return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechConnector;
-    }
+	@Override
+	public Object[] getConnections()
+	{
+		return null;
+	}
 
-    @Override
-    public int getResistance()
-    {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public IMechanicalNetwork getNetwork()
+	{
+		if (this.network == null)
+		{
+			this.network = new MechanicalNetwork();
+			this.network.addConnector(this);
+		}
+		return this.network;
+	}
+
+	@Override
+	public void setNetwork(IMechanicalNetwork network)
+	{
+		this.network = network;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechanicalConnector;
+	}
+
+	@Override
+	public int getResistance()
+	{
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

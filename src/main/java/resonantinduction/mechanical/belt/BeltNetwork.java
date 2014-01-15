@@ -3,9 +3,9 @@ package resonantinduction.mechanical.belt;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.api.IBelt;
 import resonantinduction.api.IBeltNetwork;
-import resonantinduction.mechanical.network.IMechConnector;
-import resonantinduction.mechanical.network.IMechNetwork;
-import resonantinduction.mechanical.network.MechNetwork;
+import resonantinduction.mechanical.network.IMechanicalConnector;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
+import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.core.net.ConnectionPathfinder;
 import universalelectricity.core.net.Network;
@@ -122,13 +122,13 @@ public class BeltNetwork extends Network<IBeltNetwork, IBelt, TileEntity> implem
         {
             /** The connections A and B are not connected anymore. Give them both a new common
              * network. */
-            IMechNetwork newNetwork = new MechNetwork();
+            IMechanicalNetwork newNetwork = new MechanicalNetwork();
 
             for (IConnector node : finder.closedSet)
             {
-                if (node instanceof IMechConnector)
+                if (node instanceof IMechanicalConnector)
                 {
-                    newNetwork.addConnector((IMechConnector) node);
+                    newNetwork.addConnector((IMechanicalConnector) node);
                 }
             }
 

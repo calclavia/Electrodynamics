@@ -290,19 +290,19 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
     @Override
     public Packet getDescriptionPacket()
     {
-        return ResonantInduction.PACKET_TILE.getPacket(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
+        return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
     }
 
     public void sendRenderUpdate()
     {
-        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(PACKET_RENDER, this, this.colorID, this.renderSides));
+        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
     }
 
     public void sendTankUpdate(int index)
     {
         if (this.getInternalTank() != null && index == 0)
         {
-            PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(PACKET_TANK, this, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+            PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }
     }
 

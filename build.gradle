@@ -68,7 +68,10 @@ jar {
 }
 
 repositories {
-    maven { url 'file://var/www/maven/' }
+    maven {
+		name 'Calclavia Maven'
+		url 'http://calclavia.com/maven'
+	}
 	
 	ivy {
 			name 'CB FS'

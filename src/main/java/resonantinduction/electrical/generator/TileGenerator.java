@@ -1,15 +1,15 @@
 package resonantinduction.electrical.generator;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.network.IMechConnector;
-import resonantinduction.mechanical.network.IMechMachine;
+import resonantinduction.mechanical.network.IMechanicalConnector;
+import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
 
 /** A kinetic energy to electrical energy converter.
  * 
  * @author Calclavia */
-public class TileGenerator extends TileElectrical implements IMechMachine
+public class TileGenerator extends TileElectrical implements IMechanical
 {
     //P = \tau \times 2 \pi \times \omega
     private long power;

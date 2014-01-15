@@ -6,7 +6,7 @@ import universalelectricity.api.net.IConnectable;
 /** Applied to machines that connect to a mech network
  * 
  * @author Darkguardsman */
-public interface IMechMachine extends IConnectable
+public interface IMechanical extends IConnectable
 {
     /** Called by the network when its torque value changes. */
     public void onTorqueChange(ForgeDirection side, int speed);
