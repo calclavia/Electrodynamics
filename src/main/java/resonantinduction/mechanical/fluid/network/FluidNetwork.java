@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.network;
 
+import java.util.Set;
+
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -147,20 +149,19 @@ public class FluidNetwork extends Network<IFluidNetwork, IFluidPart, IFluidHandl
     {
         this.reloadTanks = false;
         FluidStack stack = this.getTank().getFluid();
+        this.fillTankSet(stack != null ? stack.copy() : null, this.getConnectors());
+    }
 
-        if (stack != null)
+    public void fillTankSet(FluidStack stack, Set<IFluidPart> tankList)
+    {
+        int parts = tankList.size();
+        for (IFluidPart part : tankList)
         {
-            stack = stack.copy();
-        }
-        int parts = this.getConnectors().size();
-        for (IFluidPart part : this.getConnectors())
-        {
-
             part.getInternalTank().setFluid(null);
             if (stack != null)
             {
                 int fillPer = stack.amount / parts;
-                part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
+                stack.amount -= part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
                 part.onFluidChanged();
                 if (parts > 1)
                     parts--;

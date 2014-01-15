@@ -69,7 +69,7 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
             {
                 if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
                 {
-                    this.sendTankUpdate(0);
+                    this.sendTankUpdate();
                 }
 
                 this.prevStack = this.tank.getFluid();
@@ -298,9 +298,9 @@ public class TileFluidNetwork extends TileEntityFluidDevice implements IFluidPar
         PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
     }
 
-    public void sendTankUpdate(int index)
+    public void sendTankUpdate()
     {
-        if (this.getInternalTank() != null && index == 0)
+        if (this.getInternalTank() != null)
         {
             PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
         }

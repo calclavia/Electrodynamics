@@ -12,12 +12,18 @@ import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.utility.FluidUtility;
 
 /** @author DarkGuardsman */
 public class PipeNetwork extends FluidNetwork
 {
     public HashMap<IFluidHandler, EnumSet<ForgeDirection>> connectionMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
+
+    public PipeNetwork()
+    {
+        NetworkTickHandler.addNetwork(this);
+    }
 
     @Override
     public void update()
@@ -64,13 +70,13 @@ public class PipeNetwork extends FluidNetwork
     @Override
     public boolean canUpdate()
     {
-        return super.canUpdate() || this.getTank().getFluid() != null;
+        return true;
     }
 
     @Override
     public boolean continueUpdate()
     {
-        return super.canUpdate() || this.getTank().getFluid() != null;
+        return true;
     }
 
     @Override
@@ -86,7 +92,7 @@ public class PipeNetwork extends FluidNetwork
         super.buildPart(part);
         for (int i = 0; i < 6; i++)
         {
-            if (part.getConnections()[i] instanceof IFluidHandler)
+            if (part.getConnections()[i] instanceof IFluidHandler && !(part.getConnections()[i] instanceof IFluidPipe))
             {
                 EnumSet<ForgeDirection> set = this.connectionMap.get(part.getConnections()[i]);
                 if (set == null)

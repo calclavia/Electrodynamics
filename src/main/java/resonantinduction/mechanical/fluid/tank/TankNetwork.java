@@ -1,12 +1,13 @@
 package resonantinduction.mechanical.fluid.tank;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
+import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.utility.FluidUtility;
 
 /** Network that handles connected tanks
@@ -14,18 +15,24 @@ import calclavia.lib.utility.FluidUtility;
  * @author DarkGuardsman */
 public class TankNetwork extends FluidNetwork
 {
+    public TankNetwork()
+    {
+        NetworkTickHandler.addNetwork(this);
+    }
 
     @Override
     public void reloadTanks()
     {
+        System.out.println("TankNetwork: Balancing fluid");
         FluidStack fillStack = this.getTank().getFluid();
         int lowestY = 255, highestY = 0;
 
         if (fillStack == null || fillStack.getFluid().isGaseous())
         {
+            System.out.println("TankNetwork: Stack is null or a gas");
             super.reloadTanks();
         }
-        else if (this.getNodes().size() > 0)
+        else if (this.getConnectors().size() > 0)
         {
             fillStack = fillStack.copy();
             for (IFluidPart part : this.getConnectors())
@@ -43,9 +50,9 @@ public class TankNetwork extends FluidNetwork
 
             //TODO Add path finder to prevent filling when tanks are only connected at the top
             for (int y = lowestY; y <= highestY; y++)
-            {               
-                List<IFluidPart> parts = new ArrayList<IFluidPart>();
-               
+            {
+                Set<IFluidPart> parts = new LinkedHashSet<IFluidPart>();
+
                 for (IFluidPart part : this.getConnectors())
                 {
                     if (part instanceof IFluidPart && ((TileEntity) part).yCoord == y)
@@ -55,15 +62,8 @@ public class TankNetwork extends FluidNetwork
                 }
                 if (!parts.isEmpty())
                 {
-                    //TODO change this to use a percent system for even filling 
-                    int partCount = parts.size();
-                    for (IFluidPart part : parts)
-                    {
-                        fillStack.amount -= part.getInternalTank().fill(FluidUtility.getStack(fillStack, fillStack.amount / partCount), true);
-                        part.onFluidChanged();
-                        if (partCount > 1)
-                            partCount--;
-                    }
+                    System.out.println("TankNetwork: balancing level: " + y);
+                    this.fillTankSet(fillStack, parts);
                 }
 
                 if (fillStack == null || fillStack.amount <= 0)
