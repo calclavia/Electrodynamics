@@ -96,6 +96,8 @@ public class BlockEngineeringTable extends BlockRI
 						}
 					}
 				}
+
+				inventory.onInventoryChanged();
 			}
 		}
 	}
