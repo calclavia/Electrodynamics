@@ -67,8 +67,8 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	/** The angular velocity, radians per second. */
 	private float angularVelocity = 0;
 
-	/** The current angle the gear is on. In radians. */
-	private float angle = 0;
+	/** The current angle the gear is on. In radians per second. */
+	public float angle = 0;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -83,6 +83,14 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public void update()
 	{
+		/**
+		 * Update angle rotation.
+		 */
+		if (angularVelocity > 0 && torque > 0)
+		{
+			angle += angularVelocity / 20;
+		}
+
 		// TODO: Should we average the torque?
 		/** Look for gears that are back-to-back with this gear. Equate torque. */
 		universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(placementSide);
