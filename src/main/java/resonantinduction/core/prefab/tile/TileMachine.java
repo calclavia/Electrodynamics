@@ -13,6 +13,7 @@ import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.IExtraInfo.IExtraTileEntityInfo;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.TileAdvancedInventory;
 import calclavia.lib.utility.inventory.IExternalInv;
 import calclavia.lib.utility.inventory.IInvBox;
 
@@ -21,7 +22,7 @@ import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileMachine extends TileEntityInv implements ISidedInventory, IExternalInv, IExtraTileEntityInfo
+public abstract class TileMachine extends TileAdvancedInventory implements ISidedInventory, IExternalInv, IExtraTileEntityInfo
 {
 	/** Number of players with the machine's gui container open */
 	protected int playersUsingMachine = 0;

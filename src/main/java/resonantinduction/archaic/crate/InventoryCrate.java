@@ -3,9 +3,9 @@ package resonantinduction.archaic.crate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import calclavia.lib.utility.inventory.TileInventory;
+import calclavia.lib.utility.inventory.ExternalInventory;
 
-public class InventoryCrate extends TileInventory
+public class InventoryCrate extends ExternalInventory
 {
 	public InventoryCrate(TileEntity crate)
 	{

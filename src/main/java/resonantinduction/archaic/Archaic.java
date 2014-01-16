@@ -2,7 +2,9 @@ package resonantinduction.archaic;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import resonantinduction.archaic.blocks.BlockFirebox;
 import resonantinduction.archaic.blocks.BlockTurntable;
+import resonantinduction.archaic.blocks.TileFirebox;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
@@ -55,6 +57,7 @@ public class Archaic
 	public static Block blockCrate;
 	public static Block blockImprinter;
 	public static Block blockTurntable;
+	public static Block blockFirebox;
 
 	public static Item itemImprint;
 
@@ -66,6 +69,7 @@ public class Archaic
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
 		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
+		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 
 		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
 		proxy.preInit();

@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.fluid.IFluidPart;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
-import universalelectricity.core.net.NetworkTickHandler;
 
 /** Network that handles connected tanks
  * 

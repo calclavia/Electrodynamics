@@ -5,11 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.IExtendedStorage;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityInv;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.TileAdvancedInventory;
+import calclavia.lib.utility.inventory.IExtendedStorage;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.Side;
  * 
  * @author DarkGuardsman
  */
-public class TileCrate extends TileEntityInv implements IPacketReceiver, IExtendedStorage
+public class TileCrate extends TileAdvancedInventory implements IPacketReceiver, IExtendedStorage
 {
 	/*
 	 * TODO
