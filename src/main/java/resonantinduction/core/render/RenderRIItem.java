@@ -1,4 +1,4 @@
-package resonantinduction.electrical.render;
+package resonantinduction.core.render;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;

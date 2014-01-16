@@ -1,6 +1,7 @@
 package resonantinduction.mechanical;
 
 import net.minecraftforge.client.MinecraftForgeClient;
+import resonantinduction.core.render.RenderRIItem;
 import resonantinduction.mechanical.fluid.pipe.ItemPipeRenderer;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import resonantinduction.mechanical.fluid.pipe.TilePipe;
@@ -14,6 +15,7 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
+		MinecraftForgeClient.registerItemRenderer(Mechanical.itemGear.itemID, RenderRIItem.INSTANCE);
 	}
 
 	@Override

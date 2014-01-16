@@ -221,7 +221,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(Vector3 pos, float frame, int pass)
 	{
-		RenderGear.INSTANCE.renderDynamic(this, tile().xCoord, tile().yCoord, tile().zCoord);
+		if (pass == 0)
+		{
+			RenderGear.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z);
+		}
 	}
 
 	@Override
