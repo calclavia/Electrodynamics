@@ -19,7 +19,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 
 	public TileGenerator()
 	{
-		energy = new EnergyStorageHandler(10000);
+		energy = new EnergyStorageHandler(10000, 100);
 		this.ioMap = 728;
 	}
 
@@ -30,7 +30,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 		{
 			if (!isInversed)
 			{
-				this.energy.receiveEnergy(power, true);
+				this.power -= this.energy.receiveEnergy(power, true);
 				this.produce();
 			}
 			else
@@ -49,6 +49,12 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	public void setPower(long torque, float speed)
 	{
 		this.power = (long) Math.abs(torque * speed);
+	}
+
+	@Override
+	public long getPower()
+	{
+		return this.power;
 	}
 
 	@Override

@@ -12,6 +12,8 @@ public interface IMechanical extends IConnectable
 {
 	public void setPower(long torque, float speed);
 
+	public long getPower();
+
 	/** Called by the network when its torque value changes. */
 	public void onTorqueChange(ForgeDirection side, int speed);
 

@@ -63,7 +63,7 @@ public class RenderGear
 				break;
 		}
 
-		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
+		GL11.glRotatef((float) Math.toDegrees(part.angle) * (part.getTorque() > 0 ? 1 : -1), 0, 1, 0);
 
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		MODEL.renderAll();

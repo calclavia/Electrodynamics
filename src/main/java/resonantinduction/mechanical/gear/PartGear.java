@@ -77,18 +77,17 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	public long getTorque()
 	{
-		return (long) (force * radius);
+		return (long) torque;// (force * radius);
 	}
 
 	@Override
 	public void update()
 	{
-		/**
-		 * Update angle rotation.
-		 */
-		if (angularVelocity > 0 && torque > 0)
+
+		if (angularVelocity < 0 || torque == 0)
 		{
-			angle += angularVelocity / 20;
+			angularVelocity = 0;
+			torque = 0;
 		}
 
 		// TODO: Should we average the torque?
@@ -103,12 +102,12 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 			if (part instanceof PartGear)
 			{
-				torque = (torque + ((PartGear) part).torque) / 2;
-				((PartGear) part).torque = torque;
+				equatePower((PartGear) part, false);
 			}
 		}
 		else if (tile instanceof IMechanical)
 		{
+			torque = (long) (((IMechanical) tile).getPower() / angularVelocity);
 			((IMechanical) tile).setPower(torque, angularVelocity);
 		}
 
@@ -124,10 +123,9 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			{
 				TMultiPart neighbor = ((TileMultipart) checkTile).partMap(this.placementSide.ordinal());
 
-				if (neighbor instanceof PartGear)
+				if (neighbor != this && neighbor instanceof PartGear)
 				{
-					torque = (torque - ((PartGear) neighbor).torque) / 2;
-					((PartGear) neighbor).torque = -torque;
+					equatePower((PartGear) neighbor, false);
 				}
 			}
 		}
@@ -136,28 +134,53 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		for (int i = 0; i < 6; i++)
 		{
 			// TODO: Make it work with UP-DOWN
-			if (i < 2)
+			if (i < 4)
 			{
 				TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(ForgeDirection.getOrientation(i)).ordinal());
 
-				if (neighbor instanceof PartGear)
+				if (neighbor != this && neighbor instanceof PartGear)
 				{
-					torque = (torque - ((PartGear) neighbor).torque) / 2;
-					((PartGear) neighbor).torque = -torque;
+					equatePower((PartGear) neighbor, false);
 				}
 			}
 		}
+		
+		/**
+		 * Update angle rotation.
+		 */
+		if (angularVelocity > 0 && torque != 0)
+		{
+			angle += angularVelocity / 20;
+		}
+	}
+
+	public void equatePower(PartGear neighbor, boolean isPositive)
+	{
+		if (isPositive)
+		{
+			torque = (torque + ((PartGear) neighbor).torque) / 2;
+			((PartGear) neighbor).torque = torque;
+
+		}
+		else
+		{
+			torque = (torque - ((PartGear) neighbor).torque) / 2;
+			((PartGear) neighbor).torque = -torque;
+		}
+
+		angularVelocity = (angularVelocity + ((PartGear) neighbor).angularVelocity) / 2;
+		((PartGear) neighbor).angularVelocity = angularVelocity;
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println("Torque" + this.torque + " Angular Velocity" + this.angularVelocity);
+		System.out.println("Torque" + torque + " Angular Velocity" + angularVelocity);
 
 		if (player.isSneaking())
 		{
 			this.torque += 10;
-			this.angularVelocity += 0.1f;
+			this.angularVelocity += 0.2f;
 		}
 
 		return false;
