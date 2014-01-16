@@ -9,6 +9,8 @@ import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.multimeter.RenderMultimeter;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.transformer.RenderTransformer;
+import resonantinduction.mechanical.gear.ItemGear;
+import resonantinduction.mechanical.gear.RenderGear;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,7 +39,11 @@ public class RenderRIItem implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		if (item.getItem() instanceof ItemMultimeter)
+		if (item.getItem() instanceof ItemGear)
+		{
+			RenderGear.INSTANCE.renderInventory(null, 0, 0, null);
+		}
+		else if (item.getItem() instanceof ItemMultimeter)
 		{
 			GL11.glPushMatrix();
 			GL11.glRotatef(180, 0, 1, 0);

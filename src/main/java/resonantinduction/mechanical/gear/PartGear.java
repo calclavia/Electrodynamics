@@ -54,7 +54,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		}
 	}
 	/** Side of the block this is placed on */
-	private ForgeDirection placementSide;
+	public ForgeDirection placementSide;
 
 	/** Positive torque means it is spinning clockwise */
 	private long torque = 0;
@@ -221,7 +221,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(Vector3 pos, float frame, int pass)
 	{
-
+		RenderGear.INSTANCE.renderDynamic(this, tile().xCoord, tile().yCoord, tile().zCoord);
 	}
 
 	@Override

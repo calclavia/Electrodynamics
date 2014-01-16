@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 15.01.2014 20:24:21
 
-mtllib Gear.mtl
+mtllib gear.mtl
 
 #
 # object Croc
