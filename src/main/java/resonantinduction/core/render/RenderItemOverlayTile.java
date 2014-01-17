@@ -29,7 +29,12 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
-	public void renderTopCrafting(TileEntity tileEntity, ItemStack[] inventory, double x, double y, double z)
+	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, double x, double y, double z)
+	{
+		renderTopOverlay(tileEntity, inventory, 3, 3, x, y, z);
+	}
+
+	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, int matrixX, int matrixZ, double x, double y, double z)
 	{
 		/**
 		 * Render the Crafting Matrix
@@ -43,11 +48,11 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			isLooking |= objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
 		}
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < (matrixX * matrixZ); i++)
 		{
 			if (inventory[i] != null)
 			{
-				Vector3 translation = new Vector3(x + (double) (i / 3) / 3d + (0.5 / 3d), y + 1.1, z + (double) (i % 3) / 3d + (0.5 / 3d));
+				Vector3 translation = new Vector3(x + (double) (i / matrixX) / ((double) matrixX) + (0.5 / ((double) matrixX)), y + 1.1, z + (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / ((double) matrixZ)));
 				GL11.glPushMatrix();
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);

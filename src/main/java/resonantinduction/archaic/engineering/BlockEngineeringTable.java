@@ -114,10 +114,8 @@ public class BlockEngineeringTable extends BlockRI
 			{
 				if (!world.isRemote)
 				{
-					ItemStack current = player.inventory.getCurrentItem();
-
 					Vector2 hitVector = new Vector2(hitX, hitZ);
-					double regionLength = 1d / 3d;
+					final double regionLength = 1d / 3d;
 
 					/**
 					 * Crafting Matrix
@@ -202,12 +200,6 @@ public class BlockEngineeringTable extends BlockRI
 		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName() + "_side");
 		this.iconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
 		this.iconFront = par1IconRegister.registerIcon(this.getTextureName() + "_front");
-	}
-
-	@Override
-	public boolean isControlDown(EntityPlayer player)
-	{
-		return ControlKeyModifer.isControlDown(player);
 	}
 
 	@Override

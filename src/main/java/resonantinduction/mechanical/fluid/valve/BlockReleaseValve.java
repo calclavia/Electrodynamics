@@ -13,7 +13,7 @@ public class BlockReleaseValve extends BlockRI
 {
 	public BlockReleaseValve()
 	{
-		super("ReleaseValve");
+		super("releaseValve");
 		this.setHardness(1f);
 		this.setResistance(5f);
 	}

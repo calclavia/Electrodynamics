@@ -1,6 +1,8 @@
 package resonantinduction.core.prefab.block;
 
+import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
@@ -35,4 +37,9 @@ public class BlockRI extends BlockTile
 		this.setHardness(1f);
 	}
 
+	@Override
+	public boolean isControlDown(EntityPlayer player)
+	{
+		return ControlKeyModifer.isControlDown(player);
+	}
 }

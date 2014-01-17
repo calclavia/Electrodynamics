@@ -1,4 +1,4 @@
-package resonantinduction.archaic.imprint;
+package resonantinduction.archaic.firebox;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
@@ -7,18 +7,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderImprinter extends RenderItemOverlayTile
+public class RenderHotPlate extends RenderItemOverlayTile
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		if (tileEntity instanceof TileImprinter)
+		if (tileEntity instanceof TileHotPlate)
 		{
-			TileImprinter tile = (TileImprinter) tileEntity;
-			renderTopOverlay(tileEntity, tile.inventory, x, y, z);
-			renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
+			TileHotPlate tile = (TileHotPlate) tileEntity;
+			renderTopOverlay(tileEntity, tile.getInventory().getContainedItems(), 2, 2, x, y - 0.8, z);
 		}
 	}
 }

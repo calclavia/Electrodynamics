@@ -17,7 +17,7 @@ public class RenderEngineeringTable extends RenderItemOverlayTile
 		if (tileEntity instanceof TileEngineeringTable)
 		{
 			TileEngineeringTable tile = (TileEngineeringTable) tileEntity;
-			renderTopCrafting(tileEntity, tile.craftingMatrix, x, y, z);
+			renderTopOverlay(tileEntity, tile.craftingMatrix, x, y, z);
 			renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
 		}
 	}

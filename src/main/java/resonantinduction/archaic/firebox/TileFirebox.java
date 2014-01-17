@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -49,7 +50,7 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Block.fire.blockID);
 				}
 
-				if (burnTime-- == 0)
+				if (--burnTime == 0)
 				{
 					if (blockID == Block.fire.blockID)
 					{
@@ -119,5 +120,19 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		burnTime = nbt.getInteger("burnTime");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("burnTime", burnTime);
 	}
 }
