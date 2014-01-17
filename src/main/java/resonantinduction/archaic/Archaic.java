@@ -28,57 +28,56 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
-/**
- * Resonant Induction Archaic Module
+/** Resonant Induction Archaic Module
  * 
- * @author DarkCow, Calclavia
- * 
- */
+ * @author DarkCow, Calclavia */
 @Mod(modid = Archaic.ID, name = Archaic.NAME, version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Archaic
 {
-	/** Mod Information */
-	public static final String ID = "ResonantInduction|Archaic";
-	public static final String NAME = Reference.NAME + " Archaic";
+    /** Mod Information */
+    public static final String ID = "ResonantInduction|Archaic";
+    public static final String NAME = Reference.NAME + " Archaic";
 
-	@Instance(ID)
-	public static Archaic INSTANCE;
+    @Instance(ID)
+    public static Archaic INSTANCE;
 
-	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
-	public static CommonProxy proxy;
+    @SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
+    public static CommonProxy proxy;
 
-	@Mod.Metadata(ID)
-	public static ModMetadata metadata;
+    @Mod.Metadata(ID)
+    public static ModMetadata metadata;
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
-	public static Block blockEngineeringTable;
-	public static Block blockCrate;
-	public static Block blockImprinter;
-	public static Block blockTurntable;
-	public static Block blockFirebox;
+    public static Block blockEngineeringTable;
+    public static Block blockCrate;
+    public static Block blockImprinter;
+    public static Block blockTurntable;
+    public static Block blockFirebox;
 
-	public static Item itemImprint;
+    public static Item itemImprint;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent evt)
-	{
-		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
-		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
-		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
-		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
-		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent evt)
+    {
+        Settings.load();
+        NetworkRegistry.instance().registerGuiHandler(this, proxy);
+        blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
+        blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
+        blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
+        blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
+        blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 
-		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
-		proxy.preInit();
-	}
+        itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
+        proxy.preInit();
+        Settings.save();
+    }
 
-	@EventHandler
-	public void init(FMLInitializationEvent evt)
-	{
-		Settings.setModMetadata(metadata, ID, NAME);
-		proxy.init();
-	}
+    @EventHandler
+    public void init(FMLInitializationEvent evt)
+    {
+        Settings.setModMetadata(metadata, ID, NAME);
+        proxy.init();
+    }
 }
