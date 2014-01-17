@@ -96,15 +96,16 @@ public class BlockHotPlate extends BlockRI
 				{
 					int i = j * 2 + k;
 
-					if (tile.getSmeltTime(i) > 0)
+					if (tile.getStackInSlot(i) != null && tile.getSmeltTime(i) > 0)
 					{
-						int timeSmelt = TileHotPlate.MAX_SMELT_TIME - tile.getSmeltTime(i);
-System.out.println(timeSmelt);
+						int timeSmelt = TileHotPlate.MAX_SMELT_TIME * tile.getStackInSlot(i).stackSize - tile.getSmeltTime(i);
+
 						for (int spawn = 0; spawn < timeSmelt / 20; spawn++)
 						{
 							Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / ((double) 2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / ((double) 2)));
-							particlePosition.translate(new Vector3(random.nextFloat() * 0.1f, random.nextFloat() * 0.1f, random.nextFloat() * 0.1f));
+							particlePosition.translate(new Vector3((random.nextFloat() - 0.5) * 0.15, (random.nextFloat() - 0.5) * 0.15, (random.nextFloat() - 0.5) * 0.15));
 							world.spawnParticle("smoke", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.0D, 0.0D);
+							world.spawnParticle("flame", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.01D, 0.0D);
 						}
 					}
 				}

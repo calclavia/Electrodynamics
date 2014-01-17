@@ -43,7 +43,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote)
+		// if (!worldObj.isRemote)
 		{
 			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
 
@@ -70,10 +70,13 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 								 */
 								if (--smeltTime[i] == 0)
 								{
-									ItemStack outputStack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(i)).copy();
-									outputStack.stackSize = this.getStackInSlot(i).stackSize;
-									setInventorySlotContents(i, outputStack);
-									worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+									if (!worldObj.isRemote)
+									{
+										ItemStack outputStack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(i)).copy();
+										outputStack.stackSize = this.getStackInSlot(i).stackSize;
+										setInventorySlotContents(i, outputStack);
+										worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+									}
 								}
 							}
 						}
@@ -126,7 +129,11 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public void onInventoryChanged()
 	{
 		super.onInventoryChanged();
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+
+		if (worldObj != null)
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	/**
