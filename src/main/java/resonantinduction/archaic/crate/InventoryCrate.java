@@ -53,17 +53,17 @@ public class InventoryCrate extends ExternalInventory
 	}
 
 	@Override
-	public NBTTagCompound saveInv(NBTTagCompound nbt)
+	public NBTTagCompound save(NBTTagCompound nbt)
 	{
 		return nbt;
 	}
 
 	@Override
-	public void loadInv(NBTTagCompound nbt)
+	public void load(NBTTagCompound nbt)
 	{
 		if (nbt.hasKey("Items"))
 		{
-			super.loadInv(nbt);
+			super.load(nbt);
 		}
 
 	}

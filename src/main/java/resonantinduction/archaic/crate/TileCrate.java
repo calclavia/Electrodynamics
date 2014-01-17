@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileAdvancedInventory;
+import calclavia.lib.prefab.tile.TileExternalInventory;
 import calclavia.lib.utility.inventory.IExtendedStorage;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.Side;
  * 
  * @author DarkGuardsman
  */
-public class TileCrate extends TileAdvancedInventory implements IPacketReceiver, IExtendedStorage
+public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage
 {
 	/*
 	 * TODO

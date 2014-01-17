@@ -2,6 +2,7 @@ package resonantinduction.archaic.blocks;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -15,7 +16,7 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.TileAdvancedInventory;
+import calclavia.lib.prefab.tile.TileExternalInventory;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,13 +26,13 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileFirebox extends TileAdvancedInventory implements IPacketSender, IPacketReceiver
+public class TileFirebox extends TileExternalInventory implements IPacketSender, IPacketReceiver
 {
 	/**
 	 * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
 	 * into fluids to increase their internal energy.
 	 */
-	private final int POWER = 1000;
+	private final int POWER = 50000;
 	private int burnTime;
 
 	@Override
@@ -39,12 +40,23 @@ public class TileFirebox extends TileAdvancedInventory implements IPacketSender,
 	{
 		if (!worldObj.isRemote)
 		{
+			int blockID = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
+
 			if (burnTime > 0)
 			{
+				if (blockID == 0 && blockID != Block.fire.blockID)
+				{
+					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Block.fire.blockID);
+				}
+
 				if (burnTime-- == 0)
 				{
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
+			}
+			else if (blockID == Block.fire.blockID)
+			{
+				worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
 			}
 
 			if (canBurn(this.getStackInSlot(0)))
@@ -52,16 +64,21 @@ public class TileFirebox extends TileAdvancedInventory implements IPacketSender,
 				if (burnTime == 0)
 				{
 					burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0));
-					decrStackSize(1, 1);
+					decrStackSize(0, 1);
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
 			}
 		}
 	}
 
-	private boolean canBurn(ItemStack stack)
+	public boolean canBurn(ItemStack stack)
 	{
 		return TileEntityFurnace.getItemBurnTime(stack) > 0;
+	}
+
+	public boolean isBurning()
+	{
+		return burnTime > 0;
 	}
 
 	@Override
@@ -95,10 +112,5 @@ public class TileFirebox extends TileAdvancedInventory implements IPacketSender,
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public boolean isBurning()
-	{
-		return burnTime > 0;
 	}
 }

@@ -13,16 +13,16 @@ import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.IExtraInfo.IExtraTileEntityInfo;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileAdvancedInventory;
-import calclavia.lib.utility.inventory.IExternalInv;
-import calclavia.lib.utility.inventory.IInvBox;
+import calclavia.lib.prefab.tile.TileExternalInventory;
+import calclavia.lib.utility.inventory.IExternalInventory;
+import calclavia.lib.utility.inventory.IExternalInventoryBox;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
-public abstract class TileMachine extends TileAdvancedInventory implements ISidedInventory, IExternalInv, IExtraTileEntityInfo
+public abstract class TileMachine extends TileExternalInventory implements ISidedInventory, IExternalInventory, IExtraTileEntityInfo
 {
 	/** Number of players with the machine's gui container open */
 	protected int playersUsingMachine = 0;
@@ -42,7 +42,7 @@ public abstract class TileMachine extends TileAdvancedInventory implements ISide
 	protected boolean locked = false;
 
 	/** Inventory manager used by this machine */
-	protected IInvBox inventory;
+	protected IExternalInventoryBox inventory;
 
 	/** Default generic packet types used by all machines */
 	public static enum SimplePacketTypes
