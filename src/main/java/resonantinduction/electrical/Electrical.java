@@ -19,6 +19,7 @@ import resonantinduction.core.part.BlockMachinePart;
 import resonantinduction.electrical.armbot.BlockArmbot;
 import resonantinduction.electrical.armbot.TileArmbot;
 import resonantinduction.electrical.battery.BlockBattery;
+import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.encoder.BlockEncoder;
 import resonantinduction.electrical.encoder.TileEncoder;
@@ -114,7 +115,7 @@ public class Electrical
 		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
 		itemTransformer = contentRegistry.createItem(ItemTransformer.class);
 		blockTesla = contentRegistry.createTile(BlockTesla.class, TileTesla.class);
-		blockBattery = contentRegistry.createTile(BlockBattery.class, TileBattery.class);
+		blockBattery = contentRegistry.createBlock(BlockBattery.class, ItemBlockBattery.class, TileBattery.class);
 
 		// Transport
 		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
