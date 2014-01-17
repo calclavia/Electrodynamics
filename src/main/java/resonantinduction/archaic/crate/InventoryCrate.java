@@ -53,9 +53,9 @@ public class InventoryCrate extends ExternalInventory
 	}
 
 	@Override
-	public NBTTagCompound save(NBTTagCompound nbt)
+	public void save(NBTTagCompound nbt)
 	{
-		return nbt;
+
 	}
 
 	@Override

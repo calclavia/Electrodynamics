@@ -10,8 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector2;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.PacketHandler;
@@ -33,6 +31,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	 */
 	private final int POWER = 50000;
 	public final int[] smeltTime = new int[] { 0, 0, 0, 0 };
+	public final int[] stackSizeCache = new int[] { 0, 0, 0, 0 };
 	public static final int MAX_SMELT_TIME = 200;
 
 	public TileHotPlate()
@@ -60,7 +59,8 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 								/**
 								 * Heat up all slots
 								 */
-								smeltTime[i] = MAX_SMELT_TIME * this.getStackInSlot(i).stackSize;
+								stackSizeCache[i] = this.getStackInSlot(i).stackSize;
+								smeltTime[i] = MAX_SMELT_TIME * stackSizeCache[i];
 								worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 							}
 							else if (smeltTime[i] > 0)
@@ -73,7 +73,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 									if (!worldObj.isRemote)
 									{
 										ItemStack outputStack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(i)).copy();
-										outputStack.stackSize = this.getStackInSlot(i).stackSize;
+										outputStack.stackSize = stackSizeCache[i];
 										setInventorySlotContents(i, outputStack);
 										worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 									}
@@ -87,6 +87,40 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		super.onInventoryChanged();
+
+		/**
+		 * Update cache calculation.
+		 */
+		for (int i = 0; i < invSlots; i++)
+		{
+			if (getStackInSlot(i) != null)
+			{
+				if (stackSizeCache[i] != getStackInSlot(i).stackSize)
+				{
+					if (smeltTime[i] > 0)
+					{
+						smeltTime[i] += (getStackInSlot(i).stackSize - stackSizeCache[i]) * MAX_SMELT_TIME;
+					}
+
+					stackSizeCache[i] = getStackInSlot(i).stackSize;
+				}
+			}
+			else
+			{
+				stackSizeCache[i] = 0;
+			}
+		}
+
+		if (worldObj != null)
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 	}
 
@@ -123,17 +157,6 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public Packet getDescriptionPacket()
 	{
 		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
-	}
-
-	@Override
-	public void onInventoryChanged()
-	{
-		super.onInventoryChanged();
-
-		if (worldObj != null)
-		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
 	}
 
 	/**
