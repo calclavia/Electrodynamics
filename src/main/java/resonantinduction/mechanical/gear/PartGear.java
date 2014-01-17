@@ -36,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalConnector
+public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanical, IMechanicalConnector
 {
 	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
 
@@ -104,7 +104,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			angle += this.getNetwork().getAngularVelocity() / 20;
 		else
 			angle -= this.getNetwork().getAngularVelocity() / 20;
-		// this.sendRotationUpdate();
 	}
 
 	public void refresh()
@@ -208,6 +207,9 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	{
 		getNetwork().applyEnergy(torque, angularVelocity);
 		markRotationUpdate = true;
+
+		if (!world().isRemote)
+			this.sendRotationUpdate(torque, angularVelocity);
 	}
 
 	@Override
@@ -242,13 +244,13 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	{
 		if (packetID == 0)
 		{
-			((MechanicalNetwork) this.getNetwork()).angularVelocity = packet.readFloat();
+			onReceiveEnergy(null, packet.readLong(), packet.readFloat());
 		}
 	}
 
-	public void sendRotationUpdate()
+	public void sendRotationUpdate(long torque, float angularVelocity)
 	{
-		tile().getWriteStream(this).writeByte(0).writeFloat(this.getNetwork().getAngularVelocity());
+		tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity);
 	}
 
 	@Override

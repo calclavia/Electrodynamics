@@ -2,6 +2,7 @@ package resonantinduction.mechanical;
 
 import resonantinduction.mechanical.gear.PartGear;
 import codechicken.multipart.MultiPartRegistry;
+import codechicken.multipart.MultipartGenerator;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.TMultiPart;
 
@@ -14,6 +15,7 @@ public class MultipartMechanical implements IPartFactory
 	public MultipartMechanical()
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
+		MultipartGenerator.registerTrait("resonantinduction.mechanical.network.IMechanical", "resonantinduction.mechanical.gear.TraitMechanical");
 	}
 
 	@Override

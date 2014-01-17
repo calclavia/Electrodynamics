@@ -1,10 +1,11 @@
 package resonantinduction.electrical.generator;
 
+import java.util.EnumSet;
+
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalNetwork;
-import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileElectrical;
 
 /**
@@ -37,9 +38,42 @@ public class TileGenerator extends TileElectrical implements IMechanical
 			}
 			else
 			{
-				// TODO:Do something here to set mechanical energy.
+				Vector3 outputVector = new Vector3(this).modifyPositionFromSide(getOuputDirection());
+				Object mechanical = outputVector.getTileEntity(worldObj);
+
+				if (mechanical instanceof IMechanical)
+				{
+					long extract = energy.extractEnergy();
+					((IMechanical) mechanical).onReceiveEnergy(getOuputDirection().getOpposite(), (long) (extract / 0.5f), 0.5f);
+				}
 			}
 		}
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getInputDirections()
+	{
+		EnumSet<ForgeDirection> dirs = EnumSet.noneOf(ForgeDirection.class);
+		dirs.add(getInputDirection());
+		return dirs;
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		EnumSet<ForgeDirection> dirs = EnumSet.noneOf(ForgeDirection.class);
+		dirs.add(getOuputDirection());
+		return dirs;
+	}
+
+	public ForgeDirection getInputDirection()
+	{
+		return ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
+	}
+
+	public ForgeDirection getOuputDirection()
+	{
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
 	}
 
 	private boolean isFunctioning()
