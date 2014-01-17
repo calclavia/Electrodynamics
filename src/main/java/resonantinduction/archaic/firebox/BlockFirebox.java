@@ -127,9 +127,16 @@ public class BlockFirebox extends BlockRI
 	}
 
 	@Override
-	public boolean isControlDown(EntityPlayer player)
+	public float getBlockBrightness(IBlockAccess access, int x, int y, int z)
 	{
-		return ControlKeyModifer.isControlDown(player);
+		TileEntity tileEntity = access.getBlockTileEntity(x, y, z);
+
+		if (((TileFirebox) tileEntity).isBurning())
+		{
+			return 1;
+		}
+
+		return 0;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import cpw.mods.fml.common.ModMetadata;
 public class Settings
 {
 	/** IDs suggested by Jyzarc and Horfius */
-	public static final IDManager idManager = new IDManager(3200, 20150);
+	public static final IDManager idManager = new IDManager(1200, 20150);
 
 	public static int getNextBlockID()
 	{

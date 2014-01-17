@@ -3,20 +3,16 @@ package resonantinduction.mechanical.network;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IConnectable;
 
-/**
- * Applied to machines that connect to a mech network
- * 
- * @author Darkguardsman
- */
 public interface IMechanical extends IConnectable
 {
-	public void setPower(long torque, float speed);
-
-	public long getPower();
-
-	/** Called by the network when its torque value changes. */
-	public void onTorqueChange(ForgeDirection side, int speed);
-
-	/** Gets the force on the side, zero is ignored, neg is input force, pos is output force */
-	public int getForceSide(ForgeDirection side);
+	/**
+	 * Adds energy to a block. Returns the quantity of energy that was accepted. This should always
+	 * return 0 if the block cannot be externally charged.
+	 * 
+	 * @param from Orientation the energy is sent in from.
+	 * @param receive Maximum amount of energy (joules) to be sent into the block.
+	 * @param doReceive If false, the charge will only be simulated.
+	 * @return Amount of energy that was accepted by the block.
+	 */
+	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity);
 }

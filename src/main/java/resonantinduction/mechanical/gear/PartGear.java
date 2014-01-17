@@ -40,8 +40,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 {
 	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
 
-	private IMechanicalNetwork network;
-
 	static
 	{
 		oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
@@ -53,44 +51,64 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
 		}
 	}
+
+	private IMechanicalNetwork network;
+
 	/** Side of the block this is placed on */
 	public ForgeDirection placementSide;
-
-	/** Positive torque means it is spinning clockwise */
-	private long torque = 0;
-
-	private long force = 0;
 
 	/** The size of the gear */
 	private float radius = 0.5f;
 
-	/** The angular velocity, radians per second. */
-	private float angularVelocity = 0;
+	public boolean isClockwise = true;
 
 	/** The current angle the gear is on. In radians per second. */
 	public float angle = 0;
+
+	/** When true, it will start marking nearby gears for update */
+	public boolean markRotationUpdate = true;
+
+	/** The mechanical connections this gear has made */
+	protected Object[] connections = new Object[6];
+
+	private int manualCrankTime = 0;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
 		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
 	}
 
-	public long getTorque()
-	{
-		return (long) torque;// (force * radius);
-	}
-
 	@Override
 	public void update()
 	{
-
-		if (angularVelocity < 0 || torque == 0)
+		if (manualCrankTime > 0)
 		{
-			angularVelocity = 0;
-			torque = 0;
+			onReceiveEnergy(null, 20, 0.3f);
+			manualCrankTime--;
 		}
 
-		// TODO: Should we average the torque?
+		if (markRotationUpdate)
+		{
+			refresh();
+		}
+
+	}
+
+	@Override
+	public void networkUpdate()
+	{
+		/**
+		 * Update angle rotation.
+		 */
+		if (isClockwise)
+			angle += this.getNetwork().getAngularVelocity() / 20;
+		else
+			angle -= this.getNetwork().getAngularVelocity() / 20;
+		// this.sendRotationUpdate();
+	}
+
+	public void refresh()
+	{
 		/** Look for gears that are back-to-back with this gear. Equate torque. */
 		universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(placementSide);
 
@@ -98,17 +116,19 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 		if (tile instanceof TileMultipart)
 		{
-			TMultiPart part = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
+			TMultiPart neighbor = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
 
-			if (part instanceof PartGear)
+			if (neighbor instanceof PartGear)
 			{
-				equatePower((PartGear) part, false);
+				connections[this.placementSide.getOpposite().ordinal()] = neighbor;
+				getNetwork().merge(((PartGear) neighbor).getNetwork());
+				equateRotation((PartGear) neighbor, false);
 			}
 		}
 		else if (tile instanceof IMechanical)
 		{
-			torque = (long) (((IMechanical) tile).getPower() / angularVelocity);
-			((IMechanical) tile).setPower(torque, angularVelocity);
+			connections[this.placementSide.getOpposite().ordinal()] = tile;
+			getNetwork().reconstruct();
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
@@ -125,65 +145,78 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 				if (neighbor != this && neighbor instanceof PartGear)
 				{
-					equatePower((PartGear) neighbor, false);
+					connections[checkDir.ordinal()] = neighbor;
+					getNetwork().merge(((PartGear) neighbor).getNetwork());
+					equateRotation((PartGear) neighbor, false);
 				}
 			}
 		}
 
 		/** Look for gears that are internal and adjacent to this gear. (The 2 sides) */
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 4; i++)
 		{
-			// TODO: Make it work with UP-DOWN
-			if (i < 4)
-			{
-				TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(ForgeDirection.getOrientation(i)).ordinal());
+			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+			TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(checkDir).ordinal());
 
-				if (neighbor != this && neighbor instanceof PartGear)
-				{
-					equatePower((PartGear) neighbor, false);
-				}
+			if (neighbor != this && neighbor instanceof PartGear)
+			{
+				connections[checkDir.ordinal()] = neighbor;
+				getNetwork().merge(((PartGear) neighbor).getNetwork());
+				equateRotation((PartGear) neighbor, false);
 			}
 		}
-		
-		/**
-		 * Update angle rotation.
-		 */
-		if (angularVelocity > 0 && torque != 0)
-		{
-			angle += angularVelocity / 20;
-		}
+
+		markRotationUpdate = false;
 	}
 
-	public void equatePower(PartGear neighbor, boolean isPositive)
+	@Override
+	public Object[] getConnections()
 	{
-		if (isPositive)
-		{
-			torque = (torque + ((PartGear) neighbor).torque) / 2;
-			((PartGear) neighbor).torque = torque;
+		return connections;
+	}
 
-		}
-		else
+	public void equateRotation(PartGear neighbor, boolean isPositive)
+	{
+		if (!neighbor.markRotationUpdate)
 		{
-			torque = (torque - ((PartGear) neighbor).torque) / 2;
-			((PartGear) neighbor).torque = -torque;
-		}
+			if (isPositive)
+			{
+				((PartGear) neighbor).isClockwise = isClockwise;
+			}
+			else
+			{
+				((PartGear) neighbor).isClockwise = !isClockwise;
+			}
 
-		angularVelocity = (angularVelocity + ((PartGear) neighbor).angularVelocity) / 2;
-		((PartGear) neighbor).angularVelocity = angularVelocity;
+			neighbor.markRotationUpdate = true;
+		}
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println("Torque" + torque + " Angular Velocity" + angularVelocity);
-
+		System.out.println(this.getNetwork().getAngularVelocity());
 		if (player.isSneaking())
 		{
-			this.torque += 10;
-			this.angularVelocity += 0.2f;
+			this.manualCrankTime = 20;
 		}
 
 		return false;
+	}
+
+	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
+	{
+		getNetwork().applyEnergy(torque, angularVelocity);
+		markRotationUpdate = true;
+	}
+
+	@Override
+	public void preRemove()
+	{
+		if (!world().isRemote)
+		{
+			this.getNetwork().split(this);
+		}
 	}
 
 	/** Packet Code. */
@@ -197,6 +230,25 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	public void writeDesc(MCDataOutput packet)
 	{
 		packet.writeByte(this.placementSide.ordinal());
+	}
+
+	@Override
+	public void read(MCDataInput packet)
+	{
+		read(packet, packet.readUByte());
+	}
+
+	public void read(MCDataInput packet, int packetID)
+	{
+		if (packetID == 0)
+		{
+			((MechanicalNetwork) this.getNetwork()).angularVelocity = packet.readFloat();
+		}
+	}
+
+	public void sendRotationUpdate()
+	{
+		tile().getWriteStream(this).writeByte(0).writeFloat(this.getNetwork().getAngularVelocity());
 	}
 
 	@Override
@@ -279,12 +331,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	}
 
 	@Override
-	public Object[] getConnections()
-	{
-		return null;
-	}
-
-	@Override
 	public IMechanicalNetwork getNetwork()
 	{
 		if (this.network == null)
@@ -305,13 +351,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechanicalConnector;
-	}
-
-	@Override
-	public int getResistance()
-	{
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

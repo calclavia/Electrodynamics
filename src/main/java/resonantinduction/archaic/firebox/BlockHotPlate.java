@@ -33,6 +33,18 @@ public class BlockHotPlate extends BlockRI
 	}
 
 	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconReg)
 	{

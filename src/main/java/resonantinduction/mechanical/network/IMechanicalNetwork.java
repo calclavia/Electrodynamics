@@ -21,10 +21,13 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 
 	/**
 	 * Gets the angular velocity of the network.
+	 * 
 	 * @return In radians per second.
 	 */
-	public int getAngularVelocity();
+	public float getAngularVelocity();
 
 	/** Called to rebuild the network */
 	public void reconstruct();
+
+	public void applyEnergy(long torque, float angularVelocity);
 }

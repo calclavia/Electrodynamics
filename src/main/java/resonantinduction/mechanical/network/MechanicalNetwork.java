@@ -1,7 +1,9 @@
 package resonantinduction.mechanical.network;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IConnector;
@@ -23,20 +25,75 @@ import universalelectricity.core.net.NetworkTickHandler;
  * Torque = r (Radius) * F (Force) * sin0 (Direction/Angle of the force applied. 90 degrees if
  * optimal.)
  * 
- * @author DarkGuardsman
+ * @author Calclavia
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork
 {
-	private int torque = 0;
-	private int speed = 0;
-	private int resistance = 0;
+	public int torque = 0;
+	public float angularVelocity = 0;
 
-	private HashMap<IMechanical, ForceWrapper[]> torqueMap = new HashMap<IMechanical, ForceWrapper[]>();
+	/** The direction in which a conductor is placed relative to a specific conductor. */
+	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
 	@Override
 	public void update()
 	{
+		for (IMechanicalConnector connector : this.getConnectors())
+		{
+			connector.networkUpdate();
+		}
 
+		for (IMechanical node : this.getNodes())
+		{
+			for (ForgeDirection dir : handlerDirectionMap.get(node))
+			{
+				node.onReceiveEnergy(dir, torque, angularVelocity);
+			}
+		}
+
+		torque = 0;
+		angularVelocity = 0;
+	}
+
+	/**
+	 * Applies energy to the mechanical network this tick.
+	 */
+	@Override
+	public void applyEnergy(long torque, float angularVelocity)
+	{
+		this.torque += Math.abs(torque);
+		this.angularVelocity += Math.abs(angularVelocity);
+		NetworkTickHandler.addNetwork(this);
+	}
+
+	@Override
+	public int getTorque()
+	{
+		return this.torque;
+	}
+
+	@Override
+	public float getAngularVelocity()
+	{
+		return this.angularVelocity;
+	}
+
+	@Override
+	public long getPower()
+	{
+		return (long) (this.getTorque() * this.getAngularVelocity());
+	}
+
+	@Override
+	public boolean canUpdate()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean continueUpdate()
+	{
+		return false;
 	}
 
 	@Override
@@ -46,21 +103,17 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		{
 			// Reset all values related to wires
 			this.getNodes().clear();
-			this.torqueMap.clear();
-			this.resistance = 0;
-			this.torque = 0;
-			this.speed = 0;
 
 			// Iterate threw list of wires
 			Iterator<IMechanicalConnector> it = this.getConnectors().iterator();
 
 			while (it.hasNext())
 			{
-				IMechanicalConnector conductor = it.next();
+				IMechanicalConnector connector = it.next();
 
-				if (conductor != null)
+				if (connector != null)
 				{
-					this.reconstructConductor(conductor);
+					reconstructConnector(connector);
 				}
 				else
 				{
@@ -76,16 +129,14 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	}
 
 	/** Segmented out call so overriding can be done when conductors are reconstructed. */
-	protected void reconstructConductor(IMechanicalConnector conductor)
+	protected void reconstructConnector(IMechanicalConnector connector)
 	{
-		conductor.setNetwork(this);
+		connector.setNetwork(this);
 
-		for (int i = 0; i < conductor.getConnections().length; i++)
+		for (int i = 0; i < connector.getConnections().length; i++)
 		{
-			reconstructHandler(conductor.getConnections()[i], ForgeDirection.getOrientation(i).getOpposite());
+			reconstructHandler(connector.getConnections()[i], ForgeDirection.getOrientation(i).getOpposite());
 		}
-
-		this.resistance += conductor.getResistance();
 	}
 
 	/** Segmented out call so overriding can be done when machines are reconstructed. */
@@ -95,28 +146,16 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		{
 			if (obj instanceof IMechanical)
 			{
-				ForceWrapper[] set = this.torqueMap.get((IMechanical) obj);
+				EnumSet<ForgeDirection> set = this.handlerDirectionMap.get(obj);
 				if (set == null)
 				{
-					set = new ForceWrapper[6];
+					set = EnumSet.noneOf(ForgeDirection.class);
 				}
 				this.getNodes().add((IMechanical) obj);
-				set[side.ordinal()] = new ForceWrapper(((IMechanical) obj).getForceSide(side.getOpposite()), ((IMechanical) obj).getForceSide(side.getOpposite()));
-				this.torqueMap.put((IMechanical) obj, set);
+				set.add(side);
+				this.handlerDirectionMap.put(obj, set);
 			}
 		}
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return true;
 	}
 
 	@Override
@@ -127,7 +166,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 			MechanicalNetwork newNetwork = new MechanicalNetwork();
 			newNetwork.getConnectors().addAll(this.getConnectors());
 			newNetwork.getConnectors().addAll(network.getConnectors());
-
 			network.getConnectors().clear();
 			network.getNodes().clear();
 			this.getConnectors().clear();
@@ -225,35 +263,4 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 			newNetwork.reconstruct();
 		}
 	}
-
-	@Override
-	public int getTorque()
-	{
-		return this.torque;
-	}
-
-	@Override
-	public int getAngularVelocity()
-	{
-		return this.speed;
-	}
-
-	public static class ForceWrapper
-	{
-		public int force = 0;
-		public int speed = 0;
-
-		public ForceWrapper(int force, int speed)
-		{
-			this.force = force;
-			this.speed = speed;
-		}
-	}
-
-	@Override
-	public long getPower()
-	{
-		return this.getTorque() * this.getAngularVelocity();
-	}
-
 }

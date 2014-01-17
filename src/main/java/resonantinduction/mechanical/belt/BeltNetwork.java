@@ -3,7 +3,6 @@ package resonantinduction.mechanical.belt;
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.api.IBelt;
 import resonantinduction.api.IBeltNetwork;
-import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.net.IConnector;
@@ -126,10 +125,11 @@ public class BeltNetwork extends Network<IBeltNetwork, IBelt, TileEntity> implem
 
             for (IConnector node : finder.closedSet)
             {
-                if (node instanceof IMechanicalConnector)
+            	//TODO: Fix this
+               /* if (node instanceof IMechanicalConnector)
                 {
                     newNetwork.addConnector((IMechanicalConnector) node);
-                }
+                }*/
             }
 
             newNetwork.reconstruct();

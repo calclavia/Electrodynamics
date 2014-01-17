@@ -2,6 +2,8 @@ package resonantinduction.electrical.generator;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
+import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
 
@@ -46,26 +48,8 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	}
 
 	@Override
-	public void setPower(long torque, float speed)
+	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
 	{
-		this.power = (long) Math.abs(torque * speed);
+		energy.receiveEnergy((long) (torque * angularVelocity), true);
 	}
-
-	@Override
-	public long getPower()
-	{
-		return this.power;
-	}
-
-	@Override
-	public void onTorqueChange(ForgeDirection side, int speed)
-	{
-	}
-
-	@Override
-	public int getForceSide(ForgeDirection side)
-	{
-		return 0;
-	}
-
 }

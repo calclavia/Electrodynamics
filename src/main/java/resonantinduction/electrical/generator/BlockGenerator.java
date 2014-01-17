@@ -22,8 +22,12 @@ public class BlockGenerator extends BlockRIRotatable
 
 		if (tileEntity instanceof TileGenerator)
 		{
-			((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
-			entityPlayer.addChatMessage("Generator now producing " + (((TileGenerator) tileEntity).isInversed ? "electrical" : "mechanical") + " energy.");
+			if (!world.isRemote)
+			{
+				((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
+				entityPlayer.addChatMessage("Generator now producing " + (((TileGenerator) tileEntity).isInversed ? "electrical" : "mechanical") + " energy.");
+			}
+			
 			return true;
 		}
 		return false;

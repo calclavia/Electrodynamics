@@ -15,7 +15,7 @@ public class BlockRIRotatable extends BlockRotatable
 {
 	public BlockRIRotatable(String name)
 	{
-		this(name, Settings.getNextItemID());
+		this(name, Settings.getNextBlockID());
 	}
 
 	public BlockRIRotatable(String name, int id)
