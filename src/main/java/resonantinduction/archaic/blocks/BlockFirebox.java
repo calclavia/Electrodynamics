@@ -53,7 +53,7 @@ public class BlockFirebox extends BlockRI
 			}
 			else
 			{
-				
+
 			}
 		}
 
@@ -67,7 +67,7 @@ public class BlockFirebox extends BlockRI
 
 		if (tile instanceof TileFirebox)
 		{
-			if (access.getBlockMetadata(x, y, z) == side)
+			if (side == 1)
 			{
 				if (((TileFirebox) tile).isBurning())
 				{

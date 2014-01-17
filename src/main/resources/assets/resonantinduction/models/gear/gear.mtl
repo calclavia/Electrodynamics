@@ -1,16 +1,13 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 16.01.2014 23:32:32
+# Blender MTL File: 'None'
+# Material Count: 1
 
 newmtl Material__25
-	Ns 10.000000
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 0.588000 0.588000 0.588000
-	Kd 0.588000 0.588000 0.588000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka C:\Users\mrabow\Google Drev\EDX\Cyanide\WoodTexture.png
-	map_Kd C:\Users\mrabow\Google Drev\EDX\Cyanide\WoodTexture.png
+Ns 7.843137
+Ka 0.000000 0.000000 0.000000
+Kd 0.470400 0.470400 0.470400
+Ks 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\mrabow\Google Drev\EDX\Cyanide\WoodTexture.png
+map_Ka C:\\Users\\mrabow\\Google Drev\\EDX\\Cyanide\\WoodTexture.png
