@@ -9,11 +9,13 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileExternalInventory;
+import calclavia.lib.prefab.tile.TileElectricalInventory;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -23,12 +25,8 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileHotPlate extends TileExternalInventory implements IPacketSender, IPacketReceiver
+public class TileHotPlate extends TileElectricalInventory implements IPacketSender, IPacketReceiver
 {
-	/**
-	 * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
-	 * into fluids to increase their internal energy.
-	 */
 	private final int POWER = 50000;
 	public final int[] smeltTime = new int[] { 0, 0, 0, 0 };
 	public final int[] stackSizeCache = new int[] { 0, 0, 0, 0 };
@@ -36,56 +34,59 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 
 	public TileHotPlate()
 	{
-		invSlots = 4;
+		maxSlots = 4;
+		energy = new EnergyStorageHandler(POWER * 2, POWER);
+		setIO(ForgeDirection.UP, 0);
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		// if (!worldObj.isRemote)
+		if (canRun())
 		{
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
+			boolean didSmelt = false;
 
-			if (tileEntity instanceof TileFirebox)
+			for (int i = 0; i < maxSlots; i++)
 			{
-				if (((TileFirebox) tileEntity).isBurning())
+				if (canSmelt(this.getStackInSlot(i)))
 				{
-					for (int i = 0; i < invSlots; i++)
+					if (smeltTime[i] <= 0)
 					{
-						if (canSmelt(this.getStackInSlot(i)))
+						/**
+						 * Heat up all slots
+						 */
+						stackSizeCache[i] = this.getStackInSlot(i).stackSize;
+						smeltTime[i] = MAX_SMELT_TIME * stackSizeCache[i];
+						worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+					}
+					else if (smeltTime[i] > 0)
+					{
+						/**
+						 * Do the smelt action.
+						 */
+						if (--smeltTime[i] == 0)
 						{
-							if (smeltTime[i] <= 0)
+							if (!worldObj.isRemote)
 							{
-								/**
-								 * Heat up all slots
-								 */
-								stackSizeCache[i] = this.getStackInSlot(i).stackSize;
-								smeltTime[i] = MAX_SMELT_TIME * stackSizeCache[i];
+								ItemStack outputStack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(i)).copy();
+								outputStack.stackSize = stackSizeCache[i];
+								setInventorySlotContents(i, outputStack);
 								worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 							}
-							else if (smeltTime[i] > 0)
-							{
-								/**
-								 * Do the smelt action.
-								 */
-								if (--smeltTime[i] == 0)
-								{
-									if (!worldObj.isRemote)
-									{
-										ItemStack outputStack = FurnaceRecipes.smelting().getSmeltingResult(getStackInSlot(i)).copy();
-										outputStack.stackSize = stackSizeCache[i];
-										setInventorySlotContents(i, outputStack);
-										worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-									}
-								}
-							}
-						}
-						else
-						{
-							smeltTime[i] = 0;
 						}
 					}
+
+					didSmelt = true;
 				}
+				else
+				{
+					smeltTime[i] = 0;
+				}
+			}
+
+			if (didSmelt)
+			{
+				energy.extractEnergy();
 			}
 		}
 	}
@@ -98,7 +99,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 		/**
 		 * Update cache calculation.
 		 */
-		for (int i = 0; i < invSlots; i++)
+		for (int i = 0; i < maxSlots; i++)
 		{
 			if (getStackInSlot(i) != null)
 			{
@@ -124,6 +125,39 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 		}
 	}
 
+	public boolean isElectrical()
+	{
+		return this.getBlockMetadata() == 1;
+	}
+
+	public boolean canRun()
+	{
+		if (isElectrical())
+		{
+			return energy.checkExtract();
+		}
+		else
+		{
+			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
+
+			if (tileEntity instanceof TileFirebox)
+			{
+				if (((TileFirebox) tileEntity).isBurning())
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return isElectrical() && super.canConnect(direction);
+	}
+
 	public boolean canSmelt(ItemStack stack)
 	{
 		return FurnaceRecipes.smelting().getSmeltingResult(stack) != null;
@@ -131,7 +165,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 
 	public boolean isSmelting()
 	{
-		for (int i = 0; i < invSlots; i++)
+		for (int i = 0; i < maxSlots; i++)
 		{
 			if (getSmeltTime(i) > 0)
 			{
@@ -150,7 +184,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return i < invSlots && canSmelt(itemStack);
+		return i < maxSlots && canSmelt(itemStack);
 	}
 
 	@Override
@@ -192,7 +226,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		for (int i = 0; i < invSlots; i++)
+		for (int i = 0; i < maxSlots; i++)
 			smeltTime[i] = nbt.getInteger("smeltTime" + i);
 	}
 
@@ -200,7 +234,7 @@ public class TileHotPlate extends TileExternalInventory implements IPacketSender
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		for (int i = 0; i < invSlots; i++)
+		for (int i = 0; i < maxSlots; i++)
 			nbt.setInteger("smeltTime" + i, smeltTime[i]);
 	}
 

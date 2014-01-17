@@ -19,7 +19,7 @@ public abstract class TileEntityFilterable extends TileAssembly implements IRota
 	public TileEntityFilterable()
 	{
 		super(0);
-		this.invSlots = 2;
+		this.maxSlots = 2;
 	}
 
 	public TileEntityFilterable(long wattsPerTick, long maxEnergy)

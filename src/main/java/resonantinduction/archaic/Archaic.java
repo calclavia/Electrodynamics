@@ -20,6 +20,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.item.ItemBlockMetadata;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -73,7 +74,7 @@ public class Archaic
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
 		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
 		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
-		blockHotPlate = contentRegistry.createTile(BlockHotPlate.class, TileHotPlate.class);
+		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
 
 		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
 		proxy.preInit();
