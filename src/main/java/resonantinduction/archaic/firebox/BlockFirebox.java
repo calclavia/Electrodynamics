@@ -1,7 +1,8 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.archaic.firebox;
 
 import java.util.Random;
 
+import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,29 +38,26 @@ public class BlockFirebox extends BlockRI
 	}
 
 	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileFirebox)
 		{
 			TileFirebox tile = (TileFirebox) tileEntity;
+			extractItem(tile, 0, player);
+		}
+	}
 
-			if (tile.getStackInSlot(0) == null)
-			{
-				if (tile.canBurn(entityPlayer.inventory.getCurrentItem()))
-				{
-					tile.setInventorySlotContents(0, entityPlayer.inventory.getCurrentItem());
-					entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
-					return true;
-				}
-			}
-			else
-			{
-				InventoryUtility.dropItemStack(world, new Vector3(entityPlayer), tile.getStackInSlot(0));
-				tile.setInventorySlotContents(0, null);
-				return true;
-			}
+	@Override
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileFirebox)
+		{
+			TileFirebox tile = (TileFirebox) tileEntity;
+			return interactCurrentItem(tile, 0, player);
 		}
 
 		return false;
@@ -126,6 +124,12 @@ public class BlockFirebox extends BlockRI
 			world.spawnParticle("smoke", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
 			world.spawnParticle("flame", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
 		}
+	}
+
+	@Override
+	public boolean isControlDown(EntityPlayer player)
+	{
+		return ControlKeyModifer.isControlDown(player);
 	}
 
 	@Override

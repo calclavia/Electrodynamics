@@ -2,14 +2,14 @@ package resonantinduction.archaic;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import resonantinduction.archaic.blocks.BlockFirebox;
 import resonantinduction.archaic.blocks.BlockTurntable;
-import resonantinduction.archaic.blocks.TileFirebox;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.BlockEngineeringTable;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
+import resonantinduction.archaic.firebox.BlockFirebox;
+import resonantinduction.archaic.firebox.TileFirebox;
 import resonantinduction.archaic.imprint.BlockImprinter;
 import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.archaic.imprint.TileImprinter;

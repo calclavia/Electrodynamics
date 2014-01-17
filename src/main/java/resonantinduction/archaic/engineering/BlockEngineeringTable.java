@@ -132,55 +132,7 @@ public class BlockEngineeringTable extends BlockRI
 							if (check.distance(hitVector) < regionLength)
 							{
 								int slotID = j * 3 + k;
-								boolean didInsert = false;
-								ItemStack checkStack = tile.craftingMatrix[slotID];
-
-								if (current != null)
-								{
-									if (checkStack == null || checkStack.isItemEqual(current))
-									{
-										if (ControlKeyModifer.isControlDown(player))
-										{
-											if (checkStack == null)
-											{
-												tile.craftingMatrix[slotID] = current;
-											}
-											else
-											{
-												tile.craftingMatrix[slotID].stackSize += current.stackSize;
-												current.stackSize = 0;
-											}
-
-											current = null;
-										}
-										else
-										{
-											if (checkStack == null)
-											{
-												tile.craftingMatrix[slotID] = current.splitStack(1);
-											}
-											else
-											{
-												tile.craftingMatrix[slotID].stackSize++;
-												current.stackSize--;
-											}
-										}
-
-										if (current == null || current.stackSize <= 0)
-										{
-											player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-										}
-
-										didInsert = true;
-									}
-								}
-
-								if (!didInsert && checkStack != null)
-								{
-									InventoryUtility.dropItemStack(world, new Vector3(player), checkStack, 0);
-									tile.craftingMatrix[slotID] = null;
-								}
-
+								interactCurrentItem(tile, slotID, player);
 								break matrix;
 							}
 						}
@@ -250,6 +202,12 @@ public class BlockEngineeringTable extends BlockRI
 		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName() + "_side");
 		this.iconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
 		this.iconFront = par1IconRegister.registerIcon(this.getTextureName() + "_front");
+	}
+
+	@Override
+	public boolean isControlDown(EntityPlayer player)
+	{
+		return ControlKeyModifer.isControlDown(player);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.archaic.firebox;
 
 import java.util.ArrayList;
 
@@ -51,12 +51,13 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 
 				if (burnTime-- == 0)
 				{
+					if (blockID == Block.fire.blockID)
+					{
+						worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
+					}
+
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
-			}
-			else if (blockID == Block.fire.blockID)
-			{
-				worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
 			}
 
 			if (canBurn(this.getStackInSlot(0)))
@@ -79,6 +80,12 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 	public boolean isBurning()
 	{
 		return burnTime > 0;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemStack)
+	{
+		return i == 0 && canBurn(itemStack);
 	}
 
 	@Override
