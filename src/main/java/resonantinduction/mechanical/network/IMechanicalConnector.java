@@ -13,5 +13,10 @@ public interface IMechanicalConnector extends IMechanical, IConnector<IMechanica
 	/**
 	 * An update called by the network.
 	 */
-	public void networkUpdate();
+	public void onNetworkChanged();
+
+	/**
+	 * Uses this connector to send a packet to the client.
+	 */
+	public void sendNetworkPacket(long torque, float angularVelocity);
 }

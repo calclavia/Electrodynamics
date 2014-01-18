@@ -29,24 +29,35 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork
 {
-	public int prevTorque = 0;
-	public float prevAngularVelocity = 0;
+	private long prevTorque = 0;
+	private float prevAngularVelocity = 0;
 
-	public int torque = 0;
-	public float angularVelocity = 0;
+	private long torque = 0;
+	private float angularVelocity = 0;
 
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
+	/**
+	 * An network update called only server side.
+	 */
 	@Override
 	public void update()
 	{
-		prevTorque = torque;
-		prevAngularVelocity = angularVelocity;
-
-		for (IMechanicalConnector connector : this.getConnectors())
+		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
 		{
-			connector.networkUpdate();
+			boolean isFirst = true;
+
+			for (IMechanicalConnector connector : this.getConnectors())
+			{
+				if (isFirst)
+				{
+					connector.sendNetworkPacket(torque, angularVelocity);
+					isFirst = false;
+				}
+				
+				connector.onNetworkChanged();
+			}
 		}
 
 		for (IMechanical node : this.getNodes())
@@ -56,12 +67,16 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 				node.onReceiveEnergy(dir, torque, angularVelocity);
 			}
 		}
+
+		prevTorque = torque;
+		prevAngularVelocity = angularVelocity;
 		torque = 0;
 		angularVelocity = 0;
 	}
 
 	/**
 	 * Applies energy to the mechanical network this tick.
+	 * Note: Server side only.
 	 */
 	@Override
 	public void applyEnergy(long torque, float angularVelocity)
@@ -72,21 +87,42 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	}
 
 	@Override
-	public int getTorque()
+	public long getPrevTorque()
 	{
-		return this.torque;
+		return prevTorque;
+	}
+
+	@Override
+	public float getPrevAngularVelocity()
+	{
+		return prevAngularVelocity;
+	}
+
+	@Override
+	public long getTorque()
+	{
+		return torque;
 	}
 
 	@Override
 	public float getAngularVelocity()
 	{
-		return this.angularVelocity;
+		return angularVelocity;
 	}
 
 	@Override
 	public long getPower()
 	{
-		return (long) (this.getTorque() * this.getAngularVelocity());
+		return (long) (getTorque() * getAngularVelocity());
+	}
+
+	@Override
+	public void setPower(long torque, float angularVelocity)
+	{
+		prevTorque = this.torque;
+		prevAngularVelocity = this.angularVelocity;
+		this.torque = torque;
+		this.angularVelocity = angularVelocity;
 	}
 
 	@Override
@@ -98,7 +134,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	@Override
 	public boolean continueUpdate()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -124,11 +160,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 				{
 					it.remove();
 				}
-			}
-
-			if (this.getNodes().size() > 0)
-			{
-				NetworkTickHandler.addNetwork(this);
 			}
 		}
 	}
@@ -269,15 +300,4 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		}
 	}
 
-	@Override
-	public int getPrevTorque()
-	{
-		return prevTorque;
-	}
-
-	@Override
-	public float getPrevAngularVelocity()
-	{
-		return prevAngularVelocity;
-	}
 }

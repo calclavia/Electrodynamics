@@ -2,6 +2,7 @@ package resonantinduction.electrical.generator;
 
 import java.util.EnumSet;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.energy.EnergyStorageHandler;
@@ -15,8 +16,6 @@ import calclavia.lib.prefab.tile.TileElectrical;
  */
 public class TileGenerator extends TileElectrical implements IMechanical
 {
-	private long power;
-
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = false;
 
@@ -33,7 +32,6 @@ public class TileGenerator extends TileElectrical implements IMechanical
 		{
 			if (!isInversed)
 			{
-				this.power -= this.energy.receiveEnergy(power, true);
 				this.produce();
 			}
 			else
@@ -87,5 +85,19 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
 	{
 		energy.receiveEnergy((long) (torque * angularVelocity), true);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		isInversed = nbt.getBoolean("isInversed");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("isInversed", isInversed);
 	}
 }

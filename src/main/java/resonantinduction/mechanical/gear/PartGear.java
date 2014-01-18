@@ -81,39 +81,134 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public void update()
 	{
-		if (manualCrankTime > 0)
+		if (!this.world().isRemote)
 		{
-			onReceiveEnergy(null, 20, 0.3f);
-			manualCrankTime--;
-		}
-
-		if (!world().isRemote)
-		{
-			//TODO: Save packets.
-			if (markRotationUpdate || this.getNetwork().getPrevTorque() != this.getNetwork().getTorque() || this.getNetwork().getPrevAngularVelocity() != this.getNetwork().getAngularVelocity())
+			if (manualCrankTime > 0)
 			{
-				this.sendRotationUpdate(this.getNetwork().getTorque(), this.getNetwork().getAngularVelocity());
+				onReceiveEnergy(null, 20, 0.3f);
+				manualCrankTime--;
 			}
 		}
-		
-		if (markRotationUpdate)
+		else
 		{
-			refresh();
+			if (markRotationUpdate)
+			{
+				updateRotations();
+			}
+
+			/**
+			 * Update angle rotation.
+			 */
+			if (isClockwise)
+				angle += this.getNetwork().getAngularVelocity() / 20f;
+			else
+				angle -= this.getNetwork().getAngularVelocity() / 20f;
 		}
+
 	}
 
 	@Override
-	public void networkUpdate()
+	public void onNetworkChanged()
 	{
-		/**
-		 * Update angle rotation.
-		 */
-		if (isClockwise)
-			angle += this.getNetwork().getAngularVelocity() / 20;
-		else
-			angle -= this.getNetwork().getAngularVelocity() / 20;
+		if (world() != null)
+		{
+			if (markRotationUpdate)
+			{
+				updateRotations();
+			}
+		}
 	}
 
+	/**
+	 * Updates rotations of all nearby gears.
+	 */
+	public void updateRotations()
+	{
+		/** Look for gears that are back-to-back with this gear. Equate torque. */
+		universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(placementSide);
+
+		TileEntity tile = vec.getTileEntity(world());
+
+		if (tile instanceof TileMultipart)
+		{
+			TMultiPart neighbor = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
+
+			if (neighbor instanceof PartGear)
+			{
+				equateRotation((PartGear) neighbor, false);
+			}
+		}
+
+		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
+		for (int i = 0; i < 4; i++)
+		{
+			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
+			universalelectricity.api.vector.Vector3 checkVec = new universalelectricity.api.vector.Vector3(tile()).modifyPositionFromSide(checkDir);
+
+			TileEntity checkTile = checkVec.getTileEntity(world());
+
+			if (checkTile instanceof TileMultipart)
+			{
+				TMultiPart neighbor = ((TileMultipart) checkTile).partMap(this.placementSide.ordinal());
+
+				if (neighbor != this && neighbor instanceof PartGear)
+				{
+					equateRotation((PartGear) neighbor, false);
+				}
+			}
+		}
+
+		/** Look for gears that are internal and adjacent to this gear. (The 2 sides) */
+		for (int i = 0; i < 4; i++)
+		{
+			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+			TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(checkDir).ordinal());
+
+			if (neighbor != this && neighbor instanceof PartGear)
+			{
+				equateRotation((PartGear) neighbor, false);
+			}
+		}
+
+		markRotationUpdate = false;
+	}
+
+	@Override
+	public void onAdded()
+	{
+		super.onAdded();
+		refresh();
+	}
+
+	@Override
+	public void onMoved()
+	{
+		this.refresh();
+	}
+
+	@Override
+	public void onChunkLoad()
+	{
+		super.onChunkLoad();
+		refresh();
+	}
+
+	@Override
+	public void onNeighborChanged()
+	{
+		super.onNeighborChanged();
+		refresh();
+	}
+
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		refresh();
+	}
+
+	/**
+	 * Refresh should be called sparingly.
+	 */
 	public void refresh()
 	{
 		/** Look for gears that are back-to-back with this gear. Equate torque. */
@@ -129,13 +224,11 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			{
 				connections[this.placementSide.getOpposite().ordinal()] = neighbor;
 				getNetwork().merge(((PartGear) neighbor).getNetwork());
-				equateRotation((PartGear) neighbor, false);
 			}
 		}
 		else if (tile instanceof IMechanical)
 		{
 			connections[this.placementSide.getOpposite().ordinal()] = tile;
-			getNetwork().reconstruct();
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
@@ -154,7 +247,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 				{
 					connections[checkDir.ordinal()] = neighbor;
 					getNetwork().merge(((PartGear) neighbor).getNetwork());
-					equateRotation((PartGear) neighbor, false);
 				}
 			}
 		}
@@ -169,11 +261,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			{
 				connections[checkDir.ordinal()] = neighbor;
 				getNetwork().merge(((PartGear) neighbor).getNetwork());
-				equateRotation((PartGear) neighbor, false);
 			}
 		}
 
-		markRotationUpdate = false;
+		getNetwork().reconstruct();
 	}
 
 	@Override
@@ -213,17 +304,17 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
 	{
-		getNetwork().applyEnergy(torque, angularVelocity);
-		markRotationUpdate = true;
+		if (!world().isRemote)
+		{
+			getNetwork().applyEnergy(torque, angularVelocity);
+			markRotationUpdate = true;
+		}
 	}
 
 	@Override
 	public void preRemove()
 	{
-		if (!world().isRemote)
-		{
-			this.getNetwork().split(this);
-		}
+		this.getNetwork().split(this);
 	}
 
 	/** Packet Code. */
@@ -245,17 +336,20 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		read(packet, packet.readUByte());
 	}
 
+	@Override
+	public void sendNetworkPacket(long torque, float angularVelocity)
+	{System.out.println("SEND");
+		tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
+	}
+
 	public void read(MCDataInput packet, int packetID)
 	{
 		if (packetID == 0)
 		{
-			onReceiveEnergy(null, packet.readLong(), packet.readFloat());
+			getNetwork().setPower(packet.readLong(), packet.readFloat());
+			isClockwise = packet.readBoolean();
+			markRotationUpdate = true;
 		}
-	}
-
-	public void sendRotationUpdate(long torque, float angularVelocity)
-	{
-		tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity);
 	}
 
 	@Override

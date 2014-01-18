@@ -17,7 +17,7 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	public long getPower();
 
 	/** Torque applied by the network at the given speed */
-	public int getTorque();
+	public long getTorque();
 
 	/**
 	 * Gets the angular velocity of the network.
@@ -26,7 +26,7 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	 */
 	public float getAngularVelocity();
 
-	public int getPrevTorque();
+	public long getPrevTorque();
 
 	public float getPrevAngularVelocity();
 
@@ -34,4 +34,6 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	public void reconstruct();
 
 	public void applyEnergy(long torque, float angularVelocity);
+
+	public void setPower(long readLong, float readFloat);
 }

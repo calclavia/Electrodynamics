@@ -3,6 +3,7 @@ package resonantinduction.electrical.generator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -13,6 +14,7 @@ public class BlockGenerator extends BlockRIRotatable
 	public BlockGenerator()
 	{
 		super("generator");
+		setTextureName(Reference.PREFIX + "material_steel");
 	}
 
 	@Override

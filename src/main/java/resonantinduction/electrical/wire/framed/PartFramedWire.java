@@ -256,12 +256,6 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		IconHitEffects.addDestroyEffects(this, effectRenderer, false);
 	}
 
-	@Override
-	public void onPartChanged(TMultiPart part)
-	{
-		refresh();
-	}
-
 	public boolean isBlockedOnSide(ForgeDirection side)
 	{
 		TMultiPart blocker = tile().partMap(side.ordinal());
@@ -478,6 +472,12 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	public void onNeighborChanged()
 	{
 		super.onNeighborChanged();
+		refresh();
+	}
+
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
 		refresh();
 	}
 
