@@ -26,6 +26,10 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	 */
 	public float getAngularVelocity();
 
+	public int getPrevTorque();
+
+	public float getPrevAngularVelocity();
+
 	/** Called to rebuild the network */
 	public void reconstruct();
 

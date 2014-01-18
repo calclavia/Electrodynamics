@@ -29,6 +29,9 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork
 {
+	public int prevTorque = 0;
+	public float prevAngularVelocity = 0;
+
 	public int torque = 0;
 	public float angularVelocity = 0;
 
@@ -38,6 +41,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	@Override
 	public void update()
 	{
+		prevTorque = torque;
+		prevAngularVelocity = angularVelocity;
+
 		for (IMechanicalConnector connector : this.getConnectors())
 		{
 			connector.networkUpdate();
@@ -50,7 +56,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 				node.onReceiveEnergy(dir, torque, angularVelocity);
 			}
 		}
-
 		torque = 0;
 		angularVelocity = 0;
 	}
@@ -262,5 +267,17 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 
 			newNetwork.reconstruct();
 		}
+	}
+
+	@Override
+	public int getPrevTorque()
+	{
+		return prevTorque;
+	}
+
+	@Override
+	public float getPrevAngularVelocity()
+	{
+		return prevAngularVelocity;
 	}
 }

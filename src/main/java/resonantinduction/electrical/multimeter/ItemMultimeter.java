@@ -14,6 +14,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -30,7 +31,7 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart)
+		if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart && !ControlKeyModifer.isControlDown(player))
 		{
 			pos.offset(side ^ 1, -1);
 		}

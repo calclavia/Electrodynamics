@@ -22,7 +22,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 
 	public TileGenerator()
 	{
-		energy = new EnergyStorageHandler(10000, 100);
+		energy = new EnergyStorageHandler(10000, 1000);
 		this.ioMap = 728;
 	}
 
@@ -44,7 +44,9 @@ public class TileGenerator extends TileElectrical implements IMechanical
 				if (mechanical instanceof IMechanical)
 				{
 					long extract = energy.extractEnergy();
-					((IMechanical) mechanical).onReceiveEnergy(getOuputDirection().getOpposite(), (long) (extract / 0.5f), 0.5f);
+
+					if (extract > 0)
+						((IMechanical) mechanical).onReceiveEnergy(getOuputDirection().getOpposite(), (long) (500), extract / 500f);
 				}
 			}
 		}

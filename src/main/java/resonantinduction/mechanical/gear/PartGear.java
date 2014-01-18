@@ -87,11 +87,19 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			manualCrankTime--;
 		}
 
+		if (!world().isRemote)
+		{
+			//TODO: Save packets.
+			if (markRotationUpdate || this.getNetwork().getPrevTorque() != this.getNetwork().getTorque() || this.getNetwork().getPrevAngularVelocity() != this.getNetwork().getAngularVelocity())
+			{
+				this.sendRotationUpdate(this.getNetwork().getTorque(), this.getNetwork().getAngularVelocity());
+			}
+		}
+		
 		if (markRotationUpdate)
 		{
 			refresh();
 		}
-
 	}
 
 	@Override
@@ -194,7 +202,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println(this.getNetwork().getAngularVelocity());
+		System.out.println(world().isRemote + " : " + this.getNetwork().getAngularVelocity());
 		if (player.isSneaking())
 		{
 			this.manualCrankTime = 20;
@@ -207,9 +215,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	{
 		getNetwork().applyEnergy(torque, angularVelocity);
 		markRotationUpdate = true;
-
-		if (!world().isRemote)
-			this.sendRotationUpdate(torque, angularVelocity);
 	}
 
 	@Override
