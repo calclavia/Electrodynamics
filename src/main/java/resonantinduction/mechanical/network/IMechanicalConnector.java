@@ -12,8 +12,10 @@ public interface IMechanicalConnector extends IMechanical, IConnector<IMechanica
 {
 	/**
 	 * Uses this connector to send a packet to the client.
+	 * 
+	 * @return True if the packet was successfully sent.
 	 */
-	public void sendNetworkPacket(long torque, float angularVelocity);
+	public boolean sendNetworkPacket(long torque, float angularVelocity);
 
 	/**
 	 * The percentage of resistance caused by this connector.

@@ -36,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanical, IMechanicalConnector
+public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalConnector
 {
 	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
 
@@ -54,6 +54,9 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	private IMechanicalNetwork network;
 
+	/** The mechanical connections this connector has made */
+	protected Object[] connections = new Object[6];
+
 	/** Side of the block this is placed on */
 	public ForgeDirection placementSide;
 
@@ -67,9 +70,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	/** When true, it will start marking nearby gears for update */
 	public boolean markRotationUpdate = true;
-
-	/** The mechanical connections this gear has made */
-	protected Object[] connections = new Object[6];
 
 	private int manualCrankTime = 0;
 
@@ -226,6 +226,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		else if (tile instanceof IMechanical)
 		{
 			connections[this.placementSide.getOpposite().ordinal()] = tile;
+			if (tile instanceof IMechanicalConnector)
+			{
+				getNetwork().merge(((IMechanicalConnector) tile).getNetwork());
+			}
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
@@ -262,6 +266,11 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		}
 
 		getNetwork().reconstruct();
+
+		if (!world().isRemote)
+		{
+			sendRefreshPacket();
+		}
 	}
 
 	@Override
@@ -290,7 +299,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println(world().isRemote + " : " + this.getNetwork().getAngularVelocity());
+		System.out.println(world().isRemote + ": " + getNetwork());
 		if (player.isSneaking())
 		{
 			this.manualCrankTime = 20;
@@ -303,7 +312,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	{
 		if (!world().isRemote && doReceive)
 		{
-			getNetwork().applyEnergy(torque, angularVelocity);
+			getNetwork().onReceiveEnergy(torque, angularVelocity);
 			markRotationUpdate = true;
 		}
 
@@ -336,11 +345,21 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	}
 
 	@Override
-	public void sendNetworkPacket(long torque, float angularVelocity)
+	public boolean sendNetworkPacket(long torque, float angularVelocity)
 	{
 		if (tile() != null)
 		{
 			tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
+		}
+
+		return true;
+	}
+
+	public void sendRefreshPacket()
+	{
+		if (tile() != null)
+		{
+			tile().getWriteStream(this).writeByte(1);
 		}
 	}
 
@@ -351,6 +370,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			getNetwork().setPower(packet.readLong(), packet.readFloat());
 			isClockwise = packet.readBoolean();
 			markRotationUpdate = true;
+		}
+		else if (packetID == 1)
+		{
+			this.refresh();
 		}
 	}
 

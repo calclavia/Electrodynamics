@@ -3,7 +3,6 @@ package resonantinduction.mechanical.belt;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +30,43 @@ public class BlockConveyorBelt extends BlockRI
 	{
 		super("conveyorBelt");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileConveyorBelt)
+		{
+			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
+			System.out.println(world.isRemote + " : " + tileEntity.getNetwork());
+		}
+		return false;
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileConveyorBelt)
+		{
+			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
+			tileEntity.refresh();
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int par5)
+	{
+		TileEntity t = world.getBlockTileEntity(x, y, z);
+
+		if (t != null && t instanceof TileConveyorBelt)
+		{
+			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
+			tileEntity.refresh();
+		}
 	}
 
 	@Override
@@ -80,21 +116,20 @@ public class BlockConveyorBelt extends BlockRI
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
 	{
-
 		TileEntity t = world.getBlockTileEntity(x, y, z);
 
 		if (t != null && t instanceof TileConveyorBelt)
 		{
-			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
+			TileConveyorBelt tile = (TileConveyorBelt) t;
 
-			if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+			if (tile.getSlant() == SlantType.UP || tile.getSlant() == SlantType.DOWN)
 			{
 				AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.3, z + 1);
 				AxisAlignedBB boundTop = null;
 
-				ForgeDirection direction = tileEntity.getDirection();
+				ForgeDirection direction = tile.getDirection();
 
-				if (tileEntity.getSlant() == SlantType.UP)
+				if (tile.getSlant() == SlantType.UP)
 				{
 					if (direction.offsetX > 0)
 					{
@@ -113,7 +148,7 @@ public class BlockConveyorBelt extends BlockRI
 						boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
 					}
 				}
-				else if (tileEntity.getSlant() == SlantType.DOWN)
+				else if (tile.getSlant() == SlantType.DOWN)
 				{
 					if (direction.offsetX > 0)
 					{
@@ -145,7 +180,7 @@ public class BlockConveyorBelt extends BlockRI
 				return;
 			}
 
-			if (tileEntity.getSlant() == SlantType.TOP)
+			if (tile.getSlant() == SlantType.TOP)
 			{
 				AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y + 0.68, z, x + 1, y + 0.98, z + 1);
 
@@ -237,7 +272,7 @@ public class BlockConveyorBelt extends BlockRI
 		return true;
 	}
 
-	/** Moves the entity if the conductor is powered. */
+	/** Moves the entity if the belt is powered. */
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
@@ -246,83 +281,80 @@ public class BlockConveyorBelt extends BlockRI
 		if (tileEntity instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tile = (TileConveyorBelt) tileEntity;
-			if (tile.IgnoreList.contains(entity))
+
+			if (tile.ignoreList.contains(entity))
 			{
 				return;
 			}
+
 			if (!world.isBlockIndirectlyGettingPowered(x, y, z))
 			{
-				float acceleration = tile.acceleration;
-				float maxSpeed = tile.maxSpeed;
+				float maxSpeed = tile.getMoveVelocity() / 20;
 
-				SlantType slantType = tile.getSlant();
-				ForgeDirection direction = tile.getDirection();
+				if (maxSpeed > 0)
+				{
+					SlantType slantType = tile.getSlant();
+					ForgeDirection direction = tile.getDirection();
 
-				if (entity instanceof EntityLiving)
-				{
-					acceleration *= 5;
-					maxSpeed *= 10;
-				}
-				if (slantType == SlantType.UP)
-				{
-					if (entity.motionY < 0.2)
+					if (slantType == SlantType.UP)
 					{
-						entity.addVelocity(0, 0.2, 0);
+						if (entity.motionY < 0.2)
+						{
+							entity.addVelocity(0, 0.2, 0);
+						}
 					}
-				}
-				else if (slantType == SlantType.DOWN)
-				{
-					if (entity.motionY > -0.1)
+					else if (slantType == SlantType.DOWN)
 					{
-						entity.addVelocity(0, -0.1, 0);
+						if (entity.motionY > -0.1)
+						{
+							entity.addVelocity(0, -0.1, 0);
+						}
 					}
-				}
-				// Move the entity based on the conveyor belt's direction.
-				entity.addVelocity(direction.offsetX * acceleration, 0, direction.offsetZ * acceleration);
 
-				if (direction.offsetX != 0 && Math.abs(entity.motionX) > maxSpeed)
-				{
-					entity.motionX = direction.offsetX * maxSpeed;
-					entity.motionZ = 0;
-				}
-
-				if (direction.offsetZ != 0 && Math.abs(entity.motionZ) > maxSpeed)
-				{
-					entity.motionZ = direction.offsetZ * maxSpeed;
-					entity.motionX = 0;
-				}
-
-				entity.motionY += 0.0125f;
-
-				if (entity instanceof EntityItem)
-				{
 					if (direction.offsetX != 0)
 					{
-						double difference = (z + 0.5) - entity.posZ;
-						entity.motionZ += difference * 0.1;
-						// entity.posZ = z + 0.5;
+						entity.motionX = direction.offsetX * maxSpeed;
+						entity.motionZ = 0;
 					}
-					else if (direction.offsetZ != 0)
+
+					if (direction.offsetZ != 0)
 					{
-						double difference = (x + 0.5) - entity.posX;
-						entity.motionX += difference * 0.1;
-						// /entity.posX = x + 0.5;
+						entity.motionZ = direction.offsetZ * maxSpeed;
+						entity.motionX = 0;
 					}
 
-					((EntityItem) entity).age++;
+					entity.motionY += 0.0125f;
 
-					boolean foundSneaking = false;
-					for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
+					if (entity instanceof EntityItem)
 					{
-						if (player.isSneaking())
-							foundSneaking = true;
-					}
+						if (direction.offsetX != 0)
+						{
+							double difference = (z + 0.5) - entity.posZ;
+							entity.motionZ += difference * 0.1;
+							// entity.posZ = z + 0.5;
+						}
+						else if (direction.offsetZ != 0)
+						{
+							double difference = (x + 0.5) - entity.posX;
+							entity.motionX += difference * 0.1;
+							// /entity.posX = x + 0.5;
+						}
 
-					if (foundSneaking)
-						((EntityItem) entity).delayBeforeCanPickup = 0;
-					else
-						((EntityItem) entity).delayBeforeCanPickup = 20;
-					entity.onGround = false;
+						((EntityItem) entity).age++;
+
+						boolean foundSneaking = false;
+						for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
+						{
+							if (player.isSneaking())
+								foundSneaking = true;
+						}
+
+						if (foundSneaking)
+							((EntityItem) entity).delayBeforeCanPickup = 0;
+						else
+							((EntityItem) entity).delayBeforeCanPickup = 20;
+						entity.onGround = false;
+					}
 				}
 			}
 		}

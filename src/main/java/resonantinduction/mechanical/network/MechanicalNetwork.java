@@ -38,6 +38,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	/** The cached resistance caused by all connectors */
 	private float connectorResistance = 0;
 
+	/** The current rotation of the network */
+	private float rotation = 0;
+	private long lastRotateTime;
+
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
@@ -79,8 +83,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 			 */
 			for (IMechanicalConnector connector : this.getConnectors())
 			{
-				connector.sendNetworkPacket(torque, angularVelocity);
-				break;
+				if (connector.sendNetworkPacket(torque, angularVelocity))
+				{
+					break;
+				}
 			}
 		}
 
@@ -109,11 +115,12 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	 * Note: Server side only.
 	 */
 	@Override
-	public void applyEnergy(long torque, float angularVelocity)
+	public long onReceiveEnergy(long torque, float angularVelocity)
 	{
-		this.torque += Math.abs(torque);
-		this.angularVelocity += Math.abs(angularVelocity);
+		this.torque += torque;
+		this.angularVelocity += angularVelocity;
 		NetworkTickHandler.addNetwork(this);
+		return (long) (torque * angularVelocity);
 	}
 
 	@Override
@@ -335,6 +342,26 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 
 			newNetwork.reconstruct();
 		}
+	}
+
+	@Override
+	public float getRotation()
+	{
+		long deltaTime = System.currentTimeMillis() - lastRotateTime;
+
+		if (deltaTime > 1)
+		{
+			rotation = (float) (((angularVelocity) * ((float) deltaTime / 1000f) + rotation) % Math.PI);
+			lastRotateTime = System.currentTimeMillis();
+		}
+
+		return rotation;
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.getClass().getSimpleName() + "[" + this.hashCode() + ", Handlers: " + getNodes().size() + ", Connectors: " + getConnectors().size() + ", Power:" + getPower() + "]";
 	}
 
 }
