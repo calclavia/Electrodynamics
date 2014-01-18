@@ -16,6 +16,7 @@ public class ItemBlockCrate extends ItemBlock
 	public ItemBlockCrate(int par1)
 	{
 		super(par1);
+		this.setHasSubtypes(true);
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class ItemBlockCrate extends ItemBlock
 		{
 			return 1;
 		}
-		return super.getItemStackLimit();
+		return this.maxStackSize;
 	}
 
 	@Override
