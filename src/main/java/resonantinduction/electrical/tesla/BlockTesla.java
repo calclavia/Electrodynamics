@@ -41,7 +41,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
-		TileTesla tileEntity = ((TileTesla) t).getControllingTelsa();
+		TileTesla tileEntity = ((TileTesla) t).getMultiBlock().get();
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{

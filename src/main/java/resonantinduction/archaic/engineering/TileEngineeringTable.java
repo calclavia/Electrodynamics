@@ -23,7 +23,7 @@ import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
 import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.ContainerFake;
+import resonantinduction.core.prefab.ContainerDummy;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -284,7 +284,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	 */
 	public InventoryCrafting getCraftingMatrix()
 	{
-		InventoryCrafting inventoryCrafting = new InventoryCrafting(new ContainerFake(this), 3, 3);
+		InventoryCrafting inventoryCrafting = new InventoryCrafting(new ContainerDummy(this), 3, 3);
 
 		for (int i = 0; i < this.craftingMatrix.length; i++)
 		{

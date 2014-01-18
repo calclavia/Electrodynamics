@@ -2,7 +2,7 @@ package resonantinduction.electrical.encoder.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import resonantinduction.core.prefab.ContainerFake;
+import resonantinduction.core.prefab.ContainerDummy;
 import resonantinduction.electrical.encoder.TileEncoder;
 import calclavia.lib.gui.GuiContainerBase;
 
@@ -20,7 +20,7 @@ public class GuiEncoderBase extends GuiContainerBase
 
 	public GuiEncoderBase(InventoryPlayer player, TileEncoder tileEntity)
 	{
-		this(player, tileEntity, new ContainerFake(tileEntity));
+		this(player, tileEntity, new ContainerDummy(tileEntity));
 	}
 
 	public int getGuiLeft()

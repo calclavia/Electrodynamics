@@ -17,7 +17,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
 /**
- * Basic single stack inventory
+ * Basic single stack inventory.
+ * 
+ * TODO: Add filter-locking feature. Put filter in, locks the crate to only use that item.
  * 
  * @author DarkGuardsman
  */

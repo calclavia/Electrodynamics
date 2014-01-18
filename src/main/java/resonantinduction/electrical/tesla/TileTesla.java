@@ -28,6 +28,8 @@ import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.CustomDamageSource;
+import calclavia.lib.multiblock.reference.IMultiBlockStructure;
+import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileElectrical;
@@ -46,7 +48,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileTesla extends TileElectrical implements ITesla, IPacketSender, IPacketReceiver, ILinkable
+public class TileTesla extends TileElectrical implements IMultiBlockStructure<TileTesla>, ITesla, IPacketSender, IPacketReceiver, ILinkable
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final long TRANSFER_CAP = 10000;
@@ -63,12 +65,6 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	private final Set<TileTesla> connectedTeslas = new HashSet<TileTesla>();
 
 	/**
-	 * Caching
-	 */
-	private TileTesla topCache = null;
-	private TileTesla controlCache = null;
-
-	/**
 	 * Quantum Tesla
 	 */
 	public Vector3 linked;
@@ -80,6 +76,8 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	private int zapCounter = 0;
 	private boolean isLinkedClient;
 	private boolean isTransfering;
+
+	private TileTesla topCache;
 
 	public TileTesla()
 	{
@@ -104,7 +102,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 		/**
 		 * Only transfer if it is the bottom controlling Tesla tower.
 		 */
-		if (this.isController())
+		if (this.getMultiBlock().isPrimary())
 		{
 			// this.produce();
 
@@ -162,7 +160,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 										continue;
 									}
 
-									tesla = ((TileTesla) tesla).getControllingTelsa();
+									tesla = getMultiBlock().get();
 								}
 
 								transferTeslaCoils.add(tesla);
@@ -215,7 +213,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 
 							if (tesla instanceof TileTesla)
 							{
-								((TileTesla) tesla).getControllingTelsa().outputBlacklist.add(this);
+								getMultiBlock().get().outputBlacklist.add(this);
 								targetVector = new Vector3(((TileTesla) tesla).getTopTelsa());
 							}
 
@@ -264,7 +262,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 			}
 		}
 
-		this.clearCache();
+		this.topCache = null;
 	}
 
 	private void transfer(ITesla tesla, long transferEnergy)
@@ -285,7 +283,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return super.canConnect(direction) && this.isController();
+		return super.canConnect(direction) && this.getMultiBlock().isPrimary();
 	}
 
 	public void sendPacket(int type)
@@ -356,21 +354,10 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 		}
 	}
 
-	private boolean isController()
-	{
-		return this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord) == 0;
-	}
-
-	private void clearCache()
-	{
-		this.topCache = null;
-		this.controlCache = null;
-	}
-
 	@Override
 	public long teslaTransfer(long transferEnergy, boolean doTransfer)
 	{
-		if (isController() || this.getControllingTelsa() == this)
+		if (getMultiBlock().isPrimary())
 		{
 			if (doTransfer)
 			{
@@ -392,7 +379,7 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 				this.energy.setEnergy(0);
 			}
 
-			return this.getControllingTelsa().teslaTransfer(transferEnergy, doTransfer);
+			return getMultiBlock().get().teslaTransfer(transferEnergy, doTransfer);
 		}
 	}
 
@@ -403,6 +390,14 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 
 	public void updatePositionStatus()
 	{
+		Vector3[] vecs = getMultiBlockVectors();
+
+		if (vecs.length > 0)
+		{
+			((TileTesla) vecs[vecs.length - 1].getTileEntity(worldObj)).getMultiBlock().deconstruct();
+			((TileTesla) vecs[vecs.length - 1].getTileEntity(worldObj)).getMultiBlock().construct();
+		}
+
 		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
 		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
 
@@ -454,41 +449,6 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 		}
 
 		this.topCache = returnTile;
-		return returnTile;
-	}
-
-	/**
-	 * For non-controlling Tesla to use.
-	 * 
-	 * @return
-	 */
-	public TileTesla getControllingTelsa()
-	{
-		if (this.controlCache != null)
-		{
-			return this.controlCache;
-		}
-
-		Vector3 checkPosition = new Vector3(this);
-		TileTesla returnTile = this;
-
-		while (true)
-		{
-			TileEntity t = checkPosition.getTileEntity(this.worldObj);
-
-			if (t instanceof TileTesla)
-			{
-				returnTile = (TileTesla) t;
-			}
-			else
-			{
-				break;
-			}
-
-			checkPosition.y--;
-		}
-
-		this.controlCache = returnTile;
 		return returnTile;
 	}
 
@@ -650,5 +610,63 @@ public class TileTesla extends TileElectrical implements ITesla, IPacketSender, 
 		}
 
 		return false;
+	}
+
+	/**
+	 * Multiblock Methods.
+	 */
+	private MultiBlockHandler<TileTesla> multiBlock;
+
+	@Override
+	public void onMultiBlockChanged()
+	{
+
+	}
+
+	@Override
+	public Vector3[] getMultiBlockVectors()
+	{
+		List<Vector3> vectors = new ArrayList<Vector3>();
+
+		Vector3 checkPosition = new Vector3(this);
+
+		while (true)
+		{
+			TileEntity t = checkPosition.getTileEntity(this.worldObj);
+
+			if (t instanceof TileTesla)
+			{
+				checkPosition.add(new Vector3((TileTesla) t).subtract(getPosition()));
+			}
+			else
+			{
+				break;
+			}
+
+			checkPosition.y--;
+		}
+
+		return vectors.toArray(new Vector3[0]);
+	}
+
+	@Override
+	public World getWorld()
+	{
+		return worldObj;
+	}
+
+	@Override
+	public Vector3 getPosition()
+	{
+		return new Vector3(this);
+	}
+
+	@Override
+	public MultiBlockHandler<TileTesla> getMultiBlock()
+	{
+		if (multiBlock == null)
+			multiBlock = new MultiBlockHandler<TileTesla>(this);
+
+		return multiBlock;
 	}
 }

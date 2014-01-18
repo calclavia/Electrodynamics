@@ -16,8 +16,8 @@ import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.components.CalclaviaLoader;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
-import calclavia.lib.multiblock.link.IBlockActivate;
-import calclavia.lib.multiblock.link.IMultiBlock;
+import calclavia.lib.multiblock.fake.IBlockActivate;
+import calclavia.lib.multiblock.fake.IMultiBlock;
 
 import com.builtbroken.common.Pair;
 
