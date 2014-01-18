@@ -11,7 +11,7 @@ import universalelectricity.api.net.IConnector;
 public interface IMechanicalConnector extends IMechanical, IConnector<IMechanicalNetwork>
 {
 	/**
-	 * Uses this connector to send a packet to the client.
+	 * Uses this connector to send a packet to the client for the network.
 	 * 
 	 * @return True if the packet was successfully sent.
 	 */

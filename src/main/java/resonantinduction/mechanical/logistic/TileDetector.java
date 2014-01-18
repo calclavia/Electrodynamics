@@ -22,11 +22,6 @@ public class TileDetector extends TileEntityFilterable implements IPacketReceive
 {
 	private boolean powering = false;
 
-	public TileDetector()
-	{
-		super(100);
-	}
-
 	@Override
 	public void updateEntity()
 	{
@@ -109,13 +104,12 @@ public class TileDetector extends TileEntityFilterable implements IPacketReceive
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.functioning, this.isInverted());
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.isInverted());
 	}
 
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		this.functioning = data.readBoolean();
 		this.setInverted(data.readBoolean());
 	}
 
@@ -128,11 +122,4 @@ public class TileDetector extends TileEntityFilterable implements IPacketReceive
 	{
 		return this.isPoweringTo(side) > 0;
 	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return direction != this.getDirection();
-	}
-
 }

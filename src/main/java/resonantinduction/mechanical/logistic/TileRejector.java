@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -13,22 +14,17 @@ import resonantinduction.api.IBelt;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiverWithID;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.Player;
 
 /** @author Darkguardsman */
-public class TileRejector extends TileEntityFilterable
+public class TileRejector extends TileEntityFilterable implements IPacketReceiverWithID
 {
-
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;
-
-	public TileRejector()
-	{
-		super(100);
-	}
 
 	@Override
 	public void updateEntity()
@@ -75,11 +71,10 @@ public class TileRejector extends TileEntityFilterable
 	{
 		this.firePiston = true;
 		// TODO add config to adjust the motion magnitude per rejector
-		entity.motionX = side.offsetX * 0.1;
-		entity.motionY += 0.10000000298023224D;
-		entity.motionZ = side.offsetZ * 0.1;
-		this.consumePower(1, true);
-
+		entity.posX += side.offsetX;
+		// entity.motionY += 0.10000000298023224D;
+		entity.posZ += side.offsetZ;
+		
 		if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
 		{
 			((IBelt) tileEntity).ignoreEntity(entity);
@@ -102,29 +97,22 @@ public class TileRejector extends TileEntityFilterable
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection dir)
-	{
-		return dir != this.getDirection();
-	}
-
-	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.functioning, this.isInverted(), this.firePiston);
+		return ResonantInduction.PACKET_TILE.getPacket(this, 0, this.isInverted(), this.firePiston);
 	}
 
 	@Override
-	public boolean simplePacket(String id, ByteArrayDataInput dis, Player player)
+	public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		try
 		{
-			if (this.worldObj.isRemote && !super.simplePacket(id, dis, player))
+			if (this.worldObj.isRemote)
 			{
-				if (id.equalsIgnoreCase("rejector"))
+				if (id == 0)
 				{
-					this.functioning = dis.readBoolean();
-					this.setInverted(dis.readBoolean());
-					this.firePiston = dis.readBoolean();
+					this.setInverted(data.readBoolean());
+					this.firePiston = data.readBoolean();
 					return true;
 				}
 			}
@@ -133,6 +121,7 @@ public class TileRejector extends TileEntityFilterable
 		{
 			e.printStackTrace();
 		}
+
 		return false;
 	}
 

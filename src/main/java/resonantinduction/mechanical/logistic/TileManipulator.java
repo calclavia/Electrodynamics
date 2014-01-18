@@ -31,11 +31,6 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	/** The class that interacts with inventories for this machine */
 	private InternalInventoryHandler invExtractionHelper;
 
-	public TileManipulator()
-	{
-		super(10);
-	}
-
 	@Override
 	public void updateEntity()
 	{
@@ -83,7 +78,6 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 		/** output location facing */
 		Vector3 outputPosition = new Vector3(this);
 		outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
-		this.consumePower(1, true);
 
 		/** Prevents manipulators from spamming and duping items. */
 		if (outputPosition.getTileEntity(this.worldObj) instanceof TileManipulator)
@@ -146,8 +140,6 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 		/** output location facing */
 		Vector3 outputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection());
 
-		this.consumePower(1, true);
-
 		ItemStack itemStack = invHelper().tryGrabFromPosition(inputUp, ForgeDirection.UP, 1);
 
 		if (itemStack == null)
@@ -189,7 +181,7 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.functioning, this.isInverted(), this.isSelfPulse(), this.isOutput());
+		return ResonantInduction.PACKET_TILE.getPacket(this, this.isInverted(), this.isSelfPulse(), this.isOutput());
 	}
 
 	@Override
@@ -197,7 +189,6 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	{
 		try
 		{
-			this.functioning = data.readBoolean();
 			this.setInverted(data.readBoolean());
 			this.setSelfPulse(data.readBoolean());
 			this.setOutput(data.readBoolean());
@@ -206,12 +197,6 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection dir)
-	{
-		return dir != this.getDirection();
 	}
 
 	public boolean isSelfPulse()
@@ -263,11 +248,5 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	public void toggleOutput()
 	{
 		this.setOutput(!this.isOutput());
-	}
-
-	@Override
-	public int getExtraLoad()
-	{
-		return 1;
 	}
 }

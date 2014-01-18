@@ -8,8 +8,9 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
 import resonantinduction.archaic.imprint.ItemBlockImprint;
 import calclavia.lib.prefab.tile.IRotatable;
+import calclavia.lib.prefab.tile.TileExternalInventory;
 
-public abstract class TileEntityFilterable extends TileAssembly implements IRotatable, IFilterable
+public abstract class TileEntityFilterable extends TileExternalInventory implements IRotatable, IFilterable
 {
 	private ItemStack filterItem;
 	private boolean inverted;
@@ -18,18 +19,12 @@ public abstract class TileEntityFilterable extends TileAssembly implements IRota
 
 	public TileEntityFilterable()
 	{
-		super(0);
 		this.maxSlots = 2;
 	}
 
-	public TileEntityFilterable(long wattsPerTick, long maxEnergy)
+	protected boolean isFunctioning()
 	{
-		super(wattsPerTick, maxEnergy);
-	}
-
-	public TileEntityFilterable(long wattsPerTick)
-	{
-		super(wattsPerTick);
+		return true;
 	}
 
 	/**
