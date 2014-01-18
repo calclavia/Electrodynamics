@@ -36,6 +36,23 @@ public class BlockGenerator extends BlockRIRotatable
 	}
 
 	@Override
+	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileGenerator)
+		{
+			if (!world.isRemote)
+			{
+				entityPlayer.addChatMessage("Generator torque ratio: " + ((TileGenerator) tileEntity).toggleRatio());
+			}
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileGenerator();

@@ -55,7 +55,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 					connector.sendNetworkPacket(torque, angularVelocity);
 					isFirst = false;
 				}
-				
+
 				connector.onNetworkChanged();
 			}
 		}
@@ -162,6 +162,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 				}
 			}
 		}
+
+		// Reset energy.
+		prevTorque = torque = 0;
+		prevAngularVelocity = angularVelocity = 0;
 	}
 
 	/** Segmented out call so overriding can be done when conductors are reconstructed. */

@@ -81,6 +81,11 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public void update()
 	{
+		if (markRotationUpdate)
+		{
+			updateRotations();
+		}
+
 		if (!this.world().isRemote)
 		{
 			if (manualCrankTime > 0)
@@ -91,11 +96,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		}
 		else
 		{
-			if (markRotationUpdate)
-			{
-				updateRotations();
-			}
-
 			/**
 			 * Update angle rotation.
 			 */
@@ -110,13 +110,6 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public void onNetworkChanged()
 	{
-		if (world() != null)
-		{
-			if (markRotationUpdate)
-			{
-				updateRotations();
-			}
-		}
 	}
 
 	/**
@@ -338,7 +331,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 
 	@Override
 	public void sendNetworkPacket(long torque, float angularVelocity)
-	{System.out.println("SEND");
+	{
 		tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
 	}
 

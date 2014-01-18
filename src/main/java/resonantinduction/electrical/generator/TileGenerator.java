@@ -19,10 +19,17 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = false;
 
+	private float torqueRatio = 500;
+
 	public TileGenerator()
 	{
-		energy = new EnergyStorageHandler(10000, 1000);
+		energy = new EnergyStorageHandler(10000);
 		this.ioMap = 728;
+	}
+
+	public float toggleRatio()
+	{
+		return torqueRatio = (torqueRatio + 100) % energy.getMaxExtract();
 	}
 
 	@Override
@@ -44,7 +51,11 @@ public class TileGenerator extends TileElectrical implements IMechanical
 					long extract = energy.extractEnergy();
 
 					if (extract > 0)
-						((IMechanical) mechanical).onReceiveEnergy(getOuputDirection().getOpposite(), (long) (500), extract / 500f);
+					{
+						float angularVelocity = extract / torqueRatio;
+						long torque = (long) (extract / angularVelocity);
+						((IMechanical) mechanical).onReceiveEnergy(getOuputDirection().getOpposite(), torque, angularVelocity);
+					}
 				}
 			}
 		}
