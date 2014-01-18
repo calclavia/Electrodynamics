@@ -23,7 +23,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.item.ItemDust;
+import resonantinduction.core.resource.item.ItemOreResource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -51,7 +51,7 @@ public class ResourceGenerator
 		}
 	}
 
-	public static void generateDusts()
+	public static void generateOreResources()
 	{
 		for (String materialName : materialNames)
 		{
@@ -61,9 +61,9 @@ public class ResourceGenerator
 			{
 				// if (OreDictionary.getOres("dust" + name).size() == 0)
 				{
-					ItemDust.dusts.add(ResonantInduction.itemDust.getStackFromDust(materialName));
+					OreDictionary.registerOre("rubble" + name, ResonantInduction.itemRubble.getStackFromDust(materialName));
 					OreDictionary.registerOre("dust" + name, ResonantInduction.itemDust.getStackFromDust(materialName));
-
+					OreDictionary.registerOre("dustRefined" + name, ResonantInduction.itemRefinedDust.getStackFromDust(materialName));
 				}
 
 				// Add to machine recipes

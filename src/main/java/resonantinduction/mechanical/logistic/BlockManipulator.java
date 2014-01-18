@@ -40,7 +40,7 @@ public class BlockManipulator extends BlockImprintable
 			if (!world.isRemote)
 			{
 				((TileManipulator) tileEntity).setSelfPulse(!((TileManipulator) tileEntity).isSelfPulse());
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manip. set to " + (((TileManipulator) tileEntity).isSelfPulse() ? "auto pulse" : "not pulse")));
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manipulator set to " + (((TileManipulator) tileEntity).isSelfPulse() ? "auto pulse" : "not pulse")));
 			}
 		}
 		return true;
@@ -76,7 +76,7 @@ public class BlockManipulator extends BlockImprintable
 			}
 			if (!world.isRemote)
 			{
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manip. outputing =  " + manip.isOutput()));
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Manipulator outputing =  " + manip.isOutput()));
 			}
 		}
 

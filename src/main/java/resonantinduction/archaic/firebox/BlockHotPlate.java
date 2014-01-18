@@ -27,7 +27,6 @@ public class BlockHotPlate extends BlockRI
 	public BlockHotPlate()
 	{
 		super("hotPlate", Material.wood);
-		setTextureName(Reference.PREFIX + "material_wood_surface");
 		setBlockBounds(0, 0, 0, 1, 0.2f, 1);
 		this.setTickRandomly(true);
 	}

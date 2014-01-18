@@ -16,7 +16,7 @@ import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
-import resonantinduction.core.resource.item.ItemDust;
+import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.lib.multiblock.link.BlockMulti;
 import calclavia.lib.multiblock.link.TileMultiBlockPart;
 import calclavia.lib.network.PacketHandler;
@@ -65,10 +65,10 @@ public class ResonantInduction
 	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
 
 	/** Blocks and Items */
-	public static BlockMulti blockMulti;
-
 	public static Block blockOre;
-	public static ItemDust itemDust;
+	public static ItemOreResource itemRubble;
+	public static ItemOreResource itemDust;
+	public static ItemOreResource itemRefinedDust;
 	public static Block blockFluidMixture;
 	public static Block blockGas;
 
@@ -87,18 +87,18 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
-		blockMulti = new BlockMulti(Settings.CONFIGURATION.getBlock("blockMulti", Settings.getNextBlockID()).getInt()).setPacketType(PACKET_TILE);
-
 		MIXTURE = new Fluid("mixture");
 		FluidRegistry.registerFluid(MIXTURE);
 		blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), MIXTURE);
 
 		// Items
-		itemDust = new ItemDust(Settings.getNextItemID());
-		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+		itemRubble = new ItemOreResource(Settings.getNextItemID(), "oreRubble");
+		itemDust = new ItemOreResource(Settings.getNextItemID(), "oreDust");
+		itemRefinedDust = new ItemOreResource(Settings.getNextItemID(), "oreRefinedDust");
 
-		GameRegistry.registerTileEntity(TileMultiBlockPart.class, "TileEntityMultiBlockPart");
-		GameRegistry.registerBlock(blockMulti, "blockMulti");
+		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
+		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
+		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
@@ -120,8 +120,7 @@ public class ResonantInduction
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		// Generate Dusts
-		ResourceGenerator.generateDusts();
-
+		ResourceGenerator.generateOreResources();
 	}
 
 }

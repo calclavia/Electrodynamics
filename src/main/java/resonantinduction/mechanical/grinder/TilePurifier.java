@@ -8,7 +8,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.item.ItemDust;
+import resonantinduction.core.resource.item.ItemOreResource;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileElectrical;
@@ -78,7 +78,7 @@ public class TilePurifier extends TileElectrical
 
 			if (this.processingItem == null && entity instanceof EntityItem)
 			{
-				if (((EntityItem) entity).getEntityItem().getItem() instanceof ItemDust)
+				if (((EntityItem) entity).getEntityItem().getItem() instanceof ItemOreResource)
 				{
 					this.processingItem = (EntityItem) entity;
 				}

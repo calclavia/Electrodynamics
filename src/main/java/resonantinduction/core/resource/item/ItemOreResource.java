@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.item.ItemBase;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
@@ -22,24 +23,28 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class ItemDust extends ItemBase
+public class ItemOreResource extends ItemBase
 {
-	public static final Set<ItemStack> dusts = new HashSet<ItemStack>();
-
-	public ItemDust(int id)
+	public ItemOreResource(int id, String name)
 	{
-		super("oreDust", id);
-		this.setTextureName(Reference.PREFIX + "oreDust");
+		super(name, id);
 	}
 
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
 		String dustName = getDustFromStack(is);
-		ItemStack type = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1)).get(0);
+		List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
+		
+		if (list.size() > 0)
+		{
+			ItemStack type = list.get(0);
 
-		String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
-		return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
+			String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
+			return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
+		}
+
+		return "";
 	}
 
 	public ItemStack getStackFromDust(String name)
@@ -65,9 +70,9 @@ public class ItemDust extends ItemBase
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (ItemStack dust : dusts)
+		for (String materialName : ResourceGenerator.materialNames)
 		{
-			par3List.add(dust);
+			par3List.add(getStackFromDust(materialName));
 		}
 	}
 
@@ -78,7 +83,7 @@ public class ItemDust extends ItemBase
 		/**
 		 * Auto-color based on the texture of the ingot.
 		 */
-		String name = ItemDust.getDustFromStack(itemStack);
+		String name = ItemOreResource.getDustFromStack(itemStack);
 
 		if (ResourceGenerator.materialColors.containsKey(name))
 		{

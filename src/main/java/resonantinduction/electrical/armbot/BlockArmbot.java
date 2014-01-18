@@ -14,6 +14,7 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import calclavia.components.CalclaviaLoader;
 import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.link.IBlockActivate;
 import calclavia.lib.multiblock.link.IMultiBlock;
@@ -43,7 +44,7 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 
 		if (tileEntity instanceof IMultiBlock)
 		{
-			ResonantInduction.blockMulti.createMultiBlockStructure((IMultiBlock) tileEntity);
+			CalclaviaLoader.blockMulti.createMultiBlockStructure((IMultiBlock) tileEntity);
 		}
 	}
 
@@ -68,7 +69,7 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 		if (tileEntity instanceof TileArmbot)
 		{
 			((TileArmbot) tileEntity).dropHeldObject();
-			ResonantInduction.blockMulti.destroyMultiBlockStructure((TileArmbot) tileEntity);
+			CalclaviaLoader.blockMulti.destroyMultiBlockStructure((TileArmbot) tileEntity);
 		}
 		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 		super.breakBlock(world, x, y, z, par5, par6);

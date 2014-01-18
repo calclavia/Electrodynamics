@@ -41,7 +41,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 			glTranslatef((float) x + 0.5F, (float) y, (float) z + 0.5F);
 			glScalef(0.46f, 0.46f, 0.46f);
 			GL11.glRotatef(90 * i, 0, 1, 0);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_CAP);
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_CASE);
 			MODEL.renderOnly("Default");
 			glPopMatrix();
 		}

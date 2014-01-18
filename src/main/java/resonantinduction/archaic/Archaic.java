@@ -96,7 +96,7 @@ public class Archaic
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		// Add recipes Added rubble and refined dust
+		// Add recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "RAH", "SCP", "WWW", 'R', Item.shears, 'H', Item.hoeStone, 'A', Item.axeStone, 'P', Item.pickaxeStone, 'S', Item.shovelStone, 'C', Block.workbench, 'W', "logWood"));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', Item.stick, 'W', "logWood"));
@@ -107,8 +107,8 @@ public class Archaic
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, "SSS", "W W", "PPP", 'S', Block.stone, 'P', Block.pistonBase, 'W', "logWood"));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "RGR", "WWW", 'S', Block.stone, 'G', "gear", 'P', Block.pistonBase, 'W', "logWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "RGR", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', "gear", 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockHotPlate, 1, 1), "HHH", "WWW", 'H', new ItemStack(blockHotPlate, 1, 0), 'W', UniversalRecipe.WIRE.get()));
