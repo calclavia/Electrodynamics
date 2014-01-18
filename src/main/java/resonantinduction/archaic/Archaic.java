@@ -2,6 +2,8 @@ package resonantinduction.archaic;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.archaic.blocks.BlockTurntable;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
@@ -21,15 +23,18 @@ import resonantinduction.core.Settings;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
+import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Resonant Induction Archaic Module
@@ -86,5 +91,26 @@ public class Archaic
 	{
 		Settings.setModMetadata(metadata, ID, NAME);
 		proxy.init();
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent evt)
+	{
+		// Add recipes Added rubble and refined dust
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "RAH", "SCP", "WWW", 'R', Item.shears, 'H', Item.hoeStone, 'A', Item.axeStone, 'P', Item.pickaxeStone, 'S', Item.shovelStone, 'C', Block.workbench, 'W', "logWood"));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', Item.stick, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 0), 'W', "ingotIron"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 1), 'W', "ingotSteel"));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockFirebox, "III", "SFS", "SSS", 'I', Item.ingotIron, 'F', Block.furnaceIdle, 'S', Block.stone));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, "SSS", "W W", "PPP", 'S', Block.stone, 'P', Block.pistonBase, 'W', "logWood"));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "RGR", "WWW", 'S', Block.stone, 'G', "gear", 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "RGR", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockHotPlate, 1, 1), "HHH", "WWW", 'H', new ItemStack(blockHotPlate, 1, 0), 'W', UniversalRecipe.WIRE.get()));
 	}
 }
