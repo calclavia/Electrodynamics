@@ -35,19 +35,6 @@ public class BlockConveyorBelt extends BlockRI
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
-	{
-		TileEntity t = world.getBlockTileEntity(x, y, z);
-
-		if (t != null && t instanceof TileConveyorBelt)
-		{
-			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			System.out.println(world.isRemote + " : " + tileEntity.getNetwork());
-		}
-		return false;
-	}
-
-	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
 		TileEntity t = world.getBlockTileEntity(x, y, z);
@@ -325,7 +312,7 @@ public class BlockConveyorBelt extends BlockRI
 						entity.motionX = 0;
 					}
 
-					entity.motionY += 0.0125f;
+					entity.motionY += 0.125f * maxSpeed;
 
 					if (entity instanceof EntityItem)
 					{

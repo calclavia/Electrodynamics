@@ -238,6 +238,31 @@ public class TileConveyorBelt extends TileAdvanced implements IMechanicalConnect
 
 			if (dir == this.getDirection() || dir == this.getDirection().getOpposite())
 			{
+				if (dir == this.getDirection())
+				{
+					if (this.slantType == SlantType.DOWN)
+					{
+						pos.translate(new Vector3(0, -1, 0));
+					}
+					else if (this.slantType == SlantType.UP)
+					{
+						pos.translate(new Vector3(0, 1, 0));
+					}
+				}
+				else if (dir == this.getDirection().getOpposite())
+				{
+					if (this.slantType == SlantType.DOWN)
+					{
+						pos.translate(new Vector3(0, 1, 0));
+					}
+					else if (this.slantType == SlantType.UP)
+					{
+						pos.translate(new Vector3(0, -1, 0));
+					}
+				}
+
+				tile = pos.getTileEntity(this.worldObj);
+
 				if (tile instanceof IBelt)
 				{
 					connections[dir.ordinal()] = tile;
