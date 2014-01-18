@@ -103,6 +103,7 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	{
 		super.readFromNBT(nbt);
 		isInversed = nbt.getBoolean("isInversed");
+		torqueRatio = nbt.getFloat("torqueRatio");
 	}
 
 	@Override
@@ -110,5 +111,6 @@ public class TileGenerator extends TileElectrical implements IMechanical
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isInversed", isInversed);
+		nbt.setFloat("torqueRatio", torqueRatio);
 	}
 }

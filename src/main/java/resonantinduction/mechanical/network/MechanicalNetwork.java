@@ -41,9 +41,17 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	/** The current rotation of the network */
 	private float rotation = 0;
 	private long lastRotateTime;
+	private boolean markPacketUpdate = true;
 
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
+
+	@Override
+	public void addConnector(IMechanicalConnector connector)
+	{
+		this.markPacketUpdate = true;
+		super.addConnector(connector);
+	}
 
 	/**
 	 * An network update called only server side.
@@ -76,7 +84,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		/**
 		 * Update all connectors
 		 */
-		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
+		if (markPacketUpdate || getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
 		{
 			/**
 			 * Send network update packet for connectors.
