@@ -111,8 +111,9 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	}
 
 	@Override
-	public void onNetworkChanged()
+	public float getResistance()
 	{
+		return 0.1f;
 	}
 
 	/**
@@ -337,7 +338,10 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 	@Override
 	public void sendNetworkPacket(long torque, float angularVelocity)
 	{
-		tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
+		if (tile() != null)
+		{
+			tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
+		}
 	}
 
 	public void read(MCDataInput packet, int packetID)

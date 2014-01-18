@@ -11,12 +11,14 @@ import universalelectricity.api.net.IConnector;
 public interface IMechanicalConnector extends IMechanical, IConnector<IMechanicalNetwork>
 {
 	/**
-	 * An update called by the network.
-	 */
-	public void onNetworkChanged();
-
-	/**
 	 * Uses this connector to send a packet to the client.
 	 */
 	public void sendNetworkPacket(long torque, float angularVelocity);
+
+	/**
+	 * The percentage of resistance caused by this connector.
+	 * 
+	 * @return A small value, most likely less than one.
+	 */
+	public float getResistance();
 }

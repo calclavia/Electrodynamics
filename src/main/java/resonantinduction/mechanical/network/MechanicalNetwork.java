@@ -35,6 +35,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	private long torque = 0;
 	private float angularVelocity = 0;
 
+	/** The cached resistance caused by all connectors */
+	private float connectorResistance = 0;
+
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
@@ -49,7 +52,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		 */
 		if (getPower() > 0)
 		{
-			float division = 0;
+			float division = connectorResistance;
 
 			for (IMechanical node : this.getNodes())
 			{
@@ -74,17 +77,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 			/**
 			 * Send network update packet for connectors.
 			 */
-			boolean isFirst = true;
-
 			for (IMechanicalConnector connector : this.getConnectors())
 			{
-				if (isFirst)
-				{
-					connector.sendNetworkPacket(torque, angularVelocity);
-					isFirst = false;
-				}
-
-				connector.onNetworkChanged();
+				connector.sendNetworkPacket(torque, angularVelocity);
+				break;
 			}
 		}
 
@@ -174,6 +170,11 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	@Override
 	public void reconstruct()
 	{
+		// Reset
+		prevTorque = torque = 0;
+		prevAngularVelocity = angularVelocity = 0;
+		connectorResistance = 0;
+
 		if (this.getConnectors().size() > 0)
 		{
 			// Reset all values related to wires
@@ -196,10 +197,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 				}
 			}
 		}
-
-		// Reset energy.
-		prevTorque = torque = 0;
-		prevAngularVelocity = angularVelocity = 0;
 	}
 
 	/** Segmented out call so overriding can be done when conductors are reconstructed. */
@@ -211,6 +208,8 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 		{
 			reconstructHandler(connector.getConnections()[i], ForgeDirection.getOrientation(i).getOpposite());
 		}
+
+		connectorResistance += connector.getResistance();
 	}
 
 	/** Segmented out call so overriding can be done when machines are reconstructed. */
