@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,8 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -22,6 +25,7 @@ import resonantinduction.archaic.imprint.ItemBlockImprint;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.ContainerFake;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.slot.ISlotPickResult;
@@ -36,7 +40,11 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 {
 	public static final int CRAFTING_MATRIX_END = 9;
 	public static final int CRAFTING_OUTPUT_END = CRAFTING_MATRIX_END + 1;
+	public static final int PLAYER_OUTPUT_END = CRAFTING_OUTPUT_END + 40;
+
+	// Relative slot IDs
 	public static final int CRAFTING_OUTPUT_SLOT = 0;
+	private static final int IMPRINT_SLOT = 1;
 
 	private AutoCraftingManager craftManager;
 
@@ -45,7 +53,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
 	/** The output inventory containing slots. */
-	public ItemStack[] output = new ItemStack[1];
+	public ItemStack[] inventory = new ItemStack[1];
 	public static int[] inventorySlots;
 
 	/** The ability for the engineering table to serach nearby inventories. */
@@ -159,11 +167,31 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 		else if (slot < CRAFTING_OUTPUT_END)
 		{
-			return this.output[slot - CRAFTING_MATRIX_END];
+			return this.inventory[slot - CRAFTING_MATRIX_END];
 		}
-		else if (this.invPlayer != null)
+		else if (slot < PLAYER_OUTPUT_END && invPlayer != null)
 		{
 			return this.invPlayer.getStackInSlot(slot - CRAFTING_OUTPUT_END);
+		}
+		else if (searchInventories)
+		{
+			int idDisplacement = PLAYER_OUTPUT_END;
+
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+
+				if (tile instanceof IInventory)
+				{
+					IInventory inventory = (IInventory) tile;
+					int slotID = slot - idDisplacement;
+
+					if (slotID < inventory.getSizeInventory())
+						return inventory.getStackInSlot(slotID);
+
+					idDisplacement += inventory.getSizeInventory();
+				}
+			}
 		}
 
 		return null;
@@ -172,24 +200,41 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack)
 	{
-		if (slot < this.getSizeInventory())
+		if (slot < CRAFTING_MATRIX_END)
 		{
-			if (slot < CRAFTING_MATRIX_END)
-			{
-				this.craftingMatrix[slot] = itemStack;
-			}
-			else if (slot < CRAFTING_OUTPUT_END)
-			{
-				this.output[slot - CRAFTING_MATRIX_END] = itemStack;
-			}
-			else if (this.invPlayer != null)
-			{
-				this.invPlayer.setInventorySlotContents(slot - CRAFTING_OUTPUT_END, itemStack);
-				EntityPlayer player = this.invPlayer.player;
+			this.craftingMatrix[slot] = itemStack;
+		}
+		else if (slot < CRAFTING_OUTPUT_END)
+		{
+			this.inventory[slot - CRAFTING_MATRIX_END] = itemStack;
+		}
+		else if (slot < PLAYER_OUTPUT_END && this.invPlayer != null)
+		{
+			this.invPlayer.setInventorySlotContents(slot - CRAFTING_OUTPUT_END, itemStack);
+			EntityPlayer player = this.invPlayer.player;
 
-				if (player instanceof EntityPlayerMP)
+			if (player instanceof EntityPlayerMP)
+			{
+				((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+			}
+		}
+		else if (searchInventories)
+		{
+			int idDisplacement = PLAYER_OUTPUT_END;
+
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+
+				if (tile instanceof IInventory)
 				{
-					((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+					IInventory inventory = (IInventory) tile;
+					int slotID = slot - idDisplacement;
+
+					if (slotID < inventory.getSizeInventory())
+						inventory.setInventorySlotContents(slotID, itemStack);
+
+					idDisplacement += inventory.getSizeInventory();
 				}
 			}
 		}
@@ -255,7 +300,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	{
 		if (!worldObj.isRemote)
 		{
-			this.output[CRAFTING_OUTPUT_SLOT] = null;
+			this.inventory[CRAFTING_OUTPUT_SLOT] = null;
 
 			/** Try to craft from crafting grid. If not possible, then craft from imprint. */
 			boolean didCraft = false;
@@ -267,16 +312,16 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 			if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 			{
-				this.output[CRAFTING_OUTPUT_SLOT] = matrixOutput;
+				this.inventory[CRAFTING_OUTPUT_SLOT] = matrixOutput;
 				didCraft = true;
 			}
 
-			// TODO: Change this later.
-			int imprintInputSlot = 4;
-
+			/**
+			 * If output does not exist, try using the filter.
+			 */
 			if (!didCraft)
 			{
-				ItemStack filterStack = this.craftingMatrix[imprintInputSlot];
+				ItemStack filterStack = craftingMatrix[4];// this.inventory[IMPRINT_SLOT];
 
 				if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
 				{
@@ -291,10 +336,9 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 							if (idealRecipe != null)
 							{
 								ItemStack recipeOutput = idealRecipe.left();
-
 								if (recipeOutput != null & recipeOutput.stackSize > 0)
 								{
-									this.output[CRAFTING_OUTPUT_SLOT] = recipeOutput;
+									this.inventory[CRAFTING_OUTPUT_SLOT] = recipeOutput;
 									didCraft = true;
 									break;
 								}
@@ -321,7 +365,10 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				{
 					this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
 				}
-
+				else
+				{
+					itemStack.stackSize = 0;
+				}
 			}
 		}
 	}
@@ -361,7 +408,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 		NBTTagList nbtList = nbt.getTagList("Items");
 		this.craftingMatrix = new ItemStack[9];
-		this.output = new ItemStack[1];
+		this.inventory = new ItemStack[1];
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
@@ -450,12 +497,37 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public int[] getCraftingInv()
 	{
+		int[] slots = craftingSlots;
+
 		if (playerSlots != null)
 		{
-			return ArrayUtils.addAll(playerSlots, craftingSlots);
+			slots = ArrayUtils.addAll(playerSlots, slots);
 		}
 
-		return craftingSlots;
+		if (searchInventories)
+		{
+			int temporaryInvID = PLAYER_OUTPUT_END;
+
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+
+				if (tile instanceof IInventory)
+				{
+					IInventory inventory = (IInventory) tile;
+					int[] nearbySlots = new int[inventory.getSizeInventory()];
+
+					for (int i = 0; i < inventory.getSizeInventory(); i++)
+					{
+						nearbySlots[i] = temporaryInvID++;
+					}
+
+					slots = ArrayUtils.addAll(nearbySlots, slots);
+				}
+			}
+		}
+
+		return slots;
 	}
 
 }

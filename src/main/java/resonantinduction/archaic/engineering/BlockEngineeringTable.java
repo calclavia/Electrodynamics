@@ -152,9 +152,13 @@ public class BlockEngineeringTable extends BlockRI
 
 					while (output != null && (firstLoop || ControlKeyModifer.isControlDown(player)))
 					{
-						InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
-
 						tile.onPickUpFromSlot(player, 9, output);
+
+						if (output.stackSize > 0)
+						{
+							InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
+						}
+						
 						tile.setInventorySlotContents(9, null);
 						tile.onInventoryChanged();
 
@@ -171,15 +175,25 @@ public class BlockEngineeringTable extends BlockRI
 	}
 
 	@Override
-	public boolean onUseWrench(World worldorld, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		TileEntity tileEntity = worldorld.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileEngineeringTable)
 		{
 			TileEngineeringTable tile = (TileEngineeringTable) tileEntity;
 			tile.searchInventories = !tile.searchInventories;
-			worldorld.markBlockForUpdate(x, y, z);
+
+			if (!world.isRemote)
+			{
+				if (tile.searchInventories)
+					player.addChatMessage("Engineering table will now search for nearby inventories for resources.");
+				else
+					player.addChatMessage("Engineering table will not search for nearby inventories for resources.");
+			}
+
+			world.markBlockForUpdate(x, y, z);
+
 			return true;
 		}
 
