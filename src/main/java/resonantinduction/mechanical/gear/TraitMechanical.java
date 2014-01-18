@@ -67,7 +67,7 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
+	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 
@@ -75,8 +75,10 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 		{
 			if (this.mechanicalInterfaces.contains(part))
 			{
-				((IMechanical) part).onReceiveEnergy(from, torque, angularVelocity);
+				return ((IMechanical) part).onReceiveEnergy(from, torque, angularVelocity, doReceive);
 			}
 		}
+
+		return 0;
 	}
 }

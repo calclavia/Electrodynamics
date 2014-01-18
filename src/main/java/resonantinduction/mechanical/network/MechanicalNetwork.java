@@ -44,8 +44,36 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	@Override
 	public void update()
 	{
+		/**
+		 * Calculate load
+		 */
+		if (getPower() > 0)
+		{
+			float division = 0;
+
+			for (IMechanical node : this.getNodes())
+			{
+				for (ForgeDirection dir : handlerDirectionMap.get(node))
+				{
+					division += node.onReceiveEnergy(dir, torque, angularVelocity, false) / torque;
+				}
+			}
+
+			if (division > 0)
+			{
+				torque /= division / 2;
+				angularVelocity /= division / 2;
+			}
+		}
+
+		/**
+		 * Update all connectors
+		 */
 		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
 		{
+			/**
+			 * Send network update packet for connectors.
+			 */
 			boolean isFirst = true;
 
 			for (IMechanicalConnector connector : this.getConnectors())
@@ -60,11 +88,17 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 			}
 		}
 
-		for (IMechanical node : this.getNodes())
+		/**
+		 * Distribute energy to handlers
+		 */
+		if (getPower() > 0)
 		{
-			for (ForgeDirection dir : handlerDirectionMap.get(node))
+			for (IMechanical node : this.getNodes())
 			{
-				node.onReceiveEnergy(dir, torque, angularVelocity);
+				for (ForgeDirection dir : handlerDirectionMap.get(node))
+				{
+					node.onReceiveEnergy(dir, torque, angularVelocity, true);
+				}
 			}
 		}
 

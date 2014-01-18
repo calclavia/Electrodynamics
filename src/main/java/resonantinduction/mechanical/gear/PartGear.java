@@ -90,7 +90,7 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		{
 			if (manualCrankTime > 0)
 			{
-				onReceiveEnergy(null, 20, 0.3f);
+				onReceiveEnergy(null, 20, 0.3f, true);
 				manualCrankTime--;
 			}
 		}
@@ -99,10 +99,13 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 			/**
 			 * Update angle rotation.
 			 */
-			if (isClockwise)
-				angle += this.getNetwork().getAngularVelocity() / 20f;
-			else
-				angle -= this.getNetwork().getAngularVelocity() / 20f;
+			if (getNetwork().getPower() > 0)
+			{
+				if (isClockwise)
+					angle += getNetwork().getAngularVelocity() / 20f;
+				else
+					angle -= getNetwork().getAngularVelocity() / 20f;
+			}
 		}
 
 	}
@@ -295,13 +298,15 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		return false;
 	}
 
-	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity)
+	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
 	{
-		if (!world().isRemote)
+		if (!world().isRemote && doReceive)
 		{
 			getNetwork().applyEnergy(torque, angularVelocity);
 			markRotationUpdate = true;
 		}
+
+		return (long) (torque * angularVelocity);
 	}
 
 	@Override

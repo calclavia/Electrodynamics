@@ -14,5 +14,5 @@ public interface IMechanical extends IConnectable
 	 * @param doReceive If false, the charge will only be simulated.
 	 * @return Amount of energy that was accepted by the block.
 	 */
-	public void onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity);
+	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive);
 }
