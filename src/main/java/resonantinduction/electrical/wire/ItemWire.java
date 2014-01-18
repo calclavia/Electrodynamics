@@ -56,7 +56,7 @@ public class ItemWire extends JItemMultiPart
 	{
 		BlockCoord onPos = pos.copy().offset(side ^ 1);
 
-		if (ControlKeyModifer.isControlDown(player))
+		if (player.isSneaking())
 		{
 			PartFramedWire wire = (PartFramedWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
 
