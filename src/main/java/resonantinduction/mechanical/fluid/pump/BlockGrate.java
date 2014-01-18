@@ -24,6 +24,7 @@ public class BlockGrate extends BlockRIRotatable
 	public BlockGrate()
 	{
 		super("grate");
+		rotationMask = 0b111111;
 	}
 
 	@Override
@@ -89,55 +90,20 @@ public class BlockGrate extends BlockRIRotatable
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack itemStack)
-	{
-		int angle = MathHelper.floor_double((p.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, angle, 3);
-		TileEntity entity = world.getBlockTileEntity(x, y, z);
-	}
-
-	@Override
 	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		if (!world.isRemote)
 		{
-			int meta = world.getBlockMetadata(x, y, z);
+			TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-			if (world.getBlockMetadata(x, y, z) < 6)
+			if (tile instanceof TileGrate)
 			{
-				meta += 6;
-			}
-			else
-			{
-				meta -= 6;
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Draining Sources? " + ((TileGrate) tile).canDrain()));
 			}
 
-			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
-			TileEntity entity = world.getBlockTileEntity(x, y, z);
-
-			if (entity instanceof TileGrate)
-			{
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Draining Sources? " + ((TileGrate) entity).canDrain()));
-
-			}
 			return true;
 		}
-		return true;
-	}
 
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			int meta = side;
-			if (world.getBlockMetadata(x, y, z) > 5)
-			{
-				meta += 6;
-			}
-			world.setBlockMetadataWithNotify(x, y, z, meta, 3);
-			return true;
-		}
 		return true;
 	}
 }

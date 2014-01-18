@@ -18,7 +18,7 @@ public class BlockRejector extends BlockImprintable
 
 	public BlockRejector()
 	{
-		super("rejector", UniversalElectricity.machine);
+		super("rejector");
 	}
 
 	@Override

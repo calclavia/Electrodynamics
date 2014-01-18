@@ -24,7 +24,7 @@ public class BlockDetector extends BlockImprintable
 
 	public BlockDetector()
 	{
-		super("detector", UniversalElectricity.machine);
+		super("detector");
 	}
 
 	@Override

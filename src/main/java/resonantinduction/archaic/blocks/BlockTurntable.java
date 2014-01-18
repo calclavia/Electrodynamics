@@ -11,24 +11,27 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.IRotatableBlock;
 import calclavia.lib.prefab.tile.IRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTurntable extends BlockRI
+public class BlockTurntable extends BlockRIRotatable
 {
 	private Icon top;
 
 	public BlockTurntable()
 	{
-		super("turntable", Material.piston);
-		this.setTickRandomly(true);
+		super("turntable");
+		setTextureName(Reference.PREFIX + "turntable_side");
+		setTickRandomly(true);
+		rotationMask = 0b111111;
 	}
 
 	@Override
@@ -53,48 +56,34 @@ public class BlockTurntable extends BlockRI
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
+	public Icon getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int side)
 	{
+		int meta = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
+
 		if (side == meta)
 		{
 			return this.top;
 		}
+
 		return this.blockIcon;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack stack)
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(int side, int meta)
 	{
-		int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		int change = 3;
-
-		switch (angle)
+		if (side == 1)
 		{
-			case 0:
-				change = 2;
-				break;
-
-			case 1:
-				change = 5;
-				break;
-
-			case 2:
-				change = 3;
-				break;
-
-			case 3:
-				change = 4;
-				break;
+			return this.top;
 		}
 
-		world.setBlockMetadataWithNotify(x, y, z, change, 3);
-		world.scheduleBlockUpdate(x, y, z, this.blockID, 20);
+		return this.blockIcon;
 	}
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int side)
 	{
-		world.scheduleBlockUpdate(x, y, z, this.blockID, 20);
+		world.scheduleBlockUpdate(x, y, z, this.blockID, 10);
 	}
 
 	private void updateTurntableState(World world, int x, int y, int z)
@@ -103,98 +92,29 @@ public class BlockTurntable extends BlockRI
 		{
 			try
 			{
-				ForgeDirection direction = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-				ForgeDirection blockRotation = null;
+				ForgeDirection facing = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
 
-				Vector3 position = new Vector3(x, y, z).modifyPositionFromSide(direction);
+				Vector3 position = new Vector3(x, y, z).modifyPositionFromSide(facing);
 				TileEntity tileEntity = position.getTileEntity(world);
-				int blockID = position.getBlockID(world);
+				Block block = Block.blocksList[position.getBlockID(world)];
 
 				if (tileEntity instanceof IRotatable)
 				{
-					blockRotation = ((IRotatable) tileEntity).getDirection();
+					ForgeDirection blockRotation = ((IRotatable) tileEntity).getDirection();
+					((IRotatable) tileEntity).setDirection(blockRotation.getRotation(facing.getOpposite()));
 				}
-				else if (Block.blocksList[blockID] instanceof IRotatableBlock)
+				else if (block instanceof IRotatableBlock)
 				{
-					blockRotation = ((IRotatableBlock) Block.blocksList[blockID]).getDirection(world, position.intX(), position.intY(), position.intZ());
+					ForgeDirection blockRotation = ((IRotatableBlock) block).getDirection(world, position.intX(), position.intY(), position.intZ());
+					((IRotatableBlock) block).setDirection(world, position.intX(), position.intY(), position.intZ(), blockRotation.getRotation(facing.getOpposite()));
 				}
-				else if (Block.blocksList[blockID] != null)
+				else if (block != null)
 				{
-					Block.blocksList[blockID].rotateBlock(world, position.intX(), position.intY(), position.intZ(), direction.getOpposite());
+					Block.blocksList[blockID].rotateBlock(world, position.intX(), position.intY(), position.intZ(), facing.getOpposite());
 				}
-				if (direction != null)
-				{
-					if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
-					{
-						if (blockRotation == ForgeDirection.NORTH)
-						{
-							blockRotation = ForgeDirection.EAST;
-						}
-						else if (blockRotation == ForgeDirection.EAST)
-						{
-							blockRotation = ForgeDirection.SOUTH;
-						}
-						else if (blockRotation == ForgeDirection.SOUTH)
-						{
-							blockRotation = ForgeDirection.WEST;
-						}
-						else if (blockRotation == ForgeDirection.WEST)
-						{
-							blockRotation = ForgeDirection.NORTH;
-						}
-					}
-					else if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
-					{
-						if (blockRotation == ForgeDirection.NORTH)
-						{
-							blockRotation = ForgeDirection.UP;
-						}
-						else if (blockRotation == ForgeDirection.UP)
-						{
-							blockRotation = ForgeDirection.SOUTH;
-						}
-						else if (blockRotation == ForgeDirection.SOUTH)
-						{
-							blockRotation = ForgeDirection.DOWN;
-						}
-						else if (blockRotation == ForgeDirection.DOWN)
-						{
-							blockRotation = ForgeDirection.NORTH;
-						}
-					}
-					else if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
-					{
-						if (blockRotation == ForgeDirection.EAST)
-						{
-							blockRotation = ForgeDirection.UP;
-						}
-						else if (blockRotation == ForgeDirection.UP)
-						{
-							blockRotation = ForgeDirection.WEST;
-						}
-						else if (blockRotation == ForgeDirection.WEST)
-						{
-							blockRotation = ForgeDirection.DOWN;
-						}
-						else if (blockRotation == ForgeDirection.DOWN)
-						{
-							blockRotation = ForgeDirection.EAST;
-						}
-					}
-					world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
-					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
-					if (tileEntity instanceof IRotatable)
-					{
-						((IRotatable) tileEntity).setDirection(blockRotation);
-						world.scheduleBlockUpdate(position.intX(), position.intY(), position.intZ(), this.blockID, 20);
 
-					}
-					else if (Block.blocksList[blockID] instanceof IRotatableBlock)
-					{
-						((IRotatableBlock) Block.blocksList[blockID]).setDirection(world, position.intX(), position.intY(), position.intZ(), blockRotation);
-						world.scheduleBlockUpdate(position.intX(), position.intY(), position.intZ(), this.blockID, 20);
-					}
-				}
+				world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
+				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
 			}
 			catch (Exception e)
 			{
@@ -204,57 +124,4 @@ public class BlockTurntable extends BlockRI
 		}
 	}
 
-	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (world.isRemote)
-		{
-			return true;
-		}
-		world.setBlockMetadataWithNotify(x, y, z, side, 3);
-		return true;
-	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (world.isRemote)
-		{
-			return true;
-		}
-		ForgeDirection currentDirection = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-		if (currentDirection == ForgeDirection.NORTH)
-		{
-			currentDirection = ForgeDirection.UP;
-		}
-		else if (currentDirection == ForgeDirection.UP)
-		{
-			currentDirection = ForgeDirection.DOWN;
-		}
-		else if (currentDirection == ForgeDirection.DOWN)
-		{
-			currentDirection = ForgeDirection.EAST;
-		}
-		else if (currentDirection == ForgeDirection.EAST)
-		{
-			currentDirection = ForgeDirection.SOUTH;
-		}
-		else if (currentDirection == ForgeDirection.SOUTH)
-		{
-			currentDirection = ForgeDirection.WEST;
-		}
-		else if (currentDirection == ForgeDirection.WEST)
-		{
-			currentDirection = ForgeDirection.NORTH;
-		}
-		world.setBlockMetadataWithNotify(x, y, z, currentDirection.ordinal(), 3);
-		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

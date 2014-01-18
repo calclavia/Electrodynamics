@@ -17,12 +17,11 @@ import resonantinduction.core.prefab.tile.TileEntityFilterable;
  * 
  * @author Calclavia
  */
-public abstract class BlockImprintable extends BlockRI
+public abstract class BlockImprintable extends BlockRIRotatable
 {
-
-	public BlockImprintable(String blockName, Material material)
+	public BlockImprintable(String blockName)
 	{
-		super(blockName, material);
+		super(blockName);
 	}
 
 	/** Allows filters to be placed inside of this block. */

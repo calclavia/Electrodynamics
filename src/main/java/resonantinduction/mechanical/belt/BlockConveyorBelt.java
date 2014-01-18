@@ -13,6 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
@@ -29,6 +30,7 @@ public class BlockConveyorBelt extends BlockRI
 	public BlockConveyorBelt()
 	{
 		super("conveyorBelt");
+		setTextureName(Reference.PREFIX + "material_metal_side");
 		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 	}
 
