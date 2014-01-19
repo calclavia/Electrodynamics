@@ -143,7 +143,7 @@ public class BlockEngineeringTable extends BlockRI
 			}
 			else if (hitSide != 0)
 			{
-				if (!world.isRemote)
+				if (!world.isRemote && player.inventory.getCurrentItem() == null)
 				{
 					tile.setPlayerInventory(player.inventory);
 
