@@ -35,12 +35,11 @@ public class BlockPipe extends BlockFluidNetwork
 
 	}
 
-	// Use Vanilla Couldron to fill it.
-	@Deprecated
 	@Override
 	public void fillWithRain(World world, int x, int y, int z)
 	{
 		int meta = world.getBlockMetadata(x, y, z);
+		
 		if (meta == FluidContainerMaterial.WOOD.ordinal() || meta == FluidContainerMaterial.STONE.ordinal())
 		{
 			// TODO fill pipe since it will have an open top and can gather rain
