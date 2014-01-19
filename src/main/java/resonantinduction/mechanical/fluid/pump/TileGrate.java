@@ -15,13 +15,13 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
-import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.Pair;
 
-public class TileGrate extends TileEntityFluidDevice implements IFluidHandler, IDrain
+public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 {
 	/* MAX BLOCKS DRAINED PER 1/2 SECOND */
 	public static int MAX_WORLD_EDITS_PER_PROCESS = 50;

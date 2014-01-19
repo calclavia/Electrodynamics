@@ -13,14 +13,14 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.api.IReadOut;
-import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidConnector;
+import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -34,9 +34,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author DarkCow
  * 
  */
-public abstract class TileFluidNetwork<N extends FluidNetwork> extends TileEntityFluidDevice implements IFluidConnector, IPacketReceiverWithID, IReadOut
+public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IReadOut
 {
-	public static int refreshRate = 10;
 	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
 	protected Object[] connectedBlocks = new Object[6];
 	protected int colorID = 0;
@@ -45,7 +44,7 @@ public abstract class TileFluidNetwork<N extends FluidNetwork> extends TileEntit
 	protected FluidStack prevStack = null;
 
 	/** Network used to link all parts together */
-	protected N network;
+	protected IFluidNetwork network;
 
 	public static final int PACKET_DESCRIPTION = Mechanical.contentRegistry.getNextPacketID();
 	public static final int PACKET_RENDER = Mechanical.contentRegistry.getNextPacketID();
@@ -61,7 +60,8 @@ public abstract class TileFluidNetwork<N extends FluidNetwork> extends TileEntit
 	public void initiate()
 	{
 		super.initiate();
-		this.refresh();
+		refresh();
+		getNetwork().reconstruct();
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public abstract class TileFluidNetwork<N extends FluidNetwork> extends TileEntit
 
 		if (!worldObj.isRemote)
 		{
-			if (this.updateFluidRender && ticks % TileFluidNetwork.refreshRate == 0)
+			if (this.updateFluidRender)
 			{
 				if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
 				{

@@ -9,10 +9,10 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
-import resonantinduction.mechanical.fluid.prefab.TileEntityFluidDevice;
+import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import calclavia.lib.utility.WorldUtility;
 
-public class TileReleaseValve extends TileEntityFluidDevice implements ITileConnector, IReadOut
+public class TileReleaseValve extends TilePipe implements ITileConnector, IReadOut
 {
     public TileEntity[] connected = new TileEntity[6];
 
