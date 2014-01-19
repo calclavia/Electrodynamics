@@ -11,12 +11,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
@@ -24,7 +24,7 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConnector, IFluidNetwork> implements IFluidConnector, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
 	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
 	private boolean isExtracting = false;
@@ -49,15 +49,19 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConne
 	@Override
 	public void update()
 	{
-		if (isExtracting)
+		if (!world().isRemote)
 		{
-			for (int i = 0; i < this.getConnections().length; i++)
+			if (isExtracting)
 			{
-				Object obj = this.getConnections()[i];
-
-				if (obj instanceof IFluidHandler)
+				for (int i = 0; i < this.getConnections().length; i++)
 				{
-					((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), FluidContainerRegistry.BUCKET_VOLUME, true);
+					Object obj = this.getConnections()[i];
+
+					if (obj instanceof IFluidHandler)
+					{
+						FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
+						fill(null, drain, true);
+					}
 				}
 			}
 		}
@@ -66,7 +70,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConne
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (!world().isRemote)
+		if (!world().isRemote && player.isSneaking())
 		{
 			isExtracting = !isExtracting;
 			player.addChatMessage("Pipe extraction mode: " + isExtracting);
@@ -117,13 +121,13 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConne
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return this.getNetwork().drain(this, from, resource, doDrain);
+		return null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return this.getNetwork().drain(this, from, maxDrain, doDrain);
+		return null;
 	}
 
 	@Override
@@ -166,9 +170,33 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConne
 	}
 
 	@Override
-	protected IFluidConnector getConnector(TileEntity tile)
+	protected IFluidPipe getConnector(TileEntity tile)
 	{
-		return tile instanceof IFluidConnector ? (IFluidConnector) tile : null;
+		return tile instanceof IFluidPipe ? (IFluidPipe) tile : null;
+	}
+
+	@Override
+	public int getPressureIn(ForgeDirection side)
+	{
+		return 0;
+	}
+
+	@Override
+	public void onWrongPressure(ForgeDirection side, int pressure)
+	{
+
+	}
+
+	@Override
+	public int getMaxPressure()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getMaxFlowRate()
+	{
+		return FluidContainerRegistry.BUCKET_VOLUME;
 	}
 
 }

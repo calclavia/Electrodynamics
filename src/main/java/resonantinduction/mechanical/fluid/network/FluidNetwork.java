@@ -53,7 +53,7 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 			{
 				part.setNetwork(this);
 			}
-			
+
 			this.buildPart(part);
 		}
 		this.rebuildHandler();
@@ -115,6 +115,7 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		{
 			FluidStack before = this.getTank().getFluid();
 			FluidStack drain = this.getTank().drain(resource.amount, doDrain);
+			
 			if (before != this.getTank().getFluid() || this.getTank().getFluid() == null || this.getTank().getFluid().amount != before.amount)
 			{
 				this.rebuildHandler();

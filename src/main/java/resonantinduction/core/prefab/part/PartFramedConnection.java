@@ -105,19 +105,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 		return subParts;
 	}
 
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-	{
-		if (!world().isRemote)
-		{
-			// TODO: Remove; for debugging.
-			for (int i = 0; i < connections.length; i++)
-				System.out.println("TEST" + connections[i]);
-		}
-
-		return super.activate(player, part, item);
-	}
-
 	/**
 	 * Rendering and block bounds.
 	 */
@@ -282,7 +269,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-			if (CompatibilityModule.canConnect(tileEntity, side.getOpposite()) && canConnectBothSides(tileEntity, side))
+			if (canConnectTo(tileEntity) && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -343,17 +330,20 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	{
 		TileEntity[] connections = new TileEntity[6];
 
-		for (byte i = 0; i < 6; i++)
+		if (world() != null && tile() != null)
 		{
-			ForgeDirection side = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-
-			if (isCurrentlyConnected(side))
+			for (byte i = 0; i < 6; i++)
 			{
-				connections[i] = tileEntity;
-			}
-		}
+				ForgeDirection side = ForgeDirection.getOrientation(i);
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
+				if (isCurrentlyConnected(side))
+				{
+					connections[i] = tileEntity;
+				}
+			}
+
+		}
 		return connections;
 	}
 

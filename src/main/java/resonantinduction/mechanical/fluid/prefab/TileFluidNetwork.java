@@ -73,7 +73,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 		{
 			if (this.updateFluidRender)
 			{
-				if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
+				//if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
 				{
 					this.sendTankUpdate();
 				}
