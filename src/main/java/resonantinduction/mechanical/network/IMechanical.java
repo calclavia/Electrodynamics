@@ -15,4 +15,8 @@ public interface IMechanical extends IConnectable
 	 * @return Amount of energy that was accepted by the block.
 	 */
 	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive);
+
+	public boolean isClockwise();
+
+	public void setRotation(boolean isClockwise);
 }

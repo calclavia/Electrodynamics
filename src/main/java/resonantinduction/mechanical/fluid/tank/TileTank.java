@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonantinduction.api.fluid.IFluidNetwork;
-import resonantinduction.api.fluid.IFluidPart;
+import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
 public class TileTank extends TileFluidNetwork
@@ -43,7 +43,7 @@ public class TileTank extends TileFluidNetwork
         {
             if (tileEntity instanceof TileTank)
             {
-                this.getNetwork().merge(((IFluidPart) tileEntity).getNetwork());
+                this.getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
                 this.setRenderSide(side, true);
                 connectedBlocks[side.ordinal()] = tileEntity;
             }

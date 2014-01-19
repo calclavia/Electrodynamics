@@ -25,6 +25,7 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 	{
 		super("grindingWheel", Settings.getNextBlockID());
 		this.setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
+		rotationMask = 0b111111;
 	}
 
 	@Override

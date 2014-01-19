@@ -8,7 +8,7 @@ import universalelectricity.api.net.IConnector;
  * that each part can only support one fluid tank internally
  * 
  * @author DarkGuardsman */
-public interface IFluidPart extends IConnector<IFluidNetwork>, IFluidHandler
+public interface IFluidConnector extends IConnector<IFluidNetwork>, IFluidHandler
 {
     /** FluidTank that the network will have access to fill or drain */
     public FluidTank getInternalTank();

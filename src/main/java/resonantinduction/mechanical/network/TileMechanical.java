@@ -10,6 +10,8 @@ public class TileMechanical extends TileAdvanced implements IMechanicalConnector
 
 	private IMechanicalNetwork network;
 
+	private boolean isClockwise = false;
+
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
 	{
@@ -55,5 +57,17 @@ public class TileMechanical extends TileAdvanced implements IMechanicalConnector
 	public float getResistance()
 	{
 		return 0;
+	}
+
+	@Override
+	public boolean isClockwise()
+	{
+		return isClockwise;
+	}
+
+	@Override
+	public void setRotation(boolean isClockwise)
+	{
+		this.isClockwise = isClockwise;
 	}
 }

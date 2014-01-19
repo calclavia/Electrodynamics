@@ -113,4 +113,16 @@ public class TileGenerator extends TileElectrical implements IMechanical
 		nbt.setBoolean("isInversed", isInversed);
 		nbt.setFloat("torqueRatio", torqueRatio);
 	}
+
+	@Override
+	public boolean isClockwise()
+	{
+		return false;
+	}
+
+	@Override
+	public void setRotation(boolean isClockwise)
+	{
+		
+	}
 }

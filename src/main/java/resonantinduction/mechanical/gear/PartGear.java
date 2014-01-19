@@ -479,4 +479,16 @@ public class PartGear extends JCuboidPart implements JNormalOcclusion, TFacePart
 		return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechanicalConnector;
 	}
 
+	@Override
+	public boolean isClockwise()
+	{
+		return isClockwise;
+	}
+
+	@Override
+	public void setRotation(boolean isClockwise)
+	{
+		this.isClockwise = isClockwise;
+	}
+
 }

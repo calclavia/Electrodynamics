@@ -113,4 +113,16 @@ public class TraitMechanicalConnector extends TileMultipart implements IMechanic
 	{
 		return 0;
 	}
+
+	@Override
+	public boolean isClockwise()
+	{
+		return false;
+	}
+
+	@Override
+	public void setRotation(boolean isClockwise)
+	{
+		
+	}
 }

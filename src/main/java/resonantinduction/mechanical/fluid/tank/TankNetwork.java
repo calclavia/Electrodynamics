@@ -5,7 +5,7 @@ import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.api.fluid.IFluidPart;
+import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 
 /** Network that handles connected tanks
@@ -27,7 +27,7 @@ public class TankNetwork extends FluidNetwork
         else if (this.getConnectors().size() > 0)
         {
             fillStack = fillStack.copy();
-            for (IFluidPart part : this.getConnectors())
+            for (IFluidConnector part : this.getConnectors())
             {
                 part.getInternalTank().setFluid(null);
                 if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
@@ -43,13 +43,13 @@ public class TankNetwork extends FluidNetwork
             //TODO Add path finder to prevent filling when tanks are only connected at the top
             for (int y = lowestY; y <= highestY; y++)
             {
-                Set<IFluidPart> parts = new LinkedHashSet<IFluidPart>();
+                Set<IFluidConnector> parts = new LinkedHashSet<IFluidConnector>();
 
-                for (IFluidPart part : this.getConnectors())
+                for (IFluidConnector part : this.getConnectors())
                 {
-                    if (part instanceof IFluidPart && ((TileEntity) part).yCoord == y)
+                    if (part instanceof IFluidConnector && ((TileEntity) part).yCoord == y)
                     {
-                        parts.add((IFluidPart) part);
+                        parts.add((IFluidConnector) part);
                     }
                 }
                 if (!parts.isEmpty())
