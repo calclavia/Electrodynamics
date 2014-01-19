@@ -105,11 +105,15 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 					entity.attackEntityFrom(DamageSource.cactus, 2);
 				}
 
+			}
+
+			if (tile.getNetwork().getAngularVelocity() > 0)
+			{
 				// Move entity based on the direction of the block.
 				ForgeDirection dir = this.getDirection(world, x, y, z);
-				entity.motionX += dir.offsetX * 0.1;
-				entity.motionZ += dir.offsetZ * 0.1;
-				entity.motionY += 0.1;
+				entity.motionX += dir.offsetX * tile.getNetwork().getAngularVelocity() / 20;
+				entity.motionZ += dir.offsetZ * tile.getNetwork().getAngularVelocity() / 20;
+				entity.motionY += Math.random() * tile.getNetwork().getAngularVelocity() / 20;
 				entity.isAirBorne = true;
 			}
 		}

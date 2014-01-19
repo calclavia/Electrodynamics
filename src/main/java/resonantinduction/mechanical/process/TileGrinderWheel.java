@@ -3,14 +3,15 @@ package resonantinduction.mechanical.process;
 import java.util.HashMap;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.network.TileMechanical;
-import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -29,6 +30,9 @@ public class TileGrinderWheel extends TileMechanical
 
 	public EntityItem grindingItem = null;
 
+	private final long requiredTorque = 10000;
+	private long counter = 0;
+
 	@Override
 	public void updateEntity()
 	{
@@ -43,58 +47,71 @@ public class TileGrinderWheel extends TileMechanical
 	 */
 	public boolean canWork()
 	{
-		return true;
+		return (counter = Math.max(counter + getNetwork().getTorque(), 0)) > requiredTorque;
 	}
 
 	public void doWork()
 	{
-		boolean didWork = false;
-
-		if (grindingItem != null)
+		if (canWork())
 		{
-			if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
-			{
-				int timeLeft = getTimer().get(grindingItem) - 1;
-				getTimer().put(grindingItem, timeLeft);
+			boolean didWork = false;
 
-				if (timeLeft <= 0)
+			if (grindingItem != null)
+			{
+				if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
 				{
-					if (this.doGrind(grindingItem))
+					int timeLeft = getTimer().get(grindingItem) - 1;
+					getTimer().put(grindingItem, timeLeft);
+
+					if (timeLeft <= 0)
 					{
-						if (--grindingItem.getEntityItem().stackSize <= 0)
+						if (this.doGrind(grindingItem))
 						{
-							grindingItem.setDead();
-							getTimer().remove(grindingItem);
-							grindingItem = null;
+							if (--grindingItem.getEntityItem().stackSize <= 0)
+							{
+								grindingItem.setDead();
+								getTimer().remove(grindingItem);
+								grindingItem = null;
+							}
+							else
+							{
+								grindingItem.setEntityItemStack(grindingItem.getEntityItem());
+								// Reset timer
+								getTimer().put(grindingItem, DEFAULT_TIME);
+							}
+						}
+					}
+					else
+					{
+						grindingItem.delayBeforeCanPickup = 20;
+
+						if (grindingItem.getEntityItem().getItem() instanceof ItemBlock)
+						{
+							ResonantInduction.proxy.renderBlockParticle(worldObj, new Vector3(grindingItem), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), ((ItemBlock) grindingItem.getEntityItem().getItem()).getBlockID(), 1);
 						}
 						else
 						{
-							grindingItem.setEntityItemStack(grindingItem.getEntityItem());
-							// Reset timer
-							getTimer().put(grindingItem, DEFAULT_TIME);
+							this.worldObj.spawnParticle("crit", grindingItem.posX, grindingItem.posY, grindingItem.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
 						}
 					}
+
+					didWork = true;
 				}
 				else
 				{
-					grindingItem.delayBeforeCanPickup = 20;
-					this.worldObj.spawnParticle("crit", grindingItem.posX, grindingItem.posY, grindingItem.posZ, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3);
+					getTimer().remove(grindingItem);
+					grindingItem = null;
+				}
+			}
+
+			if (didWork)
+			{
+				if (this.ticks % 20 == 0)
+				{
+					this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
 				}
 
-				didWork = true;
-			}
-			else
-			{
-				getTimer().remove(grindingItem);
-				grindingItem = null;
-			}
-		}
-
-		if (didWork)
-		{
-			if (this.ticks % 20 == 0)
-			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
+				counter -= requiredTorque;
 			}
 		}
 	}
