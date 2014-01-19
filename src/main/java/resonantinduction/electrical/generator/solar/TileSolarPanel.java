@@ -24,7 +24,7 @@ public class TileSolarPanel extends TileElectrical
 				{
 					if (!(this.worldObj.isThundering() || this.worldObj.isRaining()))
 					{
-						this.energy.receiveEnergy(5, true);
+						this.energy.receiveEnergy(25, true);
 						this.produce();
 					}
 				}
