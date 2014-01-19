@@ -39,7 +39,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		
 		if (Mechanical.blockReleaseValve != null && item.itemID == Mechanical.blockReleaseValve.blockID)
 		{
-			meta = FluidContainerMaterial.IRON.getMeta();
+			meta = EnumPipeMaterial.IRON.getMeta();
 		}
 		if (type == ItemRenderType.ENTITY)
 		{

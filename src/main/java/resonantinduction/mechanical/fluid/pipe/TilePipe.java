@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPipe;
+import resonantinduction.mechanical.fluid.network.PipeNetwork;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.ColorCode;
@@ -37,10 +38,10 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		int meta = new Vector3(this).getBlockMetadata(this.worldObj);
-		if (meta < FluidContainerMaterial.values().length)
+		if (meta < EnumPipeMaterial.values().length)
 		{
-			FluidContainerMaterial pipeMat = FluidContainerMaterial.values()[meta];
-			if (pipeMat == FluidContainerMaterial.WOOD || pipeMat == FluidContainerMaterial.STONE)
+			EnumPipeMaterial pipeMat = EnumPipeMaterial.values()[meta];
+			if (pipeMat == EnumPipeMaterial.WOOD || pipeMat == EnumPipeMaterial.STONE)
 			{
 				if (side == ForgeDirection.UP)
 				{
@@ -51,10 +52,10 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
 		if (tileEntity instanceof TilePipe)
 		{
 			int metaOther = new Vector3(tileEntity).getBlockMetadata(this.worldObj);
-			if (meta < FluidContainerMaterial.values().length && metaOther < FluidContainerMaterial.values().length)
+			if (meta < EnumPipeMaterial.values().length && metaOther < EnumPipeMaterial.values().length)
 			{
-				FluidContainerMaterial pipeMat = FluidContainerMaterial.values()[meta];
-				FluidContainerMaterial pipeMatOther = FluidContainerMaterial.values()[metaOther];
+				EnumPipeMaterial pipeMat = EnumPipeMaterial.values()[meta];
+				EnumPipeMaterial pipeMatOther = EnumPipeMaterial.values()[metaOther];
 				// Same pipe types can connect
 				if (pipeMat == pipeMatOther)
 				{
@@ -62,7 +63,7 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
 					connectedBlocks[side.ordinal()] = tileEntity;
 					setRenderSide(side, true);
 				}
-				else if ((pipeMat == FluidContainerMaterial.WOOD || pipeMat == FluidContainerMaterial.STONE) && (pipeMatOther == FluidContainerMaterial.WOOD || pipeMatOther == FluidContainerMaterial.STONE))
+				else if ((pipeMat == EnumPipeMaterial.WOOD || pipeMat == EnumPipeMaterial.STONE) && (pipeMatOther == EnumPipeMaterial.WOOD || pipeMatOther == EnumPipeMaterial.STONE))
 				{
 					// Wood and stone pipes can connect to each other but not other pipe types since
 					// they are more like a trough than a pipe
@@ -70,7 +71,7 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
 					connectedBlocks[side.ordinal()] = tileEntity;
 					setRenderSide(side, true);
 				}
-				else if (pipeMat != FluidContainerMaterial.WOOD && pipeMat != FluidContainerMaterial.STONE && pipeMatOther != FluidContainerMaterial.WOOD && pipeMatOther != FluidContainerMaterial.STONE && pipeMat != FluidContainerMaterial.GLASS && pipeMatOther != FluidContainerMaterial.GLASS)
+				else if (pipeMat != EnumPipeMaterial.WOOD && pipeMat != EnumPipeMaterial.STONE && pipeMatOther != EnumPipeMaterial.WOOD && pipeMatOther != EnumPipeMaterial.STONE && pipeMat != EnumPipeMaterial.GLASS && pipeMatOther != EnumPipeMaterial.GLASS)
 				{
 					/*
 					 * Any other pipe can connect to each other as long as the color matches except
@@ -113,7 +114,7 @@ public class TilePipe extends TileFluidNetwork implements IColorCoded, IFluidPip
 	@Override
 	public void sendTankUpdate()
 	{
-		if (this.getBlockMetadata() == FluidContainerMaterial.WOOD.ordinal() || this.getBlockMetadata() == FluidContainerMaterial.STONE.ordinal())
+		if (this.getBlockMetadata() == EnumPipeMaterial.WOOD.ordinal() || this.getBlockMetadata() == EnumPipeMaterial.STONE.ordinal())
 		{
 			super.sendTankUpdate();
 		}

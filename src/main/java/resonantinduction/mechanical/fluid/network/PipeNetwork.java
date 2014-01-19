@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipe;
+package resonantinduction.mechanical.fluid.network;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -10,7 +10,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidPipe;
-import resonantinduction.mechanical.fluid.network.FluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 

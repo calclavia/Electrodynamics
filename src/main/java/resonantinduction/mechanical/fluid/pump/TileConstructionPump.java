@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
 import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.tilenetwork.ITileConnector;
-import resonantinduction.mechanical.fluid.pipe.PipeNetwork;
+import resonantinduction.mechanical.fluid.network.PipeNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 

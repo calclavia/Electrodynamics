@@ -21,7 +21,7 @@ import calclavia.lib.render.ColorCode;
  * 
  * @author DarkGuardsman
  */
-public enum FluidContainerMaterial
+public enum EnumPipeMaterial
 {
 	/** Simple water only pipe. Should render open toped when it can */
 	WOOD("wood", false, true, false, -1, 200),
@@ -65,14 +65,14 @@ public enum FluidContainerMaterial
 	 */
 	public static int spacing = 1000;
 
-	private FluidContainerMaterial()
+	private EnumPipeMaterial()
 	{
 		this.canSupportGas = true;
 		this.canSupportFluids = true;
 		canSupportMoltenFluids = true;
 	}
 
-	private FluidContainerMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
+	private EnumPipeMaterial(String name, boolean gas, boolean fluid, boolean molten, String... strings)
 	{
 		this.matName = name;
 		this.canSupportGas = gas;
@@ -80,28 +80,28 @@ public enum FluidContainerMaterial
 		this.canSupportMoltenFluids = molten;
 	}
 
-	private FluidContainerMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
+	private EnumPipeMaterial(String name, boolean gas, boolean fluid, boolean molten, int pressure, int volume, String... strings)
 	{
 		this(name, gas, fluid, molten, strings);
 		this.maxPressure = pressure;
 		this.maxVolume = volume;
 	}
 
-	public static FluidContainerMaterial get(World world, int x, int y, int z)
+	public static EnumPipeMaterial get(World world, int x, int y, int z)
 	{
 		return get(world.getBlockMetadata(x, y, z));
 	}
 
-	public static FluidContainerMaterial get(int i)
+	public static EnumPipeMaterial get(int i)
 	{
-		if (i < FluidContainerMaterial.values().length)
+		if (i < EnumPipeMaterial.values().length)
 		{
-			return FluidContainerMaterial.values()[i];
+			return EnumPipeMaterial.values()[i];
 		}
 		return null;
 	}
 
-	public static FluidContainerMaterial get(ItemStack stack)
+	public static EnumPipeMaterial get(ItemStack stack)
 	{
 		if (stack != null)
 		{
@@ -110,34 +110,14 @@ public enum FluidContainerMaterial
 		return null;
 	}
 
-	public static FluidContainerMaterial getFromItemMeta(int meta)
+	public static EnumPipeMaterial getFromItemMeta(int meta)
 	{
 		meta = meta / spacing;
-		if (meta < FluidContainerMaterial.values().length)
+		if (meta < EnumPipeMaterial.values().length)
 		{
-			return FluidContainerMaterial.values()[meta];
+			return EnumPipeMaterial.values()[meta];
 		}
-		return FluidContainerMaterial.WOOD;
-	}
-
-	public ItemStack getStack()
-	{
-		return getStack(1);
-	}
-
-	public ItemStack getStack(ColorCode color)
-	{
-		return getStack(1, color);
-	}
-
-	public ItemStack getStack(int s)
-	{
-		return new ItemStack(Mechanical.blockPipe, s, (this.ordinal() * spacing));
-	}
-
-	public ItemStack getStack(int s, ColorCode color)
-	{
-		return new ItemStack(Mechanical.blockPipe, s, (this.ordinal() * spacing) + color.ordinal() + 1);
+		return EnumPipeMaterial.WOOD;
 	}
 
 	public int getMeta(int typeID)

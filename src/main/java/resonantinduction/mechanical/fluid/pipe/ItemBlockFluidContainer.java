@@ -115,7 +115,7 @@ public class ItemBlockFluidContainer extends ItemBlock
 	@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, (metadata / FluidContainerMaterial.spacing)))
+		if (super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, (metadata / EnumPipeMaterial.spacing)))
 		{
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
 			if (tile instanceof TileFluidNetwork)

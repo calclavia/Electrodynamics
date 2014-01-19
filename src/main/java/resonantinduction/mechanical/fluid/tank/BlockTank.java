@@ -11,7 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.render.RIBlockRenderingHandler;
-import resonantinduction.mechanical.fluid.pipe.FluidContainerMaterial;
+import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
@@ -89,7 +89,7 @@ public class BlockTank extends BlockFluidNetwork
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		return new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z));
+		return new ItemStack(this, 1, EnumPipeMaterial.getDropItemMeta(world, x, y, z));
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class BlockTank extends BlockFluidNetwork
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
 		if (entity instanceof TilePipe)
 		{
-			ret.add(new ItemStack(this, 1, FluidContainerMaterial.getDropItemMeta(world, x, y, z)));
+			ret.add(new ItemStack(this, 1, EnumPipeMaterial.getDropItemMeta(world, x, y, z)));
 		}
 		return ret;
 	}
@@ -108,9 +108,9 @@ public class BlockTank extends BlockFluidNetwork
 	@Override
 	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (FluidContainerMaterial data : FluidContainerMaterial.values())
+		for (EnumPipeMaterial data : EnumPipeMaterial.values())
 		{
-			par3List.add(new ItemStack(this, 1, data.ordinal() * FluidContainerMaterial.spacing));
+			par3List.add(new ItemStack(this, 1, data.ordinal() * EnumPipeMaterial.spacing));
 			break;
 		}
 	}
