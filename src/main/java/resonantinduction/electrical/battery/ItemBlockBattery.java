@@ -33,6 +33,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
 	{
+		list.add("Tier: " + (getTier(itemStack) + 1));
 		String color = "";
 		long joules = this.getEnergy(itemStack);
 
@@ -168,7 +169,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public long getEnergyCapacity(ItemStack theItem)
 	{
-		return TileBattery.getEnergyForTier(theItem.getItemDamage() + 1);
+		return TileBattery.getEnergyForTier(getTier(theItem));
 	}
 
 	public long getTransferRate(ItemStack itemStack)
@@ -182,9 +183,8 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	{
 		for (byte tier = 0; tier < 3; tier++)
 		{
-			par3List.add(setTier(new ItemStack(this, 1), tier));
-			par3List.add(setTier(CompatibilityModule.getItemWithCharge(new ItemStack(this, 1, 0), this.getEnergyCapacity(new ItemStack(this, 1, 0))), tier));
+			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), 0));
+			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)));
 		}
 	}
-
 }

@@ -269,11 +269,11 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		{
 			if (isPositive)
 			{
-				((PartMechanical) neighbor).isClockwise = isClockwise;
+				((PartMechanical) neighbor).setClockwise(isClockwise);
 			}
 			else
 			{
-				((PartMechanical) neighbor).isClockwise = !isClockwise;
+				((PartMechanical) neighbor).setClockwise(!isClockwise);
 			}
 
 			neighbor.markRotationUpdate = true;

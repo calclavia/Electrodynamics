@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.PartMechanical;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -15,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartGear extends PartMechanical
+public class PartGear extends PartMechanical implements IMechanicalConnector
 {
 	private int manualCrankTime = 0;
 
@@ -30,7 +31,7 @@ public class PartGear extends PartMechanical
 				manualCrankTime--;
 			}
 		}
-		
+
 		super.update();
 	}
 

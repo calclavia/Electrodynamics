@@ -45,25 +45,26 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 			}
 			else
 			{
-				produceMechanical(new Vector3(this).modifyPositionFromSide(this.getDirection()));
-				produceMechanical(new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite()));
+				produceMechanical(this.getDirection());
+				produceMechanical(this.getDirection().getOpposite());
 			}
 		}
 	}
 
-	public void produceMechanical(Vector3 outputVector)
+	public void produceMechanical(ForgeDirection outputDir)
 	{
+		Vector3 outputVector = new Vector3(this).modifyPositionFromSide(outputDir);
 		TileEntity mechanical = outputVector.getTileEntity(worldObj);
 
 		if (mechanical instanceof IMechanical)
 		{
-			long extract = energy.extractEnergy();
-			
+			long extract = energy.extractEnergy(false);
+
 			if (extract > 0)
 			{
 				float angularVelocity = extract / torqueRatio;
 				long torque = (long) (extract / angularVelocity);
-				((IMechanical) mechanical).onReceiveEnergy(this.getDirection().getOpposite(), torque, angularVelocity, true);
+				energy.extractEnergy(((IMechanical) mechanical).onReceiveEnergy(outputDir.getOpposite(), torque, angularVelocity, true), true);
 			}
 		}
 	}
