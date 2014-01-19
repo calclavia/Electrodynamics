@@ -36,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IReadOut
 {
-	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
+	protected FluidTank tank;
 	protected Object[] connectedBlocks = new Object[6];
 	protected int colorID = 0;
 
@@ -53,9 +53,6 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	/** Bitmask that handles connections for the renderer **/
 	public byte renderSides = 0b0;
 
-	/** Tells the tank that on next update to check if it should update the client render data */
-	public boolean updateFluidRender = false;
-
 	@Override
 	public void initiate()
 	{
@@ -65,29 +62,17 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	}
 
 	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if (!worldObj.isRemote)
-		{
-			if (this.updateFluidRender)
-			{
-				//if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
-				{
-					this.sendTankUpdate();
-				}
-
-				this.prevStack = this.tank.getFluid();
-				this.updateFluidRender = false;
-			}
-		}
-	}
-
-	@Override
 	public void onFluidChanged()
 	{
-		this.updateFluidRender = true;
+		if (!worldObj.isRemote)
+		{
+			if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
+			{
+				this.sendTankUpdate();
+			}
+
+			this.prevStack = this.tank.getFluid();
+		}
 	}
 
 	@Override
@@ -253,8 +238,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 				}
 				else if (id == PACKET_TANK)
 				{
-					this.tank = new FluidTank(data.readInt());
-					this.getInternalTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
+					this.tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
 					return true;
 				}
 			}
@@ -280,10 +264,8 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 
 	public void sendTankUpdate()
 	{
-		if (this.getInternalTank() != null)
-		{
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
-		}
+		System.out.println("Send Amount: " + this.getInternalTank().getFluidAmount());
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
 	}
 
 	@Override

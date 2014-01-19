@@ -13,7 +13,11 @@ import resonantinduction.api.fluid.IFluidPipe;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 
-/** @author DarkGuardsman */
+/**
+ * The network for pipe fluid transfer. getNodes() is NOT used.
+ * 
+ * @author DarkGuardsman
+ */
 public class PipeNetwork extends FluidNetwork
 {
 	public HashMap<IFluidHandler, EnumSet<ForgeDirection>> connectionMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
@@ -21,60 +25,62 @@ public class PipeNetwork extends FluidNetwork
 	@Override
 	public void update()
 	{
-		super.update();
-
 		/*
 		 * Slight delay to allow visual effect to take place before draining the pipe's internal
 		 * tank
 		 */
-		if (this.getTank().getFluidAmount() > 0)
+		FluidStack stack = this.getTank().getFluid().copy();
+		int count = this.connectionMap.size();
+
+		for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
 		{
-			FluidStack stack = this.getTank().getFluid().copy();
-			int count = this.connectionMap.size();
-
-			for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
+			int sideCount = entry.getValue().size();
+			for (ForgeDirection dir : entry.getValue())
 			{
-				int sideCount = entry.getValue().size();
-				for (ForgeDirection dir : entry.getValue())
+				int volPer = (stack.amount / count);
+				int volPerSide = (volPer / sideCount);
+				int maxFill = 1000;
+
+				TileEntity tile = new Vector3((TileEntity) entry.getKey()).modifyPositionFromSide(dir).getTileEntity(((TileEntity) entry.getKey()).worldObj);
+
+				if (tile instanceof IFluidPipe)
 				{
-					int volPer = (stack.amount / count) + (stack.amount % count);
-					int volPerSide = (volPer / sideCount) + (volPer % count);
-					int maxFill = 1000;
-					TileEntity entity = new Vector3((TileEntity) entry.getKey()).modifyPositionFromSide(dir).getTileEntity(((TileEntity) entry.getKey()).worldObj);
-					if (entity instanceof IFluidPipe)
-					{
-						maxFill = ((IFluidPipe) entity).getMaxFlowRate();
-					}
-
-					stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
-
-					if (sideCount > 1)
-						--sideCount;
-					if (volPer <= 0)
-						break;
+					maxFill = ((IFluidPipe) tile).getMaxFlowRate();
 				}
-				if (count > 1)
-					count--;
-				if (stack == null || stack.amount <= 0)
+
+				stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
+
+				if (sideCount > 1)
+					--sideCount;
+				if (volPer <= 0)
 					break;
 			}
 
-			this.getTank().setFluid(stack);
-			// TODO check for change before rebuilding
-			this.rebuildHandler();
+			if (count > 1)
+				count--;
+
+			if (stack == null || stack.amount <= 0)
+			{
+				stack = null;
+				break;
+			}
 		}
+
+		this.getTank().setFluid(stack);
+		// TODO check for change before rebuilding
+		this.reconstructTankInfo();
 	}
 
 	@Override
 	public boolean canUpdate()
 	{
-		return true;
+		return getTank().getFluidAmount() > 0 && connectionMap.size() > 0 && getConnectors().size() > 0;
 	}
 
 	@Override
 	public boolean continueUpdate()
 	{
-		return this.getConnectors().size() > 0;
+		return canUpdate();
 	}
 
 	@Override
@@ -85,9 +91,9 @@ public class PipeNetwork extends FluidNetwork
 	}
 
 	@Override
-	public void buildPart(IFluidConnector part)
+	public void reconstructConnector(IFluidConnector part)
 	{
-		super.buildPart(part);
+		super.reconstructConnector(part);
 		for (int i = 0; i < 6; i++)
 		{
 			if (part.getConnections()[i] instanceof IFluidHandler && !(part.getConnections()[i] instanceof IFluidPipe))

@@ -190,7 +190,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int getMaxPressure()
 	{
-		return 0;
+		return 1000;
 	}
 
 	@Override

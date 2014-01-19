@@ -3,34 +3,28 @@ package resonantinduction.mechanical.fluid.network;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
-import resonantinduction.mechanical.fluid.tank.TileTank;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.core.net.ConnectionPathfinder;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.utility.FluidUtility;
 
+/**
+ * The fluid network.
+ * 
+ * @author DarkCow, Calclavia
+ * 
+ */
 public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork
 {
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
-	protected boolean reloadTanks = false;
-	protected long ticks = 0;
-
-	public FluidNetwork()
-	{
-		NetworkTickHandler.addNetwork(this);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
 
 	@Override
 	public void addConnector(IFluidConnector connector)
@@ -40,13 +34,28 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 	}
 
 	@Override
+	public void update()
+	{
+
+	}
+
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean continueUpdate()
+	{
+		return false;
+	}
+
+	@Override
 	public void reconstruct()
 	{
-		if (this.reloadTanks)
-		{
-			this.reloadTanks();
-		}
 		this.tank = new FluidTank(0);
+
 		for (IFluidConnector part : this.getConnectors())
 		{
 			if (part.getNetwork() instanceof IFluidNetwork)
@@ -54,15 +63,17 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 				part.setNetwork(this);
 			}
 
-			this.buildPart(part);
+			this.reconstructConnector(part);
 		}
-		this.rebuildHandler();
-		this.reloadTanks();
+
+		this.reconstructTankInfo();
+		this.distributeConnectors();
 	}
 
-	public void buildPart(IFluidConnector part)
+	public void reconstructConnector(IFluidConnector connector)
 	{
-		FluidTank tank = part.getInternalTank();
+		FluidTank tank = connector.getInternalTank();
+		
 		if (tank != null)
 		{
 			this.tank.setCapacity(this.tank.getCapacity() + tank.getCapacity());
@@ -81,7 +92,7 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		}
 	}
 
-	public void rebuildHandler()
+	public void reconstructTankInfo()
 	{
 		if (this.getTank() != null)
 		{
@@ -91,7 +102,8 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		{
 			this.tankInfo[0] = null;
 		}
-		this.reloadTanks = true;
+
+		this.distributeConnectors();
 		NetworkTickHandler.addNetwork(this);
 	}
 
@@ -100,9 +112,10 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 	{
 		int prev = this.getTank().getFluidAmount();
 		int fill = this.getTank().fill(resource, doFill);
+
 		if (prev != this.getTank().getFluidAmount())
 		{
-			this.rebuildHandler();
+			this.reconstructTankInfo();
 		}
 
 		return fill;
@@ -115,10 +128,10 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		{
 			FluidStack before = this.getTank().getFluid();
 			FluidStack drain = this.getTank().drain(resource.amount, doDrain);
-			
+
 			if (before != this.getTank().getFluid() || this.getTank().getFluid() == null || this.getTank().getFluid().amount != before.amount)
 			{
-				this.rebuildHandler();
+				this.reconstructTankInfo();
 			}
 
 			return drain;
@@ -136,59 +149,28 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		return null;
 	}
 
-	@Override
-	public boolean canUpdate()
+	public void distributeConnectors()
 	{
-		return this.reloadTanks;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return this.reloadTanks;
-	}
-
-	@Override
-	public void update()
-	{
-		this.ticks++;
-		if (ticks >= Long.MAX_VALUE - 10)
-		{
-			ticks = 1;
-		}
-		if (this.reloadTanks && ticks % 10 == 0)
-		{
-			this.reloadTanks();
-		}
-	}
-
-	@ForgeSubscribe
-	public void onWorldSave(Save event)
-	{
-		this.reloadTanks();
-	}
-
-	public void reloadTanks()
-	{
-		this.reloadTanks = false;
 		FluidStack stack = this.getTank().getFluid();
 		this.fillTankSet(stack != null ? stack.copy() : null, this.getConnectors());
 	}
 
-	public void fillTankSet(FluidStack stack, Set<IFluidConnector> tankList)
+	public void fillTankSet(FluidStack stack, Set<IFluidConnector> connectors)
 	{
-		int parts = tankList.size();
-		for (IFluidConnector part : tankList)
+		int parts = connectors.size();
+		for (IFluidConnector part : connectors)
 		{
 			part.getInternalTank().setFluid(null);
 			if (stack != null)
 			{
 				int fillPer = (stack.amount / parts) + (stack.amount % parts);
 				stack.amount -= part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
-				part.onFluidChanged();
+
 				if (parts > 1)
 					parts--;
 			}
+
+			part.onFluidChanged();
 		}
 	}
 

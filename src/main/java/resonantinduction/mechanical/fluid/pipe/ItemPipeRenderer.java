@@ -5,18 +5,12 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.valve.ModelReleaseValve;
-import resonantinduction.mechanical.fluid.valve.RenderReleaseValve;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ItemPipeRenderer implements IItemRenderer
 {
-	private ModelReleaseValve valve = new ModelReleaseValve();
-
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{
