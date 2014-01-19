@@ -62,20 +62,6 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	}
 
 	@Override
-	public void onFluidChanged()
-	{
-		if (!worldObj.isRemote)
-		{
-			if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
-			{
-				this.sendTankUpdate();
-			}
-
-			this.prevStack = this.tank.getFluid();
-		}
-	}
-
-	@Override
 	public void invalidate()
 	{
 		this.getNetwork().split(this);
@@ -264,8 +250,21 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 
 	public void sendTankUpdate()
 	{
-		System.out.println("Send Amount: " + this.getInternalTank().getFluidAmount());
 		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+	}
+
+	@Override
+	public void onFluidChanged()
+	{
+		if (!worldObj.isRemote)
+		{
+			if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
+			{
+				sendTankUpdate();
+			}
+
+			prevStack = tank.getFluid();
+		}
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class TankNetwork extends FluidNetwork
 {
 	@Override
 	public void distributeConnectors()
-	{		
+	{
 		FluidStack fillStack = this.getTank().getFluid();
 		int lowestY = 255, highestY = 0;
 
@@ -28,16 +28,19 @@ public class TankNetwork extends FluidNetwork
 		else if (this.getConnectors().size() > 0)
 		{
 			fillStack = fillStack.copy();
-			for (IFluidConnector part : this.getConnectors())
+
+			for (IFluidConnector connector : this.getConnectors())
 			{
-				part.getInternalTank().setFluid(null);
-				if (part instanceof TileEntity && ((TileEntity) part).yCoord < lowestY)
+				connector.getInternalTank().setFluid(null);
+				connector.onFluidChanged();
+
+				if (connector instanceof TileEntity && ((TileEntity) connector).yCoord < lowestY)
 				{
-					lowestY = ((TileEntity) part).yCoord;
+					lowestY = ((TileEntity) connector).yCoord;
 				}
-				if (part instanceof TileEntity && ((TileEntity) part).yCoord > highestY)
+				if (connector instanceof TileEntity && ((TileEntity) connector).yCoord > highestY)
 				{
-					highestY = ((TileEntity) part).yCoord;
+					highestY = ((TileEntity) connector).yCoord;
 				}
 			}
 

@@ -67,7 +67,6 @@ public class BlockTank extends BlockFluidNetwork
 
 		if (!world.isRemote)
 		{
-
 			return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
 		}
 		return true;
