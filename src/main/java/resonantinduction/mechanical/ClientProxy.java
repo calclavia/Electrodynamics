@@ -3,8 +3,6 @@ package resonantinduction.mechanical;
 import net.minecraftforge.client.MinecraftForgeClient;
 import resonantinduction.core.render.RenderRIItem;
 import resonantinduction.mechanical.fluid.pipe.ItemPipeRenderer;
-import resonantinduction.mechanical.fluid.pipe.RenderPipe;
-import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.tank.ItemTankRenderer;
 import resonantinduction.mechanical.fluid.tank.RenderTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
@@ -23,7 +21,6 @@ public class ClientProxy extends CommonProxy
 	{
 		MinecraftForgeClient.registerItemRenderer(Mechanical.blockTank.blockID, new ItemTankRenderer());
 		MinecraftForgeClient.registerItemRenderer(Mechanical.itemPipe.itemID, new ItemPipeRenderer());
-		MinecraftForgeClient.registerItemRenderer(Mechanical.blockReleaseValve.blockID, new ItemPipeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTank.class, RenderTank.INSTANCE);
 	}
 }

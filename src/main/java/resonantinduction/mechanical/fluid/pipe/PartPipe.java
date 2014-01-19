@@ -1,7 +1,9 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -11,6 +13,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
+import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
@@ -23,20 +26,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConnector, IFluidNetwork> implements IFluidConnector, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
-	/** Client Side Connection Check */
-	private ForgeDirection testingSide;
-
-	public Object[] connections = new Object[6];
-
-	/** Network used to link all parts together */
-	protected IFluidNetwork network;
 	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
-
-	/**
-	 * Bitmask connections
-	 */
-	public byte currentWireConnections = 0x00;
-	public byte currentAcceptorConnections = 0x00;
+	private boolean isExtracting = false;
 
 	public PartPipe()
 	{
@@ -53,6 +44,35 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidConne
 	public String getType()
 	{
 		return "resonant_induction_pipe";
+	}
+
+	@Override
+	public void update()
+	{
+		if (isExtracting)
+		{
+			for (int i = 0; i < this.getConnections().length; i++)
+			{
+				Object obj = this.getConnections()[i];
+
+				if (obj instanceof IFluidHandler)
+				{
+					((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), FluidContainerRegistry.BUCKET_VOLUME, true);
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
+	{
+		if (!world().isRemote)
+		{
+			isExtracting = !isExtracting;
+			player.addChatMessage("Pipe extraction mode: " + isExtracting);
+		}
+
+		return super.activate(player, part, item);
 	}
 
 	@Override

@@ -16,8 +16,6 @@ import resonantinduction.mechanical.fluid.pump.TileGrate;
 import resonantinduction.mechanical.fluid.pump.TilePump;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
-import resonantinduction.mechanical.fluid.valve.BlockReleaseValve;
-import resonantinduction.mechanical.fluid.valve.TileReleaseValve;
 import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.item.ItemPipeGauge;
 import resonantinduction.mechanical.logistic.BlockDetector;
@@ -96,7 +94,6 @@ public class Mechanical
 		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
-		blockReleaseValve = contentRegistry.createTile(BlockReleaseValve.class, TileReleaseValve.class);
 
 		itemPipeGuage = contentRegistry.createItem(ItemPipeGauge.class);
 		itemPipe = contentRegistry.createItem(ItemPipe.class);

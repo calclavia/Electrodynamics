@@ -49,7 +49,11 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		this.tank = new FluidTank(0);
 		for (IFluidConnector part : this.getConnectors())
 		{
-			part.setNetwork(this);
+			if (part.getNetwork() instanceof IFluidNetwork)
+			{
+				part.setNetwork(this);
+			}
+			
 			this.buildPart(part);
 		}
 		this.rebuildHandler();

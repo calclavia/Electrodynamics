@@ -34,13 +34,8 @@ public class ItemPipeRenderer implements IItemRenderer
 	{
 		GL11.glPushMatrix();
 		GL11.glRotatef(180f, 0f, 0f, 1f);
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderPipe.getTexture(item.getItemDamage()));
 		int meta = item.getItemDamage();
-		
-		if (Mechanical.blockReleaseValve != null && item.itemID == Mechanical.blockReleaseValve.blockID)
-		{
-			meta = EnumPipeMaterial.IRON.getMeta();
-		}
+
 		if (type == ItemRenderType.ENTITY)
 		{
 			GL11.glTranslatef(-.5F, -1F, -.5F);
@@ -65,12 +60,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		{
 			RenderPipe.render(item.getItemDamage(), (byte) 0b000011);
 		}
-		if (Mechanical.blockReleaseValve != null && item.itemID == Mechanical.blockReleaseValve.blockID)
-		{
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderReleaseValve.VALVE_TEXTURE);
-			valve.render();
-		}
-		
+
 		GL11.glPopMatrix();
 	}
 }

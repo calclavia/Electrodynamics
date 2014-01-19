@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipe;
+package resonantinduction.archaic.trough;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,30 +23,11 @@ import calclavia.lib.render.ColorCode;
  */
 public enum EnumPipeMaterial
 {
-	/** Gas only pipe */
-	GLASS("glass", true, false, false, 100, 300),
-	/** Cheap fluid pipe */
-	TIN("tin", false, true, false, 300, 1000),
-	/** Cheap fluid pipe */
-	COPPER("copper", false, true, false, 400, 1000),
-	/** First duel gas and fluid pipe */
-	IRON("iron", true, true, false, 500, 1000),
-	/** Fluid movement pipe that doesn't work well with pressure */
-	GOLD("gold", true, true, false, 200, 2000),
-	/** Cheap molten metal pipe */
-	OBSIDIAN("obsidian", false, true, true, 1000, 1000),
-	/**
-	 * Very strong fluid and gas support pipe. Should also support molten metal as long as they
-	 * don't stay in the pipe too long.
-	 */
-	STEEL("steel", true, true, false, 10000, 3000),
-	/** Weaker equal to steel pipes. Should also support steam very well */
-	BRONZE("bronze", true, true, false, 6000, 2000),
-	/**
-	 * Hell fluids only. Meaning lava, and molten metals. Water should turn to steam, fuel and oil
-	 * should cause an explosion around the pipe
-	 */
-	HELL("hell", true, true, true, 10000, 5000, "water", "fuel", "oil");
+	/** Simple water only pipe. Should render open toped when it can */
+	WOOD("wood", false, true, false, -1, 200),
+	/** Another version of the wooden pipe */
+	STONE("stone", false, true, false, -1, 1000);
+
 	public String matName = "material";
 	List<String> unsupportedFluids = new ArrayList<String>();
 	public boolean canSupportGas = false;
@@ -95,6 +76,25 @@ public enum EnumPipeMaterial
 			return EnumPipeMaterial.values()[i];
 		}
 		return null;
+	}
+
+	public static EnumPipeMaterial get(ItemStack stack)
+	{
+		if (stack != null)
+		{
+			return getFromItemMeta(stack.getItemDamage());
+		}
+		return null;
+	}
+
+	public static EnumPipeMaterial getFromItemMeta(int meta)
+	{
+		meta = meta / spacing;
+		if (meta < EnumPipeMaterial.values().length)
+		{
+			return EnumPipeMaterial.values()[meta];
+		}
+		return EnumPipeMaterial.WOOD;
 	}
 
 	public int getMeta(int typeID)

@@ -23,7 +23,7 @@ public class RenderPipe
 
 	public static ModelPipe MODEL_PIPE = new ModelPipe();
 	public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
-	private static HashMap<Pair<EnumPipeMaterial, Integer>, ResourceLocation> TEXTURES = new HashMap<Pair<EnumPipeMaterial, Integer>, ResourceLocation>();
+	private static HashMap<EnumPipeMaterial, ResourceLocation> TEXTURES = new HashMap<EnumPipeMaterial, ResourceLocation>();
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/iron.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)
@@ -32,80 +32,61 @@ public class RenderPipe
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(getTexture(material, 0));
-		render(material, part.getMaterialID(), part.getAllCurrentConnections());
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(getTexture(material));
+		render(material, part.getAllCurrentConnections());
 		GL11.glPopMatrix();
 	}
 
-	public static ResourceLocation getTexture(EnumPipeMaterial mat, int pipeID)
+	public static ResourceLocation getTexture(EnumPipeMaterial material)
 	{
-		if (mat != null)
+		if (material != null)
 		{
-			Pair<EnumPipeMaterial, Integer> index = new Pair<EnumPipeMaterial, Integer>(mat, pipeID);
-
-			if (!TEXTURES.containsKey(index))
+			if (!TEXTURES.containsKey(material))
 			{
-				String pipeName = "";
-				if (EnumPipeType.get(pipeID) != null)
-				{
-					pipeName = EnumPipeType.get(pipeID).getName(pipeID);
-				}
-				TEXTURES.put(index, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/" + mat.matName + ".png"));
+				TEXTURES.put(material, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/" + material.matName + ".png"));
 			}
-			return TEXTURES.get(index);
+
+			return TEXTURES.get(material);
 		}
 		return TEXTURE;
 	}
 
-	public static ResourceLocation getTexture(int meta)
+	public static void render(EnumPipeMaterial mat, byte side)
 	{
-		return getTexture(EnumPipeMaterial.getFromItemMeta(meta), EnumPipeMaterial.getType(meta));
-	}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.DOWN))
+		{
+			MODEL_PIPE.renderBottom();
+		}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.UP))
+		{
+			MODEL_PIPE.renderTop();
+		}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.NORTH))
+		{
+			MODEL_PIPE.renderBack();
+		}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.SOUTH))
+		{
+			MODEL_PIPE.renderFront();
+		}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.WEST))
+		{
+			MODEL_PIPE.renderLeft();
+		}
+		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.EAST))
+		{
+			MODEL_PIPE.renderRight();
+		}
 
-	public static void render(EnumPipeMaterial mat, int pipeID, byte side)
-	{
-		if (mat == EnumPipeMaterial.WOOD)
-		{
-			MODEL_TROUGH_PIPE.render(side, false);
-		}
-		else if (mat == EnumPipeMaterial.STONE)
-		{
-			MODEL_TROUGH_PIPE.render(side, true);
-		}
-		else
-		{
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.DOWN))
-			{
-				MODEL_PIPE.renderBottom();
-			}
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.UP))
-			{
-				MODEL_PIPE.renderTop();
-			}
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.NORTH))
-			{
-				MODEL_PIPE.renderBack();
-			}
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.SOUTH))
-			{
-				MODEL_PIPE.renderFront();
-			}
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.WEST))
-			{
-				MODEL_PIPE.renderLeft();
-			}
-			if (TileFluidNetwork.canRenderSide(side, ForgeDirection.EAST))
-			{
-				MODEL_PIPE.renderRight();
-			}
-
-			MODEL_PIPE.renderMiddle();
-		}
+		MODEL_PIPE.renderMiddle();
 	}
 
 	public static void render(int meta, byte sides)
 	{
-		render(EnumPipeMaterial.getFromItemMeta(meta), EnumPipeMaterial.getType(meta), sides);
+		if (meta < EnumPipeMaterial.values().length)
+		{
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(getTexture(EnumPipeMaterial.values()[meta]));
+			render(EnumPipeMaterial.values()[meta], sides);
+		}
 	}
-
 }

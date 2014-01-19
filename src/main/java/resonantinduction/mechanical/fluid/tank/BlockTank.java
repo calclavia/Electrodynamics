@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
-import resonantinduction.mechanical.fluid.pipe.TilePipe;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
@@ -97,7 +96,7 @@ public class BlockTank extends BlockFluidNetwork
 	{
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		TileEntity entity = world.getBlockTileEntity(x, y, z);
-		if (entity instanceof TilePipe)
+		if (entity instanceof TileTank)
 		{
 			ret.add(new ItemStack(this, 1, EnumPipeMaterial.getDropItemMeta(world, x, y, z)));
 		}
