@@ -143,7 +143,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public long getEnergyCapacity(ItemStack theItem)
 	{
-		return TileBattery.STORAGE;
+		return TileBattery.getEnergyForTier(theItem.getItemDamage());
 	}
 
 	public long getTransferRate(ItemStack itemStack)

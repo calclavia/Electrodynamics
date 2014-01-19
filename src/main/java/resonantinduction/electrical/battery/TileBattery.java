@@ -31,10 +31,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  */
 public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
-	public static final long STORAGE = 1000000000;
-
 	/** The transfer rate **/
-	public static final long DEFAULT_WATTAGE = (long) (STORAGE * 0.01);
+	public static final long DEFAULT_WATTAGE = (long) (getEnergyForTier(1) * 0.01);
 
 	/** Voltage increases as series connection increases */
 	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
@@ -49,8 +47,13 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 
 	public TileBattery()
 	{
-		this.energy = new EnergyStorageHandler(STORAGE);
+		this.energy = new EnergyStorageHandler(getEnergyForTier(1));
 		this.saveIOMap = true;
+	}
+
+	public static long getEnergyForTier(int tier)
+	{
+		return (long) Math.pow(1000000, tier);
 	}
 
 	@Override
