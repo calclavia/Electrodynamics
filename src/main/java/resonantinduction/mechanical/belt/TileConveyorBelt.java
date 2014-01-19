@@ -18,10 +18,10 @@ import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.MechanicalNetwork;
+import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -32,7 +32,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author DarkGuardsman
  */
-public class TileConveyorBelt extends TileAdvanced implements IMechanicalConnector, IBelt, IRotatable, IPacketReceiverWithID
+public class TileConveyorBelt extends TileMechanical implements IMechanicalConnector, IBelt, IRotatable, IPacketReceiverWithID
 {
 	public enum SlantType
 	{
@@ -48,11 +48,6 @@ public class TileConveyorBelt extends TileAdvanced implements IMechanicalConnect
 	public static final int PACKET_REFRESH = Mechanical.contentRegistry.getNextPacketID();
 	/** Acceleration of entities on the belt */
 	public static final float ACCELERATION = 0.01f;
-
-	private IMechanicalNetwork network;
-
-	/** The mechanical connections this connector has made */
-	protected Object[] connections = new Object[6];
 
 	/** Frame count for texture animation from 0 - maxFrame */
 	private int animationFrame = 0;
@@ -296,41 +291,6 @@ public class TileConveyorBelt extends TileAdvanced implements IMechanicalConnect
 	public float getMoveVelocity()
 	{
 		return Math.max(this.getNetwork().getAngularVelocity(), this.getNetwork().getPrevAngularVelocity());
-	}
-
-	@Override
-	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
-	{
-		return this.getNetwork().onReceiveEnergy(torque, angularVelocity);
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		return connections;
-	}
-
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new MechanicalNetwork();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public boolean sendNetworkPacket(long torque, float angularVelocity)
-	{
-		return false;
 	}
 
 	@Override

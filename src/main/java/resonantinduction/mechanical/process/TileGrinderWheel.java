@@ -9,9 +9,9 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileElectrical;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.Side;
  * @author Calclavia
  * 
  */
-public class TileGrinderWheel extends TileElectrical
+public class TileGrinderWheel extends TileMechanical
 {
 	public static final long POWER = 500000;
 	public static final int DEFAULT_TIME = 20 * 20;
@@ -29,16 +29,10 @@ public class TileGrinderWheel extends TileElectrical
 
 	public EntityItem grindingItem = null;
 
-	public TileGrinderWheel()
-	{
-		this.energy = new EnergyStorageHandler(POWER * 2);
-	}
-
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		// TODO: Add energy support.
 		doWork();
 	}
 
@@ -102,8 +96,6 @@ public class TileGrinderWheel extends TileElectrical
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
 			}
-
-			this.energy.extractEnergy(POWER / 20, true);
 		}
 	}
 
