@@ -26,6 +26,9 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
 
+	// TODO: Make animated distribution to create a smooth flow transition.
+	public boolean animateDistribution = false;
+
 	@Override
 	public void addConnector(IFluidConnector connector)
 	{
@@ -42,13 +45,13 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 	@Override
 	public boolean canUpdate()
 	{
-		return false;
+		return animateDistribution;
 	}
 
 	@Override
 	public boolean continueUpdate()
 	{
-		return false;
+		return canUpdate();
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 	public void reconstructConnector(IFluidConnector connector)
 	{
 		FluidTank tank = connector.getInternalTank();
-		
+
 		if (tank != null)
 		{
 			this.tank.setCapacity(this.tank.getCapacity() + tank.getCapacity());
