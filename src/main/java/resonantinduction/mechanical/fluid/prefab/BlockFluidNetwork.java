@@ -16,6 +16,18 @@ public class BlockFluidNetwork extends BlockRI
 	}
 
 	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileFluidNetwork)
+		{
+			((TileFluidNetwork) tile).refresh();
+			((TileFluidNetwork) tile).getNetwork().reconstruct();
+		}
+	}
+
+	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int par5)
 	{
 		TileEntity tile = world.getBlockTileEntity(x, y, z);

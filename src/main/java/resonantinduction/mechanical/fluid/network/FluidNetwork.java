@@ -10,8 +10,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidConnector;
+import resonantinduction.api.fluid.IFluidNetwork;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.core.net.ConnectionPathfinder;
 import universalelectricity.core.net.Network;
@@ -99,6 +100,7 @@ public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnecto
 		{
 			this.rebuildHandler();
 		}
+
 		return fill;
 	}
 

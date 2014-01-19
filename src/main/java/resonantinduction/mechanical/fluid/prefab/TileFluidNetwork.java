@@ -100,31 +100,19 @@ public abstract class TileFluidNetwork<N extends FluidNetwork> extends TileEntit
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (this.getNetwork() != null && resource != null)
-		{
-			return this.getNetwork().fill(this, from, resource, doFill);
-		}
-		return 0;
+		return this.getNetwork().fill(this, from, resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (this.getNetwork() != null && resource != null)
-		{
-			return this.getNetwork().drain(this, from, resource, doDrain);
-		}
-		return null;
+		return this.getNetwork().drain(this, from, resource, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (this.getNetwork() != null)
-		{
-			return this.getNetwork().drain(this, from, maxDrain, doDrain);
-		}
-		return null;
+		return this.getNetwork().drain(this, from, maxDrain, doDrain);
 	}
 
 	@Override

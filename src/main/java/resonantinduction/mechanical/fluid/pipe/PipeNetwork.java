@@ -22,17 +22,17 @@ public class PipeNetwork extends FluidNetwork
 	@Override
 	public void update()
 	{
-		System.out.println("PipeNetwork:" + this.toString());
-		System.out.println("FluidVol: " + this.getTank().getFluidAmount());
-
 		super.update();
 
-		// Slight delay to allow visual effect to take place before draining the pipe's internal
-		// tank
-		if (this.ticks % 2 == 0 && this.getTank().getFluidAmount() > 0)
+		/*
+		 * Slight delay to allow visual effect to take place before draining the pipe's internal
+		 * tank
+		 */
+		if (this.getTank().getFluidAmount() > 0)
 		{
 			FluidStack stack = this.getTank().getFluid().copy();
 			int count = this.connectionMap.size();
+
 			for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
 			{
 				int sideCount = entry.getValue().size();
@@ -46,7 +46,9 @@ public class PipeNetwork extends FluidNetwork
 					{
 						maxFill = ((IFluidPipe) entity).getMaxFlowRate();
 					}
+
 					stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
+
 					if (sideCount > 1)
 						--sideCount;
 					if (volPer <= 0)
@@ -57,6 +59,7 @@ public class PipeNetwork extends FluidNetwork
 				if (stack == null || stack.amount <= 0)
 					break;
 			}
+
 			this.getTank().setFluid(stack);
 			// TODO check for change before rebuilding
 			this.rebuildHandler();
@@ -72,7 +75,7 @@ public class PipeNetwork extends FluidNetwork
 	@Override
 	public boolean continueUpdate()
 	{
-		return true;// this.getConnectors().size() > 0;
+		return this.getConnectors().size() > 0;
 	}
 
 	@Override
