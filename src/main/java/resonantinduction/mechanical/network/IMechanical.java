@@ -18,5 +18,5 @@ public interface IMechanical extends IConnectable
 
 	public boolean isClockwise();
 
-	public void setRotation(boolean isClockwise);
+	public void setClockwise(boolean isClockwise);
 }

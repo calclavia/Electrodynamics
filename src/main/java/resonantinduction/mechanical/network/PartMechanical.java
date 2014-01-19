@@ -365,7 +365,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public void setRotation(boolean isClockwise)
+	public void setClockwise(boolean isClockwise)
 	{
 		this.isClockwise = isClockwise;
 	}

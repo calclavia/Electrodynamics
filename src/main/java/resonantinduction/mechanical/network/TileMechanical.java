@@ -66,7 +66,7 @@ public class TileMechanical extends TileAdvanced implements IMechanicalConnector
 	}
 
 	@Override
-	public void setRotation(boolean isClockwise)
+	public void setClockwise(boolean isClockwise)
 	{
 		this.isClockwise = isClockwise;
 	}

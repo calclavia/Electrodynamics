@@ -2,9 +2,11 @@ package resonantinduction.mechanical.process;
 
 import java.util.HashMap;
 
+import calclavia.lib.prefab.tile.IRotatable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
@@ -20,7 +22,7 @@ import cpw.mods.fml.relauncher.Side;
  * @author Calclavia
  * 
  */
-public class TileGrinderWheel extends TileMechanical
+public class TileGrinderWheel extends TileMechanical implements IRotatable
 {
 	public static final long POWER = 500000;
 	public static final int DEFAULT_TIME = 20 * 20;
@@ -156,5 +158,33 @@ public class TileGrinderWheel extends TileMechanical
 		}
 
 		return clientTimer;
+	}
+
+	@Override
+	public boolean isClockwise()
+	{
+		if (worldObj != null)
+		{
+			return !(getBlockMetadata() % 2 == 0);
+		}
+		
+		return false;
+	}
+
+	@Override
+	public ForgeDirection getDirection()
+	{
+		if (worldObj != null)
+		{
+			return ForgeDirection.getOrientation(getBlockMetadata());
+		}
+
+		return ForgeDirection.UNKNOWN;
+	}
+
+	@Override
+	public void setDirection(ForgeDirection direction)
+	{
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
 	}
 }

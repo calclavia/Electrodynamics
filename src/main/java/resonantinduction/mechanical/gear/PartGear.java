@@ -1,32 +1,11 @@
 package resonantinduction.mechanical.gear;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalConnector;
-import resonantinduction.mechanical.network.IMechanicalNetwork;
-import resonantinduction.mechanical.network.MechanicalNetwork;
 import resonantinduction.mechanical.network.PartMechanical;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Rotation;
-import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
-import codechicken.microblock.FaceMicroClass;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.TFacePart;
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -43,16 +22,16 @@ public class PartGear extends PartMechanical
 	@Override
 	public void update()
 	{
-		super.update();
-
 		if (!this.world().isRemote)
 		{
 			if (manualCrankTime > 0)
 			{
-				onReceiveEnergy(null, 20, 0.3f, true);
+				onReceiveEnergy(null, 20, 0.2f, true);
 				manualCrankTime--;
 			}
 		}
+		
+		super.update();
 	}
 
 	@Override

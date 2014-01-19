@@ -2,6 +2,7 @@ package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
@@ -197,6 +198,20 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public int getMaxFlowRate()
 	{
 		return FluidContainerRegistry.BUCKET_VOLUME;
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setBoolean("isExtracting", isInsulated);
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		isExtracting= nbt.getBoolean("isExtracting");
 	}
 
 }

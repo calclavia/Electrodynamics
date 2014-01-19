@@ -33,8 +33,17 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			TileGrinderWheel tile = (TileGrinderWheel) t;
 			glPushMatrix();
 			glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);
-			glScalef(0.5f, 0.5f, 0.515f);
-			glRotatef((float) Math.toDegrees(tile.getNetwork().getRotation()), 0, 0, 1);
+			glScalef(0.51f, 0.51f, 0.51f);
+
+			if (tile.getDirection().ordinal() < 2)
+				glRotatef(90, 1, 0, 0);
+			else if (tile.getDirection().ordinal() == 2 || tile.getDirection().ordinal() == 3)
+				glRotatef(90, 0, 1, 0);
+			else if (tile.getDirection().ordinal() == 4 || tile.getDirection().ordinal() == 5)
+				glRotatef(180, 0, 1, 0);
+
+			glRotatef((float) Math.toDegrees(tile.getNetwork().getRotation()) * (tile.isClockwise() ? 1 : -1), 0, 0, 1);
+
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 			MODEL.renderAll();
 			glPopMatrix();

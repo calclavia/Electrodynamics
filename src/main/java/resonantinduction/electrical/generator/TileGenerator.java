@@ -11,125 +11,132 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileElectrical;
 
-/** A kinetic energy to electrical energy converter.
+/**
+ * A kinetic energy to electrical energy converter.
  * 
- * @author Calclavia */
+ * @author Calclavia
+ */
 public class TileGenerator extends TileElectrical implements IMechanical, IRotatable
 {
-    /** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
-    public boolean isInversed = false;
+	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
+	public boolean isInversed = false;
 
-    private float torqueRatio = 8000;
+	private float torqueRatio = 8000;
 
-    public TileGenerator()
-    {
-        energy = new EnergyStorageHandler(10000);
-        this.ioMap = 728;
-    }
+	public TileGenerator()
+	{
+		energy = new EnergyStorageHandler(10000);
+		this.ioMap = 728;
+	}
 
-    public float toggleRatio()
-    {
-        return torqueRatio = (torqueRatio + 1000) % energy.getMaxExtract();
-    }
+	public float toggleRatio()
+	{
+		return torqueRatio = (torqueRatio + 1000) % energy.getMaxExtract();
+	}
 
-    @Override
-    public void updateEntity()
-    {
-        if (this.isFunctioning())
-        {
-            if (!isInversed)
-            {
-                this.produce();
-            }
-            else
-            {
-                Vector3 outputVector = new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite());
-                TileEntity mechanical = outputVector.getTileEntity(worldObj);
+	@Override
+	public void updateEntity()
+	{
+		if (this.isFunctioning())
+		{
+			if (!isInversed)
+			{
+				produce();
+			}
+			else
+			{
+				produceMechanical(new Vector3(this).modifyPositionFromSide(this.getDirection()));
+				produceMechanical(new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite()));
+			}
+		}
+	}
 
-                if (mechanical instanceof IMechanical)
-                {
-                    long extract = energy.extractEnergy();
+	public void produceMechanical(Vector3 outputVector)
+	{
+		TileEntity mechanical = outputVector.getTileEntity(worldObj);
 
-                    if (extract > 0)
-                    {
-                        float angularVelocity = extract / torqueRatio;
-                        long torque = (long) (extract / angularVelocity);
-                        ((IMechanical) mechanical).onReceiveEnergy(this.getDirection().getOpposite(), torque, angularVelocity, true);
-                    }
-                }
-            }
-        }
-    }
+		if (mechanical instanceof IMechanical)
+		{
+			long extract = energy.extractEnergy();
+			
+			if (extract > 0)
+			{
+				float angularVelocity = extract / torqueRatio;
+				long torque = (long) (extract / angularVelocity);
+				((IMechanical) mechanical).onReceiveEnergy(this.getDirection().getOpposite(), torque, angularVelocity, true);
+			}
+		}
+	}
 
-    @Override
-    public EnumSet<ForgeDirection> getInputDirections()
-    {
-        return this.getOutputDirections();
-    }
+	@Override
+	public EnumSet<ForgeDirection> getInputDirections()
+	{
+		return this.getOutputDirections();
+	}
 
-    @Override
-    public EnumSet<ForgeDirection> getOutputDirections()
-    {
-        EnumSet<ForgeDirection> dirs = EnumSet.allOf(ForgeDirection.class);
-        dirs.remove(this.getDirection());
-        dirs.remove(this.getDirection().ordinal());
-        return dirs;
-    }
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		EnumSet<ForgeDirection> dirs = EnumSet.allOf(ForgeDirection.class);
+		dirs.remove(this.getDirection());
+		dirs.remove(this.getDirection().ordinal());
+		return dirs;
+	}
 
-    @Override
-    public ForgeDirection getDirection()
-    {
-        return ForgeDirection.getOrientation(this.getBlockMetadata());
-    }
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return ForgeDirection.getOrientation(this.getBlockMetadata());
+	}
 
-    @Override
-    public void setDirection(ForgeDirection dir)
-    {
-        this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, dir.ordinal(), 3);
+	@Override
+	public void setDirection(ForgeDirection dir)
+	{
+		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, dir.ordinal(), 3);
 
-    }
+	}
 
-    private boolean isFunctioning()
-    {
-        return true;
-    }
+	private boolean isFunctioning()
+	{
+		return true;
+	}
 
-    @Override
-    public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
-    {
-        if (!this.isInversed)
-        {
-            return energy.receiveEnergy((long) (torque * angularVelocity), doReceive);
-        }
-        return 0;
-    }
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
+	{
+		if (!this.isInversed)
+		{
+			return energy.receiveEnergy((long) (torque * angularVelocity), doReceive);
+		}
+		return 0;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-        isInversed = nbt.getBoolean("isInversed");
-        torqueRatio = nbt.getFloat("torqueRatio");
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		isInversed = nbt.getBoolean("isInversed");
+		torqueRatio = nbt.getFloat("torqueRatio");
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        nbt.setBoolean("isInversed", isInversed);
-        nbt.setFloat("torqueRatio", torqueRatio);
-    }
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("isInversed", isInversed);
+		nbt.setFloat("torqueRatio", torqueRatio);
+	}
 
-    @Override
-    public boolean isClockwise()
-    {
-        return false;
-    }
+	@Override
+	public boolean isClockwise()
+	{
+		return false;
+	}
 
-    @Override
-    public void setRotation(boolean isClockwise)
-    {
+	@Override
+	public void setClockwise(boolean isClockwise)
+	{
 
-    }
+	}
 
 }

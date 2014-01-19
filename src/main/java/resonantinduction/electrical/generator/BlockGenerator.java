@@ -19,7 +19,7 @@ public class BlockGenerator extends BlockRIRotatable
 	}
 
 	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
@@ -33,6 +33,7 @@ public class BlockGenerator extends BlockRIRotatable
 
 			return true;
 		}
+
 		return false;
 	}
 
