@@ -52,7 +52,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		{
 			if (inventory[i] != null)
 			{
-				Vector3 translation = new Vector3(x + (double) (i / matrixX) / ((double) matrixX) + (0.5 / ((double) matrixX)), y + 1.1, z + (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / ((double) matrixZ)));
+				Vector3 translation = new Vector3(x + (double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), y + 1.1, z + (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ)));
 				GL11.glPushMatrix();
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -243,9 +243,9 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			entityitem.getEntityItem().stackSize = 1;
 			entityitem.hoverStart = 0.0F;
 			GL11.glPushMatrix();
-			GL11.glTranslated(-0.453125F * (float) dir.offsetX + position.x, position.y, -0.453125F * (float) dir.offsetZ + position.z);
+			GL11.glTranslated(-0.453125F * dir.offsetX + position.x, position.y, -0.453125F * dir.offsetZ + position.z);
 			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef((float) (90 * angle), 1, 0, 0);
+			GL11.glRotatef(90 * angle, 1, 0, 0);
 
 			RenderItem.renderInFrame = true;
 			RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);

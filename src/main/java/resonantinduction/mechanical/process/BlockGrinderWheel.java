@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.process;
 
-import calclavia.lib.render.block.BlockRenderingHandler;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;

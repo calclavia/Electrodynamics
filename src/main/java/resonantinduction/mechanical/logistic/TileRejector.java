@@ -18,8 +18,6 @@ import calclavia.lib.network.IPacketReceiverWithID;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.network.Player;
-
 /** @author Darkguardsman */
 public class TileRejector extends TileEntityFilterable implements IPacketReceiverWithID
 {
@@ -74,7 +72,7 @@ public class TileRejector extends TileEntityFilterable implements IPacketReceive
 		entity.posX += side.offsetX;
 		// entity.motionY += 0.10000000298023224D;
 		entity.posZ += side.offsetZ;
-		
+
 		if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
 		{
 			((IBelt) tileEntity).ignoreEntity(entity);

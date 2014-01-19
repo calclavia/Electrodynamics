@@ -636,7 +636,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 			if (t instanceof TileTesla)
 			{
-				checkPosition.add(new Vector3((TileTesla) t).subtract(getPosition()));
+				checkPosition.add(new Vector3(t).subtract(getPosition()));
 			}
 			else
 			{

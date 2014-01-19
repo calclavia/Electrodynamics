@@ -27,7 +27,6 @@ import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;

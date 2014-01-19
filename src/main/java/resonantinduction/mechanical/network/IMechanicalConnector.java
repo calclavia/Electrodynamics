@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.network;
 
-import universalelectricity.api.net.IConnectable;
 import universalelectricity.api.net.IConnector;
 
 /**

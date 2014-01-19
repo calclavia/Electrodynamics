@@ -59,12 +59,6 @@ public class BlockTank extends BlockFluidNetwork
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
 	{
-		if (world.getBlockTileEntity(x, y, z) instanceof TileTank)
-		{
-			System.out.println(world.isRemote + " Amount: " + ((TileTank) world.getBlockTileEntity(x, y, z)).getInternalTank().getFluidAmount());
-			world.markBlockForUpdate(x, y, z);
-		}
-
 		if (!world.isRemote)
 		{
 			return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);

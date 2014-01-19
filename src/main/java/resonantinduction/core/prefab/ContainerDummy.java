@@ -30,6 +30,7 @@ public class ContainerDummy extends Container
 		}
 	}
 
+	@Override
 	public void onContainerClosed(EntityPlayer player)
 	{
 		if (tile instanceof IPlayerUsing)

@@ -2,7 +2,6 @@ package resonantinduction.mechanical.process;
 
 import java.util.HashMap;
 
-import calclavia.lib.prefab.tile.IRotatable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -15,6 +14,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.IRotatable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
@@ -167,7 +167,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 		{
 			return !(getBlockMetadata() % 2 == 0);
 		}
-		
+
 		return false;
 	}
 

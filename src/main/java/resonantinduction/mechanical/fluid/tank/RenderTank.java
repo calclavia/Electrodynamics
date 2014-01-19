@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,12 +34,12 @@ public class RenderTank extends TileEntitySpecialRenderer
 		{
 			byte renderSides = ((TileTank) tileEntity).renderSides;
 
-			boolean down = TileTank.canRenderSide(renderSides, ForgeDirection.DOWN);
-			boolean up = TileTank.canRenderSide(renderSides, ForgeDirection.UP);
-			boolean north = TileTank.canRenderSide(renderSides, ForgeDirection.NORTH);
-			boolean south = TileTank.canRenderSide(renderSides, ForgeDirection.SOUTH);
-			boolean east = TileTank.canRenderSide(renderSides, ForgeDirection.EAST);
-			boolean west = TileTank.canRenderSide(renderSides, ForgeDirection.WEST);
+			boolean down = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.DOWN);
+			boolean up = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.UP);
+			boolean north = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.NORTH);
+			boolean south = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.SOUTH);
+			boolean east = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.EAST);
+			boolean west = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.WEST);
 
 			bindTexture(TextureMap.locationBlocksTexture);
 			GL11.glPushMatrix();
@@ -51,7 +52,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-				if (!TileTank.canRenderSide(renderSides, dir))
+				if (!TileFluidNetwork.canRenderSide(renderSides, dir))
 				{
 					GL11.glPushMatrix();
 					GL11.glScalef(0.99f, 0.99f, 0.99f);

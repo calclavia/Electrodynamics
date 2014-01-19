@@ -32,7 +32,7 @@ public class TileTank extends TileFluidNetwork
 	{
 		if (network instanceof TankNetwork)
 		{
-			this.network = (TankNetwork) network;
+			this.network = network;
 		}
 	}
 

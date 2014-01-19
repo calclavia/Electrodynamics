@@ -44,7 +44,7 @@ public class PartGear extends PartMechanical implements IMechanicalConnector
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println(world().isRemote + ": " + getNetwork());
+		// System.out.println(world().isRemote + ": " + getNetwork());
 		if (player.isSneaking())
 		{
 			this.manualCrankTime = 20;

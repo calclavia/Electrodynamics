@@ -28,11 +28,11 @@ public class CommonProxy extends ProxyBase
 			{
 				return new ContainerMultimeter(player.inventory, ((PartMultimeter) part));
 			}
-		}else if (tileEntity instanceof TileEncoder)
+		}
+		else if (tileEntity instanceof TileEncoder)
 		{
 			return new ContainerEncoder(player.inventory, (TileEncoder) tileEntity);
 		}
-
 
 		return null;
 	}

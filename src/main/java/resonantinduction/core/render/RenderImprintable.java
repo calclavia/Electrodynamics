@@ -41,7 +41,7 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 						if (objectPosition.blockX == tileFilterable.xCoord && objectPosition.blockY == tileFilterable.yCoord && objectPosition.blockZ == tileFilterable.zCoord)
 						{
 							Set<ItemStack> filters = ItemBlockImprint.getFilters(filter);
-							
+
 							int i = 0;
 							for (ItemStack filterStack : filters)
 							{

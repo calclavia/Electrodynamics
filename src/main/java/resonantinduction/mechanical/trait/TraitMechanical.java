@@ -3,8 +3,8 @@ package resonantinduction.mechanical.trait;
 import java.util.HashSet;
 import java.util.Set;
 
-import resonantinduction.mechanical.network.IMechanical;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.network.IMechanical;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

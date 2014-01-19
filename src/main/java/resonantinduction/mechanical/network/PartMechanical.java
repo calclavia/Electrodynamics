@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalConnector;
-import resonantinduction.mechanical.network.IMechanicalNetwork;
-import resonantinduction.mechanical.network.MechanicalNetwork;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -27,8 +21,6 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -269,17 +261,18 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		{
 			if (isPositive)
 			{
-				((PartMechanical) neighbor).setClockwise(isClockwise);
+				neighbor.setClockwise(isClockwise);
 			}
 			else
 			{
-				((PartMechanical) neighbor).setClockwise(!isClockwise);
+				neighbor.setClockwise(!isClockwise);
 			}
 
 			neighbor.markRotationUpdate = true;
 		}
 	}
 
+	@Override
 	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
 	{
 		if (!world().isRemote && doReceive)
@@ -367,6 +360,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setClockwise(boolean isClockwise)
 	{
+		if (this.isClockwise != isClockwise)
+		{
+			if (getNetwork().getPower() > 0)
+			{
+				getNetwork().setPower(0, 0);
+			}
+
+		}
+
 		this.isClockwise = isClockwise;
 	}
 

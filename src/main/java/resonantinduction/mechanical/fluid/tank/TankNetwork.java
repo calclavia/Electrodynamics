@@ -53,7 +53,7 @@ public class TankNetwork extends FluidNetwork
 				{
 					if (part instanceof IFluidConnector && ((TileEntity) part).yCoord == y)
 					{
-						parts.add((IFluidConnector) part);
+						parts.add(part);
 					}
 				}
 				if (!parts.isEmpty())

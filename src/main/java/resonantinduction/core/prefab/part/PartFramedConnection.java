@@ -4,16 +4,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import resonantinduction.mechanical.fluid.pipe.PartPipe;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.net.INetwork;
 import universalelectricity.api.vector.Vector3;

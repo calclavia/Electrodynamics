@@ -254,6 +254,7 @@ public abstract class PartAdvancedWire extends PartConductor
 		return false;
 	}
 
+	@Override
 	protected ItemStack getItem()
 	{
 		return EnumWireMaterial.values()[getMaterialID()].getWire();
@@ -328,6 +329,7 @@ public abstract class PartAdvancedWire extends PartConductor
 		this.color = nbt.getInteger("dyeID");
 	}
 
+	@Override
 	protected boolean checkRedstone(int side)
 	{
 		if (this.world().isBlockIndirectlyGettingPowered(x(), y(), z()))

@@ -1,15 +1,11 @@
 package resonantinduction.core.resource.item;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.item.ItemBase;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
@@ -35,7 +31,7 @@ public class ItemOreResource extends ItemBase
 	{
 		String dustName = getDustFromStack(is);
 		List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
-		
+
 		if (list.size() > 0)
 		{
 			ItemStack type = list.get(0);

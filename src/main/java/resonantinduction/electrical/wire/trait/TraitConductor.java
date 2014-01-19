@@ -108,7 +108,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 		{
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				//if (dir != from.getOpposite())
+				// if (dir != from.getOpposite())
 				{
 					TMultiPart part = this.partMap(dir.ordinal());
 

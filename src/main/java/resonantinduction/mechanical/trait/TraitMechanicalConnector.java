@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import codechicken.multipart.TMultiPart;
@@ -123,6 +122,6 @@ public class TraitMechanicalConnector extends TileMultipart implements IMechanic
 	@Override
 	public void setClockwise(boolean isClockwise)
 	{
-		
+
 	}
 }

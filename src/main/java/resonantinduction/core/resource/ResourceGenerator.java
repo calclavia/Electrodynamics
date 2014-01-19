@@ -23,7 +23,6 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.item.ItemOreResource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

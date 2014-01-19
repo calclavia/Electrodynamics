@@ -17,7 +17,6 @@ import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
-import resonantinduction.mechanical.fluid.tank.TileTank;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
@@ -204,14 +203,14 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setBoolean("isExtracting", isInsulated);
+		nbt.setBoolean("isExtracting", isExtracting);
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		isExtracting= nbt.getBoolean("isExtracting");
+		isExtracting = nbt.getBoolean("isExtracting");
 	}
 
 }

@@ -3,8 +3,6 @@ package resonantinduction.archaic.firebox;
 import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +17,8 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockHotPlate extends BlockRI
 {
@@ -134,12 +134,12 @@ public class BlockHotPlate extends BlockRI
 
 						for (int spawn = 0; spawn < maxParticles; spawn++)
 						{
-							Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / ((double) 2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / ((double) 2)));
+							Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
 							particlePosition.translate(new Vector3((random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2, (random.nextFloat() - 0.5) * 0.2));
 							world.spawnParticle("smoke", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.0D, 0.0D);
 						}
 
-						Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / ((double) 2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / ((double) 2)));
+						Vector3 particlePosition = new Vector3(x, y, z).translate((double) (i / 2) / ((double) 2) + (0.5 / (2)), 0.2, (double) (i % 2) / ((double) 2) + (0.5 / (2)));
 						world.spawnParticle("flame", particlePosition.x, particlePosition.y, particlePosition.z, 0.0D, 0.01D, 0.0D);
 					}
 				}

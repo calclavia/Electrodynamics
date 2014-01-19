@@ -158,7 +158,7 @@ public class BlockEngineeringTable extends BlockRI
 						{
 							InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 						}
-						
+
 						tile.setInventorySlotContents(9, null);
 						tile.onInventoryChanged();
 

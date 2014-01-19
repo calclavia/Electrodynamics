@@ -1,6 +1,5 @@
 package resonantinduction.core.prefab.block;
 
-import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.Configuration;
@@ -9,6 +8,7 @@ import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
+import codechicken.multipart.ControlKeyModifer;
 
 /**
  * Basic prefab for machine

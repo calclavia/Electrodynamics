@@ -19,55 +19,55 @@ import calclavia.lib.utility.FluidUtility;
 
 public class ItemPipeGauge extends ItemBase
 {
-    Icon pipeGuage;
+	Icon pipeGuage;
 
-    public ItemPipeGauge()
-    {
-        super("PipeGuage");
-        this.setHasSubtypes(true);
-        this.setCreativeTab(CreativeTabs.tabTools);
-        this.setMaxStackSize(1);
-        this.setTextureName(Reference.PREFIX + "readout.PipeGauge");
+	public ItemPipeGauge()
+	{
+		super("PipeGuage");
+		this.setHasSubtypes(true);
+		this.setCreativeTab(CreativeTabs.tabTools);
+		this.setMaxStackSize(1);
+		this.setTextureName(Reference.PREFIX + "readout.PipeGauge");
 
-    }
+	}
 
-    @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-    {
-        if (!world.isRemote)
-        {
-            TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-            ForgeDirection hitSide = ForgeDirection.getOrientation(side);
-            if (tileEntity instanceof IReadOut)
-            {
-                String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, EnumTools.PIPE_GUAGE);
-                if (output != null && !output.isEmpty())
-                {
-                    if (output.length() > 100)
-                    {
-                        output = output.substring(0, 100);
-                    }
-                    output.trim();
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("ReadOut> " + output));
-                    return true;
-                }
-            }
-            if (tileEntity instanceof IFluidHandler)
-            {
-                FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
-                if (tanks != null)
-                {
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
-                    for (FluidStack stack : FluidUtility.getFluidList(tanks))
-                    {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
-                    }
-                    return true;
-                }
-            }
+	@Override
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	{
+		if (!world.isRemote)
+		{
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+			ForgeDirection hitSide = ForgeDirection.getOrientation(side);
+			if (tileEntity instanceof IReadOut)
+			{
+				String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, EnumTools.PIPE_GUAGE);
+				if (output != null && !output.isEmpty())
+				{
+					if (output.length() > 100)
+					{
+						output = output.substring(0, 100);
+					}
+					output.trim();
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("ReadOut> " + output));
+					return true;
+				}
+			}
+			if (tileEntity instanceof IFluidHandler)
+			{
+				FluidTankInfo[] tanks = ((IFluidHandler) tileEntity).getTankInfo(ForgeDirection.getOrientation(side));
+				if (tanks != null)
+				{
+					player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
+					for (FluidStack stack : FluidUtility.getFluidList(tanks))
+					{
+						player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
+					}
+					return true;
+				}
+			}
 
-        }
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

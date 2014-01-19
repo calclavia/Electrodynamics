@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockImprintable;
-import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

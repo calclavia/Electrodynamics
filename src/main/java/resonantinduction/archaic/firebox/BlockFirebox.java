@@ -2,7 +2,6 @@ package resonantinduction.archaic.firebox;
 
 import java.util.Random;
 
-import codechicken.multipart.ControlKeyModifer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,8 +11,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
-import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -49,7 +49,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 	protected void actionPerformed(GuiButton button)
 	{
 		super.actionPerformed(button);
-		if (((TileEncoder) tileEntity).getProgram() != null)
+		if (tileEntity.getProgram() != null)
 		{
 			switch (button.id)
 			{
@@ -101,7 +101,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 	{
 		super.handleMouseInput();
 		int wheel = Mouse.getEventDWheel();
-		if (((TileEncoder) tileEntity).getProgram() != null)
+		if (tileEntity.getProgram() != null)
 		{
 			if (wheel > 0)
 			{
@@ -121,7 +121,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 		{
 			this.mc.thePlayer.closeScreen();
 		}
-		else if (((TileEncoder) tileEntity).getProgram() != null)
+		else if (tileEntity.getProgram() != null)
 		{
 			if (keycode == Keyboard.KEY_UP) // PAGE UP (no constant)
 			{
@@ -138,7 +138,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 			}
 			else if (keycode == Keyboard.KEY_RIGHT) // PAGE RIGHT (no constant)
 			{
-				if (this.getTaskListElement().scrollX < ((TileEncoder) tileEntity).getProgram().getSize().intX())
+				if (this.getTaskListElement().scrollX < tileEntity.getProgram().getSize().intX())
 					this.getTaskListElement().scrollSide(1);
 			}
 		}
@@ -181,7 +181,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 
 	public TileEncoder getTile()
 	{
-		return (TileEncoder) this.tileEntity;
+		return this.tileEntity;
 	}
 
 }

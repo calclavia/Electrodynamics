@@ -33,6 +33,7 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	public float getPrevAngularVelocity();
 
 	/** Called to rebuild the network */
+	@Override
 	public void reconstruct();
 
 	public long onReceiveEnergy(long torque, float angularVelocity);
