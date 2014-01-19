@@ -57,7 +57,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(), 0, 0);
+				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0.2f), 0, 1);
 				GL11.glPopMatrix();
 
 				if (isLooking)
@@ -243,21 +243,9 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			entityitem.getEntityItem().stackSize = 1;
 			entityitem.hoverStart = 0.0F;
 			GL11.glPushMatrix();
-			GL11.glTranslatef(-0.453125F * (float) dir.offsetX, -0.18F, -0.453125F * (float) dir.offsetZ);
+			GL11.glTranslated(-0.453125F * (float) dir.offsetX + position.x, position.y, -0.453125F * (float) dir.offsetZ + position.z);
 			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef((float) (-90 * angle), 0.0F, 0.0F, 1.0F);
-
-			switch (angle)
-			{
-				case 1:
-					GL11.glTranslatef(-0.16F, -0.16F, 0.0F);
-					break;
-				case 2:
-					GL11.glTranslatef(0.0F, -0.32F, 0.0F);
-					break;
-				case 3:
-					GL11.glTranslatef(0.16F, -0.16F, 0.0F);
-			}
+			GL11.glRotatef((float) (90 * angle), 1, 0, 0);
 
 			RenderItem.renderInFrame = true;
 			RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
