@@ -24,171 +24,174 @@ import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-/** A modular battery.
+/**
+ * A modular battery.
  * 
- * @author Calclavia */
+ * @author Calclavia
+ */
 public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
-    /** The transfer rate **/
-    public static final long DEFAULT_WATTAGE = getEnergyForTier(1);
+	/** The transfer rate **/
+	public static final long DEFAULT_WATTAGE = getEnergyForTier(1);
 
-    /** Voltage increases as series connection increases */
-    public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
+	/** Voltage increases as series connection increases */
+	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
 
-    private BatteryStructure structure;
+	private BatteryStructure structure;
 
-    public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
-    public float clientEnergy;
-    public int clientCells;
-    public float clientMaxEnergy;
+	public float clientEnergy;
+	public int clientCells;
+	public float clientMaxEnergy;
 
-    public TileBattery()
-    {
-        this.energy = new EnergyStorageHandler(getEnergyForTier(1));
-        this.saveIOMap = true;
-    }
+	public TileBattery()
+	{
+		this.energy = new EnergyStorageHandler(getEnergyForTier(1));
+		this.saveIOMap = true;
+	}
 
-    public static long getEnergyForTier(int tier)
-    {
-        if (tier <= 0)
-        {
-            tier = 1;
-        }
-        return (long) Math.pow(1000000, tier);
-    }
+	/**
+	 * @param tier - 0, 1, 2
+	 * @return
+	 */
+	public static long getEnergyForTier(int tier)
+	{
+		return (long) Math.pow(1000000, tier + 1);
+	}
 
-    @Override
-    public void initiate()
-    {
-        this.updateStructure();
-    }
+	@Override
+	public void initiate()
+	{
+		this.updateStructure();
+	}
 
-    public void updateStructure()
-    {
-        if (!this.worldObj.isRemote)
-        {
-            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-            {
-                TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+	public void updateStructure()
+	{
+		if (!this.worldObj.isRemote)
+		{
+			energy.setCapacity(getEnergyForTier(getBlockMetadata()));
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 
-                if (tile instanceof TileBattery)
-                {
-                    this.getNetwork().merge(((TileBattery) tile).getNetwork());
-                }
-            }
+				if (tile instanceof TileBattery)
+				{
+					this.getNetwork().merge(((TileBattery) tile).getNetwork());
+				}
+			}
 
-            this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().get().size());
-            this.getNetwork().redistribute();
-        }
-    }
+			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().get().size());
+			this.getNetwork().redistribute();
+		}
+	}
 
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
 
-        if (!this.worldObj.isRemote)
-        {
-            if (this.produce() > 0)
-            {
-                this.getNetwork().redistribute();
-            }
-        }
-    }
+		if (!this.worldObj.isRemote)
+		{
+			if (this.produce() > 0)
+			{
+				this.getNetwork().redistribute();
+			}
+		}
+	}
 
-    @Override
-    public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-    {
-        long returnValue = super.onReceiveEnergy(from, receive, doReceive);
-        this.getNetwork().redistribute();
-        return returnValue;
-    }
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+	{
+		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
+		this.getNetwork().redistribute();
+		return returnValue;
+	}
 
-    @Override
-    public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-    {
-        long returnValue = super.onExtractEnergy(from, extract, doExtract);
-        this.getNetwork().redistribute();
-        return returnValue;
-    }
+	@Override
+	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
+	{
+		long returnValue = super.onExtractEnergy(from, extract, doExtract);
+		this.getNetwork().redistribute();
+		return returnValue;
+	}
 
-    public void updateClient()
-    {
-        PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
-    }
+	public void updateClient()
+	{
+		PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
+	}
 
-    @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-    {
-    }
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+	}
 
-    @Override
-    public ArrayList getPacketData(int type)
-    {
-        ArrayList data = new ArrayList();
-        return data;
-    }
+	@Override
+	public ArrayList getPacketData(int type)
+	{
+		ArrayList data = new ArrayList();
+		return data;
+	}
 
-    @Override
-    public BatteryStructure getNetwork()
-    {
-        if (this.structure == null)
-        {
-            this.structure = new BatteryStructure();
-            this.structure.add(this);
-        }
+	@Override
+	public BatteryStructure getNetwork()
+	{
+		if (this.structure == null)
+		{
+			this.structure = new BatteryStructure();
+			this.structure.add(this);
+		}
 
-        return this.structure;
-    }
+		return this.structure;
+	}
 
-    @Override
-    public void setNetwork(BatteryStructure structure)
-    {
-        this.structure = structure;
-    }
+	@Override
+	public void setNetwork(BatteryStructure structure)
+	{
+		this.structure = structure;
+	}
 
-    @Override
-    public Object[] getConnections()
-    {
-        Object[] connections = new Object[6];
+	@Override
+	public Object[] getConnections()
+	{
+		Object[] connections = new Object[6];
 
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-        {
-            TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
 
-            if (tile instanceof TileBattery)
-            {
-                connections[dir.ordinal()] = tile;
-            }
-        }
+			if (tile instanceof TileBattery)
+			{
+				connections[dir.ordinal()] = tile;
+			}
+		}
 
-        return connections;
-    }
+		return connections;
+	}
 
-    @Override
-    public void invalidate()
-    {
-        this.getNetwork().redistribute(this);
-        this.getNetwork().split(this);
-        super.invalidate();
-    }
+	@Override
+	public void invalidate()
+	{
+		this.getNetwork().redistribute(this);
+		this.getNetwork().split(this);
+		super.invalidate();
+	}
 
-    @Override
-    public long getVoltageOutput(ForgeDirection side)
-    {
-        return DEFAULT_VOLTAGE;
-    }
+	@Override
+	public long getVoltageOutput(ForgeDirection side)
+	{
+		return DEFAULT_VOLTAGE;
+	}
 
-    @Override
-    public long getVoltageInput(ForgeDirection direction)
-    {
-        return DEFAULT_VOLTAGE;
-    }
+	@Override
+	public long getVoltageInput(ForgeDirection direction)
+	{
+		return DEFAULT_VOLTAGE;
+	}
 
-    @Override
-    public void onWrongVoltage(ForgeDirection direction, long voltage)
-    {
+	@Override
+	public void onWrongVoltage(ForgeDirection direction, long voltage)
+	{
 
-    }
+	}
 }
