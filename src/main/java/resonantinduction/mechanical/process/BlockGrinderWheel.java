@@ -1,5 +1,6 @@
-package resonantinduction.mechanical.grinder;
+package resonantinduction.mechanical.process;
 
+import calclavia.lib.render.block.BlockRenderingHandler;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -9,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -23,6 +25,12 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 	{
 		super("grindingWheel", Settings.getNextBlockID());
 		this.setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
+	}
+
+	@Override
+	public int getRenderType()
+	{
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override

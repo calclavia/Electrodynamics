@@ -33,9 +33,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class RenderPartWire
+public class RenderFramedWire
 {
-	private static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "white.png");
+	public static final ResourceLocation WIRE_SHINE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "white.png");
 	public static final Map<String, CCModel> models;
 	public static final Map<String, CCModel> shinyModels;
 	public static Icon wireIcon;
@@ -46,11 +46,11 @@ public class RenderPartWire
 	public static FloatBuffer specular = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer zero = BufferUtils.createFloatBuffer(4);
 	public static FloatBuffer defaultAmbient = BufferUtils.createFloatBuffer(4);
-	public static final RenderPartWire INSTANCE = new RenderPartWire();
+	public static final RenderFramedWire INSTANCE = new RenderFramedWire();
 
 	static
 	{
-		models = CCModel.parseObjModels(new ResourceLocation("resonantinduction", "models/wire.obj"), 7, new InvertX());
+		models = CCModel.parseObjModels(new ResourceLocation(Reference.DOMAIN, "models/wire.obj"), 7, new InvertX());
 		for (CCModel c : models.values())
 		{
 			c.apply(new Translation(.5, 0, .5));
@@ -58,7 +58,7 @@ public class RenderPartWire
 			c.shrinkUVs(0.0005);
 		}
 
-		shinyModels = CCModel.parseObjModels(new ResourceLocation("resonantinduction", "models/wireShine.obj"), 7, new InvertX());
+		shinyModels = CCModel.parseObjModels(new ResourceLocation(Reference.DOMAIN, "models/wireShine.obj"), 7, new InvertX());
 		for (CCModel c : shinyModels.values())
 		{
 			c.apply(new Translation(.5, 0, .5));

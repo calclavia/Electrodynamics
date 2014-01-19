@@ -20,7 +20,7 @@ import resonantinduction.core.Utility;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
-import resonantinduction.electrical.wire.framed.RenderPartWire;
+import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.render.EnumColor;
@@ -126,8 +126,8 @@ public class ItemWire extends JItemMultiPart
 	public void registerIcons(IconRegister register)
 	{
 		RenderFlatWire.flatWireTexture = register.registerIcon(Reference.PREFIX + "models/flatWire");
-		RenderPartWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
-		RenderPartWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation");
+		RenderFramedWire.wireIcon = register.registerIcon(Reference.PREFIX + "models/wire");
+		RenderFramedWire.insulationIcon = register.registerIcon(Reference.PREFIX + "models/insulation");
 		super.registerIcons(register);
 	}
 

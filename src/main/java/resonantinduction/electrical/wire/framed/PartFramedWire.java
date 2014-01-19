@@ -187,7 +187,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	{
 		if (pass == 0)
 		{
-			RenderPartWire.INSTANCE.renderStatic(this);
+			RenderFramedWire.INSTANCE.renderStatic(this);
 		}
 	}
 
@@ -197,7 +197,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	{
 		if (getMaterial() == EnumWireMaterial.SILVER)
 		{
-			RenderPartWire.INSTANCE.renderShine(this, pos.x, pos.y, pos.z, frame);
+			RenderFramedWire.INSTANCE.renderShine(this, pos.x, pos.y, pos.z, frame);
 		}
 	}
 
@@ -235,13 +235,13 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	@Override
 	public Icon getBreakingIcon(Object subPart, int side)
 	{
-		return RenderPartWire.breakIcon;
+		return RenderFramedWire.breakIcon;
 	}
 
 	@Override
 	public Icon getBrokenIcon(int side)
 	{
-		return RenderPartWire.breakIcon;
+		return RenderFramedWire.breakIcon;
 	}
 
 	@Override

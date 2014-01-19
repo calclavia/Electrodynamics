@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.grinder;
+package resonantinduction.mechanical.process;
 
 import java.util.HashMap;
 
@@ -38,7 +38,7 @@ public class TileGrinderWheel extends TileElectrical
 	public void updateEntity()
 	{
 		super.updateEntity();
-		// TODO: Add electricity support.
+		// TODO: Add energy support.
 		doWork();
 	}
 

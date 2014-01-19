@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
-import resonantinduction.mechanical.grinder.TilePurifier;
+import resonantinduction.mechanical.process.TilePurifier;
 import universalelectricity.api.vector.VectorWorld;
 
 /**

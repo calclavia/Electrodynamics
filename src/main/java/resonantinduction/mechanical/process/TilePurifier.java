@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.grinder;
+package resonantinduction.mechanical.process;
 
 import java.util.HashMap;
 import java.util.List;
