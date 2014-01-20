@@ -198,11 +198,11 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	@Override
 	public void bind(TileMultipart t)
 	{
-		if (tile() != null && this.getNetwork() != null)
+		if ( this.getNetwork() != null)
 		{
-			getNetwork().getConnectors().remove(tile());
+			getNetwork().getConnectors().remove(this);
 			super.bind(t);
-			getNetwork().getConnectors().add(getConnector(tile()));
+			getNetwork().getConnectors().add(this);
 		}
 		else
 		{
@@ -290,7 +290,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 				if (or != possibleWireConnections)
 				{
 					this.getNetwork().removeConnector(this);
-					this.getNetwork().split(getConnector(tile()));
+					this.getNetwork().split(this);
 					setNetwork(null);
 				}
 
@@ -327,7 +327,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	{
 		TileEntity[] connections = new TileEntity[6];
 
-		if (world() != null && tile() != null)
+		if (world() != null)
 		{
 			for (byte i = 0; i < 6; i++)
 			{
@@ -360,7 +360,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 			return false;
 		}
 
-		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
+		Vector3 connectPos = new Vector3(tile()).translate(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
 		return !isConnectionPrevented(connectTile, direction);
 	}

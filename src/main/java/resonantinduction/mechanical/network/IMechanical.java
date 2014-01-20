@@ -16,6 +16,9 @@ public interface IMechanical extends IConnectable
 	 */
 	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive);
 
+	/**
+	 * @return Is the mechanical machine going clockwise currently?
+	 */
 	public boolean isClockwise();
 
 	public void setClockwise(boolean isClockwise);
