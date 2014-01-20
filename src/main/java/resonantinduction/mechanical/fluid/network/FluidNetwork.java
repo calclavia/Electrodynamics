@@ -131,7 +131,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 			FluidStack before = this.getTank().getFluid();
 			FluidStack drain = this.getTank().drain(resource.amount, doDrain);
 
-			if (before != this.getTank().getFluid() || this.getTank().getFluid() == null || this.getTank().getFluid().amount != before.amount)
+			if (!FluidUtility.matchExact(before, drain))
 			{
 				this.reconstructTankInfo();
 			}
