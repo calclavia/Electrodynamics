@@ -1,9 +1,9 @@
 package resonantinduction.core.debug;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.prefab.tile.TileEnergyMachine;
+import resonantinduction.core.prefab.tile.TileMachine;
 
-public class TileEntityInfLoad extends TileEnergyMachine
+public class TileEntityInfLoad extends TileMachine
 {
 
 	@Override
@@ -22,11 +22,5 @@ public class TileEntityInfLoad extends TileEnergyMachine
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;
-	}
-
-	@Override
-	public long getMaxEnergyStored()
-	{
-		return Long.MAX_VALUE;
 	}
 }
