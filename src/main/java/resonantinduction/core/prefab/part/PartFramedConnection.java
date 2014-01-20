@@ -355,11 +355,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		if (world().isBlockIndirectlyGettingPowered(x(), y(), z()))
-		{
-			return false;
-		}
-
 		Vector3 connectPos = new Vector3(tile()).translate(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
 		return !isConnectionPrevented(connectTile, direction);
