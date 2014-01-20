@@ -12,7 +12,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IConnector;
-import universalelectricity.api.net.INetwork;
+import universalelectricity.api.net.INodeNetwork;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
@@ -33,7 +33,7 @@ import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
 
-public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INodeNetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
 
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];

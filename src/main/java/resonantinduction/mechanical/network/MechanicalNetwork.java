@@ -6,10 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.net.IConnector;
-import universalelectricity.core.net.ConnectionPathfinder;
-import universalelectricity.core.net.Network;
+import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
+import universalelectricity.core.net.NodeNetwork;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -27,7 +26,7 @@ import universalelectricity.core.net.NetworkTickHandler;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork
+public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork, IUpdate
 {
 	private long prevTorque = 0;
 	private float prevAngularVelocity = 0;

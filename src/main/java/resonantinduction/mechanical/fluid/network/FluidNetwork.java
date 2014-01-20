@@ -9,10 +9,9 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
-import universalelectricity.api.net.IConnector;
-import universalelectricity.core.net.ConnectionPathfinder;
-import universalelectricity.core.net.Network;
+import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
+import universalelectricity.core.net.NodeNetwork;
 import calclavia.lib.utility.FluidUtility;
 
 /**
@@ -21,7 +20,7 @@ import calclavia.lib.utility.FluidUtility;
  * @author DarkCow, Calclavia
  * 
  */
-public abstract class FluidNetwork extends Network<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork
+public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork, IUpdate
 {
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];

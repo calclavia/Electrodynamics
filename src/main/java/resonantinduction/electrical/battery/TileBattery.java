@@ -29,7 +29,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author Calclavia
  */
-public class TileBattery extends TileElectrical implements IConnector<BatteryStructure>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
+public class TileBattery extends TileElectrical implements IConnector<BatteryNetwork>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
 	/** The transfer rate **/
 	public static final long DEFAULT_WATTAGE = getEnergyForTier(1);
@@ -37,7 +37,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	/** Voltage increases as series connection increases */
 	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
 
-	private BatteryStructure structure;
+	private BatteryNetwork network;
 
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
@@ -81,7 +81,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 				}
 			}
 
-			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().get().size());
+			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().getConnectors().size());
 			this.getNetwork().redistribute();
 		}
 	}
@@ -134,21 +134,21 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryStr
 	}
 
 	@Override
-	public BatteryStructure getNetwork()
+	public BatteryNetwork getNetwork()
 	{
-		if (this.structure == null)
+		if (this.network == null)
 		{
-			this.structure = new BatteryStructure();
-			this.structure.add(this);
+			this.network = new BatteryNetwork();
+			this.network.addConnector(this);
 		}
 
-		return this.structure;
+		return this.network;
 	}
 
 	@Override
-	public void setNetwork(BatteryStructure structure)
+	public void setNetwork(BatteryNetwork structure)
 	{
-		this.structure = structure;
+		this.network = structure;
 	}
 
 	@Override

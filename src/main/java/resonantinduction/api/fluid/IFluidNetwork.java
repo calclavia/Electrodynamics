@@ -5,14 +5,14 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.api.net.INetwork;
+import universalelectricity.api.net.INodeNetwork;
 
 /**
  * Interface version of the fluid network.
  * 
  * @author DarkGuardsman
  */
-public interface IFluidNetwork extends INetwork<IFluidNetwork, IFluidConnector, IFluidHandler>
+public interface IFluidNetwork extends INodeNetwork<IFluidNetwork, IFluidConnector, IFluidHandler>
 {
 	/** Called to build the network when something changes such as addition of a pipe */
 	@Override

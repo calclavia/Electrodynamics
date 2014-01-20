@@ -1,13 +1,13 @@
 package resonantinduction.mechanical.network;
 
-import universalelectricity.api.net.INetwork;
+import universalelectricity.api.net.INodeNetwork;
 
 /**
  * Mechanical network in interface form for interaction or extension
  * 
  * @author DarkGuardsman
  */
-public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechanicalConnector, IMechanical>
+public interface IMechanicalNetwork extends INodeNetwork<IMechanicalNetwork, IMechanicalConnector, IMechanical>
 {
 	/**
 	 * Gets the power of the network.
