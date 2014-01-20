@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.obj.WavefrontObject;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,6 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderTransformer
 {
 	public static final ModelTransformer MODEL = new ModelTransformer();
+	public static final WavefrontObject MODEL_OBJ = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "transformer.obj");
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "transformer.png");
 
 	public static void render(PartTransformer part, double x, double y, double z)
@@ -153,6 +156,8 @@ public class RenderTransformer
 		}
 
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
+		//GL11.glScalef(0.5f, 0.5f, 0.5f);
+		//MODEL_OBJ.renderAll();
 		MODEL.render(0.0625F);
 		GL11.glPopMatrix();
 	}
