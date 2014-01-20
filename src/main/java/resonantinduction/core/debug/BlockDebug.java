@@ -11,18 +11,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.prefab.block.BlockRI;
-import calclavia.lib.content.IContentInfo.IExtraBlockInfo;
+import calclavia.lib.content.IBlockInfo;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockDebug extends BlockRI implements IExtraBlockInfo
+public class BlockDebug extends BlockRI implements IBlockInfo
 {
 	public static float DebugWattOut, DebugWattDemand;
 
@@ -171,13 +170,6 @@ public class BlockDebug extends BlockRI implements IExtraBlockInfo
 			}
 			return texture;
 		}
-
-	}
-
-	@Override
-	public void loadOreNames()
-	{
-		// TODO Auto-generated method stub
 
 	}
 

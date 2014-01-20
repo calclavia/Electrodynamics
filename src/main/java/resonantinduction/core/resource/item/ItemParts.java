@@ -6,12 +6,10 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemBase;
-import calclavia.lib.content.IContentInfo.IExtraItemInfo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * allow new crafting recipes to be created.
  * 
  * @author DarkGuardsman */
-public class ItemParts extends ItemBase implements IExtraItemInfo
+public class ItemParts extends ItemBase
 {
     public ItemParts()
     {
@@ -111,7 +109,6 @@ public class ItemParts extends ItemBase implements IExtraItemInfo
         }
     }
 
-    @Override
     public void loadOreNames()
     {
         for (Parts part : Parts.values())

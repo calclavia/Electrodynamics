@@ -10,11 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.components.CalclaviaLoader;
-import calclavia.lib.content.IContentInfo.IExtraBlockInfo;
+import calclavia.lib.content.IBlockInfo;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.multiblock.fake.IMultiBlock;
 
@@ -23,7 +22,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockRI implements IExtraBlockInfo
+public class BlockArmbot extends BlockRI implements IBlockInfo
 {
 	public BlockArmbot()
 	{
@@ -116,12 +115,5 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public void loadOreNames()
-	{
-		// TODO Auto-generated method stub
-
 	}
 }
