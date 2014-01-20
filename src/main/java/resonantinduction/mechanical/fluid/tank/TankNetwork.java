@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.fluid.IFluidConnector;
+import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.mechanical.fluid.network.FluidNetwork;
 
 /**
@@ -67,6 +68,12 @@ public class TankNetwork extends FluidNetwork
 				}
 			}
 		}
+	}
+
+	@Override
+	public IFluidNetwork newInstance()
+	{
+		return new TankNetwork();
 	}
 
 }

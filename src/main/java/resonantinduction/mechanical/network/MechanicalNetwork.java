@@ -247,112 +247,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	}
 
 	@Override
-	public IMechanicalNetwork merge(IMechanicalNetwork network)
-	{
-		if (network.getClass().isAssignableFrom(this.getClass()) && network != this)
-		{
-			MechanicalNetwork newNetwork = new MechanicalNetwork();
-			newNetwork.getConnectors().addAll(this.getConnectors());
-			newNetwork.getConnectors().addAll(network.getConnectors());
-			network.getConnectors().clear();
-			network.getNodes().clear();
-			this.getConnectors().clear();
-			this.getNodes().clear();
-
-			newNetwork.reconstruct();
-			return newNetwork;
-		}
-
-		return null;
-	}
-
-	@Override
-	public void split(IMechanicalConnector splitPoint)
-	{
-		this.removeConnector(splitPoint);
-		this.reconstruct();
-
-		/**
-		 * Loop through the connected blocks and attempt to see if there are connections between the
-		 * two points elsewhere.
-		 */
-		Object[] connectedBlocks = splitPoint.getConnections();
-
-		for (int i = 0; i < connectedBlocks.length; i++)
-		{
-			Object connectedBlockA = connectedBlocks[i];
-
-			if (connectedBlockA instanceof IMechanicalConnector)
-			{
-				for (int ii = 0; ii < connectedBlocks.length; ii++)
-				{
-					final Object connectedBlockB = connectedBlocks[ii];
-
-					if (connectedBlockA != connectedBlockB && connectedBlockB instanceof IMechanicalConnector)
-					{
-						ConnectionPathfinder finder = new ConnectionPathfinder((IConnector) connectedBlockB, splitPoint);
-						finder.findNodes((IConnector) connectedBlockA);
-
-						if (finder.results.size() <= 0)
-						{
-							try
-							{
-								/**
-								 * The connections A and B are not connected anymore. Give them both
-								 * a new common network.
-								 */
-								IMechanicalNetwork newNetwork = new MechanicalNetwork();
-								for (IConnector node : finder.closedSet)
-								{
-									if (node != splitPoint && node instanceof IMechanicalConnector)
-									{
-										newNetwork.addConnector((IMechanicalConnector) node);
-									}
-								}
-								newNetwork.reconstruct();
-							}
-							catch (Exception e)
-							{
-								e.printStackTrace();
-							}
-
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@Override
-	public void split(IMechanicalConnector connectorA, IMechanicalConnector connectorB)
-	{
-		this.reconstruct();
-
-		/** Check if connectorA connects with connectorB. */
-		ConnectionPathfinder finder = new ConnectionPathfinder(connectorB);
-		finder.findNodes(connectorA);
-
-		if (finder.results.size() <= 0)
-		{
-			/**
-			 * The connections A and B are not connected anymore. Give them both a new common
-			 * network.
-			 */
-			IMechanicalNetwork newNetwork = new MechanicalNetwork();
-
-			for (IConnector node : finder.closedSet)
-			{
-				if (node instanceof IMechanicalConnector)
-				{
-					newNetwork.addConnector((IMechanicalConnector) node);
-				}
-			}
-
-			newNetwork.reconstruct();
-		}
-	}
-
-	@Override
 	public float getRotation()
 	{
 		long deltaTime = System.currentTimeMillis() - lastRotateTime;
@@ -367,9 +261,14 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanicalCo
 	}
 
 	@Override
+	public IMechanicalNetwork newInstance()
+	{
+		return new MechanicalNetwork();
+	}
+
+	@Override
 	public String toString()
 	{
 		return this.getClass().getSimpleName() + "[" + this.hashCode() + ", Handlers: " + getNodes().size() + ", Connectors: " + getConnectors().size() + ", Power:" + getPower() + "]";
 	}
-
 }

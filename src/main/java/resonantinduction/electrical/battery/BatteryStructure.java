@@ -48,7 +48,7 @@ public class BatteryStructure extends Structure<TileBattery>
 	}
 
 	@Override
-	protected void refreshNode(TileBattery node)
+	protected void reconstructNode(TileBattery node)
 	{
 		node.setNetwork(this);
 	}
