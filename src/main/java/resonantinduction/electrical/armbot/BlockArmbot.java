@@ -14,7 +14,7 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.components.CalclaviaLoader;
-import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
+import calclavia.lib.content.IContentInfo.IExtraBlockInfo;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.multiblock.fake.IMultiBlock;
 
@@ -116,20 +116,6 @@ public class BlockArmbot extends BlockRI implements IExtraBlockInfo
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public boolean hasExtraConfigs()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void loadExtraConfigs(Configuration config)
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

@@ -27,10 +27,10 @@ public class TileEncoder extends TileExternalInventory implements ISidedInventor
 {
     private ItemStack disk;
     private IInventoryWatcher watcher;
-    public static final int PROGRAM_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
-    public static final int PROGRAM_CHANGE_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
-    public static final int REMOVE_TASK_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
-    public static final int NEW_TASK_PACKET_ID = Electrical.contentRegistry.getNextPacketID();
+    public static final int PROGRAM_PACKET_ID = 0;
+    public static final int PROGRAM_CHANGE_PACKET_ID = 1;
+    public static final int REMOVE_TASK_PACKET_ID = 2;
+    public static final int NEW_TASK_PACKET_ID = 3;
 
     protected IProgram program;
 

@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonantinduction.core.debug.BlockDebug;
 import resonantinduction.core.handler.FluidEventHandler;
 import resonantinduction.core.handler.LinkEventHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
@@ -17,8 +18,10 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
+import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
+import calclavia.lib.prefab.item.ItemBlockHolder;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -69,8 +72,11 @@ public class ResonantInduction
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockFluidMixture;
 	public static Block blockGas;
+	public static Block blockDebug;
 
 	public static Fluid MIXTURE = null;
+	
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -100,6 +106,8 @@ public class ResonantInduction
 
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
+
+		blockDebug = contentRegistry.createBlock(BlockDebug.class, ItemBlockHolder.class);
 
 		Settings.save();
 		proxy.preInit();

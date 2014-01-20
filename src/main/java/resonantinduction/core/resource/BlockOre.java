@@ -17,7 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
+import calclavia.lib.content.IContentInfo.IExtraBlockInfo;
 import calclavia.lib.ore.OreGenReplaceStone;
 
 import com.builtbroken.common.Pair;
@@ -127,20 +127,6 @@ public class BlockOre extends Block implements IExtraBlockInfo
 			}
 			return null;
 		}
-	}
-
-	@Override
-	public boolean hasExtraConfigs()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void loadExtraConfigs(Configuration config)
-	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

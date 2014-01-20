@@ -15,7 +15,7 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.prefab.block.BlockRI;
-import calclavia.lib.content.IExtraInfo.IExtraBlockInfo;
+import calclavia.lib.content.IContentInfo.IExtraBlockInfo;
 
 import com.builtbroken.common.Pair;
 
@@ -116,16 +116,6 @@ public class BlockDebug extends BlockRI implements IExtraBlockInfo
 	}
 
 	@Override
-	public void loadExtraConfigs(Configuration config)
-	{
-		for (DebugBlocks block : DebugBlocks.values())
-		{
-			block.enabled = config.get("Blocks", "Enable" + block.name + "Block", true).getBoolean(true);
-		}
-
-	}
-
-	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		return false;
@@ -182,13 +172,6 @@ public class BlockDebug extends BlockRI implements IExtraBlockInfo
 			return texture;
 		}
 
-	}
-
-	@Override
-	public boolean hasExtraConfigs()
-	{
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
