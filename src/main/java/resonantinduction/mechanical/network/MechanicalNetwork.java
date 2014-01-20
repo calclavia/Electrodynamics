@@ -107,8 +107,8 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 		prevTorque = torque;
 		prevAngularVelocity = angularVelocity;
-		torque *= 0.5;
-		angularVelocity *= 0.5;
+		torque = 0;
+		angularVelocity = 0;
 	}
 
 	@Override

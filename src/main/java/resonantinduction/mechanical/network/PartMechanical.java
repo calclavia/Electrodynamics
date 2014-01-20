@@ -65,25 +65,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
 	}
 
-	// TODO: We don't need to tick.
-	@Override
-	public void update()
-	{
-		if (this.world().isRemote)
-		{
-			/**
-			 * Update angle rotation.
-			 */
-			if (getNetwork().getPower() > 0)
-			{
-				if (isClockwise)
-					angle += getNetwork().getAngularVelocity() / 20f;
-				else
-					angle -= getNetwork().getAngularVelocity() / 20f;
-			}
-		}
-	}
-
 	@Override
 	public void onAdded()
 	{
@@ -127,23 +108,16 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 		TileEntity tile = vec.getTileEntity(world());
 
-		if (tile instanceof TileMultipart)
+		if (tile instanceof IMechanical)
 		{
-			TMultiPart neighbor = ((TileMultipart) tile).partMap(this.placementSide.getOpposite().ordinal());
+			IMechanicalNetwork networkToMerge = ((IMechanical) tile).getNetwork(this.placementSide.getOpposite());
 
-			if (neighbor instanceof IMechanical)
+			if (networkToMerge != null)
 			{
-				connections[this.placementSide.getOpposite().ordinal()] = neighbor;
-				getNetwork().merge(((IMechanical) neighbor).getNetwork());
+				connections[this.placementSide.getOpposite().ordinal()] = ((IMechanical) tile).getInstance(this.placementSide.getOpposite());
+				getNetwork().merge(networkToMerge);
 			}
-		}
-		else if (tile instanceof IMechanical)
-		{
-			connections[this.placementSide.getOpposite().ordinal()] = tile;
-			if (tile instanceof IMechanical)
-			{
-				getNetwork().merge(((IMechanical) tile).getNetwork());
-			}
+
 		}
 
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
@@ -153,14 +127,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 			universalelectricity.api.vector.Vector3 checkVec = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir);
 
 			TileEntity checkTile = checkVec.getTileEntity(world());
-			if (checkTile instanceof TileMultipart)
-			{
-				TMultiPart neighbor = ((TileMultipart) checkTile).partMap(this.placementSide.ordinal());
 
-				if (neighbor != this && neighbor instanceof IMechanical)
+			if (checkTile instanceof IMechanical)
+			{
+				IMechanicalNetwork networkToMerge = ((IMechanical) checkTile).getNetwork(this.placementSide);
+
+				if (networkToMerge != null)
 				{
-					connections[checkDir.ordinal()] = neighbor;
-					getNetwork().merge(((IMechanical) neighbor).getNetwork());
+					connections[checkDir.ordinal()] = ((IMechanical) checkTile).getInstance(this.placementSide);
+					getNetwork().merge(networkToMerge);
 				}
 			}
 		}
@@ -169,12 +144,12 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-			TMultiPart neighbor = tile().partMap(this.placementSide.getRotation(checkDir).ordinal());
+			IMechanicalNetwork networkToMerge = ((IMechanical) tile()).getNetwork(checkDir);
 
-			if (neighbor != this && neighbor instanceof IMechanical)
+			if (networkToMerge != null)
 			{
-				connections[checkDir.ordinal()] = neighbor;
-				getNetwork().merge(((IMechanical) neighbor).getNetwork());
+				connections[checkDir.ordinal()] = ((IMechanical) tile()).getInstance(checkDir);
+				getNetwork().merge(networkToMerge);
 			}
 		}
 
@@ -184,6 +159,12 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		{
 			sendRefreshPacket();
 		}
+	}
+
+	@Override
+	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	{
+		return getNetwork();
 	}
 
 	@Override
@@ -203,7 +184,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public boolean sendNetworkPacket(long torque, float angularVelocity)
 	{
-		if (!world().isRemote && tile() != null)
+		if (world() != null && !world().isRemote && tile() != null)
 		{
 			tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
 		}
@@ -213,7 +194,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	public void sendRefreshPacket()
 	{
-		if (tile() != null)
+		if (world() != null && !world().isRemote && tile() != null)
 		{
 			tile().getWriteStream(this).writeByte(1);
 		}

@@ -3,8 +3,10 @@ package resonantinduction.mechanical.gear;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.IMechanical;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.PartMechanical;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -27,7 +29,7 @@ public class PartGear extends PartMechanical implements IMechanical
 		{
 			if (manualCrankTime > 0)
 			{
-
+				getNetwork().onReceiveEnergy(this, 20, 0.2f);
 				manualCrankTime--;
 			}
 		}
@@ -38,16 +40,16 @@ public class PartGear extends PartMechanical implements IMechanical
 	@Override
 	public float getResistance()
 	{
-		return 0.5f;
+		return 0.1f;
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
 		System.out.println(world().isRemote + ": " + getNetwork());
+
 		if (player.isSneaking())
 		{
-			getNetwork().onReceiveEnergy(this, 20, 0.3f);
 			this.manualCrankTime = 20;
 		}
 
@@ -81,4 +83,11 @@ public class PartGear extends PartMechanical implements IMechanical
 	{
 		return "resonant_induction_gear";
 	}
+
+	@Override
+	public IMechanical getInstance(ForgeDirection from)
+	{
+		return this;
+	}
+
 }

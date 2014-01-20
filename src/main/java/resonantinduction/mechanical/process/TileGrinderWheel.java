@@ -12,6 +12,7 @@ import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -161,17 +162,6 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	}
 
 	@Override
-	public boolean isClockwise()
-	{
-		if (worldObj != null)
-		{
-			return !(getBlockMetadata() % 2 == 0);
-		}
-
-		return false;
-	}
-
-	@Override
 	public ForgeDirection getDirection()
 	{
 		if (worldObj != null)
@@ -186,5 +176,13 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public void setDirection(ForgeDirection direction)
 	{
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
+	}
+
+	@Override
+	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	{
+		if (from != this.getDirection() && from != this.getDirection().getOpposite())
+			return getNetwork();
+		return null;
 	}
 }

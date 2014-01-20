@@ -27,9 +27,16 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 	public void setClockwise(boolean isClockwise);
 
 	/**
-	 * *
-	 * 
 	 * @return Return true if the mechanical block should have its rotation set inveresed.
 	 */
 	public boolean isRotationInversed();
+
+	public IMechanicalNetwork getNetwork(ForgeDirection from);
+
+	/**
+	 * Gets the instance of this mechanical through ForgeMultipart
+	 * 
+	 * @return
+	 */
+	public IMechanical getInstance(ForgeDirection from);
 }

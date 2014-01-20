@@ -54,13 +54,15 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection from)
 	{
-		for (IMechanical connector : this.mechanicalInterfaces)
+		TMultiPart part = this.partMap(from.ordinal());
+
+		if (part != null)
 		{
-			if (connector.canConnect(direction.getOpposite()))
+			if (this.mechanicalInterfaces.contains(part))
 			{
-				return true;
+				return ((IMechanical) part).canConnect(from);
 			}
 		}
 
@@ -82,6 +84,38 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	@Override
 	public Object[] getConnections()
 	{
+		return null;
+	}
+
+	@Override
+	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	{
+		TMultiPart part = this.partMap(from.ordinal());
+
+		if (part != null)
+		{
+			if (part instanceof IMechanical)
+			{
+				return ((IMechanical) part).getNetwork();
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public IMechanical getInstance(ForgeDirection from)
+	{
+		TMultiPart part = this.partMap(from.ordinal());
+
+		if (part != null)
+		{
+			if (part instanceof IMechanical)
+			{
+				return (IMechanical) part;
+			}
+		}
+
 		return null;
 	}
 

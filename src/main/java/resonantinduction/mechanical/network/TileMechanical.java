@@ -3,7 +3,7 @@ package resonantinduction.mechanical.network;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public class TileMechanical extends TileAdvanced implements IMechanical
+public abstract class TileMechanical extends TileAdvanced implements IMechanical
 {
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
@@ -69,5 +69,11 @@ public class TileMechanical extends TileAdvanced implements IMechanical
 	public boolean isRotationInversed()
 	{
 		return false;
+	}
+
+	@Override
+	public IMechanical getInstance(ForgeDirection from)
+	{
+		return this;
 	}
 }

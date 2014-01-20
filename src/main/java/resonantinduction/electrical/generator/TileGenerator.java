@@ -69,7 +69,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 			{
 				float angularVelocity = extract / torqueRatio;
 				long torque = (long) (extract / angularVelocity);
-				energy.extractEnergy(((IMechanical) mechanical).getNetwork().onReceiveEnergy(((IMechanical) mechanical), torque, angularVelocity), true);
+				energy.extractEnergy(((IMechanical) mechanical).getNetwork(outputDir.getOpposite()).onReceiveEnergy(((IMechanical) mechanical), torque, angularVelocity), true);
 			}
 		}
 	}
@@ -154,6 +154,12 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	}
 
 	@Override
+	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	{
+		return getNetwork();
+	}
+
+	@Override
 	public void setNetwork(IMechanicalNetwork network)
 	{
 		this.network = network;
@@ -177,4 +183,9 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 		return false;
 	}
 
+	@Override
+	public IMechanical getInstance(ForgeDirection from)
+	{
+		return this;
+	}
 }
