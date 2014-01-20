@@ -47,7 +47,7 @@ public class PathfinderRotationManager extends ConnectionPathfinder<IMechanical>
 					currentNode.getNetwork().setPower(0, 0);
 				}
 
-				currentIsClockwise = (node.isRotationInversed()) ? !currentNode.isClockwise() : currentNode.isClockwise();
+				currentIsClockwise = (node.isRotationInversed() && currentNode.isRotationInversed()) ? !currentNode.isClockwise() : currentNode.isClockwise();
 				findNodes(node);
 			}
 		}
