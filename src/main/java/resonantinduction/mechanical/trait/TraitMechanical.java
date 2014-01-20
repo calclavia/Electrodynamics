@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -67,22 +68,6 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
-	{
-		TMultiPart part = this.partMap(from.ordinal());
-
-		if (part != null)
-		{
-			if (this.mechanicalInterfaces.contains(part))
-			{
-				return ((IMechanical) part).onReceiveEnergy(from, torque, angularVelocity, doReceive);
-			}
-		}
-
-		return 0;
-	}
-
-	@Override
 	public boolean isClockwise()
 	{
 		return false;
@@ -92,5 +77,41 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	public void setClockwise(boolean isClockwise)
 	{
 
+	}
+
+	@Override
+	public Object[] getConnections()
+	{
+		return null;
+	}
+
+	@Override
+	public IMechanicalNetwork getNetwork()
+	{
+		return null;
+	}
+
+	@Override
+	public void setNetwork(IMechanicalNetwork network)
+	{
+
+	}
+
+	@Override
+	public boolean sendNetworkPacket(long torque, float angularVelocity)
+	{
+		return false;
+	}
+
+	@Override
+	public float getResistance()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean isRotationInversed()
+	{
+		return false;
 	}
 }

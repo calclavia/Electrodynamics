@@ -3,7 +3,7 @@ package resonantinduction.mechanical.network;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public class TileMechanical extends TileAdvanced implements IMechanicalConnector
+public class TileMechanical extends TileAdvanced implements IMechanical
 {
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
@@ -11,12 +11,6 @@ public class TileMechanical extends TileAdvanced implements IMechanicalConnector
 	private IMechanicalNetwork network;
 
 	private boolean isClockwise = false;
-
-	@Override
-	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
-	{
-		return this.getNetwork().onReceiveEnergy(torque, angularVelocity);
-	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
@@ -69,5 +63,11 @@ public class TileMechanical extends TileAdvanced implements IMechanicalConnector
 	public void setClockwise(boolean isClockwise)
 	{
 		this.isClockwise = isClockwise;
+	}
+
+	@Override
+	public boolean isRotationInversed()
+	{
+		return false;
 	}
 }

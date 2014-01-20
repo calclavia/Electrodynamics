@@ -6,6 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
+import resonantinduction.mechanical.network.IMechanicalNetwork;
+import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -18,6 +20,8 @@ import calclavia.lib.prefab.tile.TileElectrical;
  */
 public class TileGenerator extends TileElectrical implements IMechanical, IRotatable
 {
+	private IMechanicalNetwork network;
+
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = false;
 
@@ -41,6 +45,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 		{
 			if (!isInversed)
 			{
+				energy.receiveEnergy(getNetwork().getPower(), true);
 				produce();
 			}
 			else
@@ -53,7 +58,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 
 	public void produceMechanical(ForgeDirection outputDir)
 	{
-		Vector3 outputVector = new Vector3(this).modifyPositionFromSide(outputDir);
+		Vector3 outputVector = new Vector3(this).translate(outputDir);
 		TileEntity mechanical = outputVector.getTileEntity(worldObj);
 
 		if (mechanical instanceof IMechanical)
@@ -64,7 +69,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 			{
 				float angularVelocity = extract / torqueRatio;
 				long torque = (long) (extract / angularVelocity);
-				energy.extractEnergy(((IMechanical) mechanical).onReceiveEnergy(outputDir.getOpposite(), torque, angularVelocity, true), true);
+				energy.extractEnergy(((IMechanical) mechanical).getNetwork().onReceiveEnergy(((IMechanical) mechanical), torque, angularVelocity), true);
 			}
 		}
 	}
@@ -94,22 +99,11 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	public void setDirection(ForgeDirection dir)
 	{
 		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, dir.ordinal(), 3);
-
 	}
 
 	private boolean isFunctioning()
 	{
 		return true;
-	}
-
-	@Override
-	public long onReceiveEnergy(ForgeDirection from, long torque, float angularVelocity, boolean doReceive)
-	{
-		if (!this.isInversed)
-		{
-			return energy.receiveEnergy((long) (torque * angularVelocity), doReceive);
-		}
-		return 0;
 	}
 
 	@Override
@@ -138,6 +132,49 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	public void setClockwise(boolean isClockwise)
 	{
 
+	}
+
+	@Override
+	public Object[] getConnections()
+	{
+		Object[] connections = new Object[6];
+		connections[getDirection().ordinal()] = new Vector3(this).translate(getDirection()).getTileEntity(worldObj);
+		return connections;
+	}
+
+	@Override
+	public IMechanicalNetwork getNetwork()
+	{
+		if (this.network == null)
+		{
+			this.network = new MechanicalNetwork();
+			this.network.addConnector(this);
+		}
+		return this.network;
+	}
+
+	@Override
+	public void setNetwork(IMechanicalNetwork network)
+	{
+		this.network = network;
+	}
+
+	@Override
+	public boolean sendNetworkPacket(long torque, float angularVelocity)
+	{
+		return false;
+	}
+
+	@Override
+	public float getResistance()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean isRotationInversed()
+	{
+		return false;
 	}
 
 }

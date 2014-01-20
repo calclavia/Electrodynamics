@@ -15,7 +15,6 @@ import resonantinduction.api.IBelt;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalConnector;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
@@ -30,7 +29,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author DarkGuardsman
  */
-public class TileConveyorBelt extends TileMechanical implements IMechanicalConnector, IBelt, IRotatable, IPacketReceiverWithID
+public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatable, IPacketReceiverWithID
 {
 	public enum SlantType
 	{

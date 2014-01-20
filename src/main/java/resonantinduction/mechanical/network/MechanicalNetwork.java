@@ -4,11 +4,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IUpdate;
+import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
-import universalelectricity.core.net.NodeNetwork;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -26,7 +28,7 @@ import universalelectricity.core.net.NodeNetwork;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanicalConnector, IMechanical> implements IMechanicalNetwork, IUpdate
+public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
 	private long prevTorque = 0;
 	private float prevAngularVelocity = 0;
@@ -35,7 +37,7 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	private float angularVelocity = 0;
 
 	/** The cached resistance caused by all connectors */
-	private float connectorResistance = 0;
+	private float load = 0;
 
 	/** The current rotation of the network */
 	private float rotation = 0;
@@ -45,8 +47,11 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
+	private Set<IMechanical> prevGenerators = new LinkedHashSet<IMechanical>();
+	private Set<IMechanical> generators = new LinkedHashSet<IMechanical>();
+
 	@Override
-	public void addConnector(IMechanicalConnector connector)
+	public void addConnector(IMechanical connector)
 	{
 		this.markPacketUpdate = true;
 		super.addConnector(connector);
@@ -59,25 +64,28 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	public void update()
 	{
 		/**
+		 * Calculation rotations of all generators.
+		 */
+		prevGenerators = generators;
+
+		Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
+
+		for (IMechanical generatorNode : generators)
+		{
+			PathfinderRotationManager rotationPathfinder = new PathfinderRotationManager(generatorNode, closedSet);
+			rotationPathfinder.findNodes(generatorNode);
+			closedSet.addAll(rotationPathfinder.closedSet);
+		}
+
+		generators.clear();
+
+		/**
 		 * Calculate load
 		 */
-		if (getPower() > 0)
+		if (load > 0)
 		{
-			float division = connectorResistance;
-
-			for (IMechanical node : this.getNodes())
-			{
-				for (ForgeDirection dir : handlerDirectionMap.get(node))
-				{
-					division += node.onReceiveEnergy(dir, torque, angularVelocity, false) / torque;
-				}
-			}
-
-			if (division > 0)
-			{
-				torque /= division / 2;
-				angularVelocity /= division / 2;
-			}
+			torque /= load / 2;
+			angularVelocity /= load / 2;
 		}
 
 		/**
@@ -88,7 +96,7 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 			/**
 			 * Send network update packet for connectors.
 			 */
-			for (IMechanicalConnector connector : this.getConnectors())
+			for (IMechanical connector : this.getConnectors())
 			{
 				if (connector.sendNetworkPacket(torque, angularVelocity))
 				{
@@ -97,24 +105,22 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 			}
 		}
 
-		/**
-		 * Distribute energy to handlers
-		 */
-		if (getPower() > 0)
-		{
-			for (IMechanical node : this.getNodes())
-			{
-				for (ForgeDirection dir : handlerDirectionMap.get(node))
-				{
-					node.onReceiveEnergy(dir, torque, angularVelocity, true);
-				}
-			}
-		}
-
 		prevTorque = torque;
 		prevAngularVelocity = angularVelocity;
-		torque = 0;
-		angularVelocity = 0;
+		torque *= 0.5;
+		angularVelocity *= 0.5;
+	}
+
+	@Override
+	public boolean canUpdate()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean continueUpdate()
+	{
+		return canUpdate();
 	}
 
 	/**
@@ -122,10 +128,11 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	 * Note: Server side only.
 	 */
 	@Override
-	public long onReceiveEnergy(long torque, float angularVelocity)
+	public long onReceiveEnergy(IMechanical source, long torque, float angularVelocity)
 	{
 		this.torque += torque;
 		this.angularVelocity += angularVelocity;
+		this.generators.add(source);
 		NetworkTickHandler.addNetwork(this);
 		return (long) (torque * angularVelocity);
 	}
@@ -170,66 +177,27 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
-		return true;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return true;
-	}
-
-	@Override
 	public void reconstruct()
 	{
 		// Reset
 		prevTorque = torque = 0;
 		prevAngularVelocity = angularVelocity = 0;
-		connectorResistance = 0;
+		load = 0;
 
-		if (this.getConnectors().size() > 0)
-		{
-			// Reset all values related to wires
-			this.getNodes().clear();
-
-			// Iterate threw list of wires
-			Iterator<IMechanicalConnector> it = this.getConnectors().iterator();
-
-			while (it.hasNext())
-			{
-				IMechanicalConnector connector = it.next();
-
-				if (connector != null)
-				{
-					reconstructConnector(connector);
-				}
-				else
-				{
-					it.remove();
-				}
-			}
-		}
+		super.reconstruct();
 	}
 
-	/** Segmented out call so overriding can be done when conductors are reconstructed. */
-	protected void reconstructConnector(IMechanicalConnector connector)
+	@Override
+	protected void reconstructConnector(IMechanical connector)
 	{
 		connector.setNetwork(this);
-
-		for (int i = 0; i < connector.getConnections().length; i++)
-		{
-			reconstructHandler(connector.getConnections()[i], ForgeDirection.getOrientation(i).getOpposite());
-		}
-
-		connectorResistance += connector.getResistance();
+		load += connector.getResistance();
 	}
 
 	/** Segmented out call so overriding can be done when machines are reconstructed. */
 	protected void reconstructHandler(Object obj, ForgeDirection side)
 	{
-		if (obj != null && !(obj instanceof IMechanicalConnector))
+		if (obj != null && !(obj instanceof IMechanical))
 		{
 			if (obj instanceof IMechanical)
 			{
@@ -238,7 +206,7 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 				{
 					set = EnumSet.noneOf(ForgeDirection.class);
 				}
-				this.getNodes().add((IMechanical) obj);
+				this.getConnectors().add((IMechanical) obj);
 				set.add(side);
 				this.handlerDirectionMap.put(obj, set);
 			}
@@ -252,7 +220,7 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 
 		if (deltaTime > 1)
 		{
-			rotation = (float) (((angularVelocity) * (deltaTime / 1000f) + rotation) % Math.PI);
+			rotation = (float) (((angularVelocity) * (deltaTime / 1000f) + rotation) % (2 * Math.PI));
 			lastRotateTime = System.currentTimeMillis();
 		}
 
@@ -268,6 +236,6 @@ public class MechanicalNetwork extends NodeNetwork<IMechanicalNetwork, IMechanic
 	@Override
 	public String toString()
 	{
-		return this.getClass().getSimpleName() + "[" + this.hashCode() + ", Handlers: " + getNodes().size() + ", Connectors: " + getConnectors().size() + ", Power:" + getPower() + "]";
+		return this.getClass().getSimpleName() + "[" + this.hashCode() + ", Handlers: " + getConnectors().size() + ", Connectors: " + getConnectors().size() + ", Power:" + getPower() + "]";
 	}
 }

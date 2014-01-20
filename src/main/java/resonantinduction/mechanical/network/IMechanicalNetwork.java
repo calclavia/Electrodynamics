@@ -1,13 +1,13 @@
 package resonantinduction.mechanical.network;
 
-import universalelectricity.api.net.INodeNetwork;
+import universalelectricity.api.net.INetwork;
 
 /**
  * Mechanical network in interface form for interaction or extension
  * 
  * @author DarkGuardsman
  */
-public interface IMechanicalNetwork extends INodeNetwork<IMechanicalNetwork, IMechanicalConnector, IMechanical>
+public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechanical>
 {
 	/**
 	 * Gets the power of the network.
@@ -32,11 +32,7 @@ public interface IMechanicalNetwork extends INodeNetwork<IMechanicalNetwork, IMe
 
 	public float getPrevAngularVelocity();
 
-	/** Called to rebuild the network */
-	@Override
-	public void reconstruct();
-
-	public long onReceiveEnergy(long torque, float angularVelocity);
+	public long onReceiveEnergy(IMechanical source, long torque, float angularVelocity);
 
 	/**
 	 * @return The current rotation value of the network.

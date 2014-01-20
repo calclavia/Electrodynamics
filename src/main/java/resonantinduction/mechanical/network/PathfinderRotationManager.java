@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import universalelectricity.api.net.IConnector;
+import universalelectricity.core.net.ConnectionPathfinder;
 
 /**
  * Sets proper rotations on all connected units in the mechanical network.
@@ -18,92 +19,40 @@ import universalelectricity.api.net.IConnector;
  * @author Calclavia
  * 
  */
-public class PathfinderRotationManager
+public class PathfinderRotationManager extends ConnectionPathfinder<IMechanical>
 {
-	/** A list of nodes that the pathfinder already went through. */
-	public final Set<IConnector> closedSet = new LinkedHashSet<IConnector>();
+	private boolean currentIsClockwise = true;
+	private Set<IMechanical> prevClosedSet;
 
-	/** The resulted path found by the pathfinder. Could be null if no path was found. */
-	public final Set<IConnector> results = new LinkedHashSet<IConnector>();
-
-	private final IConnector targetConnector;
-	private final List<IConnector> ignoreConnector;
-
-	public PathfinderRotationManager(IConnector targetConnector, IConnector... ignoreConnector)
+	public PathfinderRotationManager(IMechanical first, Set<IMechanical> prevClosedSet)
 	{
-		this.targetConnector = targetConnector;
-		if (ignoreConnector != null)
-		{
-			this.ignoreConnector = Arrays.asList(ignoreConnector);
-		}
-		else
-		{
-			this.ignoreConnector = new ArrayList<IConnector>();
-		}
+		super(first);
+		this.currentIsClockwise = first.isClockwise();
+		this.prevClosedSet = prevClosedSet;
 	}
 
-	/**
-	 * A recursive function to find all connectors.
-	 * 
-	 * @return True on success finding, false on failure.
-	 */
-	public boolean findNodes(IConnector currentNode)
+	public boolean findNodes(IMechanical currentNode)
 	{
 		this.closedSet.add(currentNode);
 
-		if (this.onSearch(currentNode))
-		{
-			return false;
-		}
+		currentNode.setClockwise(currentIsClockwise);
+		currentIsClockwise = !currentNode.isClockwise();
 
-		for (IConnector node : this.getConnectedNodes(currentNode))
+		for (IMechanical node : this.getConnectedNodes(currentNode))
 		{
 			if (!this.closedSet.contains(node))
 			{
-				if (this.findNodes(node))
+				if (prevClosedSet.contains(node) && node.isClockwise() != currentNode.isClockwise())
 				{
-					return true;
+					// We have conflicting gears. Network is now equal.
+					currentNode.getNetwork().setPower(0, 0);
 				}
+
+				findNodes(node);
+				currentIsClockwise = node.isRotationInversed() ? !currentNode.isClockwise() : currentNode.isClockwise();
 			}
 		}
 
 		return false;
-	}
-
-	public Set<IConnector> getConnectedNodes(IConnector currentNode)
-	{
-		Set<IConnector> connectedNodes = new HashSet<IConnector>();
-
-		if (currentNode != null)
-		{
-			for (int i = 0; i < currentNode.getConnections().length; i++)
-			{
-				Object obj = currentNode.getConnections()[i];
-
-				if (obj instanceof IConnector && !this.ignoreConnector.contains(obj))
-				{
-					connectedNodes.add((IConnector) obj);
-				}
-			}
-		}
-
-		return connectedNodes;
-	}
-
-	public boolean onSearch(IConnector node)
-	{
-		if (node == this.targetConnector)
-		{
-			this.results.add(node);
-			return true;
-		}
-
-		return false;
-	}
-
-	public void reset()
-	{
-		this.results.clear();
-		this.closedSet.clear();
 	}
 }

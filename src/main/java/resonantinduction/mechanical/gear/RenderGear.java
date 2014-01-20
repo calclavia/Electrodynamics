@@ -29,7 +29,7 @@ public class RenderGear
 		GL11.glPopMatrix();
 	}
 
-	public void renderDynamic(PartGear part, double x, double y, double z)
+	public void renderDynamic(PartGear part, double x, double y, double z, float frame)
 	{
 		GL11.glPushMatrix();
 		// Center the model first.
@@ -63,7 +63,7 @@ public class RenderGear
 				break;
 		}
 
-		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
+		GL11.glRotatef((float) Math.toDegrees(part.isClockwise() ? part.getNetwork().getRotation() : -part.getNetwork().getRotation()), 0, 1, 0);
 
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		MODEL.renderAll();

@@ -45,11 +45,11 @@ public class RenderBattery extends TileEntitySpecialRenderer
 			GL11.glRotatef(90 * i, 0, 1, 0);
 			ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_LEVELS);
-			MODEL.renderPart("Battery");
-
 			if (t.worldObj != null)
 			{
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_LEVELS);
+				MODEL.renderPart("Battery");
+				
 				// Render top and bottom
 				//if (!(new Vector3(t).translate(dir).getTileEntity(t.worldObj) instanceof TileBattery))
 				{
@@ -81,6 +81,10 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 				if (new Vector3(t).translate(ForgeDirection.UP).getTileEntity(t.worldObj) instanceof TileBattery)
 					MODEL.renderPart("VertConnector");
+			}else
+			{
+				FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_CAP);
+				MODEL.renderAll();
 			}
 			
 			glPopMatrix();

@@ -3,14 +3,14 @@ package resonantinduction.api;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import resonantinduction.mechanical.network.IMechanicalConnector;
+import resonantinduction.mechanical.network.IMechanical;
 
 /**
  * An interface applied to the tile entity of a conveyor belt
  * 
  * @Author DarkGuardsman
  */
-public interface IBelt extends IMechanicalConnector
+public interface IBelt extends IMechanical
 {
 	/**
 	 * Used to get a list of entities the belt exerts an effect upon.
