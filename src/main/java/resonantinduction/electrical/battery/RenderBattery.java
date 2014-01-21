@@ -38,6 +38,8 @@ public class RenderBattery extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
+		glPushMatrix();
+
 		for (int i = 2; i < 6; i++)
 		{
 			glPushMatrix();
@@ -127,5 +129,7 @@ public class RenderBattery extends TileEntitySpecialRenderer
 
 			glPopMatrix();
 		}
+		
+		glPopMatrix();
 	}
 }
