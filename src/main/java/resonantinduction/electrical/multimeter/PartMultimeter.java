@@ -224,8 +224,14 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 	{
 		if (tileEntity instanceof IConductor)
 		{
-			IEnergyNetwork network = ((IConductor) tileEntity).getInstance(side.getOpposite()).getNetwork();
-			return network.getLastBuffer();
+			IConductor conductor = (IConductor) ((IConductor) tileEntity).getInstance(side.getOpposite());
+
+			if (conductor != null)
+			{
+				// TODO: Conductor may always return null in some cases.
+				IEnergyNetwork network = conductor.getNetwork();
+				return network.getLastBuffer();
+			}
 		}
 
 		return CompatibilityModule.getEnergy(tileEntity, side);

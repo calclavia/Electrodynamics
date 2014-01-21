@@ -41,6 +41,7 @@ import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TilePurifier;
+import universalelectricity.api.CompatibilityModule;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
@@ -143,7 +144,7 @@ public class Electrical
 		/**
 		 * Set reference itemstacks
 		 */
-		ResonantInductionTabs.ITEMSTACK = new ItemStack(blockBattery);
+		ResonantInductionTabs.ITEMSTACK = new ItemStack(itemTransformer);
 
 		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
