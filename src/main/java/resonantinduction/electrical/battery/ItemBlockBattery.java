@@ -53,20 +53,6 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 		list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", UnitDisplay.getDisplayShort(joules, Unit.JOULES)).replace("%v1", UnitDisplay.getDisplayShort(this.getEnergyCapacity(itemStack), Unit.JOULES)));
 	}
 
-	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
-	{
-		boolean place = super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, getTier(stack));
-
-		if (place)
-		{
-			TileBattery tileEntity = (TileBattery) world.getBlockTileEntity(x, y, z);
-			tileEntity.setEnergy(null, this.getEnergy(stack));
-		}
-
-		return place;
-	}
-
 	/**
 	 * Makes sure the item is uncharged when it is crafted and not charged. Change this if you do
 	 * not want this to happen!

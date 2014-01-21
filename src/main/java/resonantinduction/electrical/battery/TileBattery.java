@@ -29,7 +29,7 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileBattery extends TileElectrical implements IConnector<BatteryNetwork>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
 	/** The transfer rate **/
-	public static final long DEFAULT_WATTAGE = getEnergyForTier(1);
+	public static final long DEFAULT_WATTAGE = getEnergyForTier(0);
 
 	/** Voltage increases as series connection increases */
 	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
@@ -40,7 +40,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 	public TileBattery()
 	{
-		this.energy = new EnergyStorageHandler(getEnergyForTier(1));
+		this.energy = new EnergyStorageHandler(0);
 		this.saveIOMap = true;
 	}
 
@@ -57,13 +57,13 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public void initiate()
 	{
 		this.updateStructure();
+		energy.setCapacity(getEnergyForTier(getBlockMetadata()));
 	}
 
 	public void updateStructure()
 	{
 		if (!this.worldObj.isRemote)
 		{
-			energy.setCapacity(getEnergyForTier(getBlockMetadata()));
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
 				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
@@ -103,7 +103,8 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
 		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
-		this.getNetwork().redistribute();
+		if (ticks % 5 == 0)
+			this.getNetwork().redistribute();
 		markUpdate = true;
 		return returnValue;
 	}
@@ -112,7 +113,8 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
 	{
 		long returnValue = super.onExtractEnergy(from, extract, doExtract);
-		this.getNetwork().redistribute();
+		if (ticks % 5 == 0)
+			this.getNetwork().redistribute();
 		markUpdate = true;
 		return returnValue;
 	}

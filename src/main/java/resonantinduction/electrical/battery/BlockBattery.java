@@ -14,6 +14,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockIOBase;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,6 +34,29 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 	}
 
 	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		if (!world.isRemote)
+		{
+			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+			battery.updateStructure();
+		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
+	{
+		if (!world.isRemote && itemstack.getItem() instanceof ItemBlockBattery)
+		{
+			ItemBlockBattery itemBlock = (ItemBlockBattery) itemstack.getItem();
+			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
+			battery.energy.setCapacity(TileBattery.getEnergyForTier(itemBlock.getTier(itemstack)));
+			battery.energy.setEnergy(itemBlock.getEnergy(itemstack));
+			battery.updateStructure();
+		}
+	}
+
+	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
 		if (!world.isRemote)
@@ -42,16 +66,6 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 				TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 				battery.updateStructure();
 			}
-		}
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
-	{
-		if (!world.isRemote)
-		{
-			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.updateStructure();
 		}
 	}
 

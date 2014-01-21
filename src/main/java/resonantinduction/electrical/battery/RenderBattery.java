@@ -68,7 +68,8 @@ public class RenderBattery extends TileEntitySpecialRenderer
 			{
 				TileBattery tile = (TileBattery) t;
 
-				RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/bat_level_" + (int) (((double) tile.energy.getEnergy() / (double) tile.energy.getEnergyCapacity()) * 10) + ".png");
+				int energyLevel = (int) (((double) tile.energy.getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 10);
+				RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/bat_level_" + energyLevel + ".png");
 				MODEL.renderPart("Battery");
 
 				// Render top and bottom
