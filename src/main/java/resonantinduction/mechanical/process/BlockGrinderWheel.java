@@ -77,7 +77,7 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 				dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
 				int inversion = tile.isClockwise() ? -1 : 1;
 				float speed = tile.getNetwork().getAngularVelocity() / 20;
-				entity.addVelocity(inversion * dir.offsetX * speed, inversion * dir.offsetZ * speed, Math.random() * speed);
+				entity.addVelocity(inversion * dir.offsetX * speed, Math.random() * speed, inversion * dir.offsetZ * speed);
 			}
 		}
 	}

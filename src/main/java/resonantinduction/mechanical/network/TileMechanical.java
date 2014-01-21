@@ -1,6 +1,8 @@
 package resonantinduction.mechanical.network;
 
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
 public abstract class TileMechanical extends TileAdvanced implements IMechanical
@@ -15,6 +17,24 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	@Override
 	public Object[] getConnections()
 	{
+		connections = new Object[6];
+
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
+
+			if (tile instanceof IMechanical)
+			{
+				IMechanical mech = (IMechanical) ((IMechanical) tile).getInstance(dir.getOpposite());
+
+				if (mech != null && canConnect(dir) && mech.canConnect(dir.getOpposite()))
+				{
+					connections[dir.ordinal()] = mech;
+					getNetwork().merge(mech.getNetwork());
+				}
+			}
+		}
+
 		return connections;
 	}
 

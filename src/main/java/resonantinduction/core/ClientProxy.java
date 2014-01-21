@@ -62,6 +62,7 @@ public class ClientProxy extends CommonProxy
 	{
 		EntityFX fx = new EntityDiggingFX(world, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z, Block.blocksList[blockID], 0, 0);
 		fx.multipleParticleScaleBy(scale);
+		fx.noClip = true;
 		FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
 	}
 }

@@ -49,7 +49,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	/** The current rotation of the network */
 	private float rotation = 0;
 	private long lastRotateTime;
-	private boolean markPacketUpdate = true;
 
 	/** The direction in which a conductor is placed relative to a specific conductor. */
 	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
@@ -58,11 +57,14 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	private Set<IMechanical> generators = new LinkedHashSet<IMechanical>();
 	private boolean disabled;
 
+	private boolean markUpdateRotation = true;
+
 	@Override
 	public void addConnector(IMechanical connector)
 	{
-		this.markPacketUpdate = true;
 		super.addConnector(connector);
+		NetworkTickHandler.addNetwork(this);
+		markUpdateRotation = true;
 	}
 
 	/**
@@ -74,7 +76,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		/**
 		 * Calculation rotations of all generators.
 		 */
-		if (!(prevGenerators.equals(generators)) && generators.size() > 0)
+		if (markUpdateRotation || (!(prevGenerators.equals(generators)) && generators.size() > 0))
 		{
 			Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
 
@@ -89,7 +91,8 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 				}
 			}
 
-			prevGenerators = new LinkedHashSet<>(generators);
+			markUpdateRotation = false;
+			prevGenerators = new LinkedHashSet<IMechanical>(generators);
 		}
 
 		generators.clear();
@@ -109,7 +112,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
 		{
 			sendNetworkPacket();
-			markPacketUpdate = false;
 		}
 
 		prevTorque = torque;
@@ -121,7 +123,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	@Override
 	public boolean canUpdate()
 	{
-		return !disabled;
+		return !disabled && getConnectors().size() > 0;
 	}
 
 	@Override
@@ -152,7 +154,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		int[] location = connector.getLocation();
 
 		if (location != null)
+		{
+			System.out.println("UPDATING!" + location[0] + "," + location[1] + "," + location[2]);
 			PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 1, connector.isClockwise()));
+		}
 	}
 
 	@Override
