@@ -74,22 +74,24 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		/**
 		 * Calculation rotations of all generators.
 		 */
-		prevGenerators = generators;
+		if (!(prevGenerators.equals(generators)) && generators.size() > 0)
+		{System.out.println("UPDA PATH");
+			Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
 
-		Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
-
-		for (IMechanical generatorNode : generators)
-		{
-			if (generatorNode != null)
+			for (IMechanical generatorNode : generators)
 			{
-				PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(generatorNode, this, closedSet);
-				rotationPathfinder.findNodes(generatorNode);
-				closedSet.addAll(rotationPathfinder.closedSet);
-				sendRotationUpdatePacket(generatorNode);
+				if (generatorNode != null)
+				{
+					PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(generatorNode, this, closedSet);
+					rotationPathfinder.findNodes(generatorNode);
+					closedSet.addAll(rotationPathfinder.closedSet);
+					sendRotationUpdatePacket(generatorNode);
+				}
 			}
-		}
 
-		generators.clear();
+			prevGenerators = new LinkedHashSet<>(generators);
+			generators.clear();
+		}
 
 		/**
 		 * Calculate load

@@ -47,7 +47,7 @@ public class PartGear extends PartMechanical implements IMechanical
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		System.out.println(world().isRemote + ": " + getNetwork());
+		//System.out.println(world().isRemote + ": " + getNetwork());
 
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), tile().xCoord, tile().yCoord, tile().zCoord))
 		{
