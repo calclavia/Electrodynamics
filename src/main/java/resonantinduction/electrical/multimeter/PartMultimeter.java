@@ -224,7 +224,7 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 	{
 		if (tileEntity instanceof IConductor)
 		{
-			IEnergyNetwork network = ((IConductor) tileEntity).getNetwork();
+			IEnergyNetwork network = ((IConductor) tileEntity).getInstance(side.getOpposite()).getNetwork();
 			return network.getLastBuffer();
 		}
 
