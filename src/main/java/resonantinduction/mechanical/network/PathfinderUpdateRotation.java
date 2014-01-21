@@ -48,7 +48,7 @@ public class PathfinderUpdateRotation extends ConnectionPathfinder<IMechanical>
 				if ((prevClosedSet != null && prevClosedSet.contains(node)) && (node.isClockwise() != currentRotationFlag))
 				{
 					// We have conflicting rotations. Network is now stuck.
-					network.setPower(0, 0);
+					network.setDisabled();
 				}
 
 				findNodes(node);

@@ -49,7 +49,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	protected Object[] connections = new Object[6];
 
 	/** Side of the block this is placed on */
-	public ForgeDirection placementSide;
+	public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
 
 	/** The size of the gear */
 	private float radius = 0.5f;
@@ -318,6 +318,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public int[] getLocation()
 	{
-		return new int[] { x(), y(), z(), placementSide.ordinal() };
+		if (tile() != null)
+			return new int[] { x(), y(), z(), placementSide.ordinal() };
+		return null;
 	}
 }

@@ -56,6 +56,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 	private Set<IMechanical> prevGenerators = new LinkedHashSet<IMechanical>();
 	private Set<IMechanical> generators = new LinkedHashSet<IMechanical>();
+	private boolean disabled;
 
 	@Override
 	public void addConnector(IMechanical connector)
@@ -117,7 +118,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	@Override
 	public boolean canUpdate()
 	{
-		return true;
+		return !disabled;
 	}
 
 	@Override
@@ -133,9 +134,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	{
 		for (IMechanical connector : this.getConnectors())
 		{
-			if (connector instanceof TileEntity)
+			int[] location = connector.getLocation();
+
+			if (location != null)
 			{
-				int[] location = connector.getLocation();
 				PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 0, torque, angularVelocity));
 				break;
 			}
@@ -145,7 +147,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public void sendRotationUpdatePacket(IMechanical connector)
 	{
 		int[] location = connector.getLocation();
-		PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 1, connector.isClockwise()));
+
+		if (location != null)
+			PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 1, connector.isClockwise()));
 	}
 
 	@Override
@@ -163,7 +167,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 					updateNode.setClockwise(data.readBoolean());
 					PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(updateNode, this, null);
 					rotationPathfinder.findNodes(updateNode);
-					System.out.println("UPDATE");
 					break;
 			}
 		}
@@ -229,6 +232,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	@Override
 	public void reconstruct()
 	{
+		disabled = false;
 		// Reset
 		prevTorque = torque = 0;
 		prevAngularVelocity = angularVelocity = 0;
@@ -278,6 +282,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	}
 
 	@Override
+	public void setDisabled()
+	{
+		System.out.println("NETWORK DISABLED");
+		disabled = true;
+	}
+
+	@Override
 	public IMechanicalNetwork newInstance()
 	{
 		return new MechanicalNetwork();
@@ -294,4 +305,5 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	{
 		return this.getClass().getSimpleName() + "[" + this.hashCode() + ", Handlers: " + getConnectors().size() + ", Connectors: " + getConnectors().size() + ", Power:" + getPower() + "]";
 	}
+
 }

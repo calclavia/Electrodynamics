@@ -30,7 +30,7 @@ public class PartGear extends PartMechanical implements IMechanical
 		{
 			if (manualCrankTime > 0)
 			{
-				getNetwork().onReceiveEnergy(this, 20, 0.2f);
+				getNetwork().onReceiveEnergy(this, 20, 0.4f);
 				manualCrankTime--;
 			}
 		}
@@ -62,7 +62,7 @@ public class PartGear extends PartMechanical implements IMechanical
 			else
 			{
 
-				this.manualCrankTime = 20;
+				this.manualCrankTime = 10;
 			}
 		}
 

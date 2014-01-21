@@ -38,4 +38,9 @@ public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechan
 	 * @return The current rotation value of the network.
 	 */
 	public float getRotation();
+
+	/**
+	 * Disables the network due to rotation issues.
+	 */
+	public void setDisabled();
 }

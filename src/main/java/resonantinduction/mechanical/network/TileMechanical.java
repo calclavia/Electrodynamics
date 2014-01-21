@@ -62,7 +62,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	@Override
 	public boolean isRotationInversed()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
