@@ -1,14 +1,12 @@
 package resonantinduction.electrical.battery;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -22,8 +20,6 @@ import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * A modular battery.
@@ -40,11 +36,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 	private BatteryNetwork network;
 
-	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
-
-	public float clientEnergy;
-	public int clientCells;
-	public float clientMaxEnergy;
+	public boolean markUpdate = false;
 
 	public TileBattery()
 	{
@@ -74,7 +66,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 			energy.setCapacity(getEnergyForTier(getBlockMetadata()));
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
 
 				if (tile instanceof TileBattery)
 				{
@@ -84,6 +76,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().getConnectors().size());
 			this.getNetwork().redistribute();
+			markUpdate = true;
 		}
 	}
 
@@ -98,6 +91,11 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 			{
 				this.getNetwork().redistribute();
 			}
+
+			if (markUpdate && ticks % 5 == 0)
+			{
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
 		}
 	}
 
@@ -106,6 +104,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	{
 		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
 		this.getNetwork().redistribute();
+		markUpdate = true;
 		return returnValue;
 	}
 
@@ -114,23 +113,29 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	{
 		long returnValue = super.onExtractEnergy(from, extract, doExtract);
 		this.getNetwork().redistribute();
+		markUpdate = true;
 		return returnValue;
 	}
 
-	public void updateClient()
+	@Override
+	public Packet getDescriptionPacket()
 	{
-		PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray()));
+		return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
 	}
 
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
+		energy.setEnergy(data.readLong());
+		ioMap = data.readShort();
 	}
 
 	@Override
 	public ArrayList getPacketData(int type)
 	{
 		ArrayList data = new ArrayList();
+		data.add(energy.getEnergy());
+		data.add((short) ioMap);
 		return data;
 	}
 
@@ -159,7 +164,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(this.worldObj);
+			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
 
 			if (tile instanceof TileBattery)
 			{
@@ -200,5 +205,12 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public IConnector<BatteryNetwork> getInstance(ForgeDirection from)
 	{
 		return this;
+	}
+
+	@Override
+	public void setIO(ForgeDirection dir, int type)
+	{
+		super.setIO(dir, type);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 }

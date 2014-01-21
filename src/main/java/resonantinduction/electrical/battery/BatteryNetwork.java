@@ -12,7 +12,7 @@ public class BatteryNetwork extends Network<BatteryNetwork, TileBattery>
 
 		for (TileBattery battery : this.getConnectors())
 		{
-			totalEnergy += battery.getEnergy(null);
+			totalEnergy += battery.energy.getEnergy();
 		}
 
 		int amountOfNodes = this.getConnectors().size() - exclusion.length;
@@ -30,11 +30,11 @@ public class BatteryNetwork extends Network<BatteryNetwork, TileBattery>
 				{
 					if (battery == firstNode)
 					{
-						battery.setEnergy(null, totalPerBatteryRemainder);
+						battery.energy.setEnergy(totalPerBatteryRemainder);
 					}
 					else
 					{
-						battery.setEnergy(null, totalPerBattery);
+						battery.energy.setEnergy(totalPerBattery);
 					}
 				}
 			}
