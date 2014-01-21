@@ -31,8 +31,7 @@ public class ItemTransformer extends ItemMultipartBase
 		{
 			int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			int facing = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
-
-			part.preparePlacement(facing, itemStack.getItemDamage());
+			part.preparePlacement(side, facing);
 		}
 
 		return part;

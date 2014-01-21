@@ -282,11 +282,6 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (!world().isRemote)
-		{
-			System.out.println(this.getNetwork());
-		}
-
 		if (item != null)
 		{
 			if (item.getItem().itemID == Block.lever.blockID)
@@ -387,7 +382,11 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				{
 					// We found a wire! Merge networks!
 					this.connections[absDir] = tp;
-					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					
+					if(tp instanceof PartFlatWire)
+					{
+						this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					}
 					continue;
 				}
 			}

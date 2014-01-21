@@ -51,6 +51,7 @@ public class RenderTransformer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		RenderUtility.rotateFaceBlockToSide(part.placementSide);
+		GL11.glRotatef(90, 0, 1, 0);
 		RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 		doRender();
 		GL11.glPopMatrix();

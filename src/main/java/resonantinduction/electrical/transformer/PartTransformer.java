@@ -49,33 +49,33 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 		}
 	}
 
-	/** Side of the block this is placed on */
+	/** Side of the block this is placed on. */
 	public ForgeDirection placementSide;
-	/** Direction this block faces */
-	public byte face = 0;
+	/** The relative direction this block faces. */
+	public byte facing = 0;
 	/** Step the voltage up */
 	private boolean stepUp;
 	/** Amount to mulitply the step by (up x2. down /2) */
 	public int multiplier = 2;
 
-	public void preparePlacement(int side, int itemDamage)
+	public void preparePlacement(int side, int facing)
 	{
-		placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
-		face = (byte) side;
+		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.facing = (byte) (facing - 2);
 	}
 
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
 		this.placementSide = ForgeDirection.getOrientation(packet.readByte());
-		this.face = packet.readByte();
+		this.facing = packet.readByte();
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
 		packet.writeByte(this.placementSide.ordinal());
-		packet.writeByte(this.face);
+		packet.writeByte(this.facing);
 	}
 
 	public boolean stepUp()
@@ -172,52 +172,13 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 
 	protected ForgeDirection getFacing()
 	{
-		if (this.placementSide != ForgeDirection.UP && this.placementSide != ForgeDirection.DOWN)
-		{
-			switch (this.face)
-			{
-				case 0:
-					return ForgeDirection.UP;
-				case 1:
-					switch (this.placementSide)
-					{
-						case NORTH:
-							return ForgeDirection.EAST;
-						case SOUTH:
-							return ForgeDirection.WEST;
-						case EAST:
-							return ForgeDirection.SOUTH;
-						case WEST:
-							return ForgeDirection.NORTH;
-					}
-				case 2:
-					return ForgeDirection.DOWN;
-				case 3:
-					switch (this.placementSide)
-					{
-						case NORTH:
-							return ForgeDirection.WEST;
-						case SOUTH:
-							return ForgeDirection.EAST;
-						case EAST:
-							return ForgeDirection.NORTH;
-						case WEST:
-							return ForgeDirection.SOUTH;
-					}
-			}
-		}
-		else
-		{
-			return ForgeDirection.getOrientation(this.face - 2);
-		}
-
-		return ForgeDirection.NORTH;
+		return ForgeDirection.getOrientation(this.facing + 2);
 	}
 
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction == getFacing() || direction == getFacing().getOpposite();
+		return direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), facing) || direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), Rotation.rotateSide(facing, 2));
 	}
 
 	@Override
@@ -286,10 +247,10 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 				return true;
 			}
 			this.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
-			if (this.face < 3)
-				this.face++;
+			if (this.facing < 3)
+				this.facing++;
 			else
-				this.face = 0;
+				this.facing = 0;
 			this.sendDescUpdate();
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
