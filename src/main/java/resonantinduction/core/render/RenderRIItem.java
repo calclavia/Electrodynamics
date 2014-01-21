@@ -5,6 +5,8 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.electrical.battery.ItemBlockBattery;
+import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.multimeter.RenderMultimeter;
 import resonantinduction.electrical.transformer.ItemTransformer;
@@ -41,7 +43,11 @@ public class RenderRIItem implements IItemRenderer
 	{
 		GL11.glPushMatrix();
 
-		if (item.getItem() instanceof ItemGear)
+		if (item.getItem() instanceof ItemBlockBattery)
+		{
+			RenderBattery.INSTANCE.renderInventory(type, item, data);
+		}
+		else if (item.getItem() instanceof ItemGear)
 		{
 			RenderGear.INSTANCE.renderInventory(null, 0, 0, null);
 		}
