@@ -20,6 +20,7 @@ import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.net.IConnector;
 import calclavia.lib.network.IPacketReceiver;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -224,7 +225,12 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 	{
 		if (tileEntity instanceof IConductor)
 		{
-			IConductor conductor = (IConductor) ((IConductor) tileEntity).getInstance(side.getOpposite());
+			IConnector<IEnergyNetwork> conductor = ((IConductor) tileEntity).getInstance(side.getOpposite());
+
+			if (conductor == null)
+			{
+				conductor = ((IConductor) tileEntity).getInstance(ForgeDirection.UNKNOWN);
+			}
 
 			if (conductor != null)
 			{
