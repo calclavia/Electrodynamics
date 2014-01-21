@@ -283,9 +283,9 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	{
 		if (tile() != null && this.getNetwork() != null)
 		{
-			getNetwork().getConnectors().remove(tile());
+			getNetwork().getConnectors().remove(this);
 			super.bind(t);
-			getNetwork().getConnectors().add((IConductor) tile());
+			getNetwork().getConnectors().add((IConductor) this);
 		}
 		else
 		{
@@ -374,7 +374,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 					try
 					{
 						this.getNetwork().removeConnector(this);
-						this.getNetwork().split((IConductor) tile());
+						this.getNetwork().split((IConductor) this);
 					}
 					catch (NullPointerException e)
 					{
@@ -390,7 +390,10 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 
 						if (tileEntity instanceof IConductor)
 						{
-							this.getNetwork().merge(((IConductor) tileEntity).getNetwork());
+							IConductor conductor = (IConductor) ((IConductor) tileEntity).getInstance(side.getOpposite());
+
+							if (conductor != null)
+								this.getNetwork().merge(conductor.getNetwork());
 						}
 					}
 				}
@@ -445,7 +448,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 			return false;
 		}
 
-		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
+		Vector3 connectPos = new Vector3(tile()).translate(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
 		return !isConnectionPrevented(connectTile, direction);
 	}
@@ -537,8 +540,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		this.currentWireConnections = otherCable.currentWireConnections;
 		this.currentAcceptorConnections = otherCable.currentAcceptorConnections;
 		this.setNetwork(otherCable.getNetwork());
-		this.getNetwork().setBufferFor(this, otherCable.getNetwork().getBufferOf(otherCable));
+		this.getNetwork().setBufferFor(this, otherCable.getInstance(ForgeDirection.UNKNOWN).getNetwork().getBufferOf(otherCable));
 	}
-
 
 }

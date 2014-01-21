@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -112,6 +113,11 @@ public class TraitConductor extends TileMultipart implements IConductor
 				}
 			}
 		}
+		
+		if (partMap(PartMap.CENTER.ordinal()) instanceof IConductor)
+		{
+			return ((IConductor) partMap(PartMap.CENTER.ordinal())).onReceiveEnergy(from, receive, doReceive);
+		}
 
 		return 0;
 	}
@@ -175,6 +181,11 @@ public class TraitConductor extends TileMultipart implements IConductor
 					return ((IConductor) part).getInstance(from);
 				}
 			}
+		}
+
+		if (partMap(PartMap.CENTER.ordinal()) instanceof IConductor)
+		{
+			return (IConnector<IEnergyNetwork>) partMap(PartMap.CENTER.ordinal());
 		}
 
 		return null;
