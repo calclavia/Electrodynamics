@@ -34,43 +34,6 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		this.checkConflicts(world, x, y, z);
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int par5)
-	{
-		this.checkConflicts(world, x, y, z);
-	}
-
-	/**
-	 * Checks for any conflicting directions with other grinders.
-	 */
-	private void checkConflicts(World world, int x, int y, int z)
-	{
-		ForgeDirection facing = this.getDirection(world, x, y, z);
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			if (dir == facing || dir == facing.getOpposite())
-			{
-				VectorWorld checkPos = (VectorWorld) new VectorWorld(world, x, y, z).modifyPositionFromSide(dir);
-				TileEntity tileEntity = checkPos.getTileEntity();
-
-				if (tileEntity instanceof TileGrinderWheel)
-				{
-					if (this.getDirection(world, checkPos.intX(), checkPos.intY(), checkPos.intZ()) == facing)
-					{
-						this.dropBlockAsItem(world, x, y, z, 0, 0);
-						world.setBlockToAir(x, y, z);
-					}
-				}
-			}
-		}
-	}
-
-	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
@@ -111,10 +74,10 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 			{
 				// Move entity based on the direction of the block.
 				ForgeDirection dir = this.getDirection(world, x, y, z);
-				entity.motionX += dir.offsetX * tile.getNetwork().getAngularVelocity() / 20;
-				entity.motionZ += dir.offsetZ * tile.getNetwork().getAngularVelocity() / 20;
-				entity.motionY += Math.random() * tile.getNetwork().getAngularVelocity() / 20;
-				entity.isAirBorne = true;
+				dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+				int inversion = tile.isClockwise() ? -1 : 1;
+				float speed = tile.getNetwork().getAngularVelocity() / 20;
+				entity.addVelocity(inversion * dir.offsetX * speed, inversion * dir.offsetZ * speed, Math.random() * speed);
 			}
 		}
 	}

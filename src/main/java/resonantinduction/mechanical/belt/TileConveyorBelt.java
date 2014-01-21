@@ -226,7 +226,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		for (int i = 2; i < 6; i++)
 		{
 			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			Vector3 pos = new Vector3(this).modifyPositionFromSide(dir);
+			Vector3 pos = new Vector3(this).translate(dir);
 			TileEntity tile = pos.getTileEntity(this.worldObj);
 
 			if (dir == this.getDirection() || dir == this.getDirection().getOpposite())
@@ -265,8 +265,13 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			}
 			else if (tile instanceof IMechanical)
 			{
-				// TODO: Fix split connection in network.
-				// connections[dir.ordinal()] = tile;
+				IMechanical mechanical = (IMechanical) ((IMechanical) tile).getInstance(dir.getOpposite());
+
+				if (mechanical != null)
+				{
+					connections[dir.ordinal()] = mechanical;
+					getNetwork().merge(mechanical.getNetwork());
+				}
 			}
 		}
 

@@ -35,7 +35,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 
 	public float toggleRatio()
 	{
-		return torqueRatio = (torqueRatio + 1000) % energy.getMaxExtract();
+		return torqueRatio = (torqueRatio + 1000) % energy.getMaxExtract() + 1000;
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	{
 		EnumSet<ForgeDirection> dirs = EnumSet.allOf(ForgeDirection.class);
 		dirs.remove(this.getDirection());
-		dirs.remove(this.getDirection().ordinal());
+		dirs.remove(this.getDirection().getOpposite());
 		return dirs;
 	}
 

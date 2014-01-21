@@ -75,7 +75,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		 * Calculation rotations of all generators.
 		 */
 		if (!(prevGenerators.equals(generators)) && generators.size() > 0)
-		{System.out.println("UPDA PATH");
+		{
 			Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
 
 			for (IMechanical generatorNode : generators)
@@ -90,8 +90,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 			}
 
 			prevGenerators = new LinkedHashSet<>(generators);
-			generators.clear();
 		}
+
+		generators.clear();
 
 		/**
 		 * Calculate load
