@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -20,6 +21,7 @@ import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
@@ -58,7 +60,8 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 
 	public void preparePlacement(int side, int itemDamage)
 	{
-		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		face = (byte) side;
 	}
 
 	@Override
@@ -141,7 +144,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	{
 		if (pass == 0)
 		{
-			RenderTransformer.render(this, pos.x, pos.y, pos.z);
+			RenderTransformer.INSTANCE.render(this, pos.x, pos.y, pos.z);
 		}
 	}
 
@@ -205,18 +208,9 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 		}
 		else
 		{
-			switch (this.face)
-			{
-				case 0:
-					return ForgeDirection.NORTH;
-				case 1:
-					return ForgeDirection.EAST;
-				case 2:
-					return ForgeDirection.SOUTH;
-				case 3:
-					return ForgeDirection.WEST;
-			}
+			return ForgeDirection.getOrientation(this.face - 2);
 		}
+
 		return ForgeDirection.NORTH;
 	}
 

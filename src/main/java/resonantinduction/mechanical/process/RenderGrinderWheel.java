@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import calclavia.lib.render.RenderUtility;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -35,12 +36,7 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);
 			glScalef(0.51f, 0.51f, 0.51f);
 
-			if (tile.getDirection().ordinal() < 2)
-				glRotatef(90, 1, 0, 0);
-			else if (tile.getDirection().ordinal() == 2 || tile.getDirection().ordinal() == 3)
-				glRotatef(90, 0, 1, 0);
-			else if (tile.getDirection().ordinal() == 4 || tile.getDirection().ordinal() == 5)
-				glRotatef(180, 0, 1, 0);
+			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());
 
 			glRotatef((float) Math.toDegrees(tile.getNetwork().getRotation()) * (tile.isClockwise() ? 1 : -1), 0, 0, 1);
 

@@ -3,6 +3,7 @@ package resonantinduction.electrical.transformer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.ItemMultipartBase;
@@ -28,7 +29,10 @@ public class ItemTransformer extends ItemMultipartBase
 
 		if (part != null)
 		{
-			part.preparePlacement(side, itemStack.getItemDamage());
+			int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			int facing = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+
+			part.preparePlacement(facing, itemStack.getItemDamage());
 		}
 
 		return part;

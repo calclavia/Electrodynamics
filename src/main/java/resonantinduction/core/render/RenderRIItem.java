@@ -39,29 +39,26 @@ public class RenderRIItem implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
+		GL11.glPushMatrix();
+
 		if (item.getItem() instanceof ItemGear)
 		{
 			RenderGear.INSTANCE.renderInventory(null, 0, 0, null);
 		}
 		else if (item.getItem() instanceof ItemMultimeter)
 		{
-			GL11.glPushMatrix();
 			GL11.glRotatef(180, 0, 1, 0);
 			GL11.glTranslated(0, -1, -0.7);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderMultimeter.TEXTURE);
 			RenderMultimeter.MODEL.render(0.0625f);
-			GL11.glPopMatrix();
 		}
 		else if (item.getItem() instanceof ItemTransformer)
 		{
-			GL11.glPushMatrix();
-			GL11.glRotatef(180, 0, 0, 1);
-			GL11.glTranslated(0, -1, 0);
-			GL11.glScaled(0.9f, 0.9f, 0.9f);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderTransformer.TEXTURE);
-			RenderTransformer.MODEL.render(0.0625f);
-			GL11.glPopMatrix();
+			GL11.glTranslated(0, -0.2f, 0);
+			RenderTransformer.INSTANCE.doRender();
 		}
+
+		GL11.glPopMatrix();
 	}
 
 }
