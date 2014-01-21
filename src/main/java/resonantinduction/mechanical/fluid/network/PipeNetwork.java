@@ -40,16 +40,8 @@ public class PipeNetwork extends FluidNetwork
             {
                 int volPer = (stack.amount / count);
                 int volPerSide = (volPer / sideCount);
-                int maxFill = 1000;
 
-                TileEntity tile = new Vector3((TileEntity) entry.getKey()).modifyPositionFromSide(dir).getTileEntity(((TileEntity) entry.getKey()).worldObj);
-
-                if (tile instanceof IFluidPipe)
-                {
-                    maxFill = ((IFluidPipe) tile).getMaxFlowRate();
-                }
-
-                stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, maxFill)), true);
+                stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
 
                 if (sideCount > 1)
                     --sideCount;
@@ -89,6 +81,7 @@ public class PipeNetwork extends FluidNetwork
     {
         this.connectionMap.clear();
         this.maxFlowRate = Integer.MAX_VALUE;
+        this.maxPressure = Integer.MAX_VALUE;
         super.reconstruct();
     }
 
