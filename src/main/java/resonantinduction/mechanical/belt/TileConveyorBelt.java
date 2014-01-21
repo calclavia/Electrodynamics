@@ -259,7 +259,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				if (tile instanceof IBelt)
 				{
 					connections[dir.ordinal()] = tile;
-					this.getNetwork().merge(((IBelt) tile).getNetwork());
+					getNetwork().merge(((IBelt) tile).getNetwork());
 					didRefresh = true;
 				}
 			}
@@ -282,13 +282,13 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	@Override
 	public void invalidate()
 	{
-		this.getNetwork().split(this);
+		getNetwork().split(this);
 		super.invalidate();
 	}
 
 	public float getMoveVelocity()
 	{
-		return Math.max(this.getNetwork().getAngularVelocity(), this.getNetwork().getPrevAngularVelocity());
+		return Math.max(getNetwork().getAngularVelocity(), getNetwork().getPrevAngularVelocity());
 	}
 
 	@Override
@@ -296,13 +296,4 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	{
 		return 0.5f;
 	}
-
-	@Override
-	public IMechanicalNetwork getNetwork(ForgeDirection from)
-	{
-		if (from != this.getDirection() && from != this.getDirection().getOpposite())
-			return getNetwork();
-		return null;
-	}
-
 }

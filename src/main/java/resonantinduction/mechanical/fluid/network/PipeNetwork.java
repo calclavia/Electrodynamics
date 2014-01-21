@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPipe;
+import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 
@@ -120,6 +121,12 @@ public class PipeNetwork extends FluidNetwork
 	public FluidStack drain(IFluidConnector source, ForgeDirection from, int resource, boolean doDrain)
 	{
 		return null;
+	}
+
+	@Override
+	public Class getConnectorClass()
+	{
+		return IFluidPipe.class;
 	}
 
 	@Override

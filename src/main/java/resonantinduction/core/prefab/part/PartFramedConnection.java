@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.net.INodeNetwork;
 import universalelectricity.api.vector.Vector3;
@@ -198,7 +199,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	@Override
 	public void bind(TileMultipart t)
 	{
-		if ( this.getNetwork() != null)
+		if (this.getNetwork() != null)
 		{
 			getNetwork().getConnectors().remove(this);
 			super.bind(t);
@@ -456,6 +457,12 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	public void setNetwork(N network)
 	{
 		this.network = network;
+	}
+
+	@Override
+	public IConnector<N> getInstance(ForgeDirection dir)
+	{
+		return this;
 	}
 
 }

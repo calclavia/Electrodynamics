@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
+import resonantinduction.api.fluid.IFluidPipe;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
 import universalelectricity.core.net.NodeNetwork;
@@ -184,6 +185,12 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 			this.tank = new FluidTank(0);
 		}
 		return this.tank;
+	}
+
+	@Override
+	public Class getConnectorClass()
+	{
+		return IFluidConnector.class;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.net.IConnector;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -67,11 +68,6 @@ public class TraitConductor extends TileMultipart implements IConductor
 	@Override
 	public IEnergyNetwork getNetwork()
 	{
-		for (IConductor conductor : this.ueInterfaces)
-		{
-			return conductor.getNetwork();
-		}
-
 		return null;
 	}
 
@@ -108,14 +104,11 @@ public class TraitConductor extends TileMultipart implements IConductor
 		{
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				// if (dir != from.getOpposite())
-				{
-					TMultiPart part = this.partMap(dir.ordinal());
+				TMultiPart part = this.partMap(dir.ordinal());
 
-					if (this.ueInterfaces.contains(part))
-					{
-						return ((IConductor) part).onReceiveEnergy(from, receive, doReceive);
-					}
+				if (this.ueInterfaces.contains(part))
+				{
+					return ((IConductor) part).onReceiveEnergy(from, receive, doReceive);
 				}
 			}
 		}
@@ -163,5 +156,27 @@ public class TraitConductor extends TileMultipart implements IConductor
 		}
 
 		return capacitance;
+	}
+
+	@Override
+	public IConnector<IEnergyNetwork> getInstance(ForgeDirection from)
+	{
+		/**
+		 * Try out different sides to try to inject energy into.
+		 */
+		if (this.partMap(from.ordinal()) == null)
+		{
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			{
+				TMultiPart part = this.partMap(dir.ordinal());
+
+				if (this.ueInterfaces.contains(part))
+				{
+					return ((IConductor) part).getInstance(from);
+				}
+			}
+		}
+
+		return null;
 	}
 }

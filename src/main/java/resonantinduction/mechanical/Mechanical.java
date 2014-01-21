@@ -24,6 +24,8 @@ import resonantinduction.mechanical.logistic.BlockRejector;
 import resonantinduction.mechanical.logistic.TileDetector;
 import resonantinduction.mechanical.logistic.TileManipulator;
 import resonantinduction.mechanical.logistic.TileRejector;
+import resonantinduction.mechanical.network.IMechanical;
+import resonantinduction.mechanical.network.PacketNetwork;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
@@ -78,6 +80,8 @@ public class Mechanical
 
 	public static Item itemPipe;
 	public static Item itemPipeGuage;
+
+	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)

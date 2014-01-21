@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.gear;
 
+import calclavia.lib.prefab.block.BlockAdvanced;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
@@ -48,9 +49,21 @@ public class PartGear extends PartMechanical implements IMechanical
 	{
 		System.out.println(world().isRemote + ": " + getNetwork());
 
-		if (player.isSneaking())
+		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), tile().xCoord, tile().yCoord, tile().zCoord))
 		{
-			this.manualCrankTime = 20;
+			if (player.isSneaking())
+			{
+				if (!world().isRemote)
+				{
+					setClockwise(!isClockwise());
+					player.addChatMessage("Flipped gear to rotate " + (isClockwise() ? "clockwise" : "anticlockwise") + ".");
+				}
+			}
+			else
+			{
+
+				this.manualCrankTime = 20;
+			}
 		}
 
 		return false;

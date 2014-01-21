@@ -43,7 +43,7 @@ public class TileTank extends TileFluidNetwork
 		{
 			if (tileEntity instanceof TileTank)
 			{
-				this.getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
+				getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
 				this.setRenderSide(side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}

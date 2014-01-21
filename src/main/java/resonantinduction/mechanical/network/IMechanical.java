@@ -6,18 +6,17 @@ import universalelectricity.api.net.IConnector;
 public interface IMechanical extends IConnector<IMechanicalNetwork>
 {
 	/**
-	 * Uses this connector to send a packet to the client for the network.
-	 * 
-	 * @return True if the packet was successfully sent.
-	 */
-	public boolean sendNetworkPacket(long torque, float angularVelocity);
-
-	/**
 	 * The percentage of resistance caused by this connector.
 	 * 
 	 * @return A small value, most likely less than one.
 	 */
 	public float getResistance();
+
+	/**
+	 * 
+	 * @return int[4]: x,y,z,direction
+	 */
+	public int[] getLocation();
 
 	/**
 	 * @return Is the mechanical machine going clockwise currently?
@@ -30,13 +29,4 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 	 * @return Return true if the mechanical block should have its rotation set inveresed.
 	 */
 	public boolean isRotationInversed();
-
-	public IMechanicalNetwork getNetwork(ForgeDirection from);
-
-	/**
-	 * Gets the instance of this mechanical through ForgeMultipart
-	 * 
-	 * @return
-	 */
-	public IMechanical getInstance(ForgeDirection from);
 }

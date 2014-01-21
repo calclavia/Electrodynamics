@@ -88,18 +88,8 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	public IMechanicalNetwork getNetwork()
 	{
-		TMultiPart part = this.partMap(from.ordinal());
-
-		if (part != null)
-		{
-			if (part instanceof IMechanical)
-			{
-				return ((IMechanical) part).getNetwork();
-			}
-		}
-
 		return null;
 	}
 
@@ -117,24 +107,13 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 		}
 
 		return null;
-	}
 
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		return null;
 	}
 
 	@Override
 	public void setNetwork(IMechanicalNetwork network)
 	{
 
-	}
-
-	@Override
-	public boolean sendNetworkPacket(long torque, float angularVelocity)
-	{
-		return false;
 	}
 
 	@Override
@@ -147,5 +126,11 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	public boolean isRotationInversed()
 	{
 		return false;
+	}
+
+	@Override
+	public int[] getLocation()
+	{
+		return null;
 	}
 }

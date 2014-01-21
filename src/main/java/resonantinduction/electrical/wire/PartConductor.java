@@ -13,6 +13,7 @@ import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.net.IConnector;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.multipart.TMultiPart;
@@ -168,6 +169,12 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		}
 
 		super.preRemove();
+	}
+
+	@Override
+	public IConnector<IEnergyNetwork> getInstance(ForgeDirection dir)
+	{
+		return this;
 	}
 
 	@Override

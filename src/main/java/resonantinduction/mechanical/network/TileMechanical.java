@@ -13,12 +13,6 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	private boolean isClockwise = false;
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return false;
-	}
-
-	@Override
 	public Object[] getConnections()
 	{
 		return connections;
@@ -42,9 +36,9 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public boolean sendNetworkPacket(long torque, float angularVelocity)
+	public int[] getLocation()
 	{
-		return false;
+		return new int[] { xCoord, yCoord, zCoord, 0 };
 	}
 
 	@Override

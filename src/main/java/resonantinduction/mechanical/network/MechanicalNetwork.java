@@ -2,15 +2,22 @@ package resonantinduction.mechanical.network;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
+import calclavia.lib.network.IPacketReceiver;
+
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -28,7 +35,7 @@ import universalelectricity.core.net.NetworkTickHandler;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
+public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IPacketReceiver, IUpdate
 {
 	private long prevTorque = 0;
 	private float prevAngularVelocity = 0;
@@ -72,9 +79,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 		for (IMechanical generatorNode : generators)
 		{
-			PathfinderRotationManager rotationPathfinder = new PathfinderRotationManager(generatorNode, closedSet);
-			rotationPathfinder.findNodes(generatorNode);
-			closedSet.addAll(rotationPathfinder.closedSet);
+			if (generatorNode != null)
+			{
+				PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(generatorNode, this, closedSet);
+				rotationPathfinder.findNodes(generatorNode);
+				closedSet.addAll(rotationPathfinder.closedSet);
+				sendRotationUpdatePacket(generatorNode);
+			}
 		}
 
 		generators.clear();
@@ -91,18 +102,10 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		/**
 		 * Update all connectors
 		 */
-		if (markPacketUpdate || getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
+		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
 		{
-			/**
-			 * Send network update packet for connectors.
-			 */
-			for (IMechanical connector : this.getConnectors())
-			{
-				if (connector.sendNetworkPacket(torque, angularVelocity))
-				{
-					break;
-				}
-			}
+			sendNetworkPacket();
+			markPacketUpdate = false;
 		}
 
 		prevTorque = torque;
@@ -121,6 +124,53 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public boolean continueUpdate()
 	{
 		return canUpdate();
+	}
+
+	/**
+	 * Send network update packet for connectors.
+	 */
+	public void sendNetworkPacket()
+	{
+		for (IMechanical connector : this.getConnectors())
+		{
+			if (connector instanceof TileEntity)
+			{
+				int[] location = connector.getLocation();
+				PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 0, torque, angularVelocity));
+				break;
+			}
+		}
+	}
+
+	public void sendRotationUpdatePacket(IMechanical connector)
+	{
+		int[] location = connector.getLocation();
+		PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 1, connector.isClockwise()));
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		try
+		{
+			switch (data.readByte())
+			{
+				case 0:
+					setPower(data.readLong(), data.readFloat());
+					break;
+				case 1:
+					IMechanical updateNode = (IMechanical) extra[0];
+					updateNode.setClockwise(data.readBoolean());
+					PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(updateNode, this, null);
+					rotationPathfinder.findNodes(updateNode);
+					System.out.println("UPDATE");
+					break;
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -182,7 +232,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		// Reset
 		prevTorque = torque = 0;
 		prevAngularVelocity = angularVelocity = 0;
-		load = 0;
+		load = 1;
 
 		super.reconstruct();
 	}
@@ -231,6 +281,12 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public IMechanicalNetwork newInstance()
 	{
 		return new MechanicalNetwork();
+	}
+
+	@Override
+	public Class getConnectorClass()
+	{
+		return IMechanical.class;
 	}
 
 	@Override

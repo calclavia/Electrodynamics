@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -193,5 +194,11 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public void onWrongVoltage(ForgeDirection direction, long voltage)
 	{
 
+	}
+
+	@Override
+	public IConnector<BatteryNetwork> getInstance(ForgeDirection from)
+	{
+		return this;
 	}
 }

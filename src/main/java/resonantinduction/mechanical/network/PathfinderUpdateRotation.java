@@ -19,35 +19,38 @@ import universalelectricity.core.net.ConnectionPathfinder;
  * @author Calclavia
  * 
  */
-public class PathfinderRotationManager extends ConnectionPathfinder<IMechanical>
+public class PathfinderUpdateRotation extends ConnectionPathfinder<IMechanical>
 {
-	private boolean currentIsClockwise = true;
+	private boolean currentRotationFlag = true;
 	private Set<IMechanical> prevClosedSet;
+	private IMechanicalNetwork network;
 
-	public PathfinderRotationManager(IMechanical first, Set<IMechanical> prevClosedSet)
+	public PathfinderUpdateRotation(IMechanical first, IMechanicalNetwork network, Set<IMechanical> prevClosedSet)
 	{
-		super(first);
-		this.currentIsClockwise = first.isClockwise();
+		super(IMechanical.class, first);
+		this.currentRotationFlag = first.isClockwise();
 		this.prevClosedSet = prevClosedSet;
+		this.network = network;
 	}
 
 	public boolean findNodes(IMechanical currentNode)
 	{
 		this.closedSet.add(currentNode);
 
-		currentNode.setClockwise(currentIsClockwise);
+		currentNode.setClockwise(currentRotationFlag);
 
 		for (IMechanical node : this.getConnectedNodes(currentNode))
 		{
 			if (!this.closedSet.contains(node))
 			{
-				if (prevClosedSet.contains(node) && node.isClockwise() != currentNode.isClockwise())
+				currentRotationFlag = (node.isRotationInversed() && currentNode.isRotationInversed()) ? !currentNode.isClockwise() : currentNode.isClockwise();
+
+				if ((prevClosedSet != null && prevClosedSet.contains(node)) && (node.isClockwise() != currentRotationFlag))
 				{
-					// We have conflicting gears. Network is now equal.
-					currentNode.getNetwork().setPower(0, 0);
+					// We have conflicting rotations. Network is now stuck.
+					network.setPower(0, 0);
 				}
 
-				currentIsClockwise = (node.isRotationInversed() && currentNode.isRotationInversed()) ? !currentNode.isClockwise() : currentNode.isClockwise();
 				findNodes(node);
 			}
 		}

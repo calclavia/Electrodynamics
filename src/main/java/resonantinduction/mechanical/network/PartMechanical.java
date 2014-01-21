@@ -20,7 +20,6 @@ import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -104,18 +103,16 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	public void refresh()
 	{
 		/** Look for gears that are back-to-back with this gear. Equate torque. */
-		universalelectricity.api.vector.Vector3 vec = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide);
+		TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
 
-		TileEntity tile = vec.getTileEntity(world());
-
-		if (tile instanceof IMechanical)
+		if (tileBehind instanceof IMechanical)
 		{
-			IMechanicalNetwork networkToMerge = ((IMechanical) tile).getNetwork(this.placementSide.getOpposite());
+			IMechanical instance = (IMechanical) ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
 
-			if (networkToMerge != null)
+			if (instance != null && instance.canConnect(placementSide))
 			{
-				connections[this.placementSide.getOpposite().ordinal()] = ((IMechanical) tile).getInstance(this.placementSide.getOpposite());
-				getNetwork().merge(networkToMerge);
+				connections[placementSide.getOpposite().ordinal()] = instance;
+				getNetwork().merge(instance.getNetwork());
 			}
 
 		}
@@ -124,18 +121,16 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		for (int i = 0; i < 4; i++)
 		{
 			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
-			universalelectricity.api.vector.Vector3 checkVec = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir);
-
-			TileEntity checkTile = checkVec.getTileEntity(world());
+			TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 
 			if (checkTile instanceof IMechanical)
 			{
-				IMechanicalNetwork networkToMerge = ((IMechanical) checkTile).getNetwork(this.placementSide);
+				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
 
-				if (networkToMerge != null)
+				if (instance != null && instance.canConnect(placementSide.getOpposite()))
 				{
-					connections[checkDir.ordinal()] = ((IMechanical) checkTile).getInstance(this.placementSide);
-					getNetwork().merge(networkToMerge);
+					connections[checkDir.ordinal()] = instance;
+					getNetwork().merge(instance.getNetwork());
 				}
 			}
 		}
@@ -144,27 +139,20 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-			IMechanicalNetwork networkToMerge = ((IMechanical) tile()).getNetwork(checkDir);
+			IMechanical instance = (IMechanical) ((IMechanical) tile()).getInstance(checkDir);
 
-			if (networkToMerge != null)
+			if (instance != null && instance.canConnect(checkDir.getOpposite()))
 			{
-				connections[checkDir.ordinal()] = ((IMechanical) tile()).getInstance(checkDir);
-				getNetwork().merge(networkToMerge);
+				connections[checkDir.ordinal()] = instance;
+				getNetwork().merge(instance.getNetwork());
 			}
 		}
-
 		getNetwork().reconstruct();
 
 		if (!world().isRemote)
 		{
-			sendRefreshPacket();
+			sendRotationPacket();
 		}
-	}
-
-	@Override
-	public IMechanicalNetwork getNetwork(ForgeDirection from)
-	{
-		return getNetwork();
 	}
 
 	@Override
@@ -180,23 +168,11 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	/** Packet Code. */
-
-	@Override
-	public boolean sendNetworkPacket(long torque, float angularVelocity)
+	public void sendRotationPacket()
 	{
 		if (world() != null && !world().isRemote && tile() != null)
 		{
-			tile().getWriteStream(this).writeByte(0).writeLong(torque).writeFloat(angularVelocity).writeBoolean(isClockwise);
-		}
-
-		return true;
-	}
-
-	public void sendRefreshPacket()
-	{
-		if (world() != null && !world().isRemote && tile() != null)
-		{
-			tile().getWriteStream(this).writeByte(1);
+			tile().getWriteStream(this).writeByte(0).writeBoolean(isClockwise);
 		}
 	}
 
@@ -204,12 +180,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	{
 		if (packetID == 0)
 		{
-			getNetwork().setPower(packet.readLong(), packet.readFloat());
+			refresh();
 			isClockwise = packet.readBoolean();
-		}
-		else if (packetID == 1)
-		{
-			this.refresh();
 		}
 	}
 
@@ -236,7 +208,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return new universalelectricity.api.vector.Vector3(this.x() + direction.offsetX, this.y() + direction.offsetY, this.z() + direction.offsetZ).getTileEntity(this.world()) instanceof IMechanical;
+		return true;
 	}
 
 	@Override
@@ -343,4 +315,9 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		return getItem();
 	}
 
+	@Override
+	public int[] getLocation()
+	{
+		return new int[] { x(), y(), z(), placementSide.ordinal() };
+	}
 }

@@ -17,6 +17,7 @@ import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
@@ -315,4 +316,9 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 		return null;
 	}
 
+	@Override
+	public IFluidConnector getInstance(ForgeDirection from)
+	{
+		return this;
+	}
 }

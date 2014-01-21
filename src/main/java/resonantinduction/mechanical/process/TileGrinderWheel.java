@@ -179,10 +179,8 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	}
 
 	@Override
-	public IMechanicalNetwork getNetwork(ForgeDirection from)
+	public boolean canConnect(ForgeDirection from)
 	{
-		if (from != this.getDirection() && from != this.getDirection().getOpposite())
-			return getNetwork();
-		return null;
+		return from != this.getDirection() && from != this.getDirection().getOpposite();
 	}
 }
