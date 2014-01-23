@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia
  */
-public class BlockEngineeringTable extends BlockRI
+public class BlockEngineeringTable extends BlockRIRotatable
 {
 	@SideOnly(Side.CLIENT)
 	private Icon iconTop;
@@ -202,18 +202,18 @@ public class BlockEngineeringTable extends BlockRI
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int par1, int par2)
+	public Icon getIcon(int side, int meta)
 	{
-		return par1 == 1 ? this.iconTop : (par1 == 0 ? this.blockIcon : (par1 != 2 && par1 != 4 ? this.blockIcon : this.iconFront));
+		return side == 1 ? this.iconTop : (side == meta ? this.iconFront : this.blockIcon);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName() + "_side");
 		this.iconTop = par1IconRegister.registerIcon(this.getTextureName() + "_top");
 		this.iconFront = par1IconRegister.registerIcon(this.getTextureName() + "_front");
+		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName() + "_side");
 	}
 
 	@Override

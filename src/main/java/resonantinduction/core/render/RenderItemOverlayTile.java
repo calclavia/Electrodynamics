@@ -36,6 +36,12 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, int matrixX, int matrixZ, double x, double y, double z)
 	{
+		GL11.glPushMatrix();
+
+		GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
+		RenderUtility.rotateBlockBasedOnDirection(ForgeDirection.getOrientation(tileEntity.getBlockMetadata()));
+		GL11.glTranslated(-0.5f, -0.5f, -0.5f);
+
 		/**
 		 * Render the Crafting Matrix
 		 */
@@ -52,7 +58,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		{
 			if (inventory[i] != null)
 			{
-				Vector3 translation = new Vector3(x + (double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), y + 1.1, z + (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ)));
+				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ)));
 				GL11.glPushMatrix();
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
@@ -64,6 +70,8 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 					RenderUtility.renderFloatingText("" + inventory[i].stackSize, (float) translation.x, (float) translation.y - 2f, (float) translation.z);
 			}
 		}
+		GL11.glPopMatrix();
+
 	}
 
 	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
