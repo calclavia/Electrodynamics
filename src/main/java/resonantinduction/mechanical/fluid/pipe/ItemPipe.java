@@ -18,6 +18,8 @@ public class ItemPipe extends ItemMultipartBase
 	public ItemPipe()
 	{
 		super("pipe", Settings.getNextItemID());
+		this.setHasSubtypes(true);
+		this.setMaxDamage(0);
 	}
 
 	@Override
