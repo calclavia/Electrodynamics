@@ -43,12 +43,16 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		 * Render the Crafting Matrix
 		 */
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		MovingObjectPosition objectPosition = player.rayTrace(8, 1);
 		boolean isLooking = false;
 
-		if (objectPosition != null)
+		if (player.isSneaking())
 		{
-			isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
+			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+
+			if (objectPosition != null)
+			{
+				isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
+			}
 		}
 
 		for (int i = 0; i < (matrixX * matrixZ); i++)
@@ -135,18 +139,19 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				}
 
 				float scale = 0.03125F;
-				GL11.glScalef(0.6f * scale, 0.6f * scale, 0);
+				GL11.glScalef(0.6f * scale, 0.6f * scale, -0.00001f);
 				GL11.glRotatef(180, 0, 0, 1);
 
 				TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
 				GL11.glDisable(2896);
+
 				if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
 				{
 					renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
 				}
-				GL11.glEnable(2896);
 
+				GL11.glEnable(2896);
 				GL11.glPopMatrix();
 			}
 

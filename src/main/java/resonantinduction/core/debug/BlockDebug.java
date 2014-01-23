@@ -120,10 +120,10 @@ public class BlockDebug extends BlockRI implements IBlockInfo
 
     public static enum DebugBlocks
     {
-        SOURCE("UnlimitedPower", TileEntityInfSupply.class, "infSource"),
-        FLUID("UnlimitedFluid", TileEntityInfFluid.class, "infFluid"),
-        VOID("FluidVoid", TileEntityVoid.class, "void"),
-        LOAD("PowerVampire", TileEntityInfLoad.class, "infLoad");
+        SOURCE("UnlimitedPower", TileInfiniteEnergySource.class, "infSource"),
+        FLUID("UnlimitedFluid", TileInfiniteFluidSource.class, "infFluid"),
+        VOID("FluidVoid", TileInfiniteFluidSink.class, "void"),
+        LOAD("PowerVampire", TileInfiniteEnergySink.class, "infLoad");
         public Icon icon;
         public String name;
         public String texture;

@@ -3,7 +3,6 @@ package resonantinduction.core.debug;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -15,11 +14,12 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.multiblock.fake.IBlockActivate;
+import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
 
 import com.builtbroken.common.lang.TextHelper.TextColor;
 
-public class TileEntityInfFluid extends TileEntity implements IFluidHandler, IBlockActivate
+public class TileInfiniteFluidSource extends TileAdvanced implements IFluidHandler, IBlockActivate
 {
 	FluidTank tank = new FluidTank(Integer.MAX_VALUE);
 	boolean autoEmpty = false;

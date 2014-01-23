@@ -2,20 +2,20 @@ package resonantinduction.core.debug;
 
 import java.util.HashMap;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
 /**
  * Designed to debug fluid devices by draining everything that comes in at one time
  * 
  * @author DarkGuardsman
  */
-public class TileEntityVoid extends TileEntity implements IFluidHandler
+public class TileInfiniteFluidSink extends TileAdvanced implements IFluidHandler
 {
 	// TODO later add to this to make it actually have an ingame use other than debug
 	public static HashMap<FluidStack, Long> storage = new HashMap<FluidStack, Long>();
