@@ -37,6 +37,7 @@ public class BlockEngineeringTable extends BlockRIRotatable
 	public BlockEngineeringTable()
 	{
 		super("engineeringTable");
+		setBlockBounds(0, 0, 0, 1, 0.9f, 1);
 	}
 
 	@Override

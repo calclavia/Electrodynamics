@@ -22,7 +22,7 @@ public class RenderEngineeringTable extends RenderItemOverlayTile
 		{
 			TileEngineeringTable tile = (TileEngineeringTable) tileEntity;
 			renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
-			renderTopOverlay(tileEntity, tile.craftingMatrix, tile.getDirection(), x, y, z);
+			renderTopOverlay(tileEntity, tile.craftingMatrix, tile.getDirection(), x, y - 0.1, z);
 		}
 	}
 }
