@@ -69,6 +69,7 @@ public class BlockArmbot extends BlockRI implements IBlockInfo
 			((TileArmbot) tileEntity).dropHeldObject();
 			CalclaviaLoader.blockMulti.destroyMultiBlockStructure((TileArmbot) tileEntity);
 		}
+		
 		this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this));
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
