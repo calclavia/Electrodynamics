@@ -100,13 +100,13 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		boolean doPacketUpdate = this.energy.getEnergy() > 0;
 
 		/**
-		 * Only transfer if it is the bottom controlling Tesla tower.
+		 * Only transfer if it is the controlling Tesla tower.
 		 */
 		if (this.getMultiBlock().isPrimary())
 		{
-			// this.produce();
+			this.produce();
 
-			if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (this.energy.getEnergy() > 0 && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
+			if (this.ticks % (4 + this.worldObj.rand.nextInt(2)) == 0 && ((this.worldObj.isRemote && isTransfering) || (!this.energy.isEmpty() && !this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord))))
 			{
 				final TileTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
@@ -142,28 +142,31 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				}
 				else
 				{
+					/**
+					 * Normal transportation
+					 */
 					List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
 
-					for (ITesla tesla : TeslaGrid.instance().get())
+					for (ITesla teslaReceiver : TeslaGrid.instance().get())
 					{
-						if (new Vector3((TileEntity) tesla).distance(new Vector3(this)) < this.getRange())
+						if (new Vector3((TileEntity) teslaReceiver).distance(new Vector3(this)) < this.getRange())
 						{
+							if (teslaReceiver instanceof TileTesla)
+							{
+								if (((TileTesla) teslaReceiver).getHeight() <= 1)
+								{
+									continue;
+								}
+
+								teslaReceiver = ((TileTesla) teslaReceiver).getMultiBlock().get();
+							}
+
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(tesla) && tesla.canTeslaTransfer(this))
+							if (!this.connectedTeslas.contains(teslaReceiver) && teslaReceiver.canTeslaTransfer(this))
 							{
-								if (tesla instanceof TileTesla)
-								{
-									if (((TileTesla) tesla).getHeight() <= 1)
-									{
-										continue;
-									}
-
-									tesla = getMultiBlock().get();
-								}
-
-								transferTeslaCoils.add(tesla);
+								transferTeslaCoils.add(teslaReceiver);
 							}
 						}
 					}
@@ -218,6 +221,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 							}
 
 							double distance = topTeslaVector.distance(targetVector);
+
 							// TODO: Fix color.
 							Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
 
@@ -269,7 +273,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	{
 		if (transferEnergy > 0)
 		{
-			tesla.teslaTransfer((long) (transferEnergy * (1 - (this.worldObj.rand.nextFloat() * 0.1f))), true);
+			tesla.teslaTransfer(transferEnergy, true);
 			this.teslaTransfer(-transferEnergy, true);
 		}
 	}
@@ -277,7 +281,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	@Override
 	public boolean canTeslaTransfer(TileEntity tileEntity)
 	{
-		return this.canReceive && !this.outputBlacklist.contains(tileEntity);
+		return canReceive && tileEntity != getMultiBlock().get() && !this.outputBlacklist.contains(tileEntity);
 	}
 
 	@Override
@@ -390,13 +394,9 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 	public void updatePositionStatus()
 	{
-		Vector3[] vecs = getMultiBlockVectors();
-
-		if (vecs.length > 0)
-		{
-			((TileTesla) vecs[vecs.length - 1].getTileEntity(worldObj)).getMultiBlock().deconstruct();
-			((TileTesla) vecs[vecs.length - 1].getTileEntity(worldObj)).getMultiBlock().construct();
-		}
+		TileTesla mainTile = getLowestTesla();
+		mainTile.getMultiBlock().deconstruct();
+		mainTile.getMultiBlock().construct();
 
 		boolean isTop = new Vector3(this).translate(new Vector3(0, 1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
 		boolean isBottom = new Vector3(this).translate(new Vector3(0, -1, 0)).getTileEntity(this.worldObj) instanceof TileTesla;
@@ -636,7 +636,31 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 			if (t instanceof TileTesla)
 			{
-				checkPosition.add(new Vector3(t).subtract(getPosition()));
+				vectors.add(checkPosition.clone().subtract(getPosition()));
+			}
+			else
+			{
+				break;
+			}
+
+			checkPosition.y++;
+		}
+
+		return vectors.toArray(new Vector3[0]);
+	}
+
+	public TileTesla getLowestTesla()
+	{
+		TileTesla lowest = this;
+		Vector3 checkPosition = new Vector3(this);
+
+		while (true)
+		{
+			TileEntity t = checkPosition.getTileEntity(this.worldObj);
+
+			if (t instanceof TileTesla)
+			{
+				lowest = (TileTesla) t;
 			}
 			else
 			{
@@ -646,7 +670,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 			checkPosition.y--;
 		}
 
-		return vectors.toArray(new Vector3[0]);
+		return lowest;
 	}
 
 	@Override
@@ -668,5 +692,29 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 			multiBlock = new MultiBlockHandler<TileTesla>(this);
 
 		return multiBlock;
+	}
+
+	@Override
+	public void setIO(ForgeDirection dir, int type)
+	{
+		if (getMultiBlock().isPrimary())
+		{
+			super.setIO(dir, type);
+		}
+		else
+		{
+			getMultiBlock().get().setIO(dir, type);
+		}
+	}
+
+	@Override
+	public int getIO(ForgeDirection dir)
+	{
+		if (getMultiBlock().isPrimary())
+		{
+			return super.getIO(dir);
+		}
+
+		return getMultiBlock().get().getIO(dir);
 	}
 }

@@ -79,7 +79,7 @@ public class BlockTesla extends BlockIOBase implements ITileEntityProvider
 		{
 			boolean receiveMode = tileEntity.toggleReceive();
 
-			if (world.isRemote)
+			if (!world.isRemote)
 			{
 				entityPlayer.addChatMessage(LanguageUtility.getLocal("message.tesla.mode").replace("%v", receiveMode + ""));
 			}

@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import mffs.api.fortron.IServerThread;
+import net.minecraft.server.ServerListenThread;
+import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -57,7 +60,9 @@ public class TeslaGrid
 
 	public static TeslaGrid instance()
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+		Thread thr = Thread.currentThread();
+
+		if ((thr instanceof ThreadMinecraftServer) || (thr instanceof ServerListenThread) || (thr instanceof IServerThread))
 		{
 			return INSTANCE_SERVER;
 		}
