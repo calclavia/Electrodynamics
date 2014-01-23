@@ -29,6 +29,7 @@ import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
+import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
@@ -47,7 +48,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFacePart, JNormalOcclusion
+public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFacePart, JNormalOcclusion, IRedstonePart
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
@@ -95,7 +96,7 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		player.openGui(ResonantInduction.INSTANCE, this.side, world(), x(), y(), z());
+		player.openGui(Electrical.INSTANCE, side, world(), x(), y(), z());
 		return true;
 	}
 
@@ -139,7 +140,7 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 				if (outputRedstone != redstoneOn)
 				{
 					redstoneOn = outputRedstone;
-					this.tile().notifyTileChange();
+					tile().notifyPartChange(this);
 				}
 
 				if (prevDetectedEnergy != detectedEnergy)
@@ -268,21 +269,8 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 		}
 		else
 		{
-			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), getPartID()));
+			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), side));
 		}
-	}
-
-	public int getPartID()
-	{
-		for (int i = 0; i < this.tile().partList().size(); i++)
-		{
-			if (this.tile().partMap(i) == this)
-			{
-				return i;
-			}
-		}
-
-		return 0;
 	}
 
 	@Override
@@ -351,7 +339,7 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 	@Override
 	public int redstoneConductionMap()
 	{
-		return 0;
+		return 0x1F;
 	}
 
 	@Override
@@ -387,6 +375,24 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 		{
 			RenderMultimeter.render(this, pos.x, pos.y, pos.z);
 		}
+	}
+
+	@Override
+	public boolean canConnectRedstone(int arg0)
+	{
+		return true;
+	}
+
+	@Override
+	public int strongPowerLevel(int arg0)
+	{
+		return redstoneOn ? 14 : 0;
+	}
+
+	@Override
+	public int weakPowerLevel(int arg0)
+	{
+		return redstoneOn ? 14 : 0;
 	}
 
 }
