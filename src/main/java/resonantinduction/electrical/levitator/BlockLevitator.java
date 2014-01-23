@@ -8,23 +8,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockLevitator extends BlockRI
+public class BlockLevitator extends BlockRIRotatable
 {
 	public BlockLevitator()
 	{
 		super("levitator");
 		this.setTextureName(Reference.PREFIX + "machine");
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType()
-	{
-		return RIBlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override
@@ -84,6 +78,13 @@ public class BlockLevitator extends BlockRI
 				}
 			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RIBlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override

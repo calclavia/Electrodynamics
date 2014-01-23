@@ -239,6 +239,8 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				}
 			}
 		}
+		
+		onInventoryChanged();
 	}
 
 	/**
