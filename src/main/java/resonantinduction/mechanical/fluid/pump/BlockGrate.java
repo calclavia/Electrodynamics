@@ -56,10 +56,10 @@ public class BlockGrate extends BlockRIRotatable
 	{
 		if (side == metadata)
 		{
-			return this.drainIcon;
+			return blockIcon;
 		}
 
-		return this.blockIcon;
+		return drainIcon;
 	}
 
 	@Override
@@ -72,18 +72,11 @@ public class BlockGrate extends BlockRIRotatable
 		{
 			if (dir == ((TileGrate) entity).getDirection())
 			{
-				if (((TileGrate) entity).canDrain())
-				{
-					return this.drainIcon;
-				}
-				else
-				{
-					return this.fillIcon;
-				}
+				return blockIcon;
 			}
 		}
 
-		return this.blockIcon;
+		return ((TileGrate) entity).canDrain() ? drainIcon : fillIcon;
 	}
 
 	@Override
@@ -95,7 +88,8 @@ public class BlockGrate extends BlockRIRotatable
 
 			if (tile instanceof TileGrate)
 			{
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Draining Sources? " + ((TileGrate) tile).canDrain()));
+				((TileGrate) tile).canDrain = !((TileGrate) tile).canDrain;
+				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Drain fluid mode: " + ((TileGrate) tile).canDrain()));
 			}
 
 			return true;

@@ -23,11 +23,9 @@ public class ItemPipeGauge extends ItemRI
 
 	public ItemPipeGauge()
 	{
-		super("PipeGuage");
+		super("pipeGuage");
 		this.setHasSubtypes(true);
-		this.setCreativeTab(CreativeTabs.tabTools);
 		this.setMaxStackSize(1);
-		this.setTextureName(Reference.PREFIX + "readout.PipeGauge");
 
 	}
 

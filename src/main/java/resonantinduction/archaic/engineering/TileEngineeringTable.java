@@ -239,7 +239,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				}
 			}
 		}
-		
+
 		onInventoryChanged();
 	}
 
@@ -301,57 +301,60 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public void onInventoryChanged()
 	{
-		if (!worldObj.isRemote)
+		if (worldObj != null)
 		{
-			this.inventory[CRAFTING_OUTPUT_SLOT] = null;
-
-			/** Try to craft from crafting grid. If not possible, then craft from imprint. */
-			boolean didCraft = false;
-
-			/** Simulate an Inventory Crafting Instance */
-			InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
-
-			ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
-
-			if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
+			if (!worldObj.isRemote)
 			{
-				this.inventory[CRAFTING_OUTPUT_SLOT] = matrixOutput;
-				didCraft = true;
-			}
+				this.inventory[CRAFTING_OUTPUT_SLOT] = null;
 
-			/**
-			 * If output does not exist, try using the filter.
-			 */
-			if (!didCraft)
-			{
-				ItemStack filterStack = craftingMatrix[4];// this.inventory[IMPRINT_SLOT];
+				/** Try to craft from crafting grid. If not possible, then craft from imprint. */
+				boolean didCraft = false;
 
-				if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
+				/** Simulate an Inventory Crafting Instance */
+				InventoryCrafting inventoryCrafting = this.getCraftingMatrix();
+
+				ItemStack matrixOutput = CraftingManager.getInstance().findMatchingRecipe(inventoryCrafting, this.worldObj);
+
+				if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 				{
-					Set<ItemStack> filters = ItemBlockImprint.getFilters(filterStack);
+					this.inventory[CRAFTING_OUTPUT_SLOT] = matrixOutput;
+					didCraft = true;
+				}
 
-					for (ItemStack outputStack : filters)
+				/**
+				 * If output does not exist, try using the filter.
+				 */
+				if (!didCraft)
+				{
+					ItemStack filterStack = craftingMatrix[4];// this.inventory[IMPRINT_SLOT];
+
+					if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
 					{
-						if (outputStack != null)
-						{
-							Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
+						Set<ItemStack> filters = ItemBlockImprint.getFilters(filterStack);
 
-							if (idealRecipe != null)
+						for (ItemStack outputStack : filters)
+						{
+							if (outputStack != null)
 							{
-								ItemStack recipeOutput = idealRecipe.left();
-								if (recipeOutput != null & recipeOutput.stackSize > 0)
+								Pair<ItemStack, ItemStack[]> idealRecipe = this.getCraftingManager().getIdealRecipe(outputStack);
+
+								if (idealRecipe != null)
 								{
-									this.inventory[CRAFTING_OUTPUT_SLOT] = recipeOutput;
-									didCraft = true;
-									break;
+									ItemStack recipeOutput = idealRecipe.left();
+									if (recipeOutput != null & recipeOutput.stackSize > 0)
+									{
+										this.inventory[CRAFTING_OUTPUT_SLOT] = recipeOutput;
+										didCraft = true;
+										break;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
 
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			}
 		}
 	}
 

@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -34,9 +36,13 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	private LiquidPathFinder pathDrain;
 	private LiquidPathFinder pathFill;
 
+	private Vector3 lastDrainOrigin;
+
+	public boolean canDrain = true;
+
 	public boolean canDrain()
 	{
-		return this.getBlockMetadata() < 6;
+		return canDrain;
 	}
 
 	public LiquidPathFinder getFillFinder()
@@ -82,17 +88,120 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			/* ONLY FIND NEW SOURCES IF OUR CURRENT LIST RUNS DRY */
 			if (this.getLiquidFinder().results.size() < TileGrate.MAX_WORLD_EDITS_PER_PROCESS + 10)
 			{
-				this.getLiquidFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, false);
+				this.getLiquidFinder().refresh().start(new Vector3(this).translate(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, false);
 			}
 
 			if (this.getFillFinder().results.size() < TileGrate.MAX_WORLD_EDITS_PER_PROCESS + 10)
 			{
-				this.getFillFinder().refresh().start(new Vector3(this).modifyPositionFromSide(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, true);
+				this.getFillFinder().refresh().start(new Vector3(this).translate(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, true);
 			}
 
+			/**
+			 * If we can drain, do the drain action.
+			 */
+			if (canDrain())
+			{
+				drainAroundArea(worldObj, new Vector3(this), 3);
+			}
 		}
 	}
 
+	/**
+	 * Drains an area starting at the given location
+	 * 
+	 * @param world - world to drain in, most cases will be the TileEntities world
+	 * @param loc - origin to start the path finder with. If this is an instance of IDrain this
+	 * method will act different
+	 */
+	public void drainAroundArea(World world, Vector3 vec, int update)
+	{
+		Vector3 origin = vec.clone();
+		if (origin == null)
+		{
+			return;
+		}
+
+		/* Update last drain origin to prevent failed path finding */
+		if (this.lastDrainOrigin == null || !this.lastDrainOrigin.equals(origin))
+		{
+			this.lastDrainOrigin = origin.clone();
+			this.getLiquidFinder().reset();
+		}
+
+		TileEntity drain = vec.clone().getTileEntity(world);
+		TileEntity originTile = null;
+
+		Set<Vector3> drainList = null;
+		if (drain instanceof IDrain)
+		{
+			if (!((IDrain) drain).canDrain(((IDrain) drain).getDirection()))
+			{
+				return;
+			}
+			origin = vec.translate(((IDrain) drain).getDirection());
+			originTile = origin.getTileEntity(world);
+
+			if (originTile instanceof IFluidHandler)
+			{
+				FluidStack draStack = ((IFluidHandler) originTile).drain(ForgeDirection.UP, MAX_WORLD_EDITS_PER_PROCESS * FluidContainerRegistry.BUCKET_VOLUME, false);
+
+				if (draStack != null && FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), draStack, false, ForgeDirection.DOWN) > 0)
+				{
+					((IFluidHandler) originTile).drain(ForgeDirection.UP, FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), draStack, true, ForgeDirection.DOWN), true);
+
+				}
+			}
+			else
+			{
+				drainList = ((IDrain) drain).getFluidList();
+			}
+		}
+
+		if (drainList == null)
+		{
+			if (this.getLiquidFinder().results.size() < MAX_WORLD_EDITS_PER_PROCESS + 10)
+			{
+				this.getLiquidFinder().setWorld(world).refresh().start(origin, MAX_WORLD_EDITS_PER_PROCESS, false);
+			}
+			drainList = this.getLiquidFinder().refresh().results;
+		}
+
+		if (originTile == null && drainList != null && drainList.size() > 0)
+		{
+			Iterator<Vector3> fluidList = drainList.iterator();
+
+			while (fluidList.hasNext())
+			{
+				if (this.currentWorldEdits >= MAX_WORLD_EDITS_PER_PROCESS)
+				{
+					break;
+				}
+
+				Vector3 drainLocation = fluidList.next();
+				FluidStack drainStack = FluidUtility.drainBlock(world, drainLocation, false, 3);
+
+				if (drainStack != null && this.fill(null, drainStack, false) >= drainStack.amount)
+				{
+					/* Remove the block that we drained. */
+					FluidUtility.drainBlock(this.worldObj, drainLocation, true, update);
+					this.fill(null, drainStack, true);
+					this.currentWorldEdits++;
+					fluidList.remove();
+
+					if (drain instanceof IDrain)
+					{
+						((IDrain) drain).onUse(drainLocation);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fills the area with fluid.
+	 * 
+	 * @return Amount filled
+	 */
 	public int fillArea(FluidStack resource, boolean doFill)
 	{
 		int fillVolume = 0;
@@ -106,8 +215,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			}
 
 			fillVolume = resource.amount;
-
-			// System.out.println("Drain>>FillArea>>Targets>> " + getFillFinder().results.size());
 
 			List<Vector3> fluids = new ArrayList<Vector3>();
 			List<Vector3> blocks = new ArrayList<Vector3>();
@@ -141,8 +248,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				{
 
 					fillVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, fillVolume), doFill);
-					// System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") +
-					// ">>Fluid>" + loc.toString());
 
 					if (doFill)
 					{
@@ -167,7 +272,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				if (FluidUtility.isFillableBlock(worldObj, loc))
 				{
 					fillVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, fillVolume), doFill);
-					System.out.println("Drain>>FillArea>>Filling>>" + (doFill ? "" : "Sim>>") + ">>Block>" + loc.toString());
 
 					if (doFill)
 					{
@@ -182,8 +286,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				}
 			}
 			this.getLiquidFinder().results.removeAll(filled);
-			// System.out.println("Drain>>FillArea>>Filling>>Filled>>" + (doFill ? "" : "Sim>>") +
-			// (resource.amount - fillVolume) + "mb");
 			return Math.max(resource.amount - fillVolume, 0);
 		}
 		return 0;
@@ -218,10 +320,16 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource == null || this.canDrain())
+		if (resource == null)
 		{
 			return 0;
 		}
+
+		if (canDrain())
+		{
+			return FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), resource, doFill);
+		}
+
 		return this.fillArea(resource, doFill);
 	}
 
@@ -234,7 +342,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -266,5 +373,19 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	public void onUse(Vector3 vec)
 	{
 		this.currentWorldEdits++;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		canDrain = nbt.getBoolean("canDrain");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("canDrain", canDrain);
 	}
 }
