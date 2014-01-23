@@ -36,7 +36,8 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 	private BatteryNetwork network;
 
-	public boolean markUpdate = false;
+	public boolean markClientUpdate = false;
+	public boolean markDistributionUpdate = false;
 
 	public TileBattery()
 	{
@@ -50,7 +51,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	 */
 	public static long getEnergyForTier(int tier)
 	{
-		return (long) Math.pow(1000000, tier + 1);
+		return (long) Math.pow(100000, tier + 1) + 900000;
 	}
 
 	@Override
@@ -74,9 +75,9 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 				}
 			}
 
-			this.energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().getConnectors().size());
-			this.getNetwork().redistribute();
-			markUpdate = true;
+			energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().getConnectors().size());
+			markDistributionUpdate = true;
+			markClientUpdate = true;
 		}
 	}
 
@@ -87,12 +88,13 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.produce() > 0)
+			if ((markDistributionUpdate || this.produce() > 0) && ticks % 5 == 0)
 			{
 				this.getNetwork().redistribute();
+				markDistributionUpdate = false;
 			}
 
-			if (markUpdate && ticks % 5 == 0)
+			if (markClientUpdate && ticks % 5 == 0)
 			{
 				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
@@ -103,9 +105,8 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
 		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
-		if (ticks % 5 == 0)
-			this.getNetwork().redistribute();
-		markUpdate = true;
+		markDistributionUpdate = true;
+		markClientUpdate = true;
 		return returnValue;
 	}
 
@@ -113,9 +114,8 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
 	{
 		long returnValue = super.onExtractEnergy(from, extract, doExtract);
-		if (ticks % 5 == 0)
-			this.getNetwork().redistribute();
-		markUpdate = true;
+		markDistributionUpdate = true;
+		markClientUpdate = true;
 		return returnValue;
 	}
 
