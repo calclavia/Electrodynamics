@@ -29,6 +29,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.slot.ISlotPickResult;
+import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.inventory.AutoCraftingManager;
 import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
@@ -36,7 +37,7 @@ import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
+public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, IRotatable, ISidedInventory, IArmbotUseable, ISlotPickResult, IAutoCrafter
 {
 	public static final int CRAFTING_MATRIX_END = 9;
 	public static final int CRAFTING_OUTPUT_END = CRAFTING_MATRIX_END + 1;
@@ -528,6 +529,18 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 
 		return slots;
+	}
+
+	@Override
+	public ForgeDirection getDirection()
+	{
+		return ForgeDirection.getOrientation(getBlockMetadata());
+	}
+
+	@Override
+	public void setDirection(ForgeDirection direction)
+	{
+		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
 	}
 
 }

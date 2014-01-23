@@ -46,7 +46,7 @@ public class RenderArmbot extends TileEntitySpecialRenderer implements ICustomBl
 				{
 					if (objectPosition.blockX == tileEntity.xCoord && (objectPosition.blockY == tileEntity.yCoord || objectPosition.blockY == tileEntity.yCoord + 1) && objectPosition.blockZ == tileEntity.zCoord)
 					{
-						RenderUtility.renderFloatingText(cmdText, (float) x + 0.5f, ((float) y) + 0.25f, (float) z + 0.5f, 0xFFFFFF);
+						RenderUtility.renderFloatingText(cmdText, new Vector3(x, y, z).add(0.5), 0xFFFFFF);
 					}
 				}
 			}

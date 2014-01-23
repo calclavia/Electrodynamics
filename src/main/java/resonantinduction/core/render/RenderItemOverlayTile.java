@@ -21,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -29,18 +30,14 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, double x, double y, double z)
+	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
 	{
-		renderTopOverlay(tileEntity, inventory, 3, 3, x, y, z);
+		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z);
 	}
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, int matrixX, int matrixZ, double x, double y, double z)
+	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
 	{
 		GL11.glPushMatrix();
-
-		GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
-		RenderUtility.rotateBlockBasedOnDirection(ForgeDirection.getOrientation(tileEntity.getBlockMetadata()));
-		GL11.glTranslated(-0.5f, -0.5f, -0.5f);
 
 		/**
 		 * Render the Crafting Matrix
@@ -51,15 +48,17 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 		if (objectPosition != null)
 		{
-			isLooking |= objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
+			isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
 		}
 
 		for (int i = 0; i < (matrixX * matrixZ); i++)
 		{
 			if (inventory[i] != null)
 			{
-				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ)));
+				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ))).translate(-0.5);
 				GL11.glPushMatrix();
+				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
+				RenderUtility.rotateBlockBasedOnDirection(dir);
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -67,7 +66,13 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 
 				if (isLooking)
-					RenderUtility.renderFloatingText("" + inventory[i].stackSize, (float) translation.x, (float) translation.y - 2f, (float) translation.z);
+				{
+					GL11.glPushMatrix();
+					GL11.glTranslated(x, y, z);
+					int angle = WorldUtility.getAngleFromForgeDirection(WorldUtility.invertX(dir));
+					RenderUtility.renderFloatingText("" + inventory[i].stackSize, translation.rotate(angle, Vector3.UP()).translate(0.5).translate(0, 0.3, 0));
+					GL11.glPopMatrix();
+				}
 			}
 		}
 		GL11.glPopMatrix();

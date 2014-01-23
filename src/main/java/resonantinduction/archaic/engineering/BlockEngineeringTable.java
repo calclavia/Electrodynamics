@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
@@ -58,10 +59,10 @@ public class BlockEngineeringTable extends BlockRIRotatable
 			{
 				IInventory inventory = (IInventory) tileEntity;
 
-				// PREVENTS OUTPUT FROM DROPPING!
-				for (int var6 = 0; var6 < inventory.getSizeInventory() - 1; ++var6)
+				// Don't drop the output, so subtract by one.
+				for (int i = 0; i < inventory.getSizeInventory() - 1; ++i)
 				{
-					ItemStack var7 = inventory.getStackInSlot(var6);
+					ItemStack var7 = inventory.getStackInSlot(i);
 
 					if (var7 != null)
 					{
@@ -92,6 +93,11 @@ public class BlockEngineeringTable extends BlockRIRotatable
 							var12.motionY = ((float) random.nextGaussian() * var13 + 0.2F);
 							var12.motionZ = ((float) random.nextGaussian() * var13);
 							world.spawnEntityInWorld(var12);
+
+							if (var7.stackSize <= 0)
+							{
+								inventory.setInventorySlotContents(i, null);
+							}
 						}
 					}
 				}
@@ -114,8 +120,13 @@ public class BlockEngineeringTable extends BlockRIRotatable
 			{
 				if (!world.isRemote)
 				{
-					Vector2 hitVector = new Vector2(hitX, hitZ);
+					Vector3 hitVector = new Vector3(hitX, 0, hitZ);
 					final double regionLength = 1d / 3d;
+
+					// Rotate the hit vector baed on direction of the tile.
+					hitVector.translate(new Vector3(-0.5, 0, -0.5));
+					hitVector.rotate(WorldUtility.getAngleFromForgeDirection(tile.getDirection()), Vector3.UP());
+					hitVector.translate(new Vector3(0.5, 0, 0.5));
 
 					/**
 					 * Crafting Matrix
@@ -127,7 +138,7 @@ public class BlockEngineeringTable extends BlockRIRotatable
 						{
 							Vector2 check = new Vector2(j, k).scale(regionLength);
 
-							if (check.distance(hitVector) < regionLength)
+							if (check.distance(hitVector.toVector2()) < regionLength)
 							{
 								int slotID = j * 3 + k;
 								interactCurrentItem(tile, slotID, player);
@@ -143,6 +154,9 @@ public class BlockEngineeringTable extends BlockRIRotatable
 			}
 			else if (hitSide != 0)
 			{
+				/**
+				 * Take out of engineering table.
+				 */
 				if (!world.isRemote && player.inventory.getCurrentItem() == null)
 				{
 					tile.setPlayerInventory(player.inventory);

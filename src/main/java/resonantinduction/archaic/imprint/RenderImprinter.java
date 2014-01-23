@@ -2,6 +2,7 @@ package resonantinduction.archaic.imprint;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +18,7 @@ public class RenderImprinter extends RenderItemOverlayTile
 		if (tileEntity instanceof TileImprinter)
 		{
 			TileImprinter tile = (TileImprinter) tileEntity;
-			renderTopOverlay(tileEntity, tile.inventory, x, y, z);
+			renderTopOverlay(tileEntity, tile.inventory, ForgeDirection.EAST, x, y, z);
 			renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
 		}
 	}
