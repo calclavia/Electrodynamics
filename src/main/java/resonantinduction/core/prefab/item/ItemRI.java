@@ -6,15 +6,15 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 
-/** @author AidanBrady */
-public class ItemBase extends Item
+/** @author Calclavia */
+public class ItemRI extends Item
 {
-	public ItemBase(String name)
+	public ItemRI(String name)
 	{
 		this(name, Settings.getNextItemID());
 	}
 
-	public ItemBase(String name, int id)
+	public ItemRI(String name, int id)
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
 		this.setCreativeTab(ResonantInductionTabs.CORE);

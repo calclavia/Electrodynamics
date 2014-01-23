@@ -18,7 +18,7 @@ import calclavia.lib.gui.IMessageBoxDialog;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 
-public class GuiEditTask extends GuiBase implements IMessageBoxDialog
+public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_task_edit.png");
 
@@ -30,7 +30,7 @@ public class GuiEditTask extends GuiBase implements IMessageBoxDialog
 	int getFocus = -1;
 	boolean newTask = false;
 
-	public GuiEditTask(GuiEncoderCoder gui, ITask task, boolean newTask)
+	public GuiEncoderEditTask(GuiEncoderCoder gui, ITask task, boolean newTask)
 	{
 		this.newTask = newTask;
 		this.ySize = 380 / 2;

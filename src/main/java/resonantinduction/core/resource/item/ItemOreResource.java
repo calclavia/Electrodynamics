@@ -6,7 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.core.prefab.item.ItemBase;
+import resonantinduction.core.prefab.item.ItemRI;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.nbt.NBTUtility;
@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class ItemOreResource extends ItemBase
+public class ItemOreResource extends ItemRI
 {
 	public ItemOreResource(int id, String name)
 	{

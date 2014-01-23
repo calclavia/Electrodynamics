@@ -12,7 +12,7 @@ import resonantinduction.electrical.encoder.TileEncoder;
 
 public class GuiEncoderCoder extends GuiEncoderBase
 {
-	private GuiTaskList taskListGui;
+	private GuiEncoderTaskList taskListGui;
 	GuiButtonImage left, right, up, down;
 	GuiButton newTask, newTask2;
 	String helpMessage = "";
@@ -79,7 +79,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 		}
 	}
 
-	protected GuiTaskList getTaskListElement(boolean renew)
+	protected GuiEncoderTaskList getTaskListElement(boolean renew)
 	{
 		if (taskListGui == null || renew)
 		{
@@ -90,7 +90,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 			}
 			else
 			{
-				taskListGui = new GuiTaskList(this.tileEntity, this, this.containerWidth + 25, this.containerHeight + 15);
+				taskListGui = new GuiEncoderTaskList(this.tileEntity, this, this.containerWidth + 25, this.containerHeight + 15);
 			}
 		}
 		return this.taskListGui;
@@ -144,7 +144,7 @@ public class GuiEncoderCoder extends GuiEncoderBase
 		}
 	}
 
-	protected GuiTaskList getTaskListElement()
+	protected GuiEncoderTaskList getTaskListElement()
 	{
 		return this.getTaskListElement(false);
 	}

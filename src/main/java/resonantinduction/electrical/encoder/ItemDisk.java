@@ -5,22 +5,21 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.item.ItemRI;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemDisk extends Item
+public class ItemDisk extends ItemRI
 {
-	public ItemDisk(int id)
+	public ItemDisk()
 	{
-		super(id);
-		this.setUnlocalizedName("disk");
-		this.setCreativeTab(ResonantInductionTabs.CORE);
+		super("disk");
 		this.setHasSubtypes(true);
 	}
 

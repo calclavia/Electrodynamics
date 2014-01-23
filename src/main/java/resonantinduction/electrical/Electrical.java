@@ -22,6 +22,7 @@ import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.encoder.BlockEncoder;
+import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.furnace.BlockAdvancedFurnace;
 import resonantinduction.electrical.furnace.TileAdvancedFurnace;
@@ -41,7 +42,6 @@ import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TilePurifier;
-import universalelectricity.api.CompatibilityModule;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
@@ -122,6 +122,7 @@ public class Electrical
 		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 		blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 		blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
+		itemDisk = contentRegistry.createItem(ItemDisk.class);
 
 		// Machines
 		blockMachinePart = contentRegistry.createBlock(BlockMachinePart.class);

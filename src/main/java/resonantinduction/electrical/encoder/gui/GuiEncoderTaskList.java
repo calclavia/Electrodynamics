@@ -22,7 +22,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
  * 
  * @author DarkGuardsman
  */
-public class GuiTaskList extends Gui implements IScroll
+public class GuiEncoderTaskList extends Gui implements IScroll
 {
 	protected int scrollY = 0, scrollX;
 
@@ -35,7 +35,7 @@ public class GuiTaskList extends Gui implements IScroll
 	int countX = 6, countY = 6;
 	GuiEncoderCoder coder;
 
-	public GuiTaskList(TileEntity entity, GuiEncoderCoder coder, int x, int y)
+	public GuiEncoderTaskList(TileEntity entity, GuiEncoderCoder coder, int x, int y)
 	{
 		this.xPos = x;
 		this.yPos = y;
@@ -168,11 +168,11 @@ public class GuiTaskList extends Gui implements IScroll
 					t.setPosition(task.getCol(), task.getRow());
 				}
 
-				FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, t, true));
+				FMLCommonHandler.instance().showGuiScreen(new GuiEncoderEditTask(this.coder, t, true));
 			}
 			else
 			{
-				FMLCommonHandler.instance().showGuiScreen(new GuiEditTask(this.coder, task, false));
+				FMLCommonHandler.instance().showGuiScreen(new GuiEncoderEditTask(this.coder, task, false));
 			}
 		}
 	}

@@ -9,7 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.item.ItemBase;
+import resonantinduction.core.prefab.item.ItemRI;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * allow new crafting recipes to be created.
  * 
  * @author DarkGuardsman */
-public class ItemParts extends ItemBase
+public class ItemParts extends ItemRI
 {
     public ItemParts()
     {

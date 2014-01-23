@@ -14,10 +14,10 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.item.ItemBase;
+import resonantinduction.core.prefab.item.ItemRI;
 import calclavia.lib.utility.FluidUtility;
 
-public class ItemPipeGauge extends ItemBase
+public class ItemPipeGauge extends ItemRI
 {
 	Icon pipeGuage;
 
