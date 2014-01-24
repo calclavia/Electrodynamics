@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.WorldUtility;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,7 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			glScalef(0.51f, 0.5f, 0.5f);
 			ForgeDirection dir = tile.getDirection();
 			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+			dir = WorldUtility.invertZ(dir);
 			RenderUtility.rotateBlockBasedOnDirection(dir);
 			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
