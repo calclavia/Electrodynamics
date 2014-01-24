@@ -18,58 +18,62 @@ import calclavia.lib.prefab.tile.TileElectrical;
  * 
  * @author Calclavia
  */
-public class TileGenerator extends TileElectrical implements IMechanical, IRotatable
+public class TileGenerator extends TileElectrical implements IRotatable
 {
 	private IMechanicalNetwork network;
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = false;
-
-	private float torqueRatio = 8000;
+	private int torqueRatio = 8000;
 
 	public TileGenerator()
 	{
 		energy = new EnergyStorageHandler(10000);
-		this.ioMap = 728;
 	}
 
 	public float toggleRatio()
 	{
-		return torqueRatio = (torqueRatio + 1000) % energy.getMaxExtract() + 1000;
+		return torqueRatio = (int) ((torqueRatio + 1000) % energy.getMaxExtract() + 1000);
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		if (this.isFunctioning())
+
+		if (!isInversed)
 		{
-			if (!isInversed)
-			{
-				energy.receiveEnergy(getNetwork().getPower(), true);
-				produce();
-			}
-			else
-			{
-				produceMechanical(this.getDirection());
-				produceMechanical(this.getDirection().getOpposite());
-			}
+			// energy.receiveEnergy(getNetwork().getPower(), true);
+			produce();
 		}
+		else
+		{
+			produceMechanical(this.getDirection());
+			produceMechanical(this.getDirection().getOpposite());
+		}
+
 	}
 
 	public void produceMechanical(ForgeDirection outputDir)
 	{
 		Vector3 outputVector = new Vector3(this).translate(outputDir);
-		TileEntity mechanical = outputVector.getTileEntity(worldObj);
+		TileEntity tile = outputVector.getTileEntity(worldObj);
 
-		if (mechanical instanceof IMechanical)
+		if (tile instanceof IMechanical)
 		{
+			IMechanical mech = ((IMechanical) tile).getInstance(outputDir.getOpposite());
 			long extract = energy.extractEnergy(false);
 
 			if (extract > 0)
 			{
-				float angularVelocity = extract / torqueRatio;
-				long torque = (long) (extract / angularVelocity);
-				energy.extractEnergy(((IMechanical) mechanical).getInstance(outputDir.getOpposite()).getNetwork().onReceiveEnergy(((IMechanical) mechanical), torque, angularVelocity), true);
+				final float maxAngularVelocity = energy.getEnergyCapacity() / (float) torqueRatio;
+				final long maxTorque = (long) ((double) energy.getEnergyCapacity() / maxAngularVelocity);
+				float addAngularVelocity = extract / (float) torqueRatio;
+				long addTorque = (long) (((double) extract) / addAngularVelocity);
+				long setTorque = Math.min(mech.getTorque() + addTorque, maxTorque);
+				float setAngularVelocity = Math.min(mech.getAngularVelocity() + addAngularVelocity, maxAngularVelocity);
+				mech.setTorque(setTorque);
+				mech.setAngularVelocity(setAngularVelocity);
+				energy.extractEnergy((long) (setTorque * setAngularVelocity), true);
 			}
 		}
 	}
@@ -77,7 +81,7 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	@Override
 	public EnumSet<ForgeDirection> getInputDirections()
 	{
-		return this.getOutputDirections();
+		return getOutputDirections();
 	}
 
 	@Override
@@ -101,17 +105,12 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, dir.ordinal(), 3);
 	}
 
-	private boolean isFunctioning()
-	{
-		return true;
-	}
-
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
 		isInversed = nbt.getBoolean("isInversed");
-		torqueRatio = nbt.getFloat("torqueRatio");
+		torqueRatio = nbt.getInteger("torqueRatio");
 	}
 
 	@Override
@@ -119,67 +118,6 @@ public class TileGenerator extends TileElectrical implements IMechanical, IRotat
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isInversed", isInversed);
-		nbt.setFloat("torqueRatio", torqueRatio);
-	}
-
-	@Override
-	public boolean isClockwise()
-	{
-		return false;
-	}
-
-	@Override
-	public void setClockwise(boolean isClockwise)
-	{
-
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-		connections[getDirection().ordinal()] = new Vector3(this).translate(getDirection()).getTileEntity(worldObj);
-		return connections;
-	}
-
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new MechanicalNetwork();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public int[] getLocation()
-	{
-		return new int[] { xCoord, yCoord, zCoord, 0 };
-	}
-
-	@Override
-	public float getResistance()
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean isRotationInversed()
-	{
-		return false;
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection from)
-	{
-		return this;
+		nbt.setInteger("torqueRatio", torqueRatio);
 	}
 }

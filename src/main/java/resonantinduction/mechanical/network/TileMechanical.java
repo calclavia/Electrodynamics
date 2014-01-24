@@ -9,10 +9,31 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 {
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
-
 	private IMechanicalNetwork network;
+	protected float angularVelocity;
+	protected long torque;
+	public float angle = 0;
 
-	private boolean isClockwise = false;
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+		angle += angularVelocity / 20;
+		torque *= getLoad();
+		angularVelocity *= getLoad();
+	}
+
+	protected float getLoad()
+	{
+		return 0.5f;
+	}
+
+	@Override
+	public void invalidate()
+	{
+		getNetwork().split(this);
+		super.invalidate();
+	}
 
 	@Override
 	public Object[] getConnections()
@@ -56,33 +77,33 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public int[] getLocation()
+	public float getAngularVelocity()
 	{
-		return new int[] { xCoord, yCoord, zCoord, 0 };
+		return angularVelocity;
 	}
 
 	@Override
-	public float getResistance()
+	public void setAngularVelocity(float velocity)
 	{
-		return 0;
+		this.angularVelocity = velocity;
 	}
 
 	@Override
-	public boolean isClockwise()
+	public long getTorque()
 	{
-		return isClockwise;
+		return torque;
 	}
 
 	@Override
-	public void setClockwise(boolean isClockwise)
+	public void setTorque(long torque)
 	{
-		this.isClockwise = isClockwise;
+		this.torque = torque;
 	}
 
 	@Override
-	public boolean isRotationInversed()
+	public float getRatio()
 	{
-		return true;
+		return 0.5f;
 	}
 
 	@Override

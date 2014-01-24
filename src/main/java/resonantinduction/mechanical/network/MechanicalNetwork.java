@@ -2,22 +2,16 @@ package resonantinduction.mechanical.network;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.gear.PartGear;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
-import calclavia.lib.network.IPacketReceiver;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -35,7 +29,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IPacketReceiver, IUpdate
+public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
 	private long prevTorque = 0;
 	private float prevAngularVelocity = 0;
@@ -59,6 +53,9 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 	private boolean markUpdateRotation = true;
 
+	/**
+	 * Only add the exact instance of the connector into the network. Multipart tiles allowed!
+	 */
 	@Override
 	public void addConnector(IMechanical connector)
 	{
@@ -74,50 +71,45 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public void update()
 	{
 		/**
-		 * Calculation rotations of all generators.
+		 * Update all mechanical nodes.
 		 */
-		if (markUpdateRotation || (!(prevGenerators.equals(generators)) && generators.size() > 0))
+		Iterator<IMechanical> it = new LinkedHashSet<IMechanical>(getConnectors()).iterator();
+		
+		while (it.hasNext())
 		{
-			Set<IMechanical> closedSet = new LinkedHashSet<IMechanical>();
+			IMechanical mechanical = it.next();
+			Object[] connections = mechanical.getConnections();
 
-			for (IMechanical generatorNode : generators)
+			for (int i = 0; i < connections.length; i++)
 			{
-				if (generatorNode != null)
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				Object adacent = connections[i];
+
+				if (adacent instanceof IMechanical)
 				{
-					PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(generatorNode, this, closedSet);
-					rotationPathfinder.findNodes(generatorNode);
-					closedSet.addAll(rotationPathfinder.closedSet);
-					sendRotationUpdatePacket(generatorNode);
+					IMechanical adjacentMech = ((IMechanical) adacent).getInstance(dir);
+
+					if (adjacentMech != null)
+					{
+						float ratio = adjacentMech.getRatio() / mechanical.getRatio();
+						float acceleration = 0.5f;
+						long torque = mechanical.getTorque();
+
+						if (Math.abs(torque - adjacentMech.getTorque() / ratio * acceleration) < Math.abs(adjacentMech.getTorque() / ratio))
+						{
+							mechanical.setTorque((long) (torque - (adjacentMech.getTorque() / ratio * acceleration)));
+						}
+
+						float velocity = mechanical.getAngularVelocity();
+
+						if (Math.abs(velocity - adjacentMech.getAngularVelocity() * ratio * acceleration) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
+						{
+							mechanical.setAngularVelocity(velocity - (adjacentMech.getAngularVelocity() * ratio * acceleration));
+						}
+					}
 				}
 			}
-
-			markUpdateRotation = false;
-			prevGenerators = new LinkedHashSet<IMechanical>(generators);
 		}
-
-		generators.clear();
-
-		/**
-		 * Calculate load
-		 */
-		if (load > 0)
-		{
-			torque /= load / 2;
-			angularVelocity /= load / 2;
-		}
-
-		/**
-		 * Update all connectors
-		 */
-		if (getPrevTorque() != getTorque() || getPrevAngularVelocity() != getAngularVelocity())
-		{
-			sendNetworkPacket();
-		}
-
-		prevTorque = torque;
-		prevAngularVelocity = angularVelocity;
-		torque = 0;
-		angularVelocity = 0;
 	}
 
 	@Override
@@ -130,58 +122,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public boolean continueUpdate()
 	{
 		return canUpdate();
-	}
-
-	/**
-	 * Send network update packet for connectors.
-	 */
-	public void sendNetworkPacket()
-	{
-		for (IMechanical connector : this.getConnectors())
-		{
-			int[] location = connector.getLocation();
-
-			if (location != null)
-			{
-				PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 0, torque, angularVelocity));
-				break;
-			}
-		}
-	}
-
-	public void sendRotationUpdatePacket(IMechanical connector)
-	{
-		int[] location = connector.getLocation();
-
-		if (location != null)
-		{
-			System.out.println("UPDATING!" + location[0] + "," + location[1] + "," + location[2]);
-			PacketDispatcher.sendPacketToAllPlayers(Mechanical.PACKET_NETWORK.getPacket(location[0], location[1], location[2], location[3], (byte) 1, connector.isClockwise()));
-		}
-	}
-
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		try
-		{
-			switch (data.readByte())
-			{
-				case 0:
-					setPower(data.readLong(), data.readFloat());
-					break;
-				case 1:
-					IMechanical updateNode = (IMechanical) extra[0];
-					updateNode.setClockwise(data.readBoolean());
-					PathfinderUpdateRotation rotationPathfinder = new PathfinderUpdateRotation(updateNode, this, null);
-					rotationPathfinder.findNodes(updateNode);
-					break;
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -247,13 +187,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		load = 1;
 
 		super.reconstruct();
+		NetworkTickHandler.addNetwork(this);
 	}
 
 	@Override
 	protected void reconstructConnector(IMechanical connector)
 	{
 		connector.setNetwork(this);
-		load += connector.getResistance();
 	}
 
 	/** Segmented out call so overriding can be done when machines are reconstructed. */

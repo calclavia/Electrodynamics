@@ -6,27 +6,19 @@ import universalelectricity.api.net.IConnector;
 public interface IMechanical extends IConnector<IMechanicalNetwork>
 {
 	/**
-	 * The percentage of resistance caused by this connector.
+	 * The angular velocity.
 	 * 
-	 * @return A small value, most likely less than one.
+	 * @return Can be negative.
 	 */
-	public float getResistance();
+	public float getAngularVelocity();
 
-	/**
-	 * 
-	 * @return int[4]: x,y,z,direction
-	 */
-	public int[] getLocation();
+	public void setAngularVelocity(float velocity);
 
-	/**
-	 * @return Is the mechanical machine going clockwise currently?
-	 */
-	public boolean isClockwise();
+	public long getTorque();
 
-	public void setClockwise(boolean isClockwise);
+	public void setTorque(long torque);
+	
+	public float getRatio();
 
-	/**
-	 * @return Return true if the mechanical block should have its rotation set inveresed.
-	 */
-	public boolean isRotationInversed();
+	public IMechanical getInstance(ForgeDirection dir);
 }

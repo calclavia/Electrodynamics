@@ -37,7 +37,7 @@ public class RenderGear
 
 		RenderUtility.rotateFaceBlockToSide(part.placementSide);
 
-		GL11.glRotatef((float) Math.toDegrees(part.isClockwise() ? part.getNetwork().getRotation() : -part.getNetwork().getRotation()), 0, 1, 0);
+		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 		MODEL.renderAll();

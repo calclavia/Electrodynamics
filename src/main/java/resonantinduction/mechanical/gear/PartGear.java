@@ -30,33 +30,31 @@ public class PartGear extends PartMechanical implements IMechanical
 		{
 			if (manualCrankTime > 0)
 			{
-				getNetwork().onReceiveEnergy(this, 20, 0.4f);
+				if (angularVelocity > 0)
+					angularVelocity += 0.1f;
+				else
+					angularVelocity -= 0.1f;
+
 				manualCrankTime--;
 			}
+
+			angularVelocity *= 0.9f;
 		}
 
 		super.update();
 	}
 
 	@Override
-	public float getResistance()
-	{
-		return 0.1f;
-	}
-
-	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		//System.out.println(world().isRemote + ": " + getNetwork());
-
-		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), tile().xCoord, tile().yCoord, tile().zCoord))
+		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())
 			{
 				if (!world().isRemote)
 				{
-					setClockwise(!isClockwise());
-					player.addChatMessage("Flipped gear to rotate " + (isClockwise() ? "clockwise" : "anticlockwise") + ".");
+					angularVelocity = -angularVelocity;
+					player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 				}
 			}
 			else
@@ -64,6 +62,9 @@ public class PartGear extends PartMechanical implements IMechanical
 
 				this.manualCrankTime = 10;
 			}
+
+			BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
+			return true;
 		}
 
 		return false;
@@ -86,21 +87,8 @@ public class PartGear extends PartMechanical implements IMechanical
 	}
 
 	@Override
-	public boolean isRotationInversed()
-	{
-		return true;
-	}
-
-	@Override
 	public String getType()
 	{
 		return "resonant_induction_gear";
 	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection from)
-	{
-		return this;
-	}
-
 }

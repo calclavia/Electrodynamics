@@ -40,6 +40,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public void updateEntity()
 	{
 		super.updateEntity();
+		counter = Math.max(counter + torque, 0);
 		doWork();
 	}
 
@@ -50,7 +51,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	 */
 	public boolean canWork()
 	{
-		return (counter = Math.max(counter + getNetwork().getTorque(), 0)) > requiredTorque;
+		return counter > requiredTorque;
 	}
 
 	public void doWork()

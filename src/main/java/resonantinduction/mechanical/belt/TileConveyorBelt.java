@@ -295,10 +295,4 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	{
 		return Math.max(getNetwork().getAngularVelocity(), getNetwork().getPrevAngularVelocity());
 	}
-
-	@Override
-	public float getResistance()
-	{
-		return 0.5f;
-	}
 }

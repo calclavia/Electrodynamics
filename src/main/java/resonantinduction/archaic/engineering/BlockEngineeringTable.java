@@ -236,4 +236,17 @@ public class BlockEngineeringTable extends BlockRIRotatable
 	{
 		return new TileEngineeringTable();
 	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
 }
