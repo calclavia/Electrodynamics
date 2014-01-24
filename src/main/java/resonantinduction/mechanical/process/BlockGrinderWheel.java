@@ -63,6 +63,8 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 					{
 						entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 					}
+
+					((EntityItem) entity).age--;
 				}
 				else
 				{

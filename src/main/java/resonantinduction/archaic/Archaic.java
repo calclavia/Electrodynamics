@@ -121,5 +121,8 @@ public class Archaic
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockHotPlate, 1, 1), "HHH", "WWW", 'H', new ItemStack(blockHotPlate, 1, 0), 'W', UniversalRecipe.WIRE.get()));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, "PPP", "PIP", "PPP", 'P', Item.paper, 'I', new ItemStack(Item.dyePowder, 0)));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', Block.cobblestone, 'S', Item.stick));
 	}
 }

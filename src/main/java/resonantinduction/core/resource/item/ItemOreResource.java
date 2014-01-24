@@ -24,6 +24,7 @@ public class ItemOreResource extends ItemRI
 	public ItemOreResource(int id, String name)
 	{
 		super(name, id);
+		setHasSubtypes(true);
 	}
 
 	@Override

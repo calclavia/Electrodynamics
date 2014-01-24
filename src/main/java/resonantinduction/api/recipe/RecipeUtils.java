@@ -90,13 +90,13 @@ public class RecipeUtils
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof OreDictResource)
-			{System.out.println(name +" VS " +((OreDictResource) obj).name);
+			{
 				return this.name.equals(((OreDictResource) obj).name);
 			}
 
 			if (obj instanceof ItemStackResource)
 			{
-								return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
+				return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
 			}
 
 			return false;
