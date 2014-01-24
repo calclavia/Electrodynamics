@@ -15,11 +15,11 @@ import universalelectricity.api.vector.VectorWorld;
  * @author Calclavia
  * 
  */
-public class BlockPurifier extends BlockRIRotatable implements ITileEntityProvider
+public class BlockMixer extends BlockRIRotatable implements ITileEntityProvider
 {
-	public BlockPurifier()
+	public BlockMixer()
 	{
-		super("purifier", Settings.getNextBlockID());
+		super("mixer", Settings.getNextBlockID());
 	}
 
 	@Override

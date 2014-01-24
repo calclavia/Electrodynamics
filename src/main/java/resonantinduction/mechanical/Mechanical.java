@@ -6,7 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.electrical.purifier.BlockPurifier;
+import resonantinduction.electrical.purifier.BlockMixer;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
@@ -112,7 +112,7 @@ public class Mechanical
 
 		// Machines
 		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
-		blockPurifier = contentRegistry.createTile(BlockPurifier.class, TilePurifier.class);
+		blockPurifier = contentRegistry.createTile(BlockMixer.class, TilePurifier.class);
 
 		OreDictionary.registerOre("gear", itemGear);
 

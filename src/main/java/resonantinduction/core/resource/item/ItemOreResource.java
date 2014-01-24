@@ -25,6 +25,7 @@ public class ItemOreResource extends ItemRI
 	{
 		super(name, id);
 		setHasSubtypes(true);
+		setMaxDamage(0);
 	}
 
 	@Override

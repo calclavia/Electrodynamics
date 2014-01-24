@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
@@ -24,7 +25,8 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 	public BlockGrinderWheel()
 	{
 		super("grindingWheel", Settings.getNextBlockID());
-		this.setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
+		setTextureName(Reference.PREFIX + "material_steel_dark");
+		setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
 		rotationMask = 0b111111;
 	}
 

@@ -33,7 +33,7 @@ import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.BlockLevitator;
 import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
-import resonantinduction.electrical.purifier.BlockPurifier;
+import resonantinduction.electrical.purifier.BlockMixer;
 import resonantinduction.electrical.tesla.BlockTesla;
 import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;

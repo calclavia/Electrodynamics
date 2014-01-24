@@ -48,7 +48,7 @@ public class BlockHotPlate extends BlockRI
 	public void registerIcons(IconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
-		topElectric = iconReg.registerIcon(Reference.PREFIX + "material_steel");
+		topElectric = iconReg.registerIcon(Reference.PREFIX + "electricHotPlate");
 	}
 
 	@Override

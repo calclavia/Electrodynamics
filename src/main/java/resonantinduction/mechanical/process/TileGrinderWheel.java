@@ -112,7 +112,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 			{
 				if (this.ticks % 8 == 0)
 				{
-					this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
+					worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
 				}
 
 				counter -= requiredTorque;
