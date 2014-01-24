@@ -38,7 +38,7 @@ public class PartGear extends PartMechanical implements IMechanical
 				manualCrankTime--;
 			}
 
-			angularVelocity *= 0.9f;
+			angularVelocity *= 0.95f;
 		}
 
 		super.update();

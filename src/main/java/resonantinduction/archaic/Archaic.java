@@ -20,6 +20,7 @@ import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.part.BlockMachinePart;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
@@ -66,7 +67,8 @@ public class Archaic
 	public static Block blockTurntable;
 	public static Block blockFirebox;
 	public static Block blockHotPlate;
-
+	public static Block blockMachinePart;
+	
 	public static Item itemImprint;
 
 	@EventHandler
@@ -81,6 +83,8 @@ public class Archaic
 		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
 
+		blockMachinePart = contentRegistry.createBlock(BlockMachinePart.class, ItemBlockMetadata.class);
+		
 		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
 		proxy.preInit();
 		Settings.save();

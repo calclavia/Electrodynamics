@@ -6,6 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.electrical.purifier.BlockPurifier;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
@@ -26,6 +27,9 @@ import resonantinduction.mechanical.logistic.TileManipulator;
 import resonantinduction.mechanical.logistic.TileRejector;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PacketNetwork;
+import resonantinduction.mechanical.process.BlockGrinderWheel;
+import resonantinduction.mechanical.process.TileGrinderWheel;
+import resonantinduction.mechanical.process.TilePurifier;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
@@ -81,6 +85,10 @@ public class Mechanical
 	public static Item itemPipe;
 	public static Item itemPipeGuage;
 
+	// Machines
+	public static Block blockGrinderWheel;
+	public static Block blockPurifier;
+
 	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
 
 	@EventHandler
@@ -101,6 +109,10 @@ public class Mechanical
 
 		itemPipeGuage = contentRegistry.createItem(ItemPipeGauge.class);
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
+
+		// Machines
+		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
+		blockPurifier = contentRegistry.createTile(BlockPurifier.class, TilePurifier.class);
 
 		OreDictionary.registerOre("gear", itemGear);
 

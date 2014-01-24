@@ -31,6 +31,7 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
+	public static final float ACCELERATION = 0.1f;
 	/** The current rotation of the network */
 	private float rotation = 0;
 	private long lastRotateTime;
@@ -79,19 +80,18 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 					if (adjacentMech != null)
 					{
 						float ratio = adjacentMech.getRatio() / mechanical.getRatio();
-						float acceleration = 0.5f;
 						long torque = mechanical.getTorque();
 
-						if (Math.abs(torque - adjacentMech.getTorque() / ratio * acceleration) < Math.abs(adjacentMech.getTorque() / ratio))
+						if (Math.abs(torque - adjacentMech.getTorque() / ratio * ACCELERATION) < Math.abs(adjacentMech.getTorque() / ratio))
 						{
-							mechanical.setTorque((long) (torque - (adjacentMech.getTorque() / ratio * acceleration)));
+							mechanical.setTorque((long) (torque - (adjacentMech.getTorque() / ratio * ACCELERATION)));
 						}
 
 						float velocity = mechanical.getAngularVelocity();
 
-						if (Math.abs(velocity - adjacentMech.getAngularVelocity() * ratio * acceleration) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
+						if (Math.abs(velocity - adjacentMech.getAngularVelocity() * ratio * ACCELERATION) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
 						{
-							mechanical.setAngularVelocity(velocity - (adjacentMech.getAngularVelocity() * ratio * acceleration));
+							mechanical.setAngularVelocity(velocity - (adjacentMech.getAngularVelocity() * ratio * ACCELERATION));
 						}
 					}
 				}

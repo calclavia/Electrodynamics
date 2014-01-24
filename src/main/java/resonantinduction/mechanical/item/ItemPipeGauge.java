@@ -19,11 +19,9 @@ import calclavia.lib.utility.FluidUtility;
 
 public class ItemPipeGauge extends ItemRI
 {
-	Icon pipeGuage;
-
 	public ItemPipeGauge()
 	{
-		super("pipeGuage");
+		super("pipeGauge");
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 

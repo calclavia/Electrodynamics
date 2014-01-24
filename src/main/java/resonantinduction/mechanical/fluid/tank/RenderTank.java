@@ -8,8 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.archaic.Archaic;
 import resonantinduction.core.render.RenderFluidHelper;
-import resonantinduction.electrical.Electrical;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import calclavia.lib.render.RenderUtility;
@@ -94,24 +94,24 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!north)
 				{
 					// north east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, 0.501, -0.475, Electrical.blockMachinePart);
+					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, 0.501, -0.475, Archaic.blockMachinePart);
 				}
 				if (!south)
 				{
 					// south east
-					RenderUtility.renderCube(0.475, -0.501, 0.475, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(0.475, -0.501, 0.475, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
 				}
 
 				if (!down)
 				{
 					// bottom east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, -0.475, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, -0.475, 0.501, Archaic.blockMachinePart);
 				}
 
 				if (!up)
 				{
 					// top east
-					RenderUtility.renderCube(0.475, 0.475, -0.501, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(0.475, 0.475, -0.501, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
 				}
 			}
 
@@ -120,22 +120,22 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!north)
 				{
 					// north west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, 0.501, -0.475, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, 0.501, -0.475, Archaic.blockMachinePart);
 				}
 				if (!south)
 				{
 					// south west
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, -0.475, 0.501, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, -0.501, 0.475, -0.475, 0.501, 0.501, Archaic.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, -0.475, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, -0.475, 0.501, Archaic.blockMachinePart);
 				}
 				if (!up)
 				{
 					// top west
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, -0.475, 0.501, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, 0.475, -0.501, -0.475, 0.501, 0.501, Archaic.blockMachinePart);
 				}
 			}
 			if (!north)
@@ -143,12 +143,12 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!up)
 				{
 					// top north
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, 0.501, 0.501, -0.475, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, 0.475, -0.501, 0.501, 0.501, -0.475, Archaic.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom north
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, -0.475, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, -0.475, Archaic.blockMachinePart);
 				}
 			}
 
@@ -157,12 +157,12 @@ public class RenderTank extends TileEntitySpecialRenderer
 				if (!up)
 				{
 					// top south
-					RenderUtility.renderCube(-0.501, 0.475, 0.475, 0.501, 0.501, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, 0.475, 0.475, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
 				}
 				if (!down)
 				{
 					// bottom south
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, 0.501, -0.475, 0.501, Electrical.blockMachinePart);
+					RenderUtility.renderCube(-0.501, -0.501, 0.475, 0.501, -0.475, 0.501, Archaic.blockMachinePart);
 				}
 			}
 

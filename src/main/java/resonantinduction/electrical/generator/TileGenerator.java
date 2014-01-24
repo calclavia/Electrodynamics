@@ -92,8 +92,15 @@ public class TileGenerator extends TileElectrical implements IRotatable
 				long currentTorque = Math.abs(mech.getTorque());
 
 				if (currentTorque != 0)
+				{
 					setTorque = Math.min(+setTorque, maxTorque) * (mech.getTorque() / currentTorque);
 
+					if (setTorque < currentTorque)
+					{
+						setTorque = (long) Math.max(setTorque, currentTorque * (currentTorque / maxTorque));
+					}
+				}
+				
 				float currentVelo = Math.abs(mech.getAngularVelocity());
 				if (currentVelo != 0)
 					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
