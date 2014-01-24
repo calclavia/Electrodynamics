@@ -37,13 +37,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	private LiquidPathFinder pathFill;
 
 	private Vector3 lastDrainOrigin;
-
-	public boolean canDrain = true;
-
-	public boolean canDrain()
-	{
-		return canDrain;
-	}
+	public boolean markDrain = false;
 
 	public LiquidPathFinder getFillFinder()
 	{
@@ -95,13 +89,13 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			{
 				this.getFillFinder().refresh().start(new Vector3(this).translate(this.getDirection()), TileGrate.MAX_WORLD_EDITS_PER_PROCESS, true);
 			}
-
 			/**
 			 * If we can drain, do the drain action.
 			 */
-			if (canDrain())
+			if (markDrain)
 			{
 				drainAroundArea(worldObj, new Vector3(this), 3);
+				markDrain = false;
 			}
 		}
 	}
@@ -132,6 +126,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 		TileEntity originTile = null;
 
 		Set<Vector3> drainList = null;
+
 		if (drain instanceof IDrain)
 		{
 			if (!((IDrain) drain).canDrain(((IDrain) drain).getDirection()))
@@ -179,12 +174,13 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 
 				Vector3 drainLocation = fluidList.next();
 				FluidStack drainStack = FluidUtility.drainBlock(world, drainLocation, false, 3);
+				int filled = FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), drainStack, false);
 
-				if (drainStack != null && this.fill(null, drainStack, false) >= drainStack.amount)
+				if (drainStack != null && filled >= drainStack.amount)
 				{
 					/* Remove the block that we drained. */
 					FluidUtility.drainBlock(this.worldObj, drainLocation, true, update);
-					this.fill(null, drainStack, true);
+					FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), drainStack, true);
 					this.currentWorldEdits++;
 					fluidList.remove();
 
@@ -314,7 +310,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return this.getDirection() != from && !this.canDrain();
+		return this.getDirection() != from;
 	}
 
 	@Override
@@ -323,11 +319,6 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 		if (resource == null)
 		{
 			return 0;
-		}
-
-		if (canDrain())
-		{
-			return FluidUtility.fillTanksAllSides(worldObj, new Vector3(this), resource, doFill);
 		}
 
 		return this.fillArea(resource, doFill);
@@ -342,12 +333,15 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
+		if (resource != null)
+			return drain(from, resource.amount, doDrain);
 		return null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		markDrain = true;
 		return null;
 	}
 
@@ -360,13 +354,13 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	@Override
 	public boolean canDrain(ForgeDirection direction)
 	{
-		return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && this.canDrain();
+		return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 
 	@Override
 	public boolean canFill(ForgeDirection direction)
 	{
-		return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) && !this.canDrain();
+		return direction == this.getDirection() && !this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -375,17 +369,4 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 		this.currentWorldEdits++;
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		canDrain = nbt.getBoolean("canDrain");
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setBoolean("canDrain", canDrain);
-	}
 }

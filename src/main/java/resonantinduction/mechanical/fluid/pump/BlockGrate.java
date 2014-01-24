@@ -76,25 +76,6 @@ public class BlockGrate extends BlockRIRotatable
 			}
 		}
 
-		return ((TileGrate) entity).canDrain() ? drainIcon : fillIcon;
-	}
-
-	@Override
-	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-			if (tile instanceof TileGrate)
-			{
-				((TileGrate) tile).canDrain = !((TileGrate) tile).canDrain;
-				entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Drain fluid mode: " + ((TileGrate) tile).canDrain()));
-			}
-
-			return true;
-		}
-
-		return true;
+		return drainIcon;
 	}
 }
