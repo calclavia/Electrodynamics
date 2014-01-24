@@ -16,7 +16,7 @@ import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
-import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -132,7 +132,7 @@ public class BlockTank extends BlockFluidNetwork
 				}
 				else
 				{
-					WorldUtility.dropItemStack(world, new Vector3(x, y, z), dropStack, false);
+					InventoryUtility.dropItemStack(world, new Vector3(x, y, z), dropStack);
 				}
 				world.setBlockToAir(x, y, z);
 			}

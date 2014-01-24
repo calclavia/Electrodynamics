@@ -26,7 +26,7 @@ import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.utility.MathUtility;
-import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
@@ -365,7 +365,7 @@ public class TileArmbot extends TileElectrical implements IMultiBlock, IArmbot, 
 			if (this.getHeldObject() instanceof ItemStack)
 			{
 				Vector3 handPosition = this.getHandPos();
-				WorldUtility.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject(), false);
+				InventoryUtility.dropItemStack(worldObj, handPosition, (ItemStack) this.getHeldObject());
 			}
 			this.grabbedObject = null;
 			this.sendGrabItemToClient();

@@ -8,6 +8,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemRI;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -54,6 +55,7 @@ public class ItemHammer extends ItemRI
 						}
 					}
 
+					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat()));
 					player.addExhaustion(1);
 					stack.damageItem(1, player);
 				}

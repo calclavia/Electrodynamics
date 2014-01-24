@@ -20,7 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Cancelable;
 import net.minecraftforge.event.Event;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
  * An event triggered by entities or tiles that create lasers
@@ -266,7 +266,7 @@ public class LaserEvent extends Event
 					items = event.items;
 					for (ItemStack stack : items)
 					{
-						WorldUtility.dropItemStack(world, vec.translate(0.5), stack, false);
+						InventoryUtility.dropItemStack(world, vec.translate(0.5), stack);
 					}
 				}
 			}
