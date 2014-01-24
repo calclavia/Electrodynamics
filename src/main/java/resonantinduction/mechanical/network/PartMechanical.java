@@ -75,13 +75,13 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		ticks++;
 		angle += angularVelocity / 20;
 
-		if (prevAngularVelocity != angularVelocity)
+		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.1f)
 		{
 			prevAngularVelocity = angularVelocity;
 			markPacketUpdate = true;
 		}
 
-		if (!world().isRemote && markPacketUpdate && ticks % 5 == 0)
+		if (!world().isRemote && markPacketUpdate && ticks % 20 == 0)
 		{
 			sendRotationPacket();
 			markPacketUpdate = false;
