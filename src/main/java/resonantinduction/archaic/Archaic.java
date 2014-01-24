@@ -9,6 +9,7 @@ import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.BlockEngineeringTable;
+import resonantinduction.archaic.engineering.ItemHammer;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
 import resonantinduction.archaic.firebox.BlockFirebox;
 import resonantinduction.archaic.firebox.BlockHotPlate;
@@ -68,8 +69,11 @@ public class Archaic
 	public static Block blockFirebox;
 	public static Block blockHotPlate;
 	public static Block blockMachinePart;
-	
+
 	public static Item itemImprint;
+
+	// Machine and Processing
+	public static Item itemHammer;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -84,8 +88,9 @@ public class Archaic
 		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
 
 		blockMachinePart = contentRegistry.createBlock(BlockMachinePart.class, ItemBlockMetadata.class);
-		
+
 		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
+		itemHammer = contentRegistry.createItem(ItemHammer.class);
 		proxy.preInit();
 		Settings.save();
 	}

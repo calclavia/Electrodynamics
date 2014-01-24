@@ -111,6 +111,11 @@ public class BlockEngineeringTable extends BlockRIRotatable
 	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int hitSide, float hitX, float hitY, float hitZ)
 	{
+		if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHammer)
+		{
+			return false;
+		}
+		
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 
 		if (te instanceof TileEngineeringTable)

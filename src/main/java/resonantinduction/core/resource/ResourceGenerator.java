@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -52,6 +53,13 @@ public class ResourceGenerator
 
 	public static void generateOreResources()
 	{
+		OreDictionary.registerOre("ingotGold", Item.ingotGold);
+		OreDictionary.registerOre("ingotIron", Item.ingotIron);
+
+		OreDictionary.registerOre("oreGold", Block.oreGold);
+		OreDictionary.registerOre("oreIron", Block.oreIron);
+		OreDictionary.registerOre("oreLapis", Block.oreLapis);
+
 		for (String materialName : materialNames)
 		{
 			String name = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
@@ -66,7 +74,7 @@ public class ResourceGenerator
 				}
 
 				// Add to machine recipes
-				ItemStack dust = OreDictionary.getOres("dust" + name).get(0).copy();
+				ItemStack dust = OreDictionary.getOres("rubble" + name).get(0).copy();
 				dust.stackSize = 2;
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, dust);
 			}

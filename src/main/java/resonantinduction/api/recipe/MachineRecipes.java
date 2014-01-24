@@ -60,7 +60,7 @@ public final class MachineRecipes
 		return new HashMap<RecipeType, Map<Resource[], Resource[]>>(this.recipes);
 	}
 
-	public Resource[] getOutput(RecipeType machine, Resource[] input)
+	public Resource[] getOutput(RecipeType machine, Resource... input)
 	{
 		Iterator<Entry<Resource[], Resource[]>> it = this.getRecipes(machine).entrySet().iterator();
 
@@ -77,7 +77,7 @@ public final class MachineRecipes
 		return new Resource[] {};
 	}
 
-	public Resource[] getRecipe(RecipeType machine, ItemStack... inputs)
+	public Resource[] getOutput(RecipeType machine, ItemStack... inputs)
 	{
 		Resource[] resourceInputs = new Resource[inputs.length];
 
@@ -89,7 +89,7 @@ public final class MachineRecipes
 		return this.getOutput(machine, resourceInputs);
 	}
 
-	public Resource[] getRecipe(RecipeType machine, String... oreDictNames)
+	public Resource[] getOutput(RecipeType machine, String... oreDictNames)
 	{
 		Resource[] resourceInputs = new Resource[oreDictNames.length];
 

@@ -122,14 +122,14 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack) == null ? false : MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack) == null ? false : MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
 	{
 		ItemStack itemStack = entity.getEntityItem();
 
-		Resource[] results = MachineRecipes.INSTANCE.getRecipe(RecipeType.GRINDER, itemStack);
+		Resource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack);
 
 		for (Resource resource : results)
 		{

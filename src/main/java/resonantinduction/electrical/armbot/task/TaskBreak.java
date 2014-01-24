@@ -12,7 +12,7 @@ import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 import com.builtbroken.common.Pair;
 
@@ -53,7 +53,7 @@ public class TaskBreak extends TaskBaseArmbot
 
 				if (!this.keep || items.size() > 1)
 				{
-					WorldUtility.dropBlockAsItem(location.left(), serachPosition);
+					InventoryUtility.dropBlockAsItem(location.left(), serachPosition);
 				}
 				else
 				{

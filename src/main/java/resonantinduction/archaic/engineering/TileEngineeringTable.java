@@ -42,6 +42,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	public static final int CRAFTING_MATRIX_END = 9;
 	public static final int CRAFTING_OUTPUT_END = CRAFTING_MATRIX_END + 1;
 	public static final int PLAYER_OUTPUT_END = CRAFTING_OUTPUT_END + 40;
+	public static final int CENTER_SLOT = 4;
 
 	// Relative slot IDs
 	public static final int CRAFTING_OUTPUT_SLOT = 0;
@@ -326,7 +327,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				 */
 				if (!didCraft)
 				{
-					ItemStack filterStack = craftingMatrix[4];// this.inventory[IMPRINT_SLOT];
+					ItemStack filterStack = craftingMatrix[CENTER_SLOT];
 
 					if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
 					{

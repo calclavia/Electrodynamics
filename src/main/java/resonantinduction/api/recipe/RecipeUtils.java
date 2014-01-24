@@ -32,6 +32,8 @@ public class RecipeUtils
 		{
 			return this.chance;
 		}
+
+		public abstract ItemStack getItemStack();
 	}
 
 	public static class ItemStackResource extends Resource
@@ -60,6 +62,12 @@ public class RecipeUtils
 
 			return false;
 		}
+
+		@Override
+		public ItemStack getItemStack()
+		{
+			return itemStack;
+		}
 	}
 
 	public static class OreDictResource extends Resource
@@ -82,16 +90,22 @@ public class RecipeUtils
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof OreDictResource)
-			{
+			{System.out.println(name +" VS " +((OreDictResource) obj).name);
 				return this.name.equals(((OreDictResource) obj).name);
 			}
 
 			if (obj instanceof ItemStackResource)
 			{
-				return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
+								return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
 			}
 
 			return false;
+		}
+
+		@Override
+		public ItemStack getItemStack()
+		{
+			return OreDictionary.getOres(name).get(0);
 		}
 	}
 
@@ -115,6 +129,12 @@ public class RecipeUtils
 		public boolean equals(Object obj)
 		{
 			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(obj) : false;
+		}
+
+		@Override
+		public ItemStack getItemStack()
+		{
+			return null;
 		}
 	}
 }
