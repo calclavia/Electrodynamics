@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -35,7 +36,9 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			glPushMatrix();
 			glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);
 			glScalef(0.51f, 0.5f, 0.5f);
-			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());
+			ForgeDirection dir = tile.getDirection();
+			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+			RenderUtility.rotateBlockBasedOnDirection(dir);
 			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 			MODEL.renderAll();

@@ -25,7 +25,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 	protected float getLoad()
 	{
-		return 0.5f;
+		return 0.9f;
 	}
 
 	@Override
