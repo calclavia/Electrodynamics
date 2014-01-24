@@ -28,9 +28,8 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public static final long POWER = 500000;
 	public static final int DEFAULT_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
-	private static final HashMap<EntityItem, Integer> clientTimer = new HashMap<EntityItem, Integer>();
-	private static final HashMap<EntityItem, Integer> serverTimer = new HashMap<EntityItem, Integer>();
-
+	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
+	
 	public EntityItem grindingItem = null;
 
 	private final long requiredTorque = 1000;
@@ -62,10 +61,9 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 			if (grindingItem != null)
 			{
-				if (getTimer().containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
+				if (timer.containsKey(grindingItem) && !grindingItem.isDead && new Vector3(this).add(0.5).distance(grindingItem) < 1)
 				{
-					int timeLeft = getTimer().get(grindingItem) - 1;
-					getTimer().put(grindingItem, timeLeft);
+					int timeLeft = timer.decrease(grindingItem);
 
 					if (timeLeft <= 0)
 					{
@@ -74,14 +72,14 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 							if (--grindingItem.getEntityItem().stackSize <= 0)
 							{
 								grindingItem.setDead();
-								getTimer().remove(grindingItem);
+								timer.remove(grindingItem);
 								grindingItem = null;
 							}
 							else
 							{
 								grindingItem.setEntityItemStack(grindingItem.getEntityItem());
 								// Reset timer
-								getTimer().put(grindingItem, DEFAULT_TIME);
+								timer.put(grindingItem, DEFAULT_TIME);
 							}
 						}
 					}
@@ -103,7 +101,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 				}
 				else
 				{
-					getTimer().remove(grindingItem);
+					timer.remove(grindingItem);
 					grindingItem = null;
 				}
 			}
@@ -150,16 +148,6 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 		}
 
 		return false;
-	}
-
-	public static HashMap<EntityItem, Integer> getTimer()
-	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			return serverTimer;
-		}
-
-		return clientTimer;
 	}
 
 	@Override

@@ -41,7 +41,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
-import resonantinduction.mechanical.process.TilePurifier;
+import resonantinduction.mechanical.process.TileMixer;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;

@@ -1,38 +1,29 @@
 package resonantinduction.mechanical.process;
 
-import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.item.ItemOreResource;
-import universalelectricity.api.energy.EnergyStorageHandler;
+import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileElectrical;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia
  * 
  */
-public class TilePurifier extends TileElectrical
+public class TileMixer extends TileMechanical
 {
 	public static final long POWER = 500000;
 	public static final int DEFAULT_TIME = 10 * 20;
-	/** A map of ItemStacks and their remaining grind-time left. */
-	private static final HashMap<EntityItem, Integer> clientTimer = new HashMap<EntityItem, Integer>();
-	private static final HashMap<EntityItem, Integer> serverTimer = new HashMap<EntityItem, Integer>();
-
-	public EntityItem processingItem = null;
-
-	public TilePurifier()
-	{
-		this.energy = new EnergyStorageHandler(POWER * 2);
-	}
+	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 
 	@Override
 	public void updateEntity()
@@ -52,7 +43,6 @@ public class TilePurifier extends TileElectrical
 	 */
 	public boolean canWork()
 	{
-		// TODO: Add electricity support.
 		return true;
 	}
 
@@ -61,37 +51,46 @@ public class TilePurifier extends TileElectrical
 		boolean didWork = false;
 
 		// Search for an item to "process"
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 1, this.yCoord, this.zCoord + 1);
+		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
+		Set<EntityItem> processItems = new LinkedHashSet<EntityItem>();
 
 		for (Entity entity : entities)
 		{
 			/**
-			 * Rotate entities around purifier
+			 * Rotate entities around the mixer
 			 */
-			double speed = 0.1;
+			double speed = 1;
 
-			Vector3 originalPosition = new Vector3(this);
-			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this));
+			Vector3 originalPosition = new Vector3(entity);
+			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
 			relativePosition.rotate(speed, 0, 0);
-			Vector3 newPosition = new Vector3(this).add(relativePosition);
+			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
+			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 
-			if (this.processingItem == null && entity instanceof EntityItem)
+			entity.addVelocity(difference.x, difference.y, difference.z);
+
+			if (entity instanceof EntityItem)
 			{
+				// TODO: Use machine recipe
 				if (((EntityItem) entity).getEntityItem().getItem() instanceof ItemOreResource)
 				{
-					this.processingItem = (EntityItem) entity;
+					processItems.add((EntityItem) entity);
 				}
 			}
 		}
 
-		if (processingItem != null)
+		for (EntityItem processingItem : processItems)
 		{
-			if (getTimer().containsKey(processingItem) && !processingItem.isDead && new Vector3(this).add(0.5).distance(processingItem) < 1)
+			if (!timer.containsKey(processingItem))
 			{
-				int timeLeft = getTimer().get(processingItem) - 1;
-				getTimer().put(processingItem, timeLeft);
-
+				timer.put(processingItem, DEFAULT_TIME);
+			}
+			
+			if (!processingItem.isDead && new Vector3(this).add(0.5).distance(processingItem) < 2)
+			{
+				int timeLeft = timer.decrease(processingItem);
+				
 				if (timeLeft <= 0)
 				{
 					if (this.doneWork(processingItem))
@@ -99,14 +98,14 @@ public class TilePurifier extends TileElectrical
 						if (--processingItem.getEntityItem().stackSize <= 0)
 						{
 							processingItem.setDead();
-							getTimer().remove(processingItem);
+							timer.remove(processingItem);
 							processingItem = null;
 						}
 						else
 						{
 							processingItem.setEntityItemStack(processingItem.getEntityItem());
 							// Reset timer
-							getTimer().put(processingItem, DEFAULT_TIME);
+							timer.put(processingItem, DEFAULT_TIME);
 						}
 					}
 				}
@@ -120,7 +119,7 @@ public class TilePurifier extends TileElectrical
 			}
 			else
 			{
-				getTimer().remove(processingItem);
+				timer.remove(processingItem);
 				processingItem = null;
 			}
 		}
@@ -129,10 +128,8 @@ public class TilePurifier extends TileElectrical
 		{
 			if (this.ticks % 20 == 0)
 			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
+				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "mixer", 0.5f, 1);
 			}
-
-			this.energy.extractEnergy(POWER / 20, true);
 		}
 	}
 
@@ -143,13 +140,9 @@ public class TilePurifier extends TileElectrical
 		return false;
 	}
 
-	public static HashMap<EntityItem, Integer> getTimer()
+	@Override
+	public boolean canConnect(ForgeDirection direction)
 	{
-		if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		{
-			return serverTimer;
-		}
-
-		return clientTimer;
+		return direction == ForgeDirection.UP || direction == ForgeDirection.DOWN;
 	}
 }

@@ -28,7 +28,7 @@ public class BlockHotPlate extends BlockRI
 	{
 		super("hotPlate", Material.wood);
 		setBlockBounds(0, 0, 0, 1, 0.2f, 1);
-		this.setTickRandomly(true);
+		setTickRandomly(true);
 	}
 
 	@Override

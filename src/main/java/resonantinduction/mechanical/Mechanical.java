@@ -29,7 +29,7 @@ import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PacketNetwork;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
-import resonantinduction.mechanical.process.TilePurifier;
+import resonantinduction.mechanical.process.TileMixer;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import cpw.mods.fml.common.Mod;
@@ -112,7 +112,7 @@ public class Mechanical
 
 		// Machines
 		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
-		blockPurifier = contentRegistry.createTile(BlockMixer.class, TilePurifier.class);
+		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
 
 		OreDictionary.registerOre("gear", itemGear);
 
