@@ -70,18 +70,6 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public boolean isClockwise()
-	{
-		return false;
-	}
-
-	@Override
-	public void setClockwise(boolean isClockwise)
-	{
-
-	}
-
-	@Override
 	public Object[] getConnections()
 	{
 		return null;
@@ -117,20 +105,32 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public float getResistance()
+	public float getAngularVelocity()
 	{
 		return 0;
 	}
 
 	@Override
-	public boolean isRotationInversed()
+	public void setAngularVelocity(float velocity)
 	{
-		return false;
+
 	}
 
 	@Override
-	public int[] getLocation()
+	public long getTorque()
 	{
-		return null;
+		return 0;
+	}
+
+	@Override
+	public void setTorque(long torque)
+	{
+
+	}
+
+	@Override
+	public float getRatio()
+	{
+		return 0;
 	}
 }

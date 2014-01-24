@@ -33,7 +33,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 	public EntityItem grindingItem = null;
 
-	private final long requiredTorque = 10000;
+	private final long requiredTorque = 1000;
 	private long counter = 0;
 
 	@Override
@@ -51,7 +51,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	 */
 	public boolean canWork()
 	{
-		return counter > requiredTorque;
+		return counter >= requiredTorque;
 	}
 
 	public void doWork()
@@ -110,7 +110,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 			if (didWork)
 			{
-				if (this.ticks % 20 == 0)
+				if (this.ticks % 8 == 0)
 				{
 					this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "grinder", 0.5f, 1);
 				}

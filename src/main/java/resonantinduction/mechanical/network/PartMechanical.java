@@ -48,9 +48,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
 
-	protected float angularVelocity;
+	protected float prevAngularVelocity, angularVelocity;
 
 	protected long torque;
+
+	/**
+	 * Packets
+	 */
+	int ticks = 0;
+	boolean markPacketUpdate = false;
 
 	/** Side of the block this is placed on */
 	public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
@@ -66,11 +72,19 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void update()
 	{
+		ticks++;
 		angle += angularVelocity / 20;
 
-		if (!world().isRemote)
+		if (prevAngularVelocity != angularVelocity)
+		{
+			prevAngularVelocity = angularVelocity;
+			markPacketUpdate = true;
+		}
+
+		if (!world().isRemote && markPacketUpdate && ticks % 5 == 0)
 		{
 			sendRotationPacket();
+			markPacketUpdate = false;
 		}
 
 		super.update();

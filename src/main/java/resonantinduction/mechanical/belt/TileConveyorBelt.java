@@ -79,12 +79,13 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
 			}
 
-			double wheelRotPct = getNetwork().getRotation() / Math.PI;
+			angle += Math.abs(angularVelocity / 20);
+			double beltPercentage = (angle % Math.PI) / Math.PI;
 
 			// Sync the animation. Slant belts are slower.
 			if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
 			{
-				this.animationFrame = (int) (wheelRotPct * MAX_FRAME);
+				this.animationFrame = (int) (beltPercentage * MAX_FRAME);
 				if (this.animationFrame < 0)
 					this.animationFrame = 0;
 				if (this.animationFrame > MAX_FRAME)
@@ -92,7 +93,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			}
 			else
 			{
-				this.animationFrame = (int) (wheelRotPct * MAX_SLANT_FRAME);
+				this.animationFrame = (int) (beltPercentage * MAX_SLANT_FRAME);
 				if (this.animationFrame < 0)
 					this.animationFrame = 0;
 				if (this.animationFrame > MAX_SLANT_FRAME)
@@ -104,6 +105,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			if (markRefresh)
 			{
 				sendRefreshPacket();
+				markRefresh = false;
 			}
 		}
 
@@ -216,7 +218,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
-		return direction == ForgeDirection.DOWN;
+		return direction != getDirection() || direction != getDirection().getOpposite();
 	}
 
 	public void refresh()
@@ -293,6 +295,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 
 	public float getMoveVelocity()
 	{
-		return Math.max(getNetwork().getAngularVelocity(), getNetwork().getPrevAngularVelocity());
+		return Math.abs(angularVelocity);
 	}
 }

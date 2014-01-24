@@ -34,7 +34,7 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			TileGrinderWheel tile = (TileGrinderWheel) t;
 			glPushMatrix();
 			glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);
-			glScalef(0.51f, 0.51f, 0.51f);
+			glScalef(0.51f, 0.5f, 0.5f);
 			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());
 			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
