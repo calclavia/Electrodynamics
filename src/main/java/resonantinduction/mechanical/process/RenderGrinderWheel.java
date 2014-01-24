@@ -25,7 +25,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderGrinderWheel extends TileEntitySpecialRenderer
 {
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "grinder.png");
 	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
 
 	@Override
@@ -42,8 +41,10 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			dir = WorldUtility.invertZ(dir);
 			RenderUtility.rotateBlockBasedOnDirection(dir);
 			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
-			MODEL.renderAll();
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			MODEL.renderAllExcept("teeth");
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			MODEL.renderOnly("teeth");
 			glPopMatrix();
 		}
 	}
