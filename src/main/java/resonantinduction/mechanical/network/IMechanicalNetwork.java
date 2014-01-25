@@ -10,7 +10,7 @@ import universalelectricity.api.net.INetwork;
 public interface IMechanicalNetwork extends INetwork<IMechanicalNetwork, IMechanical>
 {
 	/**
-	 * @return The current rotation value of the network.
+	 * @return The current rotation value of the network. Used for syncing rotational values.
 	 */
-	public float getRotation();
+	public float getRotation(float velocity);
 }

@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IBelt;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.IMechanical;
@@ -76,11 +77,12 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		{
 			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "mods.assemblyline.conveyor", 0.5f, 0.7f, true);
+				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.7f, true);
 			}
 
-			angle += Math.abs(angularVelocity / 20);
-			double beltPercentage = (angle % Math.PI) / Math.PI;
+			angle = getNetwork().getRotation(getMoveVelocity());
+			// (float) ((angle + getMoveVelocity() / 20) % Math.PI);
+			double beltPercentage = angle / (2 * Math.PI);
 
 			// Sync the animation. Slant belts are slower.
 			if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)

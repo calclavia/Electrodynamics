@@ -102,7 +102,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ICu
 				bindTexture(name);
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				GL11.glTranslatef(0f, -0.68f, 0f);
-				MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.getNetwork().getRotation()), false, false, false, false);
+				MODEL.render(0.0625f, (float) Math.toRadians(tileEntity.angle), false, false, false, false);
 			}
 		}
 		else
@@ -124,7 +124,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ICu
 			}
 			ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "belt/frame" + frame + ".png");
 			bindTexture(name);
-			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.getNetwork().getRotation()), false, false, false, true);
+			MODEL.render(0.0625F, (float) Math.toRadians(tileEntity.angle), false, false, false, true);
 
 		}
 

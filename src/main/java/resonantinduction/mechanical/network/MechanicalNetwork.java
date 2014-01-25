@@ -144,13 +144,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	}
 
 	@Override
-	public float getRotation()
+	public float getRotation(float velocity)
 	{
 		long deltaTime = System.currentTimeMillis() - lastRotateTime;
 
 		if (deltaTime > 1)
 		{
-			rotation = (float) (((0) * (deltaTime / 1000f) + rotation) % (2 * Math.PI));
+			rotation = (float) (((velocity) * (deltaTime / 1000f) + rotation) % (2 * Math.PI));
 			lastRotateTime = System.currentTimeMillis();
 		}
 
