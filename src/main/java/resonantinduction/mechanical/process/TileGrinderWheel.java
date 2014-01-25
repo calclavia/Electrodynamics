@@ -25,14 +25,13 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class TileGrinderWheel extends TileMechanical implements IRotatable
 {
-	public static final long POWER = 500000;
-	public static final int DEFAULT_TIME = 20 * 20;
+	public static final int PROCESS_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 
 	public EntityItem grindingItem = null;
-
-	private final long requiredTorque = 1000;
+	
+	private final long requiredTorque = 2000;
 	private long counter = 0;
 
 	@Override
@@ -79,7 +78,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 							{
 								grindingItem.setEntityItemStack(grindingItem.getEntityItem());
 								// Reset timer
-								timer.put(grindingItem, DEFAULT_TIME);
+								timer.put(grindingItem, PROCESS_TIME);
 							}
 						}
 					}

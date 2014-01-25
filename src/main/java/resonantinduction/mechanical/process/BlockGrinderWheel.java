@@ -58,7 +58,7 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 
 						if (!TileGrinderWheel.timer.containsKey((EntityItem) entity))
 						{
-							TileGrinderWheel.timer.put((EntityItem) entity, TileGrinderWheel.DEFAULT_TIME);
+							TileGrinderWheel.timer.put((EntityItem) entity, TileGrinderWheel.PROCESS_TIME);
 						}
 					}
 					else

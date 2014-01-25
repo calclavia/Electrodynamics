@@ -21,7 +21,7 @@ import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.part.BlockMachinePart;
+import resonantinduction.core.part.BlockMachineMaterial;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
@@ -87,7 +87,7 @@ public class Archaic
 		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
 
-		blockMachinePart = contentRegistry.createBlock(BlockMachinePart.class, ItemBlockMetadata.class);
+		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
 		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
 		itemHammer = contentRegistry.createItem(ItemHammer.class);

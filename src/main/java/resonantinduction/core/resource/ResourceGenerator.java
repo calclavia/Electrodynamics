@@ -76,10 +76,10 @@ public class ResourceGenerator
 
 				// Add rubble to crushing recipes
 				// TODO: Change this to CRUSHING when the crusher is finished.
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, "rubble" + name, "rubble" + name);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, "dust" + name, "dust" + name);
 
 				// Add dust to mixer recipes, dummy item because mixer doesn't produce any items.
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "rubble" + name, "dust" + name);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + name, "dustRefined" + name);
 			}
 		}
 	}

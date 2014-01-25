@@ -15,7 +15,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
-import resonantinduction.core.part.BlockMachinePart;
+import resonantinduction.core.part.BlockMachineMaterial;
 import resonantinduction.electrical.armbot.BlockArmbot;
 import resonantinduction.electrical.armbot.TileArmbot;
 import resonantinduction.electrical.battery.BlockBattery;

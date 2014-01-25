@@ -26,8 +26,10 @@ import universalelectricity.api.vector.Vector3;
 public class TileMixer extends TileMechanical
 {
 	public static final long POWER = 500000;
-	public static final int DEFAULT_TIME = 5 * 20;
+	public static final int PROCESS_TIME = 5 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
+	private final long requiredTorque = 1000;
+	private long counter = 0;
 
 	@Override
 	public void updateEntity()
@@ -36,6 +38,7 @@ public class TileMixer extends TileMechanical
 
 		if (canWork())
 		{
+			counter = Math.max(counter + torque, 0);
 			doWork();
 		}
 	}
@@ -47,7 +50,7 @@ public class TileMixer extends TileMechanical
 	 */
 	public boolean canWork()
 	{
-		return true;
+		return counter >= requiredTorque;
 	}
 
 	public void doWork()
@@ -105,7 +108,7 @@ public class TileMixer extends TileMechanical
 		{
 			if (!timer.containsKey(processingItem))
 			{
-				timer.put(processingItem, DEFAULT_TIME);
+				timer.put(processingItem, PROCESS_TIME);
 			}
 
 			if (!processingItem.isDead && new Vector3(this).add(0.5).distance(processingItem) < 2)
@@ -126,7 +129,7 @@ public class TileMixer extends TileMechanical
 						{
 							processingItem.setEntityItemStack(processingItem.getEntityItem());
 							// Reset timer
-							timer.put(processingItem, DEFAULT_TIME);
+							timer.put(processingItem, PROCESS_TIME);
 						}
 					}
 				}
