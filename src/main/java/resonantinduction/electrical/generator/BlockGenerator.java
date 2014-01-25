@@ -15,7 +15,7 @@ public class BlockGenerator extends BlockRIRotatable
 	{
 		super("generator");
 		setTextureName(Reference.PREFIX + "material_steel");
-		rotationMask = 0b111111;
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class BlockTurntable extends BlockRIRotatable
 		super("turntable");
 		setTextureName(Reference.PREFIX + "turntable_side");
 		setTickRandomly(true);
-		rotationMask = 0b111111;
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	@Override

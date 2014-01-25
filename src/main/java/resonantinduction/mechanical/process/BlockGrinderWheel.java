@@ -27,7 +27,7 @@ public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityPr
 		super("grindingWheel", Settings.getNextBlockID());
 		setTextureName(Reference.PREFIX + "material_steel_dark");
 		setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
-		rotationMask = 0b111111;
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	@Override

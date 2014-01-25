@@ -52,7 +52,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	public static final int PACKET_TANK = Mechanical.contentRegistry.getNextPacketID();
 
 	/** Bitmask that handles connections for the renderer **/
-	public byte renderSides = 0b0;
+	public byte renderSides = 0;
 
 	@Override
 	public void initiate()

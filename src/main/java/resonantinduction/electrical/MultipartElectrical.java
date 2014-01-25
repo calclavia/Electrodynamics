@@ -6,6 +6,8 @@ import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedSwitchWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
+import resonantinduction.mechanical.fluid.pipe.PartPipe;
+import resonantinduction.mechanical.gear.PartGear;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -28,20 +30,29 @@ public class MultipartElectrical implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-		switch (name)
+		if (name.equals("resonant_induction_wire"))
 		{
-			case "resonant_induction_wire":
-				return new PartFramedWire();
-			case "resonant_induction_switch_wire":
-				return new PartFramedSwitchWire();
-			case "resonant_induction_flat_wire":
-				return new PartFlatWire();
-			case "resonant_induction_flat_switch_wire":
-				return new PartFlatSwitchWire();
-			case "resonant_induction_multimeter":
-				return new PartMultimeter();
-			case "resonant_induction_transformer":
-				return new PartTransformer();
+			return new PartFramedWire();
+		}
+		else if (name.equals("resonant_induction_switch_wire"))
+		{
+			return new PartFramedSwitchWire();
+		}
+		else if (name.equals("resonant_induction_flat_wire"))
+		{
+			return new PartFlatWire();
+		}
+		else if (name.equals("resonant_induction_flat_switch_wire"))
+		{
+			return new PartFlatSwitchWire();
+		}
+		else if (name.equals("resonant_induction_multimeter"))
+		{
+			return new PartMultimeter();
+		}
+		else if (name.equals("resonant_induction_transformer"))
+		{
+			return new PartTransformer();
 		}
 
 		return null;

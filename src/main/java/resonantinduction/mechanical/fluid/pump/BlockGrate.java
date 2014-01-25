@@ -21,7 +21,7 @@ public class BlockGrate extends BlockRIRotatable
 	public BlockGrate()
 	{
 		super("grate");
-		rotationMask = 0b111111;
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	@Override

@@ -33,26 +33,26 @@ public class ItemPipeRenderer implements IItemRenderer
 		if (type == ItemRenderType.ENTITY)
 		{
 			GL11.glTranslatef(-.5F, -1F, -.5F);
-			RenderPipe.render(meta, (byte) 0b001100);
+			RenderPipe.render(meta, Byte.parseByte("001100", 2));
 		}
 		else if (type == ItemRenderType.INVENTORY)
 		{
 			GL11.glTranslatef(0F, -1F, 0F);
-			RenderPipe.render(meta, (byte) 0b001100);
+			RenderPipe.render(meta, Byte.parseByte("001100", 2));
 		}
 		else if (type == ItemRenderType.EQUIPPED)
 		{
 			GL11.glTranslatef(-1F, -1.2F, 0.5F);
-			RenderPipe.render(meta, (byte) 0b000011);
+			RenderPipe.render(meta, Byte.parseByte("000011", 2));
 		}
 		else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
 		{
 			GL11.glTranslatef(-2F, -1.5F, 0.2F);
-			RenderPipe.render(meta, (byte) 0b000011);
+			RenderPipe.render(meta, Byte.parseByte("000011", 2));
 		}
 		else
 		{
-			RenderPipe.render(item.getItemDamage(), (byte) 0b000011);
+			RenderPipe.render(item.getItemDamage(), Byte.parseByte("000011", 2));
 		}
 
 		GL11.glPopMatrix();

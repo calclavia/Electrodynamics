@@ -23,12 +23,13 @@ public class MultipartMechanical implements IPartFactory
 	@Override
 	public TMultiPart createPart(String name, boolean client)
 	{
-		switch (name)
+		if (name.equals("resonant_induction_gear"))
 		{
-			case "resonant_induction_gear":
-				return new PartGear();
-			case "resonant_induction_pipe":
-				return new PartPipe();
+			return new PartGear();
+		}
+		else if (name.equals("resonant_induction_pipe"))
+		{
+			return new PartPipe();
 		}
 
 		return null;
