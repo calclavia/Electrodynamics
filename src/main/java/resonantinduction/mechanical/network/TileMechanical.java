@@ -15,6 +15,12 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public float angle = 0;
 
 	@Override
+	public void initiate()
+	{
+		refresh();
+	}
+
+	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
@@ -23,16 +29,24 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 		angularVelocity *= getLoad();
 	}
 
-	protected float getLoad()
-	{
-		return 0.9f;
-	}
-
 	@Override
 	public void invalidate()
 	{
 		getNetwork().split(this);
 		super.invalidate();
+	}
+
+	/**
+	 * Refreshes all the connections of this block.
+	 */
+	public void refresh()
+	{
+
+	}
+
+	protected float getLoad()
+	{
+		return 0.9f;
 	}
 
 	@Override

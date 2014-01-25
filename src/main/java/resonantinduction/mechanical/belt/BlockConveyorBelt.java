@@ -126,7 +126,7 @@ public class BlockConveyorBelt extends BlockRI
 					{
 						par6List.add(newBounds);
 					}
-					
+
 					return;
 				}
 
@@ -304,8 +304,8 @@ public class BlockConveyorBelt extends BlockRI
 
 					if (slantType == SlantType.UP)
 					{
-						//We need at least 0.25 to move items up.
-						entity.motionY = Math.max(0.25, maxSpeed);
+						// We need at least 0.25 to move items up.
+						entity.motionY = maxSpeed * 2;// Math.max(0.25, maxSpeed);
 					}
 					else if (slantType == SlantType.DOWN)
 					{
@@ -330,16 +330,14 @@ public class BlockConveyorBelt extends BlockRI
 						{
 							double difference = (z + 0.5) - entity.posZ;
 							entity.motionZ += difference * 0.1;
-							// entity.posZ = z + 0.5;
 						}
 						else if (direction.offsetZ != 0)
 						{
 							double difference = (x + 0.5) - entity.posX;
 							entity.motionX += difference * 0.1;
-							// /entity.posX = x + 0.5;
 						}
 
-						((EntityItem) entity).age++;
+						((EntityItem) entity).age = 0;
 
 						boolean foundSneaking = false;
 						for (EntityPlayer player : (List<EntityPlayer>) world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1)))
