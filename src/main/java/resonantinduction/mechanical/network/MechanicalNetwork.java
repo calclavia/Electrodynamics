@@ -79,7 +79,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 					if (adjacentMech != null)
 					{
-						float ratio = adjacentMech.getRatio() / mechanical.getRatio();
+						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
 						long torque = mechanical.getTorque();
 
 						if (Math.abs(torque - adjacentMech.getTorque() / ratio * ACCELERATION) < Math.abs(adjacentMech.getTorque() / ratio))

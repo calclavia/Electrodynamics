@@ -115,7 +115,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public float getRatio()
+	public float getRatio(ForgeDirection dir)
 	{
 		return 0.5f;
 	}

@@ -36,9 +36,10 @@ public class TileMixer extends TileMechanical
 	{
 		super.updateEntity();
 
+		counter = Math.max(counter + torque, 0);
+
 		if (canWork())
 		{
-			counter = Math.max(counter + torque, 0);
 			doWork();
 		}
 	}
@@ -154,6 +155,8 @@ public class TileMixer extends TileMechanical
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "mixer", 0.5f, 1);
 			}
+			
+			counter-=requiredTorque;
 		}
 	}
 

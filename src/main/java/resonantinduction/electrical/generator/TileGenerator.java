@@ -62,12 +62,16 @@ public class TileGenerator extends TileElectrical implements IRotatable
 		if (tile instanceof IMechanical)
 		{
 			IMechanical mech = ((IMechanical) tile).getInstance(inputDir.getOpposite());
-			long receive = energy.receiveEnergy((long) Math.abs(mech.getTorque() * mech.getAngularVelocity()), true);
 
-			if (receive > 0)
+			if (mech != null)
 			{
-				mech.setTorque((long) (mech.getTorque() * 0.5));
-				mech.setAngularVelocity(mech.getAngularVelocity() * 0.5f);
+				long receive = energy.receiveEnergy((long) Math.abs(mech.getTorque() * mech.getAngularVelocity()), true);
+
+				if (receive > 0)
+				{
+					mech.setTorque((long) (mech.getTorque() * 0.5));
+					mech.setAngularVelocity(mech.getAngularVelocity() * 0.5f);
+				}
 			}
 		}
 	}
@@ -100,7 +104,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 						setTorque = (long) Math.max(setTorque, currentTorque * (currentTorque / maxTorque));
 					}
 				}
-				
+
 				float currentVelo = Math.abs(mech.getAngularVelocity());
 				if (currentVelo != 0)
 					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);

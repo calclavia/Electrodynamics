@@ -18,7 +18,7 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 
 	public void setTorque(long torque);
 	
-	public float getRatio();
+	public float getRatio(ForgeDirection dir);
 
 	public IMechanical getInstance(ForgeDirection dir);
 }

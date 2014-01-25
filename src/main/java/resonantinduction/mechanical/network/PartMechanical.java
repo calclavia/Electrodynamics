@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import calclavia.lib.network.PacketHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -123,60 +124,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		refresh();
 	}
 
-	/**
-	 * Refresh should be called sparingly.
-	 */
-	public void refresh()
-	{
-		connections = new Object[6];
-
-		/** Look for gears that are back-to-back with this gear. Equate torque. */
-		TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
-
-		if (tileBehind instanceof IMechanical)
-		{
-			IMechanical instance = (IMechanical) ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
-
-			if (instance != null && instance.canConnect(placementSide))
-			{
-				connections[placementSide.getOpposite().ordinal()] = instance;
-				getNetwork().merge(instance.getNetwork());
-			}
-
-		}
-		/** Look for gears that are internal and adjacent to this gear. (The 4 sides) */
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-			IMechanical instance = (IMechanical) ((IMechanical) tile()).getInstance(checkDir);
-
-			if (connections[checkDir.ordinal()] == null && checkDir != placementSide && checkDir != placementSide.getOpposite() && instance != null && instance.canConnect(checkDir.getOpposite()))
-			{
-				connections[checkDir.ordinal()] = instance;
-				getNetwork().merge(instance.getNetwork());
-			}
-		}
-
-		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
-		for (int i = 0; i < 4; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
-			TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-
-			if (connections[checkDir.ordinal()] == null && checkTile instanceof IMechanical)
-			{
-				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
-
-				if (instance != null && instance.canConnect(placementSide.getOpposite()))
-				{
-					connections[checkDir.ordinal()] = instance;
-					getNetwork().merge(instance.getNetwork());
-				}
-			}
-		}
-
-		getNetwork().reconstruct();
-	}
+	protected abstract void refresh();
 
 	@Override
 	public Object[] getConnections()
@@ -193,17 +141,24 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	/** Packet Code. */
 	public void sendRotationPacket()
 	{
-		if (world() != null && !world().isRemote && tile() != null)
+		if (world() != null && !world().isRemote)
 		{
-			tile().getWriteStream(this).writeByte(0).writeFloat(angularVelocity);
+			sendDescUpdate();
+			// TODO: Make packets more efficient.
+			// getWriteStream().writeByte(1).writeFloat(angularVelocity);
 		}
 	}
 
 	public void read(MCDataInput packet, int packetID)
 	{
-		if (packetID == 0)
+		switch (packetID)
 		{
-			angularVelocity = packet.readFloat();
+			case 0:
+				readDesc(packet);
+				break;
+			case 1:
+				angularVelocity = packet.readFloat();
+				break;
 		}
 	}
 
@@ -211,19 +166,23 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
-		this.placementSide = ForgeDirection.getOrientation(packet.readByte());
+		load(packet.readNBTTagCompound());
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		packet.writeByte(this.placementSide.ordinal());
+		// packet.writeByte(0);
+		NBTTagCompound nbt = new NBTTagCompound();
+		save(nbt);
+		packet.writeNBTTagCompound(nbt);
 	}
 
 	@Override
 	public void read(MCDataInput packet)
 	{
-		read(packet, packet.readUByte());
+		super.read(packet);
+		// read(packet, packet.readUByte());
 	}
 
 	@Override
@@ -263,15 +222,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
-		super.load(nbt);
-		this.placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
+		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
+		angularVelocity = nbt.getFloat("angularVelocity");
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
-		super.save(nbt);
-		nbt.setByte("side", (byte) this.placementSide.ordinal());
+		nbt.setByte("side", (byte) placementSide.ordinal());
+		nbt.setFloat("angularVelocity", angularVelocity);
 	}
 
 	protected abstract ItemStack getItem();
@@ -341,7 +300,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public float getRatio()
+	public float getRatio(ForgeDirection dir)
 	{
 		return 0.5f;
 	}

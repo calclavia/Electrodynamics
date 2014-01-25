@@ -30,18 +30,26 @@ public class RenderGear
 
 	public void renderDynamic(PartGear part, double x, double y, double z, float frame)
 	{
-		GL11.glPushMatrix();
-		// Center the model first.
-		GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
-		GL11.glPushMatrix();
+		if (part.getMultiBlock().isPrimary())
+		{
+			GL11.glPushMatrix();
+			// Center the model first.
+			GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
+			GL11.glPushMatrix();
 
-		RenderUtility.rotateFaceBlockToSide(part.placementSide);
+			RenderUtility.rotateFaceBlockToSide(part.placementSide);
 
-		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
+			GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
-		MODEL.renderAll();
-		GL11.glPopMatrix();
-		GL11.glPopMatrix();
+			if (part.getMultiBlock().isConstructed())
+			{
+				GL11.glScalef(3, 1, 3);
+			}
+
+			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
+			MODEL.renderAll();
+			GL11.glPopMatrix();
+			GL11.glPopMatrix();
+		}
 	}
 }
