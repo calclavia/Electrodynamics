@@ -12,9 +12,7 @@ import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.pump.BlockGrate;
-import resonantinduction.mechanical.fluid.pump.BlockPump;
 import resonantinduction.mechanical.fluid.pump.TileGrate;
-import resonantinduction.mechanical.fluid.pump.TilePump;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.mechanical.gear.ItemGear;
@@ -81,7 +79,6 @@ public class Mechanical
 	public static Block blockTank;
 	public static Block blockReleaseValve;
 	public static Block blockGrate;
-	public static Block blockPump;
 
 	public static Item itemPipe;
 	public static Item itemPipeGuage;
@@ -107,7 +104,6 @@ public class Mechanical
 
 		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
-		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 
 		itemPipeGuage = contentRegistry.createItem(ItemPipeGauge.class);
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
