@@ -7,11 +7,14 @@ import java.util.Set;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.resource.item.ItemOreResource;
+import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.fluid.TileLiquidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -72,8 +75,7 @@ public class TileMixer extends TileMechanical
 
 			if (entity instanceof EntityItem)
 			{
-				// TODO: Use machine recipe
-				if (((EntityItem) entity).getEntityItem().getItem() instanceof ItemOreResource)
+				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, ((EntityItem) entity).getEntityItem()).length > 0)
 				{
 					processItems.add((EntityItem) entity);
 				}
@@ -86,11 +88,11 @@ public class TileMixer extends TileMechanical
 			{
 				timer.put(processingItem, DEFAULT_TIME);
 			}
-			
+
 			if (!processingItem.isDead && new Vector3(this).add(0.5).distance(processingItem) < 2)
 			{
 				int timeLeft = timer.decrease(processingItem);
-				
+
 				if (timeLeft <= 0)
 				{
 					if (this.doneWork(processingItem))
@@ -135,8 +137,20 @@ public class TileMixer extends TileMechanical
 
 	private boolean doneWork(EntityItem entity)
 	{
-		ItemStack itemStack = entity.getEntityItem();
-		entity.setDead();
+		TileEntity tileEntity = new Vector3(entity).getTileEntity(worldObj);
+
+		if (tileEntity instanceof TileLiquidMixture)
+		{
+			System.out.println("MIXING!");
+			ItemStack itemStack = entity.getEntityItem().copy();
+			return ((TileLiquidMixture) tileEntity).mix(itemStack);
+		}
+		else
+		{
+			System.out.println("transformed block!");
+			new Vector3(entity).setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID);
+		}
+
 		return false;
 	}
 

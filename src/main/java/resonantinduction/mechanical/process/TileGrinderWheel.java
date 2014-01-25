@@ -29,7 +29,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public static final int DEFAULT_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
-	
+
 	public EntityItem grindingItem = null;
 
 	private final long requiredTorque = 1000;
@@ -131,20 +131,20 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 		for (Resource resource : results)
 		{
-			if (resource instanceof ItemStackResource)
-			{
-				if (!this.worldObj.isRemote)
-				{
-					EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY - 1.2, entity.posZ, ((ItemStackResource) resource).itemStack.copy());
-					entityItem.delayBeforeCanPickup = 20;
-					entityItem.motionX = 0;
-					entityItem.motionY = 0;
-					entityItem.motionZ = 0;
-					this.worldObj.spawnEntityInWorld(entityItem);
-				}
+			ItemStack outputStack = resource.getItemStack();
 
-				return true;
+			if (!this.worldObj.isRemote)
+			{
+				EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY - 1.2, entity.posZ, outputStack.copy());
+				entityItem.delayBeforeCanPickup = 20;
+				entityItem.motionX = 0;
+				entityItem.motionY = 0;
+				entityItem.motionZ = 0;
+				this.worldObj.spawnEntityInWorld(entityItem);
 			}
+
+			return true;
+
 		}
 
 		return false;

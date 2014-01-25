@@ -15,7 +15,7 @@ public final class MachineRecipes
 {
 	public static enum RecipeType
 	{
-		GRINDER, SAWMILL, SMELTER;
+		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
 	}
 
 	private final Map<RecipeType, Map<Resource[], Resource[]>> recipes = new HashMap<RecipeType, Map<Resource[], Resource[]>>();
@@ -43,6 +43,23 @@ public final class MachineRecipes
 	public void addRecipe(RecipeType machine, String input, ItemStack output)
 	{
 		this.addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, new ItemStackResource[] { new ItemStackResource(output) });
+	}
+
+	public void addRecipe(RecipeType machine, String input, String... oreNameOutputs)
+	{
+		OreDictResource[] outputs = new OreDictResource[oreNameOutputs.length];
+
+		for (int i = 0; i < outputs.length; i++)
+		{
+			outputs[i] = new OreDictResource(oreNameOutputs[i]);
+		}
+
+		addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, outputs);
+	}
+
+	public void addRecipe(RecipeType machine, String input, OreDictResource... output)
+	{
+		this.addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, output);
 	}
 
 	public void removeRecipe(RecipeType machine, Resource[] input)

@@ -16,7 +16,7 @@ import resonantinduction.core.handler.LinkEventHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
+import resonantinduction.core.resource.fluid.TileLiquidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
@@ -75,7 +75,7 @@ public class ResonantInduction
 	public static Block blockDebug;
 
 	public static Fluid MIXTURE = null;
-	
+
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
 	@EventHandler
@@ -105,7 +105,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
 
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
+		GameRegistry.registerTileEntity(TileLiquidMixture.class, blockFluidMixture.getUnlocalizedName());
 
 		blockDebug = contentRegistry.createBlock(BlockDebug.class, ItemBlockHolder.class);
 
