@@ -14,125 +14,140 @@ import resonantinduction.api.fluid.IFluidPipe;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 
-/** The network for pipe fluid transfer. getNodes() is NOT used.
+/**
+ * The network for pipe fluid transfer. getNodes() is NOT used.
  * 
- * @author DarkGuardsman */
+ * @author DarkGuardsman
+ */
 public class PipeNetwork extends FluidNetwork
 {
-    public HashMap<IFluidHandler, EnumSet<ForgeDirection>> connectionMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
-    public int maxFlowRate = 0;
-    public int maxPressure = 0;
+	public HashMap<IFluidHandler, EnumSet<ForgeDirection>> sideMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
+	public HashMap<IFluidHandler, IFluidConnector> connectionMap = new HashMap<IFluidHandler, IFluidConnector>();
+	public int maxFlowRate = 0;
+	public int maxPressure = 0;
 
-    @Override
-    public void update()
-    {
-        /*
-         * Slight delay to allow visual effect to take place before draining the pipe's internal
-         * tank
-         */
-        FluidStack stack = this.getTank().getFluid().copy();
-        int count = this.connectionMap.size();
+	@Override
+	public void update()
+	{
+		/*
+		 * Slight delay to allow visual effect to take place before draining the pipe's internal
+		 * tank
+		 */
+		FluidStack stack = this.getTank().getFluid().copy();
+		int count = this.sideMap.size();
 
-        for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.connectionMap.entrySet())
-        {
-            int sideCount = entry.getValue().size();
-            for (ForgeDirection dir : entry.getValue())
-            {
-                int volPer = (stack.amount / count);
-                int volPerSide = (volPer / sideCount);
+		for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.sideMap.entrySet())
+		{
+			int sideCount = entry.getValue().size();
 
-                stack.amount -= entry.getKey().fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
+			for (ForgeDirection dir : entry.getValue())
+			{
+				int volPer = (stack.amount / count);
+				int volPerSide = (volPer / sideCount);
+				IFluidHandler handler = entry.getKey();
 
-                if (sideCount > 1)
-                    --sideCount;
-                if (volPer <= 0)
-                    break;
-            }
+				/*
+				 * Don't input to tanks from the sides where the pipe is extraction mode. This
+				 * prevents feed-back loops.
+				 */
+				if (connectionMap.get(handler).canFlow())
+				{
+					stack.amount -= handler.fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
+				}
+				
+				if (sideCount > 1)
+					--sideCount;
+				if (volPer <= 0)
+					break;
+			}
 
-            if (count > 1)
-                count--;
+			if (count > 1)
+				count--;
 
-            if (stack == null || stack.amount <= 0)
-            {
-                stack = null;
-                break;
-            }
-        }
+			if (stack == null || stack.amount <= 0)
+			{
+				stack = null;
+				break;
+			}
+		}
 
-        this.getTank().setFluid(stack);
-        // TODO check for change before rebuilding
-        this.reconstructTankInfo();
-    }
+		this.getTank().setFluid(stack);
+		// TODO check for change before rebuilding
+		this.reconstructTankInfo();
+	}
 
-    @Override
-    public boolean canUpdate()
-    {
-        return getTank().getFluidAmount() > 0 && connectionMap.size() > 0 && getConnectors().size() > 0;
-    }
+	@Override
+	public boolean canUpdate()
+	{
+		return getTank().getFluidAmount() > 0 && sideMap.size() > 0 && getConnectors().size() > 0;
+	}
 
-    @Override
-    public boolean continueUpdate()
-    {
-        return canUpdate();
-    }
+	@Override
+	public boolean continueUpdate()
+	{
+		return canUpdate();
+	}
 
-    @Override
-    public void reconstruct()
-    {
-        this.connectionMap.clear();
-        this.maxFlowRate = Integer.MAX_VALUE;
-        this.maxPressure = Integer.MAX_VALUE;
-        super.reconstruct();
-    }
+	@Override
+	public void reconstruct()
+	{
+		this.sideMap.clear();
+		this.maxFlowRate = Integer.MAX_VALUE;
+		this.maxPressure = Integer.MAX_VALUE;
+		super.reconstruct();
+	}
 
-    @Override
-    public void reconstructConnector(IFluidConnector part)
-    {
-        super.reconstructConnector(part);
-        if (part instanceof IFluidPipe)
-        {
-            if (((IFluidPipe) part).getMaxFlowRate() < this.maxFlowRate)
-                this.maxFlowRate = ((IFluidPipe) part).getMaxFlowRate();
+	@Override
+	public void reconstructConnector(IFluidConnector connector)
+	{
+		super.reconstructConnector(connector);
 
-            if (((IFluidPipe) part).getMaxPressure() < this.maxPressure)
-                this.maxPressure = ((IFluidPipe) part).getMaxPressure();
-        }
-        for (int i = 0; i < 6; i++)
-        {
-            if (part.getConnections()[i] instanceof IFluidHandler && !(part.getConnections()[i] instanceof IFluidPipe))
-            {
-                EnumSet<ForgeDirection> set = this.connectionMap.get(part.getConnections()[i]);
-                if (set == null)
-                {
-                    set = EnumSet.noneOf(ForgeDirection.class);
-                }
-                set.add(ForgeDirection.getOrientation(i).getOpposite());
-                this.connectionMap.put((IFluidHandler) part.getConnections()[i], set);
-            }
-        }
-    }
+		if (connector instanceof IFluidPipe)
+		{
+			if (((IFluidPipe) connector).getMaxFlowRate() < this.maxFlowRate)
+				this.maxFlowRate = ((IFluidPipe) connector).getMaxFlowRate();
 
-    @Override
-    public FluidStack drain(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doDrain)
-    {
-        return null;
-    }
+			if (((IFluidPipe) connector).getMaxPressure() < this.maxPressure)
+				this.maxPressure = ((IFluidPipe) connector).getMaxPressure();
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			if (connector.getConnections()[i] instanceof IFluidHandler && !(connector.getConnections()[i] instanceof IFluidPipe))
+			{
+				EnumSet<ForgeDirection> set = this.sideMap.get(connector.getConnections()[i]);
+				if (set == null)
+				{
+					set = EnumSet.noneOf(ForgeDirection.class);
+				}
 
-    @Override
-    public FluidStack drain(IFluidConnector source, ForgeDirection from, int resource, boolean doDrain)
-    {
-        return null;
-    }
+				set.add(ForgeDirection.getOrientation(i).getOpposite());
+				sideMap.put((IFluidHandler) connector.getConnections()[i], set);
+				connectionMap.put((IFluidHandler) connector.getConnections()[i], connector);
+			}
+		}
+	}
 
-    @Override
-    public Class getConnectorClass()
-    {
-        return IFluidPipe.class;
-    }
+	@Override
+	public FluidStack drain(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		return null;
+	}
 
-    @Override
-    public IFluidNetwork newInstance()
-    {
-        return new PipeNetwork();
-    }
+	@Override
+	public FluidStack drain(IFluidConnector source, ForgeDirection from, int resource, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public Class getConnectorClass()
+	{
+		return IFluidPipe.class;
+	}
+
+	@Override
+	public IFluidNetwork newInstance()
+	{
+		return new PipeNetwork();
+	}
 }

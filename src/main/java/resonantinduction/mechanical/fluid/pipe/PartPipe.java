@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import calclavia.lib.prefab.block.BlockAdvanced;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -70,10 +71,15 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (!world().isRemote && player.isSneaking())
+		if (!world().isRemote)
 		{
-			isExtracting = !isExtracting;
-			player.addChatMessage("Pipe extraction mode: " + isExtracting);
+			if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+			{
+				isExtracting = !isExtracting;
+				player.addChatMessage("Pipe extraction mode: " + isExtracting);
+				BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
+				return true;
+			}
 		}
 
 		return super.activate(player, part, item);
@@ -211,6 +217,12 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		super.load(nbt);
 		isExtracting = nbt.getBoolean("isExtracting");
+	}
+
+	@Override
+	public boolean canFlow()
+	{
+		return !isExtracting;
 	}
 
 }

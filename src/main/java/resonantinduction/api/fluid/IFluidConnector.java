@@ -16,4 +16,6 @@ public interface IFluidConnector extends IConnector<IFluidNetwork>, IFluidHandle
 	public FluidTank getInternalTank();
 
 	public void onFluidChanged();
+
+	public boolean canFlow();
 }
