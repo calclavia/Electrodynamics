@@ -28,6 +28,7 @@ public class LiquidPathFinder
 	public Set<Vector3> nodeList = new HashSet<Vector3>();
 	/** List of all nodes that match the search parms */
 	public Set<Vector3> results = new HashSet<Vector3>();
+	public final List<Vector3> sortedResults = new ArrayList<Vector3>();
 	/** Are we looking for liquid fillable blocks */
 	private boolean fill = false;
 	/** priority search direction either up or down only */
@@ -143,15 +144,16 @@ public class LiquidPathFinder
 	public boolean find(ForgeDirection direction, Vector3 origin)
 	{
 		this.runs++;
-		Vector3 vec = origin.clone().modifyPositionFromSide(direction);
+		Vector3 vec = origin.clone().translate(direction);
 		double distance = vec.toVector2().distance(this.Start.toVector2());
-		if (distance <= this.range && this.isValidNode(vec))
+
+		if (distance <= this.range && isValidNode(vec))
 		{
 			if (this.fill && FluidUtility.drainBlock(world, vec, false) != null || FluidUtility.isFillableFluid(world, vec))
 			{
 				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
-					Vector3 veb = vec.clone().modifyPositionFromSide(dir);
+					Vector3 veb = vec.clone().translate(dir);
 					if (FluidUtility.isFillableBlock(world, veb))
 					{
 						this.addNode(veb);
@@ -162,6 +164,7 @@ public class LiquidPathFinder
 					}
 				}
 			}
+
 			if (this.findNodes(vec))
 			{
 				return true;
@@ -183,6 +186,7 @@ public class LiquidPathFinder
 		{
 			return false;
 		}
+
 		return FluidUtility.drainBlock(world, pos, false) != null || FluidUtility.isFillableFluid(world, pos);
 	}
 
@@ -224,7 +228,7 @@ public class LiquidPathFinder
 		this.find(ForgeDirection.UNKNOWN, startNode);
 
 		this.refresh();
-		this.sortBlockList(Start, results, !fill, fill);
+		this.sortBlockList(Start, results, fill);
 		return this;
 	}
 
@@ -270,60 +274,89 @@ public class LiquidPathFinder
 	 * Used to sort a list of vector3 locations using the vector3's distance from one point and
 	 * elevation in the y axis
 	 * 
+	 * Sorting is ordered from the highest-furthest block and consequently will have its adjacent
+	 * blocks as the "next blocks" to make sure the fluid can easily remove infinite fluids like
+	 * water.
+	 * 
 	 * @param start - start location to measure distance from
 	 * @param results2 - list of vectors to sort
-	 * @param closest - sort closest distance to the top
-	 * @param highest - sort highest y value to the top.
+	 * @param prioritizeHighest - sort highest y value to the top.
 	 * 
-	 * Note: highest takes priority over closest
+	 * Note: Height takes priority over distance.
 	 */
-	public void sortBlockList(final Vector3 start, final Set<Vector3> set, final boolean closest, final boolean highest)
+	public void sortBlockList(final Vector3 start, final Set<Vector3> set, final boolean prioritizeHighest)
 	{
 		try
 		{
-			List<Vector3> list = new ArrayList<Vector3>();
-			list.addAll(set);
-			Collections.sort(list, new Comparator<Vector3>()
+			sortedResults.clear();
+			sortedResults.addAll(set);
+
+			// The highest and furthest fluid block for drain. Closest fluid block for fill.
+			Vector3 bestFluid = null;
+
+			for (Vector3 checkPos : set)
+			{
+				if (bestFluid == null)
+				{
+					bestFluid = checkPos;
+				}
+
+				if (fill)
+				{
+					/**
+					 * We're filling, so we want the closest lowest block first.
+					 */
+					if (prioritizeHighest)
+					{
+						if (checkPos.y < bestFluid.y)
+						{
+							bestFluid = checkPos;
+						}
+						else if (checkPos.y == bestFluid.y && start.distance(checkPos) < start.distance(bestFluid))
+						{
+							bestFluid = checkPos;
+						}
+					}
+					else if (start.distance(checkPos) < start.distance(bestFluid))
+					{
+						bestFluid = checkPos;
+					}
+				}
+				else
+				{
+					/**
+					 * We're draining, so we want the highest furthest block first.
+					 */
+					if (prioritizeHighest)
+					{
+						if (checkPos.y > bestFluid.y)
+						{
+							bestFluid = checkPos;
+						}
+						else if (checkPos.y == bestFluid.y && start.distance(checkPos) > start.distance(bestFluid))
+						{
+							bestFluid = checkPos;
+						}
+					}
+					else if (start.distance(checkPos) > start.distance(bestFluid))
+					{
+						bestFluid = checkPos;
+					}
+				}
+			}
+
+			final Vector3 optimalFluid = bestFluid;
+
+			Collections.sort(sortedResults, new Comparator<Vector3>()
 			{
 				@Override
 				public int compare(Vector3 vecA, Vector3 vecB)
 				{
-					// Though unlikely always return zero for equal vectors
-					if (vecA.equals(vecB))
-					{
-						return 0;
-					}
-					// Check y value fist as this is the primary search area
-					if (Integer.compare(vecA.intY(), vecB.intY()) != 0)
-					{
-						if (highest)
-						{
-							return vecA.intY() > vecB.intY() ? -1 : 1;
-						}
-						else
-						{
-							return vecA.intY() > vecB.intY() ? 1 : -1;
-						}
-					}
-					// Check distance after that
-					double distanceA = Vector2.distance(vecA.toVector2(), start.toVector2());
-					double distanceB = Vector2.distance(vecB.toVector2(), start.toVector2());
-					if (Double.compare(distanceA, distanceB) != 0)
-					{
-						if (closest)
-						{
-							return distanceA > distanceB ? 1 : -1;
-						}
-						else
-						{
-							return distanceA > distanceB ? -1 : 1;
-						}
-					}
-					return Double.compare(distanceA, distanceB);
+					return Double.compare(vecA.distance(optimalFluid), vecB.distance(optimalFluid));
 				}
 			});
-			set.clear();
-			set.addAll(list);
+
+			Collections.reverse(sortedResults);
 		}
 		catch (Exception e)
 		{

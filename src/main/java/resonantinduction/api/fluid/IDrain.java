@@ -1,5 +1,6 @@
 package resonantinduction.api.fluid;
 
+import java.util.List;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
@@ -17,8 +18,8 @@ import calclavia.lib.prefab.tile.IRotatable;
 public interface IDrain extends IFluidHandler, IRotatable
 {
 	/** Gets the list of fillable blocks */
-	public Set<Vector3> getFillList();
+	public List<Vector3> getFillList();
 
 	/** Gets the list of drainable blocks */
-	public Set<Vector3> getDrainList();
+	public List<Vector3> getDrainList();
 }

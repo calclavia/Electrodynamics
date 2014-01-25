@@ -2,6 +2,7 @@ package resonantinduction.mechanical.fluid.network;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import net.minecraft.tileentity.TileEntity;
@@ -36,8 +37,11 @@ public class PipeNetwork extends FluidNetwork
 		FluidStack stack = this.getTank().getFluid().copy();
 		int count = this.sideMap.size();
 
-		for (Entry<IFluidHandler, EnumSet<ForgeDirection>> entry : this.sideMap.entrySet())
+		Iterator<Entry<IFluidHandler, EnumSet<ForgeDirection>>> it =  new HashMap<IFluidHandler, EnumSet<ForgeDirection>>(sideMap).entrySet().iterator();
+
+		while (it.hasNext())
 		{
+			Entry<IFluidHandler, EnumSet<ForgeDirection>> entry = it.next();
 			int sideCount = entry.getValue().size();
 
 			for (ForgeDirection dir : entry.getValue())
@@ -54,7 +58,7 @@ public class PipeNetwork extends FluidNetwork
 				{
 					stack.amount -= handler.fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
 				}
-				
+
 				if (sideCount > 1)
 					--sideCount;
 				if (volPer <= 0)

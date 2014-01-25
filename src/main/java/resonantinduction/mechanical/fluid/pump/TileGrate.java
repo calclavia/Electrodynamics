@@ -1,14 +1,11 @@
 package resonantinduction.mechanical.fluid.pump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -22,8 +19,6 @@ import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
-
-import com.builtbroken.common.Pair;
 
 public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 {
@@ -45,9 +40,9 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	}
 
 	@Override
-	public Set<Vector3> getFillList()
+	public List<Vector3> getFillList()
 	{
-		return this.getFillFinder().refresh().results;
+		return this.getFillFinder().refresh().sortedResults;
 	}
 
 	public LiquidPathFinder getDrainFinder()
@@ -60,9 +55,9 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 	}
 
 	@Override
-	public Set<Vector3> getDrainList()
+	public List<Vector3> getDrainList()
 	{
-		return getDrainFinder().refresh().results;
+		return getDrainFinder().refresh().sortedResults;
 	}
 
 	@Override
@@ -222,7 +217,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			doPathfinding();
 		}
 
-		Set<Vector3> drainList = getDrainList();
+		List<Vector3> drainList = getDrainList();
 
 		if (drainList != null && drainList.size() > 0)
 		{
@@ -257,7 +252,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 					 */
 					NetworkTickHandler.addNetwork(new IUpdate()
 					{
-						int wait = 60;
+						int wait = 20;
 
 						@Override
 						public void update()
