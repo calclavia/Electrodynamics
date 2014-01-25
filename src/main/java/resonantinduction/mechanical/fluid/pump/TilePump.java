@@ -117,11 +117,8 @@ public class TilePump extends TileMachine implements IReadOut, ITileConnector, I
         Set<Vector3> drainList = null;
         if (drain instanceof IDrain)
         {
-            if (!((IDrain) drain).canDrain(((IDrain) drain).getDirection()))
-            {
-                return;
-            }
-            origin = vec.modifyPositionFromSide(((IDrain) drain).getDirection());
+   
+			origin = vec.modifyPositionFromSide(((IDrain) drain).getDirection());
             entity = origin.getTileEntity(world);
             if (entity instanceof IFluidHandler)
             {

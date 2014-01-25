@@ -327,7 +327,6 @@ public class LiquidPathFinder
 		}
 		catch (Exception e)
 		{
-			System.out.println("FluidMech>>>BlockDrain>>FillArea>>Error>>CollectionSorter");
 			e.printStackTrace();
 		}
 	}

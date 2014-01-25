@@ -17,7 +17,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IDrain;
+import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.net.NetworkTickHandler;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
 
@@ -116,7 +118,8 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			return 0;
 		}
 		if (currentWorldEdits < MAX_FLUID_MODIFY_RATE)
-		{		int remainingVolume  = resource.amount;
+		{
+			int remainingVolume = resource.amount;
 
 			/* ID LIQUID BLOCK AND SET VARS FOR BLOCK PLACEMENT */
 			if (resource == null || resource.amount < FluidContainerRegistry.BUCKET_VOLUME)
@@ -127,13 +130,12 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			List<Vector3> fluids = new ArrayList<Vector3>();
 			List<Vector3> blocks = new ArrayList<Vector3>();
 			List<Vector3> filled = new ArrayList<Vector3>();
-			
 
 			if (getFillList() == null || getFillList().size() == 0)
 			{
 				doPathfinding();
 			}
-			
+
 			/* Sort results out into two groups and clear the rest out of the result list */
 			Iterator<Vector3> it = this.getFillFinder().refresh().results.iterator();
 			while (it.hasNext())
@@ -152,7 +154,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 					it.remove();
 				}
 			}
-			
+
 			/* Fill non-full fluids first */
 			for (Vector3 loc : fluids)
 			{
@@ -160,7 +162,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				{
 					break;
 				}
-				
+
 				if (FluidUtility.isFillableFluid(worldObj, loc))
 				{
 					remainingVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, remainingVolume), doFill);
@@ -172,7 +174,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 					}
 				}
 			}
-			
+
 			/* Fill air or replaceable blocks after non-full fluids */
 			for (Vector3 loc : blocks)
 			{
@@ -180,7 +182,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				{
 					break;
 				}
-				
+
 				if (FluidUtility.isFillableBlock(worldObj, loc))
 				{
 					remainingVolume -= FluidUtility.fillBlock(worldObj, loc, FluidUtility.getStack(resource, remainingVolume), doFill);
@@ -233,25 +235,55 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 					break;
 				}
 
-				Vector3 drainLocation = iterator.next();
+				final Vector3 drainLocation = iterator.next();
 				FluidStack drainStack = FluidUtility.drainBlock(worldObj, drainLocation, false, 3);
 
 				if (resultStack == null)
 				{
-					drainStack = FluidUtility.drainBlock(worldObj, drainLocation, doDrain, 3);
+					drainStack = FluidUtility.drainBlock(worldObj, drainLocation, doDrain, 2);
 					resultStack = drainStack;
 				}
 				else if (resultStack.equals(drainStack))
 				{
-					drainStack = FluidUtility.drainBlock(worldObj, drainLocation, doDrain, 3);
+					drainStack = FluidUtility.drainBlock(worldObj, drainLocation, doDrain, 2);
 					resultStack.amount += drainStack.amount;
 				}
 
 				if (doDrain)
 				{
-					currentWorldEdits++;
-					iterator.remove();
+					/**
+					 * Add a delayed notify event to prevent infinite fluids from reconstructing
+					 * quickly.
+					 */
+					NetworkTickHandler.addNetwork(new IUpdate()
+					{
+						int wait = 60;
+
+						@Override
+						public void update()
+						{
+							if (--wait <= 0)
+							{
+								worldObj.notifyBlocksOfNeighborChange(drainLocation.intX(), drainLocation.intY(), drainLocation.intZ(), worldObj.getBlockId(drainLocation.intX(), drainLocation.intY(), drainLocation.intZ()), 20);
+							}
+						}
+
+						@Override
+						public boolean canUpdate()
+						{
+							return true;
+						}
+
+						@Override
+						public boolean continueUpdate()
+						{
+							return wait > 0;
+						}
+					});
 				}
+
+				currentWorldEdits++;
+				iterator.remove();
 
 				if (resultStack.amount >= maxDrain)
 				{

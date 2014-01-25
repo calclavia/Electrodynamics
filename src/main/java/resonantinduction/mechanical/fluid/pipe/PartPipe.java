@@ -52,7 +52,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		if (!world().isRemote)
 		{
-			if (isExtracting)
+			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
 			{
 				for (int i = 0; i < this.getConnections().length; i++)
 				{
@@ -71,15 +71,15 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (!world().isRemote)
+		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
-			if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+			if (!world().isRemote)
 			{
 				isExtracting = !isExtracting;
 				player.addChatMessage("Pipe extraction mode: " + isExtracting);
 				BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
-				return true;
 			}
+			return true;
 		}
 
 		return super.activate(player, part, item);
@@ -121,7 +121,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return this.getNetwork().fill(this, from, resource, doFill);
+		return getNetwork().fill(this, from, resource, doFill);
 	}
 
 	@Override

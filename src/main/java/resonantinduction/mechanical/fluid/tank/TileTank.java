@@ -50,4 +50,10 @@ public class TileTank extends TileFluidNetwork
 		}
 	}
 
+	@Override
+	public boolean canFlow()
+	{
+		return false;
+	}
+
 }
