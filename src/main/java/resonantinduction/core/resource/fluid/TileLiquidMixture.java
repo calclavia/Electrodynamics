@@ -3,12 +3,15 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
 /**
@@ -32,6 +35,7 @@ public class TileLiquidMixture extends TileAdvanced
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			return true;
 		}
 
@@ -62,8 +66,14 @@ public class TileLiquidMixture extends TileAdvanced
 	/**
 	 * @return The color of the liquid based on the fluidStacks stored.
 	 */
+	@SideOnly(Side.CLIENT)
 	public int getColor()
 	{
+		for (ItemStack item : items)
+		{
+			return ResourceGenerator.getAverageColor(item);
+		}
+
 		return 0xFFFFFF;
 	}
 

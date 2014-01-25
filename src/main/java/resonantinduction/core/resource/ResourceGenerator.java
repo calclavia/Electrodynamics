@@ -36,6 +36,7 @@ public class ResourceGenerator
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 	public static final Set<String> materialNames = new HashSet<String>();
 	public static final HashMap<String, Integer> materialColors = new HashMap<String, Integer>();
+	public static final HashMap<Item, Integer> itemColorMap = new HashMap<Item, Integer>();
 
 	@ForgeSubscribe
 	public void oreRegisterEvent(OreRegisterEvent evt)
@@ -105,50 +106,7 @@ public class ResourceGenerator
 			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1)))
 			{
 				Item theIngot = ingotStack.getItem();
-
-				try
-				{
-					Icon icon = theIngot.getIconIndex(ingotStack);
-					String iconString = icon.getIconName();
-
-					if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
-					{
-						iconString = (iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) : Reference.ITEM_TEXTURE_DIRECTORY + iconString) + ".png";
-						ResourceLocation textureLocation = new ResourceLocation(iconString);
-
-						InputStream inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
-						BufferedImage bufferedimage = ImageIO.read(inputstream);
-
-						int width = bufferedimage.getWidth();
-						int height = bufferedimage.getWidth();
-
-						for (int x = 0; x < width; x++)
-						{
-							for (int y = 0; y < height; y++)
-							{
-								Color rgb = new Color(bufferedimage.getRGB(x, y));
-								totalR += rgb.getRed();
-								totalG += rgb.getGreen();
-								totalB += rgb.getBlue();
-								colorCount++;
-							}
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					ResonantInduction.LOGGER.fine("Failed to compute colors for: " + theIngot);
-					// e.printStackTrace();
-				}
-			}
-
-			if (colorCount > 0)
-			{
-				totalR /= colorCount;
-				totalG /= colorCount;
-				totalB /= colorCount;
-				int resultantColor = new Color(totalR, totalG, totalB).brighter().getRGB();
-				materialColors.put(ingotName, resultantColor);
+				materialColors.put(ingotName, getAverageColor(ingotStack));
 			}
 
 			if (!materialColors.containsKey(ingotName))
@@ -156,5 +114,74 @@ public class ResourceGenerator
 				materialColors.put(ingotName, 0xFFFFFF);
 			}
 		}
+	}
+
+	/**
+	 * Gets the average color of this item.
+	 * 
+	 * @param itemStack
+	 * @return
+	 */
+	@SideOnly(Side.CLIENT)
+	public static int getAverageColor(ItemStack itemStack)
+	{
+		int totalR = 0;
+		int totalG = 0;
+		int totalB = 0;
+
+		int colorCount = 0;
+		Item item = itemStack.getItem();
+
+		if (itemColorMap.containsKey(item))
+		{
+			return itemColorMap.get(item);
+		}
+
+		try
+		{
+			Icon icon = item.getIconIndex(itemStack);
+			String iconString = icon.getIconName();
+
+			if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
+			{
+				iconString = (iconString.contains(":") ? iconString.replace(":", ":" + Reference.ITEM_TEXTURE_DIRECTORY) : Reference.ITEM_TEXTURE_DIRECTORY + iconString) + ".png";
+				ResourceLocation textureLocation = new ResourceLocation(iconString);
+
+				InputStream inputstream = Minecraft.getMinecraft().getResourceManager().getResource(textureLocation).getInputStream();
+				BufferedImage bufferedimage = ImageIO.read(inputstream);
+
+				int width = bufferedimage.getWidth();
+				int height = bufferedimage.getWidth();
+
+				for (int x = 0; x < width; x++)
+				{
+					for (int y = 0; y < height; y++)
+					{
+						Color rgb = new Color(bufferedimage.getRGB(x, y));
+						totalR += rgb.getRed();
+						totalG += rgb.getGreen();
+						totalB += rgb.getBlue();
+						colorCount++;
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			ResonantInduction.LOGGER.fine("Failed to compute colors for: " + item);
+			// e.printStackTrace();
+		}
+
+		if (colorCount > 0)
+		{
+			totalR /= colorCount;
+			totalG /= colorCount;
+			totalB /= colorCount;
+			int averageColor = new Color(totalR, totalG, totalB).brighter().getRGB();
+			itemColorMap.put(item, averageColor);
+			return averageColor;
+		}
+
+		return 0xFFFFFF;
 	}
 }

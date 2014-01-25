@@ -16,29 +16,9 @@ import calclavia.lib.prefab.tile.IRotatable;
  */
 public interface IDrain extends IFluidHandler, IRotatable
 {
-	/**
-	 * Can the pump drain in the area in the given direction
-	 * 
-	 * @param direction - not the side of the block but rather the direction the block is facing
-	 * @return true if it can
-	 */
-	public boolean canDrain(ForgeDirection direction);
-
-	/**
-	 * Can the pump fill in the area in the given direction
-	 * 
-	 * @param direction - not the side of the block but rather the direction the block is facing
-	 * @return true if it can
-	 */
-	public boolean canFill(ForgeDirection direction);
-
 	/** Gets the list of fillable blocks */
 	public Set<Vector3> getFillList();
 
 	/** Gets the list of drainable blocks */
-	public Set<Vector3> getFluidList();
-
-	/** Call this after the drain was used to edit a block at the location */
-	public void onUse(Vector3 vec);
-
+	public Set<Vector3> getDrainList();
 }

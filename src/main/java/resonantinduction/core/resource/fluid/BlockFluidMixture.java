@@ -1,8 +1,11 @@
 package resonantinduction.core.resource.fluid;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
@@ -26,7 +29,7 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	{
 		world.setBlockMetadataWithNotify(x, y, z, quanta - 1, 3);
 	}
-	
+
 	/* IFluidBlock */
 	@Override
 	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
@@ -35,6 +38,14 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 		FluidStack stack = new FluidStack(ResonantInduction.MIXTURE, (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
 		tileFluid.writeFluidToNBT(stack.tag);
 		return stack;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
+	{
+		TileLiquidMixture tileFluid = (TileLiquidMixture) access.getBlockTileEntity(x, y, z);
+		return tileFluid.getColor();
 	}
 
 	@Override

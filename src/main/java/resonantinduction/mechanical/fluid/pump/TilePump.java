@@ -136,7 +136,7 @@ public class TilePump extends TileMachine implements IReadOut, ITileConnector, I
             }
             else
             {
-                drainList = ((IDrain) drain).getFluidList();
+                drainList = ((IDrain) drain).getDrainList();
             }
         }
 
@@ -183,11 +183,6 @@ public class TilePump extends TileMachine implements IReadOut, ITileConnector, I
                     this.fill(drainStack, true);
                     this.currentWorldEdits++;
                     fluidList.remove();
-
-                    if (drain instanceof IDrain)
-                    {
-                        ((IDrain) drain).onUse(drainLocation);
-                    }
                 }
             }
         }

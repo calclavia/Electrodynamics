@@ -54,12 +54,12 @@ public class BlockGrate extends BlockRIRotatable
 	@Override
 	public Icon getIcon(int side, int metadata)
 	{
-		if (side == metadata)
+		if (side == 1)
 		{
-			return blockIcon;
+			return drainIcon;
 		}
 
-		return drainIcon;
+		return blockIcon;
 	}
 
 	@Override
@@ -72,10 +72,10 @@ public class BlockGrate extends BlockRIRotatable
 		{
 			if (dir == ((TileGrate) entity).getDirection())
 			{
-				return blockIcon;
+				return drainIcon;
 			}
 		}
 
-		return drainIcon;
+		return blockIcon;
 	}
 }
