@@ -27,6 +27,7 @@ import resonantinduction.mechanical.logistic.TileManipulator;
 import resonantinduction.mechanical.logistic.TileRejector;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PacketNetwork;
+import resonantinduction.mechanical.process.BlockFilter;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TileMixer;
@@ -85,9 +86,10 @@ public class Mechanical
 	public static Item itemPipe;
 	public static Item itemPipeGuage;
 
-	// Machines
+	// Machines/Processes
 	public static Block blockGrinderWheel;
 	public static Block blockPurifier;
+	public static Block blockFilter;
 
 	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
 
@@ -113,7 +115,7 @@ public class Mechanical
 		// Machines
 		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
-
+		blockFilter = contentRegistry.createBlock(BlockFilter.class);
 		OreDictionary.registerOre("gear", itemGear);
 
 		proxy.preInit();

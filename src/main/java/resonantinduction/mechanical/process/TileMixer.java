@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ import universalelectricity.api.vector.Vector3;
 public class TileMixer extends TileMechanical
 {
 	public static final long POWER = 500000;
-	public static final int DEFAULT_TIME = 10 * 20;
+	public static final int DEFAULT_TIME = 5 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 
 	@Override
@@ -53,6 +54,23 @@ public class TileMixer extends TileMechanical
 	{
 		boolean didWork = false;
 
+		/**
+		 * Transform all water blocks into mixture blocks
+		 */
+		for (int x = -1; x < 1; x++)
+		{
+			for (int z = -1; z < 1; z++)
+			{
+				Vector3 checkVector = new Vector3(this).translate(x, 0, z);
+
+				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID)
+				{
+					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8);
+					System.out.println("SET");
+				}
+			}
+		}
+
 		// Search for an item to "process"
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
@@ -72,6 +90,7 @@ public class TileMixer extends TileMechanical
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 
 			entity.addVelocity(difference.x, difference.y, difference.z);
+			entity.onGround = false;
 
 			if (entity instanceof EntityItem)
 			{
@@ -137,18 +156,18 @@ public class TileMixer extends TileMechanical
 
 	private boolean doneWork(EntityItem entity)
 	{
-		TileEntity tileEntity = new Vector3(entity).getTileEntity(worldObj);
+		Vector3 mixPosition = new Vector3(entity.posX, yCoord, entity.posZ);
+		TileEntity tileEntity = mixPosition.getTileEntity(worldObj);
 
 		if (tileEntity instanceof TileLiquidMixture)
 		{
-			System.out.println("MIXING!");
 			ItemStack itemStack = entity.getEntityItem().copy();
-			return ((TileLiquidMixture) tileEntity).mix(itemStack);
-		}
-		else
-		{
-			System.out.println("transformed block!");
-			new Vector3(entity).setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID);
+			if (((TileLiquidMixture) tileEntity).mix(itemStack))
+			{
+				System.out.println("MIXED");
+				worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
+				return true;
+			}
 		}
 
 		return false;

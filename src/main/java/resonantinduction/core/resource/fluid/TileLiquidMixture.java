@@ -30,7 +30,6 @@ public class TileLiquidMixture extends TileAdvanced
 	{
 		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack).length > 0)
 		{
-			System.out.println("Mixed");
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);
 			return true;

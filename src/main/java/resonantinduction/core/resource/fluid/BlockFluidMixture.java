@@ -2,7 +2,6 @@ package resonantinduction.core.resource.fluid;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidFinite;
@@ -23,6 +22,11 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 		this.setTextureName("water_flow");
 	}
 
+	public void setQuanta(World world, int x, int y, int z, int quanta)
+	{
+		world.setBlockMetadataWithNotify(x, y, z, quanta - 1, 3);
+	}
+	
 	/* IFluidBlock */
 	@Override
 	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
