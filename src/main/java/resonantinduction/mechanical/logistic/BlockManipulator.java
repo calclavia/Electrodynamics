@@ -20,7 +20,7 @@ public class BlockManipulator extends BlockImprintable
 	public BlockManipulator()
 	{
 		super("manipulator");
-		this.setBlockBounds(0, 0, 0, 1, 0.29f, 1);
+		this.setBlockBounds(0, 0, 0, 1, 0.09f, 1);
 	}
 
 	@Override

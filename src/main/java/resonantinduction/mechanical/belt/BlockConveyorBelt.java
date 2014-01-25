@@ -118,6 +118,18 @@ public class BlockConveyorBelt extends BlockRI
 
 				ForgeDirection direction = tile.getDirection();
 
+				if (tile.getSlant() != SlantType.NONE)
+				{
+					AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.1, z + 1);
+
+					if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+					{
+						par6List.add(newBounds);
+					}
+					
+					return;
+				}
+
 				if (tile.getSlant() == SlantType.UP)
 				{
 					if (direction.offsetX > 0)
@@ -182,7 +194,7 @@ public class BlockConveyorBelt extends BlockRI
 			}
 		}
 
-		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.3, z + 1);
+		AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.1, z + 1);
 
 		if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
 		{
@@ -285,34 +297,32 @@ public class BlockConveyorBelt extends BlockRI
 					SlantType slantType = tile.getSlant();
 					ForgeDirection direction = tile.getDirection();
 
+					if (slantType != SlantType.NONE)
+					{
+						entity.onGround = false;
+					}
+
 					if (slantType == SlantType.UP)
 					{
-						if (entity.motionY < 0.2)
-						{
-							entity.addVelocity(0, 0.2, 0);
-						}
+						//We need at least 0.25 to move items up.
+						entity.motionY = Math.max(0.25, maxSpeed);
 					}
 					else if (slantType == SlantType.DOWN)
 					{
-						if (entity.motionY > -0.1)
-						{
-							entity.addVelocity(0, -0.1, 0);
-						}
+						entity.motionY = -maxSpeed;
 					}
 
 					if (direction.offsetX != 0)
 					{
 						entity.motionX = direction.offsetX * maxSpeed;
-						entity.motionZ = 0;
+						entity.motionZ /= 2;
 					}
 
 					if (direction.offsetZ != 0)
 					{
 						entity.motionZ = direction.offsetZ * maxSpeed;
-						entity.motionX = 0;
+						entity.motionX /= 2;
 					}
-
-					entity.motionY += 0.125f * maxSpeed;
 
 					if (entity instanceof EntityItem)
 					{

@@ -77,11 +77,10 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		{
 			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
-				this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.7f, true);
+				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * getMoveVelocity(), true);
 			}
 
 			angle = getNetwork().getRotation(getMoveVelocity());
-			// (float) ((angle + getMoveVelocity() / 20) % Math.PI);
 			double beltPercentage = angle / (2 * Math.PI);
 
 			// Sync the animation. Slant belts are slower.
