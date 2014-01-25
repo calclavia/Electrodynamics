@@ -131,10 +131,6 @@ public class TilePump extends TileMachine implements IReadOut, ITileConnector, I
                 }
                 return;// TODO check why return is here
             }
-            else
-            {
-                drainList = ((IDrain) drain).getDrainList();
-            }
         }
 
         if (drainList == null)

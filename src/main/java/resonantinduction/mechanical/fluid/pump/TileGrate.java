@@ -132,7 +132,8 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 			}
 
 			/* Sort results out into two groups and clear the rest out of the result list */
-			Iterator<Vector3> it = this.getFillFinder().refresh().results.iterator();
+			Iterator<Vector3> it = getFillList().iterator();
+
 			while (it.hasNext())
 			{
 				Vector3 vec = it.next();

@@ -39,7 +39,7 @@ public class LiquidPathFinder
 	private int resultRun = resultLimit;
 	private int runs = 0;
 	/** Start location of the pathfinder used for range calculations */
-	private Vector3 Start;
+	private Vector3 start;
 	/** Range to limit the search to */
 	private double range;
 	/** List of forgeDirection to use that are shuffled to prevent strait lines */
@@ -145,7 +145,7 @@ public class LiquidPathFinder
 	{
 		this.runs++;
 		Vector3 vec = origin.clone().translate(direction);
-		double distance = vec.toVector2().distance(this.Start.toVector2());
+		double distance = vec.toVector2().distance(this.start.toVector2());
 
 		if (distance <= this.range && isValidNode(vec))
 		{
@@ -220,7 +220,7 @@ public class LiquidPathFinder
 	/** Called to execute the pathfinding operation. */
 	public LiquidPathFinder start(final Vector3 startNode, int runCount, final boolean fill)
 	{
-		this.Start = startNode;
+		this.start = startNode;
 		this.fill = fill;
 		this.runs = 0;
 		this.resultsFound = 0;
@@ -228,7 +228,7 @@ public class LiquidPathFinder
 		this.find(ForgeDirection.UNKNOWN, startNode);
 
 		this.refresh();
-		this.sortBlockList(Start, results, fill);
+		this.sortBlockList(start, results, fill);
 		return this;
 	}
 
@@ -294,36 +294,19 @@ public class LiquidPathFinder
 			// The highest and furthest fluid block for drain. Closest fluid block for fill.
 			Vector3 bestFluid = null;
 
-			for (Vector3 checkPos : set)
+			if (fill)
 			{
-				if (bestFluid == null)
+				bestFluid = start;
+			}
+			else
+			{
+				for (Vector3 checkPos : set)
 				{
-					bestFluid = checkPos;
-				}
-
-				if (fill)
-				{
-					/**
-					 * We're filling, so we want the closest lowest block first.
-					 */
-					if (prioritizeHighest)
-					{
-						if (checkPos.y < bestFluid.y)
-						{
-							bestFluid = checkPos;
-						}
-						else if (checkPos.y == bestFluid.y && start.distance(checkPos) < start.distance(bestFluid))
-						{
-							bestFluid = checkPos;
-						}
-					}
-					else if (start.distance(checkPos) < start.distance(bestFluid))
+					if (bestFluid == null)
 					{
 						bestFluid = checkPos;
 					}
-				}
-				else
-				{
+
 					/**
 					 * We're draining, so we want the highest furthest block first.
 					 */
@@ -346,17 +329,17 @@ public class LiquidPathFinder
 			}
 
 			final Vector3 optimalFluid = bestFluid;
-
 			Collections.sort(sortedResults, new Comparator<Vector3>()
 			{
 				@Override
 				public int compare(Vector3 vecA, Vector3 vecB)
 				{
-					return Double.compare(vecA.distance(optimalFluid), vecB.distance(optimalFluid));
+					if (vecA.equals(vecB))
+						return 0;
+
+					return vecA.distance(optimalFluid) < vecB.distance(optimalFluid) ? -1 : 1;
 				}
 			});
-
-			Collections.reverse(sortedResults);
 		}
 		catch (Exception e)
 		{
