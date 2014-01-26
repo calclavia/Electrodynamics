@@ -37,6 +37,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public void update()
 	{
+		super.update();
+
 		if (!this.world().isRemote)
 		{
 			if (manualCrankTime > 0)
@@ -69,16 +71,18 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		}
 
 		getMultiBlock().update();
+	}
 
+	public void checkClientUpdate()
+	{
 		if (getMultiBlock().isPrimary())
-		{
-			super.update();
-		}
+			super.checkClientUpdate();
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
+		// System.out.println(getNetwork());
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())

@@ -73,9 +73,19 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void update()
 	{
+		if (ticks == 0)
+		{
+			getNetwork().addConnector(this);
+		}
+
 		ticks++;
 		angle += angularVelocity / 20;
 
+		super.update();
+	}
+
+	public void checkClientUpdate()
+	{
 		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.1f)
 		{
 			prevAngularVelocity = angularVelocity;
@@ -87,8 +97,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 			sendRotationPacket();
 			markPacketUpdate = false;
 		}
-
-		super.update();
 	}
 
 	@Override

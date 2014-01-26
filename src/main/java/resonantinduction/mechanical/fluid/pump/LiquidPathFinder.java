@@ -93,44 +93,37 @@ public class LiquidPathFinder
 		{
 			return false;
 		}
-		try
+		this.addNode(node);
+
+		if (this.isValidResult(node))
 		{
-			this.addNode(node);
+			this.addResult(node);
+		}
 
-			if (this.isValidResult(node))
-			{
-				this.addResult(node);
-			}
+		if (this.isDone(node.clone()))
+		{
+			return false;
+		}
 
-			if (this.isDone(node.clone()))
-			{
-				return false;
-			}
+		if (find(this.priority, node.clone()))
+		{
+			return true;
+		}
 
-			if (find(this.priority, node.clone()))
-			{
-				return true;
-			}
+		Collections.shuffle(shuffledDirections);
+		Collections.shuffle(shuffledDirections);
 
-			Collections.shuffle(shuffledDirections);
-			Collections.shuffle(shuffledDirections);
-
-			for (ForgeDirection direction : shuffledDirections)
-			{
-				if (find(direction, node.clone()))
-				{
-					return true;
-				}
-			}
-
-			if (find(this.priority.getOpposite(), node.clone()))
+		for (ForgeDirection direction : shuffledDirections)
+		{
+			if (find(direction, node.clone()))
 			{
 				return true;
 			}
 		}
-		catch (Exception e)
+
+		if (find(this.priority.getOpposite(), node.clone()))
 		{
-			e.printStackTrace();
+			return true;
 		}
 
 		return false;

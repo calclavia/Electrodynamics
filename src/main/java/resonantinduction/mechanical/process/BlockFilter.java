@@ -69,11 +69,12 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				 */
 				if (amount <= 1)
 				{
+					System.out.println("filter dropped");
 					for (ItemStack itemStack : ((TileLiquidMixture) tileAbove).items)
 					{
 						for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack))
 						{
-							InventoryUtility.dropItemStack(world, checkAbove, resoure.getItemStack());
+							InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack());
 						}
 					}
 				}

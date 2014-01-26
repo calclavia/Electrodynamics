@@ -29,15 +29,11 @@ public class TileMixer extends TileMechanical
 	public static final long POWER = 500000;
 	public static final int PROCESS_TIME = 5 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
-	private final long requiredTorque = 1000;
-	private long counter = 0;
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-
-		counter = Math.max(counter + torque, 0);
 
 		if (canWork())
 		{
@@ -52,7 +48,7 @@ public class TileMixer extends TileMechanical
 	 */
 	public boolean canWork()
 	{
-		return counter >= requiredTorque;
+		return angularVelocity > 0;
 	}
 
 	public void doWork()
@@ -70,8 +66,7 @@ public class TileMixer extends TileMechanical
 
 				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID)
 				{
-					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8);
-					System.out.println("SET");
+					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 4);
 				}
 			}
 		}
@@ -86,7 +81,7 @@ public class TileMixer extends TileMechanical
 			/**
 			 * Rotate entities around the mixer
 			 */
-			double speed = 1;
+			double speed = angularVelocity;
 
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
@@ -156,8 +151,6 @@ public class TileMixer extends TileMechanical
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "mixer", 0.5f, 1);
 			}
-
-			counter -= requiredTorque;
 		}
 	}
 

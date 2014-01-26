@@ -86,32 +86,35 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			IMechanical mech = ((IMechanical) tile).getInstance(outputDir.getOpposite());
 			long extract = energy.extractEnergy(false);
 
-			if (extract > 0)
+			if (mech != null)
 			{
-				final float maxAngularVelocity = energy.getEnergyCapacity() / (float) torqueRatio;
-				final long maxTorque = (long) ((double) energy.getEnergyCapacity() / maxAngularVelocity);
-				float setAngularVelocity = extract / (float) torqueRatio;
-				long setTorque = (long) (((double) extract) / setAngularVelocity);
-
-				long currentTorque = Math.abs(mech.getTorque());
-
-				if (currentTorque != 0)
+				if (extract > 0)
 				{
-					setTorque = Math.min(+setTorque, maxTorque) * (mech.getTorque() / currentTorque);
+					final float maxAngularVelocity = energy.getEnergyCapacity() / (float) torqueRatio;
+					final long maxTorque = (long) ((double) energy.getEnergyCapacity() / maxAngularVelocity);
+					float setAngularVelocity = extract / (float) torqueRatio;
+					long setTorque = (long) (((double) extract) / setAngularVelocity);
 
-					if (setTorque < currentTorque)
+					long currentTorque = Math.abs(mech.getTorque());
+
+					if (currentTorque != 0)
 					{
-						setTorque = (long) Math.max(setTorque, currentTorque * (currentTorque / maxTorque));
+						setTorque = Math.min(+setTorque, maxTorque) * (mech.getTorque() / currentTorque);
+
+						if (setTorque < currentTorque)
+						{
+							setTorque = (long) Math.max(setTorque, currentTorque * (currentTorque / maxTorque));
+						}
 					}
+
+					float currentVelo = Math.abs(mech.getAngularVelocity());
+					if (currentVelo != 0)
+						setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
+
+					mech.setTorque(setTorque);
+					mech.setAngularVelocity(setAngularVelocity);
+					energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 				}
-
-				float currentVelo = Math.abs(mech.getAngularVelocity());
-				if (currentVelo != 0)
-					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
-
-				mech.setTorque(setTorque);
-				mech.setAngularVelocity(setAngularVelocity);
-				energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 			}
 		}
 	}
