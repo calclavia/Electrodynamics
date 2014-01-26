@@ -69,15 +69,16 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		}
 
 		getMultiBlock().update();
-		super.update();
+
+		if (getMultiBlock().isPrimary())
+		{
+			super.update();
+		}
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		if (!world().isRemote)
-			System.out.println(getNetwork());
-
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())
@@ -163,7 +164,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			displaceCheck = 2;
 		}
-
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
 		for (int i = 0; i < 4; i++)
 		{
@@ -221,7 +221,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public Object[] getConnections()
 	{
-		return getMultiBlock().get().connections;
+		if (!getMultiBlock().isPrimary())
+		{
+			return new Object[6];
+		}
+
+		return connections;
 	}
 
 	@Override
@@ -305,10 +310,10 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public void onMultiBlockChanged()
 	{
+		tile().notifyPartChange(this);
+
 		if (!world().isRemote)
 		{
-			refresh();
-			tile().notifyPartChange(this);
 			sendDescUpdate();
 		}
 	}
@@ -348,6 +353,11 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
+		if (!getMultiBlock().isPrimary())
+		{
+			return false;
+		}
+
 		if (source instanceof IMechanical)
 		{
 			/**
@@ -356,6 +366,14 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			 */
 			if (from == placementSide.getOpposite())
 			{
+				if (source instanceof PartGear)
+				{
+					if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+					{
+						return true;
+					}
+				}
+
 				TileEntity sourceTile = getPosition().translate(from.getOpposite()).getTileEntity(world());
 
 				if (sourceTile instanceof IMechanical)
@@ -376,13 +394,16 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 					{
 						if (this != destinationPart)
 						{
-							System.out.println("WORK" + ((PartGear) destinationPart).isCenterMultiBlock());
 							return ((PartGear) destinationPart).isCenterMultiBlock();
 						}
 						else
 						{
 							return true;
 						}
+					}
+					else
+					{
+						return true;
 					}
 				}
 			}

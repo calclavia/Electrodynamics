@@ -82,7 +82,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 			markPacketUpdate = true;
 		}
 
-		if (!world().isRemote && markPacketUpdate && ticks % 20 == 0)
+		if (!world().isRemote && markPacketUpdate && ticks % 10 == 0)
 		{
 			sendRotationPacket();
 			markPacketUpdate = false;
@@ -285,7 +285,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setAngularVelocity(float velocity)
 	{
-		this.angularVelocity = velocity;
+		if (!world().isRemote)
+			this.angularVelocity = velocity;
 	}
 
 	@Override
@@ -297,7 +298,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setTorque(long torque)
 	{
-		this.torque = torque;
+		if (!world().isRemote)
+			this.torque = torque;
 	}
 
 	@Override

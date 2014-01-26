@@ -71,13 +71,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 			for (int i = 0; i < connections.length; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
-				Object adacent = connections[i];
+				Object adjacent = connections[i];
 
-				if (adacent instanceof IMechanical)
+				if (adjacent instanceof IMechanical)
 				{
-					IMechanical adjacentMech = ((IMechanical) adacent).getInstance(dir);
+					IMechanical adjacentMech = ((IMechanical) adjacent).getInstance(dir.getOpposite());
 
-					if (adjacentMech != null)
+					if (adjacentMech != null && adjacent != mechanical)
 					{
 						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
 						long torque = mechanical.getTorque();
