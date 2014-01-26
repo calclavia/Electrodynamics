@@ -19,6 +19,8 @@ import calclavia.lib.prefab.block.BlockAdvanced;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -40,15 +42,30 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			if (manualCrankTime > 0)
 			{
 				if (angularVelocity > 0)
+				{
+					torque += 1;
 					angularVelocity += 0.1f;
+				}
 				else
+				{
+					torque -= 1;
 					angularVelocity -= 0.1f;
+				}
 
 				manualCrankTime--;
 			}
 
 			if (getMultiBlock().isPrimary())
+			{
+				// Decelerate the gear.
+				torque *= 0.95f;
 				angularVelocity *= 0.95f;
+			}
+			else
+			{
+				torque = 0;
+				angularVelocity = 0;
+			}
 		}
 
 		getMultiBlock().update();
@@ -58,6 +75,9 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
+		if (!world().isRemote)
+			System.out.println(getNetwork());
+
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())
@@ -98,6 +118,9 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		connections = new Object[6];
 
+		/**
+		 * Only call refresh if this is the main block of a multiblock gear or a single gear block.
+		 */
 		if (!getMultiBlock().isPrimary())
 		{
 			return;
@@ -108,9 +131,9 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 		if (tileBehind instanceof IMechanical)
 		{
-			IMechanical instance = (IMechanical) ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
+			IMechanical instance = ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
 
-			if (instance != null && instance.canConnect(placementSide))
+			if (instance != null && instance.canConnect(placementSide, this))
 			{
 				connections[placementSide.getOpposite().ordinal()] = instance;
 				getNetwork().merge(instance.getNetwork());
@@ -126,7 +149,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				ForgeDirection checkDir = ForgeDirection.getOrientation(i);
 				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir);
 
-				if (connections[checkDir.ordinal()] == null && checkDir != placementSide && checkDir != placementSide.getOpposite() && instance != null && instance.canConnect(checkDir.getOpposite()))
+				if (connections[checkDir.ordinal()] == null && checkDir != placementSide && checkDir != placementSide.getOpposite() && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
@@ -151,7 +174,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
 
-				if (instance != null && instance.canConnect(placementSide.getOpposite()))
+				if (instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
@@ -160,6 +183,39 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		}
 
 		getNetwork().reconstruct();
+	}
+
+	/**
+	 * Is this gear block the one in the center-edge of the multiblock that can interact with other
+	 * gears?
+	 * 
+	 * @return
+	 */
+	public boolean isCenterMultiBlock()
+	{
+		if (!getMultiBlock().isConstructed())
+		{
+			return false;
+		}
+
+		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().getPosition();
+
+		if (primaryPos.intX() == x() && placementSide.offsetX == 0)
+		{
+			return true;
+		}
+
+		if (primaryPos.intY() == y() && placementSide.offsetY == 0)
+		{
+			return true;
+		}
+
+		if (primaryPos.intZ() == z() && placementSide.offsetZ == 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -286,12 +342,52 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public IMechanical getInstance(ForgeDirection from)
 	{
-		if (!getMultiBlock().isPrimary() && from == placementSide)
-		{
-			return null;
-		}
-
 		return getMultiBlock().get();
 	}
 
+	@Override
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		if (source instanceof IMechanical)
+		{
+			/**
+			 * Check for flat connections (gear face on gear face) to make sure it's actually on
+			 * this gear block.
+			 */
+			if (from == placementSide.getOpposite())
+			{
+				TileEntity sourceTile = getPosition().translate(from.getOpposite()).getTileEntity(world());
+
+				if (sourceTile instanceof IMechanical)
+				{
+					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from);
+					return sourceInstance == source;
+				}
+			}
+			else
+			{
+				TileEntity destinationTile = ((IMechanical) source).getPosition().translate(from.getOpposite()).getTileEntity(world());
+
+				if (destinationTile instanceof IMechanical && destinationTile instanceof TileMultipart)
+				{
+					TMultiPart destinationPart = ((TileMultipart) destinationTile).partMap(placementSide.ordinal());
+
+					if (destinationPart instanceof PartGear)
+					{
+						if (this != destinationPart)
+						{
+							System.out.println("WORK" + ((PartGear) destinationPart).isCenterMultiBlock());
+							return ((PartGear) destinationPart).isCenterMultiBlock();
+						}
+						else
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
 }

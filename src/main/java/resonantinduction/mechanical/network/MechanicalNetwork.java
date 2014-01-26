@@ -150,7 +150,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 		if (deltaTime > 1)
 		{
-			rotation = (float) (((velocity) * ((double)deltaTime / 1000d) + rotation) % (2 * Math.PI));
+			rotation = (float) (((velocity) * ((double) deltaTime / 1000d) + rotation) % (2 * Math.PI));
 			lastRotateTime = System.currentTimeMillis();
 		}
 

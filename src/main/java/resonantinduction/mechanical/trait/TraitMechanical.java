@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
+import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -90,7 +91,7 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 		{
 			if (part instanceof IMechanical)
 			{
-				return (IMechanical) part;
+				return ((IMechanical) part).getInstance(from);
 			}
 		}
 
@@ -133,4 +134,17 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	{
 		return 0;
 	}
+
+	@Override
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		return false;
+	}
+
+	@Override
+	public Vector3 getPosition()
+	{
+		return null;
+	}
+
 }

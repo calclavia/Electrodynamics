@@ -217,9 +217,9 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return direction != getDirection() || direction != getDirection().getOpposite();
+		return from != getDirection() || from != getDirection().getOpposite();
 	}
 
 	public void refresh()

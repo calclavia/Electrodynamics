@@ -12,6 +12,7 @@ import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
@@ -30,7 +31,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 
 	public EntityItem grindingItem = null;
-	
+
 	private final long requiredTorque = 2000;
 	private long counter = 0;
 
@@ -167,7 +168,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection from)
+	public boolean canConnect(ForgeDirection from, Object source)
 	{
 		return from != this.getDirection() && from != this.getDirection().getOpposite();
 	}

@@ -50,6 +50,13 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
+	@Deprecated
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return true;
+	}
+
+	@Override
 	public Object[] getConnections()
 	{
 		connections = new Object[6];
@@ -60,9 +67,9 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 			if (tile instanceof IMechanical)
 			{
-				IMechanical mech = (IMechanical) ((IMechanical) tile).getInstance(dir.getOpposite());
+				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
 
-				if (mech != null && canConnect(dir) && mech.canConnect(dir.getOpposite()))
+				if (mech != null && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
 				{
 					connections[dir.ordinal()] = mech;
 					getNetwork().merge(mech.getNetwork());
@@ -124,5 +131,11 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public IMechanical getInstance(ForgeDirection from)
 	{
 		return this;
+	}
+
+	@Override
+	public Vector3 getPosition()
+	{
+		return new Vector3(this);
 	}
 }

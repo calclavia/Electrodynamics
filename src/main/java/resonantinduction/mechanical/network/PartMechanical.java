@@ -270,6 +270,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
+	@Deprecated
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return true;

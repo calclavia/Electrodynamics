@@ -16,6 +16,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.TileLiquidMixture;
+import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -155,8 +156,8 @@ public class TileMixer extends TileMechanical
 			{
 				this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "mixer", 0.5f, 1);
 			}
-			
-			counter-=requiredTorque;
+
+			counter -= requiredTorque;
 		}
 	}
 
@@ -180,8 +181,8 @@ public class TileMixer extends TileMechanical
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return direction == ForgeDirection.UP || direction == ForgeDirection.DOWN;
+		return from == ForgeDirection.UP || from == ForgeDirection.DOWN;
 	}
 }
