@@ -3,8 +3,6 @@ package resonantinduction.mechanical.gear;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.builtbroken.common.Pair;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,10 +15,7 @@ import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
-import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.block.BlockAdvanced;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
@@ -218,12 +213,27 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public universalelectricity.api.vector.Vector3[] getMultiBlockVectors()
 	{
 		Set<universalelectricity.api.vector.Vector3> vectors = new HashSet<universalelectricity.api.vector.Vector3>();
+		ForgeDirection dir = placementSide;
+
+		universalelectricity.api.vector.Vector3 rotationalAxis = universalelectricity.api.vector.Vector3.UP();
+
+		if (placementSide == ForgeDirection.NORTH || placementSide == ForgeDirection.SOUTH)
+		{
+			rotationalAxis = universalelectricity.api.vector.Vector3.EAST();
+		}
+		else if (placementSide == ForgeDirection.WEST || placementSide == ForgeDirection.EAST)
+		{
+			rotationalAxis = universalelectricity.api.vector.Vector3.SOUTH();
+		}
 
 		for (int x = -1; x <= 1; x++)
 		{
 			for (int z = -1; z <= 1; z++)
 			{
-				vectors.add(new universalelectricity.api.vector.Vector3(x, 0, z));
+				universalelectricity.api.vector.Vector3 vector = new universalelectricity.api.vector.Vector3(x, 0, z);
+				vector.rotate(90, rotationalAxis);
+				vector = vector.round();
+				vectors.add(vector);
 			}
 		}
 
