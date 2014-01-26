@@ -56,6 +56,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				angularVelocity *= 0.95f;
 		}
 
+		getMultiBlock().update();
 		super.update();
 	}
 
@@ -198,9 +199,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-
-		if (tile() != null)
-			getMultiBlock().load(nbt);
+		getMultiBlock().load(nbt);
 	}
 
 	@Override
@@ -277,11 +276,11 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public IMechanical getInstance(ForgeDirection from)
 	{
-		if(!getMultiBlock().isPrimary() && from == placementSide)
+		if (!getMultiBlock().isPrimary() && from == placementSide)
 		{
 			return null;
 		}
-		
+
 		return getMultiBlock().get();
 	}
 
