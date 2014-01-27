@@ -12,13 +12,12 @@ import resonantinduction.core.Reference;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.gui.GuiBase;
-import calclavia.lib.gui.GuiMessageBox;
-import calclavia.lib.gui.IMessageBoxDialog;
+import calclavia.lib.gui.ContainerDummy;
+import calclavia.lib.gui.GuiContainerBase;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 
-public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
+public class GuiEncoderEditTask extends GuiContainerBase
 {
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_task_edit.png");
 
@@ -32,6 +31,7 @@ public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 
 	public GuiEncoderEditTask(GuiEncoderCoder gui, ITask task, boolean newTask)
 	{
+		super(new ContainerDummy());
 		this.newTask = newTask;
 		this.ySize = 380 / 2;
 		this.gui = gui;
@@ -175,7 +175,7 @@ public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 					}
 					else
 					{
-						new GuiMessageBox(this, 1, "Create new Task", "Are you sure?").show();
+						// new GuiMessageBox(this, 1, "Create new Task", "Are you sure?").show();
 					}
 				}
 				else
@@ -185,14 +185,14 @@ public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 
 				break;
 			case 2:
-				new GuiMessageBox(this, 0, "Remove Task", "Are you sure?").show();
+				// new GuiMessageBox(this, 0, "Remove Task", "Are you sure?").show();
 				break;
 		}
 	}
 
 	/** Draw the background layer for the GuiContainer (everything behind the items) */
 	@Override
-	protected void drawBackgroundLayer(int x, int y, float var1)
+	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY)
 	{
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
 
@@ -215,7 +215,7 @@ public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 	}
 
 	@Override
-	protected void drawForegroundLayer(int var2, int var3, float var1)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		this.fontRenderer.drawString("Edit Task", (int) (xSize / 2 - 7 * 2.5), 5, 4210752);
 		this.fontRenderer.drawString("Task: " + "\u00a77" + this.task.getMethodName(), ((xSize / 2) - 70), 20, 4210752);
@@ -240,7 +240,6 @@ public class GuiEncoderEditTask extends GuiBase implements IMessageBoxDialog
 
 	}
 
-	@Override
 	public void onMessageBoxClosed(int id, boolean yes)
 	{
 		if (id == 0 && yes)
