@@ -17,7 +17,7 @@ import resonantinduction.core.prefab.block.BlockRI;
  */
 public class BlockMachineMaterial extends BlockRI
 {
-	String[] iconNames = new String[] { "material_metal_side", "material_metal_top", "material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel" };
+	String[] iconNames = new String[] { "material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel" };
 	Icon[] icons = new Icon[iconNames.length];
 
 	public BlockMachineMaterial()
