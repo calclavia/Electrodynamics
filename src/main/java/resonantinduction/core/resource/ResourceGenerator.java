@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -77,6 +78,12 @@ public class ResourceGenerator
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + name, "rubble" + name);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + name, "dust" + name, "dust" + name);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + name, "dustRefined" + name);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, "dustRefined" + name, "ingot" + name);
+
+				ItemStack dust = OreDictionary.getOres("dust" + name).get(0);
+				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + name).get(0), 0.7f);
+				ItemStack refinedDust = OreDictionary.getOres("dustRefined" + name).get(0);
+				FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), OreDictionary.getOres("ingot" + name).get(0), 0.7f);
 			}
 		}
 	}
