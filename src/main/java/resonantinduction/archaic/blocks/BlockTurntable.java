@@ -89,7 +89,7 @@ public class BlockTurntable extends BlockRIRotatable
 			{
 				ForgeDirection facing = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
 
-				Vector3 position = new Vector3(x, y, z).modifyPositionFromSide(facing);
+				Vector3 position = new Vector3(x, y, z).translate(facing);
 				TileEntity tileEntity = position.getTileEntity(world);
 				Block block = Block.blocksList[position.getBlockID(world)];
 
