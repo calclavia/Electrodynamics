@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.core.prefab.block;
 
 import java.util.List;
 

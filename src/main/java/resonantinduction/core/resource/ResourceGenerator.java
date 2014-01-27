@@ -3,9 +3,9 @@ package resonantinduction.core.resource;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -35,7 +35,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ResourceGenerator
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
-	public static final Set<String> materialNames = new HashSet<String>();
+	public static final List<String> materialNames = new ArrayList<String>();
 	public static final HashMap<String, Integer> materialColors = new HashMap<String, Integer>();
 	public static final HashMap<Item, Integer> itemColorMap = new HashMap<Item, Integer>();
 
@@ -44,12 +44,13 @@ public class ResourceGenerator
 	{
 		if (evt.Name.startsWith("ingot"))
 		{
-			String ingotName = evt.Name.replace("ingot", "");
+			String materialName = evt.Name.replace("ingot", "");
 
-			if (OreDetectionBlackList.isIngotBlackListed("ingot" + ingotName) || OreDetectionBlackList.isOreBlackListed("ore" + ingotName))
+			if (OreDetectionBlackList.isIngotBlackListed("ingot" + materialName) || OreDetectionBlackList.isOreBlackListed("ore" + materialName))
 				return;
 
-			ResourceGenerator.materialNames.add(ingotName.toLowerCase());
+			if (!materialNames.contains(materialName.toLowerCase()))
+				materialNames.add(materialName.toLowerCase());
 		}
 	}
 
@@ -64,15 +65,16 @@ public class ResourceGenerator
 
 		for (String materialName : materialNames)
 		{
+			// Caps version of the name
 			String name = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
 
 			if (OreDictionary.getOres("ore" + name).size() > 0)
 			{
-				// if (OreDictionary.getOres("dust" + name).size() == 0)
+				if (OreDictionary.getOres("dust" + name).size() == 0)
 				{
-					OreDictionary.registerOre("rubble" + name, ResonantInduction.itemRubble.getStackFromDust(materialName));
-					OreDictionary.registerOre("dust" + name, ResonantInduction.itemDust.getStackFromDust(materialName));
-					OreDictionary.registerOre("dustRefined" + name, ResonantInduction.itemRefinedDust.getStackFromDust(materialName));
+					OreDictionary.registerOre("rubble" + name, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
+					OreDictionary.registerOre("dust" + name, ResonantInduction.itemDust.getStackFromMaterial(materialName));
+					OreDictionary.registerOre("dustRefined" + name, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
 				}
 
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + name, "rubble" + name);
@@ -80,10 +82,12 @@ public class ResourceGenerator
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + name, "dustRefined" + name);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, "dustRefined" + name, "ingot" + name);
 
-				ItemStack dust = OreDictionary.getOres("dust" + name).get(0);
-				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + name).get(0), 0.7f);
-				ItemStack refinedDust = OreDictionary.getOres("dustRefined" + name).get(0);
-				FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), OreDictionary.getOres("ingot" + name).get(0), 0.7f);
+				ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
+				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + name).get(0).copy(), 0.7f);
+				ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
+				ItemStack smeltResult = OreDictionary.getOres("ingot" + name).get(0).copy();
+				smeltResult.stackSize = 2;
+				FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
 			}
 		}
 	}
@@ -124,7 +128,7 @@ public class ResourceGenerator
 	 * Gets the average color of this item.
 	 * 
 	 * @param itemStack
-	 * @return
+	 * @return The RGB hexadecimal color code.
 	 */
 	@SideOnly(Side.CLIENT)
 	public static int getAverageColor(ItemStack itemStack)

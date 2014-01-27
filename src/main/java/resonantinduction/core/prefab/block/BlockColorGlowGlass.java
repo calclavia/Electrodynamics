@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.core.prefab.block;
 
 public class BlockColorGlowGlass extends BlockColorGlass
 {

@@ -39,7 +39,7 @@ public class ItemOreResource extends ItemRI
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
-		String dustName = getDustFromStack(is);
+		String dustName = getMaterialFromStack(is);
 		List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
 
 		if (list.size() > 0)
@@ -94,15 +94,16 @@ public class ItemOreResource extends ItemRI
 		return false;
 	}
 
-	public ItemStack getStackFromDust(String name)
+	public ItemStack getStackFromMaterial(String name)
 	{
 		ItemStack itemStack = new ItemStack(this);
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setString("name", name);
+		itemStack.setItemDamage(ResourceGenerator.materialNames.indexOf(name));
 		return itemStack;
 	}
 
-	public static String getDustFromStack(ItemStack itemStack)
+	public static String getMaterialFromStack(ItemStack itemStack)
 	{
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 
@@ -119,7 +120,7 @@ public class ItemOreResource extends ItemRI
 	{
 		for (String materialName : ResourceGenerator.materialNames)
 		{
-			par3List.add(getStackFromDust(materialName));
+			par3List.add(getStackFromMaterial(materialName));
 		}
 	}
 
@@ -130,7 +131,7 @@ public class ItemOreResource extends ItemRI
 		/**
 		 * Auto-color based on the texture of the ingot.
 		 */
-		String name = ItemOreResource.getDustFromStack(itemStack);
+		String name = ItemOreResource.getMaterialFromStack(itemStack);
 
 		if (ResourceGenerator.materialColors.containsKey(name))
 		{
