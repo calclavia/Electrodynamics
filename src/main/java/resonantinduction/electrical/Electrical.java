@@ -27,6 +27,8 @@ import resonantinduction.electrical.generator.BlockGenerator;
 import resonantinduction.electrical.generator.TileGenerator;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
+import resonantinduction.electrical.generator.thermopile.BlockThermopile;
+import resonantinduction.electrical.generator.thermopile.TileThermopile;
 import resonantinduction.electrical.levitator.BlockLevitator;
 import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
@@ -88,9 +90,9 @@ public class Electrical
 	// Generators
 	public static Block blockSolarPanel;
 	public static Block blockGenerator;
+	public static Block blockThermopile;
 
 	// Machines
-	public static Block blockAdvancedFurnace;
 
 	// Transport
 	public static Block blockEMLevitator;
@@ -113,20 +115,14 @@ public class Electrical
 
 		// Transport
 		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
-		//blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
+		// blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 		blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
 
 		// Generator
 		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
-
-		if (Settings.REPLACE_FURNACE)
-		{
-			blockAdvancedFurnace = BlockAdvancedFurnace.createNew(false);
-			GameRegistry.registerBlock(blockAdvancedFurnace, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
-			GameRegistry.registerTileEntity(TileAdvancedFurnace.class, "ri_" + blockAdvancedFurnace.getUnlocalizedName());
-		}
+		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
 		Settings.save();
 
@@ -192,8 +188,9 @@ public class Electrical
 		}
 
 		proxy.postInit();
+		
 		/** Inject new furnace tile class */
-		replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
+		//replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
 	}
 
 	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)

@@ -32,7 +32,6 @@ public class Settings
 	public static int FURNACE_WATTAGE = 50000;
 	public static boolean SOUND_FXS = true;
 	public static boolean SHINY_SILVER = true;
-	public static boolean REPLACE_FURNACE = true;
 	public static int MAX_CONTRACTOR_DISTANCE = 200;
 
 	/**
@@ -47,7 +46,6 @@ public class Settings
 		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
 		SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
 		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
-		REPLACE_FURNACE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Replace vanilla furnace", REPLACE_FURNACE).getBoolean(REPLACE_FURNACE);
 
 		LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
 		LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
