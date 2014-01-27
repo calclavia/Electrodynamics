@@ -56,7 +56,7 @@ public class ItemHammer extends ItemRI
 					}
 
 					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat()));
-					player.addExhaustion(1);
+					player.addExhaustion(0.3f);
 					stack.damageItem(1, player);
 				}
 			}

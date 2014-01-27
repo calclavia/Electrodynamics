@@ -17,14 +17,14 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
 
-public class ItemBlockImprint extends Item
+public class ItemImprint extends Item
 {
-	public ItemBlockImprint()
+	public ItemImprint()
 	{
 		this(Settings.getNextItemID());
 	}
 
-	public ItemBlockImprint(int id)
+	public ItemImprint(int id)
 	{
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
 		this.setUnlocalizedName(Reference.PREFIX + "imprint");

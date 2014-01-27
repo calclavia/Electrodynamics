@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.imprint.ItemBlockImprint;
+import resonantinduction.archaic.imprint.ItemImprint;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileExternalInventory;
 
@@ -36,7 +36,7 @@ public abstract class TileEntityFilterable extends TileExternalInventory impleme
 	{
 		if (this.getFilter() != null && itemStack != null)
 		{
-			Set<ItemStack> checkStacks = ItemBlockImprint.getFilters(getFilter());
+			Set<ItemStack> checkStacks = ItemImprint.getFilters(getFilter());
 
 			if (checkStacks != null)
 			{

@@ -182,7 +182,7 @@ public class BlockImprinter extends BlockRI
 					InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 					tile.setInventorySlotContents(9, null);
 				}
-				else if (current != null && current.getItem() instanceof ItemBlockImprint)
+				else if (current != null && current.getItem() instanceof ItemImprint)
 				{
 					tile.setInventorySlotContents(9, current);
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);

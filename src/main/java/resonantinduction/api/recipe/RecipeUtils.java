@@ -66,7 +66,7 @@ public class RecipeUtils
 		@Override
 		public ItemStack getItemStack()
 		{
-			return itemStack;
+			return itemStack.copy();
 		}
 	}
 

@@ -22,18 +22,6 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 	public ItemStack[] inventory = new ItemStack[10];
 
 	@Override
-	public boolean canUpdate()
-	{
-		return false;
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return this.inventory.length;
-	}
-
-	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -52,6 +40,21 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 		{
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Inventory methods.
+	 */
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return this.inventory.length;
 	}
 
 	/**
@@ -144,11 +147,11 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 			/** Makes the stamping recipe for filters */
 			ItemStack fitlerStack = this.inventory[9];
 
-			if (fitlerStack != null && fitlerStack.getItem() instanceof ItemBlockImprint)
+			if (fitlerStack != null && fitlerStack.getItem() instanceof ItemImprint)
 			{
 				ItemStack outputStack = fitlerStack.copy();
 				outputStack.stackSize = 1;
-				Set<ItemStack> filters = ItemBlockImprint.getFilters(outputStack);
+				Set<ItemStack> filters = ItemImprint.getFilters(outputStack);
 				Set<ItemStack> toAdd = new HashSet<ItemStack>();
 
 				/** A hashset of to be imprinted items containing NO repeats. */
@@ -194,7 +197,7 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 
 				filters.addAll(toAdd);
 
-				ItemBlockImprint.setFilters(outputStack, filters);
+				ItemImprint.setFilters(outputStack, filters);
 				this.inventory[9] = outputStack;
 			}
 		}

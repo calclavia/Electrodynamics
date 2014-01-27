@@ -21,7 +21,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import resonantinduction.api.IArmbot;
 import resonantinduction.api.IArmbotUseable;
-import resonantinduction.archaic.imprint.ItemBlockImprint;
+import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.encoder.coding.args.ArgumentData;
 import universalelectricity.api.vector.Vector3;
@@ -329,9 +329,9 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 				{
 					ItemStack filterStack = craftingMatrix[CENTER_SLOT];
 
-					if (filterStack != null && filterStack.getItem() instanceof ItemBlockImprint)
+					if (filterStack != null && filterStack.getItem() instanceof ItemImprint)
 					{
-						Set<ItemStack> filters = ItemBlockImprint.getFilters(filterStack);
+						Set<ItemStack> filters = ItemImprint.getFilters(filterStack);
 
 						for (ItemStack outputStack : filters)
 						{

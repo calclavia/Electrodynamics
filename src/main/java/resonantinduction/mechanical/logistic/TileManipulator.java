@@ -10,7 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IManipulator;
-import resonantinduction.archaic.imprint.ItemBlockImprint;
+import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
@@ -214,7 +214,7 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	{
 		if (invExtractionHelper == null || invExtractionHelper.world != this.worldObj)
 		{
-			this.invExtractionHelper = new InternalInventoryHandler(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemBlockImprint.getFilters(getFilter()) : null, this.isInverted());
+			this.invExtractionHelper = new InternalInventoryHandler(this.worldObj, new Vector3(this), this.getFilter() != null ? ItemImprint.getFilters(getFilter()) : null, this.isInverted());
 		}
 		return invExtractionHelper;
 	}
@@ -224,7 +224,7 @@ public class TileManipulator extends TileEntityFilterable implements IRotatable,
 	{
 		super.setFilter(filter);
 		/* Reset inv Helper's filters */
-		this.invHelper().setFilter(this.getFilter() != null ? ItemBlockImprint.getFilters(this.getFilter()) : null, this.isInverted());
+		this.invHelper().setFilter(this.getFilter() != null ? ItemImprint.getFilters(this.getFilter()) : null, this.isInverted());
 	}
 
 	/** Is this manipulator set to output items */

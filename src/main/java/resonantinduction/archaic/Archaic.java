@@ -4,7 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.archaic.blocks.BlockMillstone;
 import resonantinduction.archaic.blocks.BlockTurntable;
+import resonantinduction.archaic.blocks.TileMillstone;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
@@ -16,7 +18,7 @@ import resonantinduction.archaic.firebox.BlockHotPlate;
 import resonantinduction.archaic.firebox.TileFirebox;
 import resonantinduction.archaic.firebox.TileHotPlate;
 import resonantinduction.archaic.imprint.BlockImprinter;
-import resonantinduction.archaic.imprint.ItemBlockImprint;
+import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -68,6 +70,7 @@ public class Archaic
 	public static Block blockTurntable;
 	public static Block blockFirebox;
 	public static Block blockHotPlate;
+	public static Block blockMillstone;
 	public static Block blockMachinePart;
 
 	public static Item itemImprint;
@@ -86,10 +89,10 @@ public class Archaic
 		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
 		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
-
+		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);
 		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
-		itemImprint = contentRegistry.createItem(ItemBlockImprint.class);
+		itemImprint = contentRegistry.createItem(ItemImprint.class);
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
 		proxy.preInit();
 		Settings.save();

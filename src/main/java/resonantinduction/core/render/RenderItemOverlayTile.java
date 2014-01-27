@@ -88,7 +88,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		renderItemOnSides(tile, itemStack, x, y, z, "No Output");
 	}
 
-	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String itemName)
+	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
 	{
 		RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
 
@@ -99,7 +99,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 		if (itemStack != null)
 		{
-			itemName = itemStack.getDisplayName();
+			renderText = itemStack.getDisplayName();
 			amount = Integer.toString(itemStack.stackSize);
 		}
 
@@ -155,7 +155,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 			}
 
-			this.renderText(itemName, side, 0.02f, x, y - 0.35f, z);
+			this.renderText(renderText, side, 0.02f, x, y - 0.35f, z);
 			this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
 		}
 	}

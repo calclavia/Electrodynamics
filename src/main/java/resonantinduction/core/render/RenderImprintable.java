@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.archaic.imprint.ItemBlockImprint;
+import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
@@ -41,7 +41,7 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 					{
 						if (objectPosition.blockX == tileFilterable.xCoord && objectPosition.blockY == tileFilterable.yCoord && objectPosition.blockZ == tileFilterable.zCoord)
 						{
-							Set<ItemStack> filters = ItemBlockImprint.getFilters(filter);
+							Set<ItemStack> filters = ItemImprint.getFilters(filter);
 
 							int i = 0;
 							for (ItemStack filterStack : filters)
