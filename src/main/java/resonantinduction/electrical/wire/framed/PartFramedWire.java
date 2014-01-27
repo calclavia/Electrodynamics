@@ -18,8 +18,6 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
-import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.net.IConnector;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;

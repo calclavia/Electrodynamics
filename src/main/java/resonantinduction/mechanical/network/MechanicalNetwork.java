@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.gear.PartGear;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;

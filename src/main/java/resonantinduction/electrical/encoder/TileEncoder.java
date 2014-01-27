@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.armbot.Program;
 import resonantinduction.electrical.armbot.task.TaskRotateTo;
 import resonantinduction.electrical.encoder.coding.IProgram;

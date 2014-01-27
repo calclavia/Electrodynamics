@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
 import resonantinduction.api.fluid.IFluidPipe;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 
 /**

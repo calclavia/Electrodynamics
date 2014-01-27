@@ -3,8 +3,6 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,6 +11,8 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.prefab.tile.TileAdvanced;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia

@@ -11,7 +11,6 @@ import java.util.Set;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 

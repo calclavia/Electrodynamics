@@ -16,7 +16,6 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.TileLiquidMixture;
-import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 

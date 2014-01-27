@@ -1,8 +1,6 @@
 package resonantinduction.electrical.encoder.gui;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.encoder.TileEncoder;

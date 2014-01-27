@@ -6,8 +6,6 @@ import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedSwitchWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
-import resonantinduction.mechanical.fluid.pipe.PartPipe;
-import resonantinduction.mechanical.gear.PartGear;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;

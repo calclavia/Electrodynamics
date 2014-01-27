@@ -1,24 +1,17 @@
 package resonantinduction.mechanical.process;
 
-import java.util.HashMap;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia

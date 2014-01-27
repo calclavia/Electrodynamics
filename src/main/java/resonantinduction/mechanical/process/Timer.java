@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.entity.item.EntityItem;
 
 public class Timer<K>
 {

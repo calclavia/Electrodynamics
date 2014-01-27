@@ -9,7 +9,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.fluid.IFluidConnector;
 import resonantinduction.api.fluid.IFluidNetwork;
-import resonantinduction.api.fluid.IFluidPipe;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
 import universalelectricity.core.net.NodeNetwork;

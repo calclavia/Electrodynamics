@@ -1,11 +1,7 @@
 package resonantinduction.archaic.engineering;
 
-import org.lwjgl.opengl.GL11;
-
-import calclavia.lib.render.RenderUtility;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

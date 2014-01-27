@@ -1,9 +1,7 @@
 package resonantinduction.api.fluid;
 
 import java.util.List;
-import java.util.Set;
 
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;

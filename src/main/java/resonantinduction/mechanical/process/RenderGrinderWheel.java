@@ -5,16 +5,14 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.WorldUtility;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import cpw.mods.fml.client.FMLClientHandler;
+import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

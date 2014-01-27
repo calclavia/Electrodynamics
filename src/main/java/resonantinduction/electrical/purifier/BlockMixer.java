@@ -3,12 +3,10 @@ package resonantinduction.electrical.purifier;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.mechanical.process.TileMixer;
-import universalelectricity.api.vector.VectorWorld;
 
 /**
  * A block used to build machines.

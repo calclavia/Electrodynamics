@@ -1,10 +1,5 @@
 package resonantinduction.electrical.transformer;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
@@ -12,9 +7,7 @@ import net.minecraftforge.client.model.obj.WavefrontObject;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

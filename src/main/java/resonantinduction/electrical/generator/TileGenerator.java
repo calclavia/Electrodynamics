@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
-import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;

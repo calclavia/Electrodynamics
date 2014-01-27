@@ -2,12 +2,8 @@ package resonantinduction.electrical.encoder.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import resonantinduction.core.Reference;
 import resonantinduction.electrical.encoder.TileEncoder;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

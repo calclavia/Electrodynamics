@@ -4,8 +4,8 @@
 package resonantinduction.core;
 
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.ProxyBase;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.ProxyBase;
 
 /**
  * @author Calclavia

@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.fluid.pipe;
 
-import calclavia.lib.prefab.block.BlockAdvanced;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +17,7 @@ import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
+import calclavia.lib.prefab.block.BlockAdvanced;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;

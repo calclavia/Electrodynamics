@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.process;
 
-import calclavia.lib.utility.WorldUtility;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -12,7 +11,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
-import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.utility.WorldUtility;
 
 /**
  * A block used to build machines.

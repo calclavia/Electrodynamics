@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.prefab.block.BlockRI;
 import calclavia.lib.content.IBlockInfo;
 

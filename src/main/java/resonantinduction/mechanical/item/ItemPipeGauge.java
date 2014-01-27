@@ -1,11 +1,9 @@
 package resonantinduction.mechanical.item;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,7 +11,6 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
-import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemRI;
 import calclavia.lib.utility.FluidUtility;
 

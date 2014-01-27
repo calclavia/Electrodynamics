@@ -9,8 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInductionTabs;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.item.ItemRI;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

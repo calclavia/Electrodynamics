@@ -11,8 +11,6 @@ import mffs.api.fortron.IServerThread;
 import net.minecraft.server.ServerListenThread;
 import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Calclavia

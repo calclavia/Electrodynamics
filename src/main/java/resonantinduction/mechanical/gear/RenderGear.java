@@ -8,8 +8,8 @@ import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
