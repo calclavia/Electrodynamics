@@ -54,20 +54,21 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 
 		if (tileAbove instanceof TileLiquidMixture && (tileBelow == null || tileBelow instanceof TileLiquidMixture))
 		{
-			if (((TileLiquidMixture) tileAbove).items.size() > 0)
-			{
-				world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
+			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
 
+			if (((TileLiquidMixture) tileAbove).items.size() > 0 && random.nextFloat() > 0.9f)
+			{
 				/**
 				 * Leak the fluid down.
 				 */
 				BlockFluidMixture fluidBlock = (BlockFluidMixture) ResonantInduction.blockFluidMixture;
 				int amount = fluidBlock.getQuantaValue(world, x, y, z);
-
+				System.out.println(amount);
+				
 				/**
 				 * All fluid is filtered out, spawn all the items.
 				 */
-				if (amount <= 1)
+				//if (amount <= 1)
 				{
 					System.out.println("filter dropped");
 					for (ItemStack itemStack : ((TileLiquidMixture) tileAbove).items)

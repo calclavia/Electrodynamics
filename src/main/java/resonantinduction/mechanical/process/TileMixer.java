@@ -66,7 +66,7 @@ public class TileMixer extends TileMechanical
 
 				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID)
 				{
-					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 4);
+					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 3);
 				}
 			}
 		}

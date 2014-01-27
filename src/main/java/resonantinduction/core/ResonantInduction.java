@@ -74,7 +74,7 @@ public class ResonantInduction
 	public static Block blockGas;
 	public static Block blockDebug;
 
-	public static Fluid MIXTURE = null;
+	public static Fluid fluidMixture = null;
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
@@ -91,9 +91,9 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
-		MIXTURE = new Fluid("mixture");
-		FluidRegistry.registerFluid(MIXTURE);
-		blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), MIXTURE);
+		fluidMixture = new Fluid("water");
+		FluidRegistry.registerFluid(fluidMixture);
+		blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), fluidMixture);
 
 		// Items
 		itemRubble = new ItemOreResource(Settings.getNextItemID(), "oreRubble");

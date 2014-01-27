@@ -82,7 +82,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		// System.out.println(getNetwork());
+		if(!world().isRemote)
+		 System.out.println(getNetwork());
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())

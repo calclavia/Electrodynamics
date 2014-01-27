@@ -100,29 +100,20 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public void onAdded()
+	public void onWorldJoin()
 	{
-		super.onAdded();
 		refresh();
 	}
 
 	@Override
 	public void onMoved()
 	{
-		this.refresh();
-	}
-
-	@Override
-	public void onChunkLoad()
-	{
-		super.onChunkLoad();
 		refresh();
 	}
 
 	@Override
 	public void onNeighborChanged()
 	{
-		super.onNeighborChanged();
 		refresh();
 	}
 

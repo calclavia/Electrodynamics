@@ -37,6 +37,6 @@ public class FluidEventHandler
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Post event)
 	{
-		ResonantInduction.MIXTURE.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture"));
+		ResonantInduction.fluidMixture.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture"));
 	}
 }
