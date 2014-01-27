@@ -74,12 +74,8 @@ public class ResourceGenerator
 					OreDictionary.registerOre("dustRefined" + name, ResonantInduction.itemRefinedDust.getStackFromDust(materialName));
 				}
 
-				// Add rubble to crushing recipes
-				// TODO: Change this to CRUSHING when the crusher is finished.
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "ore" + name, "rubble" + name);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + name, "rubble" + name);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + name, "dust" + name, "dust" + name);
-
-				// Add dust to mixer recipes, dummy item because mixer doesn't produce any items.
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + name, "dustRefined" + name);
 			}
 		}

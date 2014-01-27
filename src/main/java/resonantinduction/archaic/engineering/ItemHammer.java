@@ -40,7 +40,7 @@ public class ItemHammer extends ItemRI
 				{
 					if (!world.isRemote && world.rand.nextFloat() < 0.04)
 					{
-						Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, oreName);
+						Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
 
 						// TODO: Fix multiple outputs.
 						for (Resource resource : outputs)

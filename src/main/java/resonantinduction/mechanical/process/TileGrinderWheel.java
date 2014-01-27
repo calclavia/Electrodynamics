@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.process;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -113,14 +115,16 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack) == null ? false : MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
+		// TODO: We don't have a crusher yet, so our grinder currently crushes ores.
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack).length > 0 || MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
 	{
 		ItemStack itemStack = entity.getEntityItem();
 
-		Resource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack);
+		// TODO: Remove this later on when crusher if complete.
+		Resource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack));
 
 		for (Resource resource : results)
 		{
