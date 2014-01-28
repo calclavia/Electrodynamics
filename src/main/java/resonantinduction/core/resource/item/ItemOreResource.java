@@ -40,14 +40,18 @@ public class ItemOreResource extends ItemRI
 	public String getItemDisplayName(ItemStack is)
 	{
 		String dustName = getMaterialFromStack(is);
-		List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
 
-		if (list.size() > 0)
+		if (dustName != null)
 		{
-			ItemStack type = list.get(0);
+			List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
 
-			String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
-			return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
+			if (list.size() > 0)
+			{
+				ItemStack type = list.get(0);
+
+				String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
+				return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
+			}
 		}
 
 		return "";
