@@ -93,7 +93,8 @@ public class PartGearShaft extends PartMechanical
 				{
 					IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
 
-					if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+					// Only connet to shafts outside of this block space.
+					if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && instance instanceof PartGearShaft)
 					{
 						connections[checkDir.ordinal()] = instance;
 						getNetwork().merge(instance.getNetwork());
@@ -155,9 +156,9 @@ public class PartGearShaft extends PartMechanical
 	}
 
 	@Override
-	public boolean inverseRotation(ForgeDirection dir)
+	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return dir == placementSide;
+		return dir == placementSide.getOpposite() && !(with instanceof PartGearShaft);
 	}
 
 }

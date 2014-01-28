@@ -140,7 +140,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public boolean inverseRotation(ForgeDirection dir)
+	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
 		return true;
 	}
