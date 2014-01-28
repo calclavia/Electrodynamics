@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.IMechanicalNetwork;
 import universalelectricity.api.vector.Vector3;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

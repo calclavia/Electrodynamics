@@ -14,6 +14,7 @@ public class ClientProxy extends CommonProxy
 	public void preInit()
 	{
 		MinecraftForgeClient.registerItemRenderer(Mechanical.itemGear.itemID, RenderRIItem.INSTANCE);
+		MinecraftForgeClient.registerItemRenderer(Mechanical.itemGearShaft.itemID, RenderRIItem.INSTANCE);
 	}
 
 	@Override

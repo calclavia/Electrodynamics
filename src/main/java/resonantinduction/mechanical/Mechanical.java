@@ -18,6 +18,7 @@ import resonantinduction.mechanical.fluid.pump.TileGrate;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.mechanical.gear.ItemGear;
+import resonantinduction.mechanical.gear.ItemGearShaft;
 import resonantinduction.mechanical.item.ItemPipeGauge;
 import resonantinduction.mechanical.logistic.BlockDetector;
 import resonantinduction.mechanical.logistic.BlockManipulator;
@@ -72,7 +73,7 @@ public class Mechanical
 
 	// Energy
 	public static Item itemGear;
-	public static Block itemGearShaft;
+	public static Item itemGearShaft;
 
 	// Transport
 	public static Block blockConveyorBelt;
@@ -101,6 +102,7 @@ public class Mechanical
 		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		itemGear = contentRegistry.createItem(ItemGear.class);
+		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
 
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);

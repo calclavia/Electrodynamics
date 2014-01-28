@@ -12,7 +12,9 @@ import resonantinduction.electrical.multimeter.RenderMultimeter;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.transformer.RenderTransformer;
 import resonantinduction.mechanical.gear.ItemGear;
+import resonantinduction.mechanical.gear.ItemGearShaft;
 import resonantinduction.mechanical.gear.RenderGear;
+import resonantinduction.mechanical.gear.RenderGearShaft;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -50,6 +52,10 @@ public class RenderRIItem implements IItemRenderer
 		else if (item.getItem() instanceof ItemGear)
 		{
 			RenderGear.INSTANCE.renderInventory(null, 0, 0, null);
+		}
+		else if (item.getItem() instanceof ItemGearShaft)
+		{
+			RenderGearShaft.INSTANCE.renderInventory(null, 0, 0, null);
 		}
 		else if (item.getItem() instanceof ItemMultimeter)
 		{

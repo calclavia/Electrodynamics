@@ -2,6 +2,7 @@ package resonantinduction.mechanical;
 
 import resonantinduction.mechanical.fluid.pipe.PartPipe;
 import resonantinduction.mechanical.gear.PartGear;
+import resonantinduction.mechanical.gear.PartGearShaft;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -11,7 +12,7 @@ public class MultipartMechanical implements IPartFactory
 {
 	public static MultipartMechanical INSTANCE;
 
-	public static final String[] PART_TYPES = { "resonant_induction_gear", "resonant_induction_pipe" };
+	public static final String[] PART_TYPES = { "resonant_induction_gear", "resonant_induction_gear_shaft", "resonant_induction_pipe" };
 
 	public MultipartMechanical()
 	{
@@ -26,6 +27,10 @@ public class MultipartMechanical implements IPartFactory
 		if (name.equals("resonant_induction_gear"))
 		{
 			return new PartGear();
+		}
+		else if (name.equals("resonant_induction_gear_shaft"))
+		{
+			return new PartGearShaft();
 		}
 		else if (name.equals("resonant_induction_pipe"))
 		{

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
@@ -28,19 +29,6 @@ import codechicken.multipart.TMultiPart;
  */
 public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanical
 {
-	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
-
-	static
-	{
-		oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
-		oBoxes[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
-		for (int s = 1; s < 6; s++)
-		{
-			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
-			oBoxes[s][0] = oBoxes[0][0].copy().apply(t);
-			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
-		}
-	}
 
 	private IMechanicalNetwork network;
 
@@ -69,11 +57,24 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
+	{
+		if (!world().isRemote)
+		{
+			System.out.println(this + ":" + getNetwork());
+			 for(Object obj : connections)
+			 System.out.println(obj);
+		}
+
+		return false;
+	}
+
+	@Override
 	public void update()
 	{
 		// TODO: Fix gear network somehow tick while network is invalid.
 		getNetwork().addConnector(this);
-		
+
 		ticks++;
 		angle += angularVelocity / 20;
 
@@ -184,18 +185,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public int getSlotMask()
-	{
-		return 1 << this.placementSide.ordinal();
-	}
-
-	@Override
-	public Cuboid6 getBounds()
-	{
-		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
-	}
-
-	@Override
 	public int redstoneConductionMap()
 	{
 		return 0;
@@ -205,16 +194,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	public boolean solid(int arg0)
 	{
 		return true;
-	}
-
-	/**
-	 * Multipart Methods
-	 */
-
-	@Override
-	public Iterable<Cuboid6> getOcclusionBoxes()
-	{
-		return Arrays.asList(oBoxes[this.placementSide.ordinal()]);
 	}
 
 	@Override
@@ -265,7 +244,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setNetwork(IMechanicalNetwork network)
 	{
-		network = network;
+		this.network = network;
 	}
 
 	@Override
@@ -311,5 +290,11 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	public IMechanical getInstance(ForgeDirection from)
 	{
 		return this;
+	}
+
+	@Override
+	public universalelectricity.api.vector.Vector3 getPosition()
+	{
+		return new universalelectricity.api.vector.Vector3(x(), y(), z());
 	}
 }

@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.gear;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +17,11 @@ import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.prefab.block.BlockAdvanced;
+import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
+import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
+import codechicken.microblock.FaceMicroClass;
 import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -32,6 +36,20 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class PartGear extends PartMechanical implements IMechanical, IMultiBlockStructure<PartGear>
 {
+	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
+
+	static
+	{
+		oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
+		oBoxes[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
+		for (int s = 1; s < 6; s++)
+		{
+			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
+			oBoxes[s][0] = oBoxes[0][0].copy().apply(t);
+			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
+		}
+	}
+
 	private int manualCrankTime = 0;
 
 	@Override
@@ -82,13 +100,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		if (!world().isRemote)
-		{
-			// System.out.println(this + ":" + getNetwork());
-			// for(Object obj : connections)
-			// System.out.println(obj);
-		}
-
 		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())
@@ -112,7 +123,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			return true;
 		}
 
-		return false;
+		return super.activate(player, hit, item);
 	}
 
 	@Override
@@ -159,14 +170,21 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			for (int i = 0; i < 6; i++)
 			{
 				ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir);
 
-				if (connections[checkDir.ordinal()] == null && checkDir != placementSide && checkDir != placementSide.getOpposite() && instance != null && instance.canConnect(checkDir.getOpposite(), this))
+				/**
+				 * If we're checking for the block that is opposite to the gear's placement side
+				 * (the center), then we try to look for a gear shaft in the center.
+				 */
+
+				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
+
+				if (connections[checkDir.ordinal()] == null && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
 				}
 			}
+
 		}
 
 		int displaceCheck = 1;
@@ -339,12 +357,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	}
 
 	@Override
-	public universalelectricity.api.vector.Vector3 getPosition()
-	{
-		return new universalelectricity.api.vector.Vector3(x(), y(), z());
-	}
-
-	@Override
 	public float getRatio(ForgeDirection dir)
 	{
 		if (dir == placementSide)
@@ -377,9 +389,13 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			 */
 			if (from == placementSide.getOpposite())
 			{
-				if (source instanceof PartGear)
+				if (source instanceof PartGear || source instanceof PartGearShaft)
 				{
-					if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+					if (source instanceof PartGearShaft)
+					{
+						return true;
+					}
+					else if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
 					{
 						return true;
 					}
@@ -421,5 +437,26 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		}
 
 		return false;
+	}
+
+	/**
+	 * Multipart Bounds
+	 */
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		return Arrays.asList(oBoxes[this.placementSide.ordinal()]);
+	}
+
+	@Override
+	public int getSlotMask()
+	{
+		return 1 << this.placementSide.ordinal();
+	}
+
+	@Override
+	public Cuboid6 getBounds()
+	{
+		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
 	}
 }
