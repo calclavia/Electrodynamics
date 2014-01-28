@@ -37,6 +37,12 @@ public class PartGearShaft extends PartMechanical
 		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64));
 	}
 
+	public void preparePlacement(int side, int itemDamage)
+	{
+		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.placementSide = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+	}
+
 	@Override
 	public void update()
 	{
@@ -65,9 +71,8 @@ public class PartGearShaft extends PartMechanical
 			if (checkDir == placementSide || checkDir == placementSide.getOpposite())
 			{
 				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir);
-				System.out.println("FOUND POSSIBLE CHECK"+instance);
 
-				if (instance != null && instance.canConnect(checkDir.getOpposite(), this))
+				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
@@ -76,19 +81,19 @@ public class PartGearShaft extends PartMechanical
 		}
 
 		/** Look for connections outside this block space, the relative FRONT and BACK */
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 6; i++)
 		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
-			
+			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
 			if (connections[checkDir.ordinal()] == null && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
 			{
 				TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 
 				if (checkTile instanceof IMechanical)
 				{
-					IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
+					IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
 
-					if (instance != null && instance.canConnect(checkDir.getOpposite(), this))
+					if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 					{
 						connections[checkDir.ordinal()] = instance;
 						getNetwork().merge(instance.getNetwork());
@@ -152,7 +157,7 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	public boolean inverseRotation(ForgeDirection dir)
 	{
-		return false;
+		return dir == placementSide;
 	}
 
 }

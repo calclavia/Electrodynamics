@@ -155,7 +155,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			IMechanical instance = ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
 
-			if (instance != null && instance.canConnect(placementSide, this))
+			if (instance != null && instance != this && instance.canConnect(placementSide, this))
 			{
 				connections[placementSide.getOpposite().ordinal()] = instance;
 				getNetwork().merge(instance.getNetwork());
@@ -178,7 +178,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
-				if (connections[checkDir.ordinal()] == null && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
+				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
@@ -203,7 +203,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
 
-				if (instance != null && instance.canConnect(checkDir.getOpposite(), this))
+				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());

@@ -58,16 +58,6 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	@Override
 	public boolean canConnect(ForgeDirection from)
 	{
-		TMultiPart part = this.partMap(from.ordinal());
-
-		if (part != null)
-		{
-			if (this.mechanicalInterfaces.contains(part))
-			{
-				return ((IMechanical) part).canConnect(from);
-			}
-		}
-
 		return false;
 	}
 
@@ -87,6 +77,11 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	public IMechanical getInstance(ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
+
+		if (part == null)
+		{
+			part = partMap(PartMap.CENTER.ordinal());
+		}
 
 		if (part != null)
 		{
@@ -148,4 +143,9 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 		return null;
 	}
 
+	@Override
+	public boolean inverseRotation(ForgeDirection dir)
+	{
+		return false;
+	}
 }

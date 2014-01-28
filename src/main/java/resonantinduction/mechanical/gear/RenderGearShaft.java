@@ -36,7 +36,6 @@ public class RenderGearShaft
 		GL11.glPushMatrix();
 
 		ForgeDirection dir = part.placementSide;
-		dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
 
 		switch (dir)
 		{
