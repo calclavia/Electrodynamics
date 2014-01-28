@@ -25,13 +25,14 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityProvider
+public class BlockFluidMaterial extends BlockFluidFinite
 {
-	public BlockFluidMaterial()
+	public BlockFluidMaterial(Fluid fluid)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMaterial", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMaterial, Material.lava);
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, fluid.getName(), Settings.getNextBlockID()).getInt(), fluid, Material.lava);
 		setTextureName(Reference.PREFIX + "molten_flow");
-		this.setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
+		setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
+		setQuantaPerBlock(16);
 	}
 
 	public void setQuanta(World world, int x, int y, int z, int quanta)
@@ -46,8 +47,9 @@ public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityP
 	@Override
 	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
 	{
-		TileMaterial tileFluid = (TileMaterial) world.getBlockTileEntity(x, y, z);
-		FluidStack stack = new FluidStack(ResonantInduction.fluidMaterial, (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
+		FluidStack stack = new FluidStack(getFluid(), (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
+		if (doDrain)
+			world.setBlockToAir(x, y, z);
 		return stack;
 	}
 
@@ -55,25 +57,12 @@ public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityP
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
-		TileEntity tileEntity = access.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileMaterial)
-		{
-			return ((TileMaterial) tileEntity).clientColor;
-		}
-
-		return 16777215;
+		return ResourceGenerator.materialColors.get(getFluid().getName().replace("molten", "").toLowerCase());
 	}
 
 	@Override
 	public boolean canDrain(World world, int x, int y, int z)
 	{
 		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileMaterial();
 	}
 }

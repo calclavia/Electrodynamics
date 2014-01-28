@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -75,14 +76,14 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 				{
 					usedHeat = true;
 
-					if (heatEnergy >= requiredMeltIronEnergy)
+					//if (heatEnergy >= requiredMeltIronEnergy)
 					{
 						TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
 						if (dustTile instanceof TileMaterial)
 						{
 							String name = ((TileMaterial) dustTile).name;
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResonantInduction.blockFluidMaterial.blockID, 8, 3);
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResonantInduction.blockFluidMaterial.get(ResourceGenerator.materialNames.indexOf(name)).blockID, 8, 3);
 							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)

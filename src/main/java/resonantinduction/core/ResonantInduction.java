@@ -1,5 +1,7 @@
 package resonantinduction.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -74,11 +76,11 @@ public class ResonantInduction
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockDust;
 	public static Block blockFluidMixture;
-	public static Block blockFluidMaterial;
+	public static List<Block> blockFluidMaterial = new ArrayList<Block>();
 	public static Block blockGas;
 
 	public static Fluid fluidMixture;
-	public static Fluid fluidMaterial;
+	public static List<Fluid> fluidMaterial = new ArrayList<Fluid>();
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
@@ -99,16 +101,11 @@ public class ResonantInduction
 		fluidMixture = new Fluid("water");
 		FluidRegistry.registerFluid(fluidMixture);
 		blockFluidMixture = contentRegistry.createTile(BlockFluidMixture.class, TileFluidMixture.class);
+
 		/**
 		 * Melting dusts
 		 */
 		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class);
-		fluidMaterial = new Fluid("moltenMaterial");
-		fluidMaterial.setDensity(7);
-		fluidMaterial.setViscosity(10000);
-		fluidMaterial.setTemperature(273 + 1538);
-		FluidRegistry.registerFluid(fluidMaterial);
-		blockFluidMaterial = contentRegistry.createTile(BlockFluidMaterial.class, TileMaterial.class);
 
 		// Items
 		itemRubble = new ItemOreResource(Settings.getNextItemID(), "oreRubble");
@@ -135,7 +132,7 @@ public class ResonantInduction
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		// Generate Dusts
+		// Generate Resources
 		ResourceGenerator.generateOreResources();
 	}
 
