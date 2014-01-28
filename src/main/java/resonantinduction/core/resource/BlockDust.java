@@ -47,6 +47,7 @@ public class BlockDust extends BlockRI
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
@@ -54,10 +55,7 @@ public class BlockDust extends BlockRI
 
 		if (tileEntity instanceof TileMaterial)
 		{
-			if (((TileMaterial) tileEntity).name != null)
-			{
-				return ResourceGenerator.materialColors.get(((TileMaterial) tileEntity).name);
-			}
+			return ((TileMaterial) tileEntity).clientColor;
 		}
 
 		return 16777215;
@@ -126,52 +124,6 @@ public class BlockDust extends BlockRI
 		int j = par1 & 7;
 		float f = (float) (2 * (1 + j)) / 16.0F;
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
-	}
-
-	/**
-	 * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y,
-	 * z
-	 */
-	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
-	{
-		return true;
-	}
-
-	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed
-	 * (coordinates passed are
-	 * their own) Args: x, y, z, neighbor blockID
-	 */
-	public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
-	{
-		this.canSnowStay(par1World, par2, par3, par4);
-	}
-
-	/**
-	 * Checks if this snow block can stay at this location.
-	 */
-	private boolean canSnowStay(World par1World, int par2, int par3, int par4)
-	{
-		if (!this.canPlaceBlockAt(par1World, par2, par3, par4))
-		{
-			par1World.setBlockToAir(par2, par3, par4);
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	/**
-	 * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the
-	 * coordinates of the
-	 * block and l is the block's subtype/damage.
-	 */
-	public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
-	{
-		super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
-		par1World.setBlockToAir(par3, par4, par5);
 	}
 
 	/**

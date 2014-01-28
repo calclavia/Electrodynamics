@@ -30,7 +30,7 @@ public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityP
 	public BlockFluidMaterial()
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMaterial", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMaterial, Material.lava);
-		setTextureName("lava_flow");
+		setTextureName(Reference.PREFIX + "molten_flow");
 		this.setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
 	}
 
@@ -56,13 +56,10 @@ public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityP
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
 		TileEntity tileEntity = access.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity instanceof TileMaterial)
 		{
-			if (((TileMaterial) tileEntity).name != null)
-			{
-				return ResourceGenerator.materialColors.get(((TileMaterial) tileEntity).name);
-			}
+			return ((TileMaterial) tileEntity).clientColor;
 		}
 
 		return 16777215;

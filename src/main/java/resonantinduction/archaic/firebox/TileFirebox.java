@@ -78,6 +78,7 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					if (heatEnergy >= requiredMeltIronEnergy)
 					{
 						TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+
 						if (dustTile instanceof TileMaterial)
 						{
 							String name = ((TileMaterial) dustTile).name;

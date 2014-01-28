@@ -27,7 +27,7 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	public BlockFluidMixture()
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMixture", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMixture, Material.water);
-		setTextureName("water_flow");
+		setTextureName(Reference.PREFIX + "mixture_flow");
 		this.setUnlocalizedName(Reference.PREFIX + "fluidMixture");
 	}
 
