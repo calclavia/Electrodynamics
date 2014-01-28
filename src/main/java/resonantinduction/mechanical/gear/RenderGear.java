@@ -23,9 +23,8 @@ public class RenderGear
 	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glRotatef(90, 1, 0, 0);
-		GL11.glScalef(0.5f, 0.5f, 0.5f);
 		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
-		MODEL.renderAll();
+		MODEL.renderOnly("SmallGear");
 	}
 
 	public void renderDynamic(PartGear part, double x, double y, double z, float frame)

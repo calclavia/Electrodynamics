@@ -78,7 +78,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 		ticks++;
 		angle += angularVelocity / 20;
-
+		
+		checkClientUpdate();
 		super.update();
 	}
 

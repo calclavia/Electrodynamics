@@ -116,7 +116,7 @@ public class Electrical
 		// Transport
 		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 		// blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
-		blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
+		//blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
 
 		// Generator
