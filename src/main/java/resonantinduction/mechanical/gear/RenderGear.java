@@ -18,13 +18,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderGear
 {
 	public static final RenderGear INSTANCE = new RenderGear();
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gear/gear.obj");
-	public final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "gear/gear.png");
+	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
 
 	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glRotatef(90, 1, 0, 0);
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
+		GL11.glScalef(0.5f, 0.5f, 0.5f);
+		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
 		MODEL.renderAll();
 	}
 
@@ -41,13 +41,17 @@ public class RenderGear
 
 			GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+
 			if (part.getMultiBlock().isConstructed())
 			{
-				GL11.glScalef(3, 1, 3);
+				MODEL.renderOnly("LargeGear");
+			}
+			else
+			{
+				MODEL.renderOnly("SmallGear");
 			}
 
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE);
-			MODEL.renderAll();
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 		}
