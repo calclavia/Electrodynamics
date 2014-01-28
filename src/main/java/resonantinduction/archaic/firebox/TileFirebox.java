@@ -58,7 +58,7 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Block.fire.blockID);
 				}
 
-				if (blockID == Block.waterStill.blockID || blockID == Block.waterMoving.blockID)
+				if (blockID == Block.waterStill.blockID)
 				{
 					boilEnergy += POWER / 20;
 
@@ -66,7 +66,7 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), new FluidStack(FluidRegistry.getFluid("steam"), FluidContainerRegistry.BUCKET_VOLUME), 2));
-						
+
 						worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
 						boilEnergy = 0;
 					}

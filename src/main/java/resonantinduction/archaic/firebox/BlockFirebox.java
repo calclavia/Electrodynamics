@@ -123,7 +123,7 @@ public class BlockFirebox extends BlockRI
 
 			int blockIDAbove = world.getBlockId(x, y + 1, z);
 
-			if (blockIDAbove == Block.waterStill.blockID || blockIDAbove == Block.waterMoving.blockID)
+			if (blockIDAbove == Block.waterStill.blockID )
 			{
 				for (int i = 0; i < 4; i++)
 					world.spawnParticle("bubble", xDisplace + (par5Random.nextFloat() - 0.5), yDisplace + 1.5, zDisplace + (par5Random.nextFloat() - 0.5), 0.0D, 0.05D, 0.0D);
