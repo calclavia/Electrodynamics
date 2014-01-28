@@ -63,7 +63,7 @@ public class TileMixer extends TileMechanical
 			{
 				Vector3 checkVector = new Vector3(this).translate(x, 0, z);
 
-				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID)
+				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID || checkVector.getBlockID(worldObj) == Block.waterMoving.blockID)
 				{
 					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 3);
 				}

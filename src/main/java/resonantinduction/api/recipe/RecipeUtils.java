@@ -105,7 +105,7 @@ public class RecipeUtils
 		@Override
 		public ItemStack getItemStack()
 		{
-			return OreDictionary.getOres(name).get(0);
+			return OreDictionary.getOres(name).get(0).copy();
 		}
 	}
 

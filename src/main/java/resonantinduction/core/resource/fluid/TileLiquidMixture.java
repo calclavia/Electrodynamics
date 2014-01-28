@@ -3,13 +3,19 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.io.ByteArrayDataInput;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
+import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,10 +24,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class TileLiquidMixture extends TileAdvanced
+public class TileLiquidMixture extends TileAdvanced implements IPacketReceiver
 {
 	public final Set<ItemStack> items = new HashSet<ItemStack>();
 	public final Set<FluidStack> fluids = new HashSet<FluidStack>();
+
+	private int clientColor = 0xFFFFFF;
 
 	@Override
 	public boolean canUpdate()
@@ -63,18 +71,30 @@ public class TileLiquidMixture extends TileAdvanced
 		}
 	}
 
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		clientColor = data.readInt();
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		for (ItemStack item : items)
+		{
+			return ResonantInduction.PACKET_TILE.getPacket(this, ResourceGenerator.getAverageColor(item));
+		}
+		return null;
+	}
+
 	/**
 	 * @return The color of the liquid based on the fluidStacks stored.
 	 */
 	@SideOnly(Side.CLIENT)
 	public int getColor()
 	{
-		for (ItemStack item : items)
-		{
-			return ResourceGenerator.getAverageColor(item);
-		}
-
-		return 0xFFFFFF;
+		return clientColor;
 	}
 
 	@Override
@@ -137,4 +157,5 @@ public class TileLiquidMixture extends TileAdvanced
 
 		nbt.setTag("Items", itemList);
 	}
+
 }

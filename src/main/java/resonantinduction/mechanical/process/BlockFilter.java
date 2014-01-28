@@ -2,6 +2,7 @@ package resonantinduction.mechanical.process;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -56,26 +57,25 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 		{
 			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
 
-			if (((TileLiquidMixture) tileAbove).items.size() > 0 && random.nextFloat() > 0.9f)
+			if (((TileLiquidMixture) tileAbove).items.size() > 0)
 			{
 				/**
 				 * Leak the fluid down.
 				 */
 				BlockFluidMixture fluidBlock = (BlockFluidMixture) ResonantInduction.blockFluidMixture;
 				int amount = fluidBlock.getQuantaValue(world, x, y, z);
-				System.out.println(amount);
-				
+
 				/**
 				 * All fluid is filtered out, spawn all the items.
 				 */
-				//if (amount <= 1)
+				 if (amount <= 1)
 				{
 					System.out.println("filter dropped");
 					for (ItemStack itemStack : ((TileLiquidMixture) tileAbove).items)
 					{
 						for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack))
 						{
-							InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack());
+							InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 						}
 					}
 				}
@@ -104,7 +104,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				}
 				else
 				{
-					checkBelow.setBlock(world, ResonantInduction.blockFluidMixture.blockID);
+					checkBelow.setBlock(world, Block.waterStill.blockID, 3);
 				}
 			}
 		}

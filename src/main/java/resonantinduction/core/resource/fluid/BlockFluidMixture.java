@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
+import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockFluidMixture extends BlockFluidClassic implements ITileEntityProvider
+public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityProvider
 {
 	public BlockFluidMixture(int id, Fluid fluid)
 	{
@@ -29,7 +30,7 @@ public class BlockFluidMixture extends BlockFluidClassic implements ITileEntityP
 	public void setQuanta(World world, int x, int y, int z, int quanta)
 	{
 		if (quanta > 0)
-			world.setBlockMetadataWithNotify(x, y, z, 0, 3);
+			world.setBlockMetadataWithNotify(x, y, z, quanta, 3);
 		else
 			world.setBlockToAir(x, y, z);
 	}

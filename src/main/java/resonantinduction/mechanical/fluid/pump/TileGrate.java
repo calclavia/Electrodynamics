@@ -279,7 +279,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 				currentWorldEdits++;
 				iterator.remove();
 
-				if (resultStack.amount >= maxDrain)
+				if (resultStack != null && resultStack.amount >= maxDrain)
 				{
 					break;
 				}
