@@ -42,6 +42,10 @@ public class TileThermopile extends TileElectrical
 				{
 					coolingSources++;
 				}
+				else if (blockID == Block.snow.blockID)
+				{
+					coolingSources += 2;
+				}
 				else if (blockID == Block.ice.blockID)
 				{
 					coolingSources += 2;

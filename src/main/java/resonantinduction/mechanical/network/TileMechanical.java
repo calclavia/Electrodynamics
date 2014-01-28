@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.network;
 
 import resonantinduction.mechanical.gear.PartGearShaft;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
@@ -145,5 +146,21 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
 		return true;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		torque = nbt.getLong("torque");
+		angularVelocity = nbt.getFloat("angularVelocity");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setLong("torque", torque);
+		nbt.setFloat("angularVelocity", angularVelocity);
 	}
 }

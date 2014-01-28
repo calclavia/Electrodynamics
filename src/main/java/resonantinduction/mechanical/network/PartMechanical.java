@@ -106,12 +106,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public void onMoved()
-	{
-		refresh();
-	}
-
-	@Override
 	public void onNeighborChanged()
 	{
 		refresh();

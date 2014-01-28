@@ -14,6 +14,7 @@ import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.IRotatableBlock;
 import calclavia.lib.prefab.tile.IRotatable;
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -93,23 +94,26 @@ public class BlockTurntable extends BlockRIRotatable
 				TileEntity tileEntity = position.getTileEntity(world);
 				Block block = Block.blocksList[position.getBlockID(world)];
 
-				if (tileEntity instanceof IRotatable)
+				if (!(tileEntity instanceof TileMultipart))
 				{
-					ForgeDirection blockRotation = ((IRotatable) tileEntity).getDirection();
-					((IRotatable) tileEntity).setDirection(blockRotation.getRotation(facing.getOpposite()));
-				}
-				else if (block instanceof IRotatableBlock)
-				{
-					ForgeDirection blockRotation = ((IRotatableBlock) block).getDirection(world, position.intX(), position.intY(), position.intZ());
-					((IRotatableBlock) block).setDirection(world, position.intX(), position.intY(), position.intZ(), blockRotation.getRotation(facing.getOpposite()));
-				}
-				else if (block != null)
-				{
-					Block.blocksList[blockID].rotateBlock(world, position.intX(), position.intY(), position.intZ(), facing.getOpposite());
-				}
+					if (tileEntity instanceof IRotatable)
+					{
+						ForgeDirection blockRotation = ((IRotatable) tileEntity).getDirection();
+						((IRotatable) tileEntity).setDirection(blockRotation.getRotation(facing.getOpposite()));
+					}
+					else if (block instanceof IRotatableBlock)
+					{
+						ForgeDirection blockRotation = ((IRotatableBlock) block).getDirection(world, position.intX(), position.intY(), position.intZ());
+						((IRotatableBlock) block).setDirection(world, position.intX(), position.intY(), position.intZ(), blockRotation.getRotation(facing.getOpposite()));
+					}
+					else if (block != null)
+					{
+						Block.blocksList[blockID].rotateBlock(world, position.intX(), position.intY(), position.intZ(), facing.getOpposite());
+					}
 
-				world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
-				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
+					world.markBlockForUpdate(position.intX(), position.intY(), position.intZ());
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
+				}
 			}
 			catch (Exception e)
 			{
