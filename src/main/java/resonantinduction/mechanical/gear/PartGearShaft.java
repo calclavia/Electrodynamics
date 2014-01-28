@@ -93,7 +93,7 @@ public class PartGearShaft extends PartMechanical
 				{
 					IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
 
-					// Only connet to shafts outside of this block space.
+					// Only connect to shafts outside of this block space.
 					if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && instance instanceof PartGearShaft)
 					{
 						connections[checkDir.ordinal()] = instance;

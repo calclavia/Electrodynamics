@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.network;
 
+import resonantinduction.mechanical.gear.PartGearShaft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
@@ -46,7 +47,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 	protected float getLoad()
 	{
-		return 0.9f;
+		return 0.95f;
 	}
 
 	@Override
@@ -69,7 +70,8 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 			{
 				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
 
-				if (mech != null && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
+				// Don't connect with shafts
+				if (mech != null && !(mech instanceof PartGearShaft) && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
 				{
 					connections[dir.ordinal()] = mech;
 					getNetwork().merge(mech.getNetwork());

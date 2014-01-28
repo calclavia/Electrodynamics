@@ -62,8 +62,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		if (!world().isRemote)
 		{
 			System.out.println(this + ":" + getNetwork());
-			 for(Object obj : connections)
-			 System.out.println(obj);
+			for (Object obj : connections)
+				System.out.println(obj);
 		}
 
 		return false;
@@ -263,7 +263,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setAngularVelocity(float velocity)
 	{
-		if (!world().isRemote)
+		if (world() != null && !world().isRemote)
 			this.angularVelocity = velocity;
 	}
 
@@ -276,7 +276,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void setTorque(long torque)
 	{
-		if (!world().isRemote)
+		if (world() != null && !world().isRemote)
 			this.torque = torque;
 	}
 
