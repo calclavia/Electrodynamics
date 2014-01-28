@@ -8,22 +8,30 @@ import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInductionTabs;
 import resonantinduction.core.Settings;
+import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockSidedIO;
 
-/**
- * Blocks that have specific sided input and output should extend this.
+/** Blocks that have specific sided input and output should extend this.
  * 
- * @author Calclavia
- * 
- */
+ * @author Calclavia */
 public class BlockIOBase extends BlockSidedIO
 {
-	public BlockIOBase(String name, int id)
-	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
-		this.setCreativeTab(ResonantInductionTabs.CORE);
-		this.setUnlocalizedName(Reference.PREFIX + name);
-		this.setTextureName(Reference.PREFIX + name);
-		this.setHardness(1f);
-	}
+    public BlockIOBase(String name)
+    {
+        this(name, Settings.getNextBlockID());
+    }
+
+    public BlockIOBase(String name, int id)
+    {
+        this(name, id, UniversalElectricity.machine);
+    }
+
+    public BlockIOBase(String name, int id, Material material)
+    {
+        super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), material);
+        this.setCreativeTab(ResonantInductionTabs.CORE);
+        this.setUnlocalizedName(Reference.PREFIX + name);
+        this.setTextureName(Reference.PREFIX + name);
+        this.setHardness(1f);
+    }
 }
