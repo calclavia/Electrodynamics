@@ -128,8 +128,8 @@ public class Electrical
 		Settings.save();
 
 		OreDictionary.registerOre("wire", itemPartWire);
-		OreDictionary.registerOre("battery", blockBattery);
-		OreDictionary.registerOre("batteryBox", blockBattery);
+		OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
+		OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 
 		/**
 		 * Set reference itemstacks
@@ -167,9 +167,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Battery */
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 0), "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 1), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.getTier(new ItemStack(blockBattery, 1, 0)), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 2), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.getTier(new ItemStack(blockBattery, 1, 1)), 'I', Block.blockDiamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0), "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 2), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0), 'I', Block.blockDiamond));
 
 		/** Wires **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
@@ -186,7 +186,7 @@ public class Electrical
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', defaultWire, 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockGenerator, "SRS", "SMS", "SWS", 'W', defaultWire, 'M', UniversalRecipe.MOTOR.get(), 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockGenerator, "SRS", "SMS", "SWS", 'W', defaultWire, 'R', Item.redstone, 'M', UniversalRecipe.MOTOR.get(), 'S', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockThermopile, "ORO", "OWO", "OOO", 'W', defaultWire, 'O', Block.obsidian, 'R', Item.redstone));
 
 		/** Wire Compatiblity **/

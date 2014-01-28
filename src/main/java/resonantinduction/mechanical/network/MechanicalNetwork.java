@@ -113,32 +113,15 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public void reconstruct()
 	{
 		super.reconstruct();
-		NetworkTickHandler.addNetwork(this);
+
+		if (canUpdate())
+			NetworkTickHandler.addNetwork(this);
 	}
 
 	@Override
 	protected void reconstructConnector(IMechanical connector)
 	{
 		connector.setNetwork(this);
-	}
-
-	/** Segmented out call so overriding can be done when machines are reconstructed. */
-	protected void reconstructHandler(Object obj, ForgeDirection side)
-	{
-		if (obj != null && !(obj instanceof IMechanical))
-		{
-			if (obj instanceof IMechanical)
-			{
-				EnumSet<ForgeDirection> set = this.handlerDirectionMap.get(obj);
-				if (set == null)
-				{
-					set = EnumSet.noneOf(ForgeDirection.class);
-				}
-				this.getConnectors().add((IMechanical) obj);
-				set.add(side);
-				this.handlerDirectionMap.put(obj, set);
-			}
-		}
 	}
 
 	@Override

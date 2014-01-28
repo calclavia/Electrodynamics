@@ -45,12 +45,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				if (angularVelocity > 0)
 				{
-					torque += 1;
+					torque += 10;
 					angularVelocity += 0.1f;
 				}
 				else
 				{
-					torque -= 1;
+					torque -= 10;
 					angularVelocity -= 0.1f;
 				}
 
@@ -84,7 +84,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		if (!world().isRemote)
 		{
-			System.out.println(getNetwork());
+			// System.out.println(this + ":" + getNetwork());
 			// for(Object obj : connections)
 			// System.out.println(obj);
 		}
@@ -152,6 +152,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 		}
 
+		// TODO: Make bending with large gears work.
 		if (!getMultiBlock().isConstructed())
 		{
 			/** Look for gears that are internal and adjacent to this gear. (The 4 sides) */

@@ -71,17 +71,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void update()
 	{
-		if (ticks == 0)
-		{
-			getNetwork().addConnector(this);
-		}
-
+		// TODO: Fix gear network somehow tick while network is invalid.
+		getNetwork().addConnector(this);
+		
 		ticks++;
 		angle += angularVelocity / 20;
 
 		if (!world().isRemote)
 			checkClientUpdate();
-	
+
 		super.update();
 	}
 
@@ -255,18 +253,19 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public IMechanicalNetwork getNetwork()
 	{
-		if (this.network == null)
+		if (network == null)
 		{
-			this.network = new MechanicalNetwork();
-			this.network.addConnector(this);
+			network = new MechanicalNetwork();
+			network.addConnector(this);
 		}
-		return this.network;
+
+		return network;
 	}
 
 	@Override
 	public void setNetwork(IMechanicalNetwork network)
 	{
-		this.network = network;
+		network = network;
 	}
 
 	@Override

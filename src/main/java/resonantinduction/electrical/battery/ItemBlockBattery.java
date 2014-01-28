@@ -126,7 +126,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 		return energyStored;
 	}
 
-	public ItemStack setTier(ItemStack itemStack, byte tier)
+	public static ItemStack setTier(ItemStack itemStack, byte tier)
 	{
 		if (itemStack.getTagCompound() == null)
 		{
