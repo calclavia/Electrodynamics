@@ -27,202 +27,210 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
-	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
-	private boolean isExtracting = false;
+    protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
+    private boolean isExtracting = false;
 
-	public PartPipe()
-	{
-		super();
-		material = EnumPipeMaterial.COPPER;
-	}
+    public PartPipe()
+    {
+        super();
+        material = EnumPipeMaterial.COPPER;
+    }
 
-	public PartPipe(int typeID)
-	{
-		material = EnumPipeMaterial.values()[typeID];
-	}
+    public PartPipe(int typeID)
+    {
+        material = EnumPipeMaterial.values()[typeID];
+    }
 
-	@Override
-	public String getType()
-	{
-		return "resonant_induction_pipe";
-	}
+    @Override
+    public String getType()
+    {
+        return "resonant_induction_pipe";
+    }
 
-	@Override
-	public void update()
-	{
-		if (!world().isRemote)
-		{
-			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
-			{
-				for (int i = 0; i < this.getConnections().length; i++)
-				{
-					Object obj = this.getConnections()[i];
+    @Override
+    public void update()
+    {
+        if (!world().isRemote)
+        {
+            if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
+            {
+                for (int i = 0; i < this.getConnections().length; i++)
+                {
+                    Object obj = this.getConnections()[i];
 
-					if (obj instanceof IFluidHandler)
-					{
-						FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
-						fill(null, drain, true);
-					}
-				}
-			}
-		}
-	}
+                    if (obj instanceof IFluidHandler)
+                    {
+                        FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
+                        fill(null, drain, true);
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-	{
-		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
-		{
-			if (!world().isRemote)
-			{
-				isExtracting = !isExtracting;
-				player.addChatMessage("Pipe extraction mode: " + isExtracting);
-				BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
-			}
-			return true;
-		}
+    @Override
+    public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
+    {
+        if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+        {
+            if (!world().isRemote)
+            {
+                isExtracting = !isExtracting;
+                player.addChatMessage("Pipe extraction mode: " + isExtracting);
+                BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
+            }
+            return true;
+        }
 
-		return super.activate(player, part, item);
-	}
+        return super.activate(player, part, item);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
-	{
-		RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame);
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
+    {
+        RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame);
+    }
 
-	@Override
-	public void setMaterial(int i)
-	{
-		setMaterial(EnumPipeMaterial.values()[i]);
-	}
+    @Override
+    public void setMaterial(int i)
+    {
+        setMaterial(EnumPipeMaterial.values()[i]);
+    }
 
-	@Override
-	protected ItemStack getItem()
-	{
-		return new ItemStack(Mechanical.itemPipe);
-	}
+    @Override
+    protected ItemStack getItem()
+    {
+        return new ItemStack(Mechanical.itemPipe);
+    }
 
-	/**
-	 * Fluid network methods.
-	 */
-	@Override
-	public IFluidNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new PipeNetwork();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
+    /** Fluid network methods. */
+    @Override
+    public IFluidNetwork getNetwork()
+    {
+        if (this.network == null)
+        {
+            this.network = new PipeNetwork();
+            this.network.addConnector(this);
+        }
+        return this.network;
+    }
 
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		return getNetwork().fill(this, from, resource, doFill);
-	}
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+    {
+        return getNetwork().fill(this, from, resource, doFill);
+    }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return null;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+    {
+        return null;
+    }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return null;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+    {
+        return null;
+    }
 
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
 
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
 
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		return this.getNetwork().getTankInfo();
-	}
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from)
+    {
+        return this.getNetwork().getTankInfo();
+    }
 
-	@Override
-	public void onFluidChanged()
-	{
-	}
+    @Override
+    public void onFluidChanged()
+    {
+    }
 
-	@Override
-	public FluidTank getInternalTank()
-	{
-		if (this.tank == null)
-		{
-			this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-		}
-		return this.tank;
-	}
+    @Override
+    public FluidTank getInternalTank()
+    {
+        if (this.tank == null)
+        {
+            this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+        }
+        return this.tank;
+    }
 
-	@Override
-	protected boolean canConnectTo(TileEntity tile)
-	{
-		return tile instanceof IFluidHandler;
-	}
+    @Override
+    protected boolean canConnectTo(TileEntity tile)
+    {
+        return tile instanceof IFluidHandler;
+    }
 
-	@Override
-	protected IFluidPipe getConnector(TileEntity tile)
-	{
-		return tile instanceof IFluidPipe ? (IFluidPipe) tile : null;
-	}
+    @Override
+    protected IFluidPipe getConnector(TileEntity tile)
+    {
+        return tile instanceof IFluidPipe ? (IFluidPipe) tile : null;
+    }
 
-	@Override
-	public int getPressureIn(ForgeDirection side)
-	{
-		return 0;
-	}
+    @Override
+    public int getPressureIn(ForgeDirection side)
+    {
+        return 0;
+    }
 
-	@Override
-	public void onWrongPressure(ForgeDirection side, int pressure)
-	{
+    @Override
+    public int getPressure()
+    {
+        if(this.getNetwork() != null)
+        {
+            return this.getNetwork().getPressure();
+        }
+        return 0;
+    }
 
-	}
+    @Override
+    public void onWrongPressure(ForgeDirection side, int pressure)
+    {
 
-	@Override
-	public int getMaxPressure()
-	{
-		return 1000;
-	}
+    }
 
-	@Override
-	public int getMaxFlowRate()
-	{
-		return FluidContainerRegistry.BUCKET_VOLUME;
-	}
+    @Override
+    public int getMaxPressure()
+    {
+        return 1000;
+    }
 
-	@Override
-	public void save(NBTTagCompound nbt)
-	{
-		super.save(nbt);
-		nbt.setBoolean("isExtracting", isExtracting);
-	}
+    @Override
+    public int getMaxFlowRate()
+    {
+        return FluidContainerRegistry.BUCKET_VOLUME;
+    }
 
-	@Override
-	public void load(NBTTagCompound nbt)
-	{
-		super.load(nbt);
-		isExtracting = nbt.getBoolean("isExtracting");
-	}
+    @Override
+    public void save(NBTTagCompound nbt)
+    {
+        super.save(nbt);
+        nbt.setBoolean("isExtracting", isExtracting);
+    }
 
-	@Override
-	public boolean canFlow()
-	{
-		return !isExtracting;
-	}
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        super.load(nbt);
+        isExtracting = nbt.getBoolean("isExtracting");
+    }
+
+    @Override
+    public boolean canFlow()
+    {
+        return !isExtracting;
+    }
 
 }

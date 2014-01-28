@@ -13,6 +13,8 @@ public interface IFluidPipe extends IFluidConnector, IPressureInput
 	 * @return amount in pascals.
 	 */
 	int getMaxPressure();
+	
+	int getPressure();
 
 	/**
 	 * Max flow rate of fluid this pipe can support
