@@ -21,6 +21,8 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 
 	public float getRatio(ForgeDirection dir);
 
+	public boolean inverseRotation(ForgeDirection dir);
+
 	public IMechanical getInstance(ForgeDirection dir);
 
 	/**

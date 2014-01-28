@@ -149,4 +149,10 @@ public class PartGearShaft extends PartMechanical
 		return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625);
 	}
 
+	@Override
+	public boolean inverseRotation(ForgeDirection dir)
+	{
+		return false;
+	}
+
 }

@@ -138,6 +138,7 @@ public class Mechanical
 	{
 		// Add recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemGear, "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemGearShaft, "S", "S", "S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), "III", "GGG", 'I', Item.ingotIron, 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));

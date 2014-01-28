@@ -138,4 +138,10 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	{
 		return new Vector3(this);
 	}
+
+	@Override
+	public boolean inverseRotation(ForgeDirection dir)
+	{
+		return true;
+	}
 }

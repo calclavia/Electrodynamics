@@ -1,14 +1,17 @@
 package resonantinduction.mechanical.gear;
 
+import static org.lwjgl.opengl.GL11.glRotatef;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,10 +33,22 @@ public class RenderGearShaft
 		GL11.glPushMatrix();
 		// Center the model first.
 		GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
-		GL11.glTranslatef(0, 0.5f, 0);
 		GL11.glPushMatrix();
 
-		RenderUtility.rotateFaceBlockToSide(part.placementSide);
+		ForgeDirection dir = part.placementSide;
+		dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+
+		switch (dir)
+		{
+			default:
+				break;
+			case NORTH:
+				glRotatef(90, 1, 0, 0);
+				break;
+			case WEST:
+				glRotatef(90, 0, 0, 1);
+				break;
+		}
 
 		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 

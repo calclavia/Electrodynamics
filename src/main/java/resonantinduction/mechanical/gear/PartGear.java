@@ -459,4 +459,10 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
 	}
+
+	@Override
+	public boolean inverseRotation(ForgeDirection dir)
+	{
+		return dir != placementSide.getOpposite();
+	}
 }

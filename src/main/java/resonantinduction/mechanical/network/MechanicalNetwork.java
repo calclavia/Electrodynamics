@@ -80,16 +80,19 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
 						long torque = mechanical.getTorque();
 
-						if (Math.abs(torque - adjacentMech.getTorque() / ratio * ACCELERATION) < Math.abs(adjacentMech.getTorque() / ratio))
+						boolean inverseRotation = mechanical.inverseRotation(dir) && adjacentMech.inverseRotation(dir.getOpposite());
+						int inversion = inverseRotation ? -1 : 1;
+
+						if (Math.abs(torque + inversion * (adjacentMech.getTorque() / ratio * ACCELERATION)) < Math.abs(adjacentMech.getTorque() / ratio))
 						{
-							mechanical.setTorque((long) (torque - (adjacentMech.getTorque() / ratio * ACCELERATION)));
+							mechanical.setTorque((long) (torque + inversion * ((adjacentMech.getTorque() / ratio * ACCELERATION))));
 						}
 
 						float velocity = mechanical.getAngularVelocity();
 
-						if (Math.abs(velocity - adjacentMech.getAngularVelocity() * ratio * ACCELERATION) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
+						if (Math.abs(velocity + inversion * (adjacentMech.getAngularVelocity() * ratio * ACCELERATION)) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
 						{
-							mechanical.setAngularVelocity(velocity - (adjacentMech.getAngularVelocity() * ratio * ACCELERATION));
+							mechanical.setAngularVelocity(velocity + inversion * ((adjacentMech.getAngularVelocity() * ratio * ACCELERATION)));
 						}
 					}
 				}
