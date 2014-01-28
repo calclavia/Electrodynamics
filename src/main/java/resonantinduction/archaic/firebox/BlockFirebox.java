@@ -2,6 +2,7 @@ package resonantinduction.archaic.firebox;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -102,24 +103,31 @@ public class BlockFirebox extends BlockRI
 
 		if (((TileFirebox) tileEntity).isBurning())
 		{
-			int l = world.getBlockMetadata(x, y, z);
-			float f = x + 0.5F;
-			float f1 = y + 0.0F + par5Random.nextFloat() * 6.0F / 16.0F;
-			float f2 = z + 0.5F;
-			float f3 = 0.52F;
-			float f4 = par5Random.nextFloat() * 0.6F - 0.3F;
+			float xDisplace = x + 0.5F;
+			float yDisplace = y + 0.0F + par5Random.nextFloat() * 6.0F / 16.0F;
+			float zDisplace = z + 0.5F;
+			float modifier = 0.52F;
+			float randomValue = par5Random.nextFloat() * 0.6F - 0.3F;
 
-			world.spawnParticle("smoke", f - f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-			world.spawnParticle("flame", f - f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("smoke", xDisplace - modifier, yDisplace, zDisplace + randomValue, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("flame", xDisplace - modifier, yDisplace, zDisplace + randomValue, 0.0D, 0.0D, 0.0D);
 
-			world.spawnParticle("smoke", f + f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-			world.spawnParticle("flame", f + f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("smoke", xDisplace + modifier, yDisplace, zDisplace + randomValue, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("flame", xDisplace + modifier, yDisplace, zDisplace + randomValue, 0.0D, 0.0D, 0.0D);
 
-			world.spawnParticle("smoke", f + f4, f1, f2 - f3, 0.0D, 0.0D, 0.0D);
-			world.spawnParticle("flame", f + f4, f1, f2 - f3, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("smoke", xDisplace + randomValue, yDisplace, zDisplace - modifier, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("flame", xDisplace + randomValue, yDisplace, zDisplace - modifier, 0.0D, 0.0D, 0.0D);
 
-			world.spawnParticle("smoke", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
-			world.spawnParticle("flame", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("smoke", xDisplace + randomValue, yDisplace, zDisplace + modifier, 0.0D, 0.0D, 0.0D);
+			world.spawnParticle("flame", xDisplace + randomValue, yDisplace, zDisplace + modifier, 0.0D, 0.0D, 0.0D);
+
+			int blockIDAbove = world.getBlockId(x, y + 1, z);
+
+			if (blockIDAbove == Block.waterStill.blockID || blockIDAbove == Block.waterMoving.blockID)
+			{
+				for (int i = 0; i < 4; i++)
+					world.spawnParticle("bubble", xDisplace + (par5Random.nextFloat() - 0.5), yDisplace + 1.5, zDisplace + (par5Random.nextFloat() - 0.5), 0.0D, 0.05D, 0.0D);
+			}
 		}
 	}
 
