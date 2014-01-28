@@ -11,12 +11,13 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import resonantinduction.core.handler.FluidEventHandler;
-import resonantinduction.core.handler.LinkEventHandler;
+import resonantinduction.core.handler.ToolModeLink;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileLiquidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
+import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -81,11 +82,12 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		Modstats.instance().getReporter().registerMod(this);
+		ToolMode.REGISTRY.add(new ToolModeLink());
+
 		Settings.load();
 
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
 		fluidMixture = new Fluid("water");

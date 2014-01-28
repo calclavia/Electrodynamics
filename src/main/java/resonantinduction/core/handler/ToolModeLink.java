@@ -3,50 +3,66 @@
  */
 package resonantinduction.core.handler;
 
+import calclavia.components.tool.ToolMode;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.ForgeSubscribe;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.components.event.MultitoolEvent;
 import codechicken.multipart.ControlKeyModifer;
 
 /**
  * @author Calclavia
  */
-public class LinkEventHandler
+public class ToolModeLink extends ToolMode
 {
-	@ForgeSubscribe
-	public void linkEvent(MultitoolEvent evt)
+	@Override
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
-		if (ControlKeyModifer.isControlDown(evt.player))
-		{
-			TileEntity tile = evt.world.getBlockTileEntity(evt.x, evt.y, evt.z);
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-			if (tile instanceof ILinkable && this.hasLink(evt.toolStack))
+		if (ControlKeyModifer.isControlDown(player))
+		{
+			if (tile instanceof ILinkable)
 			{
-				if (!evt.world.isRemote)
+				if (!world.isRemote)
 				{
-					if (((ILinkable) tile).onLink(evt.player, this.getLink(evt.toolStack)))
+					if (((ILinkable) tile).onLink(player, this.getLink(stack)))
 					{
-						this.clearLink(evt.toolStack);
-						evt.player.addChatMessage("Link cleared.");
+						clearLink(stack);
+						player.addChatMessage("Link cleared.");
+						return true;
 					}
 				}
-				evt.setResult(Result.DENY);
 			}
-			else
+		}
+
+		if (!world.isRemote)
+		{
+			player.addChatMessage("Set link to block [" + x + ", " + y + ", " + z + "], Dimension: '" + world.provider.getDimensionName() + "'");
+			setLink(stack, new VectorWorld(world, x, y, z));
+
+			if (tile instanceof ILinkable)
 			{
-				if (!evt.world.isRemote)
+				if (!world.isRemote)
 				{
-					evt.player.addChatMessage("Set link to block [" + evt.x + ", " + evt.y + ", " + evt.z + "], Dimension: '" + evt.world.provider.getDimensionName() + "'");
-					this.setLink(evt.toolStack, new VectorWorld(evt.world, evt.x, evt.y, evt.z));
+					((ILinkable) tile).onLink(player, this.getLink(stack));
 				}
 			}
-
-			evt.setCanceled(true);
+			
+			return true;
 		}
+
+		return false;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "toolmode.link.name";
 	}
 
 	public boolean hasLink(ItemStack itemStack)
@@ -78,4 +94,5 @@ public class LinkEventHandler
 	{
 		itemStack.getTagCompound().removeTag("link");
 	}
+
 }

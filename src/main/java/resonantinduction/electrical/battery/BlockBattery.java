@@ -32,7 +32,7 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 	public BlockBattery()
 	{
 		super("battery", Settings.getNextBlockID());
-		this.setTextureName(Reference.PREFIX + "machine");
+		this.setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 
 	@Override
