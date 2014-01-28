@@ -13,9 +13,12 @@ import org.modstats.Modstats;
 import resonantinduction.core.handler.FluidEventHandler;
 import resonantinduction.core.handler.ToolModeLink;
 import resonantinduction.core.prefab.part.PacketMultiPart;
+import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileMaterial;
+import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileLiquidMixture;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
@@ -69,10 +72,13 @@ public class ResonantInduction
 	public static ItemOreResource itemRubble;
 	public static ItemOreResource itemDust;
 	public static ItemOreResource itemRefinedDust;
+	public static Block blockDust;
 	public static Block blockFluidMixture;
+	public static Block blockFluidMaterial;
 	public static Block blockGas;
 
-	public static Fluid fluidMixture = null;
+	public static Fluid fluidMixture;
+	public static Fluid fluidMaterial;
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
@@ -92,7 +98,17 @@ public class ResonantInduction
 
 		fluidMixture = new Fluid("water");
 		FluidRegistry.registerFluid(fluidMixture);
-		blockFluidMixture = new BlockFluidMixture(Settings.CONFIGURATION.getBlock("FluidMixture", Settings.getNextBlockID()).getInt(), fluidMixture);
+		blockFluidMixture = contentRegistry.createTile(BlockFluidMixture.class, TileFluidMixture.class);
+		/**
+		 * Melting dusts
+		 */
+		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class);
+		fluidMaterial = new Fluid("moltenMaterial");
+		fluidMaterial.setDensity(7);
+		fluidMaterial.setViscosity(10000);
+		fluidMaterial.setTemperature(273 + 1538);
+		FluidRegistry.registerFluid(fluidMaterial);
+		blockFluidMaterial = contentRegistry.createTile(BlockFluidMaterial.class, TileMaterial.class);
 
 		// Items
 		itemRubble = new ItemOreResource(Settings.getNextItemID(), "oreRubble");
@@ -102,9 +118,6 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
-
-		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
-		GameRegistry.registerTileEntity(TileLiquidMixture.class, blockFluidMixture.getUnlocalizedName());
 
 		Settings.save();
 		proxy.preInit();

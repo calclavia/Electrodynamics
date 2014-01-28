@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class TileLiquidMixture extends TileAdvanced implements IPacketReceiver
+public class TileFluidMixture extends TileAdvanced implements IPacketReceiver
 {
 	public final Set<ItemStack> items = new HashSet<ItemStack>();
 	public final Set<FluidStack> fluids = new HashSet<FluidStack>();

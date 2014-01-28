@@ -14,7 +14,7 @@ import resonantinduction.api.recipe.RecipeUtils.Resource;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileLiquidMixture;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
@@ -53,11 +53,11 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 		TileEntity tileAbove = checkAbove.getTileEntity(world);
 		TileEntity tileBelow = checkBelow.getTileEntity(world);
 
-		if (tileAbove instanceof TileLiquidMixture && (tileBelow == null || tileBelow instanceof TileLiquidMixture))
+		if (tileAbove instanceof TileFluidMixture && (tileBelow == null || tileBelow instanceof TileFluidMixture))
 		{
 			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
 
-			if (((TileLiquidMixture) tileAbove).items.size() > 0)
+			if (((TileFluidMixture) tileAbove).items.size() > 0)
 			{
 				/**
 				 * Leak the fluid down.
@@ -71,7 +71,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				 if (amount <= 1)
 				{
 					System.out.println("filter dropped");
-					for (ItemStack itemStack : ((TileLiquidMixture) tileAbove).items)
+					for (ItemStack itemStack : ((TileFluidMixture) tileAbove).items)
 					{
 						for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack))
 						{

@@ -15,7 +15,7 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.fluid.TileLiquidMixture;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -158,10 +158,10 @@ public class TileMixer extends TileMechanical
 		Vector3 mixPosition = new Vector3(entity.posX, yCoord, entity.posZ);
 		TileEntity tileEntity = mixPosition.getTileEntity(worldObj);
 
-		if (tileEntity instanceof TileLiquidMixture)
+		if (tileEntity instanceof TileFluidMixture)
 		{
 			ItemStack itemStack = entity.getEntityItem().copy();
-			if (((TileLiquidMixture) tileEntity).mix(itemStack))
+			if (((TileFluidMixture) tileEntity).mix(itemStack))
 			{
 				System.out.println("MIXED");
 				worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));

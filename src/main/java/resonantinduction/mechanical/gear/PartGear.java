@@ -339,11 +339,14 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public void onMultiBlockChanged()
 	{
-		tile().notifyPartChange(this);
-
-		if (!world().isRemote)
+		if (world() != null)
 		{
-			sendDescUpdate();
+			tile().notifyPartChange(this);
+
+			if (!world().isRemote)
+			{
+				sendDescUpdate();
+			}
 		}
 	}
 

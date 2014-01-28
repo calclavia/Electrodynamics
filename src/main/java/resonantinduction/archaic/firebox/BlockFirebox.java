@@ -22,7 +22,7 @@ public class BlockFirebox extends BlockRI
 
 	public BlockFirebox()
 	{
-		super("firebox", Material.wood);
+		super("firebox", Material.rock);
 		this.setTickRandomly(true);
 	}
 

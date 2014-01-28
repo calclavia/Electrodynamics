@@ -7,13 +7,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.item.ItemRI;
 import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -29,6 +32,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemOreResource extends ItemRI
 {
+	private int blockID = ResonantInduction.blockDust.blockID;;
+
 	public ItemOreResource(int id, String name)
 	{
 		super(name, id);
@@ -60,6 +65,87 @@ public class ItemOreResource extends ItemRI
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
+		/**
+		 * Allow refined dust to be placed down.
+		 */
+		if (stack.getItem() == ResonantInduction.itemRefinedDust)
+		{
+			if (stack.stackSize == 0)
+			{
+				return false;
+			}
+			else if (!player.canPlayerEdit(x, y, z, side, stack))
+			{
+				return false;
+			}
+			else
+			{
+				TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+				if (world.getBlockId(x, y, z) == blockID && tile instanceof TileMaterial)
+				{
+					if (getMaterialFromStack(stack).equals(((TileMaterial) tile).name))
+					{
+						Block block = Block.blocksList[blockID];
+						int j1 = world.getBlockMetadata(x, y, z);
+						int k1 = j1 & 7;
+
+						if (k1 <= 6 && world.checkNoEntityCollision(block.getCollisionBoundingBoxFromPool(world, x, y, z)) && world.setBlockMetadataWithNotify(x, y, z, k1 + 1 | j1 & -8, 2))
+						{
+							world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+							--stack.stackSize;
+							return true;
+						}
+					}
+				}
+
+				if (side == 0)
+				{
+					--y;
+				}
+
+				if (side == 1)
+				{
+					++y;
+				}
+
+				if (side == 2)
+				{
+					--z;
+				}
+
+				if (side == 3)
+				{
+					++z;
+				}
+
+				if (side == 4)
+				{
+					--x;
+				}
+
+				if (side == 5)
+				{
+					++x;
+				}
+
+				if (world.canPlaceEntityOnSide(blockID, x, y, z, false, side, player, stack))
+				{
+					Block block = Block.blocksList[blockID];
+					int j1 = this.getMetadata(stack.getItemDamage());
+					int k1 = Block.blocksList[blockID].onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, j1);
+
+					if (placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, k1))
+					{
+						world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+						--stack.stackSize;
+					}
+
+					return true;
+				}
+			}
+		}
+
 		/**
 		 * Manually wash dust into refined dust.
 		 */
@@ -96,6 +182,22 @@ public class ItemOreResource extends ItemRI
 			}
 		}
 		return false;
+	}
+
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
+	{
+		if (!world.setBlock(x, y, z, this.blockID, metadata, 3))
+		{
+			return false;
+		}
+
+		if (world.getBlockId(x, y, z) == this.blockID)
+		{
+			Block.blocksList[this.blockID].onBlockPlacedBy(world, x, y, z, player, stack);
+			Block.blocksList[this.blockID].onPostBlockPlaced(world, x, y, z, metadata);
+		}
+
+		return true;
 	}
 
 	public ItemStack getStackFromMaterial(String name)

@@ -7,7 +7,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -15,20 +14,24 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileMaterial;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * Fluid class uses for molten materials.
+ * 
  * @author Calclavia
  * 
  */
-public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityProvider
+public class BlockFluidMaterial extends BlockFluidFinite implements ITileEntityProvider
 {
-	public BlockFluidMixture()
+	public BlockFluidMaterial()
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMixture", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMixture, Material.water);
-		setTextureName("water_flow");
-		this.setUnlocalizedName(Reference.PREFIX + "fluidMixture");
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMaterial", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMaterial, Material.lava);
+		setTextureName("lava_flow");
+		this.setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
 	}
 
 	public void setQuanta(World world, int x, int y, int z, int quanta)
@@ -43,9 +46,8 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	@Override
 	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
 	{
-		TileFluidMixture tileFluid = (TileFluidMixture) world.getBlockTileEntity(x, y, z);
-		FluidStack stack = new FluidStack(ResonantInduction.fluidMixture, (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
-		tileFluid.writeFluidToNBT(stack.tag != null ? stack.tag : new NBTTagCompound());
+		TileMaterial tileFluid = (TileMaterial) world.getBlockTileEntity(x, y, z);
+		FluidStack stack = new FluidStack(ResonantInduction.fluidMaterial, (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
 		return stack;
 	}
 
@@ -53,8 +55,17 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
-		TileFluidMixture tileFluid = (TileFluidMixture) access.getBlockTileEntity(x, y, z);
-		return tileFluid.getColor();
+		TileEntity tileEntity = access.getBlockTileEntity(x, y, z);
+		
+		if (tileEntity instanceof TileMaterial)
+		{
+			if (((TileMaterial) tileEntity).name != null)
+			{
+				return ResourceGenerator.materialColors.get(((TileMaterial) tileEntity).name);
+			}
+		}
+
+		return 16777215;
 	}
 
 	@Override
@@ -66,6 +77,6 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileFluidMixture();
+		return new TileMaterial();
 	}
 }

@@ -7,12 +7,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
@@ -42,7 +44,12 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 	 * It takes 338260 J to boile water.
 	 */
 	private final long requiredBoilWaterEnergy = 338260;
-	private long boilEnergy = 0;
+
+	/**
+	 * Requires about 6.6MJ of energy to melt iron.
+	 */
+	private final long requiredMeltIronEnergy = 4781700 + 1904000;
+	private long heatEnergy = 0;
 
 	@Override
 	public void updateEntity()
@@ -58,18 +65,50 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					worldObj.setBlock(xCoord, yCoord + 1, zCoord, Block.fire.blockID);
 				}
 
-				if (blockID == Block.waterStill.blockID)
-				{
-					boilEnergy += POWER / 20;
+				/**
+				 * Try to heat up and melt blocks above it.
+				 */
+				heatEnergy += POWER / 20;
+				boolean usedHeat = false;
 
-					if (boilEnergy >= requiredBoilWaterEnergy)
+				if (blockID == ResonantInduction.blockDust.blockID)
+				{
+					usedHeat = true;
+
+					if (heatEnergy >= requiredMeltIronEnergy)
+					{
+						TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+						if (dustTile instanceof TileMaterial)
+						{
+							String name = ((TileMaterial) dustTile).name;
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResonantInduction.blockFluidMaterial.blockID, 8, 3);
+							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+
+							if (tile instanceof TileMaterial)
+							{
+								((TileMaterial) tile).name = name;
+							}
+
+							heatEnergy = 0;
+						}
+					}
+				}
+				else if (blockID == Block.waterStill.blockID)
+				{
+					usedHeat = true;
+					if (heatEnergy >= requiredBoilWaterEnergy)
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), new FluidStack(FluidRegistry.getFluid("steam"), FluidContainerRegistry.BUCKET_VOLUME), 2));
 
 						worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
-						boilEnergy = 0;
+						heatEnergy = 0;
 					}
+				}
+
+				if (!usedHeat)
+				{
+					heatEnergy = 0;
 				}
 
 				if (--burnTime == 0)
