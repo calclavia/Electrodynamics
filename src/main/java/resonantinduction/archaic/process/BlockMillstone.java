@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.archaic.process;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

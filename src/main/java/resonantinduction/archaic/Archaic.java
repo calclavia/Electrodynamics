@@ -4,9 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.archaic.blocks.BlockMillstone;
 import resonantinduction.archaic.blocks.BlockTurntable;
-import resonantinduction.archaic.blocks.TileMillstone;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
@@ -20,6 +18,10 @@ import resonantinduction.archaic.firebox.TileHotPlate;
 import resonantinduction.archaic.imprint.BlockImprinter;
 import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.archaic.imprint.TileImprinter;
+import resonantinduction.archaic.process.BlockCast;
+import resonantinduction.archaic.process.BlockMillstone;
+import resonantinduction.archaic.process.TileCast;
+import resonantinduction.archaic.process.TileMillstone;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -71,6 +73,7 @@ public class Archaic
 	public static Block blockFirebox;
 	public static Block blockHotPlate;
 	public static Block blockMillstone;
+	public static Block blockCast;
 	public static Block blockMachinePart;
 
 	public static Item itemImprint;
@@ -90,6 +93,7 @@ public class Archaic
 		blockFirebox = contentRegistry.createTile(BlockFirebox.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createBlock(BlockHotPlate.class, ItemBlockMetadata.class, TileHotPlate.class);
 		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);
+		blockCast = contentRegistry.createTile(BlockCast.class, TileCast.class);
 		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
 		itemImprint = contentRegistry.createItem(ItemImprint.class);
@@ -119,8 +123,8 @@ public class Archaic
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, "SSS", "W W", "PPP", 'S', Block.stone, 'P', Block.pistonBase, 'W', "logWood"));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', "gear", 'P', Block.pistonBase, 'W', "logWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', UniversalRecipe.MOTOR.get(), 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockCast, "I I", "IBI", "III", 'S', Item.ingotIron, 'B', Block.fenceIron));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockHotPlate, 1, 1), "HHH", "WWW", 'H', new ItemStack(blockHotPlate, 1, 0), 'W', UniversalRecipe.WIRE.get()));

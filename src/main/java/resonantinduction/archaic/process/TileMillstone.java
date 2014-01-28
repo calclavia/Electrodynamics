@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.archaic.process;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

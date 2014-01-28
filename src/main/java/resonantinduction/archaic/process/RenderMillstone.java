@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.archaic.process;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;

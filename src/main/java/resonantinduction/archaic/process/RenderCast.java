@@ -1,0 +1,23 @@
+package resonantinduction.archaic.process;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.tileentity.TileEntity;
+import resonantinduction.core.render.RenderItemOverlayTile;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class RenderCast extends RenderItemOverlayTile
+{
+	private final RenderBlocks renderBlocks = new RenderBlocks();
+
+	@Override
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
+	{
+		if (tileEntity instanceof TileCast)
+		{
+			TileCast tile = (TileCast) tileEntity;
+			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "Empty");
+		}
+	}
+}

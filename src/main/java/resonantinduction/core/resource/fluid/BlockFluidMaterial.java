@@ -32,7 +32,6 @@ public class BlockFluidMaterial extends BlockFluidFinite
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, fluid.getName(), Settings.getNextBlockID()).getInt(), fluid, Material.lava);
 		setTextureName(Reference.PREFIX + "molten_flow");
 		setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
-		setQuantaPerBlock(16);
 	}
 
 	public void setQuanta(World world, int x, int y, int z, int quanta)
