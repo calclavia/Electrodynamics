@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.core.Reference;
@@ -116,7 +117,7 @@ public class Electrical
 		// Transport
 		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
 		// blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
-		//blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
+		// blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
 
 		// Generator
@@ -125,6 +126,10 @@ public class Electrical
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
 		Settings.save();
+
+		OreDictionary.registerOre("wire", itemPartWire);
+		OreDictionary.registerOre("battery", blockBattery);
+		OreDictionary.registerOre("batteryBox", blockBattery);
 
 		/**
 		 * Set reference itemstacks
@@ -162,7 +167,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', defaultWire, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Battery */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 0), "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 1), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.getTier(new ItemStack(blockBattery, 1, 0)), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBattery, 1, 2), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.getTier(new ItemStack(blockBattery, 1, 1)), 'I', Block.blockDiamond));
 
 		/** Wires **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
@@ -172,6 +179,15 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SILVER.getWire(), "MMM", 'M', "ingotSilver"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Item.ingotGold, 'E', Item.eyeOfEnder));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', defaultWire, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMLevitator, " G ", "SDS", "SWS", 'W', defaultWire, 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
+
+		/** Generators **/
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', defaultWire, 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockGenerator, "SRS", "SMS", "SWS", 'W', defaultWire, 'M', UniversalRecipe.MOTOR.get(), 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockThermopile, "ORO", "OWO", "OOO", 'W', defaultWire, 'O', Block.obsidian, 'R', Item.redstone));
 
 		/** Wire Compatiblity **/
 		if (Loader.isModLoaded("IC2"))
@@ -188,9 +204,9 @@ public class Electrical
 		}
 
 		proxy.postInit();
-		
+
 		/** Inject new furnace tile class */
-		//replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
+		// replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
 	}
 
 	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)

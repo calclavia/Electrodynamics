@@ -2,7 +2,9 @@ package resonantinduction.mechanical;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -31,15 +33,18 @@ import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TileMixer;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Resonant Induction Archaic Module
@@ -126,4 +131,25 @@ public class Mechanical
 		proxy.init();
 	}
 
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent evt)
+	{
+		// Add recipes
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemGear, "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), "III", "GGG", 'I', Item.ingotIron, 'G', itemGear));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "BBB", "B B", "BBB", 'B', Block.fenceIron));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 4), "BBB", "GGG", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemPipeGuage, "RRR", "GGG", " S ", 'S', Item.stick, 'G', Block.glass, 'R', Item.redstone));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockPurifier, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockFilter, "BBB", "PPP", "BBB", 'B', Block.fenceIron, 'P', Item.paper));
+
+	}
 }
