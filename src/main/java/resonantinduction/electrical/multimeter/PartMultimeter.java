@@ -82,6 +82,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	private DetectMode detectMode = DetectMode.NONE;
+
 	private long peakDetection;
 	private long energyLimit;
 	private long detectedEnergy;
@@ -107,15 +108,18 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public void refresh()
 	{
-		if (!world().isRemote)
+		if (world() != null && !world().isRemote)
 		{
 			for (Object obj : getConnections())
 			{
 				if (obj instanceof PartMultimeter)
 				{
-					this.getNetwork().merge(((PartMultimeter) obj).getNetwork());
+					getNetwork().merge(((PartMultimeter) obj).getNetwork());
 				}
 			}
+
+			getNetwork().reconstruct();
+			writeDesc(getWriteStream());
 		}
 	}
 
@@ -209,7 +213,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 				if (prevDetectedEnergy != detectedEnergy)
 				{
-					this.getWriteStream().writeByte(3).writeByte((byte) detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
+					writeDesc(getWriteStream());
+					// this.getWriteStream().writeByte(3).writeByte((byte)
+					// detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
 				}
 			}
 		}
@@ -218,7 +224,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			for (EntityPlayer player : playersUsing)
 			{
-				this.getWriteStream().writeByte(3).writeByte((byte) detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
+				writeDesc(getWriteStream());
+				// this.getWriteStream().writeByte(3).writeByte((byte)
+				// detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
 			}
 		}
 	}
@@ -226,21 +234,24 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
+		packet.readByte();
 		this.side = packet.readByte();
 		detectMode = DetectMode.values()[packet.readByte()];
-		detectedEnergy = packet.readLong();
-		detectedAverageEnergy = packet.readLong();
-		energyLimit = packet.readLong();
+		refresh();
+		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+		getNetwork().upperBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+		getNetwork().lowerBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
+		packet.writeByte(0);
 		packet.writeByte(this.side);
 		packet.writeByte((byte) detectMode.ordinal());
-		packet.writeLong(detectedEnergy);
-		packet.writeLong(detectedAverageEnergy);
-		packet.writeLong(energyLimit);
+		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
+		packet.writeNBTTagCompound(getNetwork().upperBound.writeToNBT(new NBTTagCompound()));
+		packet.writeNBTTagCompound(getNetwork().lowerBound.writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override
@@ -251,7 +262,16 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public void read(MCDataInput packet, int packetID)
 	{
-		if (packetID == 1)
+		if (packetID == 0)
+		{
+			this.side = packet.readByte();
+			detectMode = DetectMode.values()[packet.readByte()];
+			refresh();
+			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+			getNetwork().upperBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+			getNetwork().lowerBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+		}
+		else if (packetID == 1)
 		{
 			energyLimit = packet.readLong();
 		}

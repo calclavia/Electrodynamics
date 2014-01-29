@@ -1,6 +1,7 @@
 package resonantinduction.electrical.multimeter;
 
-import universalelectricity.api.vector.Vector2;
+import net.minecraft.nbt.NBTTagCompound;
+import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
 
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter>
@@ -8,17 +9,19 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	/**
 	 * The absolute center of the multimeter screens.
 	 */
-	public Vector2 center = new Vector2();
+	public Vector3 center = new Vector3();
 
 	/**
 	 * The relative bound sizes.
 	 */
-	public Vector2 upperBound = new Vector2();
-	public Vector2 lowerBound = new Vector2();
+	public Vector3 upperBound = new Vector3();
+	public Vector3 lowerBound = new Vector3();
 
 	@Override
 	public void reconstruct()
 	{
+		upperBound = null;
+		lowerBound = null;
 		super.reconstruct();
 		center = upperBound.midPoint(lowerBound);
 		upperBound.subtract(center);
@@ -26,57 +29,28 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	}
 
 	@Override
+	public boolean isValidConnector(PartMultimeter node)
+	{
+		return node.world() != null && node.tile() != null;
+	}
+
+	@Override
 	protected void reconstructConnector(PartMultimeter node)
 	{
 		node.setNetwork(this);
 
-		/**
-		 * Computer upper bound
-		 */
-		if (node.getPosition().y > upperBound.x)
+		if (upperBound == null)
 		{
-			upperBound.x = node.getPosition().y;
+			upperBound = node.getPosition().translate(0.5);
 		}
 
-		if (node.getDirection().offsetX == 0)
+		if (lowerBound == null)
 		{
-			if (node.getPosition().x > upperBound.y)
-			{
-				upperBound.y = node.getPosition().x;
-			}
+			lowerBound = node.getPosition().translate(0.5);
 		}
 
-		if (node.getDirection().offsetZ == 0)
-		{
-			if (node.getPosition().z > upperBound.y)
-			{
-				upperBound.y = node.getPosition().z;
-			}
-		}
-
-		/**
-		 * Computer lower bound
-		 */
-		if (node.getPosition().y < lowerBound.x)
-		{
-			lowerBound.x = node.getPosition().y;
-		}
-
-		if (node.getDirection().offsetX == 0)
-		{
-			if (node.getPosition().x < lowerBound.y)
-			{
-				lowerBound.y = node.getPosition().x;
-			}
-		}
-
-		if (node.getDirection().offsetZ == 0)
-		{
-			if (node.getPosition().z < lowerBound.y)
-			{
-				lowerBound.y = node.getPosition().z;
-			}
-		}
+		upperBound = upperBound.max(node.getPosition().translate(0.5));
+		lowerBound = lowerBound.min(node.getPosition().translate(0.5));
 	}
 
 	@Override
