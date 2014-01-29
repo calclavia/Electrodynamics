@@ -1,11 +1,17 @@
 package resonantinduction.electrical.multimeter;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.List;
+
+import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
+import universalelectricity.core.net.NetworkTickHandler;
 
-public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter>
+public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {
+	public List<String> displayInformation;
+	public Graph graph = new Graph(20 * 10);
+
 	/**
 	 * The absolute center of the multimeter screens.
 	 */
@@ -14,8 +20,15 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	/**
 	 * The relative bound sizes.
 	 */
-	public Vector3 upperBound = new Vector3();
-	public Vector3 lowerBound = new Vector3();
+	private Vector3 upperBound = new Vector3();
+	private Vector3 lowerBound = new Vector3();
+
+	/**
+	 * The overall size of the multimeter
+	 */
+	public Vector3 size = new Vector3();
+
+	private long queueGraphValue = 0;
 
 	@Override
 	public void reconstruct()
@@ -26,6 +39,35 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		center = upperBound.midPoint(lowerBound);
 		upperBound.subtract(center);
 		lowerBound.subtract(center);
+		size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
+		NetworkTickHandler.addNetwork(this);
+	}
+
+	@Override
+	public void update()
+	{
+		if (queueGraphValue > 0)
+		{
+			graph.add(queueGraphValue);
+			queueGraphValue = 0;
+		}
+	}
+
+	@Override
+	public boolean canUpdate()
+	{
+		return getConnectors().size() > 0;
+	}
+
+	@Override
+	public boolean continueUpdate()
+	{
+		return canUpdate();
+	}
+
+	public void updateGraph(long detectedValue)
+	{
+		queueGraphValue += detectedValue;
 	}
 
 	@Override
@@ -58,4 +100,5 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		return new MultimeterNetwork();
 	}
+
 }

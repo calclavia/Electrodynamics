@@ -82,19 +82,13 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
 	private DetectMode detectMode = DetectMode.NONE;
+	private long redstoneTriggerLimit;
 
-	private long peakDetection;
-	private long energyLimit;
-	private long detectedEnergy;
-	private long detectedAverageEnergy;
 	public boolean redstoneOn;
 	private byte side;
 	private int ticks;
 
 	private MultimeterNetwork network;
-
-	public List<String> displayInformation;
-	public Graph graph;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -177,10 +171,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		if (!world().isRemote)
 		{
-			if (ticks % 20 == 0)
+			if (ticks % 10 == 0)
 			{
-				long prevDetectedEnergy = detectedEnergy;
-				updateDetection(doGetDetectedEnergy());
+				long detectedEnergy = doGetDetectedEnergy();
 
 				boolean outputRedstone = false;
 
@@ -189,21 +182,23 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					default:
 						break;
 					case EQUAL:
-						outputRedstone = detectedEnergy == energyLimit;
+						outputRedstone = detectedEnergy == redstoneTriggerLimit;
 						break;
 					case GREATER_THAN:
-						outputRedstone = detectedEnergy > energyLimit;
+						outputRedstone = detectedEnergy > redstoneTriggerLimit;
 						break;
 					case GREATER_THAN_EQUAL:
-						outputRedstone = detectedEnergy >= energyLimit;
+						outputRedstone = detectedEnergy >= redstoneTriggerLimit;
 						break;
 					case LESS_THAN:
-						outputRedstone = detectedEnergy < energyLimit;
+						outputRedstone = detectedEnergy < redstoneTriggerLimit;
 						break;
 					case LESS_THAN_EQUAL:
-						outputRedstone = detectedEnergy <= energyLimit;
+						outputRedstone = detectedEnergy <= redstoneTriggerLimit;
 						break;
 				}
+
+				getNetwork().updateGraph(detectedEnergy);
 
 				if (outputRedstone != redstoneOn)
 				{
@@ -211,9 +206,10 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					tile().notifyPartChange(this);
 				}
 
-				if (prevDetectedEnergy != detectedEnergy)
+				if (getNetwork().graph.get(1) != detectedEnergy)
 				{
-					writeDesc(getWriteStream());
+					// writeDesc(getWriteStream());
+					writeGraph(getWriteStream());
 					// this.getWriteStream().writeByte(3).writeByte((byte)
 					// detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
 				}
@@ -239,8 +235,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		detectMode = DetectMode.values()[packet.readByte()];
 		refresh();
 		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-		getNetwork().upperBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-		getNetwork().lowerBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+		getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 	}
 
 	@Override
@@ -250,8 +245,13 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		packet.writeByte(this.side);
 		packet.writeByte((byte) detectMode.ordinal());
 		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
-		packet.writeNBTTagCompound(getNetwork().upperBound.writeToNBT(new NBTTagCompound()));
-		packet.writeNBTTagCompound(getNetwork().lowerBound.writeToNBT(new NBTTagCompound()));
+		packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
+	}
+
+	public void writeGraph(MCDataOutput packet)
+	{
+		packet.writeByte(2);
+		packet.writeNBTTagCompound(getNetwork().graph.save());
 	}
 
 	@Override
@@ -268,19 +268,15 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 			detectMode = DetectMode.values()[packet.readByte()];
 			refresh();
 			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-			getNetwork().upperBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-			getNetwork().lowerBound = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		}
 		else if (packetID == 1)
 		{
-			energyLimit = packet.readLong();
+			redstoneTriggerLimit = packet.readLong();
 		}
-		else if (packetID == 3)
+		else if (packetID == 2)
 		{
-			this.detectMode = DetectMode.values()[packet.readByte()];
-			this.detectedEnergy = packet.readLong();
-			this.detectedAverageEnergy = packet.readLong();
-			this.energyLimit = packet.readLong();
+			getNetwork().graph.load(packet.readNBTTagCompound());
 		}
 	}
 
@@ -328,23 +324,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		return CompatibilityModule.getEnergy(tileEntity, side);
 	}
 
-	public void updateDetection(long detected)
-	{
-		detectedEnergy = detected;
-		detectedAverageEnergy = (detectedAverageEnergy + detectedEnergy) / 2;
-		peakDetection = Math.max(peakDetection, detectedEnergy);
-	}
-
-	public long getDetectedEnergy()
-	{
-		return detectedEnergy;
-	}
-
-	public long getAverageDetectedEnergy()
-	{
-		return detectedAverageEnergy;
-	}
-
 	public void toggleMode()
 	{
 		if (!this.world().isRemote)
@@ -363,7 +342,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		super.load(nbt);
 		side = nbt.getByte("side");
 		detectMode = DetectMode.values()[nbt.getByte("detectMode")];
-		energyLimit = nbt.getLong("energyLimit");
+		redstoneTriggerLimit = nbt.getLong("energyLimit");
 	}
 
 	@Override
@@ -372,7 +351,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		super.save(nbt);
 		nbt.setByte("side", this.side);
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
-		nbt.setLong("energyLimit", energyLimit);
+		nbt.setLong("energyLimit", redstoneTriggerLimit);
 	}
 
 	public DetectMode getMode()
@@ -382,12 +361,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public float getLimit()
 	{
-		return energyLimit;
-	}
-
-	public float getPeak()
-	{
-		return peakDetection;
+		return redstoneTriggerLimit;
 	}
 
 	@Override

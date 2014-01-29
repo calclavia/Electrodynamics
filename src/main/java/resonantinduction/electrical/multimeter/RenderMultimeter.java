@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -46,11 +48,37 @@ public class RenderMultimeter
 		if (!part.hasMultimeter(part.x(), part.y() - 1, part.z()))
 			RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
 		// LEFT
-		if (((dir == ForgeDirection.WEST || dir == ForgeDirection.EAST) && !part.hasMultimeter(part.x(), part.y(), part.z() - 1)) || ((dir == ForgeDirection.SOUTH || dir == ForgeDirection.NORTH) && !part.hasMultimeter(part.x() + 1, part.y(), part.z())))
-			RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
-		// RIGHT
-		if (((dir == ForgeDirection.WEST || dir == ForgeDirection.EAST) && !part.hasMultimeter(part.x(), part.y(), part.z() + 1)) || ((dir == ForgeDirection.SOUTH || dir == ForgeDirection.NORTH) && !part.hasMultimeter(part.x() - 1, part.y(), part.z())))
-			RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+		for (int i = 2; i < 6; i++)
+		{
+			ForgeDirection check = ForgeDirection.getOrientation(i);
+
+			if (!part.hasMultimeter(part.x() + check.offsetX, part.y() + check.offsetY, part.z() + check.offsetZ))
+			{
+				if (dir.offsetX != 0 && check.offsetZ != 0)
+				{
+					if (dir.offsetX != check.offsetZ)
+					{
+						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					}
+					else if (dir.offsetX == check.offsetZ)
+					{
+						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					}
+				}
+				if (dir.offsetZ != 0 && check.offsetX != 0)
+				{
+					if (dir.offsetZ == check.offsetX)
+					{
+						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					}
+					else if (dir.offsetZ != check.offsetX)
+					{
+						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					}
+				}
+			}
+		}
+
 		GL11.glPopMatrix();
 
 		/**
@@ -65,7 +93,11 @@ public class RenderMultimeter
 			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 			GL11.glTranslated(0, 0.05, 0);
-			RenderUtility.renderText("" + part.getDetectedEnergy(), 0.8f, 0.8f);
+			String display = UnitDisplay.getDisplay(part.getNetwork().graph.get(0), Unit.JOULES);
+			if (dir.offsetX == 0)
+				RenderUtility.renderText(display, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
+			if (dir.offsetZ == 0)
+				RenderUtility.renderText(display, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
 			GL11.glPopMatrix();
 		}
 
