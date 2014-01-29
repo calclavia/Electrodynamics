@@ -64,8 +64,6 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		}
 	}
 
-	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
-
 	public enum DetectMode
 	{
 		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"), EQUAL("equal"),
@@ -79,6 +77,8 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		}
 	}
 
+	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
+
 	private DetectMode detectMode = DetectMode.NONE;
 	private long peakDetection;
 	private long energyLimit;
@@ -87,6 +87,8 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 	public boolean redstoneOn;
 	private byte side;
 	private int ticks;
+
+	public Graph graph;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -377,19 +379,19 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		}
 	}
 
-//	@Override
+	// @Override
 	public boolean canConnectRedstone(int arg0)
 	{
 		return true;
 	}
 
-	//@Override
+	// @Override
 	public int strongPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;
 	}
 
-	//@Override
+	// @Override
 	public int weakPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;

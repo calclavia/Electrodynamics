@@ -31,7 +31,7 @@ public class RenderMultimeter
 	{
 		GL11.glPushMatrix();
 		RenderUtility.rotateFaceBlockToSide(part.getDirection());
-		
+
 		/**
 		 * The more space we have, the more information we render.
 		 * 
@@ -39,8 +39,8 @@ public class RenderMultimeter
 		 * 1x2: Show storage + capacity
 		 * 3x3: Show graph behind
 		 */
-		
-		
+
+		RenderUtility.renderText("test", 0, 1, x, y, z);
 		GL11.glPopMatrix();
 
 	}
