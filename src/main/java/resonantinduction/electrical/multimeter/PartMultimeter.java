@@ -168,6 +168,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		super.update();
 
 		this.ticks++;
+		getNetwork().addConnector(this);
 
 		if (!world().isRemote)
 		{
@@ -208,10 +209,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 				if (getNetwork().graph.get(1) != detectedEnergy)
 				{
-					// writeDesc(getWriteStream());
 					writeGraph(getWriteStream());
-					// this.getWriteStream().writeByte(3).writeByte((byte)
-					// detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
 				}
 			}
 		}
@@ -220,9 +218,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			for (EntityPlayer player : playersUsing)
 			{
-				writeDesc(getWriteStream());
-				// this.getWriteStream().writeByte(3).writeByte((byte)
-				// detectMode.ordinal()).writeLong(detectedEnergy).writeLong(detectedAverageEnergy).writeLong(energyLimit);
+				writeGraph(getWriteStream());
 			}
 		}
 	}

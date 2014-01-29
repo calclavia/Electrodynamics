@@ -1,5 +1,6 @@
 package resonantinduction.electrical.multimeter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import universalelectricity.api.net.IUpdate;
@@ -9,7 +10,7 @@ import universalelectricity.core.net.NetworkTickHandler;
 
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {
-	public List<String> displayInformation;
+	public final List<String> displayInformation = new ArrayList<String>();
 	public Graph graph = new Graph(20 * 10);
 
 	/**
@@ -29,6 +30,14 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public Vector3 size = new Vector3();
 
 	private long queueGraphValue = 0;
+	private boolean doUpdate = false;
+
+	@Override
+	public void addConnector(PartMultimeter connector)
+	{
+		super.addConnector(connector);
+		NetworkTickHandler.addNetwork(this);
+	}
 
 	@Override
 	public void reconstruct()
@@ -46,28 +55,28 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	@Override
 	public void update()
 	{
-		if (queueGraphValue > 0)
-		{
-			graph.add(queueGraphValue);
-			queueGraphValue = 0;
-		}
+		graph.add(queueGraphValue);
+		queueGraphValue = 0;
+		displayInformation.clear();
+		doUpdate = false;
 	}
 
 	@Override
 	public boolean canUpdate()
 	{
-		return getConnectors().size() > 0;
+		return doUpdate && continueUpdate();
 	}
 
 	@Override
 	public boolean continueUpdate()
 	{
-		return canUpdate();
+		return getConnectors().size() > 0;
 	}
 
 	public void updateGraph(long detectedValue)
 	{
 		queueGraphValue += detectedValue;
+		doUpdate = true;
 	}
 
 	@Override
@@ -83,16 +92,16 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		if (upperBound == null)
 		{
-			upperBound = node.getPosition().translate(0.5);
+			upperBound = node.getPosition().translate(1);
 		}
 
 		if (lowerBound == null)
 		{
-			lowerBound = node.getPosition().translate(0.5);
+			lowerBound = node.getPosition();
 		}
 
-		upperBound = upperBound.max(node.getPosition().translate(0.5));
-		lowerBound = lowerBound.min(node.getPosition().translate(0.5));
+		upperBound = upperBound.max(node.getPosition().translate(1));
+		lowerBound = lowerBound.min(node.getPosition());
 	}
 
 	@Override

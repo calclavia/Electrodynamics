@@ -75,8 +75,8 @@ public class GuiMultimeter extends GuiContainerBase
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
 		this.fontRenderer.drawString(EnumColor.INDIGO + LanguageUtility.getLocal("gui.resonantinduction.multimeter.energy"), 35, 15, 4210752);
 		this.renderUniversalDisplay(35, 25, this.multimeter.getNetwork().graph.get(0), mouseX, mouseY, Unit.JOULES);
-		this.fontRenderer.drawString(EnumColor.INDIGO + LanguageUtility.getLocal("gui.resonantinduction.multimeter.energy"), 35, 35, 4210752);
-		this.renderUniversalDisplay(35, 45, this.multimeter.getNetwork().graph.get(0), mouseX, mouseY, Unit.JOULES);
+		this.fontRenderer.drawString(EnumColor.INDIGO + LanguageUtility.getLocal("gui.resonantinduction.multimeter.capacity"), 35, 35, 4210752);
+		this.renderUniversalDisplay(35, 45, this.multimeter.getNetwork().graph.getPeak(), mouseX, mouseY, Unit.JOULES);
 		this.fontRenderer.drawString(EnumColor.ORANGE + LanguageUtility.getLocal("gui.resonantinduction.multimeter.redstone"), 35, 58, 4210752);
 		this.fontRenderer.drawString(EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 35, 68, 4210752);
 		this.fontRenderer.drawString(Unit.JOULES.name + "(s)", 35, 100, 4210752);
