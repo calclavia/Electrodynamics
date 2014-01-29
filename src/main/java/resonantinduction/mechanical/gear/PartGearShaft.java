@@ -1,6 +1,9 @@
 package resonantinduction.mechanical.gear;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class PartGearShaft extends PartMechanical
 {
-	public static Cuboid6[] sides = new Cuboid6[7];
+	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 
 	static
 	{
@@ -146,7 +149,35 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
-		return Arrays.asList(sides);
+		return getCollisionBoxes();
+	}
+
+	@Override
+	public Iterable<Cuboid6> getCollisionBoxes()
+	{
+		Set<Cuboid6> collisionBoxes = new HashSet<Cuboid6>();
+		collisionBoxes.addAll((Collection<? extends Cuboid6>) getSubParts());
+
+		return collisionBoxes;
+	}
+
+	@Override
+	public Iterable<IndexedCuboid6> getSubParts()
+	{
+		Set<IndexedCuboid6> subParts = new HashSet<IndexedCuboid6>();
+		IndexedCuboid6[] currentSides = sides;
+
+		if (tile() != null)
+		{
+			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (side == placementSide || side == placementSide.getOpposite())
+					subParts.add(currentSides[side.ordinal()]);
+			}
+		}
+
+		subParts.add(currentSides[6]);
+		return subParts;
 	}
 
 	@Override

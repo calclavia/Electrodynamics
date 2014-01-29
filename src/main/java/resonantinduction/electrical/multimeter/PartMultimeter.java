@@ -199,7 +199,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 						break;
 				}
 
-				getNetwork().updateGraph(detectedEnergy);
+				getNetwork().updateGraph(detectedEnergy, 0);
 
 				if (outputRedstone != redstoneOn)
 				{

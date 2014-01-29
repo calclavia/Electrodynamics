@@ -5,14 +5,17 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.ItemMultipartBase;
-import resonantinduction.electrical.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class ItemGear extends ItemMultipartBase
 {
@@ -28,6 +31,19 @@ public class ItemGear extends ItemMultipartBase
 
 		if (part != null)
 		{
+			if (ControlKeyModifer.isControlDown(player))
+				pos.offset(side ^ 1, -1);
+
+			TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+
+			if (tile instanceof TileMultipart)
+			{
+				if (!(((TileMultipart) tile).partMap(side) instanceof PartGear))
+				{
+					side = ForgeDirection.getOrientation(side).getOpposite().ordinal();
+				}
+			}
+
 			part.preparePlacement(side, itemStack.getItemDamage());
 		}
 

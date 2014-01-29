@@ -30,6 +30,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public Vector3 size = new Vector3();
 
 	private long queueGraphValue = 0;
+	private long queueGraphCapacity = 0;
 	private boolean doUpdate = false;
 
 	@Override
@@ -57,6 +58,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		graph.add(queueGraphValue);
 		queueGraphValue = 0;
+		queueGraphCapacity = 0;
 		displayInformation.clear();
 		doUpdate = false;
 	}
@@ -73,9 +75,10 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		return getConnectors().size() > 0;
 	}
 
-	public void updateGraph(long detectedValue)
+	public void updateGraph(long detectedValue, long detectedCapcity)
 	{
 		queueGraphValue += detectedValue;
+		queueGraphCapacity += detectedCapcity;
 		doUpdate = true;
 	}
 

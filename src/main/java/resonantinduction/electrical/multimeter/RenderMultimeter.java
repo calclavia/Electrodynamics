@@ -93,13 +93,18 @@ public class RenderMultimeter
 			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 			GL11.glTranslated(0, 0.07, 0);
-			String display = UnitDisplay.getDisplay(part.getNetwork().graph.get(0), Unit.JOULES);
-			if (dir.offsetX == 0)
-				RenderUtility.renderText(display, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
-			if (dir.offsetZ == 0)
-				RenderUtility.renderText(display, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
+
+			for (int i = 0; i < 1; i++)
+			{
+				//TODO: Add other dispaly info support.
+				String display = UnitDisplay.getDisplay(part.getNetwork().graph.get(0), Unit.JOULES);
+				
+				if (dir.offsetX == 0)
+					RenderUtility.renderText(display, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
+				if (dir.offsetZ == 0)
+					RenderUtility.renderText(display, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
+			}
 			GL11.glPopMatrix();
 		}
-
 	}
 }

@@ -31,14 +31,6 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		/**
-		 * If we're clicking on the multipart
-		 */
-		/*if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart && !ControlKeyModifer.isControlDown(player))
-		{
-			pos.offset(side ^ 1, -1);
-		}*/
-
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)
