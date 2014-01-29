@@ -51,11 +51,11 @@ public class RenderRIItem implements IItemRenderer
 		}
 		else if (item.getItem() instanceof ItemGear)
 		{
-			RenderGear.INSTANCE.renderInventory(null, 0, 0, null);
+			RenderGear.INSTANCE.renderInventory(null, item.getItemDamage(), 0, null);
 		}
 		else if (item.getItem() instanceof ItemGearShaft)
 		{
-			RenderGearShaft.INSTANCE.renderInventory(null, 0, 0, null);
+			RenderGearShaft.INSTANCE.renderInventory(null, item.getItemDamage(), 0, null);
 		}
 		else if (item.getItem() instanceof ItemMultimeter)
 		{

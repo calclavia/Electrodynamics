@@ -23,11 +23,22 @@ public class RenderGear
 	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glRotatef(90, 1, 0, 0);
-		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+		switch (metadata)
+		{
+			default:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				break;
+			case 1:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				break;
+			case 2:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				break;
+		}
 		MODEL.renderOnly("SmallGear");
 	}
 
-	public void renderDynamic(PartGear part, double x, double y, double z, float frame)
+	public void renderDynamic(PartGear part, double x, double y, double z, int tier)
 	{
 		if (part.getMultiBlock().isPrimary())
 		{
@@ -40,7 +51,18 @@ public class RenderGear
 
 			GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			switch (tier)
+			{
+				default:
+					RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+					break;
+				case 1:
+					RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+					break;
+				case 2:
+					RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+					break;
+			}
 
 			if (part.getMultiBlock().isConstructed())
 			{

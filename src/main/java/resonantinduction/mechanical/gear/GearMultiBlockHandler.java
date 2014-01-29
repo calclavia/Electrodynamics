@@ -7,9 +7,9 @@ import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class MultiPartMultiBlockHandler extends MultiBlockHandler<PartGear>
+public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 {
-	public MultiPartMultiBlockHandler(PartGear wrapper)
+	public GearMultiBlockHandler(PartGear wrapper)
 	{
 		super(wrapper);
 	}
@@ -24,7 +24,10 @@ public class MultiPartMultiBlockHandler extends MultiBlockHandler<PartGear>
 
 			if (part instanceof PartGear)
 			{
-				return (PartGear) part;
+				if (((PartGear) part).tier == self.tier)
+				{
+					return (PartGear) part;
+				}
 			}
 		}
 

@@ -77,9 +77,22 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 			if (getMultiBlock().isPrimary())
 			{
-				// Decelerate the gear.
-				torque *= 0.95f;
-				angularVelocity *= 0.95f;
+				// Decelerate the gear based on tier.
+				switch (tier)
+				{
+					default:
+						torque *= 0.9f;
+						angularVelocity *= 0.95f;
+						break;
+					case 1:
+						torque *= 0.95f;
+						angularVelocity *= 0.9f;
+						break;
+					case 2:
+						torque *= 0.99f;
+						angularVelocity *= 0.99f;
+						break;
+				}
 			}
 			else
 			{
@@ -270,7 +283,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		if (pass == 0)
 		{
-			RenderGear.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z, frame);
+			RenderGear.INSTANCE.renderDynamic(this, pos.x, pos.y, pos.z, tier);
 		}
 	}
 
@@ -297,7 +310,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	/**
 	 * Multiblock
 	 */
-	private MultiPartMultiBlockHandler multiBlock;
+	private GearMultiBlockHandler multiBlock;
 
 	@Override
 	public universalelectricity.api.vector.Vector3[] getMultiBlockVectors()
@@ -354,7 +367,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public MultiBlockHandler<PartGear> getMultiBlock()
 	{
 		if (multiBlock == null)
-			multiBlock = new MultiPartMultiBlockHandler(this);
+			multiBlock = new GearMultiBlockHandler(this);
 
 		return multiBlock;
 	}

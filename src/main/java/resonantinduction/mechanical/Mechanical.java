@@ -137,7 +137,9 @@ public class Mechanical
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		// Add recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemGear, "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 0), "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 1), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 0), 'W', Block.cobblestone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 2), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 1), 'W', Item.ingotIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemGearShaft, "S", "S", "S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), "III", "GGG", 'I', Item.ingotIron, 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));

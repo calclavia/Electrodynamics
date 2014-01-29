@@ -51,9 +51,12 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	/** The current angle the gear is on. In radians. */
 	public float angle = 0;
 
+	public int tier;
+
 	public void preparePlacement(int side, int itemDamage)
 	{
 		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.tier = itemDamage;
 	}
 
 	@Override
@@ -62,8 +65,10 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		if (!world().isRemote)
 		{
 			System.out.println(this + ":" + getNetwork());
-			/*for (Object obj : connections)
-				System.out.println(obj);*/
+			/*
+			 * for (Object obj : connections)
+			 * System.out.println(obj);
+			 */
 		}
 
 		return false;
@@ -195,6 +200,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	{
 		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
 		angularVelocity = nbt.getFloat("angularVelocity");
+		tier = nbt.getByte("tier");
 	}
 
 	@Override
@@ -202,6 +208,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	{
 		nbt.setByte("side", (byte) placementSide.ordinal());
 		nbt.setFloat("angularVelocity", angularVelocity);
+		nbt.setByte("tier", (byte) tier);
 	}
 
 	protected abstract ItemStack getItem();
