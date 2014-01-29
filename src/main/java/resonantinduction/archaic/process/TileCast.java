@@ -1,10 +1,10 @@
 package resonantinduction.archaic.process;
 
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -13,22 +13,28 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Turns molten fuilds into ingots.
  * 
  * 1 m^3 of molten fluid = 1 block
- * Approximately 110 L of fluid = 1 ingot.
+ * Approximately 100-110 L of fluid = 1 ingot.
  * 
  * @author Calclavia
  * 
  */
-public class TileCast extends TileExternalInventory implements IFluidHandler
+public class TileCast extends TileExternalInventory implements IFluidHandler, IPacketReceiver
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-	private final int amountPerIngot = 110;
+	private final int amountPerIngot = 100;
 
 	@Override
 	public boolean canUpdate()
@@ -37,9 +43,33 @@ public class TileCast extends TileExternalInventory implements IFluidHandler
 	}
 
 	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		try
+		{
+			this.readFromNBT(PacketHandler.readNBTTagCompound(data));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public void onInventoryChanged()
 	{
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (worldObj != null)
+		{
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		}
 	}
 
 	@Override
@@ -54,8 +84,15 @@ public class TileCast extends TileExternalInventory implements IFluidHandler
 
 		if (block instanceof BlockFluidMaterial)
 		{
-			// TODO: Fix overfill.
-			tank.fill(((BlockFluidMaterial) block).drain(worldObj, checkPos.intX(), checkPos.intY(), checkPos.intZ(), true), true);
+			/**
+			 * Only drain if everything is accepted by the tank.
+			 */
+			FluidStack drainStack = ((BlockFluidMaterial) block).drain(worldObj, checkPos.intX(), checkPos.intY(), checkPos.intZ(), false);
+
+			if (drainStack.amount == tank.fill(drainStack, false))
+			{
+				tank.fill(((BlockFluidMaterial) block).drain(worldObj, checkPos.intX(), checkPos.intY(), checkPos.intZ(), true), true);
+			}
 		}
 
 		/**
@@ -67,7 +104,7 @@ public class TileCast extends TileExternalInventory implements IFluidHandler
 			String materialName = fluidName.replace("molten", "");
 			String nameCaps = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
 			String ingotName = "ingot" + nameCaps;
-			
+
 			if (OreDictionary.getOres(ingotName).size() > 0)
 			{
 				ItemStack stack = OreDictionary.getOres(ingotName).get(0);
