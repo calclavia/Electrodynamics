@@ -48,7 +48,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFacePart, JNormalOcclusion, IRedstonePart
+public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion, IPacketReceiver
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
@@ -377,19 +377,19 @@ public class PartMultimeter extends JCuboidPart implements IPacketReceiver, TFac
 		}
 	}
 
-	@Override
+//	@Override
 	public boolean canConnectRedstone(int arg0)
 	{
 		return true;
 	}
 
-	@Override
+	//@Override
 	public int strongPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;
 	}
 
-	@Override
+	//@Override
 	public int weakPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;

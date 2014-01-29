@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import calclavia.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -26,8 +27,25 @@ public class RenderMultimeter
 	public static final ModelMultimeter MODEL = new ModelMultimeter();
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "multimeter.png");
 
-	@SuppressWarnings("incomplete-switch")
-	public static void render(PartMultimeter tileEntity, double x, double y, double z)
+	public static void render(PartMultimeter part, double x, double y, double z)
+	{
+		GL11.glPushMatrix();
+		RenderUtility.rotateFaceBlockToSide(part.getDirection());
+		
+		/**
+		 * The more space we have, the more information we render.
+		 * 
+		 * 1x1: Show storage
+		 * 1x2: Show storage + capacity
+		 * 3x3: Show graph behind
+		 */
+		
+		
+		GL11.glPopMatrix();
+
+	}
+
+	public static void renderOld(PartMultimeter tileEntity, double x, double y, double z)
 	{
 		ForgeDirection direction = tileEntity.getDirection();
 

@@ -1,11 +1,15 @@
 package resonantinduction.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.Icon;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -39,6 +43,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The core module of Resonant Induction
@@ -95,6 +101,7 @@ public class ResonantInduction
 		Settings.load();
 
 		// Register Forge Events
+		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
@@ -136,4 +143,30 @@ public class ResonantInduction
 		ResourceGenerator.generateOreResources();
 	}
 
+	public static final HashMap<String, Icon> loadedIconMap = new HashMap<String, Icon>();
+
+	public void registerIcon(String name, TextureStitchEvent.Pre event)
+	{
+		loadedIconMap.put(name, event.map.registerIcon(name));
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void preTextureHook(TextureStitchEvent.Pre event)
+	{
+		if (event.map.textureType == 0)
+		{
+			registerIcon(Reference.PREFIX + "mixture_flow", event);
+			registerIcon(Reference.PREFIX + "molten_flow", event);
+			registerIcon(Reference.PREFIX + "multimeter_screen", event);
+		}
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void postTextureHook(TextureStitchEvent.Post event)
+	{
+		for (Fluid fluid : fluidMaterial)
+			fluid.setIcons(loadedIconMap.get(Reference.PREFIX + "molten_flow"));
+	}
 }

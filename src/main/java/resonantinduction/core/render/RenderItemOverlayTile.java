@@ -1,7 +1,6 @@
 package resonantinduction.core.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -22,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.WorldUtility;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -155,8 +155,8 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glPopMatrix();
 			}
 
-			this.renderText(renderText, side, 0.02f, x, y - 0.35f, z);
-			this.renderText(amount, side, 0.02f, x, y - 0.15f, z);
+			RenderUtility.renderText(renderText, side, 0.02f, x, y - 0.35f, z);
+			RenderUtility.renderText(amount, side, 0.02f, x, y - 0.15f, z);
 		}
 	}
 
@@ -174,83 +174,6 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		int var12 = br / 65536;
 		float scale = 0.6F;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
-	}
-
-	private void renderText(String text, int side, float maxScale, double x, double y, double z)
-	{
-		GL11.glPushMatrix();
-
-		GL11.glPolygonOffset(-10, -10);
-		GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-
-		float displayWidth = 1 - (2 / 16);
-		float displayHeight = 1 - (2 / 16);
-		GL11.glTranslated(x, y, z);
-
-		switch (side)
-		{
-			case 3:
-				GL11.glTranslatef(0, 1, 0);
-				GL11.glRotatef(0, 0, 1, 0);
-				GL11.glRotatef(90, 1, 0, 0);
-
-				break;
-			case 2:
-				GL11.glTranslatef(1, 1, 1);
-				GL11.glRotatef(180, 0, 1, 0);
-				GL11.glRotatef(90, 1, 0, 0);
-
-				break;
-			case 5:
-				GL11.glTranslatef(0, 1, 1);
-				GL11.glRotatef(90, 0, 1, 0);
-				GL11.glRotatef(90, 1, 0, 0);
-
-				break;
-			case 4:
-				GL11.glTranslatef(1, 1, 0);
-				GL11.glRotatef(-90, 0, 1, 0);
-				GL11.glRotatef(90, 1, 0, 0);
-				break;
-		}
-
-		// Find Center
-		GL11.glTranslatef(displayWidth / 2, 1F, displayHeight / 2);
-		GL11.glRotatef(-90, 1, 0, 0);
-
-		FontRenderer fontRenderer = this.getFontRenderer();
-
-		int requiredWidth = Math.max(fontRenderer.getStringWidth(text), 1);
-		int lineHeight = fontRenderer.FONT_HEIGHT + 2;
-		int requiredHeight = lineHeight * 1;
-		float scaler = 0.8f;
-		float scaleX = (displayWidth / requiredWidth);
-		float scaleY = (displayHeight / requiredHeight);
-		float scale = scaleX * scaler;
-
-		if (maxScale > 0)
-		{
-			scale = Math.min(scale, maxScale);
-		}
-
-		GL11.glScalef(scale, -scale, scale);
-		GL11.glDepthMask(false);
-
-		int offsetX;
-		int offsetY;
-		int realHeight = (int) Math.floor(displayHeight / scale);
-		int realWidth = (int) Math.floor(displayWidth / scale);
-
-		offsetX = (realWidth - requiredWidth) / 2;
-		offsetY = (realHeight - requiredHeight) / 2;
-
-		GL11.glDisable(GL11.GL_LIGHTING);
-		fontRenderer.drawString("\u00a7f" + text, offsetX - (realWidth / 2), 1 + offsetY - (realHeight / 2), 1);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glDepthMask(true);
-		GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
-
-		GL11.glPopMatrix();
 	}
 
 	private void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
