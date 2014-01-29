@@ -65,13 +65,11 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	{
 		if (!this.worldObj.isRemote)
 		{
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			for (Object obj : getConnections())
 			{
-				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
-
-				if (tile instanceof TileBattery)
+				if (obj instanceof TileBattery)
 				{
-					this.getNetwork().merge(((TileBattery) tile).getNetwork());
+					this.getNetwork().merge(((TileBattery) obj).getNetwork());
 				}
 			}
 

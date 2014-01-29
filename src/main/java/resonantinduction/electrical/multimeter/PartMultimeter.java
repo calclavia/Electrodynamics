@@ -17,6 +17,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.electrical.battery.TileBattery;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
@@ -49,7 +50,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion, IRedstonePart, IPacketReceiver
+public class PartMultimeter extends JCuboidPart implements IConnector<MultimeterNetwork>, TFacePart, JNormalOcclusion, IRedstonePart, IPacketReceiver
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
@@ -89,6 +90,9 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 	private byte side;
 	private int ticks;
 
+	private MultimeterNetwork network;
+
+	public List<String> displayInformation;
 	public Graph graph;
 
 	public void preparePlacement(int side, int itemDamage)
@@ -98,6 +102,46 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 	public boolean hasMultimeter(int x, int y, int z)
 	{
+		return getMultimeter(x, y, z) != null;
+	}
+
+	public void refresh()
+	{
+		if (!world().isRemote)
+		{
+			for (Object obj : getConnections())
+			{
+				if (obj instanceof PartMultimeter)
+				{
+					this.getNetwork().merge(((PartMultimeter) obj).getNetwork());
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onWorldJoin()
+	{
+		refresh();
+	}
+
+	@Override
+	public void onNeighborChanged()
+	{
+		refresh();
+	}
+
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		refresh();
+	}
+
+	/**
+	 * Gets the multimeter on the same plane.
+	 */
+	public PartMultimeter getMultimeter(int x, int y, int z)
+	{
 		TileEntity tileEntity = world().getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileMultipart)
@@ -106,11 +150,11 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 
 			if (part instanceof PartMultimeter)
 			{
-				return true;
+				return (PartMultimeter) part;
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	@Override
@@ -415,4 +459,56 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		return redstoneOn ? 14 : 0;
 	}
 
+	@Override
+	public MultimeterNetwork getNetwork()
+	{
+		if (network == null)
+		{
+			network = new MultimeterNetwork();
+			network.addConnector(this);
+		}
+
+		return network;
+	}
+
+	@Override
+	public void setNetwork(MultimeterNetwork network)
+	{
+		this.network = network;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return true;
+	}
+
+	@Override
+	public Object[] getConnections()
+	{
+		Object[] connections = new Object[6];
+
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			universalelectricity.api.vector.Vector3 vector = getPosition().translate(dir);
+
+			if (hasMultimeter(vector.intX(), vector.intY(), vector.intZ()))
+			{
+				connections[dir.ordinal()] = getMultimeter(vector.intX(), vector.intY(), vector.intZ());
+			}
+		}
+
+		return connections;
+	}
+
+	@Override
+	public IConnector<MultimeterNetwork> getInstance(ForgeDirection dir)
+	{
+		return this;
+	}
+
+	public universalelectricity.api.vector.Vector3 getPosition()
+	{
+		return new universalelectricity.api.vector.Vector3(x(), y(), z());
+	}
 }
