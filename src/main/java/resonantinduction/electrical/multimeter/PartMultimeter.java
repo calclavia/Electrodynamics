@@ -35,6 +35,7 @@ import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -48,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion, IPacketReceiver
+public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcclusion, IRedstonePart, IPacketReceiver
 {
 	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
@@ -93,6 +94,23 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 	public void preparePlacement(int side, int itemDamage)
 	{
 		this.side = (byte) (side ^ 1);
+	}
+
+	public boolean hasMultimeter(int x, int y, int z)
+	{
+		TileEntity tileEntity = world().getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileMultipart)
+		{
+			TMultiPart part = ((TileMultipart) tileEntity).partMap(side);
+
+			if (part instanceof PartMultimeter)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -379,19 +397,19 @@ public class PartMultimeter extends JCuboidPart implements TFacePart, JNormalOcc
 		}
 	}
 
-	// @Override
+	@Override
 	public boolean canConnectRedstone(int arg0)
 	{
 		return true;
 	}
 
-	// @Override
+	@Override
 	public int strongPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;
 	}
 
-	// @Override
+	@Override
 	public int weakPowerLevel(int arg0)
 	{
 		return redstoneOn ? 14 : 0;

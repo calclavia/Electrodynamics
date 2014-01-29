@@ -34,10 +34,10 @@ public class ItemMultimeter extends ItemMultipartBase
 		/**
 		 * If we're clicking on the multipart
 		 */
-		if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart && !ControlKeyModifer.isControlDown(player))
+		/*if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart && !ControlKeyModifer.isControlDown(player))
 		{
 			pos.offset(side ^ 1, -1);
-		}
+		}*/
 
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
@@ -45,7 +45,7 @@ public class ItemMultimeter extends ItemMultipartBase
 		{
 			part.preparePlacement(side, itemStack.getItemDamage());
 		}
-		System.out.println("OFFSET"+pos);
+
 		return part;
 	}
 
