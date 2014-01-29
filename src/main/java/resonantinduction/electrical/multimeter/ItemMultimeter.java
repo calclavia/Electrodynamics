@@ -31,6 +31,9 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
+		/**
+		 * If we're clicking on the multipart
+		 */
 		if (world.getBlockTileEntity(pos.x, pos.y, pos.z) instanceof TileMultipart && !ControlKeyModifer.isControlDown(player))
 		{
 			pos.offset(side ^ 1, -1);
@@ -42,7 +45,7 @@ public class ItemMultimeter extends ItemMultipartBase
 		{
 			part.preparePlacement(side, itemStack.getItemDamage());
 		}
-
+		System.out.println("OFFSET"+pos);
 		return part;
 	}
 
@@ -67,7 +70,7 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
 	{
-		if (!par2EntityPlayer.isSneaking())
+		if (par2EntityPlayer.isSneaking())
 		{
 			if (!world.isRemote)
 			{

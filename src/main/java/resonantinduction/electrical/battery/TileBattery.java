@@ -89,7 +89,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 		if (!this.worldObj.isRemote)
 		{
 			long produce = this.produce();
-			
+
 			if ((markDistributionUpdate || produce > 0) && ticks % 5 == 0)
 			{
 				this.getNetwork().redistribute();

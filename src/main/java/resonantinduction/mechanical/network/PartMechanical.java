@@ -62,8 +62,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		if (!world().isRemote)
 		{
 			System.out.println(this + ":" + getNetwork());
-			for (Object obj : connections)
-				System.out.println(obj);
+			/*for (Object obj : connections)
+				System.out.println(obj);*/
 		}
 
 		return false;

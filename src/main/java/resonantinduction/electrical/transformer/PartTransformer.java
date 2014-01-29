@@ -33,17 +33,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TFacePart, IVoltageOutput, IEnergyInterface
 {
-	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
+	public static Cuboid6[][] bounds = new Cuboid6[6][2];
 
 	static
 	{
-		oBoxes[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
-		oBoxes[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
+		bounds[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
+		bounds[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
 		for (int s = 1; s < 6; s++)
 		{
 			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
-			oBoxes[s][0] = oBoxes[0][0].copy().apply(t);
-			oBoxes[s][1] = oBoxes[0][1].copy().apply(t);
+			bounds[s][0] = bounds[0][0].copy().apply(t);
+			bounds[s][1] = bounds[0][1].copy().apply(t);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
-		return Arrays.asList(oBoxes[this.placementSide.ordinal()]);
+		return Arrays.asList(bounds[this.placementSide.ordinal()]);
 	}
 
 	protected ItemStack getItem()

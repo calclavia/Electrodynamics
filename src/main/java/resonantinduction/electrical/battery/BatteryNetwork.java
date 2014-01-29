@@ -17,6 +17,13 @@ public class BatteryNetwork extends Network<BatteryNetwork, TileBattery>
 			totalCapacity += battery.energy.getEnergyCapacity();
 		}
 
+		/**
+		 * Apply energy loss.
+		 */
+		double percentageLoss = Math.max(0, (1 - ((double) (getConnectors().size() * 6) / 100d)));
+		long energyLoss = (long) (percentageLoss * 10);
+		totalEnergy -= energyLoss;
+
 		int amountOfNodes = this.getConnectors().size() - exclusion.length;
 
 		if (totalEnergy > 0 && amountOfNodes > 0)
