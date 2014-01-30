@@ -42,6 +42,13 @@ public class ItemOreResource extends ItemRI
 	}
 
 	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	{
+		// par3List.add("TEST" +
+		// itemStack.getTagCompound().equals(getStackFromMaterial(getMaterialFromStack(itemStack)).getTagCompound()));
+	}
+
+	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
 		String dustName = getMaterialFromStack(is);
@@ -203,21 +210,14 @@ public class ItemOreResource extends ItemRI
 	public ItemStack getStackFromMaterial(String name)
 	{
 		ItemStack itemStack = new ItemStack(this);
-		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
-		nbt.setString("name", name);
 		itemStack.setItemDamage(ResourceGenerator.materialNames.indexOf(name));
 		return itemStack;
 	}
 
 	public static String getMaterialFromStack(ItemStack itemStack)
 	{
-		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
-
-		if (nbt.hasKey("name"))
-		{
-			return nbt.getString("name");
-		}
-
+		if (ResourceGenerator.materialNames.size() > itemStack.getItemDamage())
+			return ResourceGenerator.materialNames.get(itemStack.getItemDamage());
 		return null;
 	}
 
