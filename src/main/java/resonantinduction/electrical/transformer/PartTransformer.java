@@ -49,10 +49,13 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 
 	/** Side of the block this is placed on. */
 	public ForgeDirection placementSide;
+
 	/** The relative direction this block faces. */
 	public byte facing = 0;
+
 	/** Step the voltage up */
 	private boolean stepUp;
+
 	/** Amount to mulitply the step by (up x2. down /2) */
 	public int multiplier = 2;
 
