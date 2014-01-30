@@ -80,11 +80,9 @@ public class TileMixer extends TileMechanical
 			/**
 			 * Rotate entities around the mixer
 			 */
-			double speed = angularVelocity;
-
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(speed, 0, 0);
+			relativePosition.rotate(angularVelocity, 0, 0);
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 
