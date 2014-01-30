@@ -131,14 +131,14 @@ public class RenderMultimeter
 		 * Only one block renders this text.
 		 * Render all the multimeter text
 		 */
-		if (part.getNetwork().center.distance(new Vector3(part.x(), part.y(), part.z()).translate(0.5)) < 1)
+		if (part.getNetwork().isEnabled && part.isPrimaryRendering())
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 			Vector3 centerTranslation = part.getNetwork().center.clone().subtract(part.x(), part.y(), part.z()).add(-0.5);
 			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
-			GL11.glTranslated(0, 0.07, 0);
+			GL11.glTranslated(0, 0.05, 0);
 
 			for (int i = 0; i < 1; i++)
 			{

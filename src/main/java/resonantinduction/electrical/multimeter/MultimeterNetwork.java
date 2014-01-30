@@ -1,6 +1,7 @@
 package resonantinduction.electrical.multimeter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import universalelectricity.api.net.IUpdate;
@@ -33,23 +34,15 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	private long queueGraphCapacity = 0;
 	private boolean doUpdate = false;
 
+	/**
+	 * If the screen is not a perfect rectangle, don't render.
+	 */
+	public boolean isEnabled = true;
+
 	@Override
 	public void addConnector(PartMultimeter connector)
 	{
 		super.addConnector(connector);
-		NetworkTickHandler.addNetwork(this);
-	}
-
-	@Override
-	public void reconstruct()
-	{
-		upperBound = null;
-		lowerBound = null;
-		super.reconstruct();
-		center = upperBound.midPoint(lowerBound);
-		upperBound.subtract(center);
-		lowerBound.subtract(center);
-		size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
 		NetworkTickHandler.addNetwork(this);
 	}
 
@@ -86,6 +79,37 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public boolean isValidConnector(PartMultimeter node)
 	{
 		return node.world() != null && node.tile() != null;
+	}
+
+	@Override
+	public void reconstruct()
+	{
+		upperBound = null;
+		lowerBound = null;
+		super.reconstruct();
+		center = upperBound.midPoint(lowerBound);
+
+		/**
+		 * Make bounds relative.
+		 */
+		upperBound.subtract(center);
+		lowerBound.subtract(center);
+		size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
+
+		double area = (size.x != 0 ? size.x : 1) * (size.y != 0 ? size.y : 1) * (size.z != 0 ? size.z : 1);
+		isEnabled = area == getConnectors().size();
+
+		NetworkTickHandler.addNetwork(this);
+
+		Iterator<PartMultimeter> it = this.getConnectors().iterator();
+
+		while (it.hasNext())
+		{
+			PartMultimeter connector = it.next();
+			connector.updateDesc();
+		}
+		
+		doUpdate = true;
 	}
 
 	@Override

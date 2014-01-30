@@ -113,8 +113,12 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 			}
 
 			getNetwork().reconstruct();
-			writeDesc(getWriteStream());
 		}
+	}
+
+	public void updateDesc()
+	{
+		writeDesc(getWriteStream());
 	}
 
 	@Override
@@ -172,35 +176,35 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		if (!world().isRemote)
 		{
+			long detectedEnergy = doGetDetectedEnergy();
+
+			boolean outputRedstone = false;
+
+			switch (detectMode)
+			{
+				default:
+					break;
+				case EQUAL:
+					outputRedstone = detectedEnergy == redstoneTriggerLimit;
+					break;
+				case GREATER_THAN:
+					outputRedstone = detectedEnergy > redstoneTriggerLimit;
+					break;
+				case GREATER_THAN_EQUAL:
+					outputRedstone = detectedEnergy >= redstoneTriggerLimit;
+					break;
+				case LESS_THAN:
+					outputRedstone = detectedEnergy < redstoneTriggerLimit;
+					break;
+				case LESS_THAN_EQUAL:
+					outputRedstone = detectedEnergy <= redstoneTriggerLimit;
+					break;
+			}
+
+			getNetwork().updateGraph(detectedEnergy, 0);
+
 			if (ticks % 10 == 0)
 			{
-				long detectedEnergy = doGetDetectedEnergy();
-
-				boolean outputRedstone = false;
-
-				switch (detectMode)
-				{
-					default:
-						break;
-					case EQUAL:
-						outputRedstone = detectedEnergy == redstoneTriggerLimit;
-						break;
-					case GREATER_THAN:
-						outputRedstone = detectedEnergy > redstoneTriggerLimit;
-						break;
-					case GREATER_THAN_EQUAL:
-						outputRedstone = detectedEnergy >= redstoneTriggerLimit;
-						break;
-					case LESS_THAN:
-						outputRedstone = detectedEnergy < redstoneTriggerLimit;
-						break;
-					case LESS_THAN_EQUAL:
-						outputRedstone = detectedEnergy <= redstoneTriggerLimit;
-						break;
-				}
-
-				getNetwork().updateGraph(detectedEnergy, 0);
-
 				if (outputRedstone != redstoneOn)
 				{
 					redstoneOn = outputRedstone;
@@ -229,9 +233,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		packet.readByte();
 		this.side = packet.readByte();
 		detectMode = DetectMode.values()[packet.readByte()];
-		refresh();
 		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+		getNetwork().isEnabled = packet.readBoolean();
 	}
 
 	@Override
@@ -242,6 +246,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		packet.writeByte((byte) detectMode.ordinal());
 		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
 		packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
+		packet.writeBoolean(getNetwork().isEnabled);
 	}
 
 	public void writeGraph(MCDataOutput packet)
@@ -262,9 +267,10 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			this.side = packet.readByte();
 			detectMode = DetectMode.values()[packet.readByte()];
-			refresh();
 			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+			getNetwork().isEnabled = packet.readBoolean();
+			refresh();
 		}
 		else if (packetID == 1)
 		{
@@ -500,5 +506,18 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public universalelectricity.api.vector.Vector3 getPosition()
 	{
 		return new universalelectricity.api.vector.Vector3(x(), y(), z());
+	}
+
+	/**
+	 * Only one multimeter renders the text.
+	 */
+	public boolean isPrimaryRendering()
+	{
+		for (PartMultimeter m : getNetwork().getConnectors())
+		{
+			return m == this;
+		}
+
+		return false;
 	}
 }
