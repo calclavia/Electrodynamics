@@ -57,7 +57,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	private boolean stepUp;
 
 	/** Amount to mulitply the step by (up x2. down /2) */
-	public int multiplier = 2;
+	public byte multiplier = 2;
 
 	public void preparePlacement(int side, int facing)
 	{
@@ -68,15 +68,17 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
-		this.placementSide = ForgeDirection.getOrientation(packet.readByte());
-		this.facing = packet.readByte();
+		placementSide = ForgeDirection.getOrientation(packet.readByte());
+		facing = packet.readByte();
+		multiplier = packet.readByte();
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		packet.writeByte(this.placementSide.ordinal());
-		packet.writeByte(this.facing);
+		packet.writeByte(placementSide.ordinal());
+		packet.writeByte(facing);
+		packet.writeByte(multiplier);
 	}
 
 	public boolean stepUp()
@@ -240,26 +242,32 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-
 		if (this.isUsableWrench(player, player.inventory.getCurrentItem(), x(), y(), z()))
 		{
-			if (this.world().isRemote)
+			if (!this.world().isRemote)
 			{
-				return true;
-			}
-			this.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
-			if (this.facing < 3)
-				this.facing++;
-			else
-				this.facing = 0;
-			this.sendDescUpdate();
+				if (player.isSneaking())
+				{
+					multiplier = (byte) ((multiplier + 1) % 3);
+					sendDescUpdate();
+					return true;
+				}
 
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				tile().notifyNeighborChange(dir.ordinal());
+				damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
+
+				facing = (byte) ((facing + 1) % 3);
+
+				sendDescUpdate();
+
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				{
+					tile().notifyNeighborChange(dir.ordinal());
+				}
 			}
+
 			return true;
 		}
+
 		return false;
 	}
 
