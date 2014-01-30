@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingSand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -61,6 +62,73 @@ public class BlockDust extends BlockRI
 		}
 
 		return 16777215;
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		tryToFall(world, x, y, z);
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int y, int x, int z, int id)
+	{
+		tryToFall(world, y, x, z);
+	}
+
+	private void tryToFall(World world, int x, int y, int z)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileMaterial)
+		{
+			String materialName = ((TileMaterial) tile).name;
+			int metadata = world.getBlockMetadata(x, y, z);
+
+			if (canFallBelow(world, x, y - 1, z) && y >= 0)
+			{
+				byte b0 = 32;
+
+				world.setBlockToAir(x, y, z);
+
+				while (canFallBelow(world, x, y - 1, z) && y > 0)
+				{
+					--y;
+				}
+
+				if (y > 0)
+				{
+					world.setBlock(x, y, z, this.blockID, metadata, 3);
+
+					TileEntity newTile = world.getBlockTileEntity(x, y, z);
+
+					if (newTile instanceof TileMaterial)
+					{
+						((TileMaterial) newTile).name = materialName;
+					}
+				}
+			}
+		}
+
+	}
+
+	public static boolean canFallBelow(World par0World, int par1, int par2, int par3)
+	{
+		int l = par0World.getBlockId(par1, par2, par3);
+
+		if (par0World.isAirBlock(par1, par2, par3))
+		{
+			return true;
+		}
+		else if (l == Block.fire.blockID)
+		{
+			return true;
+		}
+		else
+		{
+			Material material = Block.blocksList[l].blockMaterial;
+			return material == Material.water ? true : material == Material.lava;
+		}
 	}
 
 	@Override

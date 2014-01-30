@@ -185,7 +185,7 @@ public class ResourceGenerator
 						 */
 						double luma = 0.2126 * rgb.getRed() + 0.7152 * rgb.getGreen() + 0.0722 * rgb.getGreen();
 
-						if (luma > 50)
+						if (luma > 40)
 						{
 							totalR += rgb.getRed();
 							totalG += rgb.getGreen();
