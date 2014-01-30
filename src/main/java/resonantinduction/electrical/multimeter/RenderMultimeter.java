@@ -27,8 +27,54 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMultimeter
 {
-	public static final ModelMultimeter MODEL = new ModelMultimeter();
-	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "multimeter.png");
+	public static final RenderMultimeter INSTANCE = new RenderMultimeter();
+	private final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "multimeter.png");
+
+	public static void render()
+	{
+		GL11.glPushMatrix();
+		GL11.glRotatef(90, 1, 0, 0);
+		RenderUtility.bind(TextureMap.locationBlocksTexture);
+		// Render the main panel
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, ResonantInduction.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		ForgeDirection dir = ForgeDirection.NORTH;
+		final int metadata = 8;
+		// Render edges
+		// UP
+		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Archaic.blockMachinePart, null, metadata);
+		// DOWN
+		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+		// LEFT
+		for (int i = 2; i < 6; i++)
+		{
+			ForgeDirection check = ForgeDirection.getOrientation(i);
+
+			if (dir.offsetX != 0 && check.offsetZ != 0)
+			{
+				if (dir.offsetX != check.offsetZ)
+				{
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+				}
+				else if (dir.offsetX == check.offsetZ)
+				{
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+				}
+			}
+			if (dir.offsetZ != 0 && check.offsetX != 0)
+			{
+				if (dir.offsetZ == check.offsetX)
+				{
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+				}
+				else if (dir.offsetZ != check.offsetX)
+				{
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+				}
+			}
+		}
+
+		GL11.glPopMatrix();
+	}
 
 	public static void render(PartMultimeter part, double x, double y, double z)
 	{
@@ -96,9 +142,9 @@ public class RenderMultimeter
 
 			for (int i = 0; i < 1; i++)
 			{
-				//TODO: Add other dispaly info support.
+				// TODO: Add other dispaly info support.
 				String display = UnitDisplay.getDisplay(part.getNetwork().graph.get(0), Unit.JOULES);
-				
+
 				if (dir.offsetX == 0)
 					RenderUtility.renderText(display, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
 				if (dir.offsetZ == 0)
@@ -107,4 +153,5 @@ public class RenderMultimeter
 			GL11.glPopMatrix();
 		}
 	}
+
 }

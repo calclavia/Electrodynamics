@@ -155,8 +155,9 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		this.placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
-		this.stepUp = nbt.getBoolean("stepUp");
+		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
+		stepUp = nbt.getBoolean("stepUp");
+		multiplier = nbt.getByte("multiplier");
 	}
 
 	@Override
@@ -165,6 +166,7 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 		super.save(nbt);
 		nbt.setByte("side", (byte) this.placementSide.ordinal());
 		nbt.setBoolean("stepUp", this.stepUp);
+		nbt.setByte("multiplier", multiplier);
 	}
 
 	@Override

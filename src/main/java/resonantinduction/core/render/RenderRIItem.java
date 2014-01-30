@@ -59,10 +59,7 @@ public class RenderRIItem implements IItemRenderer
 		}
 		else if (item.getItem() instanceof ItemMultimeter)
 		{
-			GL11.glRotatef(180, 0, 1, 0);
-			GL11.glTranslated(0, -1, -0.7);
-			FMLClientHandler.instance().getClient().renderEngine.bindTexture(RenderMultimeter.TEXTURE);
-			RenderMultimeter.MODEL.render(0.0625f);
+			RenderMultimeter.INSTANCE.render();
 		}
 		else if (item.getItem() instanceof ItemTransformer)
 		{
