@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import resonantinduction.mechanical.process.TileGrinderWheel;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
@@ -80,7 +81,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
 						long torque = mechanical.getTorque();
 
-						boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech) || adjacentMech.inverseRotation(dir.getOpposite(), mechanical);
+						boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), mechanical);
 
 						int inversion = inverseRotation ? -1 : 1;
 
@@ -93,7 +94,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 						if (Math.abs(velocity + inversion * (adjacentMech.getAngularVelocity() * ratio * ACCELERATION)) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
 						{
-							mechanical.setAngularVelocity(velocity + inversion * ((adjacentMech.getAngularVelocity() * ratio * ACCELERATION)));
+							mechanical.setAngularVelocity(velocity + (inversion * adjacentMech.getAngularVelocity() * ratio * ACCELERATION));
 						}
 					}
 				}

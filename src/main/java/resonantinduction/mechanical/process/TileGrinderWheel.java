@@ -2,7 +2,10 @@ package resonantinduction.mechanical.process;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
@@ -167,6 +170,12 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return from != this.getDirection() && from != this.getDirection().getOpposite();
+		if (getDirection().ordinal() < 2)
+		{
+			return from.offsetY != 0;
+		}
+
+		return getDirection().getRotation(ForgeDirection.UP) == from || getDirection().getRotation(ForgeDirection.DOWN) == from;
 	}
+
 }

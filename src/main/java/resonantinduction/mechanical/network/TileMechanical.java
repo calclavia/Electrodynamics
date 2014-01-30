@@ -1,13 +1,19 @@
 package resonantinduction.mechanical.network;
 
-import resonantinduction.mechanical.gear.PartGearShaft;
+import com.google.common.io.ByteArrayDataInput;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public abstract class TileMechanical extends TileAdvanced implements IMechanical
+public abstract class TileMechanical extends TileAdvanced implements IMechanical, IPacketReceiver
 {
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
@@ -15,6 +21,12 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	protected float angularVelocity;
 	protected long torque;
 	public float angle = 0;
+
+	/**
+	 * For sending client update packets
+	 */
+	private float prevAngularVelocity;
+	private boolean markPacketUpdate;
 
 	@Override
 	public void initiate()
@@ -29,6 +41,29 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 		angle += angularVelocity / 20;
 		torque *= getLoad();
 		angularVelocity *= getLoad();
+
+		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f)
+		{
+			prevAngularVelocity = angularVelocity;
+			markPacketUpdate = true;
+		}
+
+		if (markPacketUpdate && ticks % 10 == 0)
+		{
+			sendRotationPacket();
+			markPacketUpdate = false;
+		}
+	}
+
+	private void sendRotationPacket()
+	{
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, angularVelocity), worldObj, new Vector3(this), 20);
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		angularVelocity = data.readFloat();
 	}
 
 	@Override
