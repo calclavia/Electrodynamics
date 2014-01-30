@@ -14,6 +14,7 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.MultiPartRegistry;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -38,7 +39,12 @@ public class ItemGear extends ItemMultipartBase
 
 			if (tile instanceof TileMultipart)
 			{
-				if (!(((TileMultipart) tile).partMap(side) instanceof PartGear))
+				TMultiPart occupyingPart = ((TileMultipart) tile).partMap(side);
+				TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
+
+				boolean clickedCenter = hit.mag() < 1;
+
+				if ((clickedCenter && centerPart instanceof PartGearShaft))
 				{
 					side = ForgeDirection.getOrientation(side).getOpposite().ordinal();
 				}

@@ -32,6 +32,8 @@ import resonantinduction.mechanical.process.BlockFilter;
 import resonantinduction.mechanical.process.BlockGrinderWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TileMixer;
+import resonantinduction.mechanical.turbine.BlockWindTurbine;
+import resonantinduction.mechanical.turbine.TileWindTurbine;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
@@ -74,6 +76,7 @@ public class Mechanical
 	// Energy
 	public static Item itemGear;
 	public static Item itemGearShaft;
+	public static Block mechanicalTurbine;
 
 	// Transport
 	public static Block blockConveyorBelt;
@@ -103,6 +106,7 @@ public class Mechanical
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
+		mechanicalTurbine = contentRegistry.createTile(BlockWindTurbine.class, TileWindTurbine.class);
 
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);

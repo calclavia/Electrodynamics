@@ -65,7 +65,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		{
 			IMechanical mechanical = it.next();
 			Object[] connections = mechanical.getConnections();
-
+			
 			for (int i = 0; i < connections.length; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
@@ -80,7 +80,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
 						long torque = mechanical.getTorque();
 
-						boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech)|| adjacentMech.inverseRotation(dir.getOpposite(), mechanical);
+						boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech) || adjacentMech.inverseRotation(dir.getOpposite(), mechanical);
 
 						int inversion = inverseRotation ? -1 : 1;
 

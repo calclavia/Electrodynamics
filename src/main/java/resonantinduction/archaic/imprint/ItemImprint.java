@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.TabRI;
 import resonantinduction.core.Settings;
 
 public class ItemImprint extends Item
@@ -29,7 +29,7 @@ public class ItemImprint extends Item
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
 		this.setUnlocalizedName(Reference.PREFIX + "imprint");
 		this.setTextureName(Reference.PREFIX + "imprint");
-		this.setCreativeTab(ResonantInductionTabs.CORE);
+		this.setCreativeTab(TabRI.CORE);
 		this.setHasSubtypes(true);
 		this.maxStackSize = 1;
 	}

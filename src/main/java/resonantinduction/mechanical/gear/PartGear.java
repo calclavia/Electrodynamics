@@ -168,7 +168,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			IMechanical instance = ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
 
-			if (instance != null && instance != this && instance.canConnect(placementSide, this))
+			if (instance != null && instance != this && instance.canConnect(placementSide.getOpposite(), this))
 			{
 				connections[placementSide.getOpposite().ordinal()] = instance;
 				getNetwork().merge(instance.getNetwork());

@@ -14,7 +14,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.ResonantInductionTabs;
+import resonantinduction.core.TabRI;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
@@ -134,7 +134,7 @@ public class Electrical
 		/**
 		 * Set reference itemstacks
 		 */
-		ResonantInductionTabs.ITEMSTACK = new ItemStack(itemTransformer);
+		TabRI.ITEMSTACK = new ItemStack(itemTransformer);
 
 		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
