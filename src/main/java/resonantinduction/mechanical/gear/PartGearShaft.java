@@ -189,7 +189,7 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return dir == placementSide.getOpposite() && !(with instanceof PartGearShaft);
+		return dir == placementSide && !(with instanceof PartGearShaft);
 	}
 
 }

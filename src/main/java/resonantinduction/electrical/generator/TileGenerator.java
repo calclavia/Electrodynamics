@@ -22,7 +22,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 	private IMechanicalNetwork network;
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
-	public boolean isInversed = false;
+	public boolean isInversed = true;
 	private int torqueRatio = 8000;
 
 	public TileGenerator()

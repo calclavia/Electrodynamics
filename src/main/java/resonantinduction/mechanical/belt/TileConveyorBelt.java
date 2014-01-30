@@ -163,7 +163,9 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		{
 			slantType = SlantType.NONE;
 		}
+
 		this.slantType = slantType;
+		refresh();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 

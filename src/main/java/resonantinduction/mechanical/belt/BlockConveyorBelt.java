@@ -305,7 +305,7 @@ public class BlockConveyorBelt extends BlockRI
 					if (slantType == SlantType.UP)
 					{
 						// We need at least 0.25 to move items up.
-						entity.motionY = maxSpeed * 2;// Math.max(0.25, maxSpeed);
+						entity.motionY = maxSpeed * 3;// Math.max(0.25, maxSpeed);
 					}
 					else if (slantType == SlantType.DOWN)
 					{
