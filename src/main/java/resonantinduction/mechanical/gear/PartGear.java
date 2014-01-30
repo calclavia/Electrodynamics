@@ -479,6 +479,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return !(with instanceof PartGearShaft);
+		return true;
 	}
 }

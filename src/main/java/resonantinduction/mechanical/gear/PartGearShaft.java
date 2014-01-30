@@ -43,6 +43,7 @@ public class PartGearShaft extends PartMechanical
 	public void preparePlacement(int side, int itemDamage)
 	{
 		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
+		// Unwind rotation. We can only have "3" axis.
 		this.placementSide = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
 	}
 
@@ -189,7 +190,12 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return dir == placementSide && !(with instanceof PartGearShaft);
+		if (placementSide.offsetY != 0 || placementSide.offsetZ != 0)
+		{
+			return dir == placementSide.getOpposite();
+		}
+
+		return dir == placementSide;
 	}
 
 }

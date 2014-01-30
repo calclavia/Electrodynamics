@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-import resonantinduction.mechanical.process.TileGrinderWheel;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
