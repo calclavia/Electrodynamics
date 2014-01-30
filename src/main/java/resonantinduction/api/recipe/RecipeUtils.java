@@ -78,6 +78,11 @@ public class RecipeUtils
 		{
 			super();
 			this.name = s;
+
+			if (OreDictionary.getOres(name).size() <= 0)
+			{
+				throw new RuntimeException("Added invalid OreDictResource recipe: " + name);
+			}
 		}
 
 		public OreDictResource(String s, float chance)

@@ -42,7 +42,6 @@ public class ItemHammer extends ItemRI
 					{
 						Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
 
-						// TODO: Fix multiple outputs.
 						for (Resource resource : outputs)
 						{
 							ItemStack outputStack = resource.getItemStack().copy();
