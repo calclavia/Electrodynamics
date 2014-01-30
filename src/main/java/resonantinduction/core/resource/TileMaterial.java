@@ -33,7 +33,8 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		clientColor = data.readInt();
+		name = data.readUTF();
+		clientColor = ResourceGenerator.materialColors.get(name);
 		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -42,7 +43,7 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 	{
 		if (name != null)
 		{
-			return ResonantInduction.PACKET_TILE.getPacket(this, ResourceGenerator.materialColors.get(name));
+			return ResonantInduction.PACKET_TILE.getPacket(this, name);
 		}
 
 		return null;

@@ -214,4 +214,14 @@ public class ResourceGenerator
 
 		return 0xFFFFFF;
 	}
+
+	public static int getID(String name)
+	{
+		return materialNames.indexOf(name);
+	}
+
+	public static String getName(int id)
+	{
+		return materialNames.size() > id ? materialNames.get(id) : null;
+	}
 }

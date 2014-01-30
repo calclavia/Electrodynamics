@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
@@ -29,10 +30,11 @@ public class BlockDust extends BlockRI
 {
 	public BlockDust()
 	{
-		super("dust", Material.iron);
+		super("dust", Material.sand);
 		setCreativeTab(null);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
-		setBlockBoundsForSnowDepth(0);
+		setBlockBoundsForDepth(0);
+		setHardness(0.5f);
 		setTextureName(Reference.PREFIX + "material_sand");
 	}
 
@@ -72,6 +74,7 @@ public class BlockDust extends BlockRI
 	 * the pool has been
 	 * cleared to be reused)
 	 */
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
 	{
 		int l = par1World.getBlockMetadata(par2, par3, par4) & 7;
@@ -85,6 +88,7 @@ public class BlockDust extends BlockRI
 	 * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this
 	 * block.
 	 */
+	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
@@ -94,6 +98,7 @@ public class BlockDust extends BlockRI
 	 * If this block doesn't render as an ordinary block it will return False (examples: signs,
 	 * buttons, stairs, etc)
 	 */
+	@Override
 	public boolean renderAsNormalBlock()
 	{
 		return false;
@@ -102,24 +107,26 @@ public class BlockDust extends BlockRI
 	/**
 	 * Sets the block's bounds for rendering it as an item
 	 */
+	@Override
 	public void setBlockBoundsForItemRender()
 	{
-		this.setBlockBoundsForSnowDepth(0);
+		this.setBlockBoundsForDepth(0);
 	}
 
 	/**
 	 * Updates the blocks bounds based on its current state. Args: world, x, y, z
 	 */
+	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
 	{
-		this.setBlockBoundsForSnowDepth(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+		this.setBlockBoundsForDepth(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
 	}
 
 	/**
 	 * calls setBlockBounds based on the depth of the snow. Int is any values 0x0-0x7, usually this
 	 * blocks metadata.
 	 */
-	protected void setBlockBoundsForSnowDepth(int par1)
+	protected void setBlockBoundsForDepth(int par1)
 	{
 		int j = par1 & 7;
 		float f = (float) (2 * (1 + j)) / 16.0F;
@@ -129,24 +136,38 @@ public class BlockDust extends BlockRI
 	/**
 	 * Returns the ID of the items to drop on destruction.
 	 */
+	@Override
 	public int idDropped(int par1, Random par2Random, int par3)
 	{
 		return ResonantInduction.itemRefinedDust.itemID;
 	}
 
-	/**
-	 * Returns the quantity of items to drop on block destruction.
-	 */
-	public int quantityDropped(Random par1Random)
+	@Override
+	public int idPicked(World par1World, int par2, int par3, int par4)
 	{
-		return 1;
+		return ResonantInduction.itemRefinedDust.itemID;
+	}
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return par1;
+	}
+
+	@Override
+	public int getDamageValue(World world, int x, int y, int z)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileMaterial)
+		{
+			return ResourceGenerator.getID(((TileMaterial) tileEntity).name);
+		}
+		return 0;
 	}
 
 	@SideOnly(Side.CLIENT)
-	/**
-	 * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
-	 * coordinates.  Args: blockAccess, x, y, z, side
-	 */
+	@Override
 	public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
 		return par5 == 1 ? true : super.shouldSideBeRendered(par1IBlockAccess, par2, par3, par4, par5);
