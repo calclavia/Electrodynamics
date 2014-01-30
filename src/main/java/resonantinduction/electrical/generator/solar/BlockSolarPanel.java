@@ -2,6 +2,7 @@ package resonantinduction.electrical.generator.solar;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -12,7 +13,8 @@ public class BlockSolarPanel extends BlockRI
 	public BlockSolarPanel()
 	{
 		super("solarPanel");
-		this.setBlockBounds(0, 0, 0, 1, 0.5f, 1);
+		setTextureName(Reference.PREFIX + "material_metal_side");
+		setBlockBounds(0, 0, 0, 1, 0.5f, 1);
 	}
 
 	@Override
