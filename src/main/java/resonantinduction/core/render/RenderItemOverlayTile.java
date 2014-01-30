@@ -45,14 +45,11 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		boolean isLooking = false;
 
-		if (player.isSneaking())
-		{
-			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+		MovingObjectPosition objectPosition = player.rayTrace(8, 1);
 
-			if (objectPosition != null)
-			{
-				isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
-			}
+		if (objectPosition != null)
+		{
+			isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
 		}
 
 		for (int i = 0; i < (matrixX * matrixZ); i++)
