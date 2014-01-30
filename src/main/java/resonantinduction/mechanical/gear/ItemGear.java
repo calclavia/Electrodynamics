@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.ItemMultipartBase;
+import resonantinduction.electrical.wire.EnumWireMaterial;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
@@ -23,6 +24,12 @@ public class ItemGear extends ItemMultipartBase
 	public ItemGear()
 	{
 		super("gear", Settings.getNextItemID());
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return super.getUnlocalizedName(itemStack) + "." + itemStack.getItemDamage();
 	}
 
 	@Override
