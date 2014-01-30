@@ -91,7 +91,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	public void checkClientUpdate()
 	{
-		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.1f)
+		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f)
 		{
 			prevAngularVelocity = angularVelocity;
 			markPacketUpdate = true;

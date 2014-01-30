@@ -25,6 +25,12 @@ import calclavia.lib.prefab.turbine.TileTurbine;
  */
 public class TileWindTurbine extends TileTurbine implements IMechanical
 {
+	public TileWindTurbine()
+	{
+		maxPower = 50;
+		torque = 50;
+	}
+
 	@Override
 	public void invalidate()
 	{
@@ -42,8 +48,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 			 */
 			if (getDirection().offsetY == 0)
 			{
-				power += getWindPower() * 10;
-				maxPower = 100;
+				power += getWindPower();
 			}
 		}
 
@@ -170,7 +175,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return true;
+		return false;
 	}
 
 	@Override

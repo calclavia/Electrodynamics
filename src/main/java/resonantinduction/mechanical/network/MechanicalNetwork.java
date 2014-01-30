@@ -65,7 +65,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		{
 			IMechanical mechanical = it.next();
 			Object[] connections = mechanical.getConnections();
-			
+
 			for (int i = 0; i < connections.length; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
