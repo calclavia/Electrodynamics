@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -16,6 +15,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -57,18 +57,23 @@ public class TileMixer extends TileMechanical
 		/**
 		 * Transform all water blocks into mixture blocks
 		 */
+		boolean foundTanks = true;
+
 		for (int x = -1; x < 1; x++)
 		{
 			for (int z = -1; z < 1; z++)
 			{
 				Vector3 checkVector = new Vector3(this).translate(x, 0, z);
 
-				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID || checkVector.getBlockID(worldObj) == Block.waterMoving.blockID)
+				if (!(checkVector.getTileEntity(worldObj) instanceof TileTank))
 				{
-					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 3);
+					foundTanks = false;
 				}
 			}
 		}
+
+		if (!foundTanks)
+			return;
 
 		// Search for an item to "process"
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);

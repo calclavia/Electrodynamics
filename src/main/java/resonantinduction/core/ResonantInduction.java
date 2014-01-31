@@ -11,7 +11,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -22,9 +21,6 @@ import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
-import resonantinduction.core.resource.fluid.BlockFluidMaterial;
-import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
@@ -81,12 +77,11 @@ public class ResonantInduction
 	public static ItemOreResource itemDust;
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockDust;
-	public static Block blockFluidMixture;
 	public static List<Block> blockFluidMaterial = new ArrayList<Block>();
 	public static Block blockGas;
 
-	public static Fluid fluidMixture;
-	public static List<Fluid> fluidMaterial = new ArrayList<Fluid>();
+	public static List<Fluid> fluidDustMixtures = new ArrayList<Fluid>();
+	public static List<Fluid> fluidMaterials = new ArrayList<Fluid>();
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
@@ -104,10 +99,6 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
-
-		fluidMixture = new Fluid("water");
-		FluidRegistry.registerFluid(fluidMixture);
-		blockFluidMixture = contentRegistry.createTile(BlockFluidMixture.class, TileFluidMixture.class);
 
 		/**
 		 * Melting dusts
@@ -166,7 +157,7 @@ public class ResonantInduction
 	@SideOnly(Side.CLIENT)
 	public void postTextureHook(TextureStitchEvent.Post event)
 	{
-		for (Fluid fluid : fluidMaterial)
+		for (Fluid fluid : fluidMaterials)
 			fluid.setIcons(loadedIconMap.get(Reference.PREFIX + "molten_flow"));
 	}
 }
