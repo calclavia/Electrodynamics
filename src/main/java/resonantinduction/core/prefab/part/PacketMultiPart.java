@@ -50,7 +50,7 @@ public class PacketMultiPart extends PacketType
 		int y = data.readInt();
 		int z = data.readInt();
 		TileEntity tileEntity = player.worldObj.getBlockTileEntity(x, y, z);
-		
+
 		if (tileEntity instanceof TileMultipart)
 		{
 			TMultiPart part = ((TileMultipart) tileEntity).partMap(data.readInt());

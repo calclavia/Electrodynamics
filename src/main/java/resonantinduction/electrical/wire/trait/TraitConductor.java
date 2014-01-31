@@ -113,7 +113,7 @@ public class TraitConductor extends TileMultipart implements IConductor
 				}
 			}
 		}
-		
+
 		if (partMap(PartMap.CENTER.ordinal()) instanceof IConductor)
 		{
 			return ((IConductor) partMap(PartMap.CENTER.ordinal())).onReceiveEnergy(from, receive, doReceive);

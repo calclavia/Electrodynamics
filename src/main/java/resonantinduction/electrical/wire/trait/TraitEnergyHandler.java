@@ -112,7 +112,7 @@ public class TraitEnergyHandler extends TileMultipart implements IEnergyHandler
 	@Override
 	public boolean canInterface(ForgeDirection from)
 	{
-		if (this.partMap(from.ordinal()) == null)
+		if (partMap(from.ordinal()) == null)
 		{
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{

@@ -53,13 +53,13 @@ public class PacketNetwork<C extends IConnector> extends PacketType
 		int y = data.readInt();
 		int z = data.readInt();
 		TileEntity tileEntity = player.worldObj.getBlockTileEntity(x, y, z);
-		System.out.println(tileEntity+" rec: "+new Vector3(x,y,z));
-		//TODO: Somehow this would receive the wrong coordinate once in a while...
+		System.out.println(tileEntity + " rec: " + new Vector3(x, y, z));
+		// TODO: Somehow this would receive the wrong coordinate once in a while...
 		if (tileEntity != null && connectorClass.isAssignableFrom(tileEntity.getClass()))
 		{
 			C instance = (C) ((C) tileEntity).getInstance(ForgeDirection.getOrientation(data.readInt()));
 			Object network = instance.getNetwork();
-			
+
 			if (network instanceof IPacketReceiver)
 			{
 				((IPacketReceiver) network).onReceivePacket(data, player, instance);

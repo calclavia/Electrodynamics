@@ -13,7 +13,6 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.mechanical.network.TileMechanical;

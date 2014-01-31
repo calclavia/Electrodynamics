@@ -29,7 +29,7 @@ public class ItemTransformer extends ItemMultipartBase
 
 		if (part != null)
 		{
-			int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 			int facing = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
 			part.preparePlacement(side, facing);
 		}

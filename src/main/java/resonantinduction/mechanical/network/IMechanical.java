@@ -23,6 +23,7 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with);
 
+	@Override
 	public IMechanical getInstance(ForgeDirection dir);
 
 	/**

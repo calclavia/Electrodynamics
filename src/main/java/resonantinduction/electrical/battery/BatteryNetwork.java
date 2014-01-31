@@ -20,7 +20,7 @@ public class BatteryNetwork extends Network<BatteryNetwork, TileBattery>
 		/**
 		 * Apply energy loss.
 		 */
-		double percentageLoss = Math.max(0, (1 - ((double) (getConnectors().size() * 6) / 100d)));
+		double percentageLoss = Math.max(0, (1 - (getConnectors().size() * 6 / 100d)));
 		long energyLoss = (long) (percentageLoss * 100);
 		totalEnergy -= energyLoss;
 
@@ -37,7 +37,7 @@ public class BatteryNetwork extends Network<BatteryNetwork, TileBattery>
 				if (battery != firstNode && !Arrays.asList(exclusion).contains(battery))
 				{
 					double percentage = ((double) battery.energy.getEnergyCapacity() / (double) totalCapacity);
-					long energyForBattery = (long) Math.round(totalEnergy * percentage);
+					long energyForBattery = Math.round(totalEnergy * percentage);
 					battery.energy.setEnergy(energyForBattery);
 					remainingEnergy -= energyForBattery;
 				}

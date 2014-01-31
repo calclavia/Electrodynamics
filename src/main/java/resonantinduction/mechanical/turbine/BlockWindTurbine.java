@@ -7,9 +7,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
-import resonantinduction.mechanical.network.IMechanical;
 import calclavia.lib.prefab.turbine.BlockTurbine;
-import calclavia.lib.prefab.turbine.TileTurbine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

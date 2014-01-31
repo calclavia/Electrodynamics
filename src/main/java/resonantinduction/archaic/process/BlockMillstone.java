@@ -1,6 +1,5 @@
 package resonantinduction.archaic.process;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,17 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
-import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.utility.inventory.InventoryUtility;
-import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

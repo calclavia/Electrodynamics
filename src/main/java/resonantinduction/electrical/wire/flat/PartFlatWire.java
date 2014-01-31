@@ -382,8 +382,8 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				{
 					// We found a wire! Merge networks!
 					this.connections[absDir] = tp;
-					
-					if(tp instanceof PartFlatWire)
+
+					if (tp instanceof PartFlatWire)
 					{
 						this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
 					}

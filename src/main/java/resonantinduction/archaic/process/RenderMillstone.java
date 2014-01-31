@@ -2,7 +2,6 @@ package resonantinduction.archaic.process;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

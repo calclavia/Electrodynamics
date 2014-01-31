@@ -55,50 +55,50 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				 * Leak the fluid down.
 				 */
 				/*
-				BlockFluidMixture fluidBlock = (BlockFluidMixture) ResonantInduction.blockFluidMixture;
-				int amount = fluidBlock.getQuantaValue(world, x, y, z);
-
-				/**
+				 * BlockFluidMixture fluidBlock = (BlockFluidMixture)
+				 * ResonantInduction.blockFluidMixture;
+				 * int amount = fluidBlock.getQuantaValue(world, x, y, z);
+				 * /**
 				 * All fluid is filtered out, spawn all the items.
-				 *
-				 if (amount <= 1)
-				{
-					System.out.println("filter dropped");
-					for (ItemStack itemStack : ((TileFluidMixture) tileAbove).items)
-					{
-						for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack))
-						{
-							InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
-						}
-					}
-				}
-
-				int remaining = amount - 1;
-
-				/**
+				 * if (amount <= 1)
+				 * {
+				 * System.out.println("filter dropped");
+				 * for (ItemStack itemStack : ((TileFluidMixture) tileAbove).items)
+				 * {
+				 * for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER,
+				 * itemStack))
+				 * {
+				 * InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5),
+				 * resoure.getItemStack().copy());
+				 * }
+				 * }
+				 * }
+				 * int remaining = amount - 1;
+				 * /**
 				 * Remove liquid from top.
-				 *
-				if (remaining > 0)
-				{
-					fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
-					world.scheduleBlockUpdate(x, y, z, blockID, 20);
-				}
-				else
-				{
-					checkAbove.setBlock(world, 0);
-				}
-
-				/**
+				 * if (remaining > 0)
+				 * {
+				 * fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(),
+				 * checkAbove.intZ(), remaining);
+				 * world.scheduleBlockUpdate(x, y, z, blockID, 20);
+				 * }
+				 * else
+				 * {
+				 * checkAbove.setBlock(world, 0);
+				 * }
+				 * /**
 				 * Add liquid to bottom.
-				 *			
-				if (checkBelow.getBlockID(world) == ResonantInduction.blockFluidMixture.blockID)
-				{
-					fluidBlock.setQuanta(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ(), fluidBlock.getQuantaValue(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) + 1);
-				}
-				else
-				{
-					checkBelow.setBlock(world, Block.waterStill.blockID, 3);
-				}*/
+				 * if (checkBelow.getBlockID(world) == ResonantInduction.blockFluidMixture.blockID)
+				 * {
+				 * fluidBlock.setQuanta(world, checkBelow.intX(), checkBelow.intY(),
+				 * checkBelow.intZ(), fluidBlock.getQuantaValue(world, checkBelow.intX(),
+				 * checkBelow.intY(), checkBelow.intZ()) + 1);
+				 * }
+				 * else
+				 * {
+				 * checkBelow.setBlock(world, Block.waterStill.blockID, 3);
+				 * }
+				 */
 			}
 		}
 	}
