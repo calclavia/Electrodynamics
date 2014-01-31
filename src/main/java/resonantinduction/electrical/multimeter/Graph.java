@@ -13,24 +13,29 @@ import net.minecraft.nbt.NBTTagList;
  * @author Calclavia
  * 
  */
-public class Graph
+public abstract class Graph<V extends Comparable<V>>
 {
 	private final int maxPoints;
 
 	/**
 	 * Each point represents a tick.
 	 */
-	private List<Long> points = new ArrayList<Long>();
-	private long peak;
+	protected List<V> points = new ArrayList<V>();
+	private V peak;
+
+	/**
+	 * Queue for the next update to insert into the graph.
+	 */
+	protected V queue;
 
 	public Graph(int maxPoints)
 	{
 		this.maxPoints = maxPoints;
 	}
 
-	public void add(long y)
+	public void add(V y)
 	{
-		if (y > peak)
+		if (y.compareTo(peak) > 0)
 		{
 			peak = y;
 		}
@@ -41,47 +46,34 @@ public class Graph
 		{
 			if (points.get(maxPoints) == peak)
 			{
-				peak = 0;
+				peak = getDefault();
 			}
+
 			points.remove(maxPoints);
 		}
 	}
 
-	public long getPeak()
+	public V getPeak()
 	{
 		return peak;
 	}
 
-	public long get(int x)
+	public V get(int x)
 	{
-		return points.size() > x ? points.get(x) : 0;
+		return points.size() > x ? points.get(x) : getDefault();
 	}
 
-	public void load(NBTTagCompound nbt)
-	{
-		NBTTagList nbtList = nbt.getTagList("DataPoints");
+	public abstract void queue(V value);
 
-		for (int i = 0; i < nbtList.tagCount(); ++i)
-		{
-			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
-			points.add(nbtPoint.getLong("data"));
-		}
+	public void doneQueue()
+	{
+		add(queue);
 	}
 
-	public NBTTagCompound save()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTTagList data = new NBTTagList();
+	public abstract V getDefault();
 
-		for (long value : points)
-		{
-			NBTTagCompound nbtPoint = new NBTTagCompound();
-			nbtPoint.setLong("data", value);
+	public abstract void load(NBTTagCompound nbt);
 
-			data.appendTag(nbtPoint);
-		}
+	public abstract NBTTagCompound save();
 
-		nbt.setTag("DataPoints", data);
-		return nbt;
-	}
 }

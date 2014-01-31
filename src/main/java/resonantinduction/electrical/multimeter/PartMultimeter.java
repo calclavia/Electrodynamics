@@ -18,6 +18,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.battery.TileBattery;
+import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
@@ -206,7 +207,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					break;
 			}
 
-			getNetwork().updateGraph(detectedEnergy, getDetectedCapacity());
+			getNetwork().markUpdate();
 
 			if (ticks % 10 == 0)
 			{
@@ -216,7 +217,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					tile().notifyPartChange(this);
 				}
 
-				if (getNetwork().valueGraph.get(1) != detectedEnergy)
+				if (getNetwork().energyGraph.get(1) != detectedEnergy)
 				{
 					updateGraph();
 				}
@@ -230,6 +231,41 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 				updateGraph();
 			}
 		}
+	}
+
+	public void updateDetections()
+	{
+		ForgeDirection receivingSide = getDirection().getOpposite();
+		TileEntity tileEntity = getDetectedTile();
+
+		if (tileEntity instanceof IConductor)
+		{
+			IConnector<IEnergyNetwork> conductor = ((IConductor) tileEntity).getInstance(receivingSide.getOpposite());
+
+			if (conductor == null)
+			{
+				conductor = ((IConductor) tileEntity).getInstance(ForgeDirection.UNKNOWN);
+			}
+
+			if (conductor != null)
+			{
+				// TODO: Conductor may always return null in some cases.
+				IEnergyNetwork network = conductor.getNetwork();
+				getNetwork().energyGraph.queue(network.getLastBuffer());
+			}
+		}
+
+		if (tileEntity instanceof IMechanical)
+		{
+			IMechanical instance = ((IMechanical) tileEntity).getInstance(receivingSide);
+
+			if (instance != null)
+			{
+				getNetwork().energyGraph.queue((long) (instance.getTorque() * instance.getAngularVelocity()));
+			}
+		}
+
+		CompatibilityModule.getEnergy(tileEntity, receivingSide);
 	}
 
 	@Override
@@ -257,8 +293,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void writeGraph(MCDataOutput packet)
 	{
 		packet.writeByte(2);
-		packet.writeNBTTagCompound(getNetwork().valueGraph.save());
-		packet.writeNBTTagCompound(getNetwork().capacityGraph.save());
+		packet.writeNBTTagCompound(getNetwork().save());
 	}
 
 	@Override
@@ -284,8 +319,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 		else if (packetID == 2)
 		{
-			getNetwork().valueGraph.load(packet.readNBTTagCompound());
-			getNetwork().capacityGraph.load(packet.readNBTTagCompound());
+			getNetwork().load(packet.readNBTTagCompound());
 		}
 	}
 
@@ -327,6 +361,16 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 				// TODO: Conductor may always return null in some cases.
 				IEnergyNetwork network = conductor.getNetwork();
 				return network.getLastBuffer();
+			}
+		}
+
+		if (tileEntity instanceof IMechanical)
+		{
+			IMechanical instance = ((IMechanical) tileEntity).getInstance(side);
+
+			if (instance != null)
+			{
+				return (long) (instance.getTorque() * instance.getAngularVelocity());
 			}
 		}
 

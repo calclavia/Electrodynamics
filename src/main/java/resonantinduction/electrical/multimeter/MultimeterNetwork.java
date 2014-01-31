@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
@@ -12,8 +14,13 @@ import universalelectricity.core.net.NetworkTickHandler;
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {
 	public final List<String> displayInformation = new ArrayList<String>();
-	public Graph valueGraph = new Graph(20 * 10);
-	public Graph capacityGraph = new Graph(20 * 10);
+
+	/**
+	 * The available graphs to be handled.
+	 */
+	private final List<Graph> graphs = new ArrayList<Graph>();
+	public final GraphL energyGraph = new GraphL(20 * 10);
+	public final GraphL energyCapacityGraph = new GraphL(20 * 10);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -40,6 +47,12 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 */
 	public boolean isEnabled = true;
 
+	public MultimeterNetwork()
+	{
+		graphs.add(energyGraph);
+		graphs.add(energyCapacityGraph);
+	}
+
 	@Override
 	public void addConnector(PartMultimeter connector)
 	{
@@ -50,12 +63,14 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	@Override
 	public void update()
 	{
-		valueGraph.add(queueGraphValue);
-		queueGraphValue = 0;
-		capacityGraph.add(queueGraphCapacity);
-		queueGraphCapacity = 0;
-		displayInformation.clear();
+		energyGraph.doneQueue();
+		energyCapacityGraph.doneQueue();
 		doUpdate = false;
+	}
+
+	public void markUpdate()
+	{
+		doUpdate = true;
 	}
 
 	@Override
@@ -68,13 +83,6 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public boolean continueUpdate()
 	{
 		return getConnectors().size() > 0;
-	}
-
-	public void updateGraph(long detectedValue, long detectedCapcity)
-	{
-		queueGraphValue += detectedValue;
-		queueGraphCapacity += detectedCapcity;
-		doUpdate = true;
 	}
 
 	@Override
@@ -111,7 +119,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 			connector.updateDesc();
 			connector.updateGraph();
 		}
-		
+
 		doUpdate = true;
 	}
 
@@ -140,4 +148,29 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		return new MultimeterNetwork();
 	}
 
+	public void load(NBTTagCompound nbt)
+	{
+		NBTTagList nbtList = nbt.getTagList("graphs");
+
+		for (int i = 0; i < nbtList.tagCount(); ++i)
+		{
+			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
+			graphs.get(i).load(nbtPoint);
+		}
+	}
+
+	public NBTTagCompound save()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagList data = new NBTTagList();
+
+		for (Graph graph : graphs)
+		{
+			data.appendTag(graph.save());
+		}
+
+		nbt.setTag("graphs", data);
+
+		return nbt;
+	}
 }

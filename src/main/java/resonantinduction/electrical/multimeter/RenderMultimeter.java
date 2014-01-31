@@ -149,12 +149,12 @@ public class RenderMultimeter
 
 			// TODO: Add other dispaly info support.
 			List<String> information = new ArrayList<String>();
-			information.add(UnitDisplay.getDisplay(part.getNetwork().valueGraph.get(0), Unit.JOULES));
+			information.add(UnitDisplay.getDisplay(part.getNetwork().energyGraph.get(0), Unit.JOULES));
 
-			if (part.getNetwork().capacityGraph.get(0) > 0)
+			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
 			{
 				String str = information.get(0);
-				str = str + "/" + UnitDisplay.getDisplay(part.getNetwork().capacityGraph.get(0), Unit.JOULES);
+				str = str + "/" + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES);
 				information.set(0, str);
 			}
 
