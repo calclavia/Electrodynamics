@@ -5,7 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -39,14 +41,20 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ResourceGenerator
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
+	public static final Set<String> oreDictBlackList = new HashSet<String>();
 	public static final List<String> materialNames = new ArrayList<String>();
 	public static final HashMap<String, Integer> materialColors = new HashMap<String, Integer>();
-	public static final HashMap<Item, Integer> itemColorMap = new HashMap<Item, Integer>();
+	private static final HashMap<Icon, Integer> iconColorMap = new HashMap<Icon, Integer>();
+
+	static
+	{
+		oreDictBlackList.add("ingotRefinedIron");
+	}
 
 	@ForgeSubscribe
 	public void oreRegisterEvent(OreRegisterEvent evt)
 	{
-		if (evt.Name.startsWith("ingot"))
+		if (evt.Name.startsWith("ingot") && !oreDictBlackList.contains(evt.Name))
 		{
 			String materialName = evt.Name.replace("ingot", "");
 
@@ -153,14 +161,15 @@ public class ResourceGenerator
 		int colorCount = 0;
 		Item item = itemStack.getItem();
 
-		if (itemColorMap.containsKey(item))
-		{
-			return itemColorMap.get(item);
-		}
-
 		try
 		{
 			Icon icon = item.getIconIndex(itemStack);
+
+			if (iconColorMap.containsKey(icon))
+			{
+				return iconColorMap.get(icon);
+			}
+
 			String iconString = icon.getIconName();
 
 			if (iconString != null && !iconString.contains("MISSING_ICON_ITEM"))
@@ -181,9 +190,9 @@ public class ResourceGenerator
 						Color rgb = new Color(bufferedimage.getRGB(x, y));
 
 						/**
-						 * Ignore things that are too dark.per ITU-R BT.709
+						 * Ignore things that are too dark. Standard luma calculation.
 						 */
-						double luma = 0.2126 * rgb.getRed() + 0.7152 * rgb.getGreen() + 0.0722 * rgb.getGreen();
+						double luma = 0.2126 * rgb.getRed() + 0.7152 * rgb.getGreen() + 0.0722 * rgb.getBlue();
 
 						if (luma > 40)
 						{
@@ -195,21 +204,20 @@ public class ResourceGenerator
 					}
 				}
 			}
+
+			if (colorCount > 0)
+			{
+				totalR /= colorCount;
+				totalG /= colorCount;
+				totalB /= colorCount;
+				int averageColor = new Color(totalR, totalG, totalB).brighter().getRGB();
+				iconColorMap.put(icon, averageColor);
+				return averageColor;
+			}
 		}
 		catch (Exception e)
 		{
 			ResonantInduction.LOGGER.fine("Failed to compute colors for: " + item);
-			// e.printStackTrace();
-		}
-
-		if (colorCount > 0)
-		{
-			totalR /= colorCount;
-			totalG /= colorCount;
-			totalB /= colorCount;
-			int averageColor = new Color(totalR, totalG, totalB).brighter().getRGB();
-			itemColorMap.put(item, averageColor);
-			return averageColor;
 		}
 
 		return 0xFFFFFF;

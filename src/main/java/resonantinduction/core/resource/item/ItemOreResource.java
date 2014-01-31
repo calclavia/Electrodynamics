@@ -42,13 +42,6 @@ public class ItemOreResource extends ItemRI
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
-	{
-		// par3List.add("TEST" +
-		// itemStack.getTagCompound().equals(getStackFromMaterial(getMaterialFromStack(itemStack)).getTagCompound()));
-	}
-
-	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
 		String dustName = getMaterialFromStack(is);
