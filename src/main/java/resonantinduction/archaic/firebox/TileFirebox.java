@@ -56,7 +56,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 
 	public TileFirebox()
 	{
-		energy = new EnergyStorageHandler(POWER * 4, POWER * 2);
+		energy = new EnergyStorageHandler(POWER * 2, POWER / 20);
 		setIO(ForgeDirection.UP, 0);
 	}
 
@@ -68,7 +68,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 			if (energy.checkExtract())
 			{
 				energy.extractEnergy();
-				burnTime += 2;
+				burnTime += 1;
 			}
 			else if (canBurn(this.getStackInSlot(0)))
 			{
