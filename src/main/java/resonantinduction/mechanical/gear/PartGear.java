@@ -206,6 +206,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			displaceCheck = 2;
 		}
+
 		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
 		for (int i = 0; i < 4; i++)
 		{
@@ -216,7 +217,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
 
-				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance instanceof PartGearShaft))
 				{
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());

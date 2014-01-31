@@ -26,7 +26,7 @@ public class BlockHotPlate extends BlockRI
 
 	public BlockHotPlate()
 	{
-		super("hotPlate", Material.wood);
+		super("hotPlate", Material.rock);
 		setBlockBounds(0, 0, 0, 1, 0.2f, 1);
 		setTickRandomly(true);
 	}
