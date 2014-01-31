@@ -121,6 +121,11 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		writeDesc(getWriteStream());
 	}
 
+	public void updateGraph()
+	{
+		writeGraph(getWriteStream());
+	}
+
 	@Override
 	public void onWorldJoin()
 	{
@@ -176,7 +181,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		if (!world().isRemote)
 		{
-			long detectedEnergy = doGetDetectedEnergy();
+			long detectedEnergy = getDetectedEnergy();
 
 			boolean outputRedstone = false;
 
@@ -201,7 +206,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					break;
 			}
 
-			getNetwork().updateGraph(detectedEnergy, 0);
+			getNetwork().updateGraph(detectedEnergy, getDetectedCapacity());
 
 			if (ticks % 10 == 0)
 			{
@@ -211,9 +216,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					tile().notifyPartChange(this);
 				}
 
-				if (getNetwork().graph.get(1) != detectedEnergy)
+				if (getNetwork().valueGraph.get(1) != detectedEnergy)
 				{
-					writeGraph(getWriteStream());
+					updateGraph();
 				}
 			}
 		}
@@ -222,7 +227,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			for (EntityPlayer player : playersUsing)
 			{
-				writeGraph(getWriteStream());
+				updateGraph();
 			}
 		}
 	}
@@ -252,7 +257,8 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void writeGraph(MCDataOutput packet)
 	{
 		packet.writeByte(2);
-		packet.writeNBTTagCompound(getNetwork().graph.save());
+		packet.writeNBTTagCompound(getNetwork().valueGraph.save());
+		packet.writeNBTTagCompound(getNetwork().capacityGraph.save());
 	}
 
 	@Override
@@ -278,7 +284,8 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 		else if (packetID == 2)
 		{
-			getNetwork().graph.load(packet.readNBTTagCompound());
+			getNetwork().valueGraph.load(packet.readNBTTagCompound());
+			getNetwork().capacityGraph.load(packet.readNBTTagCompound());
 		}
 	}
 
@@ -288,7 +295,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		toggleMode();
 	}
 
-	public long doGetDetectedEnergy()
+	public long getDetectedEnergy()
 	{
 		return getDetectedEnergy(getDirection().getOpposite(), getDetectedTile());
 	}
@@ -324,6 +331,16 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 
 		return CompatibilityModule.getEnergy(tileEntity, side);
+	}
+
+	public long getDetectedCapacity()
+	{
+		return getDetectedCapacity(getDirection().getOpposite(), getDetectedTile());
+	}
+
+	public static long getDetectedCapacity(ForgeDirection side, TileEntity tileEntity)
+	{
+		return CompatibilityModule.getMaxEnergy(tileEntity, side);
 	}
 
 	public void toggleMode()

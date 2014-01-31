@@ -12,7 +12,8 @@ import universalelectricity.core.net.NetworkTickHandler;
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {
 	public final List<String> displayInformation = new ArrayList<String>();
-	public Graph graph = new Graph(20 * 10);
+	public Graph valueGraph = new Graph(20 * 10);
+	public Graph capacityGraph = new Graph(20 * 10);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -49,8 +50,9 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	@Override
 	public void update()
 	{
-		graph.add(queueGraphValue);
+		valueGraph.add(queueGraphValue);
 		queueGraphValue = 0;
+		capacityGraph.add(queueGraphCapacity);
 		queueGraphCapacity = 0;
 		displayInformation.clear();
 		doUpdate = false;
@@ -107,6 +109,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		{
 			PartMultimeter connector = it.next();
 			connector.updateDesc();
+			connector.updateGraph();
 		}
 		
 		doUpdate = true;

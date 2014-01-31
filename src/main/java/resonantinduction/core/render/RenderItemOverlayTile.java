@@ -57,13 +57,15 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			if (inventory[i] != null)
 			{
 				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ))).translate(-0.5);
+				translation.scale(0.9);
+				translation.translate(0, 0, 0.06);
 				GL11.glPushMatrix();
 				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
 				RenderUtility.rotateBlockBasedOnDirection(dir);
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0.2f), 0, 1);
+				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
 				GL11.glPopMatrix();
 
 				if (isLooking)
@@ -187,13 +189,10 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
 
-			if (entityItem != null)
-			{
-				boolean fancyGraphics = RenderManager.instance.options.fancyGraphics;
-				RenderManager.instance.options.fancyGraphics = true;
-				renderItem.doRenderItem(entityItem, 0, 0, 0, 0, 0);
-				RenderManager.instance.options.fancyGraphics = fancyGraphics;
-			}
+			boolean fancyGraphics = RenderManager.instance.options.fancyGraphics;
+			RenderManager.instance.options.fancyGraphics = true;
+			renderItem.doRenderItem(entityItem, 0, 0, 0, 0, 0);
+			RenderManager.instance.options.fancyGraphics = fancyGraphics;
 
 			GL11.glPopMatrix();
 		}

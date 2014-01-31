@@ -1,5 +1,8 @@
 package resonantinduction.electrical.multimeter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -78,13 +81,17 @@ public class RenderMultimeter
 
 	public static void render(PartMultimeter part, double x, double y, double z)
 	{
+		ForgeDirection dir = part.getDirection();
+
+		/**
+		 * Render the shell of the multimeter.
+		 */
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 		RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
 		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, ResonantInduction.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
-		ForgeDirection dir = part.getDirection();
 		final int metadata = 8;
 		// Render edges
 		// UP
@@ -140,18 +147,33 @@ public class RenderMultimeter
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 			GL11.glTranslated(0, 0.05, 0);
 
-			for (int i = 0; i < 1; i++)
-			{
-				// TODO: Add other dispaly info support.
-				String display = UnitDisplay.getDisplay(part.getNetwork().graph.get(0), Unit.JOULES);
+			// TODO: Add other dispaly info support.
+			List<String> information = new ArrayList<String>();
+			information.add(UnitDisplay.getDisplay(part.getNetwork().valueGraph.get(0), Unit.JOULES));
 
-				if (dir.offsetX == 0)
-					RenderUtility.renderText(display, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
-				if (dir.offsetZ == 0)
-					RenderUtility.renderText(display, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
+			if (part.getNetwork().capacityGraph.get(0) > 0)
+			{
+				String str = information.get(0);
+				str = str + "/" + UnitDisplay.getDisplay(part.getNetwork().capacityGraph.get(0), Unit.JOULES);
+				information.set(0, str);
 			}
+
+			for (int i = 0; i < information.size(); i++)
+			{
+				String info = information.get(i);
+
+				GL11.glPushMatrix();
+				GL11.glTranslatef(0, 0, 0.3f * i);
+				if (dir.offsetX == 0)
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
+				if (dir.offsetZ == 0)
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
+				GL11.glPopMatrix();
+			}
+
 			GL11.glPopMatrix();
 		}
+
 	}
 
 }

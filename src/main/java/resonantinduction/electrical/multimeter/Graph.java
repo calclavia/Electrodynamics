@@ -64,7 +64,7 @@ public class Graph
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
 			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
-			add(nbtPoint.getLong("data"));
+			points.add(nbtPoint.getLong("data"));
 		}
 	}
 
