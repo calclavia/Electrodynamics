@@ -164,13 +164,6 @@ public class BlockHotPlate extends BlockRI
 	}
 
 	@Override
-	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		par3List.add(new ItemStack(par1, 1, 0));
-		par3List.add(new ItemStack(par1, 1, 1));
-	}
-
-	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileHotPlate();

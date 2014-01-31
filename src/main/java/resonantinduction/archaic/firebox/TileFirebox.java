@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -16,10 +17,11 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.TileExternalInventory;
+import calclavia.lib.prefab.tile.TileElectricalInventory;
 import calclavia.lib.thermal.BoilEvent;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -30,7 +32,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileFirebox extends TileExternalInventory implements IPacketSender, IPacketReceiver
+public class TileFirebox extends TileElectricalInventory implements IPacketSender, IPacketReceiver
 {
 	/**
 	 * One coal = 4MJ, one coal lasts 80 seconds. Therefore, we are producing 50000 watts.
@@ -52,11 +54,32 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 	private final long requiredMeltIronEnergy = 4781700 + 1904000;
 	private long heatEnergy = 0;
 
+	public TileFirebox()
+	{
+		energy = new EnergyStorageHandler(POWER * 4, POWER * 2);
+		setIO(ForgeDirection.UP, 0);
+	}
+
 	@Override
 	public void updateEntity()
 	{
 		if (!worldObj.isRemote)
 		{
+			if (energy.checkExtract())
+			{
+				energy.extractEnergy();
+				burnTime += 2;
+			}
+			else if (canBurn(this.getStackInSlot(0)))
+			{
+				if (burnTime == 0)
+				{
+					burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0));
+					decrStackSize(0, 1);
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				}
+			}
+
 			int blockID = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
 
 			if (burnTime > 0)
@@ -124,17 +147,18 @@ public class TileFirebox extends TileExternalInventory implements IPacketSender,
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
 			}
-
-			if (canBurn(this.getStackInSlot(0)))
-			{
-				if (burnTime == 0)
-				{
-					burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0));
-					decrStackSize(0, 1);
-					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-				}
-			}
 		}
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return isElectrical() && super.canConnect(direction);
+	}
+
+	public boolean isElectrical()
+	{
+		return this.getBlockMetadata() == 1;
 	}
 
 	public boolean canBurn(ItemStack stack)

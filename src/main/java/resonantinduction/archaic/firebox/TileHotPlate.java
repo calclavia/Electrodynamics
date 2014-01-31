@@ -15,7 +15,7 @@ import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileElectricalInventory;
+import calclavia.lib.prefab.tile.TileExternalInventory;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,7 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileHotPlate extends TileElectricalInventory implements IPacketSender, IPacketReceiver
+public class TileHotPlate extends TileExternalInventory implements IPacketSender, IPacketReceiver
 {
 	private final int POWER = 50000;
 	public final int[] smeltTime = new int[] { 0, 0, 0, 0 };
@@ -35,8 +35,6 @@ public class TileHotPlate extends TileElectricalInventory implements IPacketSend
 	public TileHotPlate()
 	{
 		maxSlots = 4;
-		energy = new EnergyStorageHandler(POWER * 2, POWER);
-		setIO(ForgeDirection.UP, 0);
 	}
 
 	@Override
@@ -83,11 +81,6 @@ public class TileHotPlate extends TileElectricalInventory implements IPacketSend
 					smeltTime[i] = 0;
 				}
 			}
-
-			if (didSmelt)
-			{
-				energy.extractEnergy();
-			}
 		}
 	}
 
@@ -125,37 +118,20 @@ public class TileHotPlate extends TileElectricalInventory implements IPacketSend
 		}
 	}
 
-	public boolean isElectrical()
-	{
-		return this.getBlockMetadata() == 1;
-	}
-
 	public boolean canRun()
 	{
-		if (isElectrical())
-		{
-			return energy.checkExtract();
-		}
-		else
-		{
-			TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
 
-			if (tileEntity instanceof TileFirebox)
+		TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord);
+
+		if (tileEntity instanceof TileFirebox)
+		{
+			if (((TileFirebox) tileEntity).isBurning())
 			{
-				if (((TileFirebox) tileEntity).isBurning())
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return isElectrical() && super.canConnect(direction);
 	}
 
 	public boolean canSmelt(ItemStack stack)
