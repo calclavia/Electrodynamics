@@ -177,17 +177,23 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 	{
 		if (itemStack != null)
 		{
-			EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemStack.copy());
-			entityitem.getEntityItem().stackSize = 1;
-			entityitem.hoverStart = 0.0F;
+			EntityItem entityItem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemStack.copy());
+			entityItem.getEntityItem().stackSize = 1;
+			entityItem.hoverStart = 0.0F;
 			GL11.glPushMatrix();
 			GL11.glTranslated(-0.453125F * dir.offsetX + position.x, position.y, -0.453125F * dir.offsetZ + position.z);
 			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(90 * angle, 1, 0, 0);
 
-			RenderItem.renderInFrame = true;
-			RenderManager.instance.renderEntityWithPosYaw(entityitem, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
-			RenderItem.renderInFrame = false;
+			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+
+			if (entityItem != null)
+			{
+				boolean fancyGraphics = RenderManager.instance.options.fancyGraphics;
+				RenderManager.instance.options.fancyGraphics = true;
+				renderItem.doRenderItem(entityItem, 0, 0, 0, 0, 0);
+				RenderManager.instance.options.fancyGraphics = fancyGraphics;
+			}
 
 			GL11.glPopMatrix();
 		}
