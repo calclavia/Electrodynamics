@@ -31,6 +31,11 @@ public class ItemMultimeter extends ItemMultipartBase
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
+		if (side <= 1)
+		{
+			return null;
+		}
+
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)
