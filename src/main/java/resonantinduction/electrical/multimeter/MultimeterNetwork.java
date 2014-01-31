@@ -18,9 +18,12 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	/**
 	 * The available graphs to be handled.
 	 */
+	private int maxData = 20 * 10;
 	private final List<Graph> graphs = new ArrayList<Graph>();
-	public final GraphL energyGraph = new GraphL(20 * 10);
-	public final GraphL energyCapacityGraph = new GraphL(20 * 10);
+	public final GraphL energyGraph = new GraphL(maxData);
+	public final GraphL energyCapacityGraph = new GraphL(1);
+	public final GraphL torqueGraph = new GraphL(maxData);
+	public final GraphF angularVelocityGraph = new GraphF(maxData);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -51,6 +54,8 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		graphs.add(energyGraph);
 		graphs.add(energyCapacityGraph);
+		graphs.add(torqueGraph);
+		graphs.add(angularVelocityGraph);
 	}
 
 	@Override
@@ -63,8 +68,11 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	@Override
 	public void update()
 	{
-		energyGraph.doneQueue();
-		energyCapacityGraph.doneQueue();
+		for (Graph graph : graphs)
+		{
+			graph.doneQueue();
+		}
+
 		doUpdate = false;
 	}
 
@@ -154,8 +162,8 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
-			graphs.get(i).load(nbtPoint);
+			NBTTagCompound nbtCompound = (NBTTagCompound) nbtList.tagAt(i);
+			graphs.get(i).load(nbtCompound);
 		}
 	}
 

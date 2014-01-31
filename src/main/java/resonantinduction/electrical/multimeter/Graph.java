@@ -21,12 +21,12 @@ public abstract class Graph<V extends Comparable<V>>
 	 * Each point represents a tick.
 	 */
 	protected List<V> points = new ArrayList<V>();
-	private V peak;
+	private V peak = getDefault();
 
 	/**
 	 * Queue for the next update to insert into the graph.
 	 */
-	protected V queue;
+	protected V queue = getDefault();
 
 	public Graph(int maxPoints)
 	{
@@ -63,6 +63,11 @@ public abstract class Graph<V extends Comparable<V>>
 		return points.size() > x ? points.get(x) : getDefault();
 	}
 
+	public V get()
+	{
+		return get(0);
+	}
+
 	public abstract void queue(V value);
 
 	public void doneQueue()
@@ -70,9 +75,12 @@ public abstract class Graph<V extends Comparable<V>>
 		add(queue);
 	}
 
-	public abstract V getDefault();
+	protected abstract V getDefault();
 
-	public abstract void load(NBTTagCompound nbt);
+	public void load(NBTTagCompound nbt)
+	{
+		points.clear();
+	}
 
 	public abstract NBTTagCompound save();
 

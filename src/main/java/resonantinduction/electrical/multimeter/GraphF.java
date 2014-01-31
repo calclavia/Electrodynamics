@@ -3,15 +3,15 @@ package resonantinduction.electrical.multimeter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class GraphL extends Graph<Long>
+public class GraphF extends Graph<Float>
 {
-	public GraphL(int maxPoints)
+	public GraphF(int maxPoints)
 	{
 		super(maxPoints);
 	}
 
 	@Override
-	public void queue(Long value)
+	public void queue(Float value)
 	{
 		queue += value;
 	}
@@ -19,24 +19,25 @@ public class GraphL extends Graph<Long>
 	public void doneQueue()
 	{
 		super.doneQueue();
-		queue = 0L;
+		queue = 0f;
 	}
 
 	@Override
-	public Long getDefault()
+	public Float getDefault()
 	{
-		return 0L;
+		return 0f;
 	}
 
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
+
 		NBTTagList nbtList = nbt.getTagList("DataPoints");
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
 			NBTTagCompound nbtPoint = (NBTTagCompound) nbtList.tagAt(i);
-			points.add(nbtPoint.getLong("data"));
+			points.add(nbtPoint.getFloat("data"));
 		}
 	}
 
@@ -45,10 +46,10 @@ public class GraphL extends Graph<Long>
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagList data = new NBTTagList();
 
-		for (long value : points)
+		for (Float value : points)
 		{
 			NBTTagCompound nbtPoint = new NBTTagCompound();
-			nbtPoint.setLong("data", value);
+			nbtPoint.setFloat("data", value);
 			data.appendTag(nbtPoint);
 		}
 

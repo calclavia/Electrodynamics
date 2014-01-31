@@ -182,7 +182,8 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		if (!world().isRemote)
 		{
-			long detectedEnergy = getDetectedEnergy();
+			updateDetections();
+			long detectedEnergy = getNetwork().energyGraph.get(0);
 
 			boolean outputRedstone = false;
 
@@ -217,7 +218,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					tile().notifyPartChange(this);
 				}
 
-				if (getNetwork().energyGraph.get(1) != detectedEnergy)
+				// if (getNetwork().energyGraph.get(1) != detectedEnergy)
 				{
 					updateGraph();
 				}
@@ -238,6 +239,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		ForgeDirection receivingSide = getDirection().getOpposite();
 		TileEntity tileEntity = getDetectedTile();
 
+		/**
+		 * Update Energy Graph
+		 */
 		if (tileEntity instanceof IConductor)
 		{
 			IConnector<IEnergyNetwork> conductor = ((IConductor) tileEntity).getInstance(receivingSide.getOpposite());
@@ -259,13 +263,25 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			IMechanical instance = ((IMechanical) tileEntity).getInstance(receivingSide);
 
+			if (instance == null)
+			{
+				instance = ((IMechanical) tileEntity).getInstance(ForgeDirection.UNKNOWN);
+			}
+
 			if (instance != null)
 			{
+				getNetwork().torqueGraph.queue(instance.getTorque());
+				getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
 				getNetwork().energyGraph.queue((long) (instance.getTorque() * instance.getAngularVelocity()));
 			}
 		}
 
-		CompatibilityModule.getEnergy(tileEntity, receivingSide);
+		getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));
+
+		/**
+		 * Update Energy Capacity Graph
+		 */
+		getNetwork().energyCapacityGraph.queue(CompatibilityModule.getMaxEnergy(tileEntity, receivingSide));
 	}
 
 	@Override
@@ -329,11 +345,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		toggleMode();
 	}
 
-	public long getDetectedEnergy()
-	{
-		return getDetectedEnergy(getDirection().getOpposite(), getDetectedTile());
-	}
-
 	public TileEntity getDetectedTile()
 	{
 		ForgeDirection direction = getDirection();
@@ -345,6 +356,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		return ForgeDirection.getOrientation(this.side);
 	}
 
+	@Deprecated
 	public static long getDetectedEnergy(ForgeDirection side, TileEntity tileEntity)
 	{
 		if (tileEntity instanceof IConductor)
@@ -375,16 +387,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 
 		return CompatibilityModule.getEnergy(tileEntity, side);
-	}
-
-	public long getDetectedCapacity()
-	{
-		return getDetectedCapacity(getDirection().getOpposite(), getDetectedTile());
-	}
-
-	public static long getDetectedCapacity(ForgeDirection side, TileEntity tileEntity)
-	{
-		return CompatibilityModule.getMaxEnergy(tileEntity, side);
 	}
 
 	public void toggleMode()

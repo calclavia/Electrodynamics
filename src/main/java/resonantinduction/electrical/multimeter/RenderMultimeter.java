@@ -158,12 +158,23 @@ public class RenderMultimeter
 				information.set(0, str);
 			}
 
+			if (part.getNetwork().torqueGraph.get(0) != 0)
+			{
+				information.add("Torque: " + UnitDisplay.getDisplayShort(part.getNetwork().torqueGraph.get(0), Unit.NEWTON_METER));
+			}
+			if (part.getNetwork().angularVelocityGraph.get(0) != 0)
+			{
+				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
+			}
+
+			GL11.glTranslatef(0, 0, -0.2f * (information.size() / 2));
+
 			for (int i = 0; i < information.size(); i++)
 			{
 				String info = information.get(i);
 
 				GL11.glPushMatrix();
-				GL11.glTranslatef(0, 0, 0.3f * i);
+				GL11.glTranslatef(0, 0, 0.2f * i);
 				if (dir.offsetX == 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
 				if (dir.offsetZ == 0)
