@@ -27,8 +27,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 {
 	public TileWindTurbine()
 	{
-		maxPower = 50;
-		torque = 50;
+		maxPower = 300;
 	}
 
 	@Override
@@ -53,6 +52,12 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 		}
 
 		super.updateEntity();
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection direction)
+	{
+		return false;
 	}
 
 	public long getWindPower()

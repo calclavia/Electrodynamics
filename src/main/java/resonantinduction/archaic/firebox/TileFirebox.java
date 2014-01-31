@@ -45,6 +45,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	/**
 	 * 
 	 * It takes 338260 J to boile water.
+	 * TODO: Make desert faster, col biomes slower.
 	 */
 	private final long requiredBoilWaterEnergy = 338260;
 

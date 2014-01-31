@@ -38,17 +38,16 @@ public class TileGenerator extends TileElectrical implements IRotatable
 	@Override
 	public void updateEntity()
 	{
-
 		if (!isInversed)
 		{
-			receiveMechanical(this.getDirection());
-			receiveMechanical(this.getDirection().getOpposite());
+			receiveMechanical(getDirection());
+			receiveMechanical(getDirection().getOpposite());
 			produce();
 		}
 		else
 		{
-			produceMechanical(this.getDirection());
-			produceMechanical(this.getDirection().getOpposite());
+			produceMechanical(getDirection());
+			produceMechanical(getDirection().getOpposite());
 		}
 
 	}
@@ -68,8 +67,9 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 				if (receive > 0)
 				{
-					mech.setTorque((long) (mech.getTorque() * 0.5));
-					mech.setAngularVelocity(mech.getAngularVelocity() * 0.5f);
+					// TODO: Make sure this calculation/decrease is correct!
+					mech.setTorque((long) (mech.getTorque() * 0.9));
+					mech.setAngularVelocity(mech.getAngularVelocity() * 0.9f);
 				}
 			}
 		}

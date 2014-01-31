@@ -39,6 +39,14 @@ public class RenderGenerator extends TileEntitySpecialRenderer implements ICusto
 		// Rotate the model
 		switch (facingDirection)
 		{
+			case 0:
+				GL11.glRotatef(90, 1, 0, 0);
+				GL11.glTranslatef(0, -1, -1);
+				break;
+			case 1:
+				GL11.glRotatef(-90, 1, 0, 0);
+				GL11.glTranslatef(0, -1, 1);
+				break;
 			case 2:
 				GL11.glRotatef(180, 0f, 1f, 0f);
 				break;

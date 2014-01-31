@@ -7,7 +7,7 @@ public class TileSolarPanel extends TileElectrical
 {
 	public TileSolarPanel()
 	{
-		this.energy = new EnergyStorageHandler(200);
+		this.energy = new EnergyStorageHandler(400);
 		this.ioMap = 728;
 	}
 
