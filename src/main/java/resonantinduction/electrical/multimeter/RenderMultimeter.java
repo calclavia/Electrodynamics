@@ -153,9 +153,7 @@ public class RenderMultimeter
 
 			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
 			{
-				String str = information.get(0);
-				str = str + "/" + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES);
-				information.set(0, str);
+				information.add("Max: " + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES));
 			}
 
 			if (part.getNetwork().torqueGraph.get(0) != 0)
@@ -167,14 +165,14 @@ public class RenderMultimeter
 				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
 			}
 
-			GL11.glTranslatef(0, 0, -0.2f * (information.size() / 2));
+			GL11.glTranslatef(0, 0, -0.25f * (information.size() / 2));
 
 			for (int i = 0; i < information.size(); i++)
 			{
 				String info = information.get(i);
 
 				GL11.glPushMatrix();
-				GL11.glTranslatef(0, 0, 0.2f * i);
+				GL11.glTranslatef(0, 0, 0.25f * i);
 				if (dir.offsetX == 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
 				if (dir.offsetZ == 0)
@@ -186,5 +184,4 @@ public class RenderMultimeter
 		}
 
 	}
-
 }

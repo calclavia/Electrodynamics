@@ -49,6 +49,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 * If the screen is not a perfect rectangle, don't render.
 	 */
 	public boolean isEnabled = true;
+	public PartMultimeter primaryRenderer = null;
 
 	public MultimeterNetwork()
 	{

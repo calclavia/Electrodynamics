@@ -17,7 +17,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
-import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.mechanical.network.IMechanical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
@@ -103,17 +102,24 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public void refresh()
 	{
-		if (world() != null && !world().isRemote)
+		if (world() != null)
 		{
-			for (Object obj : getConnections())
+			if (!world().isRemote)
 			{
-				if (obj instanceof PartMultimeter)
+				for (Object obj : getConnections())
 				{
-					getNetwork().merge(((PartMultimeter) obj).getNetwork());
+					if (obj instanceof PartMultimeter)
+					{
+						getNetwork().merge(((PartMultimeter) obj).getNetwork());
+					}
 				}
-			}
 
-			getNetwork().reconstruct();
+				getNetwork().reconstruct();
+			}
+			else
+			{
+				getNetwork().primaryRenderer = null;
+			}
 		}
 	}
 
@@ -210,7 +216,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 			getNetwork().markUpdate();
 
-			if (ticks % 10 == 0)
+			if (ticks % 20 == 0)
 			{
 				if (outputRedstone != redstoneOn)
 				{
@@ -218,10 +224,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 					tile().notifyPartChange(this);
 				}
 
-				// if (getNetwork().energyGraph.get(1) != detectedEnergy)
-				{
-					updateGraph();
-				}
+				updateGraph();
 			}
 		}
 
@@ -244,18 +247,23 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		 */
 		if (tileEntity instanceof IConductor)
 		{
-			IConnector<IEnergyNetwork> conductor = ((IConductor) tileEntity).getInstance(receivingSide.getOpposite());
+			IConnector<IEnergyNetwork> instance = ((IConductor) tileEntity).getInstance(receivingSide);
 
-			if (conductor == null)
+			for (ForgeDirection dir : ForgeDirection.values())
 			{
-				conductor = ((IConductor) tileEntity).getInstance(ForgeDirection.UNKNOWN);
+				if (instance != null)
+				{
+					break;
+				}
+
+				instance = ((IConnector) tileEntity).getInstance(dir);
 			}
 
-			if (conductor != null)
+			if (instance != null)
 			{
-				// TODO: Conductor may always return null in some cases.
-				IEnergyNetwork network = conductor.getNetwork();
-				getNetwork().energyGraph.queue(network.getLastBuffer());
+
+				IEnergyNetwork network = instance.getNetwork();
+				getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
 			}
 		}
 
@@ -263,9 +271,14 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		{
 			IMechanical instance = ((IMechanical) tileEntity).getInstance(receivingSide);
 
-			if (instance == null)
+			for (ForgeDirection dir : ForgeDirection.values())
 			{
-				instance = ((IMechanical) tileEntity).getInstance(ForgeDirection.UNKNOWN);
+				if (instance != null)
+				{
+					break;
+				}
+
+				instance = ((IMechanical) tileEntity).getInstance(dir);
 			}
 
 			if (instance != null)
@@ -576,11 +589,15 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	 */
 	public boolean isPrimaryRendering()
 	{
-		for (PartMultimeter m : getNetwork().getConnectors())
+		if (getNetwork().primaryRenderer == null || !getNetwork().isValidConnector(getNetwork().primaryRenderer))
 		{
-			return m == this;
+			for (PartMultimeter m : getNetwork().getConnectors())
+			{
+				getNetwork().primaryRenderer = m;
+				break;
+			}
 		}
 
-		return false;
+		return getNetwork().primaryRenderer == this;
 	}
 }
