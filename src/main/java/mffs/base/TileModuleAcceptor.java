@@ -3,16 +3,15 @@ package mffs.base;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.api.ICache;
 import mffs.api.modules.IModule;
 import mffs.api.modules.IModuleAcceptor;
-import mffs.base.TileMFFS.TilePacketType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +25,7 @@ public abstract class TileModuleAcceptor extends TileFortron implements IModuleA
 	 * Caching for the module stack data. This is used to reduce calculation time. Cache gets reset
 	 * when inventory changes.
 	 */
-	public final HashMap<String, Object> cache = new HashMap<String, Object>();
+	public final WeakHashMap<String, Object> cache = new WeakHashMap<String, Object>();
 
 	public int startModuleIndex = 0;
 	public int endModuleIndex = this.getSizeInventory() - 1;
