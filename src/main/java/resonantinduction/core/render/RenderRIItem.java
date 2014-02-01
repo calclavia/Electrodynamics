@@ -15,6 +15,7 @@ import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.gear.ItemGearShaft;
 import resonantinduction.mechanical.gear.RenderGear;
 import resonantinduction.mechanical.gear.RenderGearShaft;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,7 +59,7 @@ public class RenderRIItem implements IItemRenderer
 		}
 		else if (item.getItem() instanceof ItemMultimeter)
 		{
-			RenderMultimeter.render();
+			RenderMultimeter.INSTANCE.render();
 		}
 		else if (item.getItem() instanceof ItemTransformer)
 		{

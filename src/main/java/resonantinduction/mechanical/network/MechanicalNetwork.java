@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
@@ -135,7 +136,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 		if (deltaTime > 1)
 		{
-			rotation = (float) (((velocity) * (deltaTime / 1000d) + rotation) % (2 * Math.PI));
+			rotation = (float) (((velocity) * ((double) deltaTime / 1000d) + rotation) % (2 * Math.PI));
 			lastRotateTime = System.currentTimeMillis();
 		}
 

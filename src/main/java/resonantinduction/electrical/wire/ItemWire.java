@@ -14,8 +14,8 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.input.Keyboard;
 
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
+import resonantinduction.core.Settings;
 import resonantinduction.core.Utility;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;

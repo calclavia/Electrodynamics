@@ -5,9 +5,13 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingSand;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
@@ -42,7 +46,7 @@ public class BlockDust extends BlockRI
 
 		if (tileEntity instanceof TileMaterial)
 		{
-			((TileMaterial) tileEntity).name = ItemOreResource.getMaterialFromStack(itemStack);
+			((TileMaterial) tileEntity).name = ((ItemOreResource) itemStack.getItem()).getMaterialFromStack(itemStack);
 		}
 	}
 
@@ -143,7 +147,7 @@ public class BlockDust extends BlockRI
 	{
 		int l = par1World.getBlockMetadata(par2, par3, par4) & 7;
 		float f = 0.125F;
-		return AxisAlignedBB.getAABBPool().getAABB(par2 + this.minX, par3 + this.minY, par4 + this.minZ, par2 + this.maxX, par3 + l * f, par4 + this.maxZ);
+		return AxisAlignedBB.getAABBPool().getAABB((double) par2 + this.minX, (double) par3 + this.minY, (double) par4 + this.minZ, (double) par2 + this.maxX, (double) ((float) par3 + (float) l * f), (double) par4 + this.maxZ);
 	}
 
 	/**
@@ -193,7 +197,7 @@ public class BlockDust extends BlockRI
 	protected void setBlockBoundsForDepth(int par1)
 	{
 		int j = par1 & 7;
-		float f = 2 * (1 + j) / 16.0F;
+		float f = (float) (2 * (1 + j)) / 16.0F;
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
 	}
 

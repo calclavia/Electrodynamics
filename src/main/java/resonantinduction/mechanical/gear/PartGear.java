@@ -104,7 +104,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		getMultiBlock().update();
 	}
 
-	@Override
 	public void checkClientUpdate()
 	{
 		if (getMultiBlock().isPrimary())
@@ -150,7 +149,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	/**
 	 * Refresh should be called sparingly.
 	 */
-	@Override
 	public void refresh()
 	{
 		connections = new Object[6];
@@ -217,7 +215,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 			if (connections[checkDir.ordinal()] == null && checkTile instanceof IMechanical)
 			{
-				IMechanical instance = ((IMechanical) checkTile).getInstance(placementSide);
+				IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(placementSide);
 
 				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance instanceof PartGearShaft))
 				{

@@ -6,6 +6,7 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,6 +37,6 @@ public class FluidEventHandler
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Post event)
 	{
-		// ResonantInduction.fluidMixture.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture"));
+		//ResonantInduction.fluidMixture.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture"));
 	}
 }

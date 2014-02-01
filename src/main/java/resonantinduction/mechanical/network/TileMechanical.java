@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.network;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -10,8 +12,6 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileAdvanced;
-
-import com.google.common.io.ByteArrayDataInput;
 
 public abstract class TileMechanical extends TileAdvanced implements IMechanical, IPacketReceiver
 {

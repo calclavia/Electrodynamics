@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.gear;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +13,7 @@ import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.PartMap;
 import cpw.mods.fml.relauncher.Side;
@@ -38,7 +40,6 @@ public class PartGearShaft extends PartMechanical
 		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64));
 	}
 
-	@Override
 	public void preparePlacement(int side, int itemDamage)
 	{
 		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
@@ -62,7 +63,6 @@ public class PartGearShaft extends PartMechanical
 	/**
 	 * Refresh should be called sparingly.
 	 */
-	@Override
 	public void refresh()
 	{
 		connections = new Object[6];
@@ -95,7 +95,7 @@ public class PartGearShaft extends PartMechanical
 
 				if (checkTile instanceof IMechanical)
 				{
-					IMechanical instance = ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
+					IMechanical instance = (IMechanical) ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
 
 					// Only connect to shafts outside of this block space.
 					if (instance != null && instance != this && instance instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))

@@ -1,12 +1,14 @@
 package resonantinduction.mechanical.process;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeUtils.Resource;

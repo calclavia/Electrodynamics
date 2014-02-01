@@ -1,13 +1,17 @@
 package resonantinduction.core.resource;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import resonantinduction.core.ResonantInduction;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.prefab.tile.TileAdvanced;
 
 /**
  * A tile that stores the material name.

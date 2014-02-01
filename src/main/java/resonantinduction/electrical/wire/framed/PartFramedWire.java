@@ -283,7 +283,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		{
 			getNetwork().getConnectors().remove(this);
 			super.bind(t);
-			getNetwork().getConnectors().add(this);
+			getNetwork().getConnectors().add((IConductor) this);
 		}
 		else
 		{
@@ -372,7 +372,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 					try
 					{
 						this.getNetwork().removeConnector(this);
-						this.getNetwork().split(this);
+						this.getNetwork().split((IConductor) this);
 					}
 					catch (NullPointerException e)
 					{

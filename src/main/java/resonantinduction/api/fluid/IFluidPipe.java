@@ -13,7 +13,7 @@ public interface IFluidPipe extends IFluidConnector, IPressureInput
 	 * @return amount in pascals.
 	 */
 	int getMaxPressure();
-
+	
 	int getPressure();
 
 	/**

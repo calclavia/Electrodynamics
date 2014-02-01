@@ -20,7 +20,6 @@ public class TileMillstone extends TileExternalInventory implements IPacketRecei
 {
 	private int grindCount = 0;
 
-	@Override
 	public void onInventoryChanged()
 	{
 		grindCount = 0;

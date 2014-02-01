@@ -14,7 +14,6 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 		super(wrapper);
 	}
 
-	@Override
 	public PartGear getWrapperAt(Vector3 position)
 	{
 		TileEntity tile = position.getTileEntity(self.getWorld());

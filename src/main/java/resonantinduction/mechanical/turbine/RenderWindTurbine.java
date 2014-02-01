@@ -2,6 +2,7 @@ package resonantinduction.mechanical.turbine;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -34,7 +35,7 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 			{
 				RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
 			}
-
+			
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
 
 			/**

@@ -52,10 +52,10 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 		{
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
+			battery.energy.setCapacity(TileBattery.getEnergyForTier(itemBlock.getTier(itemStack)));
 			battery.energy.setEnergy(itemBlock.getEnergy(itemStack));
 			battery.updateStructure();
-			world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3);
+			world.setBlockMetadataWithNotify(x, y, z, itemBlock.getTier(itemStack), 3);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 		{
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
-			ItemBlockBattery.setTier(itemStack, (byte) metadata);
+			itemBlock.setTier(itemStack, (byte) metadata);
 			itemBlock.setEnergy(itemStack, battery.energy.getEnergy());
 		}
 

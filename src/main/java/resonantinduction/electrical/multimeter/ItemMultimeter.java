@@ -14,8 +14,10 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class ItemMultimeter extends ItemMultipartBase
 {

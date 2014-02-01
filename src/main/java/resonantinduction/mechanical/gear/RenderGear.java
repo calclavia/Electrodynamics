@@ -2,6 +2,7 @@ package resonantinduction.mechanical.gear;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

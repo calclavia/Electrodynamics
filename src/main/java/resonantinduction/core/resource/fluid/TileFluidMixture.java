@@ -3,6 +3,8 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,9 +17,6 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.prefab.tile.TileAdvanced;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
