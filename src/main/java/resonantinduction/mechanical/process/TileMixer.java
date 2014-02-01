@@ -46,13 +46,13 @@ public class TileMixer extends TileMechanical
 	 */
 	public boolean canWork()
 	{
-		return angularVelocity > 0;
+		return angularVelocity != 0;
 	}
 
 	public void doWork()
 	{
 		boolean didWork = false;
-
+		
 		// Search for an item to "process"
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
@@ -65,7 +65,7 @@ public class TileMixer extends TileMechanical
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(angularVelocity, 0, 0);
+			relativePosition.rotate(-angularVelocity, 0, 0);
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 
@@ -151,7 +151,7 @@ public class TileMixer extends TileMechanical
 		}
 		else
 		{
-			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID);
+			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID, 8);
 		}
 
 		return false;

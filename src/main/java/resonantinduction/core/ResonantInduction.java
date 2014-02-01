@@ -15,12 +15,13 @@ import net.minecraftforge.fluids.Fluid;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.core.handler.FluidEventHandler;
+import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.handler.ToolModeLink;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
@@ -77,8 +78,8 @@ public class ResonantInduction
 	public static ItemOreResource itemDust;
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockDust;
-	public static List<Block> blockFluidMixtures = new ArrayList<Block>();
-	public static List<Block> blockFluidMaterials = new ArrayList<Block>();
+	public static final List<Block> blockFluidMixtures = new ArrayList<Block>();
+	public static final List<Block> blockFluidMaterials = new ArrayList<Block>();
 	public static Block blockGas;
 
 	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
@@ -97,9 +98,8 @@ public class ResonantInduction
 		Settings.load();
 
 		// Register Forge Events
-		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
+		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
 
 		/**
 		 * Melting dusts
@@ -115,6 +115,9 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
 
+		//Already registered wih ContentRegistry
+		//GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
+		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 		Settings.save();
 		proxy.preInit();
 	}
@@ -133,32 +136,5 @@ public class ResonantInduction
 	{
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
-	}
-
-	public static final HashMap<String, Icon> loadedIconMap = new HashMap<String, Icon>();
-
-	public void registerIcon(String name, TextureStitchEvent.Pre event)
-	{
-		loadedIconMap.put(name, event.map.registerIcon(name));
-	}
-
-	@ForgeSubscribe
-	@SideOnly(Side.CLIENT)
-	public void preTextureHook(TextureStitchEvent.Pre event)
-	{
-		if (event.map.textureType == 0)
-		{
-			registerIcon(Reference.PREFIX + "mixture_flow", event);
-			registerIcon(Reference.PREFIX + "molten_flow", event);
-			registerIcon(Reference.PREFIX + "multimeter_screen", event);
-		}
-	}
-
-	@ForgeSubscribe
-	@SideOnly(Side.CLIENT)
-	public void postTextureHook(TextureStitchEvent.Post event)
-	{
-		for (Fluid fluid : fluidMaterials)
-			fluid.setIcons(loadedIconMap.get(Reference.PREFIX + "molten_flow"));
 	}
 }

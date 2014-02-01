@@ -54,7 +54,7 @@ public class BlockDust extends BlockRI
 
 		if (tileEntity instanceof TileMaterial)
 		{
-			return ((TileMaterial) tileEntity).clientColor;
+			return ((TileMaterial) tileEntity).getColor();
 		}
 
 		return 16777215;

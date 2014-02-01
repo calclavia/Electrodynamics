@@ -100,7 +100,7 @@ public class ResourceGenerator
 			FluidRegistry.registerFluid(fluidMixture);
 			Block blockFluidMixture = new BlockFluidMixture(fluidMixture);
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
-			ResonantInduction.blockFluidMaterials.add(blockFluidMixture);
+			ResonantInduction.blockFluidMixtures.add(blockFluidMixture);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 			{
@@ -133,7 +133,7 @@ public class ResourceGenerator
 	@SideOnly(Side.CLIENT)
 	public static void computeColors()
 	{
-		for (String ingotName : materialNames)
+		for (String material : materialNames)
 		{
 			// Compute color
 			int totalR = 0;
@@ -142,15 +142,15 @@ public class ResourceGenerator
 
 			int colorCount = 0;
 
-			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + ingotName.substring(0, 1).toUpperCase() + ingotName.substring(1)))
+			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + material.substring(0, 1).toUpperCase() + material.substring(1)))
 			{
 				Item theIngot = ingotStack.getItem();
-				materialColors.put(ingotName, getAverageColor(ingotStack));
+				materialColors.put(material, getAverageColor(ingotStack));
 			}
 
-			if (!materialColors.containsKey(ingotName))
+			if (!materialColors.containsKey(material))
 			{
-				materialColors.put(ingotName, 0xFFFFFF);
+				materialColors.put(material, 0xFFFFFF);
 			}
 		}
 	}

@@ -15,13 +15,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class FluidEventHandler
+public class TextureHookHandler
 {
-	public static final HashMap<String, Icon> fluidIconMap = new HashMap<String, Icon>();
+	public static final HashMap<String, Icon> loadedIconMap = new HashMap<String, Icon>();
 
 	public void registerIcon(String name, TextureStitchEvent.Pre event)
 	{
-		fluidIconMap.put(name, event.map.registerIcon(name));
+		loadedIconMap.put(name, event.map.registerIcon(name));
 	}
 
 	@ForgeSubscribe
@@ -32,6 +32,7 @@ public class FluidEventHandler
 		{
 			registerIcon(Reference.PREFIX + "mixture_flow", event);
 			registerIcon(Reference.PREFIX + "molten_flow", event);
+			registerIcon(Reference.PREFIX + "multimeter_screen", event);
 		}
 	}
 
@@ -40,8 +41,8 @@ public class FluidEventHandler
 	public void textureHook(TextureStitchEvent.Post event)
 	{
 		for (Fluid f : ResonantInduction.fluidMixtures)
-			f.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture_flow"));
+			f.setIcons(loadedIconMap.get(Reference.PREFIX + "mixture_flow"));
 		for (Fluid f : ResonantInduction.fluidMaterials)
-			f.setIcons(fluidIconMap.get(Reference.PREFIX + "molten_flow"));
+			f.setIcons(loadedIconMap.get(Reference.PREFIX + "molten_flow"));
 	}
 }

@@ -13,8 +13,8 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileMaterial;
 import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -25,12 +25,10 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class TileFluidMixture extends TileAdvanced implements IPacketReceiver
+public class TileFluidMixture extends TileMaterial
 {
 	public final Set<ItemStack> items = new HashSet<ItemStack>();
 	public final Set<FluidStack> fluids = new HashSet<FluidStack>();
-
-	private int clientColor = 0xFFFFFF;
 
 	@Override
 	public boolean canUpdate()
@@ -44,6 +42,12 @@ public class TileFluidMixture extends TileAdvanced implements IPacketReceiver
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);
+
+			if (name == null)
+			{
+				name = ResourceGenerator.getName(itemStack.getItemDamage());
+			}
+
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			return true;
 		}
@@ -70,32 +74,6 @@ public class TileFluidMixture extends TileAdvanced implements IPacketReceiver
 				fluids.add(fluid);
 			}
 		}
-	}
-
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		clientColor = data.readInt();
-		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		for (ItemStack item : items)
-		{
-			return ResonantInduction.PACKET_TILE.getPacket(this, ResourceGenerator.getAverageColor(item));
-		}
-		return null;
-	}
-
-	/**
-	 * @return The color of the liquid based on the fluidStacks stored.
-	 */
-	@SideOnly(Side.CLIENT)
-	public int getColor()
-	{
-		return clientColor;
 	}
 
 	@Override
@@ -158,5 +136,4 @@ public class TileFluidMixture extends TileAdvanced implements IPacketReceiver
 
 		nbt.setTag("Items", itemList);
 	}
-
 }

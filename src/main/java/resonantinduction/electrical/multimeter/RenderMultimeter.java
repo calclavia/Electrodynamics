@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.handler.TextureHookHandler;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
@@ -39,7 +40,7 @@ public class RenderMultimeter
 		GL11.glRotatef(90, 1, 0, 0);
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, ResonantInduction.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, TextureHookHandler.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		ForgeDirection dir = ForgeDirection.NORTH;
 		final int metadata = 8;
 		// Render edges
@@ -91,7 +92,7 @@ public class RenderMultimeter
 		RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, ResonantInduction.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, TextureHookHandler.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		final int metadata = 8;
 		// Render edges
 		// UP

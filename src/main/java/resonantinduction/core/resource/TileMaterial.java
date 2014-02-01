@@ -18,7 +18,12 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileMaterial extends TileAdvanced implements IPacketReceiver
 {
 	public String name;
-	public int clientColor;
+	private int clientColor = 0xFFFFFF;
+
+	public int getColor()
+	{
+		return clientColor;
+	}
 
 	@Override
 	public boolean canUpdate()
