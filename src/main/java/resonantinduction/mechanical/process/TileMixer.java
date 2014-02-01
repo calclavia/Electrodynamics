@@ -54,22 +54,6 @@ public class TileMixer extends TileMechanical
 	{
 		boolean didWork = false;
 
-		/**
-		 * Transform all water blocks into mixture blocks
-		 */
-		for (int x = -1; x < 1; x++)
-		{
-			for (int z = -1; z < 1; z++)
-			{
-				Vector3 checkVector = new Vector3(this).translate(x, 0, z);
-
-				if (checkVector.getBlockID(worldObj) == Block.waterStill.blockID || checkVector.getBlockID(worldObj) == Block.waterMoving.blockID)
-				{
-					checkVector.setBlock(worldObj, ResonantInduction.blockFluidMixture.blockID, 8, 3);
-				}
-			}
-		}
-
 		// Search for an item to "process"
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
@@ -159,12 +143,16 @@ public class TileMixer extends TileMechanical
 		if (tileEntity instanceof TileFluidMixture)
 		{
 			ItemStack itemStack = entity.getEntityItem().copy();
+
 			if (((TileFluidMixture) tileEntity).mix(itemStack))
 			{
-				System.out.println("MIXED");
 				worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
 				return true;
 			}
+		}
+		else
+		{
+			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID);
 		}
 
 		return false;

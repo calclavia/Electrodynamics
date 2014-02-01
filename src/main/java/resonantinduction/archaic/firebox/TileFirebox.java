@@ -108,7 +108,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 						{
 							String name = ((TileMaterial) dustTile).name;
 							// TODO: Make refined dust yield more molten fluid than normal dust.
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResonantInduction.blockFluidMaterial.get(ResourceGenerator.materialNames.indexOf(name)).blockID, worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord), 3);
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResonantInduction.blockFluidMaterials.get(ResourceGenerator.materialNames.indexOf(name)).blockID, worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord), 3);
 							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)

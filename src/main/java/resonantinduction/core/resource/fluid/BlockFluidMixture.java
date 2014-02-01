@@ -24,9 +24,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityProvider
 {
-	public BlockFluidMixture()
+	public BlockFluidMixture(Fluid fluid)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMixture", Settings.getNextBlockID()).getInt(), ResonantInduction.fluidMixture, Material.water);
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMixture", Settings.getNextBlockID()).getInt(), fluid, Material.water);
 		setTextureName(Reference.PREFIX + "mixture_flow");
 		this.setUnlocalizedName(Reference.PREFIX + "fluidMixture");
 	}
@@ -43,9 +43,9 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	@Override
 	public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
 	{
-		TileFluidMixture tileFluid = (TileFluidMixture) world.getBlockTileEntity(x, y, z);
-		FluidStack stack = new FluidStack(ResonantInduction.fluidMixture, (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
-		tileFluid.writeFluidToNBT(stack.tag != null ? stack.tag : new NBTTagCompound());
+		FluidStack stack = new FluidStack(getFluid(), (int) (FluidContainerRegistry.BUCKET_VOLUME * this.getFilledPercentage(world, x, y, z)));
+		if (doDrain)
+			world.setBlockToAir(x, y, z);
 		return stack;
 	}
 

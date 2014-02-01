@@ -30,6 +30,7 @@ import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
+import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -90,7 +91,16 @@ public class ResourceGenerator
 			FluidRegistry.registerFluid(fluidMaterial);
 			Block blockFluidMaterial = new BlockFluidMaterial(fluidMaterial);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
-			ResonantInduction.blockFluidMaterial.add(blockFluidMaterial);
+			ResonantInduction.blockFluidMaterials.add(blockFluidMaterial);
+
+			/**
+			 * Generate dust mixture fluids
+			 */
+			Fluid fluidMixture = new Fluid("mixture" + nameCaps);
+			FluidRegistry.registerFluid(fluidMixture);
+			Block blockFluidMixture = new BlockFluidMixture(fluidMixture);
+			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
+			ResonantInduction.blockFluidMaterials.add(blockFluidMixture);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 			{

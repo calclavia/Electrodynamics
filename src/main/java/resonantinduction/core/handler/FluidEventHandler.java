@@ -5,6 +5,7 @@ import java.util.HashMap;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.fluids.Fluid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import cpw.mods.fml.relauncher.Side;
@@ -29,7 +30,8 @@ public class FluidEventHandler
 	{
 		if (event.map.textureType == 0)
 		{
-			registerIcon(Reference.PREFIX + "mixture", event);
+			registerIcon(Reference.PREFIX + "mixture_flow", event);
+			registerIcon(Reference.PREFIX + "molten_flow", event);
 		}
 	}
 
@@ -37,6 +39,9 @@ public class FluidEventHandler
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Post event)
 	{
-		ResonantInduction.fluidMixture.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture"));
+		for (Fluid f : ResonantInduction.fluidMixtures)
+			f.setIcons(fluidIconMap.get(Reference.PREFIX + "mixture_flow"));
+		for (Fluid f : ResonantInduction.fluidMaterials)
+			f.setIcons(fluidIconMap.get(Reference.PREFIX + "molten_flow"));
 	}
 }

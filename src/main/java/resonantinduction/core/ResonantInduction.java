@@ -81,12 +81,12 @@ public class ResonantInduction
 	public static ItemOreResource itemDust;
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockDust;
-	public static Block blockFluidMixture;
-	public static List<Block> blockFluidMaterial = new ArrayList<Block>();
+	public static List<Block> blockFluidMixtures = new ArrayList<Block>();
+	public static List<Block> blockFluidMaterials = new ArrayList<Block>();
 	public static Block blockGas;
 
-	public static Fluid fluidMixture;
-	public static List<Fluid> fluidMaterial = new ArrayList<Fluid>();
+	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
+	public static List<Fluid> fluidMaterials = new ArrayList<Fluid>();
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
 
@@ -104,10 +104,6 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
-
-		fluidMixture = new Fluid("water");
-		FluidRegistry.registerFluid(fluidMixture);
-		blockFluidMixture = contentRegistry.createTile(BlockFluidMixture.class, TileFluidMixture.class);
 
 		/**
 		 * Melting dusts
@@ -166,7 +162,7 @@ public class ResonantInduction
 	@SideOnly(Side.CLIENT)
 	public void postTextureHook(TextureStitchEvent.Post event)
 	{
-		for (Fluid fluid : fluidMaterial)
+		for (Fluid fluid : fluidMaterials)
 			fluid.setIcons(loadedIconMap.get(Reference.PREFIX + "molten_flow"));
 	}
 }
