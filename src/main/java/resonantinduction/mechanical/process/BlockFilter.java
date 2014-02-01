@@ -2,13 +2,21 @@ package resonantinduction.mechanical.process;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.block.BlockRI;
+import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
  * Used for filtering liquid mixtures
@@ -54,13 +62,12 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				/**
 				 * Leak the fluid down.
 				 */
-				/*
 				BlockFluidMixture fluidBlock = (BlockFluidMixture) ResonantInduction.blockFluidMixture;
 				int amount = fluidBlock.getQuantaValue(world, x, y, z);
 
 				/**
 				 * All fluid is filtered out, spawn all the items.
-				 *
+				 */
 				 if (amount <= 1)
 				{
 					System.out.println("filter dropped");
@@ -77,7 +84,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 
 				/**
 				 * Remove liquid from top.
-				 *
+				 */
 				if (remaining > 0)
 				{
 					fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
@@ -90,7 +97,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 
 				/**
 				 * Add liquid to bottom.
-				 *			
+				 */
 				if (checkBelow.getBlockID(world) == ResonantInduction.blockFluidMixture.blockID)
 				{
 					fluidBlock.setQuanta(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ(), fluidBlock.getQuantaValue(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) + 1);
@@ -98,7 +105,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 				else
 				{
 					checkBelow.setBlock(world, Block.waterStill.blockID, 3);
-				}*/
+				}
 			}
 		}
 	}

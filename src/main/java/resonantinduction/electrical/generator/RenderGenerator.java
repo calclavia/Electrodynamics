@@ -79,6 +79,6 @@ public class RenderGenerator extends TileEntitySpecialRenderer implements ICusto
 	@Override
 	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
-		doRender(tile, 2, 0, 0, 0, 0);
+		doRender(tile, metadata, 0, 0, 0, 0);
 	}
 }
