@@ -18,11 +18,12 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileMaterial extends TileAdvanced implements IPacketReceiver
 {
 	public String name;
-	private int clientColor = 0xFFFFFF;
 
 	public int getColor()
 	{
-		return clientColor;
+		if (name != null)
+			return ResourceGenerator.materialColors.get(name);
+		return 0xFFFFFF;
 	}
 
 	@Override
@@ -35,7 +36,6 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		name = data.readUTF();
-		clientColor = ResourceGenerator.materialColors.get(name);
 		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -61,6 +61,7 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setString("name", name);
+		if (name != null)
+			nbt.setString("name", name);
 	}
 }
