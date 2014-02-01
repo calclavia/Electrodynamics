@@ -11,9 +11,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
@@ -21,6 +25,7 @@ import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.network.Synced;
 import calclavia.lib.prefab.tile.TileElectricalInventory;
 import calclavia.lib.thermal.BoilEvent;
 
@@ -32,7 +37,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileFirebox extends TileElectricalInventory implements IPacketSender, IPacketReceiver
+public class TileFirebox extends TileElectricalInventory implements IPacketReceiver, IFluidHandler
 {
 	/**
 	 * One coal = 4MJ, one coal lasts 80 seconds. Therefore, we are producing 50000 watts.
@@ -40,6 +45,8 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	 * into fluids to increase their internal energy.
 	 */
 	private final long POWER = 50000;
+
+	@Synced
 	private int burnTime;
 
 	/**
@@ -57,7 +64,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 
 	public TileFirebox()
 	{
-		energy = new EnergyStorageHandler(POWER * 2, POWER / 20);
+		energy = new EnergyStorageHandler(POWER, (POWER * 2) / 20);
 		setIO(ForgeDirection.UP, 0);
 	}
 
@@ -66,16 +73,36 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	{
 		if (!worldObj.isRemote)
 		{
-			if (energy.checkExtract())
+			/**
+			 * Extract fuel source for burn time.
+			 */
+			FluidStack drainFluid = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false);
+
+			if (drainFluid != null && drainFluid.amount == FluidContainerRegistry.BUCKET_VOLUME)
+			{
+				if (burnTime == 0)
+				{
+					tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
+					burnTime += 20000;
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				}
+			}
+			else if (isElectrical() && energy.checkExtract())
 			{
 				energy.extractEnergy();
-				burnTime += 1;
+
+				if (burnTime == 0)
+				{
+					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				}
+
+				burnTime += 2;
 			}
 			else if (canBurn(this.getStackInSlot(0)))
 			{
 				if (burnTime == 0)
 				{
-					burnTime = TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0));
+					burnTime += TileEntityFurnace.getItemBurnTime(this.getStackInSlot(0));
 					decrStackSize(0, 1);
 					worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				}
@@ -151,6 +178,14 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 		}
 	}
 
+	/**
+	 * TODO: Make biome sensitivity.
+	 */
+	public long getRequiredBoilWaterEnergy()
+	{
+		return requiredBoilWaterEnergy;
+	}
+
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
@@ -181,34 +216,13 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, this.getPacketData(0).toArray());
-	}
-
-	/**
-	 * 1 - Description Packet
-	 * 2 - Energy Update
-	 * 3 - Tesla Beam
-	 */
-	@Override
-	public ArrayList getPacketData(int type)
-	{
-		ArrayList data = new ArrayList();
-		data.add(this.burnTime);
-		return data;
+		return ResonantInduction.PACKET_ANNOTATION.getPacket(this);
 	}
 
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		try
-		{
-			this.burnTime = data.readInt();
-			this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
@@ -216,6 +230,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	{
 		super.readFromNBT(nbt);
 		burnTime = nbt.getInteger("burnTime");
+		tank.readFromNBT(nbt);
 	}
 
 	@Override
@@ -223,5 +238,49 @@ public class TileFirebox extends TileElectricalInventory implements IPacketSende
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("burnTime", burnTime);
+		tank.writeToNBT(nbt);
+	}
+
+	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+
+	/* IFluidHandler */
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		return tank.fill(resource, doFill);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (resource == null || !resource.isFluidEqual(tank.getFluid()))
+		{
+			return null;
+		}
+		return tank.drain(resource.amount, doDrain);
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return tank.drain(maxDrain, doDrain);
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return fluid == FluidRegistry.LAVA;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[] { tank.getInfo() };
 	}
 }

@@ -25,6 +25,7 @@ import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.utility.LanguageUtility;
@@ -71,6 +72,7 @@ public class ResonantInduction
 	/** Packets */
 	public static final PacketTile PACKET_TILE = new PacketTile(Reference.CHANNEL);
 	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
+	public static final PacketAnnotation PACKET_ANNOTATION = new PacketAnnotation(Reference.CHANNEL);
 
 	/** Blocks and Items */
 	public static Block blockOre;
@@ -115,8 +117,8 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
 
-		//Already registered wih ContentRegistry
-		//GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
+		// Already registered wih ContentRegistry
+		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 		Settings.save();
 		proxy.preInit();
