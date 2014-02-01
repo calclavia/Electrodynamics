@@ -21,9 +21,7 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 
 	public int getColor()
 	{
-		if (name != null)
-			return ResourceGenerator.materialColors.get(name);
-		return 0xFFFFFF;
+		return ResourceGenerator.getColor(name);
 	}
 
 	@Override

@@ -242,4 +242,14 @@ public class ResourceGenerator
 	{
 		return materialNames.size() > id ? materialNames.get(id) : null;
 	}
+
+	public static int getColor(String name)
+	{
+		if (name != null && materialColors.containsKey(name))
+		{
+			return materialColors.get(name);
+		}
+		return 0xFFFFFF;
+
+	}
 }
