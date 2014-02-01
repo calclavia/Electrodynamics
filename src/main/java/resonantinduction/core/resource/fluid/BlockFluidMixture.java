@@ -2,18 +2,15 @@ package resonantinduction.core.resource.fluid;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +23,7 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 {
 	public BlockFluidMixture(Fluid fluid)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, "fluidMixture", Settings.getNextBlockID()).getInt(), fluid, Material.water);
+		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, fluid.getName(), Settings.getNextBlockID()).getInt(), fluid, Material.water);
 		setTextureName(Reference.PREFIX + "mixture_flow");
 		this.setUnlocalizedName(Reference.PREFIX + "fluidMixture");
 	}

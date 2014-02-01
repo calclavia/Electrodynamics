@@ -1,9 +1,6 @@
 package resonantinduction.core.resource.fluid;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
@@ -12,10 +9,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.core.resource.TileMaterial;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

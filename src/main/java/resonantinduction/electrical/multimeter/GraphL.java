@@ -16,6 +16,7 @@ public class GraphL extends Graph<Long>
 		queue += value;
 	}
 
+	@Override
 	public void doneQueue()
 	{
 		super.doneQueue();
@@ -28,6 +29,7 @@ public class GraphL extends Graph<Long>
 		return 0L;
 	}
 
+	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
@@ -40,6 +42,7 @@ public class GraphL extends Graph<Long>
 		}
 	}
 
+	@Override
 	public NBTTagCompound save()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();

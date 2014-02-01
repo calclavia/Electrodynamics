@@ -14,8 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
-import resonantinduction.core.TabRI;
 import resonantinduction.core.Settings;
+import resonantinduction.core.TabRI;
 
 public class ItemImprint extends Item
 {

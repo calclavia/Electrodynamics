@@ -4,9 +4,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockRI;
-import resonantinduction.core.render.RIBlockRenderingHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockThermopile extends BlockRI
 {

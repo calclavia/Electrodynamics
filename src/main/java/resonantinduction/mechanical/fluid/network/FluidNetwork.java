@@ -72,6 +72,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		this.distributeConnectors();
 	}
 
+	@Override
 	public void reconstructConnector(IFluidConnector connector)
 	{
 		FluidTank tank = connector.getInternalTank();

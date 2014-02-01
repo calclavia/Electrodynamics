@@ -223,6 +223,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		return from != getDirection() || from != getDirection().getOpposite();
 	}
 
+	@Override
 	public void refresh()
 	{
 		boolean didRefresh = false;
@@ -269,7 +270,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			}
 			else if (tile instanceof IMechanical)
 			{
-				IMechanical mechanical = (IMechanical) ((IMechanical) tile).getInstance(dir.getOpposite());
+				IMechanical mechanical = ((IMechanical) tile).getInstance(dir.getOpposite());
 
 				if (mechanical != null)
 				{

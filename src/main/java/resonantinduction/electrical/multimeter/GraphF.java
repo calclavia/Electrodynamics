@@ -16,6 +16,7 @@ public class GraphF extends Graph<Float>
 		queue += value;
 	}
 
+	@Override
 	public void doneQueue()
 	{
 		super.doneQueue();
@@ -28,6 +29,7 @@ public class GraphF extends Graph<Float>
 		return 0f;
 	}
 
+	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
@@ -41,6 +43,7 @@ public class GraphF extends Graph<Float>
 		}
 	}
 
+	@Override
 	public NBTTagCompound save()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();

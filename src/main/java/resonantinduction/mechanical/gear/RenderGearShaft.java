@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

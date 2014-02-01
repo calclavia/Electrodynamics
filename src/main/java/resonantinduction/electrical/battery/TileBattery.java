@@ -137,7 +137,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	{
 		ArrayList data = new ArrayList();
 		data.add(energy.getEnergy());
-		data.add((short) ioMap);
+		data.add(ioMap);
 		return data;
 	}
 

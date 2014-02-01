@@ -11,7 +11,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -22,9 +21,6 @@ import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
-import resonantinduction.core.resource.fluid.BlockFluidMaterial;
-import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;

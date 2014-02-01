@@ -17,7 +17,7 @@ public class SoundHandler
 {
 	public static final SoundHandler INSTANCE = new SoundHandler();
 
-	public static final String[] SOUND_FILES = { "hammer.ogg", "grinder1.ogg", "grinder2.ogg", "grinder3.ogg", "grinder4.ogg", "electricshock1.ogg", "electricshock2.ogg", "electricshock3.ogg", "electricshock4.ogg", "electricshock5.ogg", "electricshock6.ogg", "electricshock7.ogg" , "conveyor.ogg" };
+	public static final String[] SOUND_FILES = { "hammer.ogg", "grinder1.ogg", "grinder2.ogg", "grinder3.ogg", "grinder4.ogg", "electricshock1.ogg", "electricshock2.ogg", "electricshock3.ogg", "electricshock4.ogg", "electricshock5.ogg", "electricshock6.ogg", "electricshock7.ogg", "conveyor.ogg" };
 
 	@ForgeSubscribe
 	public void loadSoundEvents(SoundLoadEvent event)

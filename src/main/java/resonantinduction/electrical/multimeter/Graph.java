@@ -3,9 +3,7 @@ package resonantinduction.electrical.multimeter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 /**
  * Graph for the multimeter

@@ -3,15 +3,13 @@
  */
 package resonantinduction.core.handler;
 
-import calclavia.components.tool.ToolMode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.event.Event.Result;
-import net.minecraftforge.event.ForgeSubscribe;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.components.tool.ToolMode;
 import codechicken.multipart.ControlKeyModifer;
 
 /**
@@ -52,7 +50,7 @@ public class ToolModeLink extends ToolMode
 					((ILinkable) tile).onLink(player, this.getLink(stack));
 				}
 			}
-			
+
 			return true;
 		}
 
