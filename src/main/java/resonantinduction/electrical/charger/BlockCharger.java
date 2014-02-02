@@ -66,16 +66,10 @@ public class BlockCharger extends BlockRI
     @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (player != null)
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (player != null && tile instanceof TileCharger)
         {
-            if (player.inventory.getCurrentItem() != null)
-            {
-
-            }
-            else
-            {
-
-            }
+            return this.interactCurrentItem((TileCharger) tile, 0, player);
         }
         return false;
     }

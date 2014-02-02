@@ -27,174 +27,199 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 {
-	private final RenderBlocks renderBlocks = new RenderBlocks();
+    private static final ForgeDirection[] forge_sides = { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST };
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
-	{
-		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z);
-	}
+    private final RenderBlocks renderBlocks;
+    private final RenderItem renderItem;
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
-	{
-		GL11.glPushMatrix();
+    private RenderItemOverlayTile()
+    {
+        super();
+        renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+        renderBlocks = new RenderBlocks();
+    }
 
-		/**
-		 * Render the Crafting Matrix
-		 */
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		boolean isLooking = false;
+    public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
+    {
+        renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z);
+    }
 
-		MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+    public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
+    {
+        GL11.glPushMatrix();
 
-		if (objectPosition != null)
-		{
-			isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
-		}
+        /** Render the Crafting Matrix */
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        boolean isLooking = false;
 
-		for (int i = 0; i < (matrixX * matrixZ); i++)
-		{
-			if (inventory[i] != null)
-			{
-				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ))).translate(-0.5);
-				translation.scale(0.9);
-				translation.translate(0, 0, 0.06);
-				GL11.glPushMatrix();
-				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
-				RenderUtility.rotateBlockBasedOnDirection(dir);
-				GL11.glTranslated(translation.x, translation.y, translation.z);
-				GL11.glScalef(0.7f, 0.7f, 0.7f);
-				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
-				GL11.glPopMatrix();
+        MovingObjectPosition objectPosition = player.rayTrace(8, 1);
 
-				if (isLooking)
-				{
-					GL11.glPushMatrix();
-					GL11.glTranslated(x, y, z);
-					int angle = WorldUtility.getAngleFromForgeDirection(WorldUtility.invertX(dir));
-					RenderUtility.renderFloatingText("" + inventory[i].stackSize, translation.rotate(angle, Vector3.UP()).translate(0.5).translate(0, 0.3, 0));
-					GL11.glPopMatrix();
-				}
-			}
-		}
-		GL11.glPopMatrix();
+        if (objectPosition != null)
+        {
+            isLooking = objectPosition.blockX == tileEntity.xCoord && objectPosition.blockY == tileEntity.yCoord && objectPosition.blockZ == tileEntity.zCoord;
+        }
 
-	}
+        for (int i = 0; i < (matrixX * matrixZ); i++)
+        {
+            if (inventory[i] != null)
+            {
+                Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ))).translate(-0.5);
+                translation.scale(0.9);
+                translation.translate(0, 0, 0.06);
+                GL11.glPushMatrix();
+                GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
+                RenderUtility.rotateBlockBasedOnDirection(dir);
+                GL11.glTranslated(translation.x, translation.y, translation.z);
+                GL11.glScalef(0.7f, 0.7f, 0.7f);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+                this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
+                GL11.glPopMatrix();
 
-	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
-	{
-		renderItemOnSides(tile, itemStack, x, y, z, "No Output");
-	}
+                if (isLooking)
+                {
+                    GL11.glPushMatrix();
+                    GL11.glTranslated(x, y, z);
+                    int angle = WorldUtility.getAngleFromForgeDirection(WorldUtility.invertX(dir));
+                    RenderUtility.renderFloatingText("" + inventory[i].stackSize, translation.rotate(angle, Vector3.UP()).translate(0.5).translate(0, 0.3, 0));
+                    GL11.glPopMatrix();
+                }
+            }
+        }
+        GL11.glPopMatrix();
 
-	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
-	{
-		RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+    }
 
-		/**
-		 * Render the Output
-		 */
-		String amount = "";
+    public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
+    {
+        renderItemOnSides(tile, itemStack, x, y, z, "No Output");
+    }
 
-		if (itemStack != null)
-		{
-			renderText = itemStack.getDisplayName();
-			amount = Integer.toString(itemStack.stackSize);
-		}
+    public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
+    {
+        /** Render the Output */
+        String amount = "";
 
-		for (int side = 2; side < 6; side++)
-		{
-			ForgeDirection direction = ForgeDirection.getOrientation(side);
+        if (itemStack != null)
+        {
+            renderText = itemStack.getDisplayName();
+            amount = Integer.toString(itemStack.stackSize);
+        }
 
-			if (tile.worldObj.isBlockSolidOnSide(tile.xCoord + direction.offsetX, tile.yCoord, tile.zCoord + direction.offsetZ, direction.getOpposite()))
-			{
-				continue;
-			}
+        for (ForgeDirection direction : forge_sides)
+        {
+            if (tile.worldObj.isBlockSolidOnSide(tile.xCoord + direction.offsetX, tile.yCoord, tile.zCoord + direction.offsetZ, direction.getOpposite()))
+            {
+                continue;
+            }
+            this.renderItemOnSide(tile, renderItem, itemStack, direction, x, y, z, renderText, amount);
+            RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
+            RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
+        }
+    }
 
-			this.setupLight(tile, direction.offsetX, direction.offsetZ);
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+    protected void renderItemSingleSide(TileEntity tile, double x, double y, double z, ItemStack itemStack, ForgeDirection direction, String renderText)
+    {
+        if (!tile.worldObj.isBlockSolidOnSide(tile.xCoord + direction.offsetX, tile.yCoord, tile.zCoord + direction.offsetZ, direction.getOpposite()))
+        {
+            String amount = "";
 
-			if (itemStack != null)
-			{
-				GL11.glPushMatrix();
+            if (itemStack != null)
+            {
+                renderText = itemStack.getDisplayName();
+                amount = Integer.toString(itemStack.stackSize);
+            }
 
-				switch (side)
-				{
-					case 2:
-						GL11.glTranslated(x + 0.65, y + 0.9, z - 0.01);
-						break;
-					case 3:
-						GL11.glTranslated(x + 0.35, y + 0.9, z + 1.01);
-						GL11.glRotatef(180, 0, 1, 0);
-						break;
-					case 4:
-						GL11.glTranslated(x - 0.01, y + 0.9, z + 0.35);
-						GL11.glRotatef(90, 0, 1, 0);
-						break;
-					case 5:
-						GL11.glTranslated(x + 1.01, y + 0.9, z + 0.65);
-						GL11.glRotatef(-90, 0, 1, 0);
-						break;
-				}
+            this.renderItemOnSide(tile, renderItem, itemStack, direction, x, y, z, renderText, amount);
+            RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
+            RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
 
-				float scale = 0.03125F;
-				GL11.glScalef(0.6f * scale, 0.6f * scale, -0.00001f);
-				GL11.glRotatef(180, 0, 0, 1);
+        }
+    }
 
-				TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
+    protected void renderItemOnSide(TileEntity tile, RenderItem renderItem, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
+    {
 
-				GL11.glDisable(2896);
+        this.setupLight(tile, direction.offsetX, direction.offsetZ);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
-				if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
-				{
-					renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
-				}
+        if (itemStack != null)
+        {
+            GL11.glPushMatrix();
 
-				GL11.glEnable(2896);
-				GL11.glPopMatrix();
-			}
+            switch (direction)
+            {
+                case NORTH:
+                    GL11.glTranslated(x + 0.65, y + 0.9, z - 0.01);
+                    break;
+                case SOUTH:
+                    GL11.glTranslated(x + 0.35, y + 0.9, z + 1.01);
+                    GL11.glRotatef(180, 0, 1, 0);
+                    break;
+                case WEST:
+                    GL11.glTranslated(x - 0.01, y + 0.9, z + 0.35);
+                    GL11.glRotatef(90, 0, 1, 0);
+                    break;
+                case EAST:
+                    GL11.glTranslated(x + 1.01, y + 0.9, z + 0.65);
+                    GL11.glRotatef(-90, 0, 1, 0);
+                    break;
+            }
 
-			RenderUtility.renderText(renderText, side, 0.02f, x, y - 0.35f, z);
-			RenderUtility.renderText(amount, side, 0.02f, x, y - 0.15f, z);
-		}
-	}
+            float scale = 0.03125F;
+            GL11.glScalef(0.6f * scale, 0.6f * scale, -0.00001f);
+            GL11.glRotatef(180, 0, 0, 1);
 
-	private void setupLight(TileEntity tileEntity, int xDifference, int zDifference)
-	{
-		World world = tileEntity.worldObj;
+            TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
-		if (world.isBlockOpaqueCube(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference))
-		{
-			return;
-		}
+            GL11.glDisable(2896);
 
-		int br = world.getLightBrightnessForSkyBlocks(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference, 0);
-		int var11 = br % 65536;
-		int var12 = br / 65536;
-		float scale = 0.6F;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
-	}
+            if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
+            {
+                renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
+            }
 
-	private void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
-	{
-		if (itemStack != null)
-		{
-			EntityItem entityItem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemStack.copy());
-			entityItem.getEntityItem().stackSize = 1;
-			entityItem.hoverStart = 0.0F;
-			GL11.glPushMatrix();
-			GL11.glTranslated(-0.453125F * dir.offsetX + position.x, position.y, -0.453125F * dir.offsetZ + position.z);
-			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(90 * angle, 1, 0, 0);
+            GL11.glEnable(2896);
+            GL11.glPopMatrix();
+        }
+    }
 
-			RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+    private void setupLight(TileEntity tileEntity, int xDifference, int zDifference)
+    {
+        World world = tileEntity.worldObj;
 
-			boolean fancyGraphics = RenderManager.instance.options.fancyGraphics;
-			RenderManager.instance.options.fancyGraphics = true;
-			renderItem.doRenderItem(entityItem, 0, 0, 0, 0, 0);
-			RenderManager.instance.options.fancyGraphics = fancyGraphics;
+        if (world.isBlockOpaqueCube(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference))
+        {
+            return;
+        }
 
-			GL11.glPopMatrix();
-		}
-	}
+        int br = world.getLightBrightnessForSkyBlocks(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference, 0);
+        int var11 = br % 65536;
+        int var12 = br / 65536;
+        float scale = 0.6F;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
+    }
+
+    private void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
+    {
+        if (itemStack != null)
+        {
+            EntityItem entityItem = new EntityItem(world, 0.0D, 0.0D, 0.0D, itemStack.copy());
+            entityItem.getEntityItem().stackSize = 1;
+            entityItem.hoverStart = 0.0F;
+            GL11.glPushMatrix();
+            GL11.glTranslated(-0.453125F * dir.offsetX + position.x, position.y, -0.453125F * dir.offsetZ + position.z);
+            GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(90 * angle, 1, 0, 0);
+
+            RenderItem renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
+
+            boolean fancyGraphics = RenderManager.instance.options.fancyGraphics;
+            RenderManager.instance.options.fancyGraphics = true;
+            renderItem.doRenderItem(entityItem, 0, 0, 0, 0, 0);
+            RenderManager.instance.options.fancyGraphics = fancyGraphics;
+
+            GL11.glPopMatrix();
+        }
+    }
 
 }
