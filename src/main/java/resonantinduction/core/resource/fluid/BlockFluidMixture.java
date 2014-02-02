@@ -55,10 +55,6 @@ public class BlockFluidMixture extends BlockFluidFinite
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
 		return ResourceGenerator.getColor(getFluid().getName().replace("mixture", ""));
-		/*
-		 * TileFluidMixture tileFluid = (TileFluidMixture) access.getBlockTileEntity(x, y, z);
-		 * return tileFluid.getColor();
-		 */
 	}
 
 	public boolean mix(World world, int x, int y, int z, ItemStack stack)

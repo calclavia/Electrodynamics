@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.turbine;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -23,11 +24,12 @@ import calclavia.lib.prefab.turbine.TileTurbine;
  * @author Calclavia
  * 
  */
-public class TileWindTurbine extends TileTurbine implements IMechanical
+public class TileWaterTurbine extends TileTurbine implements IMechanical
 {
-	public TileWindTurbine()
+	public TileWaterTurbine()
 	{
-		maxPower = 500;
+		maxPower = 800;
+		torque = 500;
 	}
 
 	@Override
@@ -40,31 +42,45 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	@Override
 	public void updateEntity()
 	{
-		if (this.getMultiBlock().isPrimary())
+
+		/**
+		 * If this is a horizontal turbine.
+		 */
+		if (getDirection().offsetY != 0)
 		{
-			/**
-			 * If this is a vertical turbine.
-			 */
-			if (getDirection().offsetY == 0)
+			int blockIDAbove = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
+
+			if (blockIDAbove == Block.waterStill.blockID || worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
 			{
-				power += getWindPower();
+				getMultiBlock().get().power += getWaterPower();
+				worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
+				worldObj.setBlock(xCoord, yCoord - 1, zCoord, Block.waterStill.blockID);
+			}
+		}
+		else if (this.getMultiBlock().isPrimary())
+		{
+			if (worldObj.getBlockId(xCoord, yCoord - (this.getMultiBlock().isConstructed() ? 2 : 1), zCoord) == Block.waterMoving.blockID)
+			{
+				getMultiBlock().get().power += getWaterPower();
 			}
 		}
 
 		super.updateEntity();
 	}
 
+	/**
+	 * Gravitation Potential Energy:
+	 * PE = mgh
+	 */
+	private long getWaterPower()
+	{
+		return 1 * 10 * 2;
+	}
+
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
 		return false;
-	}
-
-	public long getWindPower()
-	{
-		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
-		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
-		return (long) (worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 5 : 0) + (hasBonus ? 10 : 0);
 	}
 
 	@Override
