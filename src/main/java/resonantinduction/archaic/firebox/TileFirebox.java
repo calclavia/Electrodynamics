@@ -117,16 +117,17 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				{
 					usedHeat = true;
 
-					if (heatEnergy >= getMeltIronEnergy())
+					TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+
+					if (dustTile instanceof TileMaterial)
 					{
-						TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+						String name = ((TileMaterial) dustTile).name;
+						int meta = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord);
 
-						if (dustTile instanceof TileMaterial)
+						if (heatEnergy >= getMeltIronEnergy(((float) meta / 8f) * 1000))
 						{
-							String name = ((TileMaterial) dustTile).name;
-
 							// TODO: Make refined dust yield more molten fluid than normal dust.
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getFluidMaterial(name).blockID, worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord), 3);
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getFluidMaterial(name).blockID, meta, 3);
 							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)
@@ -170,6 +171,11 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 		}
 	}
 
+	/**
+	 * Approximately 327600 + 2257000 = 2584600.
+	 * 
+	 * @return
+	 */
 	public long getRequiredBoilWaterEnergy()
 	{
 		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
@@ -177,10 +183,10 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000);
 	}
 
-	public long getMeltIronEnergy()
+	public long getMeltIronEnergy(float volume)
 	{
 		int temperatureChange = 1811 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
-		int mass = ThermalPhysics.getMass(1000, 7.9f);
+		int mass = ThermalPhysics.getMass(volume, 7.9f);
 		return ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000);
 	}
 
