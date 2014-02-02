@@ -167,7 +167,7 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (byte tier = 0; tier < 3; tier++)
+		for (byte tier = 0; tier <= TileBattery.MAX_TIER; tier++)
 		{
 			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), 0));
 			par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)));

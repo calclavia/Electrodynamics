@@ -14,6 +14,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
@@ -63,19 +64,19 @@ public class ItemMultimeter extends ItemMultipartBase
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
 	{
-		if (par2EntityPlayer.isSneaking())
+		if (ControlKeyModifer.isControlDown(entityPlayer))
 		{
 			if (!world.isRemote)
 			{
-				par2EntityPlayer.addChatMessage(LanguageUtility.getLocal("message.multimeter.onUse").replace("%v", "" + PartMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z))));
+				entityPlayer.addChatMessage(LanguageUtility.getLocal("message.multimeter.onUse").replace("%v", "" + PartMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z))));
 			}
 
 			return true;
 		}
 
-		return super.onItemUse(par1ItemStack, par2EntityPlayer, world, x, y, z, par7, par8, par9, par10);
+		return super.onItemUse(par1ItemStack, entityPlayer, world, x, y, z, par7, par8, par9, par10);
 	}
 
 	public float getDetection(ItemStack itemStack)

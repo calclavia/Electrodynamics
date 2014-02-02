@@ -28,6 +28,11 @@ import com.google.common.io.ByteArrayDataInput;
  */
 public class TileBattery extends TileElectrical implements IConnector<BatteryNetwork>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
+	/**
+	 * Tiers: 0, 1, 2
+	 */
+	public static final int MAX_TIER = 2;
+
 	/** The transfer rate **/
 	public static final long DEFAULT_WATTAGE = getEnergyForTier(0);
 
@@ -51,7 +56,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	 */
 	public static long getEnergyForTier(int tier)
 	{
-		return (long) Math.pow(100000, tier + 1) + 900000;
+		return (long) Math.pow(100000000, ((float) tier / (float) (MAX_TIER + 0.1f)) + 1);
 	}
 
 	@Override
