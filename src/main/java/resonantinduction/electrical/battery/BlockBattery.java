@@ -147,6 +147,6 @@ public class BlockBattery extends BlockIOBase implements ITileEntityProvider
 		}
 
 		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-		return CompatibilityModule.getItemWithCharge(new ItemStack(id, 1, getDamageValue(world, x, y, z)), battery.getEnergy(null));
+		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.energy.getEnergy());
 	}
 }
