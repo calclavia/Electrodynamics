@@ -233,8 +233,19 @@ public class ResourceGenerator
 		return 0xFFFFFF;
 	}
 
+	public static Block getFluidMaterial(String name)
+	{
+		return ResonantInduction.blockFluidMaterials.get((getID(name)));
+	}
+
 	public static int getID(String name)
 	{
+		if (!materialNames.contains(name))
+		{
+			ResonantInduction.LOGGER.severe("Trying to get invalid material name " + name);
+			return 0;
+		}
+
 		return materialNames.indexOf(name);
 	}
 
