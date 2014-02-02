@@ -562,11 +562,14 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			universalelectricity.api.vector.Vector3 vector = getPosition().translate(dir);
-
-			if (hasMultimeter(vector.intX(), vector.intY(), vector.intZ()))
+			if (dir != getDirection() && dir != getDirection().getOpposite())
 			{
-				connections[dir.ordinal()] = getMultimeter(vector.intX(), vector.intY(), vector.intZ());
+				universalelectricity.api.vector.Vector3 vector = getPosition().translate(dir);
+
+				if (hasMultimeter(vector.intX(), vector.intY(), vector.intZ()))
+				{
+					connections[dir.ordinal()] = getMultimeter(vector.intX(), vector.intY(), vector.intZ());
+				}
 			}
 		}
 

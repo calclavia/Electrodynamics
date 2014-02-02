@@ -45,7 +45,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	 * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
 	 * into fluids to increase their internal energy.
 	 */
-	private final long POWER = 50000;
+	private final long POWER = 100000;
 
 	@Synced
 	private int burnTime;
@@ -141,6 +141,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				else if (blockID == Block.waterStill.blockID)
 				{
 					usedHeat = true;
+
 					if (heatEnergy >= getRequiredBoilWaterEnergy())
 					{
 						if (FluidRegistry.getFluid("steam") != null)
@@ -173,7 +174,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	{
 		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
 		int mass = ThermalPhysics.getMass(1000, 1);
-		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2260000);
+		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000);
 	}
 
 	public long getMeltIronEnergy()
