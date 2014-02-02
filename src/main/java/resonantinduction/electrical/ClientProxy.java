@@ -7,6 +7,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import resonantinduction.core.render.RenderRIItem;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.battery.TileBattery;
+import resonantinduction.electrical.charger.TileCharger;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
 import resonantinduction.electrical.generator.solar.RenderSolarPanel;
@@ -18,6 +19,7 @@ import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.render.FXElectricBolt;
 import resonantinduction.electrical.tesla.RenderTesla;
 import resonantinduction.electrical.tesla.TileTesla;
+import resonantinduction.mechanical.belt.RenderCharger;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -26,58 +28,56 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * @author Calclavia
- * 
- */
+/** @author Calclavia */
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
-	@Override
-	public void preInit()
-	{
-		MinecraftForgeClient.registerItemRenderer(Electrical.blockBattery.blockID, RenderRIItem.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
-	}
+    @Override
+    public void preInit()
+    {
+        MinecraftForgeClient.registerItemRenderer(Electrical.blockBattery.blockID, RenderRIItem.INSTANCE);
+        MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
+        MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCharger.class, new RenderCharger());
+    }
 
-	@Override
-	public void postInit()
-	{
-	}
+    @Override
+    public void postInit()
+    {
+    }
 
-	@Override
-	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    @Override
+    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileMultipart)
-		{
-			TMultiPart part = ((TileMultipart) tileEntity).partMap(id);
+        if (tileEntity instanceof TileMultipart)
+        {
+            TMultiPart part = ((TileMultipart) tileEntity).partMap(id);
 
-			if (part instanceof PartMultimeter)
-			{
-				return new GuiMultimeter(player.inventory, (PartMultimeter) part);
-			}
-		}
-		else if (tileEntity instanceof TileEncoder)
-		{
-			return new GuiEncoderInventory(player.inventory, (TileEncoder) tileEntity);
-		}
+            if (part instanceof PartMultimeter)
+            {
+                return new GuiMultimeter(player.inventory, (PartMultimeter) part);
+            }
+        }
+        else if (tileEntity instanceof TileEncoder)
+        {
+            return new GuiEncoderInventory(player.inventory, (TileEncoder) tileEntity);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
-	{
-		if (world.isRemote)
-		{
-			FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b));
-		}
-	}
+    @Override
+    public void renderElectricShock(World world, Vector3 start, Vector3 target, float r, float g, float b, boolean split)
+    {
+        if (world.isRemote)
+        {
+            FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FXElectricBolt(world, start, target, split).setColor(r, g, b));
+        }
+    }
 }

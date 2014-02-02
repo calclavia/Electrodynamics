@@ -32,7 +32,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
     private final RenderBlocks renderBlocks;
     private final RenderItem renderItem;
 
-    private RenderItemOverlayTile()
+    public RenderItemOverlayTile()
     {
         super();
         renderItem = ((RenderItem) RenderManager.instance.getEntityClassRenderObject(EntityItem.class));
@@ -93,7 +93,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
     {
         renderItemOnSides(tile, itemStack, x, y, z, "No Output");
     }
-
+    
     public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
     {
         /** Render the Output */
@@ -111,7 +111,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
             {
                 continue;
             }
-            this.renderItemOnSide(tile, renderItem, itemStack, direction, x, y, z, renderText, amount);
+            this.renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
             RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
             RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
         }
@@ -129,14 +129,14 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
                 amount = Integer.toString(itemStack.stackSize);
             }
 
-            this.renderItemOnSide(tile, renderItem, itemStack, direction, x, y, z, renderText, amount);
+            this.renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
             RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
             RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
 
         }
     }
 
-    protected void renderItemOnSide(TileEntity tile, RenderItem renderItem, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
+    protected void renderItemOnSide(TileEntity tile, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
     {
 
         this.setupLight(tile, direction.offsetX, direction.offsetZ);

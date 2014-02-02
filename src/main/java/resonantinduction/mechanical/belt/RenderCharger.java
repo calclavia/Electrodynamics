@@ -12,7 +12,7 @@ public class RenderCharger extends RenderItemOverlayTile
     {
         if (tile instanceof TileCharger)
         {
-            renderItemOnSides(tile, ((TileCharger) tile).getStackInSlot(0), x, y, z);
+            this.renderItemSingleSide(tile, x, y, z, ((TileCharger)tile).getStackInSlot(0), ((TileCharger)tile).getDirection(), "IDLE");
         }
     }
 
