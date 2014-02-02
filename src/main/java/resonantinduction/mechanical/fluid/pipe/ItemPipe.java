@@ -35,7 +35,7 @@ public class ItemPipe extends ItemMultipartBase
 	{
 		return damage;
 	}
-
+	/*
 	@Override
 	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
 	{
@@ -43,5 +43,5 @@ public class ItemPipe extends ItemMultipartBase
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
 		}
-	}
+	}*/
 }
