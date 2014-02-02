@@ -14,9 +14,9 @@ public class TileCharger extends TileExternalInventory implements IRotatable, IE
 {
     private long energyCap = 0;
     private long energyStored = 0;
-    private ChargerMode currentMode = ChargerMode.SINGLE;
+    public ChargerMode currentMode = ChargerMode.SINGLE;
 
-    private static enum ChargerMode
+    public static enum ChargerMode
     {
         SINGLE(1),
         DUAL(2),

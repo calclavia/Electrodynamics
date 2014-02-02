@@ -18,6 +18,8 @@ import resonantinduction.core.TabRI;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
+import resonantinduction.electrical.charger.BlockCharger;
+import resonantinduction.electrical.charger.TileCharger;
 import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.generator.BlockGenerator;
 import resonantinduction.electrical.generator.TileGenerator;
@@ -89,6 +91,7 @@ public class Electrical
 	public static Block blockThermopile;
 
 	// Machines
+	public static Block blockItemCharger;
 
 	// Transport
 	public static Block blockEMLevitator;
@@ -119,6 +122,8 @@ public class Electrical
 		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
+		
+		blockItemCharger = contentRegistry.createTile(BlockCharger.class, TileCharger.class);
 
 		Settings.save();
 
