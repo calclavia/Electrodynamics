@@ -118,7 +118,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 
 		if (prev != this.getTank().getFluidAmount())
 		{
-			this.reconstructTankInfo();
+			reconstructTankInfo();
 		}
 
 		return fill;
@@ -134,7 +134,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 
 			if (!FluidUtility.matchExact(before, drain))
 			{
-				this.reconstructTankInfo();
+				reconstructTankInfo();
 			}
 
 			return drain;

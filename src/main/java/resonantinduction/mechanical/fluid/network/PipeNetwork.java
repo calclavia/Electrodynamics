@@ -75,9 +75,9 @@ public class PipeNetwork extends FluidNetwork
 			}
 		}
 
-		this.getTank().setFluid(stack);
+		getTank().setFluid(stack);
 		// TODO check for change before rebuilding
-		this.reconstructTankInfo();
+		reconstructTankInfo();
 	}
 
 	@Override
