@@ -22,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * NO-OP. Not yet properly implemented. We're not using TEs for now.
  * @author Calclavia
  * 
  */
@@ -38,7 +39,7 @@ public class TileFluidMixture extends TileMaterial
 
 	public boolean mix(ItemStack itemStack)
 	{
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack).length > 0)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack).length > 0 && getBlockMetadata() < 8)
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);
@@ -48,6 +49,7 @@ public class TileFluidMixture extends TileMaterial
 				name = ResourceGenerator.getName(itemStack.getItemDamage());
 			}
 
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() + 1, 3);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			return true;
 		}

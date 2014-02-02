@@ -16,6 +16,7 @@ import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
@@ -50,63 +51,46 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 		Vector3 checkAbove = position.clone().translate(ForgeDirection.UP);
 		Vector3 checkBelow = position.clone().translate(ForgeDirection.DOWN);
 
-		TileEntity tileAbove = checkAbove.getTileEntity(world);
-		TileEntity tileBelow = checkBelow.getTileEntity(world);
+		Block bAbove = Block.blocksList[checkAbove.getBlockID(world)];
+		Block bBelow = Block.blocksList[checkAbove.getBlockID(world)];
 
-		if (tileAbove instanceof TileFluidMixture && (tileBelow == null || tileBelow instanceof TileFluidMixture))
+		if (bAbove instanceof BlockFluidMixture && world.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()))
 		{
 			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
 
-			if (((TileFluidMixture) tileAbove).items.size() > 0)
+			/**
+			 * Leak the fluid down.
+			 */
+			BlockFluidMixture fluidBlock = (BlockFluidMixture) bAbove;
+			int amount = fluidBlock.getQuantaValue(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ());
+
+			/**
+			 * Drop item from fluid.
+			 */
+			for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(fluidBlock.getFluid().getName().replace("mixture", ""))))
 			{
-				/**
-				 * Leak the fluid down.
-				 */
-				BlockFluidMixture fluidBlock = (BlockFluidMixture) ResonantInduction.blockFluidMixtures;
-				int amount = fluidBlock.getQuantaValue(world, x, y, z);
-
-				/**
-				 * All fluid is filtered out, spawn all the items.
-				 */
-				if (amount <= 1)
-				{
-					System.out.println("filter dropped");
-					for (ItemStack itemStack : ((TileFluidMixture) tileAbove).items)
-					{
-						for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack))
-						{
-							InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
-						}
-					}
-				}
-
-				int remaining = amount - 1;
-
-				/**
-				 * Remove liquid from top.
-				 */
-				if (remaining > 0)
-				{
-					fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
-					world.scheduleBlockUpdate(x, y, z, blockID, 20);
-				}
-				else
-				{
-					checkAbove.setBlock(world, 0);
-				}
-
-				/**
-				 * Add liquid to bottom.
-				 */
-				if (Block.blocksList[checkBelow.getBlockID(world)] instanceof BlockFluidMixture)
-				{
-					fluidBlock.setQuanta(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ(), fluidBlock.getQuantaValue(world, checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) + 1);
-				}
-				else
-				{
-					checkBelow.setBlock(world, Block.waterStill.blockID, 3);
-				}
+				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}
+
+			int remaining = amount - 1;
+
+			/**
+			 * Remove liquid from top.
+			 */
+			if (remaining > 0)
+			{
+				fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
+				world.scheduleBlockUpdate(x, y, z, blockID, 20);
+			}
+			else
+			{
+				checkAbove.setBlock(world, 0);
+			}
+
+			/**
+			 * Add liquid to bottom.
+			 */
+			checkBelow.setBlock(world, Block.waterStill.blockID, 0, 3);
 		}
 	}
 

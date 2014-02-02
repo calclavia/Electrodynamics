@@ -2,6 +2,7 @@ package resonantinduction.core.resource.fluid;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -10,8 +11,11 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
+import resonantinduction.core.resource.ResourceGenerator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityProvider
+public class BlockFluidMixture extends BlockFluidFinite
 {
 	public BlockFluidMixture(Fluid fluid)
 	{
@@ -50,19 +54,28 @@ public class BlockFluidMixture extends BlockFluidFinite implements ITileEntityPr
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
-		TileFluidMixture tileFluid = (TileFluidMixture) access.getBlockTileEntity(x, y, z);
-		return tileFluid.getColor();
+		return ResourceGenerator.getColor(getFluid().getName().replace("mixture", ""));
+		/*
+		 * TileFluidMixture tileFluid = (TileFluidMixture) access.getBlockTileEntity(x, y, z);
+		 * return tileFluid.getColor();
+		 */
+	}
+
+	public boolean mix(World world, int x, int y, int z, ItemStack stack)
+	{
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, getQuantaValue(world, x, y, z) + 1, 3);
+			world.markBlockForUpdate(x, y, z);
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
 	public boolean canDrain(World world, int x, int y, int z)
 	{
 		return true;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileFluidMixture();
 	}
 }

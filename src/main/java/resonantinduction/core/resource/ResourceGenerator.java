@@ -11,8 +11,10 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.Language;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -79,7 +81,7 @@ public class ResourceGenerator
 		for (String materialName : materialNames)
 		{
 			// Caps version of the name
-			String nameCaps = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
+			String nameCaps = LanguageUtility.capitalizeFirst(materialName);
 
 			/**
 			 * Generate molten fluids
@@ -102,21 +104,24 @@ public class ResourceGenerator
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
 			ResonantInduction.blockFluidMixtures.add(blockFluidMixture);
 
-			OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
-			OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
-			OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
+			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
+			{
+				OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
+				OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
+				OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
 
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, "dust" + nameCaps, "dust" + nameCaps);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, "dustRefined" + nameCaps);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, "dustRefined" + nameCaps, "ingot" + nameCaps);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, "dust" + nameCaps, "dust" + nameCaps);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, "dustRefined" + nameCaps);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, "dustRefined" + nameCaps, "ingot" + nameCaps);
 
-			ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
-			FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
-			ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
-			ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
-			smeltResult.stackSize = 2;
-			FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
+				ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
+				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
+				ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
+				ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
+				smeltResult.stackSize = 2;
+				FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
+			}
 		}
 	}
 

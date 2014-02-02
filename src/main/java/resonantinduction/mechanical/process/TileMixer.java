@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
@@ -52,7 +54,7 @@ public class TileMixer extends TileMechanical
 	public void doWork()
 	{
 		boolean didWork = false;
-		
+
 		// Search for an item to "process"
 		AxisAlignedBB aabb = AxisAlignedBB.getAABBPool().getAABB(this.xCoord - 1, this.yCoord, this.zCoord - 1, this.xCoord + 2, this.yCoord + 1, this.zCoord + 2);
 		List<Entity> entities = this.worldObj.getEntitiesWithinAABB(Entity.class, aabb);
@@ -137,21 +139,21 @@ public class TileMixer extends TileMechanical
 	private boolean doneWork(EntityItem entity)
 	{
 		Vector3 mixPosition = new Vector3(entity.posX, yCoord, entity.posZ);
-		TileEntity tileEntity = mixPosition.getTileEntity(worldObj);
+		Block block = Block.blocksList[mixPosition.getBlockID(worldObj)];
 
-		if (tileEntity instanceof TileFluidMixture)
+		if (block instanceof BlockFluidMixture)
 		{
 			ItemStack itemStack = entity.getEntityItem().copy();
 
-			if (((TileFluidMixture) tileEntity).mix(itemStack))
+			if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
 			{
 				worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
 				return true;
 			}
 		}
-		else
+		else if (worldObj.isAirBlock(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ()))
 		{
-			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID, 8);
+			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID);
 		}
 
 		return false;
