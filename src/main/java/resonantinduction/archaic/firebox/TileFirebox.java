@@ -28,6 +28,7 @@ import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.Synced;
 import calclavia.lib.prefab.tile.TileElectricalInventory;
 import calclavia.lib.thermal.BoilEvent;
+import calclavia.lib.thermal.ThermalPhysics;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -49,17 +50,6 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	@Synced
 	private int burnTime;
 
-	/**
-	 * 
-	 * It takes 338260 J to boile water.
-	 * TODO: Make desert faster, col biomes slower.
-	 */
-	private final long requiredBoilWaterEnergy = 338260;
-
-	/**
-	 * Requires about 6.6MJ of energy to melt iron.
-	 */
-	private final long requiredMeltIronEnergy = 4781700 + 1904000;
 	private long heatEnergy = 0;
 
 	public TileFirebox()
@@ -127,7 +117,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				{
 					usedHeat = true;
 
-					if (heatEnergy >= requiredMeltIronEnergy)
+					if (heatEnergy >= getMeltIronEnergy())
 					{
 						TileEntity dustTile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
@@ -150,7 +140,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				else if (blockID == Block.waterStill.blockID)
 				{
 					usedHeat = true;
-					if (heatEnergy >= requiredBoilWaterEnergy)
+					if (heatEnergy >= getRequiredBoilWaterEnergy())
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), new FluidStack(FluidRegistry.getFluid("steam"), FluidContainerRegistry.BUCKET_VOLUME), 2));
@@ -178,12 +168,18 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 		}
 	}
 
-	/**
-	 * TODO: Make biome sensitivity.
-	 */
 	public long getRequiredBoilWaterEnergy()
 	{
-		return requiredBoilWaterEnergy;
+		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
+		int mass = ThermalPhysics.getMass(1000, 1);
+		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2260000);
+	}
+
+	public long getMeltIronEnergy()
+	{
+		int temperatureChange = 1811 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
+		int mass = ThermalPhysics.getMass(1000, 7.9f);
+		return ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000);
 	}
 
 	@Override
