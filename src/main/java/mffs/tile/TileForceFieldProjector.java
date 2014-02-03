@@ -140,7 +140,8 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 			{
 				if (((IModule) module.getItem()).requireTicks(module))
 				{
-					this.fieldRequireTicks = true;
+					fieldRequireTicks = true;
+					break;
 				}
 			}
 		}
@@ -236,9 +237,9 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	@Override
 	public void projectField()
 	{
-		if (this.isCalculated && !this.isCalculating)
+		if (isCalculated && !isCalculating)
 		{
-			if (!this.isCompleteConstructing || this.markFieldUpdate)
+			if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
 			{
 				this.markFieldUpdate = false;
 

@@ -6,8 +6,10 @@ import mffs.api.IProjector;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.BlockFluidBase;
 import universalelectricity.api.vector.Vector3;
 
 public class ItemModuleSponge extends ItemModule
@@ -29,7 +31,9 @@ public class ItemModuleSponge extends ItemModule
 			{
 				for (Vector3 point : projector.getInteriorPoints())
 				{
-					if (Block.blocksList[point.getBlockID(world)] instanceof BlockFluid)
+					Block block = Block.blocksList[point.getBlockID(world)];
+
+					if (block instanceof BlockFluid || block instanceof BlockFluidBase)
 					{
 						point.setBlock(world, 0);
 					}
@@ -38,5 +42,11 @@ public class ItemModuleSponge extends ItemModule
 		}
 
 		return super.onProject(projector, fields);
+	}
+
+	@Override
+	public boolean requireTicks(ItemStack moduleStack)
+	{
+		return true;
 	}
 }
