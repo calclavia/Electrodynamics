@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +19,10 @@ import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
 import calclavia.lib.prefab.block.BlockAdvanced;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.IconTransformation;
+import codechicken.lib.render.RenderUtils;
+import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
@@ -211,6 +216,13 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public int getMaxFlowRate()
 	{
 		return FluidContainerRegistry.BUCKET_VOLUME;
+	}
+
+	@Override
+	public void drawBreaking(RenderBlocks renderBlocks)
+	{
+		CCRenderState.reset();
+		RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(renderBlocks.overrideBlockTexture), null);
 	}
 
 	@Override

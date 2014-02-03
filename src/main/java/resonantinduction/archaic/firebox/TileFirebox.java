@@ -178,9 +178,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	 */
 	public long getRequiredBoilWaterEnergy()
 	{
-		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
-		int mass = ThermalPhysics.getMass(1000, 1);
-		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000);
+		return ThermalPhysics.getRequiredBoilWaterEnergy(worldObj, xCoord, zCoord);
 	}
 
 	public long getMeltIronEnergy(float volume)
