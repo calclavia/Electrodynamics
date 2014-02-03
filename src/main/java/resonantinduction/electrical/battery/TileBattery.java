@@ -56,7 +56,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	 */
 	public static long getEnergyForTier(int tier)
 	{
-		return (long) Math.pow(100000000, ((float) tier / (float) (MAX_TIER + 0.1f)) + 1);
+		return (long) Math.pow(100000000, ((float) tier / (float) (MAX_TIER + 0.25f)) + 1);
 	}
 
 	@Override
