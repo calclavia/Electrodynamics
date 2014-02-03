@@ -41,7 +41,8 @@ import com.google.common.io.ByteArrayDataInput;
 public class TileFirebox extends TileElectricalInventory implements IPacketReceiver, IFluidHandler
 {
 	/**
-	 * One coal = 4MJ, one coal lasts 80 seconds. Therefore, we are producing 50000 watts.
+	 * 1KG of coal ~= 24MJ
+	 * Approximately one coal = 4MJ, one coal lasts 80 seconds. Therefore, we are producing 50000 watts.
 	 * The power of the firebox in terms of thermal energy. The thermal energy can be transfered
 	 * into fluids to increase their internal energy.
 	 */

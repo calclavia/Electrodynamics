@@ -27,7 +27,7 @@ public enum EnumWireMaterial
 	/** Aluminum: Low Resistance */
 	SILVER("Silver", 1.59f, 5, 200, 192, 192, 192),
 	/** Superconductor: Over-powered */
-	SUPERCONDUCTOR("Superconductor", 0, 10, 600, 255, 255, 1);
+	SUPERCONDUCTOR("Superconductor", 0, 10, 1000, 255, 255, 1);
 
 	public final float resistance;
 	public final int damage;
