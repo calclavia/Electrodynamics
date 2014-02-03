@@ -307,7 +307,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		getMultiBlock().save(this, nbt);
+		getMultiBlock().save(nbt);
 	}
 
 	/**
