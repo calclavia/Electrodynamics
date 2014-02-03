@@ -254,71 +254,76 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 				int constructionCount = 0;
 				int constructionSpeed = Math.min(this.getProjectionSpeed(), Settings.MAX_FORCE_FIELDS_PER_TICK);
 
-				Set<Vector3> fieldToBeProjected = Collections.synchronizedSet(new HashSet<Vector3>(this.calculatedField));
-
-				for (IModule module : this.getModules(this.getModuleSlots()))
+				synchronized (calculatedField)
 				{
-					if (module.onProject(this, fieldToBeProjected))
+					Set<Vector3> fieldToBeProjected = new HashSet<Vector3>(calculatedField);
+
+					for (IModule module : this.getModules(this.getModuleSlots()))
 					{
-						return;
-					}
-				}
-
-				Iterator<Vector3> it = fieldToBeProjected.iterator();
-
-				fieldLoop:
-				while (it.hasNext())
-				{
-					Vector3 vector = it.next();
-
-					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
-
-					if (this.canReplaceBlock(vector, block))
-					{
-						/**
-						 * Prevents the force field projector from disintegrating itself.
-						 */
-						if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
+						if (module.onProject(this, fieldToBeProjected))
 						{
-							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
+							return;
+						}
+					}
+
+					Iterator<Vector3> it = fieldToBeProjected.iterator();
+
+					fieldLoop:
+					while (it.hasNext())
+					{
+						Vector3 vector = it.next();
+
+						Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+						if (this.canReplaceBlock(vector, block))
+						{
+							/**
+							 * Prevents the force field projector from disintegrating itself.
+							 */
+							if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
 							{
-								constructionCount++;
-
-								for (IModule module : this.getModules(this.getModuleSlots()))
+								if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
 								{
-									int flag = module.onProject(this, vector.clone());
+									constructionCount++;
 
-									if (flag == 1)
+									for (IModule module : this.getModules(this.getModuleSlots()))
 									{
-										continue fieldLoop;
+										int flag = module.onProject(this, vector.clone());
+
+										if (flag == 1)
+										{
+											continue fieldLoop;
+										}
+										else if (flag == 2)
+										{
+											break fieldLoop;
+										}
 									}
-									else if (flag == 2)
+
+									if (!this.worldObj.isRemote)
 									{
-										break fieldLoop;
+										this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 									}
-								}
 
-								if (!this.worldObj.isRemote)
-								{
-									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
-								}
+									this.forceFields.add(vector);
 
-								this.forceFields.add(vector);
+									/*
+									 * Sets the controlling projector of the force field block to
+									 * this one.
+									 */
+									TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
-								// Sets the controlling projector of the force field block to this
-								// one.
-								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
+									if (tileEntity instanceof TileForceField)
+									{
+										((TileForceField) tileEntity).setProjector(new Vector3(this));
+									}
 
-								if (tileEntity instanceof TileForceField)
-								{
-									((TileForceField) tileEntity).setProjector(new Vector3(this));
-								}
+									this.requestFortron(1, true);
 
-								this.requestFortron(1, true);
-
-								if (constructionCount > constructionSpeed)
-								{
-									break;
+									if (constructionCount > constructionSpeed)
+									{
+										break;
+									}
 								}
 							}
 						}
@@ -343,25 +348,28 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	{
 		if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
 		{
-			HashSet<Vector3> copiedSet = new HashSet<Vector3>(this.calculatedField);
-			Iterator<Vector3> it = copiedSet.iterator();
-
-			for (IModule module : this.getModules(this.getModuleSlots()))
+			synchronized (calculatedField)
 			{
-				if (module.onDestroy(this, this.getCalculatedField()))
+				HashSet<Vector3> copiedSet = new HashSet<Vector3>(calculatedField);
+				Iterator<Vector3> it = copiedSet.iterator();
+
+				for (IModule module : this.getModules(this.getModuleSlots()))
 				{
-					break;
+					if (module.onDestroy(this, this.getCalculatedField()))
+					{
+						break;
+					}
 				}
-			}
 
-			while (it.hasNext())
-			{
-				Vector3 vector = it.next();
-				Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
-
-				if (block == ModularForceFieldSystem.blockForceField)
+				while (it.hasNext())
 				{
-					this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0, 0, 3);
+					Vector3 vector = it.next();
+					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
+
+					if (block == ModularForceFieldSystem.blockForceField)
+					{
+						this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0, 0, 3);
+					}
 				}
 			}
 		}

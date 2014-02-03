@@ -86,17 +86,20 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	{
 		if (!this.worldObj.isRemote && !this.isCalculating)
 		{
-			if (this.getMode() != null)
+			synchronized (calculatedField)
 			{
-				if (this.getModeStack().getItem() instanceof ICache)
+				if (this.getMode() != null)
 				{
-					((ICache) this.getModeStack().getItem()).clearCache();
+					if (this.getModeStack().getItem() instanceof ICache)
+					{
+						((ICache) this.getModeStack().getItem()).clearCache();
+					}
+
+					calculatedField.clear();
+
+					// Start multi-threading calculations
+					(new ProjectorCalculationThread(this, callBack)).start();
 				}
-
-				this.calculatedField.clear();
-
-				// Start multi-threading calculations
-				(new ProjectorCalculationThread(this, callBack)).start();
 			}
 		}
 	}
@@ -469,31 +472,31 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	@Override
 	public void setCalculating(boolean bool)
 	{
-		this.isCalculating = bool;
+		isCalculating = bool;
 	}
 
 	@Override
 	public void setCalculated(boolean bool)
 	{
-		this.isCalculated = bool;
+		isCalculated = bool;
 	}
 
 	@Override
 	public Set<Vector3> getCalculatedField()
 	{
-		return this.calculatedField;
+		return calculatedField;
 	}
 
 	@Override
 	public List<DelayedEvent> getDelayedEvents()
 	{
-		return this.delayedEvents;
+		return delayedEvents;
 	}
 
 	@Override
 	public List<DelayedEvent> getQuedDelayedEvents()
 	{
-		return this.quedDelayedEvents;
+		return quedDelayedEvents;
 	}
 
 	/**
@@ -503,13 +506,13 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.isAbsolute = nbt.getBoolean("isAbsolute");
+		isAbsolute = nbt.getBoolean("isAbsolute");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setBoolean("isAbsolute", this.isAbsolute);
+		nbt.setBoolean("isAbsolute", isAbsolute);
 	}
 }
