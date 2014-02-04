@@ -16,7 +16,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWindTurbine extends TileEntitySpecialRenderer
 {
-	// TODO: Fix model.
 	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbines.obj");
 
 	@Override
@@ -35,8 +34,8 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 				RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
 			}
 
+			GL11.glTranslatef(0, -0.35f, 0);
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
-			GL11.glScalef(1f, 2f, 1f);
 
 			/**
 			 * TODO: Bind based on tier.
@@ -44,12 +43,14 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 			 */
 			if (tile.getMultiBlock().isConstructed())
 			{
-				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
-				MODEL.renderOnly("LargeHub");
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
 				MODEL.renderOnly("LargeBladeArm");
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "wool_colored_white.png");
 				MODEL.renderOnly("LargeBlade");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				GL11.glScalef(1f, 2f, 1f);
+				GL11.glTranslatef(0, -0.08f, 0);
+				MODEL.renderOnly("LargeHub");
 			}
 			else
 			{
