@@ -16,7 +16,7 @@ import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
-import calclavia.lib.prefab.block.BlockAdvanced;
+import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
@@ -114,7 +114,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (player.isSneaking())
 			{
@@ -133,7 +133,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				getMultiBlock().get().manualCrankTime = 10;
 			}
 
-			BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
+			WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
 			return true;
 		}
 

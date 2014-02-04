@@ -15,7 +15,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockIOBase;
+import resonantinduction.core.prefab.block.BlockRIIO;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.CompatibilityModule;
 import cpw.mods.fml.relauncher.Side;
@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockBattery extends BlockIOBase implements ITileEntityProvider
+public class BlockBattery extends BlockRIIO implements ITileEntityProvider
 {
 	public BlockBattery()
 	{

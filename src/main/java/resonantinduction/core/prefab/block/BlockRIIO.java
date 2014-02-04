@@ -16,19 +16,19 @@ import calclavia.lib.prefab.block.BlockSidedIO;
  * 
  * @author Calclavia
  */
-public class BlockIOBase extends BlockSidedIO
+public class BlockRIIO extends BlockSidedIO
 {
-	public BlockIOBase(String name)
+	public BlockRIIO(String name)
 	{
 		this(name, Settings.getNextBlockID());
 	}
 
-	public BlockIOBase(String name, int id)
+	public BlockRIIO(String name, int id)
 	{
 		this(name, id, UniversalElectricity.machine);
 	}
 
-	public BlockIOBase(String name, int id, Material material)
+	public BlockRIIO(String name, int id, Material material)
 	{
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), material);
 		this.setCreativeTab(TabRI.CORE);

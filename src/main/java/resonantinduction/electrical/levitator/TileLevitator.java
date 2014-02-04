@@ -23,13 +23,13 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.handler.ILinkable;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.prefab.block.ILinkable;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -454,12 +454,6 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 		}
 
 		return null;
-	}
-
-	public void incrementFacing()
-	{
-		int newOrdinal = getDirection().ordinal() < 5 ? getDirection().ordinal() + 1 : 0;
-		setDirection(ForgeDirection.getOrientation(newOrdinal));
 	}
 
 	public ForgeDirection getDirection()

@@ -18,7 +18,7 @@ import resonantinduction.api.fluid.IFluidPipe;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.fluid.network.PipeNetwork;
-import calclavia.lib.prefab.block.BlockAdvanced;
+import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
@@ -76,13 +76,13 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (BlockAdvanced.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (!world().isRemote)
 			{
 				isExtracting = !isExtracting;
 				player.addChatMessage("Pipe extraction mode: " + isExtracting);
-				BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
+				WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
 			}
 			return true;
 		}

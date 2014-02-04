@@ -16,7 +16,6 @@ import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
 import resonantinduction.core.handler.TextureHookHandler;
-import resonantinduction.core.handler.ToolModeLink;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.ResourceGenerator;
@@ -24,6 +23,7 @@ import resonantinduction.core.resource.TileMaterial;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
+import calclavia.components.tool.ToolModeLink;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;

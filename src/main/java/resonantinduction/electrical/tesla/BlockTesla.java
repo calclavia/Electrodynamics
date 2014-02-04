@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.Utility;
-import resonantinduction.core.prefab.block.BlockIOBase;
+import resonantinduction.core.prefab.block.BlockRIIO;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockTesla extends BlockIOBase implements ITileEntityProvider
+public class BlockTesla extends BlockRIIO implements ITileEntityProvider
 {
 	public BlockTesla()
 	{
