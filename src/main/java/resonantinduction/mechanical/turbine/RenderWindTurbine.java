@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderWindTurbine extends TileEntitySpecialRenderer
 {
 	// TODO: Fix model.
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
+	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbines.obj");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
@@ -36,19 +36,27 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 			}
 
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
+			GL11.glScalef(1f, 2f, 1f);
 
 			/**
 			 * TODO: Bind based on tier.
+			 * cobblestone, iron_block
 			 */
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
-
 			if (tile.getMultiBlock().isConstructed())
 			{
-				MODEL.renderOnly("LargeGear");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				MODEL.renderOnly("LargeHub");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				MODEL.renderOnly("LargeBladeArm");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "wool_colored_white.png");
+				MODEL.renderOnly("LargeBlade");
 			}
 			else
 			{
-				MODEL.renderOnly("SmallGear");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				MODEL.renderOnly("SmallHub");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				MODEL.renderOnly("SmallBlade");
 			}
 
 			GL11.glPopMatrix();
