@@ -126,11 +126,11 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			}
 			else if (ControlKeyModifer.isControlDown(player))
 			{
-				getMultiBlock().get().manualCrankTime = 10;
+				getMultiBlock().toggleConstruct();
 			}
 			else
 			{
-				getMultiBlock().toggleConstruct();
+				getMultiBlock().get().manualCrankTime = 10;
 			}
 
 			BlockAdvanced.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
