@@ -40,16 +40,18 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	@Override
 	public void updateEntity()
 	{
-		if (this.getMultiBlock().isPrimary())
+		/**
+		 * If this is a vertical turbine.
+		 */
+		if (getDirection().offsetY == 0)
 		{
-			/**
-			 * If this is a vertical turbine.
-			 */
-			if (getDirection().offsetY == 0)
-			{
-				power += getWindPower();
-			}
+			getMultiBlock().get().power += getWindPower();
 		}
+
+		if (!getMultiBlock().isConstructed())
+			torque = defaultTorque / 10;
+		else
+			torque = defaultTorque;
 
 		super.updateEntity();
 	}
@@ -64,7 +66,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	{
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
-		return (long) (worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 5 : 0) + (hasBonus ? 10 : 0);
+		return (long) (worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 250 : 0) + (hasBonus ? 80 : 0);
 	}
 
 	@Override
@@ -148,6 +150,12 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	}
 
 	@Override
+	public float getRatio(ForgeDirection dir)
+	{
+		return 0.5f;
+	}
+
+	@Override
 	public float getAngularVelocity()
 	{
 		return angularVelocity;
@@ -160,27 +168,15 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	}
 
 	@Override
-	public long getTorque()
-	{
-		return torque;
-	}
-
-	@Override
 	public void setTorque(long torque)
 	{
 		this.torque = torque;
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir)
-	{
-		return getMultiBlock().isConstructed() ? 1.5f : 0.5f;
-	}
-
-	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return false;
+		return true;
 	}
 
 	@Override
