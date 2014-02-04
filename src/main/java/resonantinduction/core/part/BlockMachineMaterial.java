@@ -2,12 +2,13 @@ package resonantinduction.core.part;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import calclavia.lib.prefab.block.BlockTile;
 
 /**
  * A block used to build machines or decoration.
@@ -15,14 +16,14 @@ import resonantinduction.core.prefab.block.BlockRI;
  * @author Calclavia
  * 
  */
-public class BlockMachineMaterial extends BlockRI
+public class BlockMachineMaterial extends BlockTile
 {
 	String[] iconNames = new String[] { "material_stone_brick", "material_stone_brick2", "material_stone_chiseled", "material_stone_cobble", "material_stone_cracked", "material_stone", "material_stone_slab", "material_stone_mossy", "material_steel_dark", "material_steel_tint", "material_steel" };
 	Icon[] icons = new Icon[iconNames.length];
 
-	public BlockMachineMaterial()
+	public BlockMachineMaterial(int id)
 	{
-		super("material");
+		super(id, Material.iron);
 	}
 
 	@Override

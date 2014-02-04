@@ -29,6 +29,7 @@ public class Settings
 
 	/** Settings */
 	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
+	private static boolean didLoad = false;
 	public static int FURNACE_WATTAGE = 50000;
 	public static boolean SOUND_FXS = true;
 	public static boolean SHINY_SILVER = true;
@@ -41,16 +42,20 @@ public class Settings
 	{
 		CONFIGURATION.load();
 
-		// Config
-		FURNACE_WATTAGE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage Per Tick", FURNACE_WATTAGE).getInt(FURNACE_WATTAGE);
-		SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
-		SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
-		MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
+		if (!didLoad)
+		{
+			// Config
+			FURNACE_WATTAGE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage Per Tick", FURNACE_WATTAGE).getInt(FURNACE_WATTAGE);
+			SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
+			SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
+			MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
 
-		LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
-		LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
-		LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
-		LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Contractor Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
+			LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
+			LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
+			LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
+			LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
+			didLoad = true;
+		}
 	}
 
 	public static void save()

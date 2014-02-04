@@ -9,20 +9,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.part.ItemMultipartBase;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
+import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class ItemGear extends ItemMultipartBase
+public class ItemGear extends JItemMultiPart
 {
-	public ItemGear()
+	public ItemGear(int id)
 	{
-		super("gear", Settings.getNextItemID());
+		super(id);
 	}
 
 	@Override

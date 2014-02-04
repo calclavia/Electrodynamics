@@ -4,9 +4,9 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.mechanical.process.TileMixer;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockRotatable;
 
 /**
  * A block used to build machines.
@@ -14,11 +14,11 @@ import resonantinduction.mechanical.process.TileMixer;
  * @author Calclavia
  * 
  */
-public class BlockMixer extends BlockRIRotatable implements ITileEntityProvider
+public class BlockMixer extends BlockRotatable implements ITileEntityProvider
 {
-	public BlockMixer()
+	public BlockMixer(int id)
 	{
-		super("mixer", Settings.getNextBlockID());
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_top");
 	}
 

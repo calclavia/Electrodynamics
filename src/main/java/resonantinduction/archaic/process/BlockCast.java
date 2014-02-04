@@ -9,19 +9,19 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCast extends BlockRI
+public class BlockCast extends BlockTile
 {
 	Icon top;
 
-	public BlockCast()
+	public BlockCast(int id)
 	{
-		super("cast", Material.wood);
+		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 

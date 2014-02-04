@@ -14,6 +14,7 @@ import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.prefab.BlockFluidNetwork;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -22,11 +23,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTank extends BlockFluidNetwork
 {
-	public BlockTank()
+	public BlockTank(int id)
 	{
-		super("tank");
-		this.setHardness(1f);
-		this.setResistance(5f);
+		super(id, UniversalElectricity.machine);
+		setHardness(1f);
+		setResistance(5f);
 	}
 
 	@Override

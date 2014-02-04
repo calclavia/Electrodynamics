@@ -3,15 +3,15 @@ package resonantinduction.mechanical.process;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
@@ -21,11 +21,11 @@ import calclavia.lib.utility.inventory.InventoryUtility;
  * @author Calclavia
  * 
  */
-public class BlockFilter extends BlockRI implements ITileEntityProvider
+public class BlockFilter extends BlockTile
 {
-	public BlockFilter()
+	public BlockFilter(int id)
 	{
-		super("filter");
+		super(id, Material.iron);
 	}
 
 	@Override

@@ -9,10 +9,10 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
 import resonantinduction.core.Utility;
-import resonantinduction.core.prefab.block.BlockRIIO;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockSidedIO;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,12 +21,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockTesla extends BlockRIIO implements ITileEntityProvider
+public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 {
-	public BlockTesla()
+	public BlockTesla(int id)
 	{
-		super("tesla", Settings.getNextBlockID());
-		this.setTextureName(Reference.PREFIX + "machine");
+		super(id, UniversalElectricity.machine);
+		setTextureName(Reference.PREFIX + "machine");
 	}
 
 	@Override

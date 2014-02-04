@@ -8,21 +8,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.components.tool.ToolModeLink;
+import calclavia.lib.prefab.block.BlockRotatable;
 import calclavia.lib.prefab.block.ILinkable;
 import calclavia.lib.utility.WrenchUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockLevitator extends BlockRIRotatable
+public class BlockLevitator extends BlockRotatable
 {
-	public BlockLevitator()
+	public BlockLevitator(int id)
 	{
-		super("levitator");
-		this.setTextureName(Reference.PREFIX + "machine");
+		super(id, UniversalElectricity.machine);
+		setTextureName(Reference.PREFIX + "machine");
 	}
 
 	@Override

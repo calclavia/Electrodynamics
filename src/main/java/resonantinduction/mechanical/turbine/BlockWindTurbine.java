@@ -13,19 +13,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockWindTurbine extends BlockTurbine
 {
-	public BlockWindTurbine()
+	public BlockWindTurbine(int id)
 	{
-		this(Settings.getNextBlockID(), "windTurbine", Material.iron);
+		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_wood_surface");
 		rotationMask = Byte.parseByte("111111", 2);
-	}
-
-	public BlockWindTurbine(int id, String name, Material material)
-	{
-		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), material);
-		this.setUnlocalizedName(Reference.PREFIX + name);
-		this.setCreativeTab(TabRI.CORE);
-		this.setTextureName(Reference.PREFIX + name);
 	}
 
 	@SideOnly(Side.CLIENT)

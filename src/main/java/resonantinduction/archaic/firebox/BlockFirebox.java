@@ -14,19 +14,19 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFirebox extends BlockRI
+public class BlockFirebox extends BlockTile
 {
 	private Icon topOn;
 	private Icon topOff;
 
-	public BlockFirebox()
+	public BlockFirebox(int id)
 	{
-		super("firebox", Material.rock);
-		this.setTickRandomly(true);
+		super(id, Material.rock);
+		setTickRandomly(true);
 	}
 
 	@Override

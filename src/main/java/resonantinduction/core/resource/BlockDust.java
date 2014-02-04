@@ -12,8 +12,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.resource.item.ItemOreResource;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -23,16 +23,17 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockDust extends BlockRI
+public class BlockDust extends BlockTile
 {
-	public BlockDust()
+	public BlockDust(int id)
 	{
-		super("dust", Material.sand);
+		super(id, Material.sand);
 		setCreativeTab(null);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		setBlockBoundsForDepth(0);
 		setHardness(0.5f);
 		setTextureName(Reference.PREFIX + "material_sand");
+		setStepSound(soundGravelFootstep);
 	}
 
 	@Override

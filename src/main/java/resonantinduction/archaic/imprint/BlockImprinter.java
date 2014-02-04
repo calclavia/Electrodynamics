@@ -1,7 +1,6 @@
 package resonantinduction.archaic.imprint;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,24 +10,25 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockImprinter extends BlockRI
+public class BlockImprinter extends BlockTile
 {
 	Icon imprinter_side;
 	Icon imprinter_top;
 	Icon imprinter_bottom;
 
-	public BlockImprinter()
+	public BlockImprinter(int id)
 	{
-		super("imprinter", Material.wood);
+		super(id, UniversalElectricity.machine);
 	}
 
 	@SideOnly(Side.CLIENT)

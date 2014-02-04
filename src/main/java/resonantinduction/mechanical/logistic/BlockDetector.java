@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockImprintable;
+import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,9 +22,9 @@ public class BlockDetector extends BlockImprintable
 	Icon eye_red;
 	Icon eye_green;
 
-	public BlockDetector()
+	public BlockDetector(int id)
 	{
-		super("detector");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 

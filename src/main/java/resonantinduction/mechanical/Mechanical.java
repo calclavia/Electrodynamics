@@ -8,6 +8,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.TabRI;
 import resonantinduction.electrical.purifier.BlockMixer;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
@@ -29,7 +30,7 @@ import resonantinduction.mechanical.logistic.TileRejector;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PacketNetwork;
 import resonantinduction.mechanical.process.BlockFilter;
-import resonantinduction.mechanical.process.BlockGrinderWheel;
+import resonantinduction.mechanical.process.BlockGrindingWheel;
 import resonantinduction.mechanical.process.TileGrinderWheel;
 import resonantinduction.mechanical.process.TileMixer;
 import resonantinduction.mechanical.turbine.BlockWaterTurbine;
@@ -73,7 +74,7 @@ public class Mechanical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	// Energy
 	public static Item itemGear;
@@ -124,7 +125,7 @@ public class Mechanical
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
 
 		// Machines
-		blockGrinderWheel = contentRegistry.createTile(BlockGrinderWheel.class, TileGrinderWheel.class);
+		blockGrinderWheel = contentRegistry.createTile(BlockGrindingWheel.class, TileGrinderWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
 		blockFilter = contentRegistry.createBlock(BlockFilter.class);
 		OreDictionary.registerOre("gear", itemGear);

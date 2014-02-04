@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.block.BlockImprintable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -15,9 +16,9 @@ public class BlockRejector extends BlockImprintable
 	@SideOnly(Side.CLIENT)
 	protected Icon front;
 
-	public BlockRejector()
+	public BlockRejector(int id)
 	{
-		super("rejector");
+		super(id, UniversalElectricity.machine);
 	}
 
 	@Override

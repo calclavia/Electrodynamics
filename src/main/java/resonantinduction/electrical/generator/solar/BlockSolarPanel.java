@@ -3,16 +3,17 @@ package resonantinduction.electrical.generator.solar;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockSolarPanel extends BlockRI
+public class BlockSolarPanel extends BlockTile
 {
-	public BlockSolarPanel()
+	public BlockSolarPanel(int id)
 	{
-		super("solarPanel");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_side");
 		setBlockBounds(0, 0, 0, 1, 0.5f, 1);
 	}

@@ -1,6 +1,7 @@
 package resonantinduction.archaic.engineering;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -9,15 +10,14 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.item.ItemRI;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
-public class ItemHammer extends ItemRI
+public class ItemHammer extends Item
 {
-	public ItemHammer()
+	public ItemHammer(int id)
 	{
-		super("hammer");
+		super(id);
 		setMaxStackSize(1);
 		setMaxDamage(400);
 	}

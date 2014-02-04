@@ -2,6 +2,7 @@ package resonantinduction.archaic.engineering;
 
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,9 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockRotatable;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
@@ -27,16 +28,16 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia
  */
-public class BlockEngineeringTable extends BlockRIRotatable
+public class BlockEngineeringTable extends BlockRotatable
 {
 	@SideOnly(Side.CLIENT)
 	private Icon iconTop;
 	@SideOnly(Side.CLIENT)
 	private Icon iconFront;
 
-	public BlockEngineeringTable()
+	public BlockEngineeringTable(int id)
 	{
-		super("engineeringTable");
+		super(id, Material.wood);
 		setBlockBounds(0, 0, 0, 1, 0.9f, 1);
 	}
 

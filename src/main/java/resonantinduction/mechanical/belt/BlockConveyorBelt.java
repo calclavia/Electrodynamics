@@ -2,6 +2,7 @@ package resonantinduction.mechanical.belt;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,9 +15,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -25,13 +27,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia, DarkGuardsman
  */
-public class BlockConveyorBelt extends BlockRI
+public class BlockConveyorBelt extends BlockTile
 {
-	public BlockConveyorBelt()
+	public BlockConveyorBelt(int id)
 	{
-		super("conveyorBelt");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_side");
-		this.setBlockBounds(0, 0, 0, 1, 0.3f, 1);
+		setBlockBounds(0, 0, 0, 1, 0.3f, 1);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockImprintable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,9 +18,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class BlockManipulator extends BlockImprintable
 {
-	public BlockManipulator()
+	public BlockManipulator(int id)
 	{
-		super("manipulator");
+		super(id, UniversalElectricity.machine);
 		this.setBlockBounds(0, 0, 0, 1, 0.09f, 1);
 	}
 

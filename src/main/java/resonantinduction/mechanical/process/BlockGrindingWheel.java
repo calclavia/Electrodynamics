@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.process;
 
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
@@ -8,9 +9,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import calclavia.lib.prefab.block.BlockRotatable;
 import calclavia.lib.utility.WorldUtility;
 
 /**
@@ -19,11 +19,11 @@ import calclavia.lib.utility.WorldUtility;
  * @author Calclavia
  * 
  */
-public class BlockGrinderWheel extends BlockRIRotatable implements ITileEntityProvider
+public class BlockGrindingWheel extends BlockRotatable implements ITileEntityProvider
 {
-	public BlockGrinderWheel()
+	public BlockGrindingWheel(int id)
 	{
-		super("grindingWheel", Settings.getNextBlockID());
+		super(id, Material.wood);
 		setTextureName(Reference.PREFIX + "material_steel_dark");
 		setBlockBounds(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
 		rotationMask = Byte.parseByte("111111", 2);

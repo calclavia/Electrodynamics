@@ -12,7 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockTile;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,13 +26,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public class BlockCrate extends BlockRI
+public class BlockCrate extends BlockTile
 {
 	Icon advanced, elite;
 
-	public BlockCrate()
+	public BlockCrate(int id)
 	{
-		super("crate");
+		super(id, UniversalElectricity.machine);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -13,19 +13,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockWaterTurbine extends BlockTurbine
 {
-	public BlockWaterTurbine()
+	public BlockWaterTurbine(int id)
 	{
-		this(Settings.getNextBlockID(), "waterTurbine", Material.iron);
+		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_wood_surface");
 		rotationMask = Byte.parseByte("111111", 2);
-	}
-
-	public BlockWaterTurbine(int id, String name, Material material)
-	{
-		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), material);
-		this.setUnlocalizedName(Reference.PREFIX + name);
-		this.setCreativeTab(TabRI.CORE);
-		this.setTextureName(Reference.PREFIX + name);
 	}
 
 	@SideOnly(Side.CLIENT)

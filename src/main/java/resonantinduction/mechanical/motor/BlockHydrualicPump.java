@@ -4,17 +4,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.electrical.generator.TileGenerator;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockFluidMotor extends BlockRIRotatable
+public class BlockHydrualicPump extends BlockRotatable
 {
-	public BlockFluidMotor()
+	public BlockHydrualicPump(int id)
 	{
-		super("FluidMotor");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_steel");
 		rotationMask = Byte.parseByte("111111", 2);
 	}

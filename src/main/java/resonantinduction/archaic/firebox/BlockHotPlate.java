@@ -11,19 +11,19 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockHotPlate extends BlockRI
+public class BlockHotPlate extends BlockTile
 {
 	private Icon topElectric;
 
-	public BlockHotPlate()
+	public BlockHotPlate(int id)
 	{
-		super("hotPlate", Material.rock);
+		super(id, Material.rock);
 		setBlockBounds(0, 0, 0, 1, 0.2f, 1);
 		setTickRandomly(true);
 	}

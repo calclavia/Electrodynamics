@@ -9,19 +9,19 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockMillstone extends BlockRI
+public class BlockMillstone extends BlockTile
 {
 	Icon top;
 
-	public BlockMillstone()
+	public BlockMillstone(int id)
 	{
-		super("millstone", Material.wood);
+		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_wood_surface");
 	}
 

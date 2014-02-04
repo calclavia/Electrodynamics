@@ -7,20 +7,21 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.electrical.Electrical;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockEncoder extends BlockRI
+public class BlockEncoder extends BlockTile
 {
 	Icon encoder_side;
 	Icon encoder_top;
 	Icon encoder_bottom;
 
-	public BlockEncoder()
+	public BlockEncoder(int id)
 	{
-		super("encoder");
+		super(id, UniversalElectricity.machine);
 	}
 
 	@SideOnly(Side.CLIENT)

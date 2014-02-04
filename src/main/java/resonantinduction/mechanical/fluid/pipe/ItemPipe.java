@@ -3,18 +3,17 @@ package resonantinduction.mechanical.fluid.pipe;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.part.ItemMultipartBase;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemPipe extends ItemMultipartBase
+public class ItemPipe extends JItemMultiPart
 {
-	public ItemPipe()
+	public ItemPipe(int id)
 	{
-		super("pipe", Settings.getNextItemID());
+		super(id);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}
@@ -33,12 +32,13 @@ public class ItemPipe extends ItemMultipartBase
 		return damage;
 	}
 	/*
-	@Override
-	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
-	{
-		for (EnumPipeMaterial material : EnumPipeMaterial.values())
-		{
-			listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
-		}
-	}*/
+	 * @Override
+	 * public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	 * {
+	 * for (EnumPipeMaterial material : EnumPipeMaterial.values())
+	 * {
+	 * listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
+	 * }
+	 * }
+	 */
 }

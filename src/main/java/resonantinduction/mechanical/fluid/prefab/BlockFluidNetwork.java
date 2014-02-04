@@ -1,18 +1,19 @@
 package resonantinduction.mechanical.fluid.prefab;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.block.BlockRI;
+import calclavia.lib.prefab.block.BlockTile;
 
 /**
  * @author Calclavia
  * 
  */
-public class BlockFluidNetwork extends BlockRI
+public abstract class BlockFluidNetwork extends BlockTile
 {
-	public BlockFluidNetwork(String name)
+	public BlockFluidNetwork(int id, Material material)
 	{
-		super(name);
+		super(id, material);
 	}
 
 	@Override

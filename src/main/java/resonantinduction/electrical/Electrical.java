@@ -75,7 +75,7 @@ public class Electrical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	// Energy
 	private static Item itemPartWire;
@@ -122,7 +122,7 @@ public class Electrical
 		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
-		
+
 		blockItemCharger = contentRegistry.createTile(BlockCharger.class, TileCharger.class);
 
 		Settings.save();

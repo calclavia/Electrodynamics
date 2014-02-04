@@ -8,23 +8,22 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.part.ItemMultipartBase;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;
+import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemMultimeter extends ItemMultipartBase
+public class ItemMultimeter extends JItemMultiPart
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
-	public ItemMultimeter()
+	public ItemMultimeter(int id)
 	{
-		super("multimeter", Settings.getNextItemID());
+		super(id);
 	}
 
 	@Override

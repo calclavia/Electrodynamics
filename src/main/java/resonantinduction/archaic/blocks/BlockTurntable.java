@@ -3,6 +3,7 @@ package resonantinduction.archaic.blocks;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -10,21 +11,22 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.block.BlockRotatable;
 import calclavia.lib.prefab.block.IRotatableBlock;
 import calclavia.lib.prefab.tile.IRotatable;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTurntable extends BlockRIRotatable
+public class BlockTurntable extends BlockRotatable
 {
 	private Icon top;
 
-	public BlockTurntable()
+	public BlockTurntable(int id)
 	{
-		super("turntable");
+		super(id, Material.piston);
 		setTextureName(Reference.PREFIX + "turntable_side");
 		setTickRandomly(true);
 		rotationMask = Byte.parseByte("111111", 2);

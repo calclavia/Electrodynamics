@@ -3,13 +3,14 @@ package resonantinduction.electrical.generator.thermopile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRI;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockTile;
 
-public class BlockThermopile extends BlockRI
+public class BlockThermopile extends BlockTile
 {
-	public BlockThermopile()
+	public BlockThermopile(int id)
 	{
-		super("thermopile");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_top");
 	}
 

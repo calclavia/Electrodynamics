@@ -15,9 +15,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.block.BlockRIIO;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockSidedIO;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,12 +28,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class BlockBattery extends BlockRIIO implements ITileEntityProvider
+public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 {
-	public BlockBattery()
+	public BlockBattery(int id)
 	{
-		super("battery", Settings.getNextBlockID());
-		this.setTextureName(Reference.PREFIX + "material_metal_side");
+		super(id, UniversalElectricity.machine);
+		setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 
 	@Override

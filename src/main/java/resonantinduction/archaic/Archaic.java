@@ -25,6 +25,7 @@ import resonantinduction.archaic.process.TileMillstone;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.TabRI;
 import resonantinduction.core.part.BlockMachineMaterial;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
@@ -64,7 +65,7 @@ public class Archaic
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, ID);
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	public static Block blockEngineeringTable;
 	public static Block blockCrate;

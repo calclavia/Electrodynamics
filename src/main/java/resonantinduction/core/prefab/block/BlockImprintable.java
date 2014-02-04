@@ -1,5 +1,6 @@
 package resonantinduction.core.prefab.block;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,17 +11,18 @@ import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
 import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.prefab.tile.TileEntityFilterable;
+import calclavia.lib.prefab.block.BlockRotatable;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.
  * 
  * @author Calclavia
  */
-public abstract class BlockImprintable extends BlockRIRotatable
+public abstract class BlockImprintable extends BlockRotatable
 {
-	public BlockImprintable(String blockName)
+	public BlockImprintable(int id, Material material)
 	{
-		super(blockName);
+		super(id, material);
 	}
 
 	/** Allows filters to be placed inside of this block. */

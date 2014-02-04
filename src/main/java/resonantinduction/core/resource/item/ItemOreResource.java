@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -12,8 +13,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.item.ItemRI;
+import resonantinduction.core.TabRI;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.vector.Vector3;
@@ -28,13 +30,16 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class ItemOreResource extends ItemRI
+public class ItemOreResource extends Item
 {
 	private int blockID = ResonantInduction.blockDust.blockID;;
 
 	public ItemOreResource(int id, String name)
 	{
-		super(name, id);
+		super(id);
+		setUnlocalizedName(Reference.PREFIX + name);
+		setTextureName(Reference.PREFIX + name);
+		setCreativeTab(TabRI.CORE);
 		setHasSubtypes(true);
 		setMaxDamage(0);
 	}

@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
@@ -11,14 +12,13 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IReadOut;
 import resonantinduction.api.IReadOut.EnumTools;
-import resonantinduction.core.prefab.item.ItemRI;
 import calclavia.lib.utility.FluidUtility;
 
-public class ItemPipeGauge extends ItemRI
+public class ItemPipeGauge extends Item
 {
-	public ItemPipeGauge()
+	public ItemPipeGauge(int id)
 	{
-		super("pipeGauge");
+		super(id);
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 

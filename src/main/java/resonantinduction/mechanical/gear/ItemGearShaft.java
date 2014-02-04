@@ -4,17 +4,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import resonantinduction.core.Settings;
-import resonantinduction.core.prefab.part.ItemMultipartBase;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemGearShaft extends ItemMultipartBase
+public class ItemGearShaft extends JItemMultiPart
 {
-	public ItemGearShaft()
+	public ItemGearShaft(int id)
 	{
-		super("gearShaft", Settings.getNextItemID());
+		super(id);
 	}
 
 	@Override

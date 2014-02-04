@@ -4,16 +4,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.block.BlockRIRotatable;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGenerator extends BlockRIRotatable
+public class BlockGenerator extends BlockRotatable
 {
-	public BlockGenerator()
+	public BlockGenerator(int id)
 	{
-		super("generator");
+		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_steel");
 		rotationMask = Byte.parseByte("111111", 2);
 	}
