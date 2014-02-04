@@ -2,8 +2,6 @@ package resonantinduction.mechanical.turbine;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,9 +14,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWaterTurbine extends TileEntitySpecialRenderer
 {
-	// TODO: Fix model.
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
-
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
@@ -35,20 +30,27 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer
 				RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
 			}
 
+			GL11.glTranslatef(0, -0.35f, 0);
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
 
 			/**
 			 * TODO: Bind based on tier.
+			 * cobblestone, iron_block
 			 */
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
-
 			if (tile.getMultiBlock().isConstructed())
 			{
-				MODEL.renderOnly("LargeGear");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				RenderWindTurbine.MODEL.renderOnly("LargeMetalBlade");
+				GL11.glScalef(1f, 2f, 1f);
+				GL11.glTranslatef(0, -0.08f, 0);
+				RenderWindTurbine.MODEL.renderOnly("LargeMetalHub");
 			}
 			else
 			{
-				MODEL.renderOnly("SmallGear");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				RenderWindTurbine.MODEL.renderOnly("SmallHub");
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				RenderWindTurbine.MODEL.renderOnly("SmallBlade");
 			}
 
 			GL11.glPopMatrix();

@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWindTurbine extends TileEntitySpecialRenderer
 {
-	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbines.obj");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "turbines.obj");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
