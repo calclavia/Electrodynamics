@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.PartMechanical;
@@ -131,6 +132,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			else
 			{
 				getMultiBlock().get().manualCrankTime = 10;
+				world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
+				player.addExhaustion(0.01f);
 			}
 
 			WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());

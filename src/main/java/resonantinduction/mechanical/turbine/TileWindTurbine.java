@@ -66,7 +66,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	{
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
-		return (long) (worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 250 : 0) + (hasBonus ? 80 : 0);
+		return (long) ((worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 200 : 0) + (hasBonus ? 80 : 0)) * (worldObj.isRaining() ? 2 : 1);
 	}
 
 	@Override
