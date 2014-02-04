@@ -4,39 +4,36 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class RecipeUtils
+public abstract class RecipeResource
 {
-	public static abstract class Resource
+	public final boolean hasChance;
+	public final float chance;
+
+	protected RecipeResource()
 	{
-		public final boolean hasChance;
-		public final float chance;
-
-		protected Resource()
-		{
-			this.hasChance = false;
-			this.chance = 100;
-		}
-
-		protected Resource(float chance)
-		{
-			this.hasChance = true;
-			this.chance = chance;
-		}
-
-		public boolean hasChance()
-		{
-			return this.hasChance;
-		}
-
-		public float getChance()
-		{
-			return this.chance;
-		}
-
-		public abstract ItemStack getItemStack();
+		this.hasChance = false;
+		this.chance = 100;
 	}
 
-	public static class ItemStackResource extends Resource
+	protected RecipeResource(float chance)
+	{
+		this.hasChance = true;
+		this.chance = chance;
+	}
+
+	public boolean hasChance()
+	{
+		return this.hasChance;
+	}
+
+	public float getChance()
+	{
+		return this.chance;
+	}
+
+	public abstract ItemStack getItemStack();
+
+	public static class ItemStackResource extends RecipeResource
 	{
 		public final ItemStack itemStack;
 
@@ -70,7 +67,7 @@ public class RecipeUtils
 		}
 	}
 
-	public static class OreDictResource extends Resource
+	public static class OreDictResource extends RecipeResource
 	{
 		public final String name;
 
@@ -114,7 +111,7 @@ public class RecipeUtils
 		}
 	}
 
-	public static class FluidStackResource extends Resource
+	public static class FluidStackResource extends RecipeResource
 	{
 		public final FluidStack fluidStack;
 

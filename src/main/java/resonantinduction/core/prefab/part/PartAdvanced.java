@@ -3,14 +3,9 @@ package resonantinduction.core.prefab.part;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.IconTransformation;
-import codechicken.lib.render.RenderUtils;
-import codechicken.lib.vec.Translation;
 import codechicken.multipart.IRedstonePart;
 import codechicken.multipart.TMultiPart;
 

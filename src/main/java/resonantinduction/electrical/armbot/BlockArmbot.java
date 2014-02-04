@@ -1,10 +1,7 @@
 package resonantinduction.electrical.armbot;
 
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -13,16 +10,12 @@ import net.minecraft.world.World;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.components.CalclaviaLoader;
-import calclavia.lib.content.IBlockInfo;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.multiblock.fake.IMultiBlock;
-
-import com.builtbroken.common.Pair;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockArmbot extends BlockRI implements IBlockInfo
+public class BlockArmbot extends BlockRI
 {
 	public BlockArmbot()
 	{
@@ -84,19 +77,6 @@ public class BlockArmbot extends BlockRI implements IBlockInfo
 	public int quantityDropped(Random par1Random)
 	{
 		return 0;
-	}
-
-	@Override
-	public void getTileEntities(int blockID, Set<Pair<String, Class<? extends TileEntity>>> list)
-	{
-		list.add(new Pair("ALArmbot", TileArmbot.class));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getClientTileEntityRenderers(List<Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>> list)
-	{
-		list.add(new Pair<Class<? extends TileEntity>, TileEntitySpecialRenderer>(TileArmbot.class, new RenderArmbot()));
 	}
 
 	@Override

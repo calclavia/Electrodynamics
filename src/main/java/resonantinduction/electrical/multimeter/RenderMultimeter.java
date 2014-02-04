@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.handler.TextureHookHandler;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;

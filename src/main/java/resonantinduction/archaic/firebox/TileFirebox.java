@@ -1,7 +1,5 @@
 package resonantinduction.archaic.firebox;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,7 +22,6 @@ import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.Synced;
 import calclavia.lib.prefab.tile.TileElectricalInventory;
 import calclavia.lib.thermal.BoilEvent;

@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -29,13 +29,13 @@ public class TileMillstone extends TileExternalInventory implements IPacketRecei
 
 	public void doGrind(Vector3 spawnPos)
 	{
-		Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, getStackInSlot(0));
+		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, getStackInSlot(0));
 
 		if (outputs.length > 0)
 		{
 			if (++grindCount > 20)
 			{
-				for (Resource res : outputs)
+				for (RecipeResource res : outputs)
 				{
 					InventoryUtility.dropItemStack(worldObj, spawnPos, res.getItemStack().copy());
 				}

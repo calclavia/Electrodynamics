@@ -11,10 +11,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.Language;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -33,6 +31,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

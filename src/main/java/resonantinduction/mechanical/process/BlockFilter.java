@@ -4,17 +4,13 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.prefab.block.BlockRI;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -67,7 +63,7 @@ public class BlockFilter extends BlockRI implements ITileEntityProvider
 			/**
 			 * Drop item from fluid.
 			 */
-			for (Resource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(fluidBlock.getFluid().getName().replace("mixture", ""))))
+			for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(fluidBlock.getFluid().getName().replace("mixture", ""))))
 			{
 				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}

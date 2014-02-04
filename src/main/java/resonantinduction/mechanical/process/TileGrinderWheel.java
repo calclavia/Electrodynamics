@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.network.TileMechanical;
@@ -125,9 +125,9 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 		ItemStack itemStack = entity.getEntityItem();
 
 		// TODO: Remove this later on when crusher if complete.
-		Resource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack));
+		RecipeResource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack));
 
-		for (Resource resource : results)
+		for (RecipeResource resource : results)
 		{
 			ItemStack outputStack = resource.getItemStack();
 

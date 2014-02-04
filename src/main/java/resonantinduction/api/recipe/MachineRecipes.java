@@ -7,9 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
-import resonantinduction.api.recipe.RecipeUtils.ItemStackResource;
-import resonantinduction.api.recipe.RecipeUtils.OreDictResource;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.api.recipe.RecipeResource.ItemStackResource;
+import resonantinduction.api.recipe.RecipeResource.OreDictResource;
 
 public final class MachineRecipes
 {
@@ -18,7 +17,7 @@ public final class MachineRecipes
 		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
 	}
 
-	private final Map<RecipeType, Map<Resource[], Resource[]>> recipes = new HashMap<RecipeType, Map<Resource[], Resource[]>>();
+	private final Map<RecipeType, Map<RecipeResource[], RecipeResource[]>> recipes = new HashMap<RecipeType, Map<RecipeResource[], RecipeResource[]>>();
 
 	public static final MachineRecipes INSTANCE = new MachineRecipes();
 
@@ -26,11 +25,11 @@ public final class MachineRecipes
 	{
 		for (RecipeType machine : RecipeType.values())
 		{
-			this.recipes.put(machine, new HashMap<Resource[], Resource[]>());
+			this.recipes.put(machine, new HashMap<RecipeResource[], RecipeResource[]>());
 		}
 	}
 
-	public void addRecipe(RecipeType machine, Resource[] input, Resource[] output)
+	public void addRecipe(RecipeType machine, RecipeResource[] input, RecipeResource[] output)
 	{
 		this.recipes.get(machine).put(input, output);
 	}
@@ -62,28 +61,28 @@ public final class MachineRecipes
 		this.addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, output);
 	}
 
-	public void removeRecipe(RecipeType machine, Resource[] input)
+	public void removeRecipe(RecipeType machine, RecipeResource[] input)
 	{
 		this.recipes.get(machine).remove(input);
 	}
 
-	public Map<Resource[], Resource[]> getRecipes(RecipeType machine)
+	public Map<RecipeResource[], RecipeResource[]> getRecipes(RecipeType machine)
 	{
-		return new HashMap<Resource[], Resource[]>(this.recipes.get(machine));
+		return new HashMap<RecipeResource[], RecipeResource[]>(this.recipes.get(machine));
 	}
 
-	public Map<RecipeType, Map<Resource[], Resource[]>> getRecipes()
+	public Map<RecipeType, Map<RecipeResource[], RecipeResource[]>> getRecipes()
 	{
-		return new HashMap<RecipeType, Map<Resource[], Resource[]>>(this.recipes);
+		return new HashMap<RecipeType, Map<RecipeResource[], RecipeResource[]>>(this.recipes);
 	}
 
-	public Resource[] getOutput(RecipeType machine, Resource... input)
+	public RecipeResource[] getOutput(RecipeType machine, RecipeResource... input)
 	{
-		Iterator<Entry<Resource[], Resource[]>> it = this.getRecipes(machine).entrySet().iterator();
+		Iterator<Entry<RecipeResource[], RecipeResource[]>> it = this.getRecipes(machine).entrySet().iterator();
 
 		while (it.hasNext())
 		{
-			Entry<Resource[], Resource[]> entry = it.next();
+			Entry<RecipeResource[], RecipeResource[]> entry = it.next();
 
 			if (Arrays.equals(entry.getKey(), input))
 			{
@@ -91,12 +90,12 @@ public final class MachineRecipes
 			}
 		}
 
-		return new Resource[] {};
+		return new RecipeResource[] {};
 	}
 
-	public Resource[] getOutput(RecipeType machine, ItemStack... inputs)
+	public RecipeResource[] getOutput(RecipeType machine, ItemStack... inputs)
 	{
-		Resource[] resourceInputs = new Resource[inputs.length];
+		RecipeResource[] resourceInputs = new RecipeResource[inputs.length];
 
 		for (int i = 0; i < inputs.length; i++)
 		{
@@ -106,9 +105,9 @@ public final class MachineRecipes
 		return this.getOutput(machine, resourceInputs);
 	}
 
-	public Resource[] getOutput(RecipeType machine, String... oreDictNames)
+	public RecipeResource[] getOutput(RecipeType machine, String... oreDictNames)
 	{
-		Resource[] resourceInputs = new Resource[oreDictNames.length];
+		RecipeResource[] resourceInputs = new RecipeResource[oreDictNames.length];
 
 		for (int i = 0; i < oreDictNames.length; i++)
 		{

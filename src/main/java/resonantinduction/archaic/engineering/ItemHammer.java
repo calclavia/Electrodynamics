@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.item.ItemRI;
 import universalelectricity.api.vector.Vector3;
@@ -40,9 +40,9 @@ public class ItemHammer extends ItemRI
 				{
 					if (!world.isRemote && world.rand.nextFloat() < 0.04)
 					{
-						Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
+						RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
 
-						for (Resource resource : outputs)
+						for (RecipeResource resource : outputs)
 						{
 							ItemStack outputStack = resource.getItemStack().copy();
 

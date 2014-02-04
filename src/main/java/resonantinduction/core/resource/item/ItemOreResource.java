@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeUtils.Resource;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.item.ItemRI;
 import resonantinduction.core.resource.ResourceGenerator;
@@ -147,7 +147,7 @@ public class ItemOreResource extends ItemRI
 		/**
 		 * Manually wash dust into refined dust.
 		 */
-		Resource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack);
+		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack);
 
 		if (outputs.length > 0)
 		{
@@ -161,7 +161,7 @@ public class ItemOreResource extends ItemRI
 				{
 					if (world.rand.nextFloat() > 0.9)
 					{
-						for (Resource res : outputs)
+						for (RecipeResource res : outputs)
 						{
 							InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
 						}
