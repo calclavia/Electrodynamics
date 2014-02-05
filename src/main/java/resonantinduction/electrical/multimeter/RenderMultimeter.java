@@ -165,14 +165,14 @@ public class RenderMultimeter
 				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
 			}
 
-			GL11.glTranslatef(0, 0, -0.25f * (information.size() / 2));
+			GL11.glTranslatef(0, 0, -0.18f * (information.size() / 2));
 
 			for (int i = 0; i < information.size(); i++)
 			{
 				String info = information.get(i);
 
 				GL11.glPushMatrix();
-				GL11.glTranslatef(0, 0, 0.25f * i);
+				GL11.glTranslatef(0, 0, 0.2f * i);
 				if (dir.offsetX == 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
 				if (dir.offsetZ == 0)

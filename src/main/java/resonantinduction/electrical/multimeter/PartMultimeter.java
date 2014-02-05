@@ -261,9 +261,11 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 			if (instance != null)
 			{
-
-				IEnergyNetwork network = instance.getNetwork();
-				getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
+				if (instance.getNetwork() instanceof IEnergyNetwork)
+				{
+					IEnergyNetwork network = instance.getNetwork();
+					getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
+				}
 			}
 		}
 
