@@ -25,8 +25,8 @@ public class TileWaterTurbine extends TileTurbine implements IMechanical
 {
 	public TileWaterTurbine()
 	{
-		maxPower = 800;
-		torque = 500;
+		maxPower = 300;
+		torque = defaultTorque;
 	}
 
 	@Override

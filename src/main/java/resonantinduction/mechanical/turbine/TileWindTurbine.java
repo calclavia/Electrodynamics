@@ -25,11 +25,6 @@ import calclavia.lib.prefab.turbine.TileTurbine;
  */
 public class TileWindTurbine extends TileTurbine implements IMechanical
 {
-	public TileWindTurbine()
-	{
-		maxPower = 500;
-	}
-
 	@Override
 	public void invalidate()
 	{
@@ -45,13 +40,18 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 		 */
 		if (getDirection().offsetY == 0)
 		{
+			maxPower = 100;
 			getMultiBlock().get().power += getWindPower();
+		}
+		else
+		{
+			maxPower = 1000;
 		}
 
 		if (!getMultiBlock().isConstructed())
-			torque = defaultTorque / 10;
+			torque = defaultTorque / 6;
 		else
-			torque = defaultTorque;
+			torque = defaultTorque / 2;
 
 		super.updateEntity();
 	}
@@ -66,13 +66,11 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	{
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
-		return (long) ((worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord) ? (((float) yCoord + 4) / 256) * 200 : 0) + (hasBonus ? 80 : 0)) * (worldObj.isRaining() ? 2 : 1);
-	}
 
-	@Override
-	public void onProduce()
-	{
+		if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord))
+			return 0;
 
+		return (long) (((((float) yCoord + 4) / 256) * maxPower) + (hasBonus ? 80 : 0)) * (worldObj.isRaining() ? 2 : 1);
 	}
 
 	@Override
@@ -84,20 +82,6 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 			// "atomicscience:turbine", 0.6f, (float) (0.7f + (0.2 * ((double) this.power / (double)
 			// this.getMaxPower()))));
 		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, (byte) 1, nbt);
-	}
-
-	@Override
-	public void sendPowerUpdate()
-	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, (byte) 2, angularVelocity), this.worldObj, new Vector3(this), 25);
 	}
 
 	/**

@@ -64,13 +64,13 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				if (angularVelocity > 0)
 				{
-					torque += 10;
-					angularVelocity += 0.1f;
+					torque += 1;
+					angularVelocity += 0.01f;
 				}
 				else
 				{
-					torque -= 10;
-					angularVelocity -= 0.1f;
+					torque -= 1;
+					angularVelocity -= 0.01f;
 				}
 
 				manualCrankTime--;
