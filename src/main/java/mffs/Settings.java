@@ -6,6 +6,7 @@ import mffs.api.Blacklist;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import calclavia.lib.content.IDManager;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.Loader;
 
 /**
@@ -102,74 +103,17 @@ public class Settings
 		CONSERVE_PACKETS = highGraphics.getBoolean(HIGH_GRAPHICS);
 
 		Property forceManipulatorBlacklist = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "");
-		highGraphics.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space.";
-		String blackListString = forceManipulatorBlacklist.getString();
-
-		if (blackListString != null)
-		{
-			for (String blockIDString : blackListString.split(","))
-			{
-				if (blockIDString != null && !blockIDString.isEmpty())
-				{
-					try
-					{
-						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.forceManipulationBlacklist.add(blockID);
-					}
-					catch (Exception e)
-					{
-						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		forceManipulatorBlacklist.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space.";
+		String blackListManipulate = forceManipulatorBlacklist.getString();
+		Blacklist.forceManipulationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListManipulate));
 
 		Property blacklist1 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "");
-		String blackListString1 = blacklist1.getString();
-
-		if (blackListString1 != null)
-		{
-			for (String blockIDString : blackListString1.split(","))
-			{
-				if (blockIDString != null && !blockIDString.isEmpty())
-				{
-					try
-					{
-						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.stabilizationBlacklist.add(blockID);
-					}
-					catch (Exception e)
-					{
-						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		String blackListStabilize = blacklist1.getString();
+		Blacklist.stabilizationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListStabilize));
 
 		Property blacklist2 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "");
-		String blackListString2 = blacklist1.getString();
-
-		if (blackListString2 != null)
-		{
-			for (String blockIDString : blackListString2.split(","))
-			{
-				if (blockIDString != null && !blockIDString.isEmpty())
-				{
-					try
-					{
-						int blockID = Integer.parseInt(blockIDString);
-						Blacklist.disintegrationBlacklist.add(blockID);
-					}
-					catch (Exception e)
-					{
-						ModularForceFieldSystem.LOGGER.severe("Invalid block blacklist ID!");
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		String blackListDisintegrate = blacklist1.getString();
+		Blacklist.disintegrationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListDisintegrate));
 
 		CONFIGURATION.save();
 	}
