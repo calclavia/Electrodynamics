@@ -78,7 +78,7 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 				}
 			}
 
-			energy.setMaxTransfer(DEFAULT_WATTAGE * this.getNetwork().getConnectors().size());
+			energy.setMaxTransfer((long) Math.min(Math.pow(1000, this.getNetwork().getConnectors().size()), energy.getEnergyCapacity()));
 			markDistributionUpdate = true;
 			markClientUpdate = true;
 		}
