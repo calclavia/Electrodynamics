@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
-import resonantinduction.core.render.RenderRIItem;
+import resonantinduction.core.render.RIRenderItem;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.TileCharger;
@@ -35,9 +35,9 @@ public class ClientProxy extends CommonProxy
     @Override
     public void preInit()
     {
-        MinecraftForgeClient.registerItemRenderer(Electrical.blockBattery.blockID, RenderRIItem.INSTANCE);
-        MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RenderRIItem.INSTANCE);
-        MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RenderRIItem.INSTANCE);
+        MinecraftForgeClient.registerItemRenderer(Electrical.blockBattery.blockID, RIRenderItem.INSTANCE);
+        MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, RIRenderItem.INSTANCE);
+        MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, RIRenderItem.INSTANCE);
         ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
         ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
         ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());

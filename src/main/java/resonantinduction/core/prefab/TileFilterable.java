@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.tile;
+package resonantinduction.core.prefab;
 
 import java.util.Set;
 
@@ -10,14 +10,14 @@ import resonantinduction.archaic.imprint.ItemImprint;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileExternalInventory;
 
-public abstract class TileEntityFilterable extends TileExternalInventory implements IRotatable, IFilterable
+public abstract class TileFilterable extends TileExternalInventory implements IRotatable, IFilterable
 {
 	private ItemStack filterItem;
 	private boolean inverted;
 	public static final int FILTER_SLOT = 0;
 	public static final int BATERY_DRAIN_SLOT = 1;
 
-	public TileEntityFilterable()
+	public TileFilterable()
 	{
 		this.maxSlots = 2;
 	}

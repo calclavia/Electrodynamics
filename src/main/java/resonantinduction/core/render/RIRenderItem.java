@@ -23,9 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class RenderRIItem implements IItemRenderer
+public class RIRenderItem implements IItemRenderer
 {
-	public static final RenderRIItem INSTANCE = new RenderRIItem();
+	public static final RIRenderItem INSTANCE = new RIRenderItem();
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)

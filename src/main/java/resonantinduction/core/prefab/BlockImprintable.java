@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.block;
+package resonantinduction.core.prefab;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,7 +10,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
 import resonantinduction.archaic.imprint.ItemImprint;
-import resonantinduction.core.prefab.tile.TileEntityFilterable;
 import calclavia.lib.prefab.block.BlockRotatable;
 
 /**
@@ -75,9 +74,9 @@ public abstract class BlockImprintable extends BlockRotatable
 
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityFilterable)
+			if (tileEntity instanceof TileFilterable)
 			{
-				((TileEntityFilterable) tileEntity).toggleInversion();
+				((TileFilterable) tileEntity).toggleInversion();
 				world.markBlockForRenderUpdate(x, y, z);
 				world.markBlockForUpdate(x, y, z);
 			}

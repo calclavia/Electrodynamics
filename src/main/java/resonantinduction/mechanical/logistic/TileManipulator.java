@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IManipulator;
 import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityFilterable;
+import resonantinduction.core.prefab.TileFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -20,7 +20,7 @@ import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileManipulator extends TileEntityFilterable implements IRotatable, IManipulator, IPacketReceiver
+public class TileManipulator extends TileFilterable implements IRotatable, IManipulator, IPacketReceiver
 {
 	/** True to auto output items with a redstone pulse */
 	private boolean selfPulse = false;

@@ -12,14 +12,14 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IBelt;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.tile.TileEntityFilterable;
+import resonantinduction.core.prefab.TileFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 
 import com.google.common.io.ByteArrayDataInput;
 
 /** @author Darkguardsman */
-public class TileRejector extends TileEntityFilterable implements IPacketReceiverWithID
+public class TileRejector extends TileFilterable implements IPacketReceiverWithID
 {
 	/** should the piston fire, or be extended */
 	public boolean firePiston = false;

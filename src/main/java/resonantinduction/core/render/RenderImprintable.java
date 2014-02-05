@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.archaic.imprint.ItemImprint;
-import resonantinduction.core.prefab.tile.TileEntityFilterable;
+import resonantinduction.core.prefab.TileFilterable;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -26,9 +26,9 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 	{
 		if (tileEntity != null)
 		{
-			if (tileEntity instanceof TileEntityFilterable)
+			if (tileEntity instanceof TileFilterable)
 			{
-				TileEntityFilterable tileFilterable = (TileEntityFilterable) tileEntity;
+				TileFilterable tileFilterable = (TileFilterable) tileEntity;
 
 				ItemStack filter = tileFilterable.getFilter();
 
@@ -46,7 +46,7 @@ public abstract class RenderImprintable extends TileEntitySpecialRenderer
 							int i = 0;
 							for (ItemStack filterStack : filters)
 							{
-								if (((TileEntityFilterable) tileEntity).isInverted())
+								if (((TileFilterable) tileEntity).isInverted())
 								{
 									RenderUtility.renderFloatingText(filterStack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips).get(0).toString(), new Vector3(x, y, z).translate(0.5, i * 0.25f - 1f, z + 0.5f), 0xFF8888);
 								}
