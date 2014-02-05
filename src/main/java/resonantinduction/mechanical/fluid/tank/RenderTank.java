@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,139 +33,9 @@ public class RenderTank extends TileEntitySpecialRenderer
 		{
 			byte renderSides = ((TileTank) tileEntity).renderSides;
 
-			boolean down = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.DOWN);
-			boolean up = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.UP);
-			boolean north = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.NORTH);
-			boolean south = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.SOUTH);
-			boolean east = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.EAST);
-			boolean west = TileFluidNetwork.canRenderSide(renderSides, ForgeDirection.WEST);
-
-			bindTexture(TextureMap.locationBlocksTexture);
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-
-			/**
-			 * Render faces
-			 */
-			for (int i = 0; i < 6; i++)
-			{
-				ForgeDirection dir = ForgeDirection.getOrientation(i);
-
-				if (!TileFluidNetwork.canRenderSide(renderSides, dir))
-				{
-					GL11.glPushMatrix();
-					GL11.glScalef(0.99f, 0.99f, 0.99f);
-
-					switch (i)
-					{
-						case 0:
-							GL11.glRotatef(0, 0, 0, 1);
-							break;
-						case 1:
-							GL11.glRotatef(180, 0, 0, 1);
-							break;
-						case 2:
-							GL11.glRotatef(90, 1, 0, 0);
-							break;
-						case 3:
-							GL11.glRotatef(-90, 1, 0, 0);
-							break;
-						case 4:
-							GL11.glRotatef(-90, 0, 0, 1);
-							break;
-						case 5:
-							GL11.glRotatef(90, 0, 0, 1);
-							break;
-					}
-
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, 0.501, Mechanical.blockTank);
-					GL11.glPopMatrix();
-				}
-			}
-
-			/**
-			 * Render edges
-			 */
-			GL11.glPushMatrix();
-
-			if (!east)
-			{
-				if (!north)
-				{
-					// north east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, 0.501, -0.475, Archaic.blockMachinePart);
-				}
-				if (!south)
-				{
-					// south east
-					RenderUtility.renderCube(0.475, -0.501, 0.475, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
-				}
-
-				if (!down)
-				{
-					// bottom east
-					RenderUtility.renderCube(0.475, -0.501, -0.501, 0.501, -0.475, 0.501, Archaic.blockMachinePart);
-				}
-
-				if (!up)
-				{
-					// top east
-					RenderUtility.renderCube(0.475, 0.475, -0.501, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
-				}
-			}
-
-			if (!west)
-			{
-				if (!north)
-				{
-					// north west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, 0.501, -0.475, Archaic.blockMachinePart);
-				}
-				if (!south)
-				{
-					// south west
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, -0.475, 0.501, 0.501, Archaic.blockMachinePart);
-				}
-				if (!down)
-				{
-					// bottom west
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, -0.475, -0.475, 0.501, Archaic.blockMachinePart);
-				}
-				if (!up)
-				{
-					// top west
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, -0.475, 0.501, 0.501, Archaic.blockMachinePart);
-				}
-			}
-			if (!north)
-			{
-				if (!up)
-				{
-					// top north
-					RenderUtility.renderCube(-0.501, 0.475, -0.501, 0.501, 0.501, -0.475, Archaic.blockMachinePart);
-				}
-				if (!down)
-				{
-					// bottom north
-					RenderUtility.renderCube(-0.501, -0.501, -0.501, 0.501, -0.475, -0.475, Archaic.blockMachinePart);
-				}
-			}
-
-			if (!south)
-			{
-				if (!up)
-				{
-					// top south
-					RenderUtility.renderCube(-0.501, 0.475, 0.475, 0.501, 0.501, 0.501, Archaic.blockMachinePart);
-				}
-				if (!down)
-				{
-					// bottom south
-					RenderUtility.renderCube(-0.501, -0.501, 0.475, 0.501, -0.475, 0.501, Archaic.blockMachinePart);
-				}
-			}
-
-			GL11.glPopMatrix();
+			RenderUtility.renderBlockWithConnectedTextures(renderSides, Mechanical.blockTank, null, Archaic.blockMachinePart, null);
 			GL11.glPopMatrix();
 
 			if (fluid != null && fluid.amount > 100)

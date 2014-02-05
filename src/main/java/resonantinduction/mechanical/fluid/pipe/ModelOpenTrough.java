@@ -6,10 +6,10 @@
 
 package resonantinduction.mechanical.fluid.pipe;
 
+import calclavia.lib.render.RenderUtility;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 
 public class ModelOpenTrough extends ModelBase
 {
@@ -283,11 +283,11 @@ public class ModelOpenTrough extends ModelBase
 
 	public void render(byte side, boolean stone)
 	{
-		renderMiddle(TileFluidNetwork.canRenderSide(side, ForgeDirection.DOWN), stone);
-		renderBack(TileFluidNetwork.canRenderSide(side, ForgeDirection.NORTH) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
-		renderFront(TileFluidNetwork.canRenderSide(side, ForgeDirection.SOUTH) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
-		renderRight(TileFluidNetwork.canRenderSide(side, ForgeDirection.WEST) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
-		renderLeft(TileFluidNetwork.canRenderSide(side, ForgeDirection.EAST) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+		renderMiddle(RenderUtility.canRenderSide(side, ForgeDirection.DOWN), stone);
+		renderBack(RenderUtility.canRenderSide(side, ForgeDirection.NORTH) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+		renderFront(RenderUtility.canRenderSide(side, ForgeDirection.SOUTH) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+		renderRight(RenderUtility.canRenderSide(side, ForgeDirection.WEST) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
+		renderLeft(RenderUtility.canRenderSide(side, ForgeDirection.EAST) ? PipeType.NORMAL : stone ? PipeType.SOLID : PipeType.MID_CAP);
 	}
 
 	public void renderMiddle(boolean bottom, boolean corners)

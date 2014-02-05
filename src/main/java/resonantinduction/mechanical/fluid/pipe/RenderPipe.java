@@ -7,8 +7,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import calclavia.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -50,27 +50,27 @@ public class RenderPipe
 
 	public static void render(EnumPipeMaterial mat, byte side)
 	{
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.DOWN))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.DOWN))
 		{
 			MODEL_PIPE.renderBottom();
 		}
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.UP))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.UP))
 		{
 			MODEL_PIPE.renderTop();
 		}
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.NORTH))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.NORTH))
 		{
 			MODEL_PIPE.renderBack();
 		}
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.SOUTH))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.SOUTH))
 		{
 			MODEL_PIPE.renderFront();
 		}
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.WEST))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.WEST))
 		{
 			MODEL_PIPE.renderLeft();
 		}
-		if (TileFluidNetwork.canRenderSide(side, ForgeDirection.EAST))
+		if (RenderUtility.canRenderSide(side, ForgeDirection.EAST))
 		{
 			MODEL_PIPE.renderRight();
 		}

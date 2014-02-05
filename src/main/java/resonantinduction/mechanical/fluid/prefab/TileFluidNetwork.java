@@ -284,11 +284,6 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 		this.colorID = id;
 	}
 
-	public static boolean canRenderSide(byte renderSides, ForgeDirection direction)
-	{
-		return (renderSides & (1 << direction.ordinal())) != 0;
-	}
-
 	@Override
 	public boolean canConnect(ForgeDirection direction)
 	{
