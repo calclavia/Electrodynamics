@@ -19,7 +19,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderTank extends TileEntitySpecialRenderer
 {
 	public static final RenderTank INSTANCE = new RenderTank();
-	public final ModelTank model = new ModelTank();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
