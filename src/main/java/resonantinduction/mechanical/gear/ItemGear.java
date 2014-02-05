@@ -23,6 +23,7 @@ public class ItemGear extends JItemMultiPart
 	public ItemGear(int id)
 	{
 		super(id);
+		setHasSubtypes(true);
 	}
 
 	@Override
