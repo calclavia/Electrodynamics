@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.Utility;
+import resonantinduction.core.MultipartUtility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.CustomDamageSource;
@@ -204,7 +204,7 @@ public abstract class PartAdvancedWire extends PartConductor
 	{
 		if (itemStack != null)
 		{
-			int dyeColor = Utility.isDye(itemStack);
+			int dyeColor = MultipartUtility.isDye(itemStack);
 
 			if (dyeColor != -1 && this.isInsulated())
 			{

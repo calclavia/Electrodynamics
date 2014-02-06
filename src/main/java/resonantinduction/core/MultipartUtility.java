@@ -16,7 +16,7 @@ import codechicken.multipart.TileMultipart;
  * @author Calclavia
  * 
  */
-public class Utility
+public class MultipartUtility
 {
 	public static TileMultipart getMultipartTile(IBlockAccess access, BlockCoord pos)
 	{

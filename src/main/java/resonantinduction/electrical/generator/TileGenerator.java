@@ -32,7 +32,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 	public float toggleRatio()
 	{
-		return torqueRatio = (int) ((torqueRatio + 1000) % energy.getMaxExtract() + 1000);
+		return torqueRatio = (int) ((torqueRatio + 500) % (energy.getMaxExtract() / 2) + 500);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Utility;
+import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockSidedIO;
@@ -45,7 +45,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 
 		if (entityPlayer.getCurrentEquippedItem() != null)
 		{
-			int dyeColor = Utility.isDye(entityPlayer.getCurrentEquippedItem());
+			int dyeColor = MultipartUtility.isDye(entityPlayer.getCurrentEquippedItem());
 
 			if (dyeColor != -1)
 			{

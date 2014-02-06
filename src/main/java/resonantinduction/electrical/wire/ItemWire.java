@@ -16,7 +16,7 @@ import org.lwjgl.input.Keyboard;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
-import resonantinduction.core.Utility;
+import resonantinduction.core.MultipartUtility;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
@@ -68,7 +68,7 @@ public class ItemWire extends JItemMultiPart
 		}
 		else
 		{
-			if (!Utility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
+			if (!MultipartUtility.canPlaceWireOnSide(world, onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side), false))
 			{
 				return null;
 			}

@@ -77,7 +77,7 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 
 					if (adjacentMech != null && adjacent != mechanical)
 					{
-						float ratio = adjacentMech.getRatio(dir) / mechanical.getRatio(dir.getOpposite());
+						float ratio = adjacentMech.getRatio(dir.getOpposite()) / mechanical.getRatio(dir);
 						long torque = mechanical.getTorque();
 
 						boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), mechanical);

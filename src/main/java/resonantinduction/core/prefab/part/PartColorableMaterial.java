@@ -11,7 +11,7 @@ import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.core.Utility;
+import resonantinduction.core.MultipartUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 
@@ -120,7 +120,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 	{
 		if (itemStack != null)
 		{
-			int dyeColor = Utility.isDye(itemStack);
+			int dyeColor = MultipartUtility.isDye(itemStack);
 
 			if (dyeColor != -1 && this.isInsulated())
 			{
