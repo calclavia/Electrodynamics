@@ -288,7 +288,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Mechanical.itemGear);
+		return new ItemStack(Mechanical.itemGear, 1, tier);
 	}
 
 	@Override
