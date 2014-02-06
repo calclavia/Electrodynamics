@@ -119,15 +119,15 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			if (player.isSneaking())
 			{
+				getMultiBlock().toggleConstruct();
+			}
+			else if (ControlKeyModifer.isControlDown(player))
+			{
 				if (!world().isRemote)
 				{
 					getMultiBlock().get().angularVelocity = -angularVelocity;
 					player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 				}
-			}
-			else if (ControlKeyModifer.isControlDown(player))
-			{
-				getMultiBlock().toggleConstruct();
 			}
 			else
 			{
@@ -138,6 +138,14 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 			WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
 			return true;
+		}
+		else if (player.isSneaking())
+		{
+			if (!world().isRemote)
+			{
+				getMultiBlock().get().angularVelocity = -angularVelocity;
+				player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
+			}
 		}
 
 		return super.activate(player, hit, item);
