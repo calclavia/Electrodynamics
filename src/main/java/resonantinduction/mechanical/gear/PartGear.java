@@ -258,7 +258,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		if (!getMultiBlock().isConstructed())
 		{
-			return false;
+			return true;
 		}
 
 		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().getPosition();
@@ -410,6 +410,13 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		return getMultiBlock().get();
 	}
 
+	/**
+	 * Can this gear be connected BY the source?
+	 * 
+	 * @param from - Direction source is coming from.
+	 * @param source - The source of the connection.
+	 * @return True is so.
+	 */
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
@@ -424,6 +431,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			 * Check for flat connections (gear face on gear face) to make sure it's actually on
 			 * this gear block.
 			 */
+			System.out.println(getPosition() + ":" + from + " vs " + placementSide);
 			if (from == placementSide.getOpposite())
 			{
 				if (source instanceof PartGear || source instanceof PartGearShaft)
@@ -439,16 +447,49 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 							return true;
 						}
 
-						// For large gear to small gear on edge connection.
-						return true;
+						if (((PartGear) source).placementSide != placementSide)
+						{
+							/**
+							 * Case when we connect gears via edges internally. Large gear attempt
+							 * to connect to small gear.
+							 */
+							TMultiPart part = tile().partMap(((PartGear) source).placementSide.ordinal());
+
+							if (part instanceof PartGear)
+							{
+								PartGear sourceGear = (PartGear) part;
+
+								if (sourceGear.isCenterMultiBlock() && !sourceGear.getMultiBlock().isPrimary())
+								{
+									// For large gear to small gear on edge connection.
+									return true;
+								}
+							}
+						}
 					}
 				}
 
+				/**
+				 * Face to face stick connection.
+				 */
 				TileEntity sourceTile = getPosition().translate(from.getOpposite()).getTileEntity(world());
 
 				if (sourceTile instanceof IMechanical)
 				{
 					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from);
+					return sourceInstance == source;
+				}
+			}
+			else if (from == placementSide)
+			{
+				/**
+				 * Face to face stick connection.
+				 */
+				TileEntity sourceTile = getPosition().translate(from).getTileEntity(world());
+
+				if (sourceTile instanceof IMechanical)
+				{
+					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
 					return sourceInstance == source;
 				}
 			}
