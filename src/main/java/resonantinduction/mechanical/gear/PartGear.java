@@ -125,7 +125,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				if (!world().isRemote)
 				{
-					getMultiBlock().get().angularVelocity = -angularVelocity;
+					getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
 					player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 				}
 			}
@@ -143,7 +143,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			if (!world().isRemote)
 			{
-				getMultiBlock().get().angularVelocity = -angularVelocity;
+				getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
 				player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 			}
 		}
@@ -189,28 +189,38 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 		}
 
-		// TODO: Make bending with large gears work.
-		if (!getMultiBlock().isConstructed())
+		/**
+		 * Look for gears that are internal and adjacent to this gear. (The 4 sides + the internal
+		 * center)
+		 */
+		for (int i = 0; i < 6; i++)
 		{
-			/** Look for gears that are internal and adjacent to this gear. (The 4 sides) */
-			for (int i = 0; i < 6; i++)
-			{
-				ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
 
+			TileEntity tile = tile();
+
+			if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
+			{
+				tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
+				System.out.println("MOIFIED" + checkDir);
+			}
+
+			if (tile instanceof IMechanical)
+			{
 				/**
 				 * If we're checking for the block that is opposite to the gear's placement side
 				 * (the center), then we try to look for a gear shaft in the center.
 				 */
-
-				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
+				IMechanical instance = ((IMechanical) tile).getInstance(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
 				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
+					System.out.println("F" + instance);
+
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
 				}
 			}
-
 		}
 
 		int displaceCheck = 1;
@@ -425,8 +435,14 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 					{
 						return true;
 					}
-					else if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+					else if (source instanceof PartGear)
 					{
+						if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+						{
+							return true;
+						}
+
+						// For large gear to small gear on edge connection.
 						return true;
 					}
 				}
