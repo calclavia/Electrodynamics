@@ -64,13 +64,13 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				if (angularVelocity > 0)
 				{
-					torque += 1;
-					angularVelocity += 0.01f;
+					torque += 3;
+					angularVelocity += 0.02f;
 				}
 				else
 				{
-					torque -= 1;
-					angularVelocity -= 0.01f;
+					torque -= 3;
+					angularVelocity -= 0.02f;
 				}
 
 				manualCrankTime--;
@@ -202,7 +202,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
 			{
 				tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-				System.out.println("MOIFIED" + checkDir);
 			}
 
 			if (tile instanceof IMechanical)
@@ -215,8 +214,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
-					System.out.println("F" + instance);
-
 					connections[checkDir.ordinal()] = instance;
 					getNetwork().merge(instance.getNetwork());
 				}

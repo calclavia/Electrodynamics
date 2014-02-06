@@ -23,7 +23,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = true;
-	private int torqueRatio = 8000;
+	private int torqueRatio = 5000;
 
 	public TileGenerator()
 	{
