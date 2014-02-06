@@ -62,7 +62,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 			for (Object obj : connections)
 				if (obj != null)
 					i++;
-			
+
 			System.out.println("Connected with: " + i + ":" + getNetwork());
 
 		}
@@ -254,7 +254,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public float getAngularVelocity()
 	{
-		return angularVelocity;
+		return torque != 0 ? angularVelocity : 0;
 	}
 
 	@Override
@@ -267,7 +267,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public long getTorque()
 	{
-		return torque;
+		return angularVelocity != 0 ? torque : 0;
 	}
 
 	@Override
