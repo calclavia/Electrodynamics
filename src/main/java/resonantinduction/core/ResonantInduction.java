@@ -96,7 +96,8 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
-
+		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
+		
 		/**
 		 * Melting dusts
 		 */

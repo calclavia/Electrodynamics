@@ -49,7 +49,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	public void preparePlacement(int side, int itemDamage)
 	{
-		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.placementSide = ForgeDirection.getOrientation((byte) (side));
 		this.tier = itemDamage;
 	}
 

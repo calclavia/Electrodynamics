@@ -8,10 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.Settings;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import codechicken.multipart.ControlKeyModifer;
+import codechicken.microblock.FacePlacementGrid$;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.PartMap;
@@ -36,30 +35,23 @@ public class ItemGear extends JItemMultiPart
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
 		PartGear part = (PartGear) MultiPartRegistry.createPart("resonant_induction_gear", false);
+		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
 
-		if (part != null)
+		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+		
+		if (tile instanceof TileMultipart)
 		{
-			if (ControlKeyModifer.isControlDown(player))
-				pos.offset(side ^ 1, -1);
-
-			TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
-
-			if (tile instanceof TileMultipart)
+			TMultiPart occupyingPart = ((TileMultipart) tile).partMap(side);
+			TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
+			boolean clickedCenter = hit.mag() < 1;
+			
+			if ((clickedCenter && centerPart instanceof PartGearShaft))
 			{
-				TMultiPart occupyingPart = ((TileMultipart) tile).partMap(side);
-				TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
-
-				boolean clickedCenter = hit.mag() < 1;
-
-				if ((clickedCenter && centerPart instanceof PartGearShaft))
-				{
-					side = ForgeDirection.getOrientation(side).getOpposite().ordinal();
-				}
+				side ^= 1;
 			}
-
-			part.preparePlacement(side, itemStack.getItemDamage());
 		}
 
+		part.preparePlacement(side, itemStack.getItemDamage());
 		return part;
 	}
 
