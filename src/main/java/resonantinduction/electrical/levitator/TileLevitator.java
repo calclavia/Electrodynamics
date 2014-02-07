@@ -145,7 +145,7 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 				}
 			}
 
-			final int renderFrequency = ResonantInduction.proxy.isGraphicsFancy() ? 1 + worldObj.rand.nextInt(2) : 10 + worldObj.rand.nextInt(2);
+			final int renderFrequency = 1;
 			final boolean renderBeam = ticks % renderFrequency == 0 && hasLink() && linked.suck != suck;
 
 			if (hasLink())
@@ -153,14 +153,13 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 				if (!suck)
 				{
 					if (renderBeam)
-					{
 						Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(this).translate(new Vector3(getDirection())).translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
-					}
 
 					// Push entity along path.
 					if (pathfinder != null)
 					{
-						List<Vector3> results = this.pathfinder.results;
+						List<Vector3> results = pathfinder.results;
+
 						for (int i = 0; i < results.size(); i++)
 						{
 							Vector3 result = results.get(i).clone();
@@ -210,18 +209,13 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 
 					pathfinder = null;
 
-					Vector3 searchVec = new Vector3(this).modifyPositionFromSide(getDirection());
+					Vector3 searchVec = new Vector3(this).translate(getDirection());
 					AxisAlignedBB searchBounds = AxisAlignedBB.getAABBPool().getAABB(searchVec.x, searchVec.y, searchVec.z, searchVec.x + 1, searchVec.y + 1, searchVec.z + 1);
 
 					if (searchBounds != null)
 					{
 						for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, searchBounds))
 						{
-							if (renderBeam)
-							{
-								Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), EnumColor.DYES[dyeID].toColor(), false);
-							}
-
 							moveEntity(entityItem, getDirection(), new Vector3(this));
 						}
 					}
@@ -231,6 +225,8 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 			{
 				for (EntityItem entityItem : (List<EntityItem>) worldObj.getEntitiesWithinAABB(EntityItem.class, operationBounds))
 				{
+					if (ticks % renderFrequency == 0)
+						Electrical.proxy.renderElectricShock(worldObj, new Vector3(this).translate(0.5), new Vector3(entityItem), EnumColor.DYES[dyeID].toColor(), false);
 					moveEntity(entityItem, getDirection(), new Vector3(this));
 				}
 			}
@@ -570,8 +566,8 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 		{
 			pathfinder = null;
 
-			Vector3 start = new Vector3(this).modifyPositionFromSide(getDirection());
-			Vector3 target = new Vector3(linked).modifyPositionFromSide(linked.getDirection());
+			Vector3 start = new Vector3(this).translate(getDirection());
+			Vector3 target = new Vector3(linked).translate(linked.getDirection());
 
 			if (start.distance(target) < Settings.MAX_CONTRACTOR_DISTANCE)
 			{
