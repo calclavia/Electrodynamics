@@ -94,7 +94,7 @@ public class GuiForceFieldProjector extends GuiMFFS
 		this.textFieldFrequency.drawTextBox();
 
 		this.drawTextWithTooltip("fortron", "%1: " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER), 120, 121, 4210752);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER) + "/s", 118, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
