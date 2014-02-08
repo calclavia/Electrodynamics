@@ -227,7 +227,7 @@ public class ModularForceFieldSystem
 		itemModuleScale = new ItemModule(Settings.getNextItemID(), "moduleScale").setCost(2.5f);
 		itemModuleRotate = new ItemModule(Settings.getNextItemID(), "moduleRotate").setCost(0.5f);
 
-		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(0.8f);
+		itemModuleSpeed = new ItemModule(Settings.getNextItemID(), "moduleSpeed").setCost(1f);
 		itemModuleCapacity = new ItemModule(Settings.getNextItemID(), "moduleCapacity").setCost(0.5f);
 
 		// Force Field Projector Modules
@@ -340,14 +340,14 @@ public class ModularForceFieldSystem
 	{
 		// -- General Items --
 		// Focus Matrix
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 9), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get(), 'D', Item.diamond, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 8), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get(), 'D', Item.diamond, 'R', Item.redstone));
 
 		// Remote Controller
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemRemoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipe.WIRE.get(), 'C', UniversalRecipe.BATTERY.get(), 'M', UniversalRecipe.PRIMARY_METAL.get()));
 
 		// -- Machines --
 		// Coercion Deriver
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCoercionDeriver), "M M", "MFM", "MCM", 'C', UniversalRecipe.BATTERY.get(), 'M', UniversalRecipe.PRIMARY_METAL.get(), 'F', itemFocusMatix));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCoercionDeriver), "FMF", "FCF", "FMF", 'C', UniversalRecipe.BATTERY.get(), 'M', UniversalRecipe.PRIMARY_METAL.get(), 'F', itemFocusMatix));
 		// Fortron Capacitor
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFortronCapacitor), "MFM", "FCF", "MFM", 'D', Item.diamond, 'C', UniversalRecipe.BATTERY.get(), 'F', itemFocusMatix, 'M', UniversalRecipe.PRIMARY_METAL.get()));
 		// Force Field Projector
@@ -381,7 +381,7 @@ public class ModularForceFieldSystem
 		// -- Modules --
 		// -- -- General -- --
 		// Speed
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed, 2), "FFF", "RRR", "FFF", 'F', itemFocusMatix, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed, 1), "FFF", "RRR", "FFF", 'F', itemFocusMatix, 'R', Item.redstone));
 		// Capacity
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCapacity, 2), "FCF", 'F', itemFocusMatix, 'C', UniversalRecipe.BATTERY.get()));
 		// Shock
