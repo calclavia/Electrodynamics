@@ -1,20 +1,27 @@
 package resonantinduction.electrical.charger;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.CompatibilityModule;
-import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.IPacketReceiverWithID;
+import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileExternalInventory;
 import calclavia.lib.utility.inventory.ExternalInventory;
 
+import com.google.common.io.ByteArrayDataInput;
+
 /** @author Darkguardsman */
-public class TileCharger extends TileExternalInventory implements IRotatable, IEnergyInterface, IEnergyContainer
+public class TileCharger extends TileExternalInventory implements IRotatable, IEnergyInterface, IPacketReceiverWithID
 {
-    private long energyCap = 0;
-    private long energyStored = 0;
     public ChargerMode currentMode = ChargerMode.SINGLE;
+    private long lastPacket = 0;
 
     public static enum ChargerMode
     {
@@ -30,25 +37,9 @@ public class TileCharger extends TileExternalInventory implements IRotatable, IE
     }
 
     @Override
-    public void initiate()
+    public boolean canUpdate()
     {
-        super.initiate();
-    }
-
-    @Override
-    public void updateEntity()
-    {
-        super.updateEntity();
-        if (this.ticks % 5 == 0)
-        {
-            this.energyCap = 0;
-            this.energyStored = 0;
-            for (int i = 0; i < this.getSizeInventory(); i++)
-            {
-                this.energyCap += CompatibilityModule.getMaxEnergyItem(this.getStackInSlot(i));
-                this.energyStored += CompatibilityModule.getEnergyItem(this.getStackInSlot(i));
-            }
-        }
+        return false;
     }
 
     @Override
@@ -83,6 +74,11 @@ public class TileCharger extends TileExternalInventory implements IRotatable, IE
             if (energyLeft <= 0)
                 break;
         }
+        if (energyUsed > 0 && System.currentTimeMillis() - this.lastPacket >= 50)
+        {
+            this.lastPacket = System.currentTimeMillis();
+            this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
         return energyUsed;
     }
 
@@ -93,28 +89,34 @@ public class TileCharger extends TileExternalInventory implements IRotatable, IE
     }
 
     @Override
-    public void setEnergy(ForgeDirection from, long energy)
+    public Packet getDescriptionPacket()
     {
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
+        return ResonantInduction.PACKET_TILE.getPacketWithID(0, this, nbt);
     }
 
     @Override
-    public long getEnergy(ForgeDirection from)
+    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
-        if (this.canConnect(from))
+        try
         {
-            return this.energyStored;
-        }
-        return 0;
-    }
+            if (id == 0)
+            {
+                this.readFromNBT(PacketHandler.readNBTTagCompound(data));
+                return true;
+            }
+            else if (id == 1)
+            {
 
-    @Override
-    public long getEnergyCapacity(ForgeDirection from)
-    {
-        if (this.canConnect(from))
-        {
-            return this.energyCap;
+            }
         }
-        return 0;
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return true;
+        }
+        return false;
     }
 
     @Override
