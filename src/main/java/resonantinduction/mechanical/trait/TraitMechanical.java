@@ -126,7 +126,7 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir)
+	public float getRatio(ForgeDirection dir, Object source)
 	{
 		return 0;
 	}

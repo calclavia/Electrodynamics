@@ -134,7 +134,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir)
+	public float getRatio(ForgeDirection dir, Object source)
 	{
 		return 0.5f;
 	}

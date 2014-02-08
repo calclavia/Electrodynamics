@@ -402,6 +402,7 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 
 	public void updateBounds()
 	{
+		//TODO: Raytrace for block collision
 		switch (getDirection())
 		{
 			case DOWN:

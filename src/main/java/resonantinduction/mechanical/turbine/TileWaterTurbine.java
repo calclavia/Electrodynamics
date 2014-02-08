@@ -185,7 +185,7 @@ public class TileWaterTurbine extends TileTurbine implements IMechanical
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir)
+	public float getRatio(ForgeDirection dir, Object source)
 	{
 		return getMultiBlock().isConstructed() ? 1.5f : 0.5f;
 	}

@@ -394,14 +394,23 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir)
+	public float getRatio(ForgeDirection dir, Object source)
 	{
-		if (dir == placementSide)
+		if (source instanceof IMechanical)
 		{
-			return super.getRatio(dir);
+			universalelectricity.api.vector.Vector3 deltaPos = ((IMechanical) source).getPosition().subtract(getPosition());
+
+			boolean caseX = placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0;
+			boolean caseY = placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0;
+			boolean caseZ = placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0;
+
+			if (caseX || caseY || caseZ)
+			{
+				return super.getRatio(dir, source);
+			}
 		}
 
-		return getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir);
+		return getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir, source);
 	}
 
 	@Override
@@ -431,7 +440,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			 * Check for flat connections (gear face on gear face) to make sure it's actually on
 			 * this gear block.
 			 */
-			System.out.println(getPosition() + ":" + from + " vs " + placementSide);
 			if (from == placementSide.getOpposite())
 			{
 				if (source instanceof PartGear || source instanceof PartGearShaft)
@@ -449,20 +457,38 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 						if (((PartGear) source).placementSide != placementSide)
 						{
-							/**
-							 * Case when we connect gears via edges internally. Large gear attempt
-							 * to connect to small gear.
-							 */
+
 							TMultiPart part = tile().partMap(((PartGear) source).placementSide.ordinal());
 
 							if (part instanceof PartGear)
 							{
+								/**
+								 * Case when we connect gears via edges internally. Large gear
+								 * attempt
+								 * to connect to small gear.
+								 */
 								PartGear sourceGear = (PartGear) part;
 
 								if (sourceGear.isCenterMultiBlock() && !sourceGear.getMultiBlock().isPrimary())
 								{
 									// For large gear to small gear on edge connection.
 									return true;
+								}
+							}
+							else
+							{
+								/**
+								 * Small gear attempting to connect to large gear.
+								 */
+								if (getMultiBlock().isConstructed())
+								{
+									TMultiPart checkPart = ((PartGear) source).tile().partMap(placementSide.ordinal());
+
+									if (checkPart instanceof PartGear)
+									{
+										ForgeDirection requiredDirection = ((PartGear) checkPart).getPosition().subtract(getPosition()).toForgeDirection();
+										return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
+									}
 								}
 							}
 						}
