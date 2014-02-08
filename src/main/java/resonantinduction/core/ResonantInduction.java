@@ -97,16 +97,16 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
-		
+
 		/**
 		 * Melting dusts
 		 */
 		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class);
 
 		// Items
-		itemRubble = new ItemOreResource(Settings.getNextItemID(), "oreRubble");
-		itemDust = new ItemOreResource(Settings.getNextItemID(), "oreDust");
-		itemRefinedDust = new ItemOreResource(Settings.getNextItemID(), "oreRefinedDust");
+		itemRubble = new ItemOreResource(Settings.getNextItemID("oreRubble"), "oreRubble");
+		itemDust = new ItemOreResource(Settings.getNextItemID("oreDust"), "oreDust");
+		itemRefinedDust = new ItemOreResource(Settings.getNextItemID("oreRefinedDust"), "oreRefinedDust");
 
 		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
@@ -115,7 +115,6 @@ public class ResonantInduction
 		// Already registered wih ContentRegistry
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
-		Settings.save();
 		proxy.preInit();
 	}
 
@@ -133,5 +132,6 @@ public class ResonantInduction
 	{
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
+		Settings.save();
 	}
 }

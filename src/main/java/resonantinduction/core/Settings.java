@@ -22,9 +22,21 @@ public class Settings
 		return idManager.getNextBlockID();
 	}
 
+	public static int getNextBlockID(String key)
+	{
+		int id = idManager.getNextBlockID();
+		return Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, key, id).getInt(id);
+	}
+
 	public static int getNextItemID()
 	{
 		return idManager.getNextItemID();
+	}
+
+	public static int getNextItemID(String key)
+	{
+		int id = idManager.getNextItemID();
+		return Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, key, id).getInt(id);
 	}
 
 	/** Settings */

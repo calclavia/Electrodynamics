@@ -24,7 +24,7 @@ public class BlockFluidMaterial extends BlockFluidFinite
 {
 	public BlockFluidMaterial(Fluid fluid)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, fluid.getName(), Settings.getNextBlockID()).getInt(), fluid, Material.lava);
+		super(Settings.getNextBlockID(fluid.getName()), fluid, Material.lava);
 		setTextureName(Reference.PREFIX + "molten_flow");
 		setUnlocalizedName(Reference.PREFIX + "fluidMaterial");
 	}

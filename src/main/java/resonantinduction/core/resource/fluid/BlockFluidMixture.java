@@ -25,7 +25,7 @@ public class BlockFluidMixture extends BlockFluidFinite
 {
 	public BlockFluidMixture(Fluid fluid)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, fluid.getName(), Settings.getNextBlockID()).getInt(), fluid, Material.water);
+		super(Settings.getNextBlockID(fluid.getName()), fluid, Material.water);
 		setTextureName(Reference.PREFIX + "mixture_flow");
 		this.setUnlocalizedName(Reference.PREFIX + "fluidMixture");
 	}
