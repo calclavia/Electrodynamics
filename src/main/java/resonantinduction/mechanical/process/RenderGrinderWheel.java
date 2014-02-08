@@ -36,7 +36,6 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			glScalef(0.51f, 0.5f, 0.5f);
 			ForgeDirection dir = tile.getDirection();
 			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
-			dir = WorldUtility.invertZ(dir);
 			RenderUtility.rotateBlockBasedOnDirection(dir);
 			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");

@@ -12,6 +12,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.network.IMechanical;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -174,6 +175,12 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 		}
 
 		return getDirection().getRotation(ForgeDirection.UP) == from || getDirection().getRotation(ForgeDirection.DOWN) == from;
+	}
+
+	@Override
+	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
+	{
+		return !(dir.ordinal() % 2 == 0);
 	}
 
 }

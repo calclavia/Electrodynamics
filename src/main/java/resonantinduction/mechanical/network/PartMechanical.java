@@ -64,6 +64,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 					i++;
 
 			System.out.println("Connected with: " + i + ":" + getNetwork());
+			//efresh();
 
 		}
 
