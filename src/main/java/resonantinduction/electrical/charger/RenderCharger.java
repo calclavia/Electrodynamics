@@ -1,8 +1,7 @@
-package resonantinduction.mechanical.belt;
+package resonantinduction.electrical.charger;
 
 import net.minecraft.tileentity.TileEntity;
 import resonantinduction.core.render.RenderItemOverlayTile;
-import resonantinduction.electrical.charger.TileCharger;
 
 public class RenderCharger extends RenderItemOverlayTile
 {
