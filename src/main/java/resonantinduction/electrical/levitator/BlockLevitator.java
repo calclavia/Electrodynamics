@@ -23,7 +23,8 @@ public class BlockLevitator extends BlockRotatable
 	public BlockLevitator(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "machine");
+		setTextureName(Reference.PREFIX + "material_steel");
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	@Override

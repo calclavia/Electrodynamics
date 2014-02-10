@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -402,36 +403,27 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 
 	public void updateBounds()
 	{
-		//TODO: Raytrace for block collision
-		switch (getDirection())
+		ForgeDirection dir = getDirection();
+		MovingObjectPosition mop = worldObj.clip(new Vector3(this).translate(dir).toVec3(), new Vector3(this).translate(dir, Settings.LEVITATOR_MAX_REACH).toVec3());
+
+		int reach = Settings.LEVITATOR_MAX_REACH;
+
+		if (mop != null)
 		{
-			case DOWN:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, Math.max(yCoord - Settings.LEVITATOR_MAX_REACH, 1), zCoord, xCoord + 1, yCoord, zCoord + 1);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord - 0.1, zCoord, xCoord + 1, yCoord, zCoord + 1);
-				break;
-			case UP:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord + 1, zCoord, xCoord + 1, Math.min(yCoord + 1 + Settings.LEVITATOR_MAX_REACH, 255), zCoord + 1);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord + 1, zCoord, xCoord + 1, yCoord + 1.1, zCoord + 1);
-				break;
-			case NORTH:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord - Settings.LEVITATOR_MAX_REACH, xCoord + 1, yCoord + 1, zCoord);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord - 0.1, xCoord + 1, yCoord + 1, zCoord);
-				break;
-			case SOUTH:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord + 1, xCoord + 1, yCoord + 1, zCoord + 1 + Settings.LEVITATOR_MAX_REACH);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord + 1, xCoord + 1, yCoord + 1, zCoord + 1.1);
-				break;
-			case WEST:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord - Settings.LEVITATOR_MAX_REACH, yCoord, zCoord, xCoord, yCoord + 1, zCoord + 1);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord - 0.1, yCoord, zCoord, xCoord, yCoord + 1, zCoord + 1);
-				break;
-			case EAST:
-				operationBounds = AxisAlignedBB.getBoundingBox(xCoord + 1, yCoord, zCoord, xCoord + 1 + Settings.LEVITATOR_MAX_REACH, yCoord + 1, zCoord + 1);
-				suckBounds = AxisAlignedBB.getBoundingBox(xCoord + 1, yCoord, zCoord, xCoord + 1.1, yCoord + 1, zCoord + 1);
-				break;
-			default:
-				break;
+			reach = (int) Math.min(new Vector3(this).distance(new Vector3(mop.hitVec)), reach);
 		}
+
+		if (dir.offsetX + dir.offsetY + dir.offsetZ < 0)
+		{
+			operationBounds = AxisAlignedBB.getBoundingBox(xCoord + dir.offsetX * reach, yCoord + dir.offsetY * reach, zCoord + dir.offsetZ * reach, xCoord + 1, yCoord + 1, zCoord + 1);
+			suckBounds = AxisAlignedBB.getBoundingBox(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, xCoord + 1, yCoord + 1, zCoord + 1);
+		}
+		else
+		{
+			operationBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1 + dir.offsetX * reach, yCoord + 1 + dir.offsetY * reach, zCoord + 1 + dir.offsetZ * reach);
+			suckBounds = AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1 + dir.offsetX, yCoord + 1 + dir.offsetY, zCoord + 1 + dir.offsetZ);
+		}
+
 	}
 
 	public boolean isLatched()
