@@ -38,6 +38,7 @@ import resonantinduction.mechanical.turbine.BlockWindTurbine;
 import resonantinduction.mechanical.turbine.TileWaterTurbine;
 import resonantinduction.mechanical.turbine.TileWindTurbine;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
@@ -132,6 +133,9 @@ public class Mechanical
 
 		proxy.preInit();
 		Settings.save();
+
+		PacketAnnotation.register(TileWindTurbine.class);
+		PacketAnnotation.register(TileWaterTurbine.class);
 	}
 
 	@EventHandler

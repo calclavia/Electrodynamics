@@ -28,6 +28,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.recipe.UniversalRecipe;
@@ -101,6 +102,8 @@ public class Archaic
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
 		proxy.preInit();
 		Settings.save();
+
+		PacketAnnotation.register(TileFirebox.class);
 	}
 
 	@EventHandler

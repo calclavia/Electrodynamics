@@ -35,7 +35,6 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-@Synced
 public class TileFirebox extends TileElectricalInventory implements IPacketReceiver, IFluidHandler
 {
 	/**
