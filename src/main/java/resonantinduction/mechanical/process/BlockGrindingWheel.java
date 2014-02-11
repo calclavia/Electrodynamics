@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.process;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -29,6 +31,7 @@ public class BlockGrindingWheel extends BlockRotatable implements ITileEntityPro
 		rotationMask = Byte.parseByte("111111", 2);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
 	{
