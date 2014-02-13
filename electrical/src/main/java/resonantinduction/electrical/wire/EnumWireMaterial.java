@@ -17,17 +17,17 @@ import codechicken.lib.colour.ColourRGBA;
 public enum EnumWireMaterial
 {
 	/** Copper: General. */
-	COPPER("Copper", 1.68f, 5, 150, 184, 115, 51),
+	COPPER("Copper", 1.68f, 5, 300, 184, 115, 51),
 	/** Tin: Low shock, cheap */
-	TIN("Tin", 11f, 1, 100, 132, 132, 130),
+	TIN("Tin", 11f, 1, 2000, 132, 132, 130),
 	/** Iron: High Capacity */
-	IRON("Iron", 10f, 3, 400, 97, 102, 105),
+	IRON("Iron", 10f, 3, 8000, 97, 102, 105),
 	/** Aluminum: High Shock */
-	ALUMINUM("Aluminum", 2.82f, 10, 320, 215, 205, 181),
+	ALUMINUM("Aluminum", 2.82f, 10, 3200, 215, 205, 181),
 	/** Aluminum: Low Resistance */
-	SILVER("Silver", 1.59f, 5, 200, 192, 192, 192),
+	SILVER("Silver", 1.59f, 5, 4000, 192, 192, 192),
 	/** Superconductor: Over-powered */
-	SUPERCONDUCTOR("Superconductor", 0, 10, 1000, 255, 255, 1);
+	SUPERCONDUCTOR("Superconductor", 0, 10, 1000000, 255, 255, 1);
 
 	public final float resistance;
 	public final int damage;
