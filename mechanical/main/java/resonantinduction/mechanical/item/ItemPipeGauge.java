@@ -1,5 +1,8 @@
 package resonantinduction.mechanical.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,8 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.IReadOut;
-import resonantinduction.api.IReadOut.EnumTools;
+import resonantinduction.api.IInformation;
 import calclavia.lib.utility.FluidUtility;
 
 public class ItemPipeGauge extends Item
@@ -31,17 +33,16 @@ public class ItemPipeGauge extends Item
 		{
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 			ForgeDirection hitSide = ForgeDirection.getOrientation(side);
-			if (tileEntity instanceof IReadOut)
+
+			if (tileEntity instanceof IInformation)
 			{
-				String output = ((IReadOut) tileEntity).getMeterReading(player, hitSide, EnumTools.PIPE_GUAGE);
-				if (output != null && !output.isEmpty())
+				List<String> list = new ArrayList<String>();
+				((IInformation) tileEntity).getInformation(list);
+
+				if (list.size() > 0)
 				{
-					if (output.length() > 100)
-					{
-						output = output.substring(0, 100);
-					}
-					output.trim();
-					player.sendChatToPlayer(ChatMessageComponent.createFromText("ReadOut> " + output));
+					for (String output : list)
+						player.addChatMessage(output);
 					return true;
 				}
 			}
@@ -51,10 +52,10 @@ public class ItemPipeGauge extends Item
 				if (tanks != null)
 				{
 					player.sendChatToPlayer(ChatMessageComponent.createFromText("FluidHandler> Side:" + hitSide.toString() + " Tanks:" + tanks.length));
+
 					for (FluidStack stack : FluidUtility.getFluidList(tanks))
-					{
-						player.sendChatToPlayer(ChatMessageComponent.createFromText("Fluid>" + stack.amount + "mb of " + stack.getFluid().getName()));
-					}
+						player.addChatMessage("Fluid: " + stack.amount + "mb of " + stack.getFluid().getName());
+
 					return true;
 				}
 			}

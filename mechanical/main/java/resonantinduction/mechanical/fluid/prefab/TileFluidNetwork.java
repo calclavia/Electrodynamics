@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.prefab;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -12,7 +14,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.api.IReadOut;
+import resonantinduction.api.IInformation;
 import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.core.ResonantInduction;
@@ -34,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author DarkCow
  * 
  */
-public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IReadOut
+public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IInformation
 {
 	protected FluidTank tank;
 	protected Object[] connectedBlocks = new Object[6];
@@ -301,13 +303,9 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	}
 
 	@Override
-	public String getMeterReading(EntityPlayer user, ForgeDirection side, EnumTools tool)
+	public void getInformation(List<String> info)
 	{
-		if (tool == EnumTools.PIPE_GUAGE)
-		{
-			return this.getNetwork().toString();
-		}
-		return null;
+		info.add(this.getNetwork().toString());
 	}
 
 	@Override

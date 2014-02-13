@@ -1,4 +1,4 @@
-package resonantinduction.api;
+package resonantinduction.api.electrical;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
  * 
  * @author DarkGuardsman
  */
-public class EntityDictionary
+public class ArmbotEntity
 {
 	public static HashMap<String, Class<? extends Entity>> entityMap = new HashMap();
 	public static HashMap<Class<? extends Entity>, Boolean> grabMap = new HashMap();
