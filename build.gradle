@@ -70,6 +70,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
+			artifact apiZip
 			
 			artifact {
 				file 'output/build.properties'
