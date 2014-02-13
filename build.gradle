@@ -88,7 +88,10 @@ publishing {
         mavenJava(MavenPublication) {
             artifact jar
 			artifact apiZip
-			artifact createChangelog
+			
+			artifact {
+				file 'output/' + "${System.getenv().JOB_NAME}-${project.version}" + '-changelog' + '.txt'
+			}
 			
 			artifact {
 				file 'output/build.properties'
