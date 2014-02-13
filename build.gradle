@@ -13,6 +13,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 ext.buildProps = file "build.properties"
 
