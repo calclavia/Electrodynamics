@@ -63,7 +63,7 @@ artifacts {
 
 jar {
     dependsOn copyBuildXml
-    classifier = ''
+    classifier = 'core'
     destinationDir = file 'output'
 }
 
