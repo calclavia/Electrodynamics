@@ -51,7 +51,7 @@ task copyBuildXml(type: Copy) {
 
 jar {
     dependsOn copyBuildXml
-    classifier = 'core'
+    classifier = ''
     destinationDir = file 'output'
 }
 
@@ -73,10 +73,12 @@ publishing {
 			artifact apiZip
 			
 			artifact {
+				classifier "changelog"
 				file 'output/' + "${System.getenv().JOB_NAME}-${project.version}" + '-changelog' + '.txt'
 			}
 			
 			artifact {
+				classifier "properties"
 				file 'output/build.properties'
 			}
         }		
