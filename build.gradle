@@ -51,7 +51,7 @@ task copyBuildXml(type: Copy) {
 
 jar {
     dependsOn copyBuildXml
-    classifier = ''
+    classifier = 'core'
     destinationDir = file 'output'
 }
 
