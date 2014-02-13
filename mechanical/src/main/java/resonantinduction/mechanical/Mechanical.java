@@ -136,6 +136,8 @@ public class Mechanical
 
 		proxy.preInit();
 		Settings.save();
+		
+		TabRI.ITEMSTACK = new ItemStack(blockGrinderWheel);
 
 		PacketAnnotation.register(TileWindTurbine.class);
 		PacketAnnotation.register(TileWaterTurbine.class);
@@ -145,7 +147,7 @@ public class Mechanical
 	public void init(FMLInitializationEvent evt)
 	{
 		MultipartMechanical.INSTANCE = new MultipartMechanical();
-		Settings.setModMetadata(metadata, ID, NAME);
+		Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
 		proxy.init();
 	}
 

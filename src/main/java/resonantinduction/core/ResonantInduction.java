@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 
@@ -52,7 +53,7 @@ public class ResonantInduction
 {
 	/** Mod Information */
 	public static final String ID = "ResonantInduction|Core";
-	public static final String NAME = Reference.NAME + " Core";
+	public static final String NAME = Reference.NAME;
 
 	@Instance(ID)
 	public static ResonantInduction INSTANCE;
@@ -119,6 +120,7 @@ public class ResonantInduction
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 		proxy.preInit();
+		TabRI.ITEMSTACK = new ItemStack(blockMachinePart);
 	}
 
 	@EventHandler

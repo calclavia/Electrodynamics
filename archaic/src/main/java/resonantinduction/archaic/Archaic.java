@@ -98,6 +98,7 @@ public class Archaic
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
 		proxy.preInit();
 		Settings.save();
+		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
 
 		PacketAnnotation.register(TileFirebox.class);
 	}
@@ -105,7 +106,7 @@ public class Archaic
 	@EventHandler
 	public void init(FMLInitializationEvent evt)
 	{
-		Settings.setModMetadata(metadata, ID, NAME);
+		Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
 		proxy.init();
 	}
 
