@@ -73,12 +73,12 @@ publishing {
 			artifact apiZip
 			
 			artifact {
-				classifier "changelog"
+				classifier = "changelog"
 				file 'output/' + "${System.getenv().JOB_NAME}-${project.version}" + '-changelog' + '.txt'
 			}
 			
 			artifact {
-				classifier "properties"
+				classifier = "properties"
 				file 'output/build.properties'
 			}
         }		
