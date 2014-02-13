@@ -70,21 +70,21 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	{
 		super.updateEntity();
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			if (this.isActive())
+			if (isActive())
 			{
-				if (this.isInversed && Settings.ENABLE_ELECTRICITY)
+				if (isInversed && Settings.ENABLE_ELECTRICITY)
 				{
-					if (this.energy.getEnergy() < this.energy.getEnergyCapacity())
+					if (energy.getEnergy() < energy.getEnergyCapacity())
 					{
-						long withdrawnElectricity = (long) (this.requestFortron(this.getProductionRate(), true) / UE_FORTRON_RATIO);
+						long withdrawnElectricity = (long) (requestFortron(getProductionRate() / 20, true) / UE_FORTRON_RATIO);
 						// Inject electricity from Fortron.
-						this.energy.receiveEnergy(withdrawnElectricity * ENERGY_LOSS, true);
+						energy.receiveEnergy(withdrawnElectricity * ENERGY_LOSS, true);
 					}
 
-					this.recharge(this.getStackInSlot(SLOT_BATTERY));
-					this.produce();
+					recharge(getStackInSlot(SLOT_BATTERY));
+					produce();
 				}
 				else
 				{
@@ -134,6 +134,22 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	public long getWattage()
 	{
 		return (long) (DEFAULT_WATTAGE + (DEFAULT_WATTAGE * ((float) this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / (float) 8)));
+	}
+
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+	{
+		if (!isInversed)
+			return super.onReceiveEnergy(from, receive, doReceive);
+		return receive;
+	}
+
+	@Override
+	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
+	{
+		if (isInversed)
+			return super.onExtractEnergy(from, extract, doExtract);
+		return 0;
 	}
 
 	@Override

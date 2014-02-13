@@ -115,20 +115,44 @@ public abstract class TileMFFSElectrical extends TileModuleAcceptor implements I
 		this.energy.setEnergy(energy);
 	}
 
-	protected void produce()
+	protected long produce(long outputEnergy)
 	{
-		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		long usedEnergy = 0;
+
+		for (ForgeDirection direction : this.getOutputDirections())
 		{
-			if (this.energy.getEnergy() > 0)
+			if (outputEnergy > 0)
 			{
-				TileEntity tileEntity = new Vector3(this).modifyPositionFromSide(direction).getTileEntity(this.worldObj);
+				TileEntity tileEntity = new Vector3(this).translate(direction).getTileEntity(this.worldObj);
 
 				if (tileEntity != null)
 				{
-					long used = CompatibilityModule.receiveEnergy(tileEntity, direction.getOpposite(), this.energy.extractEnergy(this.energy.getEnergy(), false), true);
-					this.energy.extractEnergy(used, true);
+					usedEnergy += CompatibilityModule.receiveEnergy(tileEntity, direction.getOpposite(), outputEnergy, true);
 				}
 			}
 		}
+
+		return usedEnergy;
+	}
+
+	protected long produce()
+	{
+		long totalUsed = 0;
+
+		for (ForgeDirection direction : this.getOutputDirections())
+		{
+			if (this.energy.getEnergy() > 0)
+			{
+				TileEntity tileEntity = new Vector3(this).translate(direction).getTileEntity(this.worldObj);
+
+				if (tileEntity != null)
+				{
+					long used = CompatibilityModule.receiveEnergy(tileEntity, direction.getOpposite(), energy.extractEnergy(energy.getEnergy(), false), true);
+					totalUsed += this.energy.extractEnergy(used, true);
+				}
+			}
+		}
+
+		return totalUsed;
 	}
 }
