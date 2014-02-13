@@ -11,6 +11,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.LanguageUtility;
 
@@ -26,7 +28,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add(LanguageUtility.getLocal("info.item.fortron") + " " + this.getFortronCost(1));
+		info.add(LanguageUtility.getLocal("info.item.fortron") + " " + UnitDisplay.getDisplay(getFortronCost(1) * 20, Unit.LITER) + "/s");
 		super.addInformation(itemStack, player, info, b);
 	}
 

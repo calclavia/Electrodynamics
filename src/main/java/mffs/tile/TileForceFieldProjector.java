@@ -218,7 +218,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	{
 		if (this.getMode() instanceof ItemModeCustom)
 		{
-			return ((ItemModeCustom) this.getMode()).getFieldBlocks(this, this.getModeStack()).size() / 1000;
+			return Math.max(((ItemModeCustom) this.getMode()).getFieldBlocks(this, this.getModeStack()).size() / 100, 1);
 		}
 
 		return Math.max(Math.min((this.getCalculatedField().size() / 1000), 10), 1);

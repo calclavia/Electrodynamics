@@ -420,6 +420,6 @@ public class ItemModeCustom extends ItemMode implements ICache
 	@Override
 	public float getFortronCost(float amplifier)
 	{
-		return amplifier;
+		return super.getFortronCost(amplifier) * amplifier;
 	}
 }

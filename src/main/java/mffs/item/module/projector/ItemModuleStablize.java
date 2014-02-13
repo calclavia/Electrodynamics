@@ -31,7 +31,7 @@ public class ItemModuleStablize extends ItemModule
 	{
 		super(id, "moduleStabilize");
 		this.setMaxStackSize(1);
-		this.setCost(15);
+		this.setCost(20);
 	}
 
 	@Override

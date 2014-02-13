@@ -30,7 +30,7 @@ public class ItemModuleDisintegration extends ItemModule
 	{
 		super(id, "moduleDisintegration");
 		this.setMaxStackSize(1);
-		this.setCost(15);
+		this.setCost(20);
 	}
 
 	@Override
