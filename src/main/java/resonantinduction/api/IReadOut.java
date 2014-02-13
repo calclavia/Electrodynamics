@@ -9,6 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
  * 
  * @author DarkGuardsman
  */
+@Deprecated
 public interface IReadOut
 {
 	/**
