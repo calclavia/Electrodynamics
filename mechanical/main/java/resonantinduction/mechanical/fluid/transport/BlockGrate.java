@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pump;
+package resonantinduction.mechanical.fluid.transport;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;

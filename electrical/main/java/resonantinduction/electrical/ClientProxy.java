@@ -1,6 +1,5 @@
 package resonantinduction.electrical;
 
-import calclavia.lib.render.item.GlobalItemRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -23,6 +22,7 @@ import resonantinduction.electrical.tesla.RenderTesla;
 import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.RenderTransformer;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.item.GlobalItemRenderer;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.client.FMLClientHandler;

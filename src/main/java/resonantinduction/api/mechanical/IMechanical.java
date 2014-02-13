@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.network;
+package resonantinduction.api.mechanical;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IConnector;

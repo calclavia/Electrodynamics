@@ -10,8 +10,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
@@ -46,14 +46,14 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		GL11.glRotatef(90, 1, 0, 0);
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		ForgeDirection dir = ForgeDirection.NORTH;
 		final int metadata = 8;
 		// Render edges
 		// UP
-		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Archaic.blockMachinePart, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
 		// DOWN
-		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 		// LEFT
 		for (int i = 2; i < 6; i++)
 		{
@@ -63,22 +63,22 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			{
 				if (dir.offsetX != check.offsetZ)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 				}
 				else if (dir.offsetX == check.offsetZ)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 				}
 			}
 			if (dir.offsetZ != 0 && check.offsetX != 0)
 			{
 				if (dir.offsetZ == check.offsetX)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 				}
 				else if (dir.offsetZ != check.offsetX)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 				}
 			}
 		}
@@ -98,15 +98,15 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, Archaic.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		final int metadata = 8;
 		// Render edges
 		// UP
 		if (!part.hasMultimeter(part.x(), part.y() + 1, part.z()))
-			RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, Archaic.blockMachinePart, null, metadata);
+			RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
 		// DOWN
 		if (!part.hasMultimeter(part.x(), part.y() - 1, part.z()))
-			RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+			RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 		// LEFT
 		for (int i = 2; i < 6; i++)
 		{
@@ -118,22 +118,22 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				{
 					if (dir.offsetX != check.offsetZ)
 					{
-						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 					else if (dir.offsetX == check.offsetZ)
 					{
-						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
 				if (dir.offsetZ != 0 && check.offsetX != 0)
 				{
 					if (dir.offsetZ == check.offsetX)
 					{
-						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 					else if (dir.offsetZ != check.offsetX)
 					{
-						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, Archaic.blockMachinePart, null, metadata);
+						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
 			}

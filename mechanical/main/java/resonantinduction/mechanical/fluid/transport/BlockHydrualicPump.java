@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.motor;
+package resonantinduction.mechanical.fluid.transport;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -21,7 +21,7 @@ public class BlockHydrualicPump extends BlockRotatable
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileFluidMotor();
+		return new TileHydraulicPump();
 	}
 
 	@Override

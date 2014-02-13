@@ -18,8 +18,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import resonantinduction.archaic.imprint.ItemImprint;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.gui.ContainerDummy;
 import calclavia.lib.network.IPacketReceiver;

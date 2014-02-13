@@ -14,6 +14,7 @@ import org.modstats.Modstats;
 import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
+import resonantinduction.core.resource.BlockMachineMaterial;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
@@ -24,6 +25,7 @@ import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
+import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -76,7 +78,7 @@ public class ResonantInduction
 	public static Block blockDust;
 	public static final List<Block> blockFluidMixtures = new ArrayList<Block>();
 	public static final List<Block> blockFluidMaterials = new ArrayList<Block>();
-	public static Block blockGas;
+	public static Block blockMachinePart;
 
 	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
 	public static List<Fluid> fluidMaterials = new ArrayList<Fluid>();
@@ -96,7 +98,8 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
-		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
+
+		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
 		/**
 		 * Melting dusts

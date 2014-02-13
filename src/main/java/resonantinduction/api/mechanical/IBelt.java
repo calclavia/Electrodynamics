@@ -1,9 +1,8 @@
-package resonantinduction.api;
+package resonantinduction.api.mechanical;
 
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import resonantinduction.mechanical.network.IMechanical;
 
 /**
  * An interface applied to the tile entity of a conveyor belt

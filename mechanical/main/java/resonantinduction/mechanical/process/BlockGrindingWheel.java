@@ -1,7 +1,5 @@
 package resonantinduction.mechanical.process;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -13,7 +11,8 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.lib.prefab.block.BlockRotatable;
-import calclavia.lib.utility.WorldUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A block used to build machines.

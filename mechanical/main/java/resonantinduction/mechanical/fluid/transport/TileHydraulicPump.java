@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.motor;
+package resonantinduction.mechanical.fluid.transport;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -6,12 +6,12 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.fluid.IFluidPipe;
+import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileAdvanced;
 
-public class TileFluidMotor extends TileAdvanced implements IFluidHandler, IRotatable
+public class TileHydraulicPump extends TileAdvanced implements IFluidHandler, IRotatable
 {
 	ForgeDirection facing = ForgeDirection.UNKNOWN;
 	boolean input = true;
@@ -39,7 +39,7 @@ public class TileFluidMotor extends TileAdvanced implements IFluidHandler, IRota
 					return 0;
 				}
 			}
-			if (tileOut instanceof IFluidHandler && !(tileOut instanceof TileFluidMotor))
+			if (tileOut instanceof IFluidHandler && !(tileOut instanceof TileHydraulicPump))
 			{
 				// TODO pass fluid on to the other side of the motor and get average flow rate
 			}
@@ -80,7 +80,7 @@ public class TileFluidMotor extends TileAdvanced implements IFluidHandler, IRota
 		if (from == getDirection().getOpposite())
 		{
 			TileEntity tile = new Vector3(this).translate(from.getOpposite()).getTileEntity(this.worldObj);
-			if (tile instanceof IFluidHandler && !(tile instanceof TileFluidMotor))
+			if (tile instanceof IFluidHandler && !(tile instanceof TileHydraulicPump))
 			{
 				return ((IFluidHandler) tile).getTankInfo(from);
 			}

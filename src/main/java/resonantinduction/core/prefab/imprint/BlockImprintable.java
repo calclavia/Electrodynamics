@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab;
+package resonantinduction.core.prefab.imprint;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.imprint.ItemImprint;
 import calclavia.lib.prefab.block.BlockRotatable;
 
 /**

@@ -1,14 +1,12 @@
 package resonantinduction.mechanical.fluid.tank;
 
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.Archaic;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.render.RenderUtility;
@@ -34,7 +32,7 @@ public class RenderTank extends TileEntitySpecialRenderer
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-			RenderUtility.renderBlockWithConnectedTextures(renderSides, Mechanical.blockTank, null, Archaic.blockMachinePart, null);
+			RenderUtility.renderBlockWithConnectedTextures(renderSides, Mechanical.blockTank, null, ResonantInduction.blockMachinePart, null);
 			GL11.glPopMatrix();
 
 			if (fluid != null && fluid.amount > 100)

@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab;
+package resonantinduction.core.prefab.imprint;
 
 import java.util.Set;
 
@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
-import resonantinduction.archaic.imprint.ItemImprint;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileExternalInventory;
 

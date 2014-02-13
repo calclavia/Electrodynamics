@@ -1,19 +1,15 @@
 package resonantinduction.mechanical.turbine;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.ResonantInduction;
+import resonantinduction.api.mechanical.IMechanical;
+import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.mechanical.gear.PartGearShaft;
-import resonantinduction.mechanical.network.IMechanical;
-import resonantinduction.mechanical.network.IMechanicalNetwork;
 import resonantinduction.mechanical.network.MechanicalNetwork;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
 /**

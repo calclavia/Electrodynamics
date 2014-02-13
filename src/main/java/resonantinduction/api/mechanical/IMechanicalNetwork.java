@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.network;
+package resonantinduction.api.mechanical;
 
 import universalelectricity.api.net.INetwork;
 

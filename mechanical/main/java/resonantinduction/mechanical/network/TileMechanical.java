@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.mechanical.IMechanical;
+import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.vector.Vector3;

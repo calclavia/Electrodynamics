@@ -129,7 +129,7 @@ import net.minecraftforge.gradle.delayed.*
 task createChangelog(type: ChangelogTask) {
     def jobName = "${System.getenv().JOB_NAME}"
     def buildNumber = "${System.getenv().BUILD_NUMBER}"
-    
+    jobName.replaceAll(' ','%20')
     setServerRoot(new DelayedString(project, 'http://ci.calclavia.com/'))
     setJobName(new DelayedString(project, jobName.toString()));
     setAuthName(new DelayedString(project, 'console_script'));

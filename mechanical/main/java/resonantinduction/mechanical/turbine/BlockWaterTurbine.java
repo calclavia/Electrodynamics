@@ -4,8 +4,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.lib.prefab.turbine.BlockTurbine;
 import cpw.mods.fml.relauncher.Side;

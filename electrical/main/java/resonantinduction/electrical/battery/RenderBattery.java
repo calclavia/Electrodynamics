@@ -19,8 +19,6 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.electrical.battery.ItemBlockBattery;
-import resonantinduction.electrical.battery.TileBattery;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;

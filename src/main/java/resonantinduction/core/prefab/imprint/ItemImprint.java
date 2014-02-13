@@ -1,4 +1,4 @@
-package resonantinduction.archaic.imprint;
+package resonantinduction.core.prefab.imprint;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +19,6 @@ import resonantinduction.core.TabRI;
 
 public class ItemImprint extends Item
 {
-	public ItemImprint()
-	{
-		this(Settings.getNextItemID());
-	}
-
 	public ItemImprint(int id)
 	{
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());

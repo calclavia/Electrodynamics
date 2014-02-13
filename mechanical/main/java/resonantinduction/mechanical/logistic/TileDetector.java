@@ -11,7 +11,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.TileFilterable;
+import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;

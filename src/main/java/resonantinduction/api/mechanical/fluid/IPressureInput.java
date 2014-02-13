@@ -1,4 +1,4 @@
-package resonantinduction.api.fluid;
+package resonantinduction.api.mechanical.fluid;
 
 import net.minecraftforge.common.ForgeDirection;
 

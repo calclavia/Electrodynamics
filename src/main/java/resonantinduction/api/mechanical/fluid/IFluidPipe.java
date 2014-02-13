@@ -1,4 +1,4 @@
-package resonantinduction.api.fluid;
+package resonantinduction.api.mechanical.fluid;
 
 /**
  * Applied to tiles that are pipes and support pressure

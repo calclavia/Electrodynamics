@@ -1,4 +1,4 @@
-package resonantinduction.archaic.blocks;
+package resonantinduction.core.resource;
 
 import java.util.List;
 

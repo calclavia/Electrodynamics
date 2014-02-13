@@ -1,4 +1,4 @@
-package resonantinduction.core;
+package resonantinduction.mechanical;
 
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
@@ -6,12 +6,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.render.RenderUtility;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.gear.RenderGear;
-import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.RenderUtils;
-import codechicken.lib.render.TextureUtils;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
 import cpw.mods.fml.relauncher.Side;

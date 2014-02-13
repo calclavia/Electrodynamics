@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.fluid.IFluidConnector;
-import resonantinduction.api.fluid.IFluidNetwork;
-import resonantinduction.api.fluid.IFluidPipe;
+import resonantinduction.api.mechanical.fluid.IFluidConnector;
+import resonantinduction.api.mechanical.fluid.IFluidNetwork;
+import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import calclavia.lib.utility.FluidUtility;
 
 /**

@@ -6,10 +6,10 @@
 
 package resonantinduction.mechanical.fluid.pipe;
 
-import calclavia.lib.render.RenderUtility;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.ForgeDirection;
+import calclavia.lib.render.RenderUtility;
 
 public class ModelOpenTrough extends ModelBase
 {
