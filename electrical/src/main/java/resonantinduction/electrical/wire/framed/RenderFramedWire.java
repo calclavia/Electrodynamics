@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.Map;
 
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.item.ItemDye;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -13,9 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.InvertX;
-import calclavia.lib.render.EnumColor;
 import codechicken.lib.colour.Colour;
-import codechicken.lib.colour.ColourRGBA;
+import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCRenderState;
@@ -166,7 +166,8 @@ public class RenderFramedWire
 
 		if (wire.isInsulated())
 		{
-			Colour insulationColour = new ColourRGBA(EnumColor.DYES[wire.getColor()].toColor().getRGB());
+			Colour insulationColour = new ColourARGB(ItemDye.dyeColors[wire.getColor()]);
+			insulationColour.a = (byte) 255;
 			renderPart(insulationIcon, models.get(name + "Insulation"), wire.x(), wire.y(), wire.z(), insulationColour);
 		}
 	}

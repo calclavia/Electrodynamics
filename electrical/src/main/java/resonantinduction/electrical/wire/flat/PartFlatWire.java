@@ -3,8 +3,10 @@ package resonantinduction.electrical.wire.flat;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockColored;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +22,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 import calclavia.lib.render.EnumColor;
 import codechicken.lib.colour.Colour;
+import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -894,7 +897,14 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 
 	public Colour getColour()
 	{
-		return this.isInsulated ? new ColourRGBA(EnumColor.DYES[this.color].toColor().getRGB()) : this.getMaterial().color;
+		if (isInsulated)
+		{
+			Colour color = new ColourARGB(ItemDye.dyeColors[this.color]);
+			color.a = (byte) 255;
+			return color;
+		}
+		
+		return getMaterial().color;
 	}
 
 	public boolean useStaticRenderer()
