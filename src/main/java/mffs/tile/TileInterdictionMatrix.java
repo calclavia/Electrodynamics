@@ -45,7 +45,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 		if (!this.worldObj.isRemote)
 		{
-			if (this.isActive() || (this.getStackInSlot(0) != null && this.getStackInSlot(0).itemID == ModularForceFieldSystem.itemCardInfinite.itemID))
+			if (isActive() || (this.getStackInSlot(0) != null && this.getStackInSlot(0).itemID == ModularForceFieldSystem.itemCardInfinite.itemID))
 			{
 				if (this.ticks % 10 == 0)
 				{
@@ -53,6 +53,10 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 					{
 						this.requestFortron(this.getFortronCost() * 10, true);
 						this.scan();
+					}
+					else
+					{
+						setActive(false);
 					}
 				}
 			}
