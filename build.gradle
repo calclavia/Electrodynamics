@@ -73,7 +73,7 @@ publishing {
             artifact jar
         }
 		
-		artifact {
+		artifacts {
 			file 'output/build.properties'
 		}
     }
