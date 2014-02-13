@@ -35,7 +35,8 @@ public class ItemModePyramid extends ItemMode
 		final int zStretch = posScale.intZ() + negScale.intZ();
 		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
 
-		final int inverseThickness = 8;
+		final int inverseThickness = (int) Math.max((yStretch + zStretch) / 4f, 1);
+		System.out.println(inverseThickness);
 
 		for (float y = 0; y <= yStretch; y += 1f)
 		{
