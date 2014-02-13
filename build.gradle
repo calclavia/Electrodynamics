@@ -71,11 +71,11 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-			
-			artifact {
-				file 'output/build.properties'
-			}
         }
+		
+		artifact {
+			file 'output/build.properties'
+		}
     }
     repositories {
         maven {
