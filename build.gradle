@@ -12,7 +12,6 @@ buildscript {
 }
 
 apply plugin: 'forge'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 ext.buildProps = file "build.properties"
@@ -71,11 +70,11 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-        }
-		
-		artifacts {
-			file 'output/build.properties'
-		}
+			
+			artifact {
+				file 'output/build.properties'
+			}
+        }		
     }
     repositories {
         maven {
