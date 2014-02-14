@@ -172,18 +172,20 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
 			}
 
-			GL11.glTranslatef(0, 0, -0.18f * (information.size() / 2));
+			float displacement = information.size() / 5f;
+			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.005f;
+			GL11.glTranslatef(0, 0, -displacement / 2 * (information.size() / 2));
 
 			for (int i = 0; i < information.size(); i++)
 			{
 				String info = information.get(i);
 
 				GL11.glPushMatrix();
-				GL11.glTranslatef(0, 0, 0.2f * i);
+				GL11.glTranslatef(0, 0, displacement * i);
 				if (dir.offsetX == 0)
-					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), 0.5f);
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), maxScale);
 				if (dir.offsetZ == 0)
-					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), 0.5f);
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), maxScale);
 				GL11.glPopMatrix();
 			}
 
