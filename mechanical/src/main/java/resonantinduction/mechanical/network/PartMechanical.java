@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.network;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	private IMechanicalNetwork network;
 
 	/** The mechanical connections this connector has made */
-	protected Object[] connections = new Object[6];
+	protected WeakReference[] connections = new WeakReference[6];
 
 	protected float prevAngularVelocity, angularVelocity;
 
@@ -66,7 +67,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 					i++;
 
 			System.out.println("Connected with: " + i + ":" + getNetwork());
-			//efresh();
+			// efresh();
 
 		}
 
@@ -126,7 +127,13 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public Object[] getConnections()
 	{
-		return connections;
+		Object[] actualConnections = new Object[6];
+
+		for (int i = 0; i < connections.length; i++)
+			if (connections[i] != null)
+				actualConnections[i] = connections[i].get();
+
+		return actualConnections;
 	}
 
 	@Override

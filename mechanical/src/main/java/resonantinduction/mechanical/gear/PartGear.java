@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.gear;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -164,7 +165,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public void refresh()
 	{
-		connections = new Object[6];
+		connections = new WeakReference[6];
 
 		/**
 		 * Only call refresh if this is the main block of a multiblock gear or a single gear block.
@@ -183,7 +184,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 			if (instance != null && instance != this && !(instance instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
 			{
-				connections[placementSide.ordinal()] = instance;
+				connections[placementSide.ordinal()] = new WeakReference(instance);
 				getNetwork().merge(instance.getNetwork());
 			}
 
@@ -214,7 +215,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
-					connections[checkDir.ordinal()] = instance;
+					connections[checkDir.ordinal()] = new WeakReference(instance);
 					getNetwork().merge(instance.getNetwork());
 				}
 			}
@@ -239,7 +240,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance instanceof PartGearShaft))
 				{
-					connections[checkDir.ordinal()] = instance;
+					connections[checkDir.ordinal()] = new WeakReference(instance);
 					getNetwork().merge(instance.getNetwork());
 				}
 			}
@@ -289,7 +290,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			return new Object[6];
 		}
 
-		return connections;
+		return super.getConnections();
 	}
 
 	@Override

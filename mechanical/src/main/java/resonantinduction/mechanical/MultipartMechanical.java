@@ -18,7 +18,7 @@ public class MultipartMechanical implements IPartFactory
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.api.fluid.IFluidPipe");
-		MultipartGenerator.registerTrait("resonantinduction.mechanical.network.IMechanical", "resonantinduction.mechanical.trait.TraitMechanical");
+		MultipartGenerator.registerTrait("resonantinduction.api.mechanical.IMechanical", "resonantinduction.mechanical.trait.TraitMechanical");
 	}
 
 	@Override
