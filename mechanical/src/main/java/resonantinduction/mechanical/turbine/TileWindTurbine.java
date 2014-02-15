@@ -36,7 +36,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 		 */
 		if (getDirection().offsetY == 0)
 		{
-			maxPower = 500;
+			maxPower = 200;
 			getMultiBlock().get().power += getWindPower();
 		}
 		else
@@ -46,9 +46,9 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 
 		
 		if (!getMultiBlock().isConstructed())
-			torque = defaultTorque / 6;
+			torque = defaultTorque / 9;
 		else
-			torque = defaultTorque / 2;
+			torque = defaultTorque / 3;
 
 		super.updateEntity();
 	}
