@@ -156,21 +156,24 @@ public class RenderMultimeter implements ISimpleItemRenderer
 
 			// TODO: Add other dispaly info support.
 			List<String> information = new ArrayList<String>();
-			information.add(UnitDisplay.getDisplay(part.getNetwork().energyGraph.get(0), Unit.JOULES));
+
+			if (part.getNetwork().energyGraph.get(0) > 0)
+				information.add(UnitDisplay.getDisplay(part.getNetwork().energyGraph.get(0), Unit.JOULES));
 
 			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
-			{
 				information.add("Max: " + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES));
-			}
 
 			if (part.getNetwork().torqueGraph.get(0) != 0)
-			{
 				information.add("Torque: " + UnitDisplay.getDisplayShort(part.getNetwork().torqueGraph.get(0), Unit.NEWTON_METER));
-			}
+
 			if (part.getNetwork().angularVelocityGraph.get(0) != 0)
-			{
 				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
-			}
+
+			if (part.getNetwork().fluidGraph.get(0) != 0)
+				information.add("Fluid: " + UnitDisplay.getDisplay(part.getNetwork().fluidGraph.get(0), Unit.LITER));
+
+			if (information.size() <= 0)
+				information.add("No information");
 
 			float displacement = information.size() / 5f;
 			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.005f;

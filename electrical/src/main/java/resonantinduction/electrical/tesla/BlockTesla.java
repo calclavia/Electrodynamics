@@ -26,7 +26,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	public BlockTesla(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "machine");
+		setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 
 	@Override

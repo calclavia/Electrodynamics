@@ -20,10 +20,15 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 */
 	private int maxData = 20 * 10;
 	private final List<Graph> graphs = new ArrayList<Graph>();
+	/**
+	 * Energy Related
+	 */
 	public final GraphL energyGraph = new GraphL(maxData);
 	public final GraphL energyCapacityGraph = new GraphL(1);
 	public final GraphL torqueGraph = new GraphL(maxData);
 	public final GraphF angularVelocityGraph = new GraphF(maxData);
+
+	public final GraphI fluidGraph = new GraphI(maxData);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -57,6 +62,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		graphs.add(energyCapacityGraph);
 		graphs.add(torqueGraph);
 		graphs.add(angularVelocityGraph);
+		graphs.add(fluidGraph);
 	}
 
 	@Override
@@ -103,33 +109,36 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	@Override
 	public void reconstruct()
 	{
-		upperBound = null;
-		lowerBound = null;
-		super.reconstruct();
-		center = upperBound.midPoint(lowerBound);
-
-		/**
-		 * Make bounds relative.
-		 */
-		upperBound.subtract(center);
-		lowerBound.subtract(center);
-		size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
-
-		double area = (size.x != 0 ? size.x : 1) * (size.y != 0 ? size.y : 1) * (size.z != 0 ? size.z : 1);
-		isEnabled = area == getConnectors().size();
-
-		NetworkTickHandler.addNetwork(this);
-
-		Iterator<PartMultimeter> it = this.getConnectors().iterator();
-
-		while (it.hasNext())
+		if (getConnectors().size() > 0)
 		{
-			PartMultimeter connector = it.next();
-			connector.updateDesc();
-			connector.updateGraph();
-		}
+			upperBound = null;
+			lowerBound = null;
+			super.reconstruct();
+			center = upperBound.midPoint(lowerBound);
 
-		doUpdate = true;
+			/**
+			 * Make bounds relative.
+			 */
+			upperBound.subtract(center);
+			lowerBound.subtract(center);
+			size = new Vector3(Math.abs(upperBound.x) + Math.abs(lowerBound.x), Math.abs(upperBound.y) + Math.abs(lowerBound.y), Math.abs(upperBound.z) + Math.abs(lowerBound.z));
+
+			double area = (size.x != 0 ? size.x : 1) * (size.y != 0 ? size.y : 1) * (size.z != 0 ? size.z : 1);
+			isEnabled = area == getConnectors().size();
+
+			NetworkTickHandler.addNetwork(this);
+
+			Iterator<PartMultimeter> it = this.getConnectors().iterator();
+
+			while (it.hasNext())
+			{
+				PartMultimeter connector = it.next();
+				connector.updateDesc();
+				connector.updateGraph();
+			}
+
+			doUpdate = true;
+		}
 	}
 
 	@Override

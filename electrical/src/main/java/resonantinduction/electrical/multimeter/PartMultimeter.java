@@ -15,6 +15,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
@@ -98,6 +100,13 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public boolean hasMultimeter(int x, int y, int z)
 	{
 		return getMultimeter(x, y, z) != null;
+	}
+
+	@Override
+	public void preRemove()
+	{
+		if (!world().isRemote)
+			getNetwork().split(this);
 	}
 
 	public void refresh()
@@ -288,6 +297,17 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 				getNetwork().torqueGraph.queue(instance.getTorque());
 				getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
 				getNetwork().energyGraph.queue((long) (instance.getTorque() * instance.getAngularVelocity()));
+			}
+		}
+
+		if (tileEntity instanceof IFluidHandler)
+		{
+			FluidTankInfo[] fluidInfo = ((IFluidHandler) tileEntity).getTankInfo(receivingSide);
+			
+			for(FluidTankInfo info : fluidInfo)
+			{
+				if(info.fluid != null)
+					getNetwork().fluidGraph.queue(info.fluid.amount);
 			}
 		}
 
