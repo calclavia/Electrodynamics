@@ -139,7 +139,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void preRemove()
 	{
-		this.getNetwork().split(this);
+		getNetwork().split(this);
 	}
 
 	/** Packet Code. */

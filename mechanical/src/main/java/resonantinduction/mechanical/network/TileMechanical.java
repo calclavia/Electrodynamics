@@ -44,7 +44,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 		torque *= getLoad();
 		angularVelocity *= getLoad();
 
-		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f)
+		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
 		{
 			prevAngularVelocity = angularVelocity;
 			markPacketUpdate = true;

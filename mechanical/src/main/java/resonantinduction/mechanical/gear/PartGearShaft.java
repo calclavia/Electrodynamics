@@ -55,8 +55,8 @@ public class PartGearShaft extends PartMechanical
 		if (!this.world().isRemote)
 		{
 			// Decelerate the gear.
-			torque *= 0.95f;
-			angularVelocity *= 0.95f;
+			torque *= 0.99f;
+			angularVelocity *= 0.99f;
 		}
 	}
 

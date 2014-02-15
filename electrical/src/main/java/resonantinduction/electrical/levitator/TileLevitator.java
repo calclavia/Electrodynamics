@@ -130,6 +130,8 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 							{
 								item.setEntityItemStack(remains);
 							}
+							
+							//TODO: Add redstone pulse?
 						}
 					}
 				}

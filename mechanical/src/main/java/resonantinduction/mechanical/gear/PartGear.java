@@ -65,12 +65,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			{
 				if (angularVelocity > 0)
 				{
-					torque += 3;
+					torque += 5;
 					angularVelocity += 0.02f;
 				}
 				else
 				{
-					torque -= 3;
+					torque -= 5;
 					angularVelocity -= 0.02f;
 				}
 
@@ -83,12 +83,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				switch (tier)
 				{
 					default:
-						torque *= 0.9f;
-						angularVelocity *= 0.95f;
+						torque *= 0.97f;
+						angularVelocity *= 0.98f;
 						break;
 					case 1:
-						torque *= 0.95f;
-						angularVelocity *= 0.9f;
+						torque *= 0.98f;
+						angularVelocity *= 0.97f;
 						break;
 					case 2:
 						torque *= 0.99f;
