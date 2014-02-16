@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
@@ -53,9 +54,15 @@ public class TileMillstone extends TileExternalInventory implements IPacketRecei
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemstack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
+	}
+
+	@Override
+	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+	{
+		return true;
 	}
 
 	/**

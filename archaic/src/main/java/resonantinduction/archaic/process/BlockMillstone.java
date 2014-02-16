@@ -22,7 +22,7 @@ public class BlockMillstone extends BlockTile
 	public BlockMillstone(int id)
 	{
 		super(id, Material.iron);
-		setTextureName(Reference.PREFIX + "material_wood_surface");
+		setTextureName(Reference.PREFIX + "millstone_side");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -45,7 +45,7 @@ public class BlockMillstone extends BlockTile
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
-		if (side == 1)
+		if (side == 0 || side == 1)
 		{
 			return top;
 		}
