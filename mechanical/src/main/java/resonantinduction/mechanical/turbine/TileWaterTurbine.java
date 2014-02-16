@@ -21,7 +21,7 @@ import calclavia.lib.prefab.turbine.TileTurbine;
  * @author Calclavia
  * 
  */
-public class TileWaterTurbine extends TileTurbine implements IMechanical
+public class TileWaterTurbine extends TileMechanicalTurbine
 {
 	public TileWaterTurbine()
 	{
@@ -47,7 +47,7 @@ public class TileWaterTurbine extends TileTurbine implements IMechanical
 		{
 			int blockIDAbove = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
 
-			if (blockIDAbove == Block.waterStill.blockID || worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
+			if (blockIDAbove == Block.waterStill.blockID && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
 			{
 				getMultiBlock().get().power += getWaterPower();
 				worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
@@ -72,139 +72,5 @@ public class TileWaterTurbine extends TileTurbine implements IMechanical
 	private long getWaterPower()
 	{
 		return 1 * 10 * 2;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return false;
-	}
-
-	@Override
-	public void onProduce()
-	{
-
-	}
-
-	@Override
-	public void playSound()
-	{
-		if (this.ticks % 18 == 0)
-		{
-			// this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord,
-			// "atomicscience:turbine", 0.6f, (float) (0.7f + (0.2 * ((double) this.power / (double)
-			// this.getMaxPower()))));
-		}
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, (byte) 1, nbt);
-	}
-
-	@Override
-	public void sendPowerUpdate()
-	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, (byte) 2, angularVelocity), this.worldObj, new Vector3(this), 25);
-	}
-
-	/**
-	 * Mechanical Methods
-	 * 
-	 * @return The connections.
-	 */
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
-
-			if (tile instanceof IMechanical)
-			{
-				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
-
-				// Don't connect with shafts
-				if (mech != null && !(mech instanceof PartGearShaft) && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
-				{
-					connections[dir.ordinal()] = mech;
-					getNetwork().merge(mech.getNetwork());
-				}
-			}
-		}
-
-		return connections;
-	}
-
-	private IMechanicalNetwork network;
-
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new MechanicalNetwork();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public float getAngularVelocity()
-	{
-		return angularVelocity;
-	}
-
-	@Override
-	public void setAngularVelocity(float velocity)
-	{
-		this.angularVelocity = velocity;
-	}
-
-	@Override
-	public long getTorque()
-	{
-		return torque;
-	}
-
-	@Override
-	public void setTorque(long torque)
-	{
-		this.torque = torque;
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, Object source)
-	{
-		return getMultiBlock().isConstructed() ? 1.5f : 0.5f;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return false;
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection dir)
-	{
-		return (IMechanical) getMultiBlock().get();
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object sourcen)
-	{
-		return from == getDirection().getOpposite();
 	}
 }
