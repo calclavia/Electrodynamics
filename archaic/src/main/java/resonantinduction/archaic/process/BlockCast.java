@@ -17,7 +17,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCast extends BlockTile
 {
-	Icon top;
+	Icon topIcon;
+	Icon side1Icon;
+	Icon side2Icon;
 
 	public BlockCast(int id)
 	{
@@ -29,15 +31,10 @@ public class BlockCast extends BlockTile
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.top = iconReg.registerIcon(Reference.PREFIX + "material_wood_top");
+		topIcon = iconReg.registerIcon(Reference.PREFIX + "metalCast_top");
+		side1Icon = iconReg.registerIcon(Reference.PREFIX + "metalCast_side_1");
+		side2Icon = iconReg.registerIcon(Reference.PREFIX + "metalCast_side_2");
 		super.registerIcons(iconReg);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
-	{
-		return getIcon(side, 0);
 	}
 
 	/** Returns the block texture based on the side being looked at. Args: side */
@@ -45,12 +42,13 @@ public class BlockCast extends BlockTile
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
-		if (side == 1)
-		{
-			return top;
-		}
+		if (side == 0)
+			return blockIcon;
 
-		return blockIcon;
+		if (side == 1)
+			return topIcon;
+
+		return side % 2 == 0 ? side1Icon : side2Icon;
 	}
 
 	@Override
@@ -60,7 +58,6 @@ public class BlockCast extends BlockTile
 
 		if (tile != null)
 			tile.updateEntity();
-
 	}
 
 	@Override

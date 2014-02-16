@@ -17,7 +17,7 @@ public class RenderCast extends RenderItemOverlayTile
 		if (tileEntity instanceof TileCast)
 		{
 			TileCast tile = (TileCast) tileEntity;
-			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "Empty");
+			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
 		}
 	}
 }

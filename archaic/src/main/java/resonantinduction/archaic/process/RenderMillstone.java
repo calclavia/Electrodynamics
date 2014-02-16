@@ -17,7 +17,7 @@ public class RenderMillstone extends RenderItemOverlayTile
 		if (tileEntity instanceof TileMillstone)
 		{
 			TileMillstone tile = (TileMillstone) tileEntity;
-			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "Empty");
+			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
 		}
 	}
 }
