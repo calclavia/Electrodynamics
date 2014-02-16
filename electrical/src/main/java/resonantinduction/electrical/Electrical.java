@@ -86,7 +86,7 @@ public class Electrical
 	public static Block blockEncoder;
 
 	// Generators
-	public static Block blockSolarPanel;
+	public static BlockSolarPanel blockSolarPanel;
 	public static Block blockGenerator;
 	public static Block blockThermopile;
 
@@ -119,7 +119,7 @@ public class Electrical
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
 
 		// Generator
-		blockSolarPanel = contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
+		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
