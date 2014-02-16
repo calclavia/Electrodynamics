@@ -40,8 +40,21 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 	{
 		if (!world.isRemote)
 		{
-			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.updateStructure();
+			TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
+			distribution.updateStructure();
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+	{
+		if (!world.isRemote)
+		{
+			if (id == blockID)
+			{
+				TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
+				distribution.updateStructure();
+			}
 		}
 	}
 
@@ -56,19 +69,6 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 			battery.energy.setEnergy(itemBlock.getEnergy(itemStack));
 			battery.updateStructure();
 			world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3);
-		}
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
-	{
-		if (!world.isRemote)
-		{
-			if (id == blockID)
-			{
-				TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-				battery.updateStructure();
-			}
 		}
 	}
 

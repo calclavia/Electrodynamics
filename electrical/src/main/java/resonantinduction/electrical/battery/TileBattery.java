@@ -26,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
  * 
  * @author Calclavia
  */
-public class TileBattery extends TileElectrical implements IConnector<BatteryNetwork>, IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
+public class TileBattery extends TileEnergyDistribution implements IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
 	/**
 	 * Tiers: 0, 1, 2
@@ -38,11 +38,6 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 
 	/** Voltage increases as series connection increases */
 	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
-
-	private BatteryNetwork network;
-
-	public boolean markClientUpdate = false;
-	public boolean markDistributionUpdate = false;
 
 	public TileBattery()
 	{
@@ -62,67 +57,20 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	@Override
 	public void initiate()
 	{
-		this.updateStructure();
+		super.initiate();
 		energy.setCapacity(getEnergyForTier(getBlockMetadata()));
-	}
-
-	public void updateStructure()
-	{
-		if (!this.worldObj.isRemote)
-		{
-			for (Object obj : getConnections())
-			{
-				if (obj instanceof TileBattery)
-				{
-					this.getNetwork().merge(((TileBattery) obj).getNetwork());
-				}
-			}
-
-			markDistributionUpdate = true;
-			markClientUpdate = true;
-		}
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
-
 		if (!this.worldObj.isRemote)
 		{
 			energy.setMaxTransfer((long) Math.min(Math.pow(10000, this.getNetwork().getConnectors().size()), energy.getEnergyCapacity()));
-
-			long produce = produce();
-
-			if ((markDistributionUpdate || produce > 0) && ticks % 5 == 0)
-			{
-				getNetwork().redistribute();
-				markDistributionUpdate = false;
-			}
-
-			if (markClientUpdate && ticks % 5 == 0)
-			{
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-			}
+			markDistributionUpdate |= produce() > 0;
 		}
-	}
 
-	@Override
-	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
-	{
-		long returnValue = super.onReceiveEnergy(from, receive, doReceive);
-		markDistributionUpdate = true;
-		markClientUpdate = true;
-		return returnValue;
-	}
-
-	@Override
-	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
-	{
-		long returnValue = super.onExtractEnergy(from, extract, doExtract);
-		markDistributionUpdate = true;
-		markClientUpdate = true;
-		return returnValue;
+		super.updateEntity();
 	}
 
 	@Override
@@ -148,50 +96,6 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	}
 
 	@Override
-	public BatteryNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new BatteryNetwork();
-			this.network.addConnector(this);
-		}
-
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(BatteryNetwork structure)
-	{
-		this.network = structure;
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(this.worldObj);
-
-			if (tile instanceof TileBattery)
-			{
-				connections[dir.ordinal()] = tile;
-			}
-		}
-
-		return connections;
-	}
-
-	@Override
-	public void invalidate()
-	{
-		this.getNetwork().redistribute(this);
-		this.getNetwork().split(this);
-		super.invalidate();
-	}
-
-	@Override
 	public long getVoltageOutput(ForgeDirection side)
 	{
 		return DEFAULT_VOLTAGE;
@@ -207,12 +111,6 @@ public class TileBattery extends TileElectrical implements IConnector<BatteryNet
 	public void onWrongVoltage(ForgeDirection direction, long voltage)
 	{
 
-	}
-
-	@Override
-	public IConnector<BatteryNetwork> getInstance(ForgeDirection from)
-	{
-		return this;
 	}
 
 	@Override

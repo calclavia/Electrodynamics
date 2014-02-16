@@ -1,21 +1,19 @@
 package resonantinduction.electrical.generator.solar;
 
+import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import calclavia.lib.prefab.tile.TileElectrical;
 
-public class TileSolarPanel extends TileElectrical
+public class TileSolarPanel extends TileEnergyDistribution
 {
 	public TileSolarPanel()
 	{
-		this.energy = new EnergyStorageHandler(500);
+		this.energy = new EnergyStorageHandler(800);
 		this.ioMap = 728;
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		super.updateEntity();
-
 		if (!this.worldObj.isRemote)
 		{
 			if (this.worldObj.canBlockSeeTheSky(xCoord, yCoord + 1, zCoord) && !this.worldObj.provider.hasNoSky)
@@ -25,11 +23,13 @@ public class TileSolarPanel extends TileElectrical
 					if (!(this.worldObj.isThundering() || this.worldObj.isRaining()))
 					{
 						this.energy.receiveEnergy(25, true);
-						this.produce();
+						markDistributionUpdate |= produce() > 0;
 					}
 				}
 			}
 		}
+
+		super.updateEntity();
 	}
 
 }

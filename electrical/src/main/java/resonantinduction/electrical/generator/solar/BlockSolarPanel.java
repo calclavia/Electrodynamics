@@ -6,6 +6,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RIBlockRenderingHandler;
+import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
@@ -21,6 +22,29 @@ public class BlockSolarPanel extends BlockTile
 		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "solarPanel_top");
 		setBlockBounds(0, 0, 0, 1, 0.3f, 1);
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		if (!world.isRemote)
+		{
+			TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
+			distribution.updateStructure();
+		}
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
+	{
+		if (!world.isRemote)
+		{
+			if (id == blockID)
+			{
+				TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
+				distribution.updateStructure();
+			}
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
