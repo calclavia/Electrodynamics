@@ -157,8 +157,25 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			// TODO: Add other dispaly info support.
 			List<String> information = new ArrayList<String>();
 
-			if (part.getNetwork().energyGraph.get(0) > 0)
+			if (part.getNetwork().energyGraph.get(0) > 0 && part.getNetwork().energyGraph.points.size() > 0)
+			{
 				information.add(UnitDisplay.getDisplay(part.getNetwork().energyGraph.get(0), Unit.JOULES));
+
+				/**
+				 * Compute power
+				 */
+				long power = 0;
+
+				for (long point : part.getNetwork().energyGraph.points)
+				{
+					power += point;
+				}
+
+				power /= part.getNetwork().energyGraph.points.size();
+
+				if (power > 0)
+					information.add("Power: " + UnitDisplay.getDisplay(power * 20, Unit.WATT));
+			}
 
 			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
 				information.add("Max: " + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES));
@@ -175,9 +192,9 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			if (information.size() <= 0)
 				information.add("No information");
 
-			float displacement = information.size() / 5f;
+			float displacement = 0.7f / information.size();
 			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.005f;
-			GL11.glTranslatef(0, 0, -displacement / 2 * (information.size() / 2));
+			GL11.glTranslatef(0, 0, -displacement * (information.size() / 2f));
 
 			for (int i = 0; i < information.size(); i++)
 			{
