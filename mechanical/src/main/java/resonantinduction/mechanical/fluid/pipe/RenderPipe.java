@@ -21,7 +21,7 @@ public class RenderPipe
 	public static ModelPipe MODEL_PIPE = new ModelPipe();
 	public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
 	private static HashMap<EnumPipeMaterial, ResourceLocation> TEXTURES = new HashMap<EnumPipeMaterial, ResourceLocation>();
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/iron.png");
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
@@ -30,60 +30,35 @@ public class RenderPipe
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(getTexture(material));
-		render(material, part.getAllCurrentConnections());
+		MODEL_PIPE.render(part.getAllCurrentConnections());
 		GL11.glPopMatrix();
 	}
 
 	public static ResourceLocation getTexture(EnumPipeMaterial material)
 	{
-		if (material != null)
-		{
-			if (!TEXTURES.containsKey(material))
-			{
-				TEXTURES.put(material, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe/" + material.matName + ".png"));
-			}
+		/*
+		 * if (material != null)
+		 * {
+		 * if (!TEXTURES.containsKey(material))
+		 * {
+		 * TEXTURES.put(material, new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH +
+		 * "pipe/" + material.matName + ".png"));
+		 * }
+		 * return TEXTURES.get(material);
+		 * }
+		 */
 
-			return TEXTURES.get(material);
-		}
 		return TEXTURE;
-	}
-
-	public static void render(EnumPipeMaterial mat, byte side)
-	{
-		if (RenderUtility.canRenderSide(side, ForgeDirection.DOWN))
-		{
-			MODEL_PIPE.renderBottom();
-		}
-		if (RenderUtility.canRenderSide(side, ForgeDirection.UP))
-		{
-			MODEL_PIPE.renderTop();
-		}
-		if (RenderUtility.canRenderSide(side, ForgeDirection.NORTH))
-		{
-			MODEL_PIPE.renderBack();
-		}
-		if (RenderUtility.canRenderSide(side, ForgeDirection.SOUTH))
-		{
-			MODEL_PIPE.renderFront();
-		}
-		if (RenderUtility.canRenderSide(side, ForgeDirection.WEST))
-		{
-			MODEL_PIPE.renderLeft();
-		}
-		if (RenderUtility.canRenderSide(side, ForgeDirection.EAST))
-		{
-			MODEL_PIPE.renderRight();
-		}
-
-		MODEL_PIPE.renderMiddle();
 	}
 
 	public static void render(int meta, byte sides)
 	{
 		if (meta < EnumPipeMaterial.values().length)
 		{
+			RenderUtility.enableBlending();
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(getTexture(EnumPipeMaterial.values()[meta]));
-			render(EnumPipeMaterial.values()[meta], sides);
+			MODEL_PIPE.render(sides);
+			RenderUtility.disableBlending();
 		}
 	}
 }
