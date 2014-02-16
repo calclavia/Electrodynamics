@@ -15,6 +15,8 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.gear.ConnectionLogic.ConnectionGearLarge;
+import resonantinduction.mechanical.gear.ConnectionLogic.ConnectionGearSmall;
 import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
@@ -447,7 +449,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				{
 					if (source instanceof PartGearShaft)
 					{
-						return true;
+						return ((PartGearShaft) source).tile().partMap(from.getOpposite().ordinal()) == this;
 					}
 					else if (source instanceof PartGear)
 					{

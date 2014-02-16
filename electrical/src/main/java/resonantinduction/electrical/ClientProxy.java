@@ -37,11 +37,8 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit()
 	{
-		MinecraftForgeClient.registerItemRenderer(Electrical.blockBattery.blockID, GlobalItemRenderer.INSTANCE);
 		GlobalItemRenderer.register(Electrical.blockBattery.blockID, RenderBattery.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(Electrical.itemMultimeter.itemID, GlobalItemRenderer.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemMultimeter.itemID, RenderMultimeter.INSTANCE);
-		MinecraftForgeClient.registerItemRenderer(Electrical.itemTransformer.itemID, GlobalItemRenderer.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemTransformer.itemID, RenderTransformer.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
