@@ -29,7 +29,7 @@ public class BlockMillstone extends BlockTile
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		this.top = iconReg.registerIcon(Reference.PREFIX + "material_wood_top");
+		this.top = iconReg.registerIcon(Reference.PREFIX + "millstone_top");
 		super.registerIcons(iconReg);
 	}
 
