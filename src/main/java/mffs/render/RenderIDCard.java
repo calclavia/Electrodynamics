@@ -63,9 +63,8 @@ public class RenderIDCard implements IItemRenderer
 				glTranslatef(0f, 0f, -0.0005f);
 			}
 
-			this.renderPlayerFace(this.getSkinFace(card.getUsername(itemStack)));
+			renderPlayerFace(getSkinFace(card.getUsername(itemStack)));
 
-			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			glEnable(GL_CULL_FACE);
 			glPopMatrix();
 		}
