@@ -37,13 +37,13 @@ public class ItemGear extends JItemMultiPart
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
 
 		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
-		
+
 		if (tile instanceof TileMultipart)
 		{
 			TMultiPart occupyingPart = ((TileMultipart) tile).partMap(side);
 			TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
-			boolean clickedCenter = hit.mag() < 1;
-			
+			boolean clickedCenter = hit.mag() < 0.4;
+
 			if ((clickedCenter && centerPart instanceof PartGearShaft))
 			{
 				side ^= 1;

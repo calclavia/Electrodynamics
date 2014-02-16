@@ -36,7 +36,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 		 */
 		if (getDirection().offsetY == 0)
 		{
-			maxPower = 200;
+			maxPower = 120;
 			getMultiBlock().get().power += getWindPower();
 		}
 		else
@@ -44,10 +44,10 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 			maxPower = 1000;
 		}
 
-		if (!getMultiBlock().isConstructed())
-			torque = defaultTorque / 9;
+		if (getMultiBlock().isConstructed())
+			torque = (long) (defaultTorque / (9f / multiBlockRadius));
 		else
-			torque = defaultTorque / 3;
+			torque = defaultTorque / 12;
 
 		super.updateEntity();
 	}
@@ -66,7 +66,7 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 		if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord))
 			return 0;
 
-		return (long) (((((float) yCoord + 4) / 256) * maxPower) * (hasBonus ? 3 : 1)) * (worldObj.isRaining() ? 2 : 1);
+		return (long) (((((float) yCoord + 4) / 256) * maxPower) * (hasBonus ? 2 : 1)) * (worldObj.isRaining() ? 2 : 1);
 	}
 
 	@Override
@@ -166,8 +166,19 @@ public class TileWindTurbine extends TileTurbine implements IMechanical
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection from, Object sourcen)
+	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return from == getDirection().getOpposite();
+		/**
+		 * Face to face stick connection.
+		 */
+		TileEntity sourceTile = getPosition().translate(from).getTileEntity(getWorld());
+
+		if (sourceTile instanceof IMechanical)
+		{
+			IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
+			return sourceInstance == source && from == getDirection().getOpposite();
+		}
+
+		return false;
 	}
 }

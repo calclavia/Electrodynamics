@@ -43,6 +43,8 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 			 */
 			if (tile.getMultiBlock().isConstructed())
 			{
+				GL11.glScalef(0.3f, 1, 0.3f);
+				GL11.glScalef(tile.multiBlockRadius * 2 + 1, 1, tile.multiBlockRadius * 2 + 1);
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
 				MODEL.renderOnly("LargeBladeArm");
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "wool_colored_white.png");
