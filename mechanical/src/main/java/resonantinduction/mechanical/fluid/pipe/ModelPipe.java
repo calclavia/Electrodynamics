@@ -172,47 +172,6 @@ public class ModelPipe extends ModelBase
 		renderMiddle();
 	}
 
-	public void render(boolean[] side)
-	{
-		if (side[0])
-		{
-			renderBottom();
-		}
-		if (side[1])
-		{
-			renderUp();
-		}
-		if (side[3])
-		{
-			renderNorth();
-		}
-		if (side[2])
-		{
-			renderSouth();
-		}
-		if (side[5])
-		{
-			renderWest();
-		}
-		if (side[4])
-		{
-			renderEast();
-		}
-		renderMiddle();
-	}
-
-	public void renderAll()
-	{
-		this.renderMiddle();
-		this.renderBottom();
-		this.renderUp();
-		this.renderEast();
-		this.renderWest();
-		this.renderSouth();
-		this.renderNorth();
-
-	}
-
 	public void renderMiddle()
 	{
 		Mid.render(0.0625F);
