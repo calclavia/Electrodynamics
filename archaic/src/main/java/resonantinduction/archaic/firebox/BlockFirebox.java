@@ -22,11 +22,19 @@ public class BlockFirebox extends BlockTile
 {
 	private Icon topOn;
 	private Icon topOff;
+	private Icon sideOn;
+	private Icon sideOff;
+
+	private Icon topElectricOn;
+	private Icon topElectricOff;
+	private Icon sideOnElectric;
+	private Icon sideOffElectric;
 
 	public BlockFirebox(int id)
 	{
 		super(id, Material.rock);
 		setTickRandomly(true);
+		setTextureName(Reference.PREFIX + "material_stone_slab");
 	}
 
 	@Override
@@ -34,8 +42,16 @@ public class BlockFirebox extends BlockTile
 	public void registerIcons(IconRegister iconReg)
 	{
 		super.registerIcons(iconReg);
+		sideOn = iconReg.registerIcon(Reference.PREFIX + "firebox_side_on");
+		sideOff = iconReg.registerIcon(Reference.PREFIX + "firebox_side_off");
 		topOn = iconReg.registerIcon(Reference.PREFIX + "firebox_top_on");
 		topOff = iconReg.registerIcon(Reference.PREFIX + "firebox_top_off");
+
+		sideOnElectric = iconReg.registerIcon(Reference.PREFIX + "firebox_electric_side_on");
+		sideOffElectric = iconReg.registerIcon(Reference.PREFIX + "firebox_electric_side_off");
+		topElectricOn = iconReg.registerIcon(Reference.PREFIX + "firebox_electric_top_on");
+		topElectricOff = iconReg.registerIcon(Reference.PREFIX + "firebox_electric_top_off");
+
 	}
 
 	@Override
@@ -67,36 +83,36 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side)
 	{
+		boolean isElectric = access.getBlockMetadata(x, y, z) == 1;
+		boolean isBurning = false;
 		TileEntity tile = access.getBlockTileEntity(x, y, z);
 
 		if (tile instanceof TileFirebox)
 		{
-			if (side == 1)
-			{
-				if (((TileFirebox) tile).isBurning())
-				{
-					return topOn;
-				}
-				else
-				{
-					return topOff;
-				}
-			}
+			isBurning = ((TileFirebox) tile).isBurning();
 		}
 
-		return blockIcon;
+		if (side == 1)
+		{
+			return isBurning ? (isElectric ? topElectricOn : topOn) : (isElectric ? topElectricOff : topOff);
+		}
+
+		return isBurning ? (isElectric ? sideOnElectric : sideOn) : (isElectric ? sideOffElectric : sideOff);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
+		boolean isElectric = meta == 1;
+		boolean isBurning = false;
+
 		if (side == 1)
 		{
-			return topOff;
+			return isBurning ? (isElectric ? topElectricOn : topOn) : (isElectric ? topElectricOff : topOff);
 		}
 
-		return blockIcon;
+		return isBurning ? (isElectric ? sideOnElectric : sideOn) : (isElectric ? sideOffElectric : sideOff);
 	}
 
 	@Override
