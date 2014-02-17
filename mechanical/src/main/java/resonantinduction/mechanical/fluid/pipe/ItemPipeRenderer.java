@@ -48,7 +48,7 @@ public class ItemPipeRenderer implements IItemRenderer
 		else if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
 		{
 			GL11.glTranslatef(-2F, -1.5F, 0.2F);
-			RenderPipe.render(meta, Byte.parseByte("000011", 2));
+			RenderPipe.render(meta, Byte.parseByte("001100", 2));
 		}
 		else
 		{
