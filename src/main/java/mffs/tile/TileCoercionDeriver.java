@@ -253,7 +253,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
 		return true;
 	}

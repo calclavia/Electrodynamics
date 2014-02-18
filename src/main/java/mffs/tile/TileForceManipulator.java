@@ -120,7 +120,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 							if (this.doAnchor)
 							{
-								this.anchor = this.anchor.modifyPositionFromSide(this.getDirection());
+								this.anchor = this.anchor.translate(this.getDirection());
 							}
 						}
 						else
@@ -261,7 +261,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			Vector3 checkPos = position.clone().modifyPositionFromSide(direction);
+			Vector3 checkPos = position.clone().translate(direction);
 			int blockID = checkPos.getBlockID(this.worldObj);
 
 			if (blockID > 0)
@@ -315,12 +315,12 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 							if (type == 1)
 							{
 								// Blue, PREVIEW
-								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
+								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone().translate(this.getDirection()));
 							}
 							else if (type == 2)
 							{
 								// Green, DO MOVE
-								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector.clone().modifyPositionFromSide(this.getDirection()));
+								ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector.clone().translate(this.getDirection()));
 							}
 						}
 						break;
@@ -560,7 +560,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			return ((ICoordLink) this.getCard().getItem()).getLink(this.getCard());
 		}
 
-		return (VectorWorld) new VectorWorld(this.worldObj, this.getAbsoluteAnchor()).clone().modifyPositionFromSide(this.getDirection());
+		return (VectorWorld) new VectorWorld(this.worldObj, this.getAbsoluteAnchor()).clone().translate(this.getDirection());
 	}
 
 	/**

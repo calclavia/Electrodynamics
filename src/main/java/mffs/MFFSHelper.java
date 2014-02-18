@@ -303,7 +303,7 @@ public class MFFSHelper
 			{
 				ForgeDirection direction = ForgeDirection.getOrientation(i);
 				Vector3 vector = new Vector3(tileEntity);
-				vector.modifyPositionFromSide(direction);
+				vector.translate(direction);
 				TileEntity checkTile = vector.getTileEntity(tileEntity.worldObj);
 
 				if (checkTile != null)

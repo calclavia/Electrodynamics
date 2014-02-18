@@ -254,7 +254,7 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 				{
 					ForgeDirection searchDirection = ForgeDirection.getOrientation(i);
 					Vector3 searchPosition = position.clone();
-					searchPosition.modifyPositionFromSide(searchDirection);
+					searchPosition.translate(searchDirection);
 
 					if (searchPosition.getTileEntity(this.worldObj) != null)
 					{
@@ -363,7 +363,7 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 			{
 				if (itemStack != null)
 				{
-					itemStack = this.tryPlaceInPosition(itemStack, new Vector3(this).modifyPositionFromSide(direction), direction);
+					itemStack = this.tryPlaceInPosition(itemStack, new Vector3(this).translate(direction), direction);
 				}
 			}
 
