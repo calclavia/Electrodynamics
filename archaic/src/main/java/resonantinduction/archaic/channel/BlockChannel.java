@@ -57,7 +57,6 @@ public class BlockChannel extends BlockFluidNetwork
 		{
 			return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
 		}
-
 		return super.onMachineActivated(world, x, y, z, entityplayer, side, hitX, hitY, hitZ);
 	}
 
