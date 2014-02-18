@@ -84,7 +84,7 @@ public class ResonantInduction
 	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
 	public static List<Fluid> fluidMaterials = new ArrayList<Fluid>();
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID);
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
