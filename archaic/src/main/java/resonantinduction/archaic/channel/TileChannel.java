@@ -2,13 +2,16 @@ package resonantinduction.archaic.channel;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.fluid.TileFluidNetwork;
+import resonantinduction.mechanical.fluid.tank.TileTank;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.utility.WrenchUtility;
 
@@ -53,6 +56,28 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
         }
 
         return false;
+    }
+
+    @Override
+    public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
+    {
+        if (!this.worldObj.isRemote)
+        {
+            if (tileEntity instanceof IFluidPipe)
+            {
+                if (tileEntity instanceof TileChannel)
+                {
+                    getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
+                    this.setRenderSide(side, true);
+                    connectedBlocks[side.ordinal()] = tileEntity;
+                }
+            }
+            else if (tileEntity instanceof IFluidHandler)
+            {
+                this.setRenderSide(side, true);
+                connectedBlocks[side.ordinal()] = tileEntity;
+            }
+        }
     }
 
     @Override
@@ -125,5 +150,4 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
     {
         return 500;
     }
-
 }
