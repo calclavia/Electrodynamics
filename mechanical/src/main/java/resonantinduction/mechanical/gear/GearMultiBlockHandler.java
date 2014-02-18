@@ -28,8 +28,7 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 			{
 				if (((PartGear) part).tier == self.tier)
 				{
-					if (!((IMultiBlockStructure) tile).getMultiBlock().isConstructed())
-						return (PartGear) part;
+					return (PartGear) part;
 				}
 			}
 		}
