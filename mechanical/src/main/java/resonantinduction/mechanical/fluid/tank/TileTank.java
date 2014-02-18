@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
+import resonantinduction.core.prefab.fluid.TileFluidNetwork;
 
 public class TileTank extends TileFluidNetwork
 {

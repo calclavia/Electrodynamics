@@ -1,21 +1,21 @@
-package resonantinduction.mechanical.fluid.pipe;
+package resonantinduction.archaic.channel;
 
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.channel.ModelOpenTrough;
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.fluid.pipe.ModelPipe;
+import resonantinduction.mechanical.fluid.pipe.PartPipe;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderPipe
+public class RenderChannel
 {
-    public static final RenderPipe INSTANCE = new RenderPipe();
+    public static final RenderChannel INSTANCE = new RenderChannel();
 
-    public static ModelPipe MODEL_PIPE = new ModelPipe();
     public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
     public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
 
@@ -32,7 +32,7 @@ public class RenderPipe
     {
         RenderUtility.enableBlending();
         RenderUtility.bind(TEXTURE);
-        MODEL_PIPE.render(sides);
+        MODEL_TROUGH_PIPE.render(sides, meta == 0 ? true : false);
         RenderUtility.disableBlending();
     }
 }

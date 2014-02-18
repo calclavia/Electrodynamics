@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.mechanical.fluid.prefab.TileFluidNetwork;
+import resonantinduction.core.prefab.fluid.TileFluidNetwork;
 
 /**
  * Enum to hold info about each pipe material. Values are by default and some can change with pipe
