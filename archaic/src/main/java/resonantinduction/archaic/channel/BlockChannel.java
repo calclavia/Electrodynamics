@@ -49,17 +49,14 @@ public class BlockChannel extends BlockFluidNetwork
     }
 
     @Override
-    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
-        if (!world.isRemote)
+        if (!world.isRemote && tile instanceof TileChannel)
         {
-            if (!FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side))
+            if (!((TileChannel) tile).onActivated(entityplayer))
             {
-                if (tile instanceof TileChannel)
-                {
-                    return ((TileChannel) tile).onActivated(entityplayer);
-                }
+                return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
             }
         }
         return true;
