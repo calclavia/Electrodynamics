@@ -27,7 +27,7 @@ public class RenderChannel extends TileEntitySpecialRenderer
 
     public static void render(int meta, byte sides)
     {
-        RenderUtility.bind(TEXTURE);
+		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
         MODEL_TROUGH_PIPE.render(sides, meta == 0 ? true : false);
     }
 

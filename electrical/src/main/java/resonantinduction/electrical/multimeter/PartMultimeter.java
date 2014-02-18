@@ -303,10 +303,10 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		if (tileEntity instanceof IFluidHandler)
 		{
 			FluidTankInfo[] fluidInfo = ((IFluidHandler) tileEntity).getTankInfo(receivingSide);
-			
-			for(FluidTankInfo info : fluidInfo)
+
+			for (FluidTankInfo info : fluidInfo)
 			{
-				if(info.fluid != null)
+				if (info.fluid != null)
 					getNetwork().fluidGraph.queue(info.fluid.amount);
 			}
 		}
@@ -624,5 +624,15 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 
 		return getNetwork().primaryRenderer == this;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Cuboid6 getRenderBounds()
+	{
+		if (isPrimaryRendering())
+			return Cuboid6.full.copy().expand(Double.POSITIVE_INFINITY);
+
+		return Cuboid6.full;
 	}
 }
