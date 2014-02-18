@@ -11,7 +11,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.lib.render.RenderUtility;
 
-public class ModelOpenTrough extends ModelBase
+public class ModelChannel extends ModelBase
 {
 	// fields
 	ModelRenderer base;
@@ -52,7 +52,7 @@ public class ModelOpenTrough extends ModelBase
 	ModelRenderer cornerFrontLeft;
 	ModelRenderer cornerFrontRight;
 
-	public ModelOpenTrough()
+	public ModelChannel()
 	{
 		textureWidth = 128;
 		textureHeight = 128;

@@ -4,7 +4,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.channel.ModelOpenTrough;
+import resonantinduction.archaic.channel.ModelChannel;
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -16,7 +16,7 @@ public class RenderPipe
     public static final RenderPipe INSTANCE = new RenderPipe();
 
     public static ModelPipe MODEL_PIPE = new ModelPipe();
-    public static ModelOpenTrough MODEL_TROUGH_PIPE = new ModelOpenTrough();
+    public static ModelChannel MODEL_TROUGH_PIPE = new ModelChannel();
     public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
 
     public void render(PartPipe part, double x, double y, double z, float f)
