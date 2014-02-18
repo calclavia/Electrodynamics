@@ -3,13 +3,14 @@ package resonantinduction.mechanical.gear;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import resonantinduction.core.prefab.part.IHighlight;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemGearShaft extends JItemMultiPart
+public class ItemGearShaft extends JItemMultiPart implements IHighlight
 {
 	public ItemGearShaft(int id)
 	{

@@ -91,7 +91,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public void preparePlacement(int side, int itemDamage)
 	{
-		this.side = (byte) (side ^ 1);
+		this.side = (byte) (side);
 	}
 
 	public boolean hasMultimeter(int x, int y, int z)

@@ -6,6 +6,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.core.prefab.part.IHighlight;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
@@ -18,7 +19,7 @@ public class MicroblockHighlightHandler
 	@SideOnly(Side.CLIENT)
 	public void drawBlockHighlight(DrawBlockHighlightEvent event)
 	{
-		if (event.currentItem != null && event.currentItem.getItem() == Mechanical.itemGear && event.target != null && event.target.typeOfHit == EnumMovingObjectType.TILE)
+		if (event.currentItem != null && (event.currentItem.getItem() instanceof IHighlight) && event.target != null && event.target.typeOfHit == EnumMovingObjectType.TILE)
 		{
 			GL11.glPushMatrix();
 			RenderUtils.translateToWorldCoords(event.player, event.partialTicks);

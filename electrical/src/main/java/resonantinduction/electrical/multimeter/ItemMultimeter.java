@@ -8,16 +8,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.prefab.part.IHighlight;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.microblock.FacePlacementGrid$;
 import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemMultimeter extends JItemMultiPart
+public class ItemMultimeter extends JItemMultiPart implements IHighlight
 {
 	private Icon[] icons = new Icon[EnumWireMaterial.values().length];
 
@@ -29,6 +31,8 @@ public class ItemMultimeter extends JItemMultiPart
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
+		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
+
 		if (side <= 1)
 		{
 			return null;

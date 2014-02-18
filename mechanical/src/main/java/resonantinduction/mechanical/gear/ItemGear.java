@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonantinduction.core.prefab.part.IHighlight;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
@@ -16,7 +17,7 @@ import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class ItemGear extends JItemMultiPart
+public class ItemGear extends JItemMultiPart implements IHighlight
 {
 	public ItemGear(int id)
 	{
