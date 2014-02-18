@@ -11,53 +11,57 @@ import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * Early tier version of the basic pipe. Open on the top, and can't support pressure.
+/** Early tier version of the basic pipe. Open on the top, and can't support pressure.
  * 
- * @author Darkguardsman
- */
+ * @author Darkguardsman */
 public class BlockChannel extends BlockFluidNetwork
 {
-	public BlockChannel(int id)
-	{
-		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "material_wood_surface");
-	}
+    public BlockChannel(int id)
+    {
+        super(id, UniversalElectricity.machine);
+        setTextureName(Reference.PREFIX + "material_wood_surface");
+    }
 
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new TileChannel();
-	}
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileChannel();
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderType()
-	{
-		return RIBlockRenderingHandler.ID;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType()
+    {
+        return RIBlockRenderingHandler.ID;
+    }
 
-	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			return FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side);
-		}
-		return super.onMachineActivated(world, x, y, z, entityplayer, side, hitX, hitY, hitZ);
-	}
-
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
+    {
+        TileEntity tile = world.getBlockTileEntity(x, y, z);
+        if (!world.isRemote)
+        {
+            if (!FluidUtility.playerActivatedFluidItem(world, x, y, z, entityplayer, side))
+            {
+                if (tile instanceof TileChannel)
+                {
+                    return ((TileChannel) tile).onActivated(entityplayer);
+                }
+            }
+        }
+        return true;
+    }
 }
