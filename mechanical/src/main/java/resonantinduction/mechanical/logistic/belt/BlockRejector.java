@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.logistic;
+package resonantinduction.mechanical.logistic.belt;
 
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.logistic;
+package resonantinduction.mechanical.logistic.belt;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;

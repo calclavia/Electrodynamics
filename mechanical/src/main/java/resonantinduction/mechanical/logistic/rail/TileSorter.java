@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.logistic;
+package resonantinduction.mechanical.logistic.rail;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileManipulator extends TileFilterable implements IRotatable, IManipulator, IPacketReceiver
+public class TileSorter extends TileFilterable implements IRotatable, IManipulator, IPacketReceiver
 {
 	/** True to auto output items with a redstone pulse */
 	private boolean selfPulse = false;
@@ -80,9 +80,9 @@ public class TileManipulator extends TileFilterable implements IRotatable, IMani
 		outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
 
 		/** Prevents manipulators from spamming and duping items. */
-		if (outputPosition.getTileEntity(this.worldObj) instanceof TileManipulator)
+		if (outputPosition.getTileEntity(this.worldObj) instanceof TileSorter)
 		{
-			if (((TileManipulator) outputPosition.getTileEntity(this.worldObj)).getDirection() == this.getDirection().getOpposite())
+			if (((TileSorter) outputPosition.getTileEntity(this.worldObj)).getDirection() == this.getDirection().getOpposite())
 			{
 				return;
 			}
