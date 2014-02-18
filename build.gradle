@@ -17,9 +17,7 @@ apply plugin: 'maven-publish'
 sourceSets {
 	main {
 		java {
-			include 'archaic/src/main/java/**'
-			include 'electrical/src/main/java/**'
-			include 'mechanical/src/main/java/**'
+			srcDirs 'src/main/java', 'archaic/src/main/java', 'electrical/src/main/java', 'mechanical/src/main/java'
 		}
 	}
 }
