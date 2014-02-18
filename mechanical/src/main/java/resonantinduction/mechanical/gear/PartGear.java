@@ -9,14 +9,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.gear.ConnectionLogic.ConnectionGearLarge;
-import resonantinduction.mechanical.gear.ConnectionLogic.ConnectionGearSmall;
 import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
@@ -55,6 +54,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	}
 
 	private int manualCrankTime = 0;
+	private int multiBlockRadius = 1;
 
 	@Override
 	public void update()
@@ -576,5 +576,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Cuboid6 getRenderBounds()
+	{
+		return Cuboid6.full.copy().expand(multiBlockRadius);
 	}
 }
