@@ -48,13 +48,12 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		if (!world.isRemote)
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (!world.isRemote && tileEntity instanceof TileEnergyDistribution)
 		{
-			if (id == blockID)
-			{
-				TileEnergyDistribution distribution = (TileEnergyDistribution) world.getBlockTileEntity(x, y, z);
-				distribution.updateStructure();
-			}
+			TileEnergyDistribution distribution = (TileEnergyDistribution) tileEntity;
+			distribution.updateStructure();
 		}
 	}
 

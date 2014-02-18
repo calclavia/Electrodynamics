@@ -26,11 +26,6 @@ import codechicken.multipart.TMultiPart;
  * @author Calclavia
  * 
  */
-
-/**
- * TODO: Combind with PartFramedConnection
- */
-@Deprecated
 public abstract class PartAdvancedWire extends PartConductor
 {
 	public static final int DEFAULT_COLOR = 15;

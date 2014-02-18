@@ -78,7 +78,7 @@ public class Electrical
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	// Energy
-	private static Item itemPartWire;
+	public static Item itemWire;
 	public static Item itemMultimeter;
 	public static Item itemTransformer;
 	public static Block blockTesla;
@@ -106,7 +106,7 @@ public class Electrical
 		Settings.load();
 
 		// Energy
-		itemPartWire = contentRegistry.createItem(ItemWire.class);
+		itemWire = contentRegistry.createItem(ItemWire.class);
 		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
 		itemTransformer = contentRegistry.createItem(ItemTransformer.class);
 		blockTesla = contentRegistry.createTile(BlockTesla.class, TileTesla.class);
@@ -127,7 +127,7 @@ public class Electrical
 
 		Settings.save();
 
-		OreDictionary.registerOre("wire", itemPartWire);
+		OreDictionary.registerOre("wire", itemWire);
 		OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 		OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 
@@ -138,7 +138,7 @@ public class Electrical
 
 		for (EnumWireMaterial material : EnumWireMaterial.values())
 		{
-			material.setWire(itemPartWire);
+			material.setWire(itemWire);
 		}
 
 		proxy.preInit();

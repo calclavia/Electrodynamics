@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,14 +13,15 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.prefab.part.PartFramedConnection;
+import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
+import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
@@ -31,7 +31,6 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
-import codechicken.multipart.IconHitEffects;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.MultiPartRegistry;
@@ -43,23 +42,12 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
-	/** Client Side Connection Check */
-	private ForgeDirection testingSide;
-
-	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
-	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
-
-	/**
-	 * Bitmask connections
-	 */
-	public byte currentWireConnections = 0x00;
-	public byte currentAcceptorConnections = 0x00;
-
 	public PartFramedWire()
 	{
 		super();
+		breakIcon = RenderFramedWire.breakIcon;
 	}
 
 	public PartFramedWire(int typeID)
@@ -70,25 +58,8 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	public PartFramedWire(EnumWireMaterial type)
 	{
 		super();
+		breakIcon = RenderFramedWire.breakIcon;
 		material = type;
-	}
-
-	static
-	{
-		sides[0] = new IndexedCuboid6(0, new Cuboid6(0.36, 0.000, 0.36, 0.64, 0.36, 0.64));
-		sides[1] = new IndexedCuboid6(1, new Cuboid6(0.36, 0.64, 0.36, 0.64, 1.000, 0.64));
-		sides[2] = new IndexedCuboid6(2, new Cuboid6(0.36, 0.36, 0.000, 0.64, 0.64, 0.36));
-		sides[3] = new IndexedCuboid6(3, new Cuboid6(0.36, 0.36, 0.64, 0.64, 0.64, 1.000));
-		sides[4] = new IndexedCuboid6(4, new Cuboid6(0.000, 0.36, 0.36, 0.36, 0.64, 0.64));
-		sides[5] = new IndexedCuboid6(5, new Cuboid6(0.64, 0.36, 0.36, 1.000, 0.64, 0.64));
-		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64));
-		insulatedSides[0] = new IndexedCuboid6(0, new Cuboid6(0.3, 0.0, 0.3, 0.7, 0.3, 0.7));
-		insulatedSides[1] = new IndexedCuboid6(1, new Cuboid6(0.3, 0.7, 0.3, 0.7, 1.0, 0.7));
-		insulatedSides[2] = new IndexedCuboid6(2, new Cuboid6(0.3, 0.3, 0.0, 0.7, 0.7, 0.3));
-		insulatedSides[3] = new IndexedCuboid6(3, new Cuboid6(0.3, 0.3, 0.7, 0.7, 0.7, 1.0));
-		insulatedSides[4] = new IndexedCuboid6(4, new Cuboid6(0.0, 0.3, 0.3, 0.3, 0.7, 0.7));
-		insulatedSides[5] = new IndexedCuboid6(5, new Cuboid6(0.7, 0.3, 0.3, 1.0, 0.7, 0.7));
-		insulatedSides[6] = new IndexedCuboid6(6, new Cuboid6(0.3, 0.3, 0.3, 0.7, 0.7, 0.7));
 	}
 
 	@Override
@@ -98,39 +69,8 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	}
 
 	@Override
-	public boolean occlusionTest(TMultiPart other)
-	{
-		return NormalOcclusionTest.apply(this, other);
-	}
-
-	@Override
-	public Iterable<IndexedCuboid6> getSubParts()
-	{
-		Set<IndexedCuboid6> subParts = new HashSet<IndexedCuboid6>();
-		IndexedCuboid6[] currentSides = isInsulated() ? insulatedSides : sides;
-
-		if (tile() != null)
-		{
-			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-			{
-				int ord = side.ordinal();
-				if (connectionMapContainsSide(getAllCurrentConnections(), side) || side == testingSide)
-					subParts.add(currentSides[ord]);
-			}
-		}
-
-		subParts.add(currentSides[6]);
-		return subParts;
-	}
-
-	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		if (!world().isRemote)
-		{
-			System.out.println(this.getNetwork());
-		}
-
 		if (item != null)
 		{
 			if (item.getItem().itemID == Block.lever.blockID)
@@ -238,201 +178,41 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		return RenderFramedWire.breakIcon;
 	}
 
-	@Override
-	public Icon getBrokenIcon(int side)
+	protected boolean canConnectTo(TileEntity tile)
 	{
-		return RenderFramedWire.breakIcon;
+		return tile instanceof IConductor || this.canConnectToObj(tile);
 	}
 
-	@Override
-	public void addHitEffects(MovingObjectPosition hit, EffectRenderer effectRenderer)
+	public boolean canConnectToObj(Object obj)
 	{
-		IconHitEffects.addHitEffects(this, hit, effectRenderer);
-	}
-
-	@Override
-	public void addDestroyEffects(EffectRenderer effectRenderer)
-	{
-		IconHitEffects.addDestroyEffects(this, effectRenderer, false);
-	}
-
-	public boolean isBlockedOnSide(ForgeDirection side)
-	{
-		TMultiPart blocker = tile().partMap(side.ordinal());
-		testingSide = side;
-		boolean expandable = NormalOcclusionTest.apply(this, blocker);
-		testingSide = null;
-		return !expandable;
-	}
-
-	public byte getAllCurrentConnections()
-	{
-		return (byte) (currentWireConnections | currentAcceptorConnections);
-	}
-
-	public static boolean connectionMapContainsSide(byte connections, ForgeDirection side)
-	{
-		byte tester = (byte) (1 << side.ordinal());
-		return ((connections & tester) > 0);
-	}
-
-	@Override
-	public void bind(TileMultipart t)
-	{
-		if (tile() != null && this.getNetwork() != null)
+		if (obj != null && (obj.getClass().isAssignableFrom(this.getClass()) || this.getClass().isAssignableFrom(obj.getClass())))
 		{
-			getNetwork().getConnectors().remove(this);
-			super.bind(t);
-			getNetwork().getConnectors().add(this);
+			PartAdvancedWire wire = (PartAdvancedWire) obj;
+
+			if (this.getMaterial() == wire.getMaterial())
+			{
+				if (this.isInsulated() && wire.isInsulated())
+				{
+					return this.getColor() == wire.getColor() || (this.getColor() == DEFAULT_COLOR || wire.getColor() == DEFAULT_COLOR);
+				}
+
+				return true;
+			}
 		}
-		else
+		else if (!(obj instanceof IConductor))
 		{
-			super.bind(t);
+			return CompatibilityModule.isHandler(obj);
 		}
+
+		return false;
 	}
 
-	/**
-	 * CONNECTION LOGIC CODE
-	 */
-
-	public boolean canConnectBothSides(TileEntity tile, ForgeDirection side)
+	public IConductor getConnector(TileEntity tile)
 	{
-		boolean notPrevented = !isConnectionPrevented(tile, side);
-
 		if (tile instanceof IConductor)
-		{
-			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite(), this);
-		}
+			return (IConductor) ((IConductor) tile).getInstance(ForgeDirection.UNKNOWN);
 
-		return notPrevented;
-	}
-
-	/**
-	 * Override if there are ways of preventing a connection
-	 * 
-	 * @param tile The TileEntity on the given side
-	 * @param side The side we're checking
-	 * @return Whether we're preventing connections on given side or to given tileEntity
-	 */
-	public boolean isConnectionPrevented(TileEntity tile, ForgeDirection side)
-	{
-		return (tile instanceof IConductor ? this.canConnectTo(tile) : false) || (isBlockedOnSide(side));
-		// || tile instanceof IBlockableConnection && ((IBlockableConnection)
-		// tile).isBlockedOnSide(side.getOpposite()))*/;
-	}
-
-	public byte getPossibleWireConnections()
-	{
-		byte connections = 0x00;
-
-		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-
-			if (tileEntity instanceof IConductor && canConnectBothSides(tileEntity, side))
-			{
-				connections |= 1 << side.ordinal();
-			}
-		}
-
-		return connections;
-	}
-
-	public byte getPossibleAcceptorConnections()
-	{
-		byte connections = 0x00;
-
-		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-
-			if (CompatibilityModule.canConnect(tileEntity, side.getOpposite(), this) && canConnectBothSides(tileEntity, side))
-			{
-				connections |= 1 << side.ordinal();
-			}
-		}
-
-		return connections;
-	}
-
-	public void refresh()
-	{
-		if (!world().isRemote)
-		{
-			byte possibleWireConnections = getPossibleWireConnections();
-			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
-
-			if (possibleWireConnections != this.currentWireConnections)
-			{
-				byte or = (byte) (possibleWireConnections | this.currentWireConnections);
-
-				// Connections have been removed
-				if (or != possibleWireConnections)
-				{
-					try
-					{
-						this.getNetwork().removeConnector(this);
-						this.getNetwork().split(this);
-					}
-					catch (NullPointerException e)
-					{
-					}
-					this.setNetwork(null);
-				}
-
-				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-				{
-					if (connectionMapContainsSide(possibleWireConnections, side))
-					{
-						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
-
-						if (tileEntity instanceof IConductor)
-						{
-							IConductor conductor = (IConductor) ((IConductor) tileEntity).getInstance(side.getOpposite());
-
-							if (conductor != null)
-								this.getNetwork().merge(conductor.getNetwork());
-						}
-					}
-				}
-
-				this.currentWireConnections = possibleWireConnections;
-			}
-
-			this.currentAcceptorConnections = possibleAcceptorConnections;
-			this.getNetwork().reconstruct();
-			this.sendConnectionUpdate();
-		}
-
-		tile().markRender();
-	}
-
-	/**
-	 * Should include connections that are in the current connection maps even if those connections
-	 * aren't allowed any more. This is so that networks split correctly.
-	 */
-	@Override
-	public TileEntity[] getConnections()
-	{
-		TileEntity[] connections = new TileEntity[6];
-
-		for (byte i = 0; i < 6; i++)
-		{
-			ForgeDirection side = ForgeDirection.getOrientation(i);
-			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
-
-			if (isCurrentlyConnected(side))
-			{
-				connections[i] = tileEntity;
-			}
-		}
-
-		return connections;
-	}
-
-	public boolean isCurrentlyConnected(ForgeDirection side)
-	{
-		return connectionMapContainsSide(getAllCurrentConnections(), side);
+		return null;
 	}
 
 	/**
@@ -457,81 +237,9 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	}
 
 	@Override
-	public void onAdded()
+	public float getResistance()
 	{
-		super.onAdded();
-		refresh();
-	}
-
-	@Override
-	public void onMoved()
-	{
-		this.refresh();
-	}
-
-	@Override
-	public void onChunkLoad()
-	{
-		super.onChunkLoad();
-		refresh();
-	}
-
-	@Override
-	public void onNeighborChanged()
-	{
-		super.onNeighborChanged();
-		refresh();
-	}
-
-	@Override
-	public void onPartChanged(TMultiPart part)
-	{
-		refresh();
-	}
-
-	/**
-	 * Packets
-	 */
-	public void sendConnectionUpdate()
-	{
-		tile().getWriteStream(this).writeByte(0).writeByte(this.currentWireConnections).writeByte(this.currentAcceptorConnections);
-	}
-
-	@Override
-	public void readDesc(MCDataInput packet)
-	{
-		super.readDesc(packet);
-		this.currentWireConnections = packet.readByte();
-		this.currentAcceptorConnections = packet.readByte();
-	}
-
-	@Override
-	public void writeDesc(MCDataOutput packet)
-	{
-		super.writeDesc(packet);
-		packet.writeByte(this.currentWireConnections);
-		packet.writeByte(this.currentAcceptorConnections);
-	}
-
-	@Override
-	public void read(MCDataInput packet)
-	{
-		read(packet, packet.readUByte());
-	}
-
-	@Override
-	public void read(MCDataInput packet, int packetID)
-	{
-		if (packetID == 0)
-		{
-			this.currentWireConnections = packet.readByte();
-			this.currentAcceptorConnections = packet.readByte();
-			tile().markRender();
-		}
-		else
-		{
-			super.read(packet, packetID);
-		}
+		return this.getMaterial().resistance;
 	}
 
 	public void copyFrom(PartFramedWire otherCable)
@@ -544,6 +252,47 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		this.currentAcceptorConnections = otherCable.currentAcceptorConnections;
 		this.setNetwork(otherCable.getNetwork());
 		this.getNetwork().setBufferFor(this, otherCable.getInstance(ForgeDirection.UNKNOWN).getNetwork().getBufferOf(otherCable));
+	}
+
+	@Override
+	public IEnergyNetwork getNetwork()
+	{
+		if (network == null)
+		{
+			setNetwork(EnergyNetworkLoader.getNewNetwork(this));
+		}
+
+		return network;
+	}
+
+	@Override
+	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
+	{
+		return this.getNetwork().produce(this, from.getOpposite(), receive, doReceive);
+	}
+
+	@Override
+	public long onExtractEnergy(ForgeDirection from, long request, boolean doExtract)
+	{
+		return 0;
+	}
+
+	@Override
+	public long getCurrentCapacity()
+	{
+		return this.getMaterial().maxAmps;
+	}
+
+	@Override
+	public void setMaterial(int i)
+	{
+		setMaterial(EnumWireMaterial.values()[i]);
+	}
+
+	@Override
+	protected ItemStack getItem()
+	{
+		return new ItemStack(Electrical.itemWire);
 	}
 
 }
