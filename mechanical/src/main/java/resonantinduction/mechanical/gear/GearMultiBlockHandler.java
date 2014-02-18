@@ -3,6 +3,7 @@ package resonantinduction.mechanical.gear;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -27,7 +28,8 @@ public class GearMultiBlockHandler extends MultiBlockHandler<PartGear>
 			{
 				if (((PartGear) part).tier == self.tier)
 				{
-					return (PartGear) part;
+					if (!((IMultiBlockStructure) tile).getMultiBlock().isConstructed())
+						return (PartGear) part;
 				}
 			}
 		}
