@@ -50,16 +50,16 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 		breakIcon = RenderFramedWire.breakIcon;
 	}
 
-	public PartFramedWire(int typeID)
-	{
-		this(EnumWireMaterial.values()[typeID]);
-	}
-
 	public PartFramedWire(EnumWireMaterial type)
 	{
 		super();
 		breakIcon = RenderFramedWire.breakIcon;
 		material = type;
+	}
+
+	public PartFramedWire(int typeID)
+	{
+		this(EnumWireMaterial.values()[typeID]);
 	}
 
 	@Override

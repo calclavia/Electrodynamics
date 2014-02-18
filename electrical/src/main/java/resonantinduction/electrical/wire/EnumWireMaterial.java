@@ -19,11 +19,11 @@ public enum EnumWireMaterial
 	/** Copper: General. */
 	COPPER("Copper", 1.68f, 5, 300, 184, 115, 51),
 	/** Tin: Low shock, cheap */
-	TIN("Tin", 11f, 1, 2000, 132, 132, 130),
+	TIN("Tin", 3.1f, 1, 2000, 132, 132, 130),
 	/** Iron: High Capacity */
-	IRON("Iron", 10f, 3, 8000, 97, 102, 105),
+	IRON("Iron", 3f, 3, 8000, 97, 102, 105),
 	/** Aluminum: High Shock */
-	ALUMINUM("Aluminum", 2.82f, 10, 3200, 215, 205, 181),
+	ALUMINUM("Aluminum", 2.6f, 10, 3200, 215, 205, 181),
 	/** Aluminum: Low Resistance */
 	SILVER("Silver", 1.59f, 5, 4000, 192, 192, 192),
 	/** Superconductor: Over-powered */
