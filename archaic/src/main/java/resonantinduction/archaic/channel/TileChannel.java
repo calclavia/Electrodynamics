@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.fluid.IFluidConnector;
@@ -19,6 +20,11 @@ import calclavia.lib.utility.WrenchUtility;
 public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFluidPipe
 {
     private boolean isExtracting = false;
+    
+    public TileChannel()
+    {
+        this.getInternalTank().setCapacity(1 * FluidContainerRegistry.BUCKET_VOLUME);
+    }
 
     @Override
     public void updateEntity()
@@ -67,7 +73,7 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
             {
                 if (tileEntity instanceof TileChannel)
                 {
-                    getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
+                    getNetwork().merge(((TileChannel) tileEntity).getNetwork());
                     this.setRenderSide(side, true);
                     connectedBlocks[side.ordinal()] = tileEntity;
                 }
