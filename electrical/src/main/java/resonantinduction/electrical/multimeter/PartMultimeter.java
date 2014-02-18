@@ -303,8 +303,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 			for (FluidTankInfo info : fluidInfo)
 			{
-				if (info.fluid != null)
-					getNetwork().fluidGraph.queue(info.fluid.amount);
+				if (info != null)
+					if (info.fluid != null)
+						getNetwork().fluidGraph.queue(info.fluid.amount);
 			}
 		}
 

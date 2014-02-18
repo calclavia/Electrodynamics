@@ -91,7 +91,7 @@ public class Electrical
 	public static Block blockThermopile;
 
 	// Machines
-	public static Block blockItemCharger;
+	public static Block blockCharger;
 
 	// Transport
 	public static Block blockEMLevitator;
@@ -123,7 +123,7 @@ public class Electrical
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
-		blockItemCharger = contentRegistry.createTile(BlockCharger.class, TileCharger.class);
+		blockCharger = contentRegistry.createTile(BlockCharger.class, TileCharger.class);
 
 		Settings.save();
 
@@ -164,6 +164,8 @@ public class Electrical
 		/** Multimeter */
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, "PPP", "RRR", "WWW", 'W', "wire", 'P', Item.paper, 'R', Item.redstone));
+
 		/** Battery */
 		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0), "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
@@ -178,8 +180,8 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Item.ingotGold, 'E', Item.eyeOfEnder));
 
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
-
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Generators **/

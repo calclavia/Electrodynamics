@@ -136,7 +136,7 @@ public class Mechanical
 
 		proxy.preInit();
 		Settings.save();
-		
+
 		TabRI.ITEMSTACK = new ItemStack(blockGrinderWheel);
 
 		PacketAnnotation.register(TileWindTurbine.class);
@@ -163,6 +163,9 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(windTurbine, "CWC", "WGW", "CWC", 'G', itemGear, 'C', Block.cloth, 'W', "plankWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(waterTurbine, " W ", "WGW", " W ", 'G', itemGear, 'W', UniversalRecipe.PRIMARY_METAL.get()));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "BBB", "B B", "BBB", 'B', Block.fenceIron));
