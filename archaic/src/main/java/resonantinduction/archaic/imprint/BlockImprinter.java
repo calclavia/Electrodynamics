@@ -75,7 +75,7 @@ public class BlockImprinter extends BlockTile
 		if (te instanceof TileImprinter)
 		{
 			TileImprinter tile = (TileImprinter) te;
-			int idOnTop = ((VectorWorld) new VectorWorld(world, x, y, z).modifyPositionFromSide(ForgeDirection.getOrientation(1))).getBlockID();
+			int idOnTop = ((VectorWorld) new VectorWorld(world, x, y, z).translate(ForgeDirection.getOrientation(1))).getBlockID();
 
 			if (Block.pistonMoving.blockID == blockID)
 			{

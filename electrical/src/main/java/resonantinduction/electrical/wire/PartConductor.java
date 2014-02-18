@@ -73,9 +73,9 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	 * EXTERNAL USE Can this wire be connected by another block?
 	 */
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object source)
 	{
-		Vector3 connectPos = new Vector3(tile()).modifyPositionFromSide(direction);
+		Vector3 connectPos = new Vector3(tile()).translate(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());
 
 		if (connectTile instanceof IConductor)
@@ -101,7 +101,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 		{
 			ForgeDirection side = ForgeDirection.getOrientation(i);
 
-			if (this.canConnect(side))
+			if (this.canConnect(side, this))
 			{
 				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 				connections[i] = tileEntity;

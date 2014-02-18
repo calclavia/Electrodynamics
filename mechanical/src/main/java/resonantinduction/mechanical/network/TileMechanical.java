@@ -89,13 +89,6 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	@Deprecated
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return true;
-	}
-
-	@Override
 	public Object[] getConnections()
 	{
 		connections = new Object[6];

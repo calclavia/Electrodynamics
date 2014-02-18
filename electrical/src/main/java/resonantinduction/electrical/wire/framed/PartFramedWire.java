@@ -301,7 +301,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 
 		if (tile instanceof IConductor)
 		{
-			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite());
+			notPrevented &= ((IConductor) tile).canConnect(side.getOpposite(), this);
 		}
 
 		return notPrevented;
@@ -346,7 +346,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-			if (CompatibilityModule.canConnect(tileEntity, side.getOpposite()) && canConnectBothSides(tileEntity, side))
+			if (CompatibilityModule.canConnect(tileEntity, side.getOpposite(), this) && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -384,7 +384,7 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 				{
 					if (connectionMapContainsSide(possibleWireConnections, side))
 					{
-						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side);
+						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
 
 						if (tileEntity instanceof IConductor)
 						{
@@ -439,16 +439,21 @@ public class PartFramedWire extends PartAdvancedWire implements TSlottedPart, JN
 	 * Shouldn't need to be overridden. Override connectionPrevented instead
 	 */
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		if (world().isBlockIndirectlyGettingPowered(x(), y(), z()))
+		if (obj instanceof PartFramedWire)
 		{
-			return false;
+			if (world().isBlockIndirectlyGettingPowered(x(), y(), z()))
+			{
+				return false;
+			}
+
+			Vector3 connectPos = new Vector3(tile()).translate(direction);
+			TileEntity connectTile = connectPos.getTileEntity(world());
+			return !isConnectionPrevented(connectTile, direction);
 		}
 
-		Vector3 connectPos = new Vector3(tile()).translate(direction);
-		TileEntity connectTile = connectPos.getTileEntity(world());
-		return !isConnectionPrevented(connectTile, direction);
+		return false;
 	}
 
 	@Override

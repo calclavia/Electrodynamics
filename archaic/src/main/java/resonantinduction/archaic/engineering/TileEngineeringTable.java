@@ -177,7 +177,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
 
 				if (tile instanceof IInventory)
 				{
@@ -222,7 +222,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
 
 				if (tile instanceof IInventory)
 				{
@@ -489,7 +489,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				TileEntity tile = new Vector3(this).modifyPositionFromSide(dir).getTileEntity(worldObj);
+				TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
 
 				if (tile instanceof IInventory)
 				{

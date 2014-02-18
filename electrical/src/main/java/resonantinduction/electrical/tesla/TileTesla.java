@@ -285,9 +285,9 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return super.canConnect(direction) && this.getMultiBlock().isPrimary();
+		return super.canConnect(direction, obj) && this.getMultiBlock().isPrimary();
 	}
 
 	public void sendPacket(int type)

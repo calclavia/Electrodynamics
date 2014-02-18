@@ -126,7 +126,7 @@ public class LaserEvent extends Event
 		int meta = vec.getBlockID(world);
 		Block block = Block.blocksList[id];
 
-		Vector3 faceVec = vec.clone().modifyPositionFromSide(side);
+		Vector3 faceVec = vec.clone().translate(side);
 		int id2 = faceVec.getBlockID(world);
 		Block block2 = Block.blocksList[id2];
 
@@ -207,7 +207,7 @@ public class LaserEvent extends Event
 			try
 			{
 
-				Block blockBellow = Block.blocksList[vec.clone().modifyPositionFromSide(ForgeDirection.DOWN).getBlockID(world)];
+				Block blockBellow = Block.blocksList[vec.clone().translate(ForgeDirection.DOWN).getBlockID(world)];
 				if (block != null)
 				{
 					if (block.blockID == Block.tnt.blockID)

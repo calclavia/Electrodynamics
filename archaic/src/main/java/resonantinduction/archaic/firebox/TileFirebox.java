@@ -188,9 +188,9 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return isElectrical() && super.canConnect(direction);
+		return isElectrical() && super.canConnect(direction, obj);
 	}
 
 	public boolean isElectrical()

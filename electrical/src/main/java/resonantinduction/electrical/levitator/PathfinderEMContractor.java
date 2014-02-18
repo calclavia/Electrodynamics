@@ -36,7 +36,7 @@ public class PathfinderEMContractor extends PathfinderAStar
 
 				for (int i = 0; i < 6; i++)
 				{
-					Vector3 neighbor = currentNode.clone().modifyPositionFromSide(ForgeDirection.getOrientation(i));
+					Vector3 neighbor = currentNode.clone().translate(ForgeDirection.getOrientation(i));
 
 					if (TileLevitator.canBePath(world, neighbor))
 					{

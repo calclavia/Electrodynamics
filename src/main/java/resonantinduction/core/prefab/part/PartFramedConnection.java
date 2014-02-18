@@ -223,7 +223,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
 		if (getConnector(tile) != null)
 		{
-			notPrevented &= getConnector(tile).canConnect(side.getOpposite());
+			notPrevented &= getConnector(tile).canConnect(side.getOpposite(), this);
 		}
 
 		return notPrevented;
@@ -298,7 +298,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 				{
 					if (connectionMapContainsSide(possibleWireConnections, side))
 					{
-						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side);
+						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
 
 						if (getConnector(tileEntity) != null)
 						{
@@ -353,7 +353,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	 * Shouldn't need to be overridden. Override connectionPrevented instead
 	 */
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object source)
 	{
 		Vector3 connectPos = new Vector3(tile()).translate(direction);
 		TileEntity connectTile = connectPos.getTileEntity(world());

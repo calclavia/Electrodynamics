@@ -26,6 +26,11 @@ import codechicken.multipart.TMultiPart;
  * @author Calclavia
  * 
  */
+
+/**
+ * TODO: Combind with PartFramedConnection
+ */
+@Deprecated
 public abstract class PartAdvancedWire extends PartConductor
 {
 	public static final int DEFAULT_COLOR = 15;
@@ -81,7 +86,7 @@ public abstract class PartAdvancedWire extends PartConductor
 		}
 		else if (!(obj instanceof IConductor))
 		{
-			return CompatibilityModule.canConnect(obj, dir.getOpposite());
+			return CompatibilityModule.canConnect(obj, dir.getOpposite(), this);
 		}
 
 		return false;

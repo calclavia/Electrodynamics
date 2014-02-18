@@ -26,14 +26,5 @@ public interface IMechanical extends IConnector<IMechanicalNetwork>
 	@Override
 	public IMechanical getInstance(ForgeDirection dir);
 
-	/**
-	 * Can this components connect with the other?
-	 * 
-	 * @param from - The direction the connection is coming from relative to this block.
-	 * @param source - The object trying to connect
-	 * @return
-	 */
-	public boolean canConnect(ForgeDirection from, Object sourcen);
-
 	public Vector3 getPosition();
 }

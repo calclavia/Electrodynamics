@@ -82,11 +82,11 @@ public class TraitConductor extends TileMultipart implements IConductor
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object source)
 	{
 		for (IConductor conductor : this.ueInterfaces)
 		{
-			if (conductor.canConnect(direction.getOpposite()))
+			if (conductor.canConnect(direction.getOpposite(), source))
 			{
 				return true;
 			}

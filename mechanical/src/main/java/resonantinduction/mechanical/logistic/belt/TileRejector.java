@@ -34,7 +34,7 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
 			this.firePiston = false;
 
 			Vector3 searchPosition = new Vector3(this);
-			searchPosition.modifyPositionFromSide(this.getDirection());
+			searchPosition.translate(this.getDirection());
 			TileEntity tileEntity = searchPosition.getTileEntity(this.worldObj);
 
 			try

@@ -71,13 +71,13 @@ public class TileManipulator extends TileFilterable implements IRotatable, IMani
 		Vector3 inputPosition = new Vector3(this);
 		/** output location up */
 		Vector3 outputUp = new Vector3(this);
-		outputUp.modifyPositionFromSide(ForgeDirection.UP);
+		outputUp.translate(ForgeDirection.UP);
 		/** output location down */
 		Vector3 outputDown = new Vector3(this);
-		outputDown.modifyPositionFromSide(ForgeDirection.DOWN);
+		outputDown.translate(ForgeDirection.DOWN);
 		/** output location facing */
 		Vector3 outputPosition = new Vector3(this);
-		outputPosition.modifyPositionFromSide(this.getDirection().getOpposite());
+		outputPosition.translate(this.getDirection().getOpposite());
 
 		/** Prevents manipulators from spamming and duping items. */
 		if (outputPosition.getTileEntity(this.worldObj) instanceof TileManipulator)
@@ -132,13 +132,13 @@ public class TileManipulator extends TileFilterable implements IRotatable, IMani
 	{
 		this.isRedstonePowered = false;
 		/** input location up */
-		Vector3 inputUp = new Vector3(this).modifyPositionFromSide(ForgeDirection.UP);
+		Vector3 inputUp = new Vector3(this).translate(ForgeDirection.UP);
 		/** input location down */
-		Vector3 inputDown = new Vector3(this).modifyPositionFromSide(ForgeDirection.DOWN);
+		Vector3 inputDown = new Vector3(this).translate(ForgeDirection.DOWN);
 		/** input location facing */
-		Vector3 inputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection().getOpposite());
+		Vector3 inputPosition = new Vector3(this).translate(this.getDirection().getOpposite());
 		/** output location facing */
-		Vector3 outputPosition = new Vector3(this).modifyPositionFromSide(this.getDirection());
+		Vector3 outputPosition = new Vector3(this).translate(this.getDirection());
 
 		ItemStack itemStack = invHelper().tryGrabFromPosition(inputUp, ForgeDirection.UP, 1);
 

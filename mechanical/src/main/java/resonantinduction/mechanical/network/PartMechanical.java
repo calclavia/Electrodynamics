@@ -255,13 +255,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	@Deprecated
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return true;
-	}
-
-	@Override
 	public float getAngularVelocity()
 	{
 		return torque != 0 ? angularVelocity : 0;

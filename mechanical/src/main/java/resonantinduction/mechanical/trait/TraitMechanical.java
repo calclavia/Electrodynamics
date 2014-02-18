@@ -56,12 +56,6 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection from)
-	{
-		return false;
-	}
-
-	@Override
 	public Object[] getConnections()
 	{
 		return null;

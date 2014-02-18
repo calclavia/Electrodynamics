@@ -181,9 +181,9 @@ public class PartTransformer extends JCuboidPart implements JNormalOcclusion, TF
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), facing) || direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), Rotation.rotateSide(facing, 2));
+		return obj instanceof IEnergyInterface && direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), facing) || direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), Rotation.rotateSide(facing, 2));
 	}
 
 	@Override

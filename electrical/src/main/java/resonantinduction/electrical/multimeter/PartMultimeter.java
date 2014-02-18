@@ -1,6 +1,3 @@
-/**
- * 
- */
 package resonantinduction.electrical.multimeter;
 
 import java.util.ArrayList;
@@ -572,9 +569,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction)
+	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return true;
+		return obj instanceof PartMultimeter;
 	}
 
 	@Override

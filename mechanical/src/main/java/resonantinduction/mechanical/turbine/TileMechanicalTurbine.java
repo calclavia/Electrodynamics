@@ -11,11 +11,6 @@ import calclavia.lib.prefab.turbine.TileTurbine;
 
 public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 {
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return false;
-	}
 
 	/**
 	 * Mechanical Methods
@@ -105,17 +100,19 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		/**
-		 * Face to face stick connection.
-		 */
-		TileEntity sourceTile = getPosition().translate(from).getTileEntity(getWorld());
-
-		if (sourceTile instanceof IMechanical)
+		if (source instanceof IMechanical)
 		{
-			IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
-			return sourceInstance == source && from == getDirection().getOpposite();
-		}
+			/**
+			 * Face to face stick connection.
+			 */
+			TileEntity sourceTile = getPosition().translate(from).getTileEntity(getWorld());
 
+			if (sourceTile instanceof IMechanical)
+			{
+				IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
+				return sourceInstance == source && from == getDirection().getOpposite();
+			}
+		}
 		return false;
 	}
 }
