@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.network;
+package resonantinduction.core.prefab.fluid;
 
 import java.util.EnumSet;
 import java.util.HashMap;
