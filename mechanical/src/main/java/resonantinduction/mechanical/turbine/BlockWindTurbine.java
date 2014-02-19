@@ -20,6 +20,7 @@ public class BlockWindTurbine extends BlockTurbine
 		rotationMask = Byte.parseByte("111111", 2);
 	}
 
+	@Override
 	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		if (entityPlayer.getCurrentEquippedItem() == null)
@@ -41,6 +42,7 @@ public class BlockWindTurbine extends BlockTurbine
 		return false;
 	}
 
+	@Override
 	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);

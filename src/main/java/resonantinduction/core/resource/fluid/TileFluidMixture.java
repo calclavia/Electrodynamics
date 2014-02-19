@@ -14,6 +14,7 @@ import resonantinduction.core.resource.TileMaterial;
 
 /**
  * NO-OP. Not yet properly implemented. We're not using TEs for now.
+ * 
  * @author Calclavia
  * 
  */

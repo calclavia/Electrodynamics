@@ -52,7 +52,7 @@ public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleIte
 	{
 		glPushMatrix();
 		GL11.glScalef(0.5f, 0.5f, 0.5f);
-		glTranslatef((float) 0.5F, (float) 0.5f, (float) 1.5F);
+		glTranslatef(0.5F, 0.5f, 1.5F);
 		RenderUtility.bind(TEXTURE);
 		MODEL.renderAll();
 		glPopMatrix();

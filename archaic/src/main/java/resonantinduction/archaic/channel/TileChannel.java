@@ -7,12 +7,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.fluid.TileFluidNetwork;
-import resonantinduction.mechanical.fluid.tank.TileTank;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.utility.WrenchUtility;
 

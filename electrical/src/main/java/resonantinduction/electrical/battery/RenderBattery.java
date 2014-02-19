@@ -39,6 +39,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 	public static final ResourceLocation TEXTURE_CASE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "battery/bat_case_tex.png");
 	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "battery/battery.obj");
 
+	@Override
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		glPushMatrix();

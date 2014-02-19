@@ -8,15 +8,15 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-    @Override
-    public void preInit()
-    {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileChannel.class, RenderChannel.INSTANCE);
-    }
+	@Override
+	public void preInit()
+	{
+		ClientRegistry.bindTileEntitySpecialRenderer(TileChannel.class, RenderChannel.INSTANCE);
+	}
 
-    @Override
-    public void init()
-    {
-        MinecraftForgeClient.registerItemRenderer(Archaic.blockChannel.blockID, new ItemChannelRenderer());
-    }
+	@Override
+	public void init()
+	{
+		MinecraftForgeClient.registerItemRenderer(Archaic.blockChannel.blockID, new ItemChannelRenderer());
+	}
 }

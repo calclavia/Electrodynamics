@@ -13,6 +13,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.core.render.InvertX;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
@@ -115,7 +116,7 @@ public class RenderFramedWire
 
 			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
-				if (PartFramedWire.connectionMapContainsSide(renderSides, side))
+				if (PartFramedConnection.connectionMapContainsSide(renderSides, side))
 					renderSideShine(side, wire);
 			}
 			CCRenderState.draw();
@@ -150,7 +151,7 @@ public class RenderFramedWire
 
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 		{
-			if (PartFramedWire.connectionMapContainsSide(renderSides, side))
+			if (PartFramedConnection.connectionMapContainsSide(renderSides, side))
 			{
 				renderSide(side, wire);
 			}

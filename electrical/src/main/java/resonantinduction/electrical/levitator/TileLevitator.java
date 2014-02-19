@@ -130,8 +130,8 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 							{
 								item.setEntityItemStack(remains);
 							}
-							
-							//TODO: Add redstone pulse?
+
+							// TODO: Add redstone pulse?
 						}
 					}
 				}
@@ -447,11 +447,13 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 		return null;
 	}
 
+	@Override
 	public ForgeDirection getDirection()
 	{
 		return ForgeDirection.getOrientation(getBlockType() != null ? getBlockMetadata() : 0);
 	}
 
+	@Override
 	public void setDirection(ForgeDirection side)
 	{
 		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, side.ordinal(), 3);

@@ -3,7 +3,6 @@ package resonantinduction.mechanical.turbine;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
-import net.minecraftforge.common.ForgeDirection;
 
 /**
  * The vertical wind turbine collects airflow.

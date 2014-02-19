@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.UniversalElectricity;
@@ -13,11 +12,8 @@ import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
-import universalelectricity.api.net.IConnector;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.TileElectrical;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -51,7 +47,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	 */
 	public static long getEnergyForTier(int tier)
 	{
-		return (long) Math.pow(100000000, ((float) tier / (float) (MAX_TIER + 0.25f)) + 1);
+		return (long) Math.pow(100000000, (tier / (MAX_TIER + 0.25f)) + 1);
 	}
 
 	@Override

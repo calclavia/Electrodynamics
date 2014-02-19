@@ -3,7 +3,6 @@ package resonantinduction.electrical.wire.flat;
 import java.util.Arrays;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
@@ -20,10 +19,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
-import calclavia.lib.render.EnumColor;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.lighting.LazyLightMatrix;
@@ -903,7 +900,7 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 			color.a = (byte) 255;
 			return color;
 		}
-		
+
 		return getMaterial().color;
 	}
 

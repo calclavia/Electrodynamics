@@ -23,7 +23,6 @@ import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.Vector3;
 import codechicken.lib.lighting.LazyLightMatrix;
-import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
@@ -34,9 +33,7 @@ import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.MultiPartRegistry;
-import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.PartMap;
-import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
@@ -101,6 +98,7 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 		return super.activate(player, part, item);
 	}
 
+	@Override
 	public void preparePlacement(int meta)
 	{
 		this.setMaterial(meta);
@@ -178,6 +176,7 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 		return RenderFramedWire.breakIcon;
 	}
 
+	@Override
 	protected boolean canConnectTo(TileEntity tile)
 	{
 		return tile instanceof IConductor || this.canConnectToObj(tile);
@@ -207,6 +206,7 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 		return false;
 	}
 
+	@Override
 	public IConductor getConnector(TileEntity tile)
 	{
 		if (tile instanceof IConductor)

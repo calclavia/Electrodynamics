@@ -18,7 +18,6 @@ import resonantinduction.api.IInformation;
 import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;

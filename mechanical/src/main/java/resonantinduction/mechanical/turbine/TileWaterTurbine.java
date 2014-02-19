@@ -1,18 +1,6 @@
 package resonantinduction.mechanical.turbine;
 
 import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.gear.PartGearShaft;
-import resonantinduction.mechanical.network.MechanicalNetwork;
-import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.turbine.TileTurbine;
 
 /**
  * The vertical wind turbine collects airflow.
