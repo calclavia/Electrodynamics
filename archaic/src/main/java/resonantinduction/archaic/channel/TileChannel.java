@@ -19,141 +19,143 @@ import calclavia.lib.utility.WrenchUtility;
 /** @author Darkguardsman */
 public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFluidPipe
 {
-    private boolean isExtracting = false;
-    
-    public TileChannel()
-    {
-        this.getInternalTank().setCapacity(1 * FluidContainerRegistry.BUCKET_VOLUME);
-    }
+	private boolean isExtracting = false;
 
-    @Override
-    public void updateEntity()
-    {
-        if (!worldObj.isRemote)
-        {
-            if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
-            {
-                for (int i = 0; i < this.getConnections().length; i++)
-                {
-                    Object obj = this.getConnections()[i];
+	public TileChannel()
+	{
+		this.getInternalTank().setCapacity(1 * FluidContainerRegistry.BUCKET_VOLUME);
+	}
 
-                    if (obj instanceof IFluidHandler)
-                    {
-                        FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
-                        fill(null, drain, true);
-                    }
-                }
-            }
-        }
-    }
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
 
-    @Override
-    public boolean onActivated(EntityPlayer player)
-    {
-        if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord))
-        {
-            if (!this.worldObj.isRemote)
-            {
-                isExtracting = !isExtracting;
-                player.addChatMessage("Pipe extraction mode: " + isExtracting);
-                WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord);
-            }
-            return true;
-        }
+		if (!worldObj.isRemote)
+		{
+			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
+			{
+				for (int i = 0; i < this.getConnections().length; i++)
+				{
+					Object obj = this.getConnections()[i];
 
-        return false;
-    }
+					if (obj instanceof IFluidHandler)
+					{
+						FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
+						fill(null, drain, true);
+					}
+				}
+			}
+		}
+	}
 
-    @Override
-    public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-    {
-        if (!this.worldObj.isRemote)
-        {
-            if (tileEntity instanceof IFluidPipe)
-            {
-                if (tileEntity instanceof TileChannel)
-                {
-                    getNetwork().merge(((TileChannel) tileEntity).getNetwork());
-                    this.setRenderSide(side, true);
-                    connectedBlocks[side.ordinal()] = tileEntity;
-                }
-            }
-            else if (tileEntity instanceof IFluidHandler)
-            {
-                this.setRenderSide(side, true);
-                connectedBlocks[side.ordinal()] = tileEntity;
-            }
-        }
-    }
+	@Override
+	public boolean onActivated(EntityPlayer player)
+	{
+		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord))
+		{
+			if (!this.worldObj.isRemote)
+			{
+				isExtracting = !isExtracting;
+				player.addChatMessage("Pipe extraction mode: " + isExtracting);
+				WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord);
+			}
+			return true;
+		}
 
-    @Override
-    public boolean canFlow()
-    {
-        return !isExtracting;
-    }
+		return false;
+	}
 
-    @Override
-    public IFluidNetwork getNetwork()
-    {
-        if (this.network == null)
-        {
-            this.network = new PipeNetwork();
-            this.network.addConnector(this);
-        }
-        return this.network;
-    }
+	@Override
+	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
+	{
+		if (!this.worldObj.isRemote)
+		{
+			if (tileEntity instanceof IFluidPipe)
+			{
+				if (tileEntity instanceof TileChannel)
+				{
+					getNetwork().merge(((TileChannel) tileEntity).getNetwork());
+					this.setRenderSide(side, true);
+					connectedBlocks[side.ordinal()] = tileEntity;
+				}
+			}
+			else if (tileEntity instanceof IFluidHandler)
+			{
+				this.setRenderSide(side, true);
+				connectedBlocks[side.ordinal()] = tileEntity;
+			}
+		}
+	}
 
-    @Override
-    public void setNetwork(IFluidNetwork network)
-    {
-        if (network instanceof PipeNetwork)
-        {
-            this.network = network;
-        }
-    }
+	@Override
+	public boolean canFlow()
+	{
+		return !isExtracting;
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        nbt.setBoolean("isExtracting", isExtracting);
-    }
+	@Override
+	public IFluidNetwork getNetwork()
+	{
+		if (this.network == null)
+		{
+			this.network = new PipeNetwork();
+			this.network.addConnector(this);
+		}
+		return this.network;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-        isExtracting = nbt.getBoolean("isExtracting");
-    }
+	@Override
+	public void setNetwork(IFluidNetwork network)
+	{
+		if (network instanceof PipeNetwork)
+		{
+			this.network = network;
+		}
+	}
 
-    @Override
-    public int getPressureIn(ForgeDirection side)
-    {
-        return 0;
-    }
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("isExtracting", isExtracting);
+	}
 
-    @Override
-    public void onWrongPressure(ForgeDirection side, int pressure)
-    {
-        // TODO place fluid blocks into the world
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		isExtracting = nbt.getBoolean("isExtracting");
+	}
 
-    }
+	@Override
+	public int getPressureIn(ForgeDirection side)
+	{
+		return 0;
+	}
 
-    @Override
-    public int getMaxPressure()
-    {
-        return 0;
-    }
+	@Override
+	public void onWrongPressure(ForgeDirection side, int pressure)
+	{
+		// TODO place fluid blocks into the world
 
-    @Override
-    public int getPressure()
-    {
-        return this.getNetwork().getPressure();
-    }
+	}
 
-    @Override
-    public int getMaxFlowRate()
-    {
-        return 500;
-    }
+	@Override
+	public int getMaxPressure()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getPressure()
+	{
+		return this.getNetwork().getPressure();
+	}
+
+	@Override
+	public int getMaxFlowRate()
+	{
+		return 500;
+	}
 }
