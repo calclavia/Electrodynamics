@@ -4,18 +4,18 @@ import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
+
+import org.lwjgl.opengl.GL11;
+
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
-import calclavia.lib.render.model.TechneAdvancedModel;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final TechneAdvancedModel MODEL = (TechneAdvancedModel) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "mixer.tcn");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "mixer.tcn");
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "mixer.png");
 
 	@Override

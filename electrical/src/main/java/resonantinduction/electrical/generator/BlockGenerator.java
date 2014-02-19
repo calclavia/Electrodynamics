@@ -15,7 +15,7 @@ public class BlockGenerator extends BlockRotatable
 	public BlockGenerator(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "material_steel");
+		setTextureName(Reference.PREFIX + "material_stone");
 		rotationMask = Byte.parseByte("111111", 2);
 	}
 
