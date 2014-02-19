@@ -1,13 +1,9 @@
 package resonantinduction.electrical;
 
 import ic2.api.item.Items;
-
-import java.util.Map;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -43,7 +39,6 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -167,9 +162,13 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, "PPP", "RRR", "WWW", 'W', "wire", 'P', Item.paper, 'R', Item.redstone));
 
 		/** Battery */
-		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0), "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 2), "RRR", "RIR", "RRR", 'R', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0), 'I', Block.blockDiamond));
+		ItemStack tierOneBattery = ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0);
+		ItemStack tierTwoBattery = ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 1);
+		ItemStack tierThreeBattery = ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 2);
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(tierOneBattery, "III", "IRI", "III", 'R', Block.blockRedstone, 'I', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(tierTwoBattery, "RRR", "RIR", "RRR", 'R', tierOneBattery, 'I', UniversalRecipe.PRIMARY_PLATE.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Block.blockDiamond));
 
 		/** Wires **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
@@ -204,36 +203,5 @@ public class Electrical
 		}
 
 		proxy.postInit();
-
-		/** Inject new furnace tile class */
-		// replaceTileEntity(TileEntityFurnace.class, TileAdvancedFurnace.class);
-	}
-
-	public static void replaceTileEntity(Class<? extends TileEntity> findTile, Class<? extends TileEntity> replaceTile)
-	{
-		try
-		{
-			Map<String, Class> nameToClassMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_a", "nameToClassMap", "a");
-			Map<Class, String> classToNameMap = ObfuscationReflectionHelper.getPrivateValue(TileEntity.class, null, "field_" + "70326_b", "classToNameMap", "b");
-
-			String findTileID = classToNameMap.get(findTile);
-
-			if (findTileID != null)
-			{
-				nameToClassMap.put(findTileID, replaceTile);
-				classToNameMap.put(replaceTile, findTileID);
-				classToNameMap.remove(findTile);
-				ResonantInduction.LOGGER.fine("Replaced TileEntity: " + findTile);
-			}
-			else
-			{
-				ResonantInduction.LOGGER.severe("Failed to replace TileEntity: " + findTile);
-			}
-		}
-		catch (Exception e)
-		{
-			ResonantInduction.LOGGER.severe("Failed to replace TileEntity: " + findTile);
-			e.printStackTrace();
-		}
 	}
 }
