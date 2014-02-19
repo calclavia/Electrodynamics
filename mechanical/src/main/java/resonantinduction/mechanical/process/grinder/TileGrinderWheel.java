@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process;
+package resonantinduction.mechanical.process.grinder;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
@@ -14,6 +14,7 @@ import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.network.TileMechanical;
+import resonantinduction.mechanical.process.Timer;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

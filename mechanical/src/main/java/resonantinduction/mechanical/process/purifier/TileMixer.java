@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process;
+package resonantinduction.mechanical.process.purifier;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,6 +16,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
+import resonantinduction.mechanical.process.Timer;
 import universalelectricity.api.vector.Vector3;
 
 /**

@@ -105,7 +105,7 @@ public class ResonantInduction
 		/**
 		 * Melting dusts
 		 */
-		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class);
+		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class).setCreativeTab(null);
 
 		// Items
 		itemRubble = new ItemOreResource(Settings.getNextItemID("oreRubble"), "oreRubble");

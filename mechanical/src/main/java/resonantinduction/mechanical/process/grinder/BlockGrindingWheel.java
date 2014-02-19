@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process;
+package resonantinduction.mechanical.process.grinder;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;

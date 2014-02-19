@@ -28,7 +28,6 @@ public class BlockDust extends BlockTile
 	public BlockDust(int id)
 	{
 		super(id, Material.sand);
-		setCreativeTab(null);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		setBlockBoundsForDepth(0);
 		setHardness(0.5f);

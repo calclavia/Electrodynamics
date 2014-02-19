@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process;
+package resonantinduction.mechanical.process.grinder;
 
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;

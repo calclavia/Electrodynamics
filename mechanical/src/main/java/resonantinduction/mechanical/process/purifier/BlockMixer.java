@@ -1,12 +1,14 @@
-package resonantinduction.mechanical.purifier;
+package resonantinduction.mechanical.process.purifier;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.process.TileMixer;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockRotatable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A block used to build machines.
@@ -20,6 +22,13 @@ public class BlockMixer extends BlockRotatable implements ITileEntityProvider
 	{
 		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_metal_top");
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RIBlockRenderingHandler.ID;
 	}
 
 	@Override
