@@ -58,7 +58,7 @@ public class PartCharger extends PartFace implements IExternalInventory, ISidedI
 	{
 		if (WrenchUtility.isUsableWrench(player, player.inventory.getCurrentItem(), x(), y(), z()))
 		{
-			if (!this.world().isRemote)
+			if (!world().isRemote)
 			{
 				WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
 				facing = (byte) ((facing + 1) % 4);
@@ -87,7 +87,8 @@ public class PartCharger extends PartFace implements IExternalInventory, ISidedI
 		{
 			InventoryUtility.dropItemStack(world(), new universalelectricity.api.vector.Vector3(player), getStackInSlot(0), 0);
 			setInventorySlotContents(0, null);
-			sendDescUpdate();
+			if (!world().isRemote)
+				sendDescUpdate();
 		}
 
 		return true;

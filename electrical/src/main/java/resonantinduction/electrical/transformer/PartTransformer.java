@@ -24,7 +24,13 @@ import codechicken.multipart.TFacePart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartTransformer extends PartFace implements JNormalOcclusion, TFacePart, IVoltageOutput, IEnergyInterface
+/**
+ * TODO: We can't use face parts, need to use thicker ones. Also, transformer is currently NO-OP
+ * 
+ * @author Calclavia
+ * 
+ */
+public class PartTransformer extends PartFace implements IVoltageOutput, IEnergyInterface
 {
 
 	/** Step the voltage up */

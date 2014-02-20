@@ -22,8 +22,7 @@ import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
-import resonantinduction.electrical.levitator.BlockLevitator;
-import resonantinduction.electrical.levitator.TileLevitator;
+import resonantinduction.electrical.levitator.ItemLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
 import resonantinduction.electrical.tesla.TileTesla;
@@ -86,7 +85,7 @@ public class Electrical
 	public static Block blockThermopile;
 
 	// Transport
-	public static Block blockEMLevitator;
+	public static Item itemLevitator;
 	public static Block blockArmbot;
 	public static Item itemDisk;
 
@@ -106,7 +105,7 @@ public class Electrical
 		blockBattery = contentRegistry.createBlock(BlockBattery.class, ItemBlockBattery.class, TileBattery.class);
 
 		// Transport
-		blockEMLevitator = contentRegistry.createTile(BlockLevitator.class, TileLevitator.class);
+		itemLevitator = contentRegistry.createItem(ItemLevitator.class);
 		// blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
 		// blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
@@ -177,7 +176,7 @@ public class Electrical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));

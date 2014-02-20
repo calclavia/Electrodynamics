@@ -11,7 +11,6 @@ import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
 import resonantinduction.electrical.generator.solar.RenderSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.RenderLevitator;
-import resonantinduction.electrical.levitator.TileLevitator;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.multimeter.RenderMultimeter;
@@ -39,8 +38,8 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Electrical.itemMultimeter.itemID, RenderMultimeter.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemTransformer.itemID, RenderTransformer.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemCharger.itemID, RenderCharger.INSTANCE);
+		GlobalItemRenderer.register(Electrical.itemLevitator.itemID, RenderLevitator.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
 	}

@@ -7,7 +7,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import codechicken.lib.vec.BlockCoord;
+import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
 /**
@@ -22,6 +25,28 @@ public class MultipartUtility
 	{
 		TileEntity te = access.getBlockTileEntity(pos.x, pos.y, pos.z);
 		return te instanceof TileMultipart ? (TileMultipart) te : null;
+	}
+
+	public static TMultiPart getMultipart(World world, Vector3 vector, int partMap)
+	{
+		return getMultipart(new VectorWorld(world, vector), partMap);
+	}
+
+	public static TMultiPart getMultipart(VectorWorld vector, int partMap)
+	{
+		return getMultipart(vector.world, vector.intX(), vector.intY(), vector.intZ(), partMap);
+	}
+
+	public static TMultiPart getMultipart(World world, int x, int y, int z, int partMap)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileMultipart)
+		{
+			return ((TileMultipart) tile).partMap(partMap);
+		}
+
+		return null;
 	}
 
 	public static boolean canPlaceWireOnSide(World w, int x, int y, int z, ForgeDirection side, boolean _default)

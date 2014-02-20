@@ -1,6 +1,7 @@
 package resonantinduction.electrical;
 
 import resonantinduction.electrical.charger.PartCharger;
+import resonantinduction.electrical.levitator.PartLevitator;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.transformer.PartTransformer;
 import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
@@ -16,7 +17,7 @@ public class MultipartElectrical implements IPartFactory
 {
 	public static MultipartElectrical INSTANCE;
 
-	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger" };
+	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger", "resonant_induction_levitator" };
 
 	public MultipartElectrical()
 	{
@@ -43,6 +44,8 @@ public class MultipartElectrical implements IPartFactory
 			return new PartTransformer();
 		else if (name.equals("resonant_induction_charger"))
 			return new PartCharger();
+		else if (name.equals("resonant_induction_levitator"))
+			return new PartLevitator();
 
 		return null;
 	}
