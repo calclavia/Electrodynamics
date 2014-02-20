@@ -1,12 +1,21 @@
 package resonantinduction.electrical.charger;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.WavefrontObject;
+
+import org.lwjgl.opengl.GL11;
+
+import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
+import cpw.mods.fml.client.FMLClientHandler;
 
 /**
  * Renderer for electric item charger
@@ -15,6 +24,22 @@ import calclavia.lib.render.RenderUtility;
  */
 public class RenderCharger extends RenderItemOverlayTile
 {
+	public static final RenderCharger INSTANCE = new RenderCharger();
+
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "charger.tcn");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "charger.png");
+/*
+	public void render(PartCharger part, double x, double y, double z)
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
+		RenderUtility.rotateFaceBlockToSide(part.placementSide);
+		RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
+
+		RenderUtility.bind(TEXTURE);
+		MODEL.renderAll();
+		GL11.glPopMatrix();
+	}*/
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)

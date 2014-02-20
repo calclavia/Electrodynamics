@@ -29,8 +29,8 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 {
 	private static final ForgeDirection[] forge_sides = { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST };
 
-	private final RenderBlocks renderBlocks;
-	private final RenderItem renderItem;
+	private static RenderBlocks renderBlocks;
+	private static RenderItem renderItem;
 
 	public RenderItemOverlayTile()
 	{
@@ -44,7 +44,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z);
 	}
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
+	public static void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
 	{
 		GL11.glPushMatrix();
 
@@ -72,7 +72,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				this.renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
+				renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
 				GL11.glPopMatrix();
 
 				if (isLooking)
@@ -89,12 +89,12 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 	}
 
-	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
+	public static void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
 	{
 		renderItemOnSides(tile, itemStack, x, y, z, "No Output");
 	}
 
-	public void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
+	public static void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
 	{
 		/** Render the Output */
 		String amount = "";
@@ -111,13 +111,13 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			{
 				continue;
 			}
-			this.renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
+			renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
 			RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
 			RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
 		}
 	}
 
-	protected void renderItemSingleSide(TileEntity tile, double x, double y, double z, ItemStack itemStack, ForgeDirection direction, String renderText)
+	protected static void renderItemSingleSide(TileEntity tile, double x, double y, double z, ItemStack itemStack, ForgeDirection direction, String renderText)
 	{
 		if (!tile.worldObj.isBlockSolidOnSide(tile.xCoord + direction.offsetX, tile.yCoord, tile.zCoord + direction.offsetZ, direction.getOpposite()))
 		{
@@ -129,17 +129,16 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				amount = Integer.toString(itemStack.stackSize);
 			}
 
-			this.renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
+			renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
 			RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
 			RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
 
 		}
 	}
 
-	protected void renderItemOnSide(TileEntity tile, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
+	protected static void renderItemOnSide(TileEntity tile, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
 	{
-
-		this.setupLight(tile, direction.offsetX, direction.offsetZ);
+		setupLight(tile, direction.offsetX, direction.offsetZ);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 		if (itemStack != null)
@@ -173,9 +172,9 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 			GL11.glDisable(2896);
 
-			if (!ForgeHooksClient.renderInventoryItem(this.renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
+			if (!ForgeHooksClient.renderInventoryItem(renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
 			{
-				renderItem.renderItemIntoGUI(this.getFontRenderer(), renderEngine, itemStack, 0, 0);
+				renderItem.renderItemIntoGUI(Minecraft.getMinecraft().fontRenderer, renderEngine, itemStack, 0, 0);
 			}
 
 			GL11.glEnable(2896);
@@ -183,7 +182,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		}
 	}
 
-	private void setupLight(TileEntity tileEntity, int xDifference, int zDifference)
+	private static void setupLight(TileEntity tileEntity, int xDifference, int zDifference)
 	{
 		World world = tileEntity.worldObj;
 
@@ -199,7 +198,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
 	}
 
-	private void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
+	private static void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
 	{
 		if (itemStack != null)
 		{

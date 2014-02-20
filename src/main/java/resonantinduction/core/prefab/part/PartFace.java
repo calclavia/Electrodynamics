@@ -123,8 +123,35 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 		nbt.setByte("facing", facing);
 	}
 
+	/**
+	 * Gets the relative direction of this block relative to the face it is on.
+	 */
 	public ForgeDirection getFacing()
 	{
 		return ForgeDirection.getOrientation(this.facing + 2);
+	}
+
+	public ForgeDirection getAbsoluteFacing()
+	{
+		int s = 0;
+
+		switch (facing)
+		{
+			case 0:
+				s = 2;
+				break;
+			case 1:
+				s = 0;
+				break;
+			case 2:
+				s = 1;
+				break;
+			case 3:
+				s = 3;
+				break;
+		}
+
+		int absDir = Rotation.rotateSide(placementSide.ordinal(), s);
+		return ForgeDirection.getOrientation(absDir);
 	}
 }

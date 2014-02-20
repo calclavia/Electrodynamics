@@ -48,6 +48,7 @@ public class RenderTransformer implements ISimpleItemRenderer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		RenderUtility.rotateFaceBlockToSide(part.placementSide);
 		RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
+		GL11.glRotatef(90, 0, 1, 0);
 		GL11.glScalef(0.5f, 0.5f, 0.5f);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_COIL);
 

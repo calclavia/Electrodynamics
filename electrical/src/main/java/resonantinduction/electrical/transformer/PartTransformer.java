@@ -104,7 +104,7 @@ public class PartTransformer extends PartFace implements JNormalOcclusion, TFace
 	@Override
 	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return obj instanceof IEnergyInterface && direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), facing) || direction.ordinal() == Rotation.rotateSide(placementSide.ordinal(), Rotation.rotateSide(facing, 2));
+		return obj instanceof IEnergyInterface && (direction == getAbsoluteFacing() || direction == getAbsoluteFacing().getOpposite());
 	}
 
 	@Override
@@ -178,14 +178,11 @@ public class PartTransformer extends PartFace implements JNormalOcclusion, TFace
 
 				WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
 
-				facing = (byte) ((facing + 1) % 3);
+				facing = (byte) ((facing + 1) % 4);
 
 				sendDescUpdate();
 
-				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				{
-					tile().notifyNeighborChange(dir.ordinal());
-				}
+				tile().notifyPartChange(this);
 			}
 
 			return true;
