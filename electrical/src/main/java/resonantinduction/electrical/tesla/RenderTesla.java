@@ -1,11 +1,10 @@
-/**
- * 
- */
 package resonantinduction.electrical.tesla;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
@@ -23,32 +22,32 @@ public class RenderTesla extends TileEntitySpecialRenderer
 	public static final ResourceLocation TEXTURE_BOTTOM = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_bottom.png");
 	public static final ResourceLocation TEXTURE_MIDDLE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_middle.png");
 	public static final ResourceLocation TEXTURE_TOP = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "tesla_top.png");
-	public static final ModelTeslaBottom MODEL_BOTTOM = new ModelTeslaBottom();
-	public static final ModelTeslaMiddle MODEL_MIDDLE = new ModelTeslaMiddle();
-	public static final ModelTeslaTop MODEL_TOP = new ModelTeslaTop();
+
+	public static final IModelCustom MODEL_BOTTOM = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "teslaBottom.tcn");
+	public static final IModelCustom MODEL_MIDDLE = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "teslaMiddle.tcn");
+	public static final IModelCustom MODEL_TOP = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "teslaTop.tcn");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
-		int facing = t.getBlockType() != null ? t.getBlockMetadata() : 0;
+		int meta = t.getBlockType() != null ? t.getBlockMetadata() : 0;
 
-		switch (facing)
+		switch (meta)
 		{
 			default:
-				this.bindTexture(TEXTURE_BOTTOM);
-				MODEL_BOTTOM.render(0.0625f);
+				bindTexture(TEXTURE_BOTTOM);
+				MODEL_BOTTOM.renderAll();
 				break;
 			case 1:
-				this.bindTexture(TEXTURE_MIDDLE);
-				MODEL_MIDDLE.render(0.0625f);
+				bindTexture(TEXTURE_MIDDLE);
+				MODEL_MIDDLE.renderAll();
 				break;
 			case 2:
-				this.bindTexture(TEXTURE_TOP);
-				MODEL_TOP.render(0.0625f);
+				bindTexture(TEXTURE_TOP);
+				MODEL_TOP.renderAll();
 				break;
 		}
 

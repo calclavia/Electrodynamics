@@ -27,26 +27,36 @@ public class RenderLevitator extends TileEntitySpecialRenderer implements ICusto
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 1.5, z + 0.5);
-		RenderUtility.rotateFaceBlockToSide(((TileLevitator) t).getDirection());
-
-		/**
-		 * if (((TileLevitator) t).suck)
-		 * this.bindTexture(TEXTURE_ON);
-		 * else
-		 * this.bindTexture(TEXTURE_PUSH);
-		 */
-
-		if (((TileLevitator) t).canFunction())
-		{
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+		RenderUtility.rotateFaceToSideNoTranslate(((TileLevitator) t).getDirection().getOpposite());
+		TileLevitator tile = (TileLevitator) t;
+		if (tile.canFunction())
 			bindTexture(TEXTURE_ON);
-		}
 		else
-		{
 			bindTexture(TEXTURE_OFF);
-		}
 
-		MODEL.renderAll();
+		GL11.glPushMatrix();
+		GL11.glRotatef(tile.renderRotation, 1, 0, 0);
+		MODEL.renderOnly("ring1");
+		GL11.glPopMatrix();
+
+		GL11.glPushMatrix();
+		GL11.glRotatef(-tile.renderRotation, 1, 0, 0);
+		MODEL.renderOnly("ring2");
+		GL11.glPopMatrix();
+
+		GL11.glPushMatrix();
+		GL11.glRotatef(tile.renderRotation, 0, 0, 1);
+		MODEL.renderOnly("ring3");
+		GL11.glPopMatrix();
+
+		GL11.glPushMatrix();
+		GL11.glRotatef(-tile.renderRotation, 0, 0, 1);
+		MODEL.renderOnly("ring4");
+		GL11.glPopMatrix();
+
+		MODEL.renderAllExcept("ring1", "ring2", "ring3", "ring4");
+
 		GL11.glPopMatrix();
 	}
 
@@ -66,8 +76,7 @@ public class RenderLevitator extends TileEntitySpecialRenderer implements ICusto
 	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0.5f, 1.7f, 0.5f);
-		GL11.glRotatef(180f, 0f, 0f, 1f);
+		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_OFF);
 		MODEL.renderAll();
 		GL11.glPopMatrix();

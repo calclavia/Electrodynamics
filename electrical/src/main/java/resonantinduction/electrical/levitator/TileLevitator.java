@@ -67,6 +67,11 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 	private int dyeID = TileTesla.DEFAULT_COLOR;
 	private Vector3 tempLinkVector;
 
+	/**
+	 * Client Side Only
+	 */
+	public float renderRotation = 0;
+
 	@Override
 	public void initiate()
 	{
@@ -96,24 +101,29 @@ public class TileLevitator extends TileAdvanced implements IPacketReceiver, IPac
 			TileEntity inventoryTile = getLatched();
 			IInventory inventory = (IInventory) inventoryTile;
 
-			if (!suck && pushDelay == 0)
+			if (!suck)
 			{
-				ItemStack retrieved = InventoryUtility.takeTopItemFromInventory(inventory, getDirection().getOpposite().ordinal());
-
-				if (retrieved != null)
+				renderRotation = Math.max(0, renderRotation - 0.8f);
+				if (pushDelay == 0)
 				{
-					EntityItem item = getItemWithPosition(retrieved);
+					ItemStack retrieved = InventoryUtility.takeTopItemFromInventory(inventory, getDirection().getOpposite().ordinal());
 
-					if (!worldObj.isRemote)
+					if (retrieved != null)
 					{
-						worldObj.spawnEntityInWorld(item);
-					}
+						EntityItem item = getItemWithPosition(retrieved);
 
-					pushDelay = Settings.LEVITATOR_PUSH_DELAY;
+						if (!worldObj.isRemote)
+						{
+							worldObj.spawnEntityInWorld(item);
+						}
+
+						pushDelay = Settings.LEVITATOR_PUSH_DELAY;
+					}
 				}
 			}
 			else if (suck)
 			{
+				renderRotation = Math.min(20, renderRotation + 0.8f);
 				if (suckBounds != null)
 				{
 					if (!worldObj.isRemote)
