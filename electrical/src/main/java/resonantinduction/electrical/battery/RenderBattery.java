@@ -43,7 +43,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		glPushMatrix();
-		GL11.glTranslated(0.5f, 0, 0.5f);
+		GL11.glTranslated(0, -0.5f, 0);
 
 		for (int i = 2; i < 6; i++)
 		{

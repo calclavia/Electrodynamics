@@ -1,7 +1,11 @@
 package resonantinduction.electrical.charger;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -38,24 +42,37 @@ public class RenderCharger implements ISimpleItemRenderer
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 
 		RenderUtility.rotateFaceToSideNoTranslate(part.placementSide);
+		RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 
 		RenderUtility.bind(TEXTURE);
 		MODEL.renderAll();
 
 		if (part.getStackInSlot(0) != null)
 		{
-			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.09, -0.4, -0.09), 0, 4);
-			
-			/**
-			 * Render item and tool tip
-			 */
-			if (CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0)) > 0)
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.4, -0.00), 0, 4);
+
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			boolean isLooking = false;
+
+			MovingObjectPosition objectPosition = player.rayTrace(8, 1);
+
+			if (objectPosition != null)
 			{
-				long energy = CompatibilityModule.getEnergyItem(part.getStackInSlot(0));
-				long maxEnergy = CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0));
-				GL11.glTranslatef(0, 0.1F, 0);
-				GL11.glRotatef(90, 1, 0, 0);
-				RenderUtility.renderText(UnitDisplay.getDisplay(energy, Unit.JOULES, 2, true) + "/" + UnitDisplay.getDisplay(maxEnergy, Unit.JOULES, 2, true), 1, 1);
+				if (objectPosition.blockX == part.x() && objectPosition.blockY == part.y() && objectPosition.blockZ == part.z())
+				{
+					/**
+					 * Render item and tool tip
+					 */
+					if (CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0)) > 0)
+					{
+						long energy = CompatibilityModule.getEnergyItem(part.getStackInSlot(0));
+						long maxEnergy = CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0));
+						GL11.glTranslatef(0, 0.1F, 0);
+						GL11.glRotatef(90, 1, 0, 0);
+						RenderUtility.renderText(UnitDisplay.getDisplay(energy, Unit.JOULES, 2, true) + "/" + UnitDisplay.getDisplay(maxEnergy, Unit.JOULES, 2, true), 1, 1);
+					}
+				}
 			}
 		}
 

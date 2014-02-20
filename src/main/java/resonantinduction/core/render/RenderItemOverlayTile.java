@@ -64,15 +64,14 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			if (inventory[i] != null)
 			{
 				Vector3 translation = new Vector3((double) (i / matrixX) / ((double) matrixX) + (0.5 / (matrixX)), 1.1, (double) (i % matrixZ) / ((double) matrixZ) + (0.5 / (matrixZ))).translate(-0.5);
-				translation.scale(0.9);
-				translation.translate(0, 0, 0.06);
+				translation.scale(0.85);
 				GL11.glPushMatrix();
 				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
 				RenderUtility.rotateBlockBasedOnDirection(dir);
 				GL11.glTranslated(translation.x, translation.y, translation.z);
 				GL11.glScalef(0.7f, 0.7f, 0.7f);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-				renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 1);
+				renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 4);
 				GL11.glPopMatrix();
 
 				if (isLooking)
@@ -206,7 +205,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			entityItem.getEntityItem().stackSize = 1;
 			entityItem.hoverStart = 0.0F;
 			GL11.glPushMatrix();
-			GL11.glTranslated( position.x, position.y, - position.z);
+			GL11.glTranslated(position.x, position.y, -position.z);
 			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(90 * angle, 1, 0, 0);
 

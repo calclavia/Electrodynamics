@@ -1,5 +1,8 @@
 package resonantinduction.electrical.charger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -8,39 +11,83 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
-import scala.xml.persistent.SetStorage;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.IEnergyInterface;
-import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.WrenchUtility;
 import calclavia.lib.utility.inventory.ExternalInventory;
 import calclavia.lib.utility.inventory.IExternalInventory;
 import calclavia.lib.utility.inventory.IExternalInventoryBox;
 import calclavia.lib.utility.inventory.InventoryUtility;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * TODO: This DOES NOT WORK when @UniversalClass is not annotated. Flat wires seem to only interact
+ * with TE multiparts.
+ * 
+ * @author Calclavia
+ * 
+ */
+@UniversalClass
 public class PartCharger extends PartFace implements IExternalInventory, ISidedInventory, IEnergyInterface
 {
 	private long lastPacket;
 
 	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		super.readDesc(packet);
+		getInventory().load(packet.readNBTTagCompound());
+	}
+
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		super.writeDesc(packet);
+		NBTTagCompound nbt = new NBTTagCompound();
+		getInventory().save(nbt);
+		packet.writeNBTTagCompound(nbt);
+	}
+
+	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
+		if (WrenchUtility.isUsableWrench(player, player.inventory.getCurrentItem(), x(), y(), z()))
+		{
+			if (!this.world().isRemote)
+			{
+				WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
+				facing = (byte) ((facing + 1) % 4);
+				sendDescUpdate();
+				tile().notifyPartChange(this);
+			}
+
+			return true;
+		}
+
 		if (item != null)
 		{
-			if (getStackInSlot(0) == null)
+			if (getStackInSlot(0) == null && item != null && CompatibilityModule.isHandler(item.getItem()))
 			{
 				setInventorySlotContents(0, item);
 				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+
+				if (!world().isRemote)
+					sendDescUpdate();
+
 				return true;
 			}
 		}
 
 		if (getStackInSlot(0) != null)
 		{
-			InventoryUtility.dropItemStack(player.worldObj, new universalelectricity.api.vector.Vector3(player), getStackInSlot(0), 0);
+			InventoryUtility.dropItemStack(world(), new universalelectricity.api.vector.Vector3(player), getStackInSlot(0), 0);
 			setInventorySlotContents(0, null);
+			sendDescUpdate();
 		}
 
 		return true;
@@ -49,7 +96,7 @@ public class PartCharger extends PartFace implements IExternalInventory, ISidedI
 	@Override
 	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return obj instanceof IEnergyInterface && direction == getFacing().getOpposite();
+		return obj instanceof IEnergyInterface;
 	}
 
 	@Override
@@ -99,6 +146,19 @@ public class PartCharger extends PartFace implements IExternalInventory, ISidedI
 	public String getType()
 	{
 		return "resonant_induction_charger";
+	}
+
+	@Override
+	public Iterable<ItemStack> getDrops()
+	{
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(getItem());
+
+		for (int i = 0; i < getSizeInventory(); i++)
+			if (getStackInSlot(i) != null)
+				drops.add(getStackInSlot(i));
+
+		return drops;
 	}
 
 	/**
