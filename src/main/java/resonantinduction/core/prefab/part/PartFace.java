@@ -1,0 +1,130 @@
+package resonantinduction.core.prefab.part;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeDirection;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.Cuboid6;
+import codechicken.lib.vec.Rotation;
+import codechicken.lib.vec.Transformation;
+import codechicken.lib.vec.Vector3;
+import codechicken.microblock.FaceMicroClass;
+import codechicken.multipart.JCuboidPart;
+import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.TFacePart;
+
+public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, TFacePart
+{
+	public static Cuboid6[][] bounds = new Cuboid6[6][2];
+
+	static
+	{
+		bounds[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
+		bounds[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
+		for (int s = 1; s < 6; s++)
+		{
+			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
+			bounds[s][0] = bounds[0][0].copy().apply(t);
+			bounds[s][1] = bounds[0][1].copy().apply(t);
+		}
+	}
+
+	/** Side of the block this is placed on. */
+	public ForgeDirection placementSide;
+
+	/** The relative direction this block faces. */
+	public byte facing = 0;
+
+	public void preparePlacement(int side, int facing)
+	{
+		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.facing = (byte) (facing - 2);
+	}
+
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		placementSide = ForgeDirection.getOrientation(packet.readByte());
+		facing = packet.readByte();
+	}
+
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		packet.writeByte(placementSide.ordinal());
+		packet.writeByte(facing);
+	}
+
+	@Override
+	public int getSlotMask()
+	{
+		return 1 << this.placementSide.ordinal();
+	}
+
+	@Override
+	public Cuboid6 getBounds()
+	{
+		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
+	}
+
+	@Override
+	public int redstoneConductionMap()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean solid(int arg0)
+	{
+		return true;
+	}
+
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		return Arrays.asList(bounds[this.placementSide.ordinal()]);
+	}
+
+	@Override
+	public Iterable<ItemStack> getDrops()
+	{
+		List<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(getItem());
+		return drops;
+	}
+
+	protected abstract ItemStack getItem();
+
+	@Override
+	public ItemStack pickItem(MovingObjectPosition hit)
+	{
+		return getItem();
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
+		facing = nbt.getByte("facing");
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setByte("side", (byte) placementSide.ordinal());
+		nbt.setByte("facing", facing);
+	}
+
+	public ForgeDirection getFacing()
+	{
+		return ForgeDirection.getOrientation(this.facing + 2);
+	}
+}
