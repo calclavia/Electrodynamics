@@ -14,8 +14,7 @@ import resonantinduction.core.TabRI;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
-import resonantinduction.electrical.charger.BlockCharger;
-import resonantinduction.electrical.charger.TileCharger;
+import resonantinduction.electrical.charger.ItemCharger;
 import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.generator.BlockGenerator;
 import resonantinduction.electrical.generator.TileGenerator;
@@ -76,6 +75,7 @@ public class Electrical
 	public static Item itemWire;
 	public static Item itemMultimeter;
 	public static Item itemTransformer;
+	public static Item itemCharger;
 	public static Block blockTesla;
 	public static Block blockBattery;
 	public static Block blockEncoder;
@@ -84,9 +84,6 @@ public class Electrical
 	public static BlockSolarPanel blockSolarPanel;
 	public static Block blockGenerator;
 	public static Block blockThermopile;
-
-	// Machines
-	public static Block blockCharger;
 
 	// Transport
 	public static Block blockEMLevitator;
@@ -104,6 +101,7 @@ public class Electrical
 		itemWire = contentRegistry.createItem(ItemWire.class);
 		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
 		itemTransformer = contentRegistry.createItem(ItemTransformer.class);
+		itemCharger = contentRegistry.createItem(ItemCharger.class);
 		blockTesla = contentRegistry.createTile(BlockTesla.class, TileTesla.class);
 		blockBattery = contentRegistry.createBlock(BlockBattery.class, ItemBlockBattery.class, TileBattery.class);
 
@@ -117,8 +115,6 @@ public class Electrical
 		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
-
-		blockCharger = contentRegistry.createTile(BlockCharger.class, TileCharger.class);
 
 		Settings.save();
 
@@ -179,7 +175,7 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", 'M', "ingotSuperconductor"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(3), "MMM", "MEM", "MMM", 'M', Item.ingotGold, 'E', Item.eyeOfEnder));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEMLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 

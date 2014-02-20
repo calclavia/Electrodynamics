@@ -1,5 +1,6 @@
 package resonantinduction.electrical;
 
+import resonantinduction.electrical.charger.PartCharger;
 import resonantinduction.electrical.multimeter.PartMultimeter;
 import resonantinduction.electrical.transformer.PartTransformer;
 import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
@@ -15,7 +16,7 @@ public class MultipartElectrical implements IPartFactory
 {
 	public static MultipartElectrical INSTANCE;
 
-	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer" };
+	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger" };
 
 	public MultipartElectrical()
 	{
@@ -29,29 +30,19 @@ public class MultipartElectrical implements IPartFactory
 	public TMultiPart createPart(String name, boolean client)
 	{
 		if (name.equals("resonant_induction_wire"))
-		{
 			return new PartFramedWire();
-		}
 		else if (name.equals("resonant_induction_switch_wire"))
-		{
 			return new PartFramedSwitchWire();
-		}
 		else if (name.equals("resonant_induction_flat_wire"))
-		{
 			return new PartFlatWire();
-		}
 		else if (name.equals("resonant_induction_flat_switch_wire"))
-		{
 			return new PartFlatSwitchWire();
-		}
 		else if (name.equals("resonant_induction_multimeter"))
-		{
 			return new PartMultimeter();
-		}
 		else if (name.equals("resonant_induction_transformer"))
-		{
 			return new PartTransformer();
-		}
+		else if (name.equals("resonant_induction_charger"))
+			return new PartCharger();
 
 		return null;
 	}

@@ -198,7 +198,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
 	}
 
-	private static void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
+	public static void renderItem(World world, ForgeDirection dir, ItemStack itemStack, Vector3 position, float rotationYaw, int angle)
 	{
 		if (itemStack != null)
 		{
@@ -206,7 +206,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			entityItem.getEntityItem().stackSize = 1;
 			entityItem.hoverStart = 0.0F;
 			GL11.glPushMatrix();
-			GL11.glTranslated(-0.453125F * dir.offsetX + position.x, position.y, -0.453125F * dir.offsetZ + position.z);
+			GL11.glTranslated( position.x, position.y, - position.z);
 			GL11.glRotatef(180.0F + rotationYaw, 0.0F, 1.0F, 0.0F);
 			GL11.glRotatef(90 * angle, 1, 0, 0);
 

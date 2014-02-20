@@ -6,7 +6,6 @@ import net.minecraft.world.World;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.RenderCharger;
-import resonantinduction.electrical.charger.TileCharger;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
 import resonantinduction.electrical.generator.solar.RenderSolarPanel;
@@ -39,11 +38,11 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Electrical.blockBattery.blockID, RenderBattery.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemMultimeter.itemID, RenderMultimeter.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemTransformer.itemID, RenderTransformer.INSTANCE);
+		GlobalItemRenderer.register(Electrical.itemCharger.itemID, RenderCharger.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLevitator.class, new RenderLevitator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCharger.class, new RenderCharger());
 	}
 
 	@Override

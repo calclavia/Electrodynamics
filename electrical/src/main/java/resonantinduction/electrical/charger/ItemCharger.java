@@ -1,4 +1,4 @@
-package resonantinduction.electrical.transformer;
+package resonantinduction.electrical.charger;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,9 +14,9 @@ import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
 
-public class ItemTransformer extends JItemMultiPart implements IHighlight
+public class ItemCharger extends JItemMultiPart implements IHighlight
 {
-	public ItemTransformer(int id)
+	public ItemCharger(int id)
 	{
 		super(id);
 	}
@@ -25,7 +25,7 @@ public class ItemTransformer extends JItemMultiPart implements IHighlight
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
-		PartTransformer part = (PartTransformer) MultiPartRegistry.createPart("resonant_induction_transformer", false);
+		PartCharger part = (PartCharger) MultiPartRegistry.createPart("resonant_induction_charger", false);
 
 		if (part != null)
 		{

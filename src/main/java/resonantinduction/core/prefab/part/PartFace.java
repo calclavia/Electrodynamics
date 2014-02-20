@@ -43,7 +43,7 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 
 	public void preparePlacement(int side, int facing)
 	{
-		this.placementSide = ForgeDirection.getOrientation((byte) (side ^ 1));
+		this.placementSide = ForgeDirection.getOrientation( side);
 		this.facing = (byte) (facing - 2);
 	}
 
