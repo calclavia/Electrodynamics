@@ -83,11 +83,14 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	private DetectMode detectMode = DetectMode.NONE;
 	private long redstoneTriggerLimit;
 
+	// TODO: Move warn settings over.
 	public boolean redstoneOn;
 	private byte side;
 	private int ticks;
 
 	private MultimeterNetwork network;
+
+	boolean isPrimary;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -121,10 +124,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 				}
 
 				getNetwork().reconstruct();
-			}
-			else
-			{
-				getNetwork().primaryRenderer = null;
 			}
 		}
 	}
@@ -342,7 +341,11 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void writeGraph(MCDataOutput packet)
 	{
 		packet.writeByte(2);
-		packet.writeNBTTagCompound(getNetwork().save());
+		isPrimary = getNetwork().isPrimary(this);
+		packet.writeBoolean(isPrimary);
+
+		if (isPrimary)
+			packet.writeNBTTagCompound(getNetwork().save());
 	}
 
 	@Override
@@ -368,7 +371,10 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 		else if (packetID == 2)
 		{
-			getNetwork().load(packet.readNBTTagCompound());
+			isPrimary = packet.readBoolean();
+
+			if (isPrimary)
+				getNetwork().load(packet.readNBTTagCompound());
 		}
 	}
 
@@ -607,28 +613,11 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		return new universalelectricity.api.vector.Vector3(x(), y(), z());
 	}
 
-	/**
-	 * Only one multimeter renders the text.
-	 */
-	public boolean isPrimaryRendering()
-	{
-		if (getNetwork().primaryRenderer == null || !getNetwork().isValidConnector(getNetwork().primaryRenderer))
-		{
-			for (PartMultimeter m : getNetwork().getConnectors())
-			{
-				getNetwork().primaryRenderer = m;
-				break;
-			}
-		}
-
-		return getNetwork().primaryRenderer == this;
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Cuboid6 getRenderBounds()
 	{
-		if (isPrimaryRendering())
+		if (isPrimary)
 			return Cuboid6.full.copy().expand(Double.POSITIVE_INFINITY);
 
 		return Cuboid6.full;

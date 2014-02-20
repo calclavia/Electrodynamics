@@ -54,7 +54,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 * If the screen is not a perfect rectangle, don't render.
 	 */
 	public boolean isEnabled = true;
-	public PartMultimeter primaryRenderer = null;
+	public PartMultimeter primaryMultimeter = null;
 
 	public MultimeterNetwork()
 	{
@@ -63,6 +63,11 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		graphs.add(torqueGraph);
 		graphs.add(angularVelocityGraph);
 		graphs.add(fluidGraph);
+	}
+
+	public boolean isPrimary(PartMultimeter check)
+	{
+		return primaryMultimeter == check;
 	}
 
 	@Override
@@ -111,6 +116,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		if (getConnectors().size() > 0)
 		{
+			primaryMultimeter = null;
 			upperBound = null;
 			lowerBound = null;
 			super.reconstruct();
@@ -146,6 +152,9 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		node.setNetwork(this);
 
+		if (primaryMultimeter == null)
+			primaryMultimeter = node;
+		
 		if (upperBound == null)
 		{
 			upperBound = node.getPosition().translate(1);

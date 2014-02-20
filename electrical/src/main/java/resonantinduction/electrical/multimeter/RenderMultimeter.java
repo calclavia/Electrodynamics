@@ -145,7 +145,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		 * Only one block renders this text.
 		 * Render all the multimeter text
 		 */
-		if (part.getNetwork().isEnabled && part.isPrimaryRendering())
+		if (part.getNetwork().isEnabled && part.isPrimary)
 		{
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -213,5 +213,4 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		}
 
 	}
-
 }
