@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.fluid;
+package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.core.prefab.fluid.TileFluidNetwork;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.tank.TileTank;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;

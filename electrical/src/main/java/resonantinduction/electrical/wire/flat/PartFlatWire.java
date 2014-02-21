@@ -408,11 +408,11 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 		BlockCoord pos = new BlockCoord(tile()).offset(absSide);
 
 		/** Look for an external wire connection. */
-		TileMultipart t = MultipartUtility.getMultipartTile(world(), pos);
+		TileMultipart tileMultiPart = MultipartUtility.getMultipartTile(world(), pos);
 
-		if (t != null && r != -1)
+		if (tileMultiPart != null && r != -1)
 		{
-			TMultiPart tp = t.partMap(this.side);
+			TMultiPart tp = tileMultiPart.partMap(this.side);
 
 			if (this.canConnectTo(tp, ForgeDirection.getOrientation(absSide)))
 			{
@@ -422,8 +422,17 @@ public class PartFlatWire extends PartAdvancedWire implements TFacePart, JNormal
 				if (tp instanceof PartFlatWire && ((PartFlatWire) tp).canConnectTo(this, ForgeDirection.getOrientation(absSide).getOpposite()) && ((PartFlatWire) tp).maskOpen(otherR))
 				{
 					// We found a wire! Merge connection.
-					this.connections[absSide] = tp;
-					this.getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					connections[absSide] = tp;
+					getNetwork().merge(((PartFlatWire) tp).getNetwork());
+					return true;
+				}
+
+				/**
+				 * Check for a micro-energy block
+				 */
+				if (canConnectTo(tp))
+				{
+					connections[absSide] = tp;
 					return true;
 				}
 			}

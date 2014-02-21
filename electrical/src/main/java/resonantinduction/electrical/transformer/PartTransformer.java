@@ -8,6 +8,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
+import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.electricity.IVoltageOutput;
@@ -17,10 +20,7 @@ import universalelectricity.api.vector.VectorHelper;
 import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Vector3;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.TFacePart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,11 +30,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
+@UniversalClass
 public class PartTransformer extends PartFace implements IVoltageOutput, IEnergyInterface
 {
 
 	/** Step the voltage up */
-	private boolean stepUp;
+	private boolean stepUp = true;
 
 	/** Amount to mulitply the step by (up x2. down /2) */
 	public byte multiplier = 2;
@@ -97,7 +98,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setBoolean("stepUp", this.stepUp);
+		nbt.setBoolean("stepUp", stepUp);
 		nbt.setByte("multiplier", multiplier);
 	}
 
@@ -116,22 +117,24 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
-		if (from == this.getFacing().getOpposite())
+		if (from == getAbsoluteFacing())
 		{
-			TileEntity entity = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(this.x(), this.y(), this.z()), this.getFacing());
-			if (entity instanceof IEnergyInterface)
+			TileEntity tile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(x(), y(), z()), from.getOpposite());
+
+			if (CompatibilityModule.isHandler(tile))
 			{
-				if (entity instanceof IVoltageInput)
+				if (tile instanceof IVoltageInput)
 				{
 					long voltage = this.getVoltageOutput(from.getOpposite());
-					if (voltage != ((IVoltageInput) entity).getVoltageInput(from))
+
+					if (voltage != ((IVoltageInput) tile).getVoltageInput(from))
 					{
-						((IVoltageInput) entity).onWrongVoltage(from, voltage);
+						((IVoltageInput) tile).onWrongVoltage(from, voltage);
 					}
 				}
-				return ((IEnergyInterface) entity).onReceiveEnergy(from, receive, doReceive);
-			}
 
+				return CompatibilityModule.receiveEnergy(tile, from, receive, doReceive);
+			}
 		}
 		return 0;
 	}
@@ -143,28 +146,36 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	}
 
 	@Override
-	public long getVoltageOutput(ForgeDirection side)
+	public long getVoltageOutput(ForgeDirection from)
 	{
-		if (side == this.getFacing())
+		if (from == getAbsoluteFacing().getOpposite())
 		{
-			TileEntity entity = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(this.x(), this.y(), this.z()), this.getFacing().getOpposite());
-			if (entity instanceof IConductor && ((IConductor) entity).getNetwork() instanceof IElectricalNetwork)
+			TileEntity inputTile = VectorHelper.getTileEntityFromSide(this.world(), new universalelectricity.api.vector.Vector3(x(), y(), z()), getAbsoluteFacing());
+
+			long inputVoltage = UniversalElectricity.DEFAULT_VOLTAGE;
+
+			if (inputTile instanceof IConductor)
 			{
-				long voltage = ((IElectricalNetwork) ((IConductor) entity).getNetwork()).getVoltage();
-				if (this.stepUp())
-				{
-					return voltage * this.multiplier;
-				}
-				else if (voltage > 0)
-				{
-					return voltage / this.multiplier;
-				}
+				IConductor conductor = (IConductor) ((IConductor) inputTile).getInstance(placementSide);
+
+				if (conductor != null)
+					if (conductor.getNetwork() instanceof IElectricalNetwork)
+						inputVoltage = ((IElectricalNetwork) conductor.getNetwork()).getVoltage();
 			}
-			else if (entity instanceof IVoltageOutput)
+			else if (inputTile instanceof IVoltageOutput)
 			{
-				return ((IVoltageOutput) entity).getVoltageOutput(side);
+				inputVoltage = ((IVoltageOutput) inputTile).getVoltageOutput(from);
 			}
+
+			if (inputVoltage <= 0)
+				inputVoltage = UniversalElectricity.DEFAULT_VOLTAGE;
+
+			if (this.stepUp())
+				return inputVoltage * (this.multiplier + 2);
+			else
+				return inputVoltage / (this.multiplier + 2);
 		}
+
 		return 0;
 	}
 
@@ -185,16 +196,18 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 				WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
 
 				facing = (byte) ((facing + 1) % 4);
-
 				sendDescUpdate();
-
 				tile().notifyPartChange(this);
 			}
 
 			return true;
 		}
 
-		return false;
-	}
+		stepUp = !stepUp;
 
+		if (!world().isRemote)
+			player.addChatMessage("Transformer set to step " + (stepUp ? "up" : "down") + ".");
+
+		return true;
+	}
 }
