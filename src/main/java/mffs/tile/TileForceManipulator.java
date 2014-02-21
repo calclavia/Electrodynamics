@@ -421,7 +421,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	@Override
 	public int doGetFortronCost()
 	{
-		return (int) Math.round(super.doGetFortronCost() * 10 + (this.anchor != null ? this.anchor.getMagnitude() * 1000 : 0));
+		return (int) Math.round(super.doGetFortronCost() + (this.anchor != null ? this.anchor.getMagnitude() * 1000 : 0));
 	}
 
 	@Override

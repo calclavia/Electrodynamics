@@ -92,7 +92,7 @@ public class GuiForceManipulator extends GuiMFFS
 		this.textFieldFrequency.drawTextBox();
 
 		this.drawTextWithTooltip("fortron", LanguageUtility.getLocal("gui.manipulator.fortron") + " " + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.LITER), 30, 110, x, y);
-		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost(), Unit.LITER) + "/s", 8, 121, 4210752);
+		this.fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER) + "/s", 8, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
