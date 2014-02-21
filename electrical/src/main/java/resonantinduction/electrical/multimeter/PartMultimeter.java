@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
@@ -25,15 +26,10 @@ import calclavia.lib.network.IPacketReceiver;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Rotation;
-import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
 import codechicken.multipart.IRedstonePart;
-import codechicken.multipart.JCuboidPart;
-import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.NormalOcclusionTest;
-import codechicken.multipart.TFacePart;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -49,22 +45,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Calclavia
  * 
  */
-public class PartMultimeter extends JCuboidPart implements IConnector<MultimeterNetwork>, TFacePart, JNormalOcclusion, IRedstonePart, IPacketReceiver
+public class PartMultimeter extends PartFace implements IConnector<MultimeterNetwork>, IRedstonePart, IPacketReceiver
 {
-	public static Cuboid6[][] bounds = new Cuboid6[6][2];
-
-	static
-	{
-		bounds[0][0] = new Cuboid6(1 / 8D, 0, 0, 7 / 8D, 1 / 8D, 1);
-		bounds[0][1] = new Cuboid6(0, 0, 1 / 8D, 1, 1 / 8D, 7 / 8D);
-		for (int s = 1; s < 6; s++)
-		{
-			Transformation t = Rotation.sideRotations[s].at(Vector3.center);
-			bounds[s][0] = bounds[0][0].copy().apply(t);
-			bounds[s][1] = bounds[0][1].copy().apply(t);
-		}
-	}
-
 	public enum DetectMode
 	{
 		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"), EQUAL("equal"),
@@ -85,17 +67,9 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	// TODO: Move warn settings over.
 	public boolean redstoneOn;
-	private byte side;
-	private int ticks;
+	public boolean isPrimary;
 
 	private MultimeterNetwork network;
-
-	boolean isPrimary;
-
-	public void preparePlacement(int side, int itemDamage)
-	{
-		this.side = (byte) (side);
-	}
 
 	public boolean hasMultimeter(int x, int y, int z)
 	{
@@ -165,7 +139,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 		if (tileEntity instanceof TileMultipart)
 		{
-			TMultiPart part = ((TileMultipart) tileEntity).partMap(side);
+			TMultiPart part = ((TileMultipart) tileEntity).partMap(placementSide.ordinal());
 
 			if (part instanceof PartMultimeter)
 			{
@@ -179,7 +153,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
-		player.openGui(Electrical.INSTANCE, side, world(), x(), y(), z());
+		player.openGui(Electrical.INSTANCE, placementSide.ordinal(), world(), x(), y(), z());
 		return true;
 	}
 
@@ -320,7 +294,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void readDesc(MCDataInput packet)
 	{
 		packet.readByte();
-		this.side = packet.readByte();
+		placementSide = ForgeDirection.getOrientation(packet.readByte());
 		detectMode = DetectMode.values()[packet.readByte()];
 		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
@@ -331,7 +305,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void writeDesc(MCDataOutput packet)
 	{
 		packet.writeByte(0);
-		packet.writeByte(this.side);
+		packet.writeByte(placementSide.ordinal());
 		packet.writeByte((byte) detectMode.ordinal());
 		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
 		packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
@@ -358,7 +332,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	{
 		if (packetID == 0)
 		{
-			this.side = packet.readByte();
+			placementSide = ForgeDirection.getOrientation(packet.readByte());
 			detectMode = DetectMode.values()[packet.readByte()];
 			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
@@ -392,7 +366,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 
 	public ForgeDirection getDirection()
 	{
-		return ForgeDirection.getOrientation(this.side);
+		return ForgeDirection.getOrientation(this.placementSide.ordinal());
 	}
 
 	@Deprecated
@@ -436,7 +410,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 		}
 		else
 		{
-			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), side));
+			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal()));
 		}
 	}
 
@@ -444,7 +418,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		side = nbt.getByte("side");
+		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
 		detectMode = DetectMode.values()[nbt.getByte("detectMode")];
 		redstoneTriggerLimit = nbt.getLong("energyLimit");
 	}
@@ -453,7 +427,7 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setByte("side", this.side);
+		nbt.setByte("side", (byte) placementSide.ordinal());
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
 		nbt.setLong("energyLimit", redstoneTriggerLimit);
 	}
@@ -475,30 +449,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	}
 
 	@Override
-	public int getSlotMask()
-	{
-		return 1 << this.side;
-	}
-
-	@Override
-	public Cuboid6 getBounds()
-	{
-		return FaceMicroClass.aBounds()[0x10 | this.side];
-	}
-
-	@Override
-	public Iterable<Cuboid6> getOcclusionBoxes()
-	{
-		return Arrays.asList(bounds[this.side]);
-	}
-
-	@Override
-	public boolean occlusionTest(TMultiPart npart)
-	{
-		return NormalOcclusionTest.apply(this, npart);
-	}
-
-	@Override
 	public int redstoneConductionMap()
 	{
 		return 0x1F;
@@ -513,20 +463,6 @@ public class PartMultimeter extends JCuboidPart implements IConnector<Multimeter
 	protected ItemStack getItem()
 	{
 		return new ItemStack(Electrical.itemMultimeter);
-	}
-
-	@Override
-	public Iterable<ItemStack> getDrops()
-	{
-		List<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(getItem());
-		return drops;
-	}
-
-	@Override
-	public ItemStack pickItem(MovingObjectPosition hit)
-	{
-		return getItem();
 	}
 
 	@Override

@@ -116,7 +116,7 @@ public class ResonantInduction
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
 
-		// Already registered wih ContentRegistry
+		// Already registered with ContentRegistry
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 		proxy.preInit();

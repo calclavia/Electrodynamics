@@ -17,7 +17,9 @@ import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TFacePart;
+import codechicken.multipart.TMultiPart;
 
 public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, TFacePart
 {
@@ -41,9 +43,11 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 	/** The relative direction this block faces. */
 	public byte facing = 0;
 
+	protected int ticks;
+
 	public void preparePlacement(int side, int facing)
 	{
-		this.placementSide = ForgeDirection.getOrientation( side);
+		this.placementSide = ForgeDirection.getOrientation(side);
 		this.facing = (byte) (facing - 2);
 	}
 
@@ -89,6 +93,12 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
 		return Arrays.asList(bounds[this.placementSide.ordinal()]);
+	}
+
+	@Override
+	public boolean occlusionTest(TMultiPart npart)
+	{
+		return NormalOcclusionTest.apply(this, npart);
 	}
 
 	@Override
