@@ -1,6 +1,3 @@
-/**
- * 
- */
 package resonantinduction.electrical.levitator;
 
 import java.util.HashSet;
@@ -19,13 +16,12 @@ import calclavia.lib.path.PathfinderAStar;
  * @author Calclavia
  * 
  */
-public class PathfinderEMContractor extends PathfinderAStar
+public class PathfinderLevitator extends PathfinderAStar
 {
 	private World world;
-
 	private double maxSearchDistance;
 
-	public PathfinderEMContractor(final World world, final Vector3 goal)
+	public PathfinderLevitator(final World world, final Vector3 goal)
 	{
 		super(new IPathCallBack()
 		{
@@ -38,7 +34,7 @@ public class PathfinderEMContractor extends PathfinderAStar
 				{
 					Vector3 neighbor = currentNode.clone().translate(ForgeDirection.getOrientation(i));
 
-					if (TileLevitator.canBePath(world, neighbor))
+					if (PartLevitator.canBePath(world, neighbor) || neighbor.equals(goal))
 					{
 						neighbors.add(neighbor);
 					}
@@ -67,7 +63,7 @@ public class PathfinderEMContractor extends PathfinderAStar
 			ForgeDirection direction = ForgeDirection.getOrientation(i);
 			Vector3 neighbor = this.goal.clone().translate(new Vector3(direction.offsetX, direction.offsetY, direction.offsetZ));
 
-			if (!TileLevitator.canBePath(this.world, neighbor))
+			if (!PartLevitator.canBePath(this.world, neighbor))
 			{
 				blockCount++;
 			}

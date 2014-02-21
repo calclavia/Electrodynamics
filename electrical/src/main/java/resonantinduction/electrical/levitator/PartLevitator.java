@@ -1,22 +1,21 @@
 package resonantinduction.electrical.levitator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.awt.geom.CubicCurve2D;
+import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.BlockVine;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -24,29 +23,24 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.MultipartUtility;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
-import resonantinduction.electrical.transformer.RenderTransformer;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.components.tool.ToolModeLink;
-import calclavia.lib.prefab.block.ILinkable;
 import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.WrenchUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.vec.Cuboid6;
 import codechicken.multipart.TMultiPart;
-
-import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartLevitator extends PartFace implements ILinkable
+public class PartLevitator extends PartFace
 {
 	private int pushDelay;
 
@@ -56,16 +50,14 @@ public class PartLevitator extends PartFace implements ILinkable
 	/**
 	 * true = suck, false = push
 	 */
-	public boolean suck = true;
+	public boolean input = true;
 
 	/**
 	 * Pathfinding
 	 */
-	private ThreadEMPathfinding thread;
-	private PathfinderEMContractor pathfinder;
-	private Set<EntityItem> pathfindingTrackers = new HashSet<EntityItem>();
-	// TODO: WeakReference
-	private PartLevitator linked;
+	private ThreadLevitatorPathfinding thread;
+	private PathfinderLevitator pathfinder;
+	private WeakReference<PartLevitator> linked;
 	private int lastCalcTime = 0;
 
 	/** Color of beam */
@@ -74,28 +66,32 @@ public class PartLevitator extends PartFace implements ILinkable
 	/**
 	 * Linking
 	 */
-	private byte linkSide;
-	private Vector3 tempLinkVector;
+	private byte saveLinkSide;
+	private VectorWorld saveLinkVector;
 
 	/**
 	 * Client Side Only
 	 */
 	public float renderRotation = 0;
 
-	private int ticks;
-
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack itemStack)
 	{
 		if (WrenchUtility.isWrench(itemStack))
 		{
-			if (onLink(player, ToolModeLink.getLink(itemStack)))
+			if (tryLink(ToolModeLink.getLink(itemStack), ToolModeLink.getSide(itemStack)))
 			{
+				if (world().isRemote)
+					player.addChatMessage("Successfully linked devices.");
 				ToolModeLink.clearLink(itemStack);
 			}
 			else
 			{
+				if (world().isRemote)
+					player.addChatMessage("Marked link for device.");
+
 				ToolModeLink.setLink(itemStack, new VectorWorld(world(), x(), y(), z()));
+				ToolModeLink.setSide(itemStack, (byte) placementSide.ordinal());
 			}
 
 			return true;
@@ -116,61 +112,99 @@ public class PartLevitator extends PartFace implements ILinkable
 			}
 		}
 
-		suck = !suck;
+		if (player.isSneaking())
+			input = !input;
+
+		updateBounds();
 		updatePath();
 
 		return true;
 	}
 
-	@Override
-	protected ItemStack getItem()
+	/**
+	 * Link methods
+	 */
+	public boolean tryLink(VectorWorld linkVector, byte side)
 	{
-		return new ItemStack(Electrical.itemLevitator);
-	}
-
-	@Override
-	public String getType()
-	{
-		return "resonant_induction_levitator";
-	}
-
-	public void initiate()
-	{
-		updateBounds();
-	}
-
-	@Override
-	public void update()
-	{
-		super.update();
-
-		if (ticks++ == 0)
+		if (linkVector != null)
 		{
-			initiate();
-		}
-
-		pushDelay = Math.max(0, pushDelay - 1);
-
-		if (tempLinkVector != null)
-		{
-			TMultiPart part = MultipartUtility.getMultipart(world(), tempLinkVector, linkSide);
+			TMultiPart part = MultipartUtility.getMultipart(world(), linkVector, side);
 
 			if (part instanceof PartLevitator)
 			{
 				setLink((PartLevitator) part, true);
 			}
 
-			tempLinkVector = null;
+			return true;
+		}
+
+		return false;
+	}
+
+	public PartLevitator getLink()
+	{
+		return linked != null ? linked.get() : null;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity)
+	{
+		/**
+		 * Attempt to pull items in.
+		 */
+		if (!world().isRemote && input && canFunction() && entity instanceof EntityItem)
+		{
+			EntityItem item = (EntityItem) entity;
+			IInventory inventory = (IInventory) getLatched();
+
+			ItemStack remains = InventoryUtility.putStackInInventory(inventory, item.getEntityItem(), placementSide.getOpposite().getOpposite().ordinal(), false);
+
+			if (remains == null)
+			{
+				item.setDead();
+			}
+			else
+			{
+				item.setEntityItemStack(remains);
+			}
+
+			// TODO: Add redstone pulse and reaction?
+		}
+	}
+
+	@Override
+	public void update()
+	{
+		if (ticks % 60 == 0)
+			updateBounds();
+
+		super.update();
+
+		pushDelay = Math.max(0, pushDelay - 1);
+
+		/**
+		 * Try to use temp link vectors from save/loads to link.
+		 */
+		if (saveLinkVector != null)
+		{
+			tryLink(saveLinkVector, saveLinkSide);
+			saveLinkVector = null;
 		}
 
 		if (canFunction())
 		{
-			TileEntity inventoryTile = getLatched();
-			IInventory inventory = (IInventory) inventoryTile;
+			IInventory inventory = (IInventory) getLatched();
 
-			if (!suck)
+			/**
+			 * Place items or take items from the inventory into the world.
+			 */
+			if (!input)
 			{
-				renderRotation = Math.max(0, renderRotation - 0.8f);
+				renderRotation = Math.min(20, renderRotation + 0.8f);
+
+				/**
+				 * Attempt to push items out.
+				 */
 				if (pushDelay == 0)
 				{
 					ItemStack retrieved = InventoryUtility.takeTopItemFromInventory(inventory, placementSide.getOpposite().getOpposite().ordinal());
@@ -188,136 +222,118 @@ public class PartLevitator extends PartFace implements ILinkable
 					}
 				}
 			}
-			else if (suck)
+			else if (input)
 			{
-				renderRotation = Math.min(20, renderRotation + 0.8f);
-				if (suckBounds != null)
+				renderRotation = Math.max(0, renderRotation - 0.8f);
+			}
+
+			final int renderPeriod = 1;
+			final boolean renderBeam = ticks % renderPeriod == 0 && hasLink() && getLink().input != input;
+
+			if (!input)
+			{
+				if (hasLink())
 				{
-					if (!world().isRemote)
+					if (getLink().input)
 					{
-						for (EntityItem item : (List<EntityItem>) world().getEntitiesWithinAABB(EntityItem.class, suckBounds))
+						/**
+						 * Linked usage.
+						 */
+						if (thread != null)
 						{
-							ItemStack remains = InventoryUtility.putStackInInventory(inventory, item.getEntityItem(), placementSide.getOpposite().getOpposite().ordinal(), false);
+							PathfinderLevitator newPath = thread.getPath();
 
-							if (remains == null)
+							if (newPath != null)
 							{
-								item.setDead();
+								pathfinder = newPath;
+								pathfinder.results.add(getPosition());
+								thread = null;
 							}
-							else
-							{
-								item.setEntityItemStack(remains);
-							}
-
-							// TODO: Add redstone pulse?
 						}
-					}
-				}
-			}
 
-			if (thread != null)
-			{
-				PathfinderEMContractor newPath = thread.getPath();
-
-				if (newPath != null)
-				{
-					pathfinder = newPath;
-					thread = null;
-				}
-			}
-
-			final int renderFrequency = 1;
-			final boolean renderBeam = ticks % renderFrequency == 0 && hasLink() && linked.suck != suck;
-
-			if (hasLink())
-			{
-				if (!suck)
-				{
-					if (renderBeam)
-						Electrical.proxy.renderElectricShock(world(), getPosition().translate(0.5), getPosition().translate(new Vector3(placementSide.getOpposite())).translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
-
-					// Push entity along path.
-					if (pathfinder != null)
-					{
-						List<Vector3> results = pathfinder.results;
-
-						for (int i = 0; i < results.size(); i++)
+						// Push entity along path.
+						if (pathfinder != null)
 						{
-							Vector3 result = results.get(i).clone();
+							List<Vector3> results = pathfinder.results;
 
-							if (PartLevitator.canBePath(world(), result))
+							/**
+							 * Draw default beams.
+							 */
+							if (renderBeam)
 							{
-								if (i - 1 >= 0)
+								Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), getPosition().translate(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+								Electrical.proxy.renderElectricShock(world(), getLink().getPosition().translate(0.5), getLink().getBeamSpawnPosition(), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+							}
+
+							for (int i = 0; i < results.size(); i++)
+							{
+								Vector3 result = results.get(i).clone();
+
+								if (canBeMovePath(world(), result))
 								{
-									Vector3 prevResult = results.get(i - 1).clone();
-
-									Vector3 difference = prevResult.clone().difference(result);
-									final ForgeDirection direction = difference.toForgeDirection();
-
-									if (renderBeam)
+									if (i - 1 >= 0)
 									{
-										Electrical.proxy.renderElectricShock(world(), prevResult.clone().translate(0.5), result.clone().translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
+										Vector3 prevResult = results.get(i - 1).clone();
+
+										Vector3 difference = prevResult.clone().difference(result);
+										final ForgeDirection direction = difference.toForgeDirection();
+
+										if (renderBeam)
+											Electrical.proxy.renderElectricShock(world(), prevResult.clone().translate(0.5), result.clone().translate(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+
+										AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
+										List<EntityItem> entities = world().getEntitiesWithinAABB(EntityItem.class, bounds);
+
+										for (EntityItem entityItem : entities)
+										{
+											moveEntity(entityItem, direction, result);
+										}
 									}
 
-									AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
-									List<EntityItem> entities = world().getEntitiesWithinAABB(EntityItem.class, bounds);
-
-									for (EntityItem entityItem : entities)
-									{
-										moveEntity(entityItem, direction, result);
-									}
 								}
-
-							}
-							else
-							{
-								updatePath();
-								break;
+								else
+								{
+									updatePath();
+									break;
+								}
 							}
 						}
-					}
-					else
-					{
-						updatePath();
-					}
-				}
-				else
-				{
-					if (renderBeam)
-					{
-						Electrical.proxy.renderElectricShock(world(), getPosition().translate(0.5), getPosition().translate(new Vector3(placementSide.getOpposite())).translate(0.5), EnumColor.DYES[dyeID].toColor(), false);
-					}
-
-					pathfinder = null;
-
-					Vector3 searchVec = getPosition().translate(placementSide.getOpposite());
-					AxisAlignedBB searchBounds = AxisAlignedBB.getAABBPool().getAABB(searchVec.x, searchVec.y, searchVec.z, searchVec.x + 1, searchVec.y + 1, searchVec.z + 1);
-
-					if (searchBounds != null)
-					{
-						for (EntityItem entityItem : (List<EntityItem>) world().getEntitiesWithinAABB(EntityItem.class, searchBounds))
+						else
 						{
-							moveEntity(entityItem, placementSide.getOpposite(), getPosition());
+							updatePath();
 						}
 					}
 				}
-			}
-			else if (!hasLink())
-			{
-				for (EntityItem entityItem : (List<EntityItem>) world().getEntitiesWithinAABB(EntityItem.class, operationBounds))
+				else if (operationBounds != null)
 				{
-					if (ticks % renderFrequency == 0)
-						Electrical.proxy.renderElectricShock(world(), getPosition().translate(0.5), new Vector3(entityItem), EnumColor.DYES[dyeID].toColor(), false);
-					moveEntity(entityItem, placementSide.getOpposite(), getPosition());
-				}
-			}
+					/**
+					 * Non-linked usage.
+					 */
+					for (EntityItem entityItem : (List<EntityItem>) world().getEntitiesWithinAABB(EntityItem.class, operationBounds))
+					{
+						moveEntity(entityItem, placementSide.getOpposite(), getPosition());
+					}
 
-			if (linked != null)
-			{
-				linked = null;
+					if (ticks % renderPeriod == 0)
+						Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), new Vector3(operationBounds.maxX - 0.5 - placementSide.offsetX / 3f, operationBounds.maxY - 0.5 - placementSide.offsetY / 3f, operationBounds.maxZ - 0.5 - placementSide.offsetZ / 3f), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+				}
 			}
 
 			lastCalcTime--;
 		}
+	}
+
+	public boolean canBeMovePath(World world, Vector3 position)
+	{
+		TMultiPart partSelf = MultipartUtility.getMultipart(new VectorWorld(world, position), placementSide.ordinal());
+		if (partSelf == this)
+			return true;
+
+		TMultiPart partLink = MultipartUtility.getMultipart(new VectorWorld(world, position), getLink().placementSide.ordinal());
+		if (partLink == getLink())
+			return true;
+
+		return canBePath(world, position);
 	}
 
 	public static boolean canBePath(World world, Vector3 position)
@@ -328,7 +344,7 @@ public class PartLevitator extends PartFace implements ILinkable
 
 	private boolean hasLink()
 	{
-		return linked != null && linked.linked == this;
+		return getLink() != null && getLink().getLink() == this;
 	}
 
 	private void moveEntity(EntityItem entityItem, ForgeDirection direction, Vector3 lockVector)
@@ -341,7 +357,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionY = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionY - Settings.LEVITATOR_ACCELERATION);
 				}
@@ -358,7 +374,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionX = 0;
 				entityItem.motionZ = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionY = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionY + .04 + Settings.LEVITATOR_ACCELERATION);
 				}
@@ -375,7 +391,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionZ = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ - Settings.LEVITATOR_ACCELERATION);
 				}
@@ -392,7 +408,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionZ = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionZ + Settings.LEVITATOR_ACCELERATION);
 				}
@@ -409,7 +425,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionX = Math.max(-Settings.LEVITATOR_MAX_SPEED, entityItem.motionX - Settings.LEVITATOR_ACCELERATION);
 				}
@@ -425,7 +441,7 @@ public class PartLevitator extends PartFace implements ILinkable
 				entityItem.motionY = 0;
 				entityItem.motionZ = 0;
 
-				if (!suck)
+				if (!input)
 				{
 					entityItem.motionX = Math.min(Settings.LEVITATOR_MAX_SPEED, entityItem.motionX + Settings.LEVITATOR_ACCELERATION);
 				}
@@ -447,62 +463,52 @@ public class PartLevitator extends PartFace implements ILinkable
 
 	private EntityItem getItemWithPosition(ItemStack toSend)
 	{
-		EntityItem item = null;
-
-		switch (placementSide.getOpposite())
-		{
-			case DOWN:
-				item = new EntityItem(world(), x() + 0.5, y() - 0.2, z() + 0.5, toSend);
-				break;
-			case UP:
-				item = new EntityItem(world(), x() + 0.5, y() + 1.2, z() + 0.5, toSend);
-				break;
-			case NORTH:
-				item = new EntityItem(world(), x() + 0.5, y() + 0.5, z() - 0.2, toSend);
-				break;
-			case SOUTH:
-				item = new EntityItem(world(), x() + 0.5, y() + 0.5, z() + 1.2, toSend);
-				break;
-			case WEST:
-				item = new EntityItem(world(), x() - 0.2, y() + 0.5, z() + 0.5, toSend);
-				break;
-			case EAST:
-				item = new EntityItem(world(), x() + 1.2, y() + 0.5, z() + 0.5, toSend);
-				break;
-			default:
-				break;
-		}
-
+		EntityItem item = new EntityItem(world(), x() + 0.5, y() + 0.5, z() + 0.5, toSend);
 		item.motionX = 0;
 		item.motionY = 0;
 		item.motionZ = 0;
-
 		return item;
 	}
 
 	public void updateBounds()
 	{
-		ForgeDirection dir = placementSide;
+		suckBounds = operationBounds = null;
+
+		ForgeDirection dir = placementSide.getOpposite();
 		MovingObjectPosition mop = world().clip(getPosition().translate(dir).toVec3(), getPosition().translate(dir, Settings.LEVITATOR_MAX_REACH).toVec3());
 
 		int reach = Settings.LEVITATOR_MAX_REACH;
 
 		if (mop != null)
 		{
-			reach = (int) Math.min(getPosition().distance(new Vector3(mop.hitVec)), reach);
-		}
+			if (MultipartUtility.getMultipart(world(), mop.blockX, mop.blockY, mop.blockZ, placementSide.getOpposite().ordinal()) instanceof PartLevitator)
+			{
+				reach = (int) Math.min(getPosition().distance(new Vector3(mop.hitVec)), reach);
 
-		if (dir.offsetX + dir.offsetY + dir.offsetZ < 0)
-		{
-			operationBounds = AxisAlignedBB.getBoundingBox(x() + dir.offsetX * reach, y() + dir.offsetY * reach, z() + dir.offsetZ * reach, x() + 1, y() + 1, z() + 1);
-			suckBounds = AxisAlignedBB.getBoundingBox(x() + dir.offsetX, y() + dir.offsetY, z() + dir.offsetZ, x() + 1, y() + 1, z() + 1);
+				if (dir.offsetX + dir.offsetY + dir.offsetZ < 0)
+				{
+					operationBounds = AxisAlignedBB.getBoundingBox(x() + dir.offsetX * reach, y() + dir.offsetY * reach, z() + dir.offsetZ * reach, x() + 1, y() + 1, z() + 1);
+					suckBounds = AxisAlignedBB.getBoundingBox(x() + dir.offsetX, y() + dir.offsetY, z() + dir.offsetZ, x() + 1, y() + 1, z() + 1);
+				}
+				else
+				{
+					operationBounds = AxisAlignedBB.getBoundingBox(x(), y(), z(), x() + 1 + dir.offsetX * reach, y() + 1 + dir.offsetY * reach, z() + 1 + dir.offsetZ * reach);
+					suckBounds = AxisAlignedBB.getBoundingBox(x(), y(), z(), x() + 1 + dir.offsetX, y() + 1 + dir.offsetY, z() + 1 + dir.offsetZ);
+				}
+			}
 		}
-		else
-		{
-			operationBounds = AxisAlignedBB.getBoundingBox(x(), y(), z(), x() + 1 + dir.offsetX * reach, y() + 1 + dir.offsetY * reach, z() + 1 + dir.offsetZ * reach);
-			suckBounds = AxisAlignedBB.getBoundingBox(x(), y(), z(), x() + 1 + dir.offsetX, y() + 1 + dir.offsetY, z() + 1 + dir.offsetZ);
-		}
+	}
 
+	@Override
+	public void onNeighborChanged()
+	{
+		super.onNeighborChanged();
+		updateBounds();
+	}
+
+	public boolean canFunction()
+	{
+		return isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
 	}
 
 	public boolean isLatched()
@@ -528,12 +534,13 @@ public class PartLevitator extends PartFace implements ILinkable
 	public void readDesc(MCDataInput packet)
 	{
 		super.readDesc(packet);
-		suck = packet.readBoolean();
+		input = packet.readBoolean();
 		dyeID = packet.readByte();
 
 		if (packet.readBoolean())
 		{
-			tempLinkVector = new Vector3(packet.readInt(), packet.readInt(), packet.readInt());
+			saveLinkVector = new VectorWorld(packet.readNBTTagCompound());
+			saveLinkSide = packet.readByte();
 		}
 	}
 
@@ -541,15 +548,16 @@ public class PartLevitator extends PartFace implements ILinkable
 	public void writeDesc(MCDataOutput packet)
 	{
 		super.writeDesc(packet);
-		packet.writeBoolean(suck);
+		packet.writeBoolean(input);
 		packet.writeByte(dyeID);
 
-		if (linked != null)
+		if (getLink() != null)
 		{
 			packet.writeBoolean(true);
-			packet.writeInt(linked.x());
-			packet.writeInt(linked.y());
-			packet.writeInt(linked.z());
+			NBTTagCompound nbt = new NBTTagCompound();
+			new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeToNBT(nbt);
+			packet.writeNBTTagCompound(nbt);
+			packet.writeByte(getLink().placementSide.ordinal());
 		}
 		else
 		{
@@ -558,22 +566,18 @@ public class PartLevitator extends PartFace implements ILinkable
 
 	}
 
-	public boolean canFunction()
-	{
-		return isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
-	}
-
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
 
-		this.suck = nbt.getBoolean("suck");
+		this.input = nbt.getBoolean("suck");
 		this.dyeID = nbt.getInteger("dyeID");
 
 		if (nbt.hasKey("link"))
 		{
-			tempLinkVector = new Vector3(nbt.getCompoundTag("link"));
+			saveLinkVector = new VectorWorld(nbt.getCompoundTag("link"));
+			saveLinkSide = nbt.getByte("linkSide");
 		}
 	}
 
@@ -582,30 +586,31 @@ public class PartLevitator extends PartFace implements ILinkable
 	{
 		super.save(nbt);
 
-		nbt.setBoolean("suck", suck);
+		nbt.setBoolean("suck", input);
 		nbt.setInteger("dyeID", dyeID);
 
-		if (linked != null)
+		if (getLink() != null && getLink().world() != null)
 		{
-			nbt.setCompoundTag("link", new Vector3(linked.x(), linked.y(), linked.z()).writeToNBT(new NBTTagCompound()));
+			nbt.setCompoundTag("link", new VectorWorld(getLink().world(), getLink().x(), getLink().y(), getLink().z()).writeToNBT(new NBTTagCompound()));
+			nbt.setByte("linkSide", (byte) getLink().placementSide.ordinal());
 		}
 	}
 
 	/**
 	 * Link between two TileEntities, do pathfinding operation.
 	 */
-	public void setLink(PartLevitator tileEntity, boolean setOpponent)
+	public void setLink(PartLevitator levitator, boolean setOpponent)
 	{
-		if (linked != null && setOpponent)
+		if (getLink() != null && setOpponent)
 		{
-			linked.setLink(null, false);
+			getLink().setLink(null, false);
 		}
 
-		linked = tileEntity;
+		linked = new WeakReference(levitator);
 
 		if (setOpponent)
 		{
-			linked.setLink(this, false);
+			getLink().setLink(this, false);
 		}
 
 		updatePath();
@@ -613,18 +618,18 @@ public class PartLevitator extends PartFace implements ILinkable
 
 	public void updatePath()
 	{
-		if (thread == null && linked != null && lastCalcTime <= 0)
+		if (thread == null && getLink() != null && lastCalcTime <= 0)
 		{
 			pathfinder = null;
 
-			Vector3 start = getPosition().translate(placementSide.getOpposite());
-			Vector3 target = new Vector3(linked.x(), linked.y(), linked.z()).translate(linked.placementSide.getOpposite());
+			Vector3 start = getPosition();
+			Vector3 target = new Vector3(getLink().x(), getLink().y(), getLink().z());
 
 			if (start.distance(target) < Settings.MAX_CONTRACTOR_DISTANCE)
 			{
-				if (PartLevitator.canBePath(world(), start) && PartLevitator.canBePath(world(), target))
+				if (canBeMovePath(world(), start) && canBeMovePath(world(), target))
 				{
-					thread = new ThreadEMPathfinding(new PathfinderEMContractor(world(), target), start);
+					thread = new ThreadLevitatorPathfinding(new PathfinderLevitator(world(), target), start);
 					thread.start();
 					lastCalcTime = 40;
 				}
@@ -638,16 +643,26 @@ public class PartLevitator extends PartFace implements ILinkable
 		world().markBlockForUpdate(x(), y(), z());
 	}
 
-	@Override
-	public boolean onLink(EntityPlayer player, VectorWorld vector)
-	{
-		tempLinkVector = vector;
-		return false;
-	}
-
 	public Vector3 getPosition()
 	{
 		return new Vector3(x(), y(), z());
+	}
+
+	public Vector3 getBeamSpawnPosition()
+	{
+		return new Vector3(x() + 0.5 + placementSide.offsetX / 3f, y() + 0.5 + placementSide.offsetY / 3f, z() + 0.5 + placementSide.offsetZ / 3f);
+	}
+
+	@Override
+	protected ItemStack getItem()
+	{
+		return new ItemStack(Electrical.itemLevitator);
+	}
+
+	@Override
+	public String getType()
+	{
+		return "resonant_induction_levitator";
 	}
 
 	@Override

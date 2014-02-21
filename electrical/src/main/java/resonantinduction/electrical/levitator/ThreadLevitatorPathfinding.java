@@ -9,13 +9,13 @@ import universalelectricity.api.vector.Vector3;
  * @author Calclavia
  * 
  */
-public class ThreadEMPathfinding extends Thread
+public class ThreadLevitatorPathfinding extends Thread
 {
 	private boolean isCompleted = false;
-	private PathfinderEMContractor pathfinder;
+	private PathfinderLevitator pathfinder;
 	private Vector3 start;
 
-	public ThreadEMPathfinding(PathfinderEMContractor pathfinder, Vector3 start)
+	public ThreadLevitatorPathfinding(PathfinderLevitator pathfinder, Vector3 start)
 	{
 		this.pathfinder = pathfinder;
 		this.start = start;
@@ -29,7 +29,7 @@ public class ThreadEMPathfinding extends Thread
 		this.isCompleted = true;
 	}
 
-	public PathfinderEMContractor getPath()
+	public PathfinderLevitator getPath()
 	{
 		if (this.isCompleted)
 		{

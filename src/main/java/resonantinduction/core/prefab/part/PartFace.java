@@ -51,6 +51,21 @@ public abstract class PartFace extends JCuboidPart implements JNormalOcclusion, 
 		this.facing = (byte) (facing - 2);
 	}
 
+	public void initiate()
+	{
+	}
+
+	@Override
+	public void update()
+	{
+		super.update();
+
+		if (ticks++ == 0)
+		{
+			initiate();
+		}
+	}
+
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
