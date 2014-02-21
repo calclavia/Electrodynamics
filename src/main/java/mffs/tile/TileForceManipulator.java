@@ -727,21 +727,21 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			}
 			case 3:
 			{
-				Object[] result = { false }
+				Object[] result = { false };
 				
 				if (this.isActive() || this.isCalculatingManipulation)
 				{
 					// Don't call canMove while it is working because it alters failedPositions
 					// return false
-					return result[0] 
+					return result;
 				}
 				else
 				{
 					
-					result[0] = this.canMove()
-					//Clean up the failed positions list so it doesn't trip up the call in update entity
-					this.failedPositions.clear()
-					return this.canMove()
+					result[0] = this.canMove();
+					//Clean up the failed positions list so it doesn't trip up the call in update entity later
+					this.failedPositions.clear();
+					return result;
 				}
 			}
 		}
