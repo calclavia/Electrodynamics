@@ -31,7 +31,7 @@ public class BlockFluidMixture extends BlockFluidFinite
 
 	public void setQuanta(World world, int x, int y, int z, int quanta)
 	{
-		if (quanta > 0)
+		if (quanta > 0 && quanta <= quantaPerBlock)
 			world.setBlockMetadataWithNotify(x, y, z, quanta, 3);
 		else
 			world.setBlockToAir(x, y, z);
@@ -58,9 +58,12 @@ public class BlockFluidMixture extends BlockFluidFinite
 	{
 		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
 		{
-			world.setBlockMetadataWithNotify(x, y, z, getQuantaValue(world, x, y, z) + 1, 3);
-			world.markBlockForUpdate(x, y, z);
-			return true;
+			if (getQuantaValue(world, x, y, z) < quantaPerBlock)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, getQuantaValue(world, x, y, z) + 1, 3);
+				world.markBlockForUpdate(x, y, z);
+				return true;
+			}
 		}
 
 		return false;

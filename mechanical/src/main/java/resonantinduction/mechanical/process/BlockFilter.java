@@ -68,20 +68,14 @@ public class BlockFilter extends BlockTile
 				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}
 
-			int remaining = amount - 1;
-
+			//TODO: Check if this is correct?
+			int remaining = amount - 2;
+			
 			/**
 			 * Remove liquid from top.
 			 */
-			if (remaining > 0)
-			{
-				fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
-				world.scheduleBlockUpdate(x, y, z, blockID, 20);
-			}
-			else
-			{
-				checkAbove.setBlock(world, 0);
-			}
+			fluidBlock.setQuanta(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ(), remaining);
+			world.scheduleBlockUpdate(x, y, z, blockID, 20);
 
 			/**
 			 * Add liquid to bottom.

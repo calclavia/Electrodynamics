@@ -151,7 +151,7 @@ public class TileMixer extends TileMechanical
 				return true;
 			}
 		}
-		else if (worldObj.isAirBlock(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ()))
+		else if (worldObj.isAirBlock(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ()) || block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID)
 		{
 			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID);
 		}
