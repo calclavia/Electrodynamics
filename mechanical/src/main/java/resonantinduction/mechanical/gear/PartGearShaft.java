@@ -136,6 +136,14 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
+		if (source instanceof PartGear)
+		{
+			PartGear gear = (PartGear) source;
+
+			if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
+				return false;
+		}
+
 		return from == placementSide || from == placementSide.getOpposite();
 	}
 

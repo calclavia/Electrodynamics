@@ -448,7 +448,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				{
 					if (source instanceof PartGearShaft)
 					{
-						return ((PartGearShaft) source).tile().partMap(from.getOpposite().ordinal()) == this;
+						PartGearShaft shaft = (PartGearShaft) source;
+						return shaft.tile().partMap(from.getOpposite().ordinal()) == this && Math.abs(shaft.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(placementSide.offsetZ);
 					}
 					else if (source instanceof PartGear)
 					{
