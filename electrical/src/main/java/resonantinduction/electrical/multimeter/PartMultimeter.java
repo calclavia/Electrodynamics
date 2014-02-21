@@ -1,9 +1,6 @@
 package resonantinduction.electrical.multimeter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +16,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
@@ -27,9 +25,7 @@ import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
-import codechicken.microblock.FaceMicroClass;
 import codechicken.multipart.IRedstonePart;
-import codechicken.multipart.NormalOcclusionTest;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -244,6 +240,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 				{
 					IEnergyNetwork network = instance.getNetwork();
 					getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
+
+					if (instance.getNetwork() instanceof IElectricalNetwork)
+						getNetwork().voltageGraph.queue(((IElectricalNetwork) network).getVoltage());
 				}
 			}
 		}

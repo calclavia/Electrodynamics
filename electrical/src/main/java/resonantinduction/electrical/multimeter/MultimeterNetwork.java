@@ -25,6 +25,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 */
 	public final GraphL energyGraph = new GraphL(maxData);
 	public final GraphL energyCapacityGraph = new GraphL(1);
+	public final GraphL voltageGraph = new GraphL(maxData);
 	public final GraphL torqueGraph = new GraphL(maxData);
 	public final GraphF angularVelocityGraph = new GraphF(maxData);
 
@@ -60,6 +61,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	{
 		graphs.add(energyGraph);
 		graphs.add(energyCapacityGraph);
+		graphs.add(voltageGraph);
 		graphs.add(torqueGraph);
 		graphs.add(angularVelocityGraph);
 		graphs.add(fluidGraph);
@@ -154,7 +156,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		if (primaryMultimeter == null)
 			primaryMultimeter = node;
-		
+
 		if (upperBound == null)
 		{
 			upperBound = node.getPosition().translate(1);

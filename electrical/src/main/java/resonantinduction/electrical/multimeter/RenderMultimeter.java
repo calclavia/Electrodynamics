@@ -180,6 +180,9 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
 				information.add("Max: " + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES));
 
+			if (part.getNetwork().voltageGraph.get(0) > 0)
+				information.add(UnitDisplay.getDisplay(part.getNetwork().voltageGraph.get(0), Unit.VOLTAGE));
+
 			if (part.getNetwork().torqueGraph.get(0) != 0)
 				information.add("Torque: " + UnitDisplay.getDisplayShort(part.getNetwork().torqueGraph.get(0), Unit.NEWTON_METER));
 
