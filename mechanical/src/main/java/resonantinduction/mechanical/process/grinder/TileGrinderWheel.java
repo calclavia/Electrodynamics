@@ -181,7 +181,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	@Override
 	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
 	{
-		return !(dir.ordinal() % 2 == 0);
+		return !(dir.offsetX > 0 || dir.offsetZ < 0|| dir.offsetY < 0);
 	}
 
 }
