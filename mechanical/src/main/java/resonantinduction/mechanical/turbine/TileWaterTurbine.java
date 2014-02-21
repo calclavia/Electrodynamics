@@ -21,6 +21,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  */
 public class TileWaterTurbine extends TileMechanicalTurbine
 {
+	public int powerTicks = 0;
+
 	public TileWaterTurbine()
 	{
 		maxPower = 200;
@@ -47,11 +49,17 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 		 */
 		if (getDirection().offsetY != 0)
 		{
+			if (powerTicks > 0)
+			{
+				getMultiBlock().get().power += getWaterPower();
+				powerTicks--;
+			}
+
 			int blockIDAbove = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
 
 			if (blockIDAbove == Block.waterStill.blockID && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
 			{
-				getMultiBlock().get().power += getWaterPower() * 10;
+				powerTicks = 20;
 				worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
 				worldObj.setBlock(xCoord, yCoord - 1, zCoord, Block.waterStill.blockID);
 			}

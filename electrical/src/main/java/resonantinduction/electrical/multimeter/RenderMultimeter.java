@@ -192,8 +192,8 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			if (information.size() <= 0)
 				information.add("No information");
 
-			float displacement = 0.7f / information.size();
-			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.005f;
+			float displacement = 0.72f / information.size();
+			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.004f;
 			GL11.glTranslatef(0, 0, -displacement * (information.size() / 2f));
 
 			for (int i = 0; i < information.size(); i++)
