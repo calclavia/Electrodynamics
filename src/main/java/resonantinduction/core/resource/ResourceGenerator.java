@@ -29,6 +29,7 @@ import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.Settings;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import calclavia.lib.utility.LanguageUtility;
@@ -60,11 +61,17 @@ public class ResourceGenerator
 		{
 			String materialName = evt.Name.replace("ingot", "");
 
-			if (OreDetectionBlackList.isIngotBlackListed("ingot" + materialName) || OreDetectionBlackList.isOreBlackListed("ore" + materialName))
-				return;
+			if (!materialNames.contains(materialName))
+			{
+				Settings.CONFIGURATION.load();
+				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + materialName, true).getBoolean(true);
+				Settings.CONFIGURATION.save();
 
-			if (!materialNames.contains(materialName.toLowerCase()))
-				materialNames.add(materialName.toLowerCase());
+				if (!allowMaterial && OreDetectionBlackList.isIngotBlackListed("ingot" + materialName) || OreDetectionBlackList.isOreBlackListed("ore" + materialName))
+					return;
+
+				materialNames.add(materialName);
+			}
 		}
 	}
 
