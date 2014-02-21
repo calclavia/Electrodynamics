@@ -19,6 +19,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
+import universalelectricity.api.energy.IConductor;
 import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
@@ -56,10 +57,13 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public void update()
 	{
+		super.update();
+
 		if (!world().isRemote)
 		{
 			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
 			{
+
 				for (int i = 0; i < this.getConnections().length; i++)
 				{
 					Object obj = this.getConnections()[i];
@@ -77,6 +81,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
+		if (!world().isRemote)
+			System.out.println(getNetwork());
 		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
 		{
 			if (!world().isRemote)
@@ -182,7 +188,10 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	protected IFluidPipe getConnector(TileEntity tile)
 	{
-		return tile instanceof IFluidPipe ? (IFluidPipe) tile : null;
+		if (tile instanceof IFluidPipe)
+			return (IFluidPipe) ((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN);
+
+		return null;
 	}
 
 	@Override

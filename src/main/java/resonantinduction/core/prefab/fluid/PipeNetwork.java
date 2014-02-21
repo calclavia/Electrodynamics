@@ -58,7 +58,7 @@ public class PipeNetwork extends FluidNetwork
 				{
 					stack.amount -= handler.fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
 				}
-
+				
 				if (sideCount > 1)
 					--sideCount;
 				if (volPer <= 0)
