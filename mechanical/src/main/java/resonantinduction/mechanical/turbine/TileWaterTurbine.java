@@ -1,6 +1,16 @@
 package resonantinduction.mechanical.turbine;
 
+import java.lang.reflect.Method;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.mechanical.IMechanical;
+import universalelectricity.api.vector.Vector3;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * The vertical wind turbine collects airflow.
@@ -13,7 +23,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 {
 	public TileWaterTurbine()
 	{
-		maxPower = 300;
+		maxPower = 200;
 		torque = defaultTorque;
 	}
 
@@ -27,6 +37,10 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 	@Override
 	public void updateEntity()
 	{
+		if (getMultiBlock().isConstructed())
+			torque = (long) (defaultTorque / (9f / multiBlockRadius));
+		else
+			torque = defaultTorque / 12;
 
 		/**
 		 * If this is a horizontal turbine.
@@ -37,16 +51,40 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 
 			if (blockIDAbove == Block.waterStill.blockID && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
 			{
-				getMultiBlock().get().power += getWaterPower();
+				getMultiBlock().get().power += getWaterPower() * 10;
 				worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
 				worldObj.setBlock(xCoord, yCoord - 1, zCoord, Block.waterStill.blockID);
 			}
 		}
-		else if (this.getMultiBlock().isPrimary())
+		else if (getMultiBlock().isPrimary())
 		{
-			if (worldObj.getBlockId(xCoord, yCoord - (this.getMultiBlock().isConstructed() ? 2 : 1), zCoord) == Block.waterMoving.blockID)
+			int checkX = xCoord;
+			int checkY = yCoord - (this.getMultiBlock().isConstructed() ? 1 + multiBlockRadius : 1);
+			int checkZ = zCoord;
+			int blockID = worldObj.getBlockId(xCoord, checkY, checkZ);
+			int metadata = worldObj.getBlockMetadata(xCoord, checkY, checkZ);
+
+			if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)
 			{
-				getMultiBlock().get().power += getWaterPower();
+
+				try
+				{
+					Method m = ReflectionHelper.findMethod(BlockFluid.class, null, new String[] { "getFlowVector", "func_72202_i" }, IBlockAccess.class, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+					Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, xCoord, checkY, checkZ));
+					ForgeDirection dir = getDirection();
+
+					if ((dir.offsetZ > 0 && vector.x > 0) || (dir.offsetZ < 0 && vector.x < 0) || (dir.offsetX > 0 && vector.z > 0) || (dir.offsetX < 0 && vector.z < 0))
+						torque = -torque;
+
+					if (getDirection().offsetX != 0)
+						getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z * (7 - metadata) / 7f);
+					if (getDirection().offsetZ != 0)
+						getMultiBlock().get().power += Math.abs(getWaterPower() * vector.x * (7 - metadata) / 7f);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -59,6 +97,35 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 	 */
 	private long getWaterPower()
 	{
-		return 1 * 10 * 2;
+		return maxPower / 2;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		if (getDirection().offsetY == 0)
+		{
+			if (source instanceof IMechanical)
+			{
+				/**
+				 * Face to face stick connection.
+				 */
+				TileEntity sourceTile = getPosition().translate(from).getTileEntity(getWorld());
+
+				if (sourceTile instanceof IMechanical)
+				{
+					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
+					return sourceInstance == source && from == getDirection();
+				}
+			}
+		}
+
+		return super.canConnect(from, source);
+	}
+
+	@Override
+	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
+	{
+		return false;
 	}
 }

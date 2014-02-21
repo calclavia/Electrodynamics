@@ -10,6 +10,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
@@ -162,5 +163,11 @@ public class TileMixer extends TileMechanical
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
 		return from == ForgeDirection.UP || from == ForgeDirection.DOWN;
+	}
+
+	@Override
+	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
+	{
+		return false;
 	}
 }

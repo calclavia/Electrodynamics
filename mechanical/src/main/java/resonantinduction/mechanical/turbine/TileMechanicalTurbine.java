@@ -31,7 +31,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
 
 				// Don't connect with shafts
-				if (mech != null && !(mech instanceof PartGearShaft) && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
+				if (mech != null && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
 				{
 					connections[dir.ordinal()] = mech;
 					getNetwork().merge(mech.getNetwork());
@@ -100,7 +100,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		if (source instanceof IMechanical)
+		if (source instanceof IMechanical && !(source instanceof TileMechanicalTurbine))
 		{
 			/**
 			 * Face to face stick connection.
