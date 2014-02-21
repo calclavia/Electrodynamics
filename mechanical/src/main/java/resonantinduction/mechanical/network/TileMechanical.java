@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -17,6 +18,8 @@ import com.google.common.io.ByteArrayDataInput;
 
 public abstract class TileMechanical extends TileAdvanced implements IMechanical, IPacketReceiver
 {
+	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
+
 	/** The mechanical connections this connector has made */
 	protected Object[] connections = new Object[6];
 	private IMechanicalNetwork network;
@@ -59,13 +62,19 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 	private void sendRotationPacket()
 	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, angularVelocity), worldObj, new Vector3(this), 20);
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_VELOCITY, angularVelocity), worldObj, new Vector3(this), 20);
 	}
 
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		angularVelocity = data.readFloat();
+		onReceivePacket(data.readInt(), data, player, extra);
+	}
+
+	public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		if (id == PACKET_VELOCITY)
+			angularVelocity = data.readFloat();
 	}
 
 	@Override

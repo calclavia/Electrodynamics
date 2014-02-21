@@ -30,7 +30,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * 
  * @author DarkGuardsman
  */
-public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatable, IPacketReceiverWithID
+public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatable
 {
 	public enum SlantType
 	{
@@ -108,7 +108,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				markRefresh = false;
 			}
 		}
-
 	}
 
 	@Override
@@ -127,29 +126,15 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	}
 
 	@Override
-	public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		if (this.worldObj.isRemote)
-		{
-			try
-			{
-				if (id == PACKET_SLANT)
-				{
-					this.slantType = SlantType.values()[data.readInt()];
-					return true;
-				}
-				else if (id == PACKET_REFRESH)
-				{
-					refresh();
-					return true;
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		return false;
+		super.onReceivePacket(id, data, player, extra);
+
+		if (id == PACKET_SLANT)
+			this.slantType = SlantType.values()[data.readInt()];
+		else if (id == PACKET_REFRESH)
+			refresh();
+
 	}
 
 	public SlantType getSlant()

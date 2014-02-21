@@ -189,7 +189,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	protected IFluidPipe getConnector(TileEntity tile)
 	{
 		if (tile instanceof IFluidPipe)
-			return (IFluidPipe) ((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN);
+			if (((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN) instanceof IFluidPipe)
+				return (IFluidPipe) ((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN);
 
 		return null;
 	}
