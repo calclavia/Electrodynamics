@@ -31,6 +31,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 	public final GraphI fluidGraph = new GraphI(maxData);
 
+	
 	/**
 	 * The absolute center of the multimeter screens.
 	 */

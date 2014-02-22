@@ -67,6 +67,12 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	}
 
 	@Override
+	public boolean doesTick()
+	{
+		return false;
+	}
+
+	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
 		if (item != null)

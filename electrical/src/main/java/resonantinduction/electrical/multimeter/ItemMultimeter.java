@@ -33,11 +33,6 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 	{
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
 
-		if (side <= 1)
-		{
-			return null;
-		}
-
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
 		if (part != null)

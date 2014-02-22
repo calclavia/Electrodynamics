@@ -54,8 +54,8 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
 		// DOWN
 		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
-		// LEFT
-		for (int i = 2; i < 6; i++)
+
+		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection check = ForgeDirection.getOrientation(i);
 
@@ -100,42 +100,68 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		// Render the main panel
 		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		final int metadata = 8;
+
 		// Render edges
-		// UP
-		if (!part.hasMultimeter(part.x(), part.y() + 1, part.z()))
-			RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
-		// DOWN
-		if (!part.hasMultimeter(part.x(), part.y() - 1, part.z()))
-			RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
-		// LEFT
-		for (int i = 2; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			ForgeDirection check = ForgeDirection.getOrientation(i);
 
 			if (!part.hasMultimeter(part.x() + check.offsetX, part.y() + check.offsetY, part.z() + check.offsetZ))
 			{
-				if (dir.offsetX != 0 && check.offsetZ != 0)
+				if (dir.offsetX != 0)
 				{
-					if (dir.offsetX != check.offsetZ)
+					if (check.offsetZ != 0)
 					{
-						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						if (dir.offsetX != check.offsetZ)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetX == check.offsetZ)
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
-					else if (dir.offsetX == check.offsetZ)
+					else if (check.offsetY != 0)
 					{
-						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						if (dir.offsetX != check.offsetY)
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetX == check.offsetY)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
-				if (dir.offsetZ != 0 && check.offsetX != 0)
+
+				if (dir.offsetZ != 0)
 				{
-					if (dir.offsetZ == check.offsetX)
+					if (check.offsetX != 0)
 					{
-						RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						if (dir.offsetZ == check.offsetX)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetZ != check.offsetX)
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
-					else if (dir.offsetZ != check.offsetX)
+					else if (check.offsetY != 0)
 					{
-						RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						if (dir.offsetZ != check.offsetY)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetZ == check.offsetY)
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
+
+				if (dir.offsetY != 0)
+				{
+					if (check.offsetX != 0)
+					{
+						if (dir.offsetY != check.offsetX)
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetY == check.offsetX)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+					}
+					else if (check.offsetZ != 0)
+					{
+						if (dir.offsetY != check.offsetZ)
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+						else if (dir.offsetY == check.offsetZ)
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+					}
+				}
+
 			}
 		}
 
@@ -152,9 +178,8 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			Vector3 centerTranslation = part.getNetwork().center.clone().subtract(part.x(), part.y(), part.z()).add(-0.5);
 			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
-			GL11.glTranslated(0, 0.05, 0);
+			GL11.glTranslated(0, 0.07, 0);
 
-			// TODO: Add other dispaly info support.
 			List<String> information = new ArrayList<String>();
 
 			if (part.getNetwork().energyGraph.get(0) > 0 && part.getNetwork().energyGraph.points.size() > 0)
