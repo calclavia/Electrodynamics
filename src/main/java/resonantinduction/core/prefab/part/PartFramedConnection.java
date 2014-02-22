@@ -71,7 +71,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
 	/** Client Side */
 	private ForgeDirection testingSide;
-	
+
 	@SideOnly(Side.CLIENT)
 	protected Icon breakIcon;
 
@@ -217,7 +217,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	/**
 	 * CONNECTION LOGIC CODE
 	 */
-	protected abstract boolean canConnectTo(TileEntity tile);
+	protected abstract boolean canConnectTo(TileEntity tile, ForgeDirection to);
 
 	protected abstract C getConnector(TileEntity tile);
 
@@ -242,7 +242,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	 */
 	public boolean isConnectionPrevented(TileEntity tile, ForgeDirection side)
 	{
-		return (!this.canConnectTo(tile)) || (isBlockedOnSide(side));
+		return (!this.canConnectTo(tile, side)) || (isBlockedOnSide(side));
 	}
 
 	public byte getPossibleWireConnections()
@@ -270,7 +270,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 		{
 			TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-			if (canConnectTo(tileEntity) && canConnectBothSides(tileEntity, side))
+			if (canConnectTo(tileEntity, side) && canConnectBothSides(tileEntity, side))
 			{
 				connections |= 1 << side.ordinal();
 			}
@@ -279,185 +279,187 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 		return connections;
 	}
 
-    public void refresh()
-    {
-        if (!world().isRemote)
-        {
-            byte possibleWireConnections = getPossibleWireConnections();
-            byte possibleAcceptorConnections = getPossibleAcceptorConnections();
+	public void refresh()
+	{
+		if (!world().isRemote)
+		{
+			byte possibleWireConnections = getPossibleWireConnections();
+			byte possibleAcceptorConnections = getPossibleAcceptorConnections();
 
-            if (possibleWireConnections != this.currentWireConnections)
-            {
-                byte or = (byte) (possibleWireConnections | this.currentWireConnections);
+			if (possibleWireConnections != this.currentWireConnections)
+			{
+				byte or = (byte) (possibleWireConnections | this.currentWireConnections);
 
-                // Connections have been removed
-                if (or != possibleWireConnections)
-                {
-                    this.getNetwork().removeConnector(this);
-                    this.getNetwork().split(this);
-                    setNetwork(null);
-                }
+				// Connections have been removed
+				if (or != possibleWireConnections)
+				{
+					this.getNetwork().removeConnector(this);
+					this.getNetwork().split(this);
+					setNetwork(null);
+				}
 
-                for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
-                {
-                    if (connectionMapContainsSide(possibleWireConnections, side))
-                    {
-                        TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
+				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+				{
+					if (connectionMapContainsSide(possibleWireConnections, side))
+					{
+						TileEntity tileEntity = VectorHelper.getConnectorFromSide(world(), new Vector3(tile()), side, this);
 
-                        if (getConnector(tileEntity) != null)
-                        {
-                            this.getNetwork().merge(getConnector(tileEntity).getNetwork());
-                        }
-                    }
-                }
+						if (getConnector(tileEntity) != null)
+						{
+							this.getNetwork().merge(getConnector(tileEntity).getNetwork());
+						}
+					}
+				}
 
-                this.currentWireConnections = possibleWireConnections;
-            }
+				this.currentWireConnections = possibleWireConnections;
+			}
 
-            this.currentAcceptorConnections = possibleAcceptorConnections;
-            this.getNetwork().reconstruct();
-            this.sendConnectionUpdate();
-        }
+			this.currentAcceptorConnections = possibleAcceptorConnections;
+			this.getNetwork().reconstruct();
+			this.sendConnectionUpdate();
+		}
 
-        tile().markRender();
-    }
+		tile().markRender();
+	}
 
-    /** Should include connections that are in the current connection maps even if those connections
-     * aren't allowed any more. This is so that networks split correctly. */
-    @Override
-    public TileEntity[] getConnections()
-    {
-        TileEntity[] connections = new TileEntity[6];
+	/**
+	 * Should include connections that are in the current connection maps even if those connections
+	 * aren't allowed any more. This is so that networks split correctly.
+	 */
+	@Override
+	public TileEntity[] getConnections()
+	{
+		TileEntity[] connections = new TileEntity[6];
 
-        if (world() != null)
-        {
-            for (byte i = 0; i < 6; i++)
-            {
-                ForgeDirection side = ForgeDirection.getOrientation(i);
-                TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
+		if (world() != null)
+		{
+			for (byte i = 0; i < 6; i++)
+			{
+				ForgeDirection side = ForgeDirection.getOrientation(i);
+				TileEntity tileEntity = VectorHelper.getTileEntityFromSide(world(), new Vector3(tile()), side);
 
-                if (isCurrentlyConnected(side))
-                {
-                    connections[i] = tileEntity;
-                }
-            }
+				if (isCurrentlyConnected(side))
+				{
+					connections[i] = tileEntity;
+				}
+			}
 
-        }
-        return connections;
-    }
+		}
+		return connections;
+	}
 
-    public boolean isCurrentlyConnected(ForgeDirection side)
-    {
-        return connectionMapContainsSide(getAllCurrentConnections(), side);
-    }
+	public boolean isCurrentlyConnected(ForgeDirection side)
+	{
+		return connectionMapContainsSide(getAllCurrentConnections(), side);
+	}
 
-    /** Shouldn't need to be overridden. Override connectionPrevented instead */
-    @Override
-    public boolean canConnect(ForgeDirection direction, Object source)
-    {
-        Vector3 connectPos = new Vector3(tile()).translate(direction);
-        TileEntity connectTile = connectPos.getTileEntity(world());
-        return !isConnectionPrevented(connectTile, direction);
-    }
+	/** Shouldn't need to be overridden. Override connectionPrevented instead */
+	@Override
+	public boolean canConnect(ForgeDirection direction, Object source)
+	{
+		Vector3 connectPos = new Vector3(tile()).translate(direction);
+		TileEntity connectTile = connectPos.getTileEntity(world());
+		return !isConnectionPrevented(connectTile, direction);
+	}
 
-    @Override
-    public void onAdded()
-    {
-        super.onAdded();
-        refresh();
-    }
+	@Override
+	public void onAdded()
+	{
+		super.onAdded();
+		refresh();
+	}
 
-    @Override
-    public void onMoved()
-    {
-        this.refresh();
-    }
+	@Override
+	public void onMoved()
+	{
+		this.refresh();
+	}
 
-    @Override
-    public void onChunkLoad()
-    {
-        super.onChunkLoad();
-        refresh();
-    }
+	@Override
+	public void onChunkLoad()
+	{
+		super.onChunkLoad();
+		refresh();
+	}
 
-    @Override
-    public void onNeighborChanged()
-    {
-        super.onNeighborChanged();
-        refresh();
-    }
+	@Override
+	public void onNeighborChanged()
+	{
+		super.onNeighborChanged();
+		refresh();
+	}
 
-    @Override
-    public void onPartChanged(TMultiPart part)
-    {
-        refresh();
-    }
+	@Override
+	public void onPartChanged(TMultiPart part)
+	{
+		refresh();
+	}
 
-    public void copyFrom(PartFramedConnection<M, C, N> other)
-    {
-        this.isInsulated = other.isInsulated;
-        this.color = other.color;
-        this.connections = other.connections;
-        this.material = other.material;
-        this.currentWireConnections = other.currentWireConnections;
-        this.currentAcceptorConnections = other.currentAcceptorConnections;
-        this.setNetwork(other.getNetwork());
-    }
+	public void copyFrom(PartFramedConnection<M, C, N> other)
+	{
+		this.isInsulated = other.isInsulated;
+		this.color = other.color;
+		this.connections = other.connections;
+		this.material = other.material;
+		this.currentWireConnections = other.currentWireConnections;
+		this.currentAcceptorConnections = other.currentAcceptorConnections;
+		this.setNetwork(other.getNetwork());
+	}
 
-    /** Packet Methods */
-    public void sendConnectionUpdate()
-    {
-        tile().getWriteStream(this).writeByte(0).writeByte(this.currentWireConnections).writeByte(this.currentAcceptorConnections);
-    }
+	/** Packet Methods */
+	public void sendConnectionUpdate()
+	{
+		tile().getWriteStream(this).writeByte(0).writeByte(this.currentWireConnections).writeByte(this.currentAcceptorConnections);
+	}
 
-    @Override
-    public void readDesc(MCDataInput packet)
-    {
-        super.readDesc(packet);
-        this.currentWireConnections = packet.readByte();
-        this.currentAcceptorConnections = packet.readByte();
-    }
+	@Override
+	public void readDesc(MCDataInput packet)
+	{
+		super.readDesc(packet);
+		this.currentWireConnections = packet.readByte();
+		this.currentAcceptorConnections = packet.readByte();
+	}
 
-    @Override
-    public void writeDesc(MCDataOutput packet)
-    {
-        super.writeDesc(packet);
-        packet.writeByte(this.currentWireConnections);
-        packet.writeByte(this.currentAcceptorConnections);
-    }
+	@Override
+	public void writeDesc(MCDataOutput packet)
+	{
+		super.writeDesc(packet);
+		packet.writeByte(this.currentWireConnections);
+		packet.writeByte(this.currentAcceptorConnections);
+	}
 
-    @Override
-    public void read(MCDataInput packet)
-    {
-        read(packet, packet.readUByte());
-    }
+	@Override
+	public void read(MCDataInput packet)
+	{
+		read(packet, packet.readUByte());
+	}
 
-    @Override
-    public void read(MCDataInput packet, int packetID)
-    {
-        if (packetID == 0)
-        {
-            this.currentWireConnections = packet.readByte();
-            this.currentAcceptorConnections = packet.readByte();
-            tile().markRender();
-        }
-        else
-        {
-            super.read(packet, packetID);
-        }
-    }
+	@Override
+	public void read(MCDataInput packet, int packetID)
+	{
+		if (packetID == 0)
+		{
+			this.currentWireConnections = packet.readByte();
+			this.currentAcceptorConnections = packet.readByte();
+			tile().markRender();
+		}
+		else
+		{
+			super.read(packet, packetID);
+		}
+	}
 
-    /** Network Methods */
-    @Override
-    public void setNetwork(N network)
-    {
-        this.network = network;
-    }
+	/** Network Methods */
+	@Override
+	public void setNetwork(N network)
+	{
+		this.network = network;
+	}
 
-    @Override
-    public IConnector<N> getInstance(ForgeDirection dir)
-    {
-        return this;
-    }
+	@Override
+	public IConnector<N> getInstance(ForgeDirection dir)
+	{
+		return this;
+	}
 
 }

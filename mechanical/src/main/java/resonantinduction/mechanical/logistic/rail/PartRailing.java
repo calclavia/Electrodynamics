@@ -2,6 +2,7 @@ package resonantinduction.mechanical.logistic.rail;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import universalelectricity.api.net.INodeNetwork;
@@ -10,12 +11,18 @@ import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 
+/**
+ * NO-OP
+ * 
+ * @author Calclavia
+ * 
+ */
 public class PartRailing extends PartFramedConnection<EnumPipeMaterial, IRailing, INodeNetwork> implements IRailing, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
 	RedstoneControl control;
 
 	@Override
-	protected boolean canConnectTo(TileEntity tile)
+	protected boolean canConnectTo(TileEntity tile, ForgeDirection dir)
 	{
 		// TODO Auto-generated method stub
 		return false;

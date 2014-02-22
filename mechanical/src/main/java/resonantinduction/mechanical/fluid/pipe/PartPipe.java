@@ -180,7 +180,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	protected boolean canConnectTo(TileEntity tile)
+	protected boolean canConnectTo(TileEntity tile, ForgeDirection dir)
 	{
 		return tile instanceof IFluidHandler;
 	}
