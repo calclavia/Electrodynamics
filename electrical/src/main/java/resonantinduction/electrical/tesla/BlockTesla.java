@@ -14,9 +14,9 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.components.tool.ToolModeLink;
 import calclavia.lib.prefab.block.BlockSidedIO;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.LinkUtility;
 import calclavia.lib.utility.WrenchUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -106,18 +106,18 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 
 			if (WrenchUtility.isWrench(itemStack))
 			{
-				if (((TileTesla)tile).tryLink(ToolModeLink.getLink(itemStack)))
+				if (((TileTesla)tile).tryLink(LinkUtility.getLink(itemStack)))
 				{
 					if (world.isRemote)
 						player.addChatMessage("Successfully linked devices.");
-					ToolModeLink.clearLink(itemStack);
+					LinkUtility.clearLink(itemStack);
 				}
 				else
 				{
 					if (world.isRemote)
 						player.addChatMessage("Marked link for device.");
 
-					ToolModeLink.setLink(itemStack, new VectorWorld(world, x, y, z));
+					LinkUtility.setLink(itemStack, new VectorWorld(world, x, y, z));
 				}
 
 				return true;

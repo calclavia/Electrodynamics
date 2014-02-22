@@ -29,8 +29,8 @@ import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.components.tool.ToolModeLink;
 import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LinkUtility;
 import calclavia.lib.utility.WrenchUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.lib.data.MCDataInput;
@@ -79,19 +79,19 @@ public class PartLevitator extends PartFace
 	{
 		if (WrenchUtility.isWrench(itemStack))
 		{
-			if (tryLink(ToolModeLink.getLink(itemStack), ToolModeLink.getSide(itemStack)))
+			if (tryLink(LinkUtility.getLink(itemStack), LinkUtility.getSide(itemStack)))
 			{
 				if (world().isRemote)
 					player.addChatMessage("Successfully linked devices.");
-				ToolModeLink.clearLink(itemStack);
+				LinkUtility.clearLink(itemStack);
 			}
 			else
 			{
 				if (world().isRemote)
 					player.addChatMessage("Marked link for device.");
 
-				ToolModeLink.setLink(itemStack, new VectorWorld(world(), x(), y(), z()));
-				ToolModeLink.setSide(itemStack, (byte) placementSide.ordinal());
+				LinkUtility.setLink(itemStack, new VectorWorld(world(), x(), y(), z()));
+				LinkUtility.setSide(itemStack, (byte) placementSide.ordinal());
 			}
 
 			return true;

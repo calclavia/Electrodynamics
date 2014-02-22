@@ -21,13 +21,13 @@ import resonantinduction.core.resource.TileMaterial;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import resonantinduction.core.resource.item.ItemOreResource;
 import calclavia.components.tool.ToolMode;
-import calclavia.components.tool.ToolModeLink;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.LinkUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -92,7 +92,6 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		Modstats.instance().getReporter().registerMod(this);
-		ToolMode.REGISTRY.add(new ToolModeLink());
 
 		Settings.load();
 

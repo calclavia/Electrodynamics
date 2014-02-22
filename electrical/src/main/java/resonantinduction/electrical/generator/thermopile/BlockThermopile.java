@@ -11,7 +11,6 @@ public class BlockThermopile extends BlockTile
 	public BlockThermopile(int id)
 	{
 		super(id, UniversalElectricity.machine);
-		setTextureName(Reference.PREFIX + "material_metal_top");
 	}
 
 	@Override

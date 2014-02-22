@@ -19,8 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /** @author Briman0094 */
 public class BlockDetector extends BlockImprintable
 {
-	Icon eye_red;
-	Icon eye_green;
+	Icon front_red, front_green, side_green, side_red;
 
 	public BlockDetector(int id)
 	{
@@ -28,47 +27,14 @@ public class BlockDetector extends BlockImprintable
 		setTextureName(Reference.PREFIX + "material_metal_side");
 	}
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
-	{
-		int angle = MathHelper.floor_double((entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		int change = 2;
-
-		switch (angle)
-		{
-			case 0:
-				change = ForgeDirection.NORTH.ordinal();
-				break;
-			case 1:
-				change = ForgeDirection.EAST.ordinal();
-				break;
-			case 2:
-				change = ForgeDirection.SOUTH.ordinal();
-				break;
-			case 3:
-				change = ForgeDirection.WEST.ordinal();
-				break;
-		}
-
-		if (entity.rotationPitch < -70f) // up
-		{
-			change = ForgeDirection.DOWN.ordinal();
-		}
-		if (entity.rotationPitch > 70f) // down
-		{
-			change = ForgeDirection.UP.ordinal();
-		}
-
-		world.setBlockMetadataWithNotify(x, y, z, change, 3);
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister iconReg)
 	{
-		super.registerIcons(iconReg);
-		this.eye_green = iconReg.registerIcon(Reference.PREFIX + "detector_green");
-		this.eye_red = iconReg.registerIcon(Reference.PREFIX + "detector_red");
+		front_green = iconReg.registerIcon(Reference.PREFIX + "detector_front_green");
+		front_red = iconReg.registerIcon(Reference.PREFIX + "detector_front_red");
+		side_green = iconReg.registerIcon(Reference.PREFIX + "detector_side_green");
+		side_red = iconReg.registerIcon(Reference.PREFIX + "detector_side_red");
 		super.registerIcons(iconReg);
 	}
 
@@ -76,24 +42,17 @@ public class BlockDetector extends BlockImprintable
 	@SideOnly(Side.CLIENT)
 	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side)
 	{
+		boolean isInverted = false;
+		boolean isFront = false;
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
+
 		if (tileEntity instanceof TileDetector)
 		{
-			if (side == ForgeDirection.getOrientation(iBlockAccess.getBlockMetadata(x, y, z)).ordinal())
-			{
-				if (((TileDetector) tileEntity).isInverted())
-				{
-					return this.eye_red;
-
-				}
-				else
-				{
-					return this.eye_green;
-				}
-			}
+			isFront = side == ((TileDetector) tileEntity).getDirection().ordinal();
+			isInverted = ((TileDetector) tileEntity).isInverted();
 		}
 
-		return this.blockIcon;
+		return isInverted ? (isFront ? front_red : side_red) : (isFront ? front_green : side_green);
 	}
 
 	@Override
@@ -102,17 +61,24 @@ public class BlockDetector extends BlockImprintable
 	{
 		if (side == ForgeDirection.SOUTH.ordinal())
 		{
-			return this.eye_green;
+			return front_green;
 		}
 
-		return this.blockIcon;
+		return side_green;
 	}
 
 	@Override
 	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		world.setBlockMetadataWithNotify(x, y, z, side, 3);
-		return true;
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileDetector)
+		{
+			((TileDetector) tileEntity).toggleInversion();
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
