@@ -39,7 +39,7 @@ public class Settings
 	 */
 	public static int MAX_FORCE_FIELDS_PER_TICK = 1000;
 	public static int MAX_FORCE_FIELD_SCALE = 200;
-	public static float FORTRON_PRODUCTION_MULTIPLIER = 1;
+	public static double FORTRON_PRODUCTION_MULTIPLIER = 1;
 	public static boolean INTERACT_CREATIVE = true;
 	public static boolean LOAD_CHUNKS = true;
 	public static boolean OP_OVERRIDE = true;
@@ -58,7 +58,7 @@ public class Settings
 
 		ENABLE_MANIPULATOR = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Enable Force Manipulator", ENABLE_MANIPULATOR).getBoolean(ENABLE_MANIPULATOR);
 
-		FORTRON_PRODUCTION_MULTIPLIER = (float) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
+		FORTRON_PRODUCTION_MULTIPLIER = (double) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
 
 		Property propFieldScale = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
 		MAX_FORCE_FIELD_SCALE = propFieldScale.getInt(MAX_FORCE_FIELD_SCALE);
