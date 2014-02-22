@@ -95,7 +95,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 			graphValue = UnitDisplay.getDisplay(fluidGraph.get(), Unit.LITER);
 
 		if (graph == thermalGraph)
-			graphValue = UnitDisplay.roundDecimals(thermalGraph.get() - 273) + " C";
+			graphValue = UnitDisplay.roundDecimals(thermalGraph.get()) + " K";
 
 		return graph.name + ": " + graphValue;
 
