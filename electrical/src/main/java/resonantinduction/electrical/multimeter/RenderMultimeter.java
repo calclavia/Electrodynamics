@@ -178,6 +178,13 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			Vector3 centerTranslation = part.getNetwork().center.clone().subtract(part.x(), part.y(), part.z()).add(-0.5);
 			GL11.glTranslated(centerTranslation.x, centerTranslation.y, centerTranslation.z);
 			RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
+
+			if (part.getDirection().offsetY != 0)
+			{
+				GL11.glRotatef(90, 0, 1, 0);
+				RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
+			}
+			
 			GL11.glTranslated(0, 0.07, 0);
 
 			List<String> information = new ArrayList<String>();

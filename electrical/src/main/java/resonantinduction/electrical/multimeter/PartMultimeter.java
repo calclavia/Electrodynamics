@@ -300,6 +300,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	{
 		packet.readByte();
 		placementSide = ForgeDirection.getOrientation(packet.readByte());
+		facing = packet.readByte();
 		detectMode = DetectMode.values()[packet.readByte()];
 		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
@@ -311,7 +312,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	{
 		packet.writeByte(0);
 		packet.writeByte(placementSide.ordinal());
-		packet.writeByte((byte) detectMode.ordinal());
+		packet.writeByte(facing);
+		packet.writeByte(detectMode.ordinal());
 		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
 		packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
 		packet.writeBoolean(getNetwork().isEnabled);
@@ -338,6 +340,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		if (packetID == 0)
 		{
 			placementSide = ForgeDirection.getOrientation(packet.readByte());
+			facing = packet.readByte();
 			detectMode = DetectMode.values()[packet.readByte()];
 			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());

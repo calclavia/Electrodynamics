@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.IHighlight;
@@ -37,7 +38,9 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 
 		if (part != null)
 		{
-			part.preparePlacement(side, itemStack.getItemDamage());
+			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+			int facing = l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
+			part.preparePlacement(side, facing);
 		}
 
 		return part;
