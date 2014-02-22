@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public abstract class Graph<V extends Comparable<V>>
 {
+	public final String name;
+
 	private final int maxPoints;
 
 	/**
@@ -26,8 +28,9 @@ public abstract class Graph<V extends Comparable<V>>
 	 */
 	protected V queue = getDefault();
 
-	public Graph(int maxPoints)
+	public Graph(String name, int maxPoints)
 	{
+		this.name = name;
 		this.maxPoints = maxPoints;
 	}
 

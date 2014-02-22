@@ -184,15 +184,13 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				GL11.glRotatef(90, 0, 1, 0);
 				RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 			}
-			
+
 			GL11.glTranslated(0, 0.07, 0);
 
 			List<String> information = new ArrayList<String>();
 
 			if (part.getNetwork().energyGraph.get(0) > 0 && part.getNetwork().energyGraph.points.size() > 0)
 			{
-				information.add(UnitDisplay.getDisplay(part.getNetwork().energyGraph.get(0), Unit.JOULES));
-
 				/**
 				 * Compute power
 				 */
@@ -209,23 +207,13 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					information.add("Power: " + UnitDisplay.getDisplay(power * 20, Unit.WATT));
 			}
 
-			if (part.getNetwork().energyCapacityGraph.get(0) > 0)
-				information.add("Max: " + UnitDisplay.getDisplay(part.getNetwork().energyCapacityGraph.get(0), Unit.JOULES));
-
-			if (part.getNetwork().voltageGraph.get(0) > 0)
-				information.add(UnitDisplay.getDisplay(part.getNetwork().voltageGraph.get(0), Unit.VOLTAGE));
-
-			if (part.getNetwork().torqueGraph.get(0) != 0)
-				information.add("Torque: " + UnitDisplay.getDisplayShort(part.getNetwork().torqueGraph.get(0), Unit.NEWTON_METER));
-
-			if (part.getNetwork().angularVelocityGraph.get(0) != 0)
-				information.add("Speed: " + UnitDisplay.roundDecimals(part.getNetwork().angularVelocityGraph.get(0)));
-
-			if (part.getNetwork().fluidGraph.get(0) != 0)
-				information.add("Fluid: " + UnitDisplay.getDisplay(part.getNetwork().fluidGraph.get(0), Unit.LITER));
-
-			if (part.getNetwork().thermalGraph.get(0) != 0)
-				information.add("Temperature: " + UnitDisplay.roundDecimals(part.getNetwork().thermalGraph.get(0) - 273) + " C");
+			for (int i = 0; i < part.getNetwork().graphs.size(); i++)
+			{
+				if (part.getNetwork().graphs.get(i).get() != null && !part.getNetwork().graphs.get(i).get().equals(part.getNetwork().graphs.get(i).getDefault()))
+				{
+					information.add(part.getNetwork().getDisplay(i));
+				}
+			}
 
 			if (information.size() <= 0)
 				information.add("No information");

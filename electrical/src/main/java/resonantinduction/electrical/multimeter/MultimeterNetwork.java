@@ -6,6 +6,8 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
@@ -19,19 +21,17 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 * The available graphs to be handled.
 	 */
 	private int maxData = 20 * 10;
-	private final List<Graph> graphs = new ArrayList<Graph>();
+	public final List<Graph> graphs = new ArrayList<Graph>();
 	/**
 	 * Energy Related
 	 */
-	public final GraphL energyGraph = new GraphL(maxData);
-	public final GraphL energyCapacityGraph = new GraphL(1);
-	public final GraphL voltageGraph = new GraphL(maxData);
-	public final GraphL torqueGraph = new GraphL(maxData);
-	public final GraphF angularVelocityGraph = new GraphF(maxData);
-
-	public final GraphI fluidGraph = new GraphI(maxData);
-
-	public final GraphF thermalGraph = new GraphF(maxData);
+	public final GraphL energyGraph = new GraphL("Energy", maxData);
+	public final GraphL energyCapacityGraph = new GraphL("Max", 1);
+	public final GraphL voltageGraph = new GraphL("Voltage", maxData);
+	public final GraphL torqueGraph = new GraphL("Torque", maxData);
+	public final GraphF angularVelocityGraph = new GraphF("Speed", maxData);
+	public final GraphI fluidGraph = new GraphI("Fluid", maxData);
+	public final GraphF thermalGraph = new GraphF("Temperature", maxData);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -68,6 +68,37 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		graphs.add(angularVelocityGraph);
 		graphs.add(fluidGraph);
 		graphs.add(thermalGraph);
+	}
+
+	public String getDisplay(int graphID)
+	{
+		Graph graph = graphs.get(graphID);
+
+		String graphValue = "";
+
+		if (graph == energyGraph)
+			graphValue = UnitDisplay.getDisplay(energyGraph.get(), Unit.JOULES);
+
+		if (graph == energyCapacityGraph)
+			graphValue = UnitDisplay.getDisplay(energyCapacityGraph.get(), Unit.JOULES);
+
+		if (graph == voltageGraph)
+			graphValue = UnitDisplay.getDisplay(voltageGraph.get(), Unit.VOLTAGE);
+
+		if (graph == torqueGraph)
+			graphValue = UnitDisplay.getDisplayShort(torqueGraph.get(), Unit.NEWTON_METER);
+
+		if (graph == angularVelocityGraph)
+			graphValue = UnitDisplay.roundDecimals(angularVelocityGraph.get()) + "";
+
+		if (graph == fluidGraph)
+			graphValue = UnitDisplay.getDisplay(fluidGraph.get(), Unit.LITER);
+
+		if (graph == thermalGraph)
+			graphValue = UnitDisplay.roundDecimals(thermalGraph.get()) + "";
+
+		return graph.name + ": " + graphValue;
+
 	}
 
 	public boolean isPrimary(PartMultimeter check)

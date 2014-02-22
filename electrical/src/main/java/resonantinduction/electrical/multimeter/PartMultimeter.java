@@ -59,11 +59,13 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
+	public double redstoneTriggerLimit;
+	public int detectionValueType = 0;
 	private DetectMode detectMode = DetectMode.NONE;
-	private long redstoneTriggerLimit;
 
 	// TODO: Move warn settings over.
 	public boolean redstoneOn;
+
 	public boolean isPrimary;
 
 	private MultimeterNetwork network;
@@ -363,7 +365,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		toggleMode();
+		detectMode = DetectMode.values()[data.readInt()];
+		detectionValueType = data.readInt();
+		redstoneTriggerLimit = data.readDouble();
 	}
 
 	public TileEntity getDetectedTile()
@@ -412,14 +416,19 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 	public void toggleMode()
 	{
-		if (!this.world().isRemote)
-		{
-			detectMode = DetectMode.values()[(detectMode.ordinal() + 1) % DetectMode.values().length];
-		}
-		else
-		{
-			PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal()));
-		}
+		detectMode = DetectMode.values()[(detectMode.ordinal() + 1) % DetectMode.values().length];
+		updateServer();
+	}
+
+	public void toggleDetectionValue()
+	{
+		detectionValueType = (detectionValueType + 1) % getNetwork().graphs.size();
+		updateServer();
+	}
+
+	public void updateServer()
+	{
+		PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal(), detectMode.ordinal(), detectionValueType, redstoneTriggerLimit));
 	}
 
 	@Override
@@ -428,7 +437,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		super.load(nbt);
 		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
 		detectMode = DetectMode.values()[nbt.getByte("detectMode")];
-		redstoneTriggerLimit = nbt.getLong("energyLimit");
+		redstoneTriggerLimit = nbt.getDouble("triggerLimit");
 	}
 
 	@Override
@@ -437,17 +446,12 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		super.save(nbt);
 		nbt.setByte("side", (byte) placementSide.ordinal());
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
-		nbt.setLong("energyLimit", redstoneTriggerLimit);
+		nbt.setDouble("triggerLimit", redstoneTriggerLimit);
 	}
 
 	public DetectMode getMode()
 	{
 		return detectMode;
-	}
-
-	public float getLimit()
-	{
-		return redstoneTriggerLimit;
 	}
 
 	@Override

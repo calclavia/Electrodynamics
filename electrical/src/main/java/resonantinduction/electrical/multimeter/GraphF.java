@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagList;
 
 public class GraphF extends Graph<Float>
 {
-	public GraphF(int maxPoints)
+	public GraphF(String name, int maxPoints)
 	{
-		super(maxPoints);
+		super(name, maxPoints);
 	}
 
 	@Override

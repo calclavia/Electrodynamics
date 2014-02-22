@@ -32,17 +32,18 @@ public class GuiMultimeter extends GuiContainerBase
 		super(new ContainerMultimeter(inventoryPlayer, tileEntity));
 		this.multimeter = tileEntity;
 		this.ySize = 217;
-		this.baseTexture = new ResourceLocation(Reference.DOMAIN, Reference.GUI_DIRECTORY + "gui_multimeter.png");
 	}
 
 	@Override
 	public void initGui()
 	{
 		super.initGui();
-		this.buttonList.add(new GuiButton(0, this.width / 2 + 20, this.height / 2 - 30, 50, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggle")));
-		this.textFieldLimit = new GuiTextField(fontRenderer, 35, 82, 65, 12);
+		this.buttonList.add(new GuiButton(0, this.width / 2 + 20, this.height / 2 - 23, 50, 20, LanguageUtility.getLocal("gui.resonantinduction.multimeter.toggle")));
+		this.buttonList.add(new GuiButton(1, this.width / 2 - 80, this.height / 2 - 75, 100, 20, "Toggle Detection"));
+		this.buttonList.add(new GuiButton(2, this.width / 2 - 80, this.height / 2 + 0, 80, 20, "Toggle Graph"));
+		this.textFieldLimit = new GuiTextField(fontRenderer, 9, 90, 90, 12);
 		this.textFieldLimit.setMaxStringLength(8);
-		this.textFieldLimit.setText("" + this.multimeter.getLimit());
+		this.textFieldLimit.setText("" + this.multimeter.redstoneTriggerLimit);
 	}
 
 	@Override
@@ -53,7 +54,8 @@ public class GuiMultimeter extends GuiContainerBase
 
 		try
 		{
-			this.multimeter.getWriteStream().writeByte(1).writeLong(Long.parseLong(this.textFieldLimit.getText()));
+			multimeter.redstoneTriggerLimit = Integer.parseInt(this.textFieldLimit.getText());
+			multimeter.updateServer();
 		}
 		catch (Exception e)
 		{
@@ -68,19 +70,28 @@ public class GuiMultimeter extends GuiContainerBase
 	}
 
 	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		switch (button.id)
+		{
+			case 0:
+				multimeter.toggleMode();
+				break;
+			case 1:
+				multimeter.toggleDetectionValue();
+				break;
+		}
+	}
+
+	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		String s = LanguageUtility.getLocal("tile.resonantinduction:multimeter.name");
-		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 15, 4210752);
-		this.fontRenderer.drawString(EnumColor.INDIGO + LanguageUtility.getLocal("gui.resonantinduction.multimeter.energy"), 35, 15, 4210752);
-		this.renderUniversalDisplay(35, 25, this.multimeter.getNetwork().energyGraph.get(0), mouseX, mouseY, Unit.JOULES);
-		this.fontRenderer.drawString(EnumColor.INDIGO + LanguageUtility.getLocal("gui.resonantinduction.multimeter.capacity"), 35, 35, 4210752);
-		this.renderUniversalDisplay(35, 45, this.multimeter.getNetwork().energyGraph.getPeak(), mouseX, mouseY, Unit.JOULES);
-		this.fontRenderer.drawString(EnumColor.ORANGE + LanguageUtility.getLocal("gui.resonantinduction.multimeter.redstone"), 35, 58, 4210752);
-		this.fontRenderer.drawString(EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 35, 68, 4210752);
-		this.fontRenderer.drawString(Unit.JOULES.name + "(s)", 35, 100, 4210752);
-
+		String s = LanguageUtility.getLocal("item.resonantinduction:multimeter.name");
+		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
+		this.fontRenderer.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
+		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectionValueType), 9, 60, 4210752);
+		this.fontRenderer.drawString("Logic: " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
 		this.textFieldLimit.drawTextBox();
 	}
 
@@ -88,12 +99,6 @@ public class GuiMultimeter extends GuiContainerBase
 	protected void drawGuiContainerBackgroundLayer(float f, int x, int y)
 	{
 		super.drawGuiContainerBackgroundLayer(f, x, y);
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button)
-	{
-		this.multimeter.toggleMode();
 	}
 
 }

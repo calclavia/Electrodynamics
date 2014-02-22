@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagList;
 
 public class GraphL extends Graph<Long>
 {
-	public GraphL(int maxPoints)
+	public GraphL(String name,int maxPoints)
 	{
-		super(maxPoints);
+		super(name,maxPoints);
 	}
 
 	@Override
