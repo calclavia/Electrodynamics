@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -31,10 +32,9 @@ import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.block.ILinkable;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
+import codechicken.multipart.TMultiPart;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -48,7 +48,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
  * @author Calclavia
  * 
  */
-public class TileTesla extends TileElectrical implements IMultiBlockStructure<TileTesla>, ITesla, IPacketSender, IPacketReceiver, ILinkable
+public class TileTesla extends TileElectrical implements IMultiBlockStructure<TileTesla>, ITesla, IPacketSender, IPacketReceiver
 {
 	public final static int DEFAULT_COLOR = 12;
 	public final long TRANSFER_CAP = 10000;
@@ -578,35 +578,16 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		}
 	}
 
-	@Override
-	public boolean onLink(EntityPlayer player, VectorWorld vector)
+	public boolean tryLink(VectorWorld vector)
 	{
-		if (linked == null)
+		if (vector != null)
 		{
-			if (vector != null)
+			if (vector.getTileEntity() instanceof TileTesla)
 			{
-				if (!worldObj.isRemote)
-				{
-					World otherWorld = vector.world;
-
-					if (vector.getTileEntity(otherWorld) instanceof TileTesla)
-					{
-						this.setLink(new Vector3(((TileTesla) vector.getTileEntity(otherWorld)).getTopTelsa()), vector.world.provider.dimensionId, true);
-						player.addChatMessage(LanguageUtility.getLocal("message.tesla.pair").replace("%v0", this.getBlockType().getLocalizedName()).replace("%v1", vector.x + "").replace("%v2", vector.y + "").replace("%v3", vector.z + ""));
-						worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "ambient.weather.thunder", 5, 1);
-						return true;
-					}
-				}
+				setLink(vector, vector.world.provider.dimensionId, true);
 			}
-		}
-		else
-		{
-			this.setLink(null, worldObj.provider.dimensionId, true);
 
-			if (!worldObj.isRemote)
-			{
-				player.addChatMessage("Unlinked Tesla.");
-			}
+			return true;
 		}
 
 		return false;

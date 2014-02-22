@@ -6,14 +6,18 @@ package resonantinduction.electrical.tesla;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.vector.VectorWorld;
+import calclavia.components.tool.ToolModeLink;
 import calclavia.lib.prefab.block.BlockSidedIO;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.WrenchUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -86,6 +90,38 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 
 			return true;
 
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileTesla)
+		{
+			ItemStack itemStack = player.getCurrentEquippedItem();
+
+			if (WrenchUtility.isWrench(itemStack))
+			{
+				if (((TileTesla)tile).tryLink(ToolModeLink.getLink(itemStack)))
+				{
+					if (world.isRemote)
+						player.addChatMessage("Successfully linked devices.");
+					ToolModeLink.clearLink(itemStack);
+				}
+				else
+				{
+					if (world.isRemote)
+						player.addChatMessage("Marked link for device.");
+
+					ToolModeLink.setLink(itemStack, new VectorWorld(world, x, y, z));
+				}
+
+				return true;
+			}
 		}
 
 		return false;
