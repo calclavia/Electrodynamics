@@ -217,6 +217,9 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			if (part.getNetwork().fluidGraph.get(0) != 0)
 				information.add("Fluid: " + UnitDisplay.getDisplay(part.getNetwork().fluidGraph.get(0), Unit.LITER));
 
+			if (part.getNetwork().thermalGraph.get(0) != 0)
+				information.add("Temperature: " + UnitDisplay.roundDecimals(part.getNetwork().thermalGraph.get(0) - 273) + " C");
+
 			if (information.size() <= 0)
 				information.add("No information");
 

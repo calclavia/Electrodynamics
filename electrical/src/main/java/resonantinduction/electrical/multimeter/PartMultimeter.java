@@ -20,6 +20,7 @@ import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
+import atomicscience.api.ITemperature;
 import calclavia.lib.network.IPacketReceiver;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -279,6 +280,11 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 					if (info.fluid != null)
 						getNetwork().fluidGraph.queue(info.fluid.amount);
 			}
+		}
+
+		if (tileEntity instanceof ITemperature)
+		{
+			getNetwork().thermalGraph.queue(((ITemperature) tileEntity).getTemperature());
 		}
 
 		getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));

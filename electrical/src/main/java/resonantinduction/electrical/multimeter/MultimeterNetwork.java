@@ -31,7 +31,8 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 	public final GraphI fluidGraph = new GraphI(maxData);
 
-	
+	public final GraphF thermalGraph = new GraphF(maxData);
+
 	/**
 	 * The absolute center of the multimeter screens.
 	 */
@@ -66,6 +67,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		graphs.add(torqueGraph);
 		graphs.add(angularVelocityGraph);
 		graphs.add(fluidGraph);
+		graphs.add(thermalGraph);
 	}
 
 	public boolean isPrimary(PartMultimeter check)
