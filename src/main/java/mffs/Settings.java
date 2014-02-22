@@ -105,15 +105,15 @@ public class Settings
 		Property forceManipulatorBlacklist = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "");
 		forceManipulatorBlacklist.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space.";
 		String blackListManipulate = forceManipulatorBlacklist.getString();
-		Blacklist.forceManipulationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListManipulate));
+		Blacklist.forceManipulationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListManipulate));
 
 		Property blacklist1 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "");
 		String blackListStabilize = blacklist1.getString();
-		Blacklist.stabilizationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListStabilize));
+		Blacklist.stabilizationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListStabilize));
 
 		Property blacklist2 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "");
 		String blackListDisintegrate = blacklist1.getString();
-		Blacklist.disintegrationBlacklist.addAll(LanguageUtility.decodeIDSeparatedByComma(blackListDisintegrate));
+		Blacklist.disintegrationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListDisintegrate));
 
 		CONFIGURATION.save();
 	}
