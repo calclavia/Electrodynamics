@@ -58,14 +58,17 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	{
 		this.tank = new FluidTank(0);
 
-		for (IFluidConnector part : this.getConnectors())
+		synchronized (getConnectors())
 		{
-			if (part.getNetwork() instanceof IFluidNetwork)
+			for (IFluidConnector part : this.getConnectors())
 			{
-				part.setNetwork(this);
-			}
+				if (part.getNetwork() instanceof IFluidNetwork)
+				{
+					part.setNetwork(this);
+				}
 
-			this.reconstructConnector(part);
+				this.reconstructConnector(part);
+			}
 		}
 
 		this.reconstructTankInfo();

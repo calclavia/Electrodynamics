@@ -19,6 +19,7 @@ import calclavia.lib.utility.FluidUtility;
 
 public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 {
+	
 	public static final int MAX_FLUID_MODIFY_RATE = 50;
 
 	private long lastUseTime = 0;
