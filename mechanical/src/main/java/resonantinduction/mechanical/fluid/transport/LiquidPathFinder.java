@@ -313,9 +313,19 @@ public class LiquidPathFinder
 							bestFluid = checkPos;
 						}
 					}
-					else if (start.distance(checkPos) > start.distance(bestFluid))
+					else
 					{
-						bestFluid = checkPos;
+						/**
+						 * We're filling, so prioritize the lowest block first.
+						 */
+						if (checkPos.y < bestFluid.y)
+						{
+							bestFluid = checkPos;
+						}
+						else if (start.distance(checkPos) > start.distance(bestFluid))
+						{
+							bestFluid = checkPos;
+						}
 					}
 				}
 			}

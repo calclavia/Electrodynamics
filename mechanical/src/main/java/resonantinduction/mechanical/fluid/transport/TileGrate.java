@@ -19,7 +19,7 @@ import calclavia.lib.utility.FluidUtility;
 
 public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 {
-	
+
 	public static final int MAX_FLUID_MODIFY_RATE = 50;
 
 	private long lastUseTime = 0;
@@ -86,6 +86,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler, IDrain
 		if (this.getFillFinder().results.size() < TileGrate.MAX_FLUID_MODIFY_RATE + 10)
 		{
 			this.getFillFinder().refresh().start(new Vector3(this).translate(this.getDirection()), TileGrate.MAX_FLUID_MODIFY_RATE, true);
+			getFillFinder().results.add(new Vector3(this).translate(this.getDirection()));
 		}
 	}
 
