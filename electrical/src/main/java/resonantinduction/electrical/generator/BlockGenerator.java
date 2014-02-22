@@ -47,7 +47,8 @@ public class BlockGenerator extends BlockRotatable
 		{
 			if (!world.isRemote)
 			{
-				entityPlayer.addChatMessage("Generator torque ratio: " + ((TileGenerator) tileEntity).toggleRatio());
+				int gear = ((TileGenerator) tileEntity).toggleGearRatio();
+				entityPlayer.addChatMessage("Generator set to " + (gear == 0 ? "low" : gear == 1 ? "medium" : "high") + " gear.");
 			}
 
 			return true;

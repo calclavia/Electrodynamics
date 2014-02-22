@@ -23,16 +23,16 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = true;
-	private int torqueRatio = 5000;
+	private byte gearRatio;
 
 	public TileGenerator()
 	{
 		energy = new EnergyStorageHandler(10000);
 	}
 
-	public float toggleRatio()
+	public byte toggleGearRatio()
 	{
-		return torqueRatio = (int) ((torqueRatio + 500) % (energy.getMaxExtract() / 2) + 500);
+		return gearRatio = (byte) ((gearRatio + 1) % 3);
 	}
 
 	@Override
@@ -89,6 +89,8 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			{
 				if (extract > 0)
 				{
+					long torqueRatio = (long) ((gearRatio + 1) / 3d * (energy.getMaxExtract() / 2));
+
 					final float maxAngularVelocity = extract / (float) torqueRatio;
 					final long maxTorque = (long) (((double) extract) / maxAngularVelocity);
 
@@ -144,7 +146,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 	{
 		super.readFromNBT(nbt);
 		isInversed = nbt.getBoolean("isInversed");
-		torqueRatio = nbt.getInteger("torqueRatio");
+		gearRatio = nbt.getByte("gear");
 	}
 
 	@Override
@@ -152,6 +154,6 @@ public class TileGenerator extends TileElectrical implements IRotatable
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isInversed", isInversed);
-		nbt.setInteger("torqueRatio", torqueRatio);
+		nbt.setByte("gear", gearRatio);
 	}
 }
