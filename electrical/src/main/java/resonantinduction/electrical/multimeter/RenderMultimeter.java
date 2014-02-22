@@ -119,10 +119,10 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					}
 					else if (check.offsetY != 0)
 					{
-						if (dir.offsetX != check.offsetY)
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
-						else if (dir.offsetX == check.offsetY)
+						if (check.offsetY > 0)
 							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+						else
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
 
@@ -137,9 +137,9 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					}
 					else if (check.offsetY != 0)
 					{
-						if (dir.offsetZ != check.offsetY)
+						if (check.offsetY > 0)
 							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
-						else if (dir.offsetZ == check.offsetY)
+						else
 							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
 					}
 				}
@@ -232,7 +232,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				if (dir.offsetX != 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), maxScale);
 				else if (dir.offsetY != 0)
-					RenderUtility.renderText(info, (float) ((part.getNetwork().size.x + part.getNetwork().size.z) / 2 * 0.9f), maxScale);
+					RenderUtility.renderText(info, (float) (Math.min(part.getNetwork().size.x, part.getNetwork().size.z) * 0.9f), maxScale);
 				else if (dir.offsetZ != 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), maxScale);
 				GL11.glPopMatrix();
