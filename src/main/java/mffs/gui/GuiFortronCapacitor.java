@@ -53,6 +53,10 @@ public class GuiFortronCapacitor extends GuiMFFS
 		this.textFieldFrequency.drawTextBox();
 		this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y);
 		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 105, 4210752);
+		
+		if (tileEntity.getFortronCost() > 0)
+			fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(tileEntity.getFortronCost() * 20, Unit.LITER) + "/s", 118, 116, 4210752);
+		
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
