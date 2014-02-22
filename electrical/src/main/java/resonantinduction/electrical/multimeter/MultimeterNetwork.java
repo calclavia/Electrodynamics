@@ -26,7 +26,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 * Energy Related
 	 */
 	public final GraphL energyGraph = new GraphL("Energy", maxData);
-	public final GraphL energyCapacityGraph = new GraphL("Max", 1);
+	public final GraphL energyCapacityGraph = new GraphL("Capacity", 1);
 	public final GraphL voltageGraph = new GraphL("Voltage", maxData);
 	public final GraphL torqueGraph = new GraphL("Torque", maxData);
 	public final GraphF angularVelocityGraph = new GraphF("Speed", maxData);
@@ -41,8 +41,8 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	/**
 	 * The relative bound sizes.
 	 */
-	private Vector3 upperBound = new Vector3();
-	private Vector3 lowerBound = new Vector3();
+	public Vector3 upperBound = new Vector3();
+	public Vector3 lowerBound = new Vector3();
 
 	/**
 	 * The overall size of the multimeter
@@ -89,13 +89,13 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 			graphValue = UnitDisplay.getDisplayShort(torqueGraph.get(), Unit.NEWTON_METER);
 
 		if (graph == angularVelocityGraph)
-			graphValue = UnitDisplay.roundDecimals(angularVelocityGraph.get()) + "";
+			graphValue = UnitDisplay.roundDecimals(angularVelocityGraph.get()) + " rad/s";
 
 		if (graph == fluidGraph)
 			graphValue = UnitDisplay.getDisplay(fluidGraph.get(), Unit.LITER);
 
 		if (graph == thermalGraph)
-			graphValue = UnitDisplay.roundDecimals(thermalGraph.get()) + "";
+			graphValue = UnitDisplay.roundDecimals(thermalGraph.get() - 273) + " C";
 
 		return graph.name + ": " + graphValue;
 

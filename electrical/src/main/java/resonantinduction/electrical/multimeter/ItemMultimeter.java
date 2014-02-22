@@ -64,22 +64,6 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 		}
 	}
 
-	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
-	{
-		if (ControlKeyModifer.isControlDown(entityPlayer))
-		{
-			if (!world.isRemote)
-			{
-				entityPlayer.addChatMessage(LanguageUtility.getLocal("message.multimeter.onUse").replace("%v", "" + PartMultimeter.getDetectedEnergy(ForgeDirection.getOrientation(par7), world.getBlockTileEntity(x, y, z))));
-			}
-
-			return true;
-		}
-
-		return super.onItemUse(par1ItemStack, entityPlayer, world, x, y, z, par7, par8, par9, par10);
-	}
-
 	public float getDetection(ItemStack itemStack)
 	{
 		if (itemStack.stackTagCompound == null || !itemStack.getTagCompound().hasKey("detection"))

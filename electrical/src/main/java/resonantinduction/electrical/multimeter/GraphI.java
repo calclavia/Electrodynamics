@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagList;
 
 public class GraphI extends Graph<Integer>
 {
-	public GraphI(String name,int maxPoints)
+	public GraphI(String name, int maxPoints)
 	{
-		super(name,maxPoints);
+		super(name, maxPoints);
 	}
 
 	@Override
@@ -57,6 +57,12 @@ public class GraphI extends Graph<Integer>
 
 		nbt.setTag("DataPoints", data);
 		return nbt;
+	}
+
+	@Override
+	public double getDouble()
+	{
+		return get();
 	}
 
 }

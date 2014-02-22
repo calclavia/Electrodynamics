@@ -60,4 +60,10 @@ public class GraphF extends Graph<Float>
 		return nbt;
 	}
 
+	@Override
+	public double getDouble()
+	{
+		return get();
+	}
+
 }

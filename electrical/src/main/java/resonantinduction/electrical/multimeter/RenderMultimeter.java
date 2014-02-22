@@ -185,7 +185,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 				RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 			}
 
-			GL11.glTranslated(0, 0.07, 0);
+			GL11.glTranslated(0, 0.05, 0);
 
 			List<String> information = new ArrayList<String>();
 
@@ -228,10 +228,13 @@ public class RenderMultimeter implements ISimpleItemRenderer
 
 				GL11.glPushMatrix();
 				GL11.glTranslatef(0, 0, displacement * i);
-				if (dir.offsetX == 0)
-					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), maxScale);
-				if (dir.offsetZ == 0)
+
+				if (dir.offsetX != 0)
 					RenderUtility.renderText(info, (float) (part.getNetwork().size.z * 0.9f), maxScale);
+				else if (dir.offsetY != 0)
+					RenderUtility.renderText(info, (float) ((part.getNetwork().size.x + part.getNetwork().size.z) / 2 * 0.9f), maxScale);
+				else if (dir.offsetZ != 0)
+					RenderUtility.renderText(info, (float) (part.getNetwork().size.x * 0.9f), maxScale);
 				GL11.glPopMatrix();
 			}
 

@@ -54,7 +54,7 @@ public class GuiMultimeter extends GuiContainerBase
 
 		try
 		{
-			multimeter.redstoneTriggerLimit = Integer.parseInt(this.textFieldLimit.getText());
+			multimeter.redstoneTriggerLimit = Double.parseDouble(textFieldLimit.getText());
 			multimeter.updateServer();
 		}
 		catch (Exception e)
@@ -80,6 +80,9 @@ public class GuiMultimeter extends GuiContainerBase
 			case 1:
 				multimeter.toggleDetectionValue();
 				break;
+			case 2:
+				multimeter.toggleGraphType();
+				break;
 		}
 	}
 
@@ -90,8 +93,9 @@ public class GuiMultimeter extends GuiContainerBase
 		String s = LanguageUtility.getLocal("item.resonantinduction:multimeter.name");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
-		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectionValueType), 9, 60, 4210752);
+		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectType), 9, 60, 4210752);
 		this.fontRenderer.drawString("Logic: " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
+		this.fontRenderer.drawString(multimeter.getNetwork().graphs.get(multimeter.graphType).name, 95, 115, 4210752);
 		this.textFieldLimit.drawTextBox();
 	}
 

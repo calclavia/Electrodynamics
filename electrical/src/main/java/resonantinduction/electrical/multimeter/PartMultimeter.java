@@ -47,7 +47,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	public enum DetectMode
 	{
 		NONE("none"), LESS_THAN("lessThan"), LESS_THAN_EQUAL("lessThanOrEqual"), EQUAL("equal"),
-		GREATER_THAN("greaterThanOrEqual"), GREATER_THAN_EQUAL("greaterThan");
+		GREATER_THAN_EQUAL("greaterThanOrEqual"), GREATER_THAN("greaterThan");
 
 		public String display;
 
@@ -59,15 +59,16 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 	public Set<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
 
+	/**
+	 * Detection
+	 */
 	public double redstoneTriggerLimit;
-	public int detectionValueType = 0;
+	public byte detectType = 0;
+	public byte graphType = 0;
 	private DetectMode detectMode = DetectMode.NONE;
-
-	// TODO: Move warn settings over.
 	public boolean redstoneOn;
 
 	public boolean isPrimary;
-
 	private MultimeterNetwork network;
 
 	public boolean hasMultimeter(int x, int y, int z)
@@ -167,7 +168,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		if (!world().isRemote)
 		{
 			updateDetections();
-			long detectedEnergy = getNetwork().energyGraph.get(0);
+			double detectedValue = getNetwork().graphs.get(detectType).getDouble();
 
 			boolean outputRedstone = false;
 
@@ -176,19 +177,19 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 				default:
 					break;
 				case EQUAL:
-					outputRedstone = detectedEnergy == redstoneTriggerLimit;
+					outputRedstone = detectedValue == redstoneTriggerLimit;
 					break;
 				case GREATER_THAN:
-					outputRedstone = detectedEnergy > redstoneTriggerLimit;
+					outputRedstone = detectedValue > redstoneTriggerLimit;
 					break;
 				case GREATER_THAN_EQUAL:
-					outputRedstone = detectedEnergy >= redstoneTriggerLimit;
+					outputRedstone = detectedValue >= redstoneTriggerLimit;
 					break;
 				case LESS_THAN:
-					outputRedstone = detectedEnergy < redstoneTriggerLimit;
+					outputRedstone = detectedValue < redstoneTriggerLimit;
 					break;
 				case LESS_THAN_EQUAL:
-					outputRedstone = detectedEnergy <= redstoneTriggerLimit;
+					outputRedstone = detectedValue <= redstoneTriggerLimit;
 					break;
 			}
 
@@ -304,6 +305,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		placementSide = ForgeDirection.getOrientation(packet.readByte());
 		facing = packet.readByte();
 		detectMode = DetectMode.values()[packet.readByte()];
+		detectType = packet.readByte();
+		graphType = packet.readByte();
 		getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 		getNetwork().isEnabled = packet.readBoolean();
@@ -316,6 +319,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		packet.writeByte(placementSide.ordinal());
 		packet.writeByte(facing);
 		packet.writeByte(detectMode.ordinal());
+		packet.writeByte(detectType);
+		packet.writeByte(graphType);
 		packet.writeNBTTagCompound(getNetwork().center.writeToNBT(new NBTTagCompound()));
 		packet.writeNBTTagCompound(getNetwork().size.writeToNBT(new NBTTagCompound()));
 		packet.writeBoolean(getNetwork().isEnabled);
@@ -344,6 +349,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 			placementSide = ForgeDirection.getOrientation(packet.readByte());
 			facing = packet.readByte();
 			detectMode = DetectMode.values()[packet.readByte()];
+			detectType = packet.readByte();
+			graphType = packet.readByte();
 			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
 			getNetwork().isEnabled = packet.readBoolean();
@@ -365,8 +372,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		detectMode = DetectMode.values()[data.readInt()];
-		detectionValueType = data.readInt();
+		detectMode = DetectMode.values()[data.readByte()];
+		detectType = data.readByte();
+		graphType = data.readByte();
 		redstoneTriggerLimit = data.readDouble();
 	}
 
@@ -381,37 +389,10 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		return ForgeDirection.getOrientation(this.placementSide.ordinal());
 	}
 
-	@Deprecated
-	public static long getDetectedEnergy(ForgeDirection side, TileEntity tileEntity)
+	public void toggleGraphType()
 	{
-		if (tileEntity instanceof IConductor)
-		{
-			IConnector<IEnergyNetwork> conductor = ((IConductor) tileEntity).getInstance(side.getOpposite());
-
-			if (conductor == null)
-			{
-				conductor = ((IConductor) tileEntity).getInstance(ForgeDirection.UNKNOWN);
-			}
-
-			if (conductor != null)
-			{
-				// TODO: Conductor may always return null in some cases.
-				IEnergyNetwork network = conductor.getNetwork();
-				return network.getLastBuffer();
-			}
-		}
-
-		if (tileEntity instanceof IMechanical)
-		{
-			IMechanical instance = ((IMechanical) tileEntity).getInstance(side);
-
-			if (instance != null)
-			{
-				return (long) (instance.getTorque() * instance.getAngularVelocity());
-			}
-		}
-
-		return CompatibilityModule.getEnergy(tileEntity, side);
+		graphType = (byte) ((graphType + 1) % getNetwork().graphs.size());
+		updateServer();
 	}
 
 	public void toggleMode()
@@ -422,13 +403,13 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 	public void toggleDetectionValue()
 	{
-		detectionValueType = (detectionValueType + 1) % getNetwork().graphs.size();
+		detectType = (byte) ((detectType + 1) % getNetwork().graphs.size());
 		updateServer();
 	}
 
 	public void updateServer()
 	{
-		PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal(), detectMode.ordinal(), detectionValueType, redstoneTriggerLimit));
+		PacketDispatcher.sendPacketToServer(ResonantInduction.PACKET_MULTIPART.getPacket(new universalelectricity.api.vector.Vector3(x(), y(), z()), placementSide.ordinal(), (byte) detectMode.ordinal(), detectType, graphType, redstoneTriggerLimit));
 	}
 
 	@Override
@@ -437,6 +418,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		super.load(nbt);
 		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
 		detectMode = DetectMode.values()[nbt.getByte("detectMode")];
+		detectType = nbt.getByte("detectionType");
+		graphType = nbt.getByte("graphType");
 		redstoneTriggerLimit = nbt.getDouble("triggerLimit");
 	}
 
@@ -446,6 +429,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		super.save(nbt);
 		nbt.setByte("side", (byte) placementSide.ordinal());
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
+		nbt.setByte("detectionType", detectType);
+		nbt.setByte("graphType", graphType);
 		nbt.setDouble("triggerLimit", redstoneTriggerLimit);
 	}
 
@@ -566,8 +551,8 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	public Cuboid6 getRenderBounds()
 	{
 		if (isPrimary)
-			return Cuboid6.full.copy().expand(Double.POSITIVE_INFINITY);
-
+			return Cuboid6.full.copy().expand(new Vector3(getNetwork().size.x, getNetwork().size.y, getNetwork().size.z));
 		return Cuboid6.full;
 	}
+
 }
