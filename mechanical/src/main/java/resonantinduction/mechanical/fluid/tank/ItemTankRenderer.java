@@ -50,6 +50,7 @@ public class ItemTankRenderer implements IItemRenderer
 		}
 
 		FluidStack fluid = null;
+		
 		if (item.getTagCompound() != null && item.getTagCompound().hasKey("fluid"))
 		{
 			fluid = FluidStack.loadFluidStackFromNBT(item.getTagCompound().getCompoundTag("fluid"));

@@ -6,6 +6,7 @@ package resonantinduction.electrical.tesla;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -34,7 +34,6 @@ import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
-import codechicken.multipart.TMultiPart;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -111,11 +110,11 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				final TileTesla topTesla = this.getTopTelsa();
 				final Vector3 topTeslaVector = new Vector3(topTesla);
 
-				/**
-				 * Quantum transportation.
-				 */
 				if (this.linked != null || this.isLinkedClient)
 				{
+					/**
+					 * Quantum transportation.
+					 */
 					if (!this.worldObj.isRemote)
 					{
 						World dimWorld = MinecraftServer.getServer().worldServerForDimension(this.linkDim);
@@ -126,7 +125,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 							if (transferTile instanceof TileTesla && !transferTile.isInvalid())
 							{
-								this.transfer(((TileTesla) transferTile), Math.min(this.energy.getEmptySpace(), TRANSFER_CAP));
+								this.transfer(((TileTesla) transferTile), Math.min(this.energy.getEnergy(), TRANSFER_CAP));
 
 								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
 								{
@@ -222,7 +221,6 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 							double distance = topTeslaVector.distance(targetVector);
 
-							// TODO: Fix color.
 							Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
 
 							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
@@ -287,7 +285,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	@Override
 	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
-		return super.canConnect(direction, obj) && this.getMultiBlock().isPrimary();
+		return super.canConnect(direction, obj) && this.getMultiBlock().isPrimary() && !(obj instanceof TileTesla);
 	}
 
 	public void sendPacket(int type)
@@ -546,13 +544,13 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 	public void setLink(Vector3 vector3, int dimID, boolean setOpponent)
 	{
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			World otherWorld = MinecraftServer.getServer().worldServerForDimension(this.linkDim);
+			World otherWorld = MinecraftServer.getServer().worldServerForDimension(linkDim);
 
-			if (setOpponent && this.linked != null && otherWorld != null)
+			if (setOpponent && linked != null && otherWorld != null)
 			{
-				TileEntity tileEntity = this.linked.getTileEntity(otherWorld);
+				TileEntity tileEntity = linked.getTileEntity(otherWorld);
 
 				if (tileEntity instanceof TileTesla)
 				{
@@ -560,9 +558,10 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				}
 			}
 
-			this.linked = vector3;
-			this.linkDim = dimID;
-			this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			linked = vector3;
+			linkDim = dimID;
+
+			worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 
 			World newOtherWorld = MinecraftServer.getServer().worldServerForDimension(this.linkDim);
 
@@ -697,5 +696,13 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		}
 
 		return getMultiBlock().get().getIO(dir);
+	}
+
+	@Override
+	public EnumSet<ForgeDirection> getOutputDirections()
+	{
+		EnumSet<ForgeDirection> dirs = super.getOutputDirections();
+		dirs.remove(ForgeDirection.UP);
+		return dirs;
 	}
 }
