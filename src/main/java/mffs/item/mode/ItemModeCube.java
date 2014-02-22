@@ -57,11 +57,11 @@ public class ItemModeCube extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		for (int x = -negScale.intX(); x <= posScale.intX(); x++)
+		for (float x = -negScale.intX(); x <= posScale.intX(); x += 0.5f)
 		{
-			for (int z = -negScale.intZ(); z <= posScale.intZ(); z++)
+			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 0.5f)
 			{
-				for (int y = -negScale.intY(); y <= posScale.intY(); y++)
+				for (float y = -negScale.intY(); y <= posScale.intY(); y += 0.5f)
 				{
 					fieldBlocks.add(new Vector3(x, y, z));
 				}
