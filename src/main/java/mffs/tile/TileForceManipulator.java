@@ -712,7 +712,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	@Override
 	public String[] getMethodNames()
 	{
-		return new String[] { "isActivate", "setActivate", "resetAnchor" };
+		return new String[] { "isActivate", "setActivate", "resetAnchor", "canMove" };
 	}
 
 	@Override
@@ -724,6 +724,25 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				this.anchor = null;
 				return null;
+			}
+			case 3:
+			{
+				Object[] result = { false };
+				
+				if (this.isActive() || this.isCalculatingManipulation)
+				{
+					// Don't call canMove while it is working because it alters failedPositions
+					// return false
+					return result;
+				}
+				else
+				{
+					
+					result[0] = this.canMove();
+					//Clean up the failed positions list so it doesn't trip up the call in update entity later
+					this.failedPositions.clear();
+					return result;
+				}
 			}
 		}
 
