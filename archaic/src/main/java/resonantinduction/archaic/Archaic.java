@@ -119,7 +119,7 @@ public class Archaic
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		// Add recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "RAH", "SCP", "WWW", 'R', Item.shears, 'H', Item.hoeStone, 'A', Item.axeStone, 'P', Item.pickaxeStone, 'S', Item.shovelStone, 'C', Block.workbench, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "P", "C", 'P', Block.pressurePlatePlanks, 'C', Block.workbench));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', Item.stick, 'W', "logWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 0), 'W', "ingotIron"));
