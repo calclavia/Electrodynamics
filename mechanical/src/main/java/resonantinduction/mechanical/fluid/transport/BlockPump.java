@@ -9,9 +9,9 @@ import calclavia.lib.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockHydrualicPump extends BlockRotatable
+public class BlockPump extends BlockRotatable
 {
-	public BlockHydrualicPump(int id)
+	public BlockPump(int id)
 	{
 		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_steel");
@@ -21,7 +21,7 @@ public class BlockHydrualicPump extends BlockRotatable
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileHydraulicPump();
+		return new TilePump();
 	}
 
 	@Override

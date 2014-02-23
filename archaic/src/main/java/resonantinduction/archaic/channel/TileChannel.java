@@ -135,25 +135,24 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 	@Override
 	public void onWrongPressure(ForgeDirection side, int pressure)
 	{
-		// TODO place fluid blocks into the world
 
 	}
 
 	@Override
-	public int getMaxPressure()
+	public int getPressure(ForgeDirection dir)
 	{
 		return 0;
-	}
-
-	@Override
-	public int getPressure()
-	{
-		return this.getNetwork().getPressure();
 	}
 
 	@Override
 	public int getMaxFlowRate()
 	{
 		return 500;
+	}
+
+	@Override
+	public void setPressure(int amount)
+	{
+
 	}
 }

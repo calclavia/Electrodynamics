@@ -75,13 +75,4 @@ public class TankNetwork extends FluidNetwork
 	{
 		return new TankNetwork();
 	}
-
-	@Override
-	public int getPressure()
-	{
-		// TODO implement a compression system that would cause a tank to build up pressure greater
-		// than normal ATM
-		return 0;
-	}
-
 }

@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
  * 
  * @author DarkGaurdsman
  */
-public interface IPressureInput
+public interface IPressureInput extends IPressure
 {
 	public int getPressureIn(ForgeDirection side);
 

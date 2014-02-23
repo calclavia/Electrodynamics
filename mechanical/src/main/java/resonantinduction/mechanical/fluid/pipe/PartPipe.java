@@ -34,8 +34,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
-	protected FluidTank tank = new FluidTank(1 * FluidContainerRegistry.BUCKET_VOLUME);
-	private boolean isExtracting = false;
+	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	private int pressure;
 
 	public PartPipe()
 	{
@@ -55,44 +55,16 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public void update()
+	public boolean doesTick()
 	{
-		super.update();
-
-		if (!world().isRemote)
-		{
-			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
-			{
-
-				for (int i = 0; i < this.getConnections().length; i++)
-				{
-					Object obj = this.getConnections()[i];
-
-					if (obj instanceof IFluidHandler)
-					{
-						FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
-						fill(null, drain, true);
-					}
-				}
-			}
-		}
+		return false;
 	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
 		if (!world().isRemote)
-			System.out.println(getNetwork());
-		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
-		{
-			if (!world().isRemote)
-			{
-				isExtracting = !isExtracting;
-				player.addChatMessage("Pipe extraction mode: " + isExtracting);
-				WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
-			}
-			return true;
-		}
+			System.out.println("Pressure: " + pressure + " : " + tank.getFluidAmount());
 
 		return super.activate(player, part, item);
 	}
@@ -131,19 +103,19 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return getNetwork().fill(this, from, resource, doFill);
+		return tank.fill(resource, doFill);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return null;
+		return tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return null;
+		return tank.drain(maxDrain, doDrain);
 	}
 
 	@Override
@@ -202,13 +174,15 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public int getPressure()
+	public int getPressure(ForgeDirection dir)
 	{
-		if (this.getNetwork() != null)
-		{
-			return this.getNetwork().getPressure();
-		}
-		return 0;
+		return pressure;
+	}
+
+	@Override
+	public void setPressure(int amount)
+	{
+		pressure = amount;
 	}
 
 	@Override
@@ -218,15 +192,9 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public int getMaxPressure()
-	{
-		return 1000;
-	}
-
-	@Override
 	public int getMaxFlowRate()
 	{
-		return FluidContainerRegistry.BUCKET_VOLUME;
+		return 50;
 	}
 
 	@Override
@@ -240,20 +208,18 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setBoolean("isExtracting", isExtracting);
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		isExtracting = nbt.getBoolean("isExtracting");
 	}
 
 	@Override
 	public boolean canFlow()
 	{
-		return !isExtracting;
+		return true;
 	}
 
 }
