@@ -168,12 +168,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public int getPressureIn(ForgeDirection side)
-	{
-		return 0;
-	}
-
-	@Override
 	public int getPressure(ForgeDirection dir)
 	{
 		return pressure;
@@ -183,12 +177,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public void setPressure(int amount)
 	{
 		pressure = amount;
-	}
-
-	@Override
-	public void onWrongPressure(ForgeDirection side, int pressure)
-	{
-
 	}
 
 	@Override
@@ -208,12 +196,14 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
+		tank.writeToNBT(nbt);
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
+		tank.readFromNBT(nbt);
 	}
 
 	@Override

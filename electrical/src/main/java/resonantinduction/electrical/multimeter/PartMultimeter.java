@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.IMechanical;
+import resonantinduction.api.mechanical.fluid.IPressure;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
@@ -298,6 +299,11 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 					if (info.fluid != null)
 						getNetwork().fluidGraph.queue(info.fluid.amount);
 			}
+		}
+
+		if (tileEntity instanceof IPressure)
+		{
+			getNetwork().pressureGraph.queue(((IPressure) tileEntity).getPressure(receivingSide));
 		}
 
 		if (tileEntity instanceof ITemperature)

@@ -32,6 +32,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public final GraphF angularVelocityGraph = new GraphF("Speed", maxData);
 	public final GraphI fluidGraph = new GraphI("Fluid", maxData);
 	public final GraphF thermalGraph = new GraphF("Temperature", maxData);
+	public final GraphI pressureGraph = new GraphI("Pressure", maxData);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -68,6 +69,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		graphs.add(angularVelocityGraph);
 		graphs.add(fluidGraph);
 		graphs.add(thermalGraph);
+		graphs.add(pressureGraph);
 	}
 
 	public String getDisplay(int graphID)
@@ -96,6 +98,9 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		if (graph == thermalGraph)
 			graphValue = UnitDisplay.roundDecimals(thermalGraph.get()) + " K";
+
+		if (graph == pressureGraph)
+			graphValue = UnitDisplay.roundDecimals(pressureGraph.get()) + " Pa";
 
 		return graph.name + ": " + graphValue;
 

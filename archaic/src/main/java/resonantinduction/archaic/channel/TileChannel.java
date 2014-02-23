@@ -116,26 +116,14 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setBoolean("isExtracting", isExtracting);
+		tank.writeToNBT(nbt);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		isExtracting = nbt.getBoolean("isExtracting");
-	}
-
-	@Override
-	public int getPressureIn(ForgeDirection side)
-	{
-		return 0;
-	}
-
-	@Override
-	public void onWrongPressure(ForgeDirection side, int pressure)
-	{
-
+		tank.readFromNBT(nbt);
 	}
 
 	@Override

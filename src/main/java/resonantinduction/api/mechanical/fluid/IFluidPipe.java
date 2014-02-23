@@ -1,13 +1,11 @@
 package resonantinduction.api.mechanical.fluid;
 
-import net.minecraftforge.common.ForgeDirection;
-
 /**
  * Applied to tiles that are pipes and support pressure
  * 
  * @author DarkGuardsman
  */
-public interface IFluidPipe extends IFluidConnector, IPressureInput
+public interface IFluidPipe extends IFluidConnector, IPressure
 {
 
 	/**
@@ -16,5 +14,4 @@ public interface IFluidPipe extends IFluidConnector, IPressureInput
 	 * @return amount in liters.
 	 */
 	int getMaxFlowRate();
-
 }

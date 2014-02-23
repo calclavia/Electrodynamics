@@ -7,6 +7,7 @@ import net.minecraftforge.common.ForgeDirection;
  * 
  * @author Darkguardsman
  */
+@Deprecated
 public interface IPressureOutput
 {
 	public int getPressureOut(ForgeDirection side);
