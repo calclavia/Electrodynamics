@@ -61,15 +61,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
-	{
-		if (!world().isRemote)
-			System.out.println("Pressure: " + pressure + " : " + tank.getFluidAmount());
-
-		return super.activate(player, part, item);
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{

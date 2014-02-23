@@ -1,11 +1,15 @@
 package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.archaic.channel.ModelChannel;
+import resonantinduction.archaic.channel.TileChannel;
 import resonantinduction.core.Reference;
+import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -21,6 +25,67 @@ public class RenderPipe
 
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
+		FluidStack fluid = part.getInternalTank().getFluid();
+		int capacity = part.getInternalTank().getCapacity();
+		byte renderSides = part.getAllCurrentConnections();
+
+		if (fluid != null && fluid.amount > 0)
+		{
+			float percentage = (float) fluid.amount / (float) capacity;
+			int[] displayList = RenderFluidHelper.getFluidDisplayLists(fluid, part.world(), false);
+			RenderUtility.bind(RenderFluidHelper.getFluidSheet(fluid));
+
+			GL11.glPushMatrix();
+			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+			GL11.glTranslatef((float) x + 0.3f, (float) y + 0.35f, (float) z + 0.3f);
+			GL11.glScalef(0.4f, 0.3f, 0.4f);
+
+			GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+			GL11.glPopAttrib();
+			GL11.glPopMatrix();
+
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			{
+				if (RenderUtility.canRenderSide(renderSides, direction))
+				{
+					GL11.glPushMatrix();
+					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+					GL11.glEnable(GL11.GL_CULL_FACE);
+					GL11.glDisable(GL11.GL_LIGHTING);
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+					switch (direction.ordinal())
+					{
+						case 4:
+							GL11.glTranslatef((float) x + 0F, (float) y + 0.35f, (float) z + 0.3F);
+							break;
+						case 5:
+							GL11.glTranslatef((float) x + 0.7F, (float) y + 0.35f, (float) z + 0.3F);
+							break;
+						case 2:
+							GL11.glTranslatef((float) x + 0.3F, (float) y + 0.35f, (float) z + 0F);
+							break;
+						case 3:
+							GL11.glTranslatef((float) x + 0.3F, (float) y + 0.35f, (float) z + 0.7F);
+							break;
+					}
+
+					GL11.glScalef(0.4f, 0.3f, 0.4f);
+					GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+
+					GL11.glPopAttrib();
+					GL11.glPopMatrix();
+				}
+			}
+		}
+
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
