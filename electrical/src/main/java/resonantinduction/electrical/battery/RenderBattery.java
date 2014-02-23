@@ -71,6 +71,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 	{
 		final String[][] partToDisable = new String[][] { new String[] { "bottom" }, new String[] { "top" }, new String[] { "frame1", "frame2" }, new String[] { "frame3", "frame4" }, new String[] { "frame4", "frame1" }, new String[] { "frame2", "frame3" } };
 		final String[][] connectionPartToEnable = new String[][] { null, null, new String[] { "frame1con", "frame2con" }, new String[] { "frame3con", "frame4con" }, new String[] { "frame4con", "frame1con" }, new String[] { "frame2con", "frame3con" } };
+		//final String[][] connectionPartSideToEnable = new String[][] { null, null, new String[] { "frame1conSide", "frame2conSide" }, new String[] { "frame3conSide", "frame4conSide" }, new String[] { "frame4conSide", "frame1conSide" }, new String[] { "frame2conSide", "frame3conSide" } };
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -107,7 +108,10 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 						if (sideCheck.offsetY == 0)
 						{
 							if (new Vector3(t).translate(sideCheck).getTileEntity(t.worldObj) instanceof TileBattery)
+							{
 								connectionParts.removeAll(Arrays.asList(connectionPartToEnable[sideCheck.ordinal()]));
+								//connectionParts.addAll(Arrays.asList(connectionPartSideToEnable[sideCheck.ordinal()]));
+							}
 						}
 					}
 
