@@ -22,6 +22,7 @@ import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
 import atomicscience.api.ITemperature;
 import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -67,6 +68,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	public byte graphType = 0;
 	private DetectMode detectMode = DetectMode.NONE;
 	public boolean redstoneOn;
+	private boolean doDetect = true;
 
 	public boolean isPrimary;
 	private MultimeterNetwork network;
@@ -153,6 +155,17 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
+		if (WrenchUtility.isUsableWrench(player, player.inventory.getCurrentItem(), x(), y(), z()))
+		{
+			if (!this.world().isRemote)
+			{
+				doDetect = !doDetect;
+				player.addChatMessage("Multimeter detection set to: " + doDetect);
+				WrenchUtility.damageWrench(player, player.inventory.getCurrentItem(), x(), y(), z());
+			}
+			return true;
+		}
+
 		player.openGui(Electrical.INSTANCE, placementSide.ordinal(), world(), x(), y(), z());
 		return true;
 	}
@@ -167,7 +180,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 		if (!world().isRemote)
 		{
-			updateDetections();
+			if (doDetect)
+				updateDetections();
+
 			double detectedValue = getNetwork().graphs.get(detectType).getDouble();
 
 			boolean outputRedstone = false;
@@ -420,6 +435,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		detectMode = DetectMode.values()[nbt.getByte("detectMode")];
 		detectType = nbt.getByte("detectionType");
 		graphType = nbt.getByte("graphType");
+		doDetect = nbt.getBoolean("doDetect");
 		redstoneTriggerLimit = nbt.getDouble("triggerLimit");
 	}
 
@@ -431,6 +447,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		nbt.setByte("detectMode", (byte) detectMode.ordinal());
 		nbt.setByte("detectionType", detectType);
 		nbt.setByte("graphType", graphType);
+		nbt.setBoolean("doDetect", doDetect);
 		nbt.setDouble("triggerLimit", redstoneTriggerLimit);
 	}
 
