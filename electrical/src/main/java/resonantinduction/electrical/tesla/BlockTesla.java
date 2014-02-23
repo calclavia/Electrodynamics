@@ -106,7 +106,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 
 			if (WrenchUtility.isWrench(itemStack))
 			{
-				if (((TileTesla)tile).tryLink(LinkUtility.getLink(itemStack)))
+				if (((TileTesla) tile).tryLink(LinkUtility.getLink(itemStack)))
 				{
 					if (world.isRemote)
 						player.addChatMessage("Successfully linked devices.");
@@ -130,8 +130,12 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		((TileTesla) tileEntity).updatePositionStatus();
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		
+		if (tile instanceof TileTesla)
+		{
+			((TileTesla) tile).updatePositionStatus();
+		}
 	}
 
 	@Override

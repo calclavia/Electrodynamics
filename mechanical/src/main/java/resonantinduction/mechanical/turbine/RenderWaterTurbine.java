@@ -52,22 +52,27 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glPushMatrix();
 			GL11.glScalef(1, 1.6f, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
-			MODEL.renderOnly("Beamknot", "wheel_shaft");
+			MODEL.renderOnly("bigwheel_endknot", "horizontal_centre_shaft");
 			GL11.glPopMatrix();
 
 			GL11.glPushMatrix();
 			GL11.glScalef(1, 1.4f, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_spruce.png");
-			MODEL.renderOnly("BaseSupporter");
+			MODEL.renderOnly("bigwheel_supporters");
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
-			MODEL.renderOnly("Scoops", "SupporterCircle");
+			MODEL.renderOnly("bigwheel_scoops", "bigwheel_supportercircle");
 			GL11.glPopMatrix();
 
 		}
 		else
 		{
+			GL11.glPushMatrix();
+			GL11.glScalef(0.7f, 1, 0.7f);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
-			MODEL.renderOnly("turbine_centre");
+			MODEL.renderOnly("small_waterwheel_endknot");
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			MODEL.renderOnly("small_waterwheel", "small_waterwheel_supporters", "horizontal_centre_shaft");
+			GL11.glPopMatrix();
 		}
 	}
 
@@ -83,8 +88,13 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 		}
 		else
 		{
+			GL11.glPushMatrix();
+			GL11.glScalef(0.9f, 1f, 0.9f);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
-			MODEL.renderOnly("turbine_centre");
+			MODEL.renderOnly("small_waterwheel_endknot");
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+			MODEL.renderOnly("small_turbine_blades");
+			GL11.glPopMatrix();
 		}
 	}
 
