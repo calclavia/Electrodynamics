@@ -46,7 +46,7 @@ public class RenderCharger implements ISimpleItemRenderer
 		if (part.getStackInSlot(0) != null)
 		{
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.4, -0.00), 0, 4);
+			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.3, -0.00), 0, 4);
 
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			boolean isLooking = false;
@@ -64,7 +64,7 @@ public class RenderCharger implements ISimpleItemRenderer
 					{
 						long energy = CompatibilityModule.getEnergyItem(part.getStackInSlot(0));
 						long maxEnergy = CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0));
-						GL11.glTranslatef(0, 0.1F, 0);
+						GL11.glTranslatef(0, 0.2F, 0);
 						GL11.glRotatef(90, 1, 0, 0);
 						RenderUtility.renderText(UnitDisplay.getDisplay(energy, Unit.JOULES, 2, true) + "/" + UnitDisplay.getDisplay(maxEnergy, Unit.JOULES, 2, true), 1, 1);
 					}

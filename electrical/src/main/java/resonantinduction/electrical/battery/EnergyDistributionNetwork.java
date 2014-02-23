@@ -6,6 +6,12 @@ import universalelectricity.core.net.Network;
 
 public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork, TileEnergyDistribution>
 {
+	public int getEnergyRenderForHeight()
+	{
+		
+		return 0;
+	}
+	
 	public void redistribute(TileEnergyDistribution... exclusion)
 	{
 		long totalEnergy = 0;
