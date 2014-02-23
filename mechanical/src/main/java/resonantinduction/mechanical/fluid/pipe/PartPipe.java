@@ -21,6 +21,7 @@ import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.utility.WrenchUtility;
+import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
@@ -55,9 +56,33 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	public boolean doesTick()
+	public void update()
 	{
-		return false;
+		super.update();
+
+		if (!world().isRemote)
+			if (ticks % 20 == 0)
+				sendFluidUpdate();
+	}
+
+	public void sendFluidUpdate()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		tank.writeToNBT(nbt);
+		tile().getWriteStream(this).writeByte(1).writeNBTTagCompound(nbt);
+	}
+
+	@Override
+	public void read(MCDataInput packet, int packetID)
+	{
+		if (packetID == 1)
+		{
+			this.tank.readFromNBT(packet.readNBTTagCompound());
+		}
+		else
+		{
+			super.read(packet, packetID);
+		}
 	}
 
 	@Override

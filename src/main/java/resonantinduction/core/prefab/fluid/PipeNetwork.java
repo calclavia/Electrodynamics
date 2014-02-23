@@ -114,6 +114,15 @@ public class PipeNetwork extends FluidNetwork
 			if (obj instanceof IPressure)
 			{
 				int pressure = ((IPressure) obj).getPressure(ForgeDirection.getOrientation(i).getOpposite());
+
+				/**
+				 * Apply "gravity pressure"
+				 */
+				if (i == 0)
+					pressure -= 25;
+				else if (i == 1)
+					pressure += 25;
+
 				minPressure = Math.min(pressure, minPressure);
 				maxPressure = Math.max(pressure, maxPressure);
 				totalPressure += pressure;
@@ -131,9 +140,9 @@ public class PipeNetwork extends FluidNetwork
 			 * Create pressure loss.
 			 */
 			if (minPressure < 0)
-				minPressure++;
+				minPressure += 1;
 			if (maxPressure > 0)
-				maxPressure--;
+				maxPressure -= 1;
 
 			sourcePipe.setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / findCount + Integer.signum(totalPressure))));
 		}
@@ -161,10 +170,11 @@ public class PipeNetwork extends FluidNetwork
 				if (pressureA >= pressureB)
 				{
 					FluidTank tankA = sourcePipe.getInternalTank();
+					FluidStack fluidA = tankA.getFluid();
 
-					if (tankA != null)
+					if (tankA != null && fluidA != null)
 					{
-						int amountA = tankA.getFluidAmount();
+						int amountA = fluidA.amount;
 
 						if (amountA > 0)
 						{
@@ -180,7 +190,7 @@ public class PipeNetwork extends FluidNetwork
 								if (quantity > 0)
 								{
 									tankA.drain(quantity, true);
-									tankB.fill(new FluidStack(tankA.getFluid().getFluid(), quantity), true);
+									tankB.fill(new FluidStack(fluidA.getFluid(), quantity), true);
 								}
 							}
 						}

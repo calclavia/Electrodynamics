@@ -83,11 +83,11 @@ public class TilePump extends TileAdvanced implements IFluidHandler, IRotatable,
 	{
 		if (dir == getDirection())
 		{
-			return 20;
+			return 100;
 		}
 		else if (dir == getDirection().getOpposite())
 		{
-			return -25;
+			return -100;
 		}
 
 		return 0;

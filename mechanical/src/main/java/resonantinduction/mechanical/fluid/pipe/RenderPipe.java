@@ -25,6 +25,8 @@ public class RenderPipe
 
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
+		GL11.glPushMatrix();
+
 		FluidStack fluid = part.getInternalTank().getFluid();
 		int capacity = part.getInternalTank().getCapacity();
 		byte renderSides = part.getAllCurrentConnections();
@@ -42,8 +44,8 @@ public class RenderPipe
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			GL11.glTranslatef((float) x + 0.3f, (float) y + 0.35f, (float) z + 0.3f);
-			GL11.glScalef(0.4f, 0.3f, 0.4f);
+			GL11.glTranslatef((float) x + 0.35f, (float) y + 0.35f, (float) z + 0.35f);
+			GL11.glScalef(0.3f, 0.3f, 0.3f);
 
 			GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
 
@@ -63,21 +65,27 @@ public class RenderPipe
 
 					switch (direction.ordinal())
 					{
-						case 4:
-							GL11.glTranslatef((float) x + 0F, (float) y + 0.35f, (float) z + 0.3F);
+						case 0:
+							GL11.glTranslatef((float) x + 0.35F, (float) y - 0f, (float) z + 0.35F);
 							break;
-						case 5:
-							GL11.glTranslatef((float) x + 0.7F, (float) y + 0.35f, (float) z + 0.3F);
+						case 1:
+							GL11.glTranslatef((float) x + 0.35F, (float) y + 0.65f, (float) z + 0.35F);
 							break;
 						case 2:
-							GL11.glTranslatef((float) x + 0.3F, (float) y + 0.35f, (float) z + 0F);
+							GL11.glTranslatef((float) x + 0.35F, (float) y + 0.35f, (float) z + 0F);
 							break;
 						case 3:
-							GL11.glTranslatef((float) x + 0.3F, (float) y + 0.35f, (float) z + 0.7F);
+							GL11.glTranslatef((float) x + 0.35F, (float) y + 0.35f, (float) z + 0.65F);
+							break;
+						case 4:
+							GL11.glTranslatef((float) x + 0F, (float) y + 0.35f, (float) z + 0.35F);
+							break;
+						case 5:
+							GL11.glTranslatef((float) x + 0.65F, (float) y + 0.35f, (float) z + 0.35F);
 							break;
 					}
 
-					GL11.glScalef(0.4f, 0.3f, 0.4f);
+					GL11.glScalef(0.3f, 0.3f, 0.3f);
 					GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
 
 					GL11.glPopAttrib();
@@ -85,6 +93,7 @@ public class RenderPipe
 				}
 			}
 		}
+		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);

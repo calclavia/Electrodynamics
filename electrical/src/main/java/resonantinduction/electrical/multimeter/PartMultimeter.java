@@ -293,11 +293,14 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		{
 			FluidTankInfo[] fluidInfo = ((IFluidHandler) tileEntity).getTankInfo(receivingSide);
 
-			for (FluidTankInfo info : fluidInfo)
+			if (fluidInfo != null)
 			{
-				if (info != null)
-					if (info.fluid != null)
-						getNetwork().fluidGraph.queue(info.fluid.amount);
+				for (FluidTankInfo info : fluidInfo)
+				{
+					if (info != null)
+						if (info.fluid != null)
+							getNetwork().fluidGraph.queue(info.fluid.amount);
+				}
 			}
 		}
 
