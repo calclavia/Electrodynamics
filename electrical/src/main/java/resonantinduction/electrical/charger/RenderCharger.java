@@ -41,12 +41,21 @@ public class RenderCharger implements ISimpleItemRenderer
 		RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 
 		RenderUtility.bind(TEXTURE);
+		GL11.glPushMatrix();
+		GL11.glTranslatef(0, 0.12f, 0);
 		MODEL.renderAll();
+		GL11.glPopMatrix();
+		GL11.glPopMatrix();
 
 		if (part.getStackInSlot(0) != null)
 		{
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
+			RenderUtility.rotateFaceToSideNoTranslate(part.placementSide);
+			RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.3, -0.00), 0, 4);
+			GL11.glPopMatrix();
 
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			boolean isLooking = false;
@@ -64,20 +73,18 @@ public class RenderCharger implements ISimpleItemRenderer
 					{
 						long energy = CompatibilityModule.getEnergyItem(part.getStackInSlot(0));
 						long maxEnergy = CompatibilityModule.getMaxEnergyItem(part.getStackInSlot(0));
-						GL11.glTranslatef(0, 0.2F, 0);
-						GL11.glRotatef(90, 1, 0, 0);
-						RenderUtility.renderText(UnitDisplay.getDisplay(energy, Unit.JOULES, 2, true) + "/" + UnitDisplay.getDisplay(maxEnergy, Unit.JOULES, 2, true), 1, 1);
+						RenderUtility.renderFloatingText(UnitDisplay.getDisplay(energy, Unit.JOULES, 2, true) + "/" + UnitDisplay.getDisplay(maxEnergy, Unit.JOULES, 2, true), new Vector3((float) x + 0.5F, (float) y + 0.8F, (float) z + 0.5F));
 					}
 				}
 			}
 		}
 
-		GL11.glPopMatrix();
 	}
 
 	@Override
 	public void renderInventoryItem(ItemStack itemStack)
 	{
+		GL11.glTranslatef(0.5f, 0.7f, 0.5f);
 		RenderUtility.bind(TEXTURE);
 		MODEL.renderAll();
 	}

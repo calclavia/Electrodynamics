@@ -89,7 +89,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	public ArrayList getPacketData(int type)
 	{
 		ArrayList data = new ArrayList();
-		data.add(energy.getEnergy());
+		data.add(renderEnergyAmount);
 		data.add(ioMap);
 		return data;
 	}

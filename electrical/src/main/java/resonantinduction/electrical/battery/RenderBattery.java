@@ -69,7 +69,8 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		String[][] partToDisable = new String[][] { new String[] { "bottom", "coil1" }, new String[] { "top" }, new String[] { "frame1", "frame2" }, new String[] { "frame3", "frame4" }, new String[] { "frame4", "frame1" }, new String[] { "frame2", "frame3" } };
+		final String[][] partToDisable = new String[][] { new String[] { "bottom" }, new String[] { "top" }, new String[] { "frame1", "frame2" }, new String[] { "frame3", "frame4" }, new String[] { "frame4", "frame1" }, new String[] { "frame2", "frame3" } };
+		final String[][] connectionPartToEnable = new String[][] { null, null, new String[] { "frame1con", "frame2con" }, new String[] { "frame3con", "frame4con" }, new String[] { "frame4con", "frame1con" }, new String[] { "frame2con", "frame3con" } };
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -95,7 +96,22 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 				}
 				else if (check == ForgeDirection.DOWN)
 				{
-					enabledParts.addAll(Arrays.asList(new String[] { "frame1con", "frame2con", "frame3con", "frame4con" }));
+					List<String> connectionParts = new ArrayList<String>();
+
+					for (ForgeDirection sideCheck : ForgeDirection.VALID_DIRECTIONS)
+						if (sideCheck.offsetY == 0)
+							connectionParts.addAll(Arrays.asList(connectionPartToEnable[sideCheck.ordinal()]));
+
+					for (ForgeDirection sideCheck : ForgeDirection.VALID_DIRECTIONS)
+					{
+						if (sideCheck.offsetY == 0)
+						{
+							if (new Vector3(t).translate(sideCheck).getTileEntity(t.worldObj) instanceof TileBattery)
+								connectionParts.removeAll(Arrays.asList(connectionPartToEnable[sideCheck.ordinal()]));
+						}
+					}
+
+					enabledParts.addAll(connectionParts);
 				}
 			}
 
@@ -129,7 +145,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 		{
 			if (i != 1 || enabledParts.contains("coil1"))
 			{
-				if ((8 - i) <= energyLevel)
+				if ((8 - i) < energyLevel)
 					MODEL.renderOnly("coil" + i + "lit");
 				else
 					MODEL.renderOnly("coil" + i);
@@ -140,6 +156,8 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 		disabledParts.addAll(Arrays.asList(new String[] { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8" }));
 		disabledParts.addAll(Arrays.asList(new String[] { "coil1lit", "coil2lit", "coil3lit", "coil4lit", "coil5lit", "coil6lit", "coil7lit", "coil8lit" }));
 		disabledParts.addAll(Arrays.asList(new String[] { "frame1con", "frame2con", "frame3con", "frame4con" }));
+
+		enabledParts.removeAll(Arrays.asList(new String[] { "coil1", "coil2", "coil3", "coil4", "coil5", "coil6", "coil7", "coil8" }));
 		MODEL.renderAllExcept(disabledParts.toArray(new String[0]));
 		MODEL.renderOnly(enabledParts.toArray(new String[0]));
 

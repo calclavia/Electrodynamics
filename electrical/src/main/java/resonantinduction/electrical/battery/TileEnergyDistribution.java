@@ -12,6 +12,8 @@ public class TileEnergyDistribution extends TileElectrical implements IConnector
 
 	public boolean markClientUpdate = false;
 	public boolean markDistributionUpdate = false;
+	
+	public long renderEnergyAmount = 0;
 
 	@Override
 	public void initiate()
