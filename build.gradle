@@ -18,6 +18,7 @@ sourceSets {
 	main {
 		java {
 			srcDirs 'src/main/java', 'archaic/src/main/java', 'electrical/src/main/java', 'mechanical/src/main/java'
+			exclude 'src/main/java/resonantinduction/core/nei/**'
 		}
 	}
 }
@@ -95,7 +96,7 @@ dependencies {
 	compile group: 'calclaviacore', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
 	compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 	compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-	compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
+	//compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
 }
 
 publishing {
