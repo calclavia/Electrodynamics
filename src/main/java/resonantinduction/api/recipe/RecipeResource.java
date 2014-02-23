@@ -56,6 +56,10 @@ public abstract class RecipeResource
 			{
 				return this.itemStack.isItemEqual(((ItemStackResource) obj).itemStack);
 			}
+			if (obj instanceof ItemStack)
+			{
+				return this.itemStack.isItemEqual((ItemStack) obj);
+			}
 
 			return false;
 		}
@@ -64,6 +68,12 @@ public abstract class RecipeResource
 		public ItemStack getItemStack()
 		{
 			return itemStack.copy();
+		}
+		
+		@Override
+		public String toString()
+		{
+			return "[ItemStackResource {" + itemStack.toString() + "}]";
 		}
 	}
 
@@ -98,7 +108,14 @@ public abstract class RecipeResource
 
 			if (obj instanceof ItemStackResource)
 			{
-				return this.name.equals(OreDictionary.getOreName(OreDictionary.getOreID(((ItemStackResource) obj).itemStack)));
+				return OreDictionary.getOres(name).contains(((ItemStackResource) obj).itemStack);
+			}
+			if (obj instanceof ItemStack)
+			{
+				for (ItemStack is : OreDictionary.getOres(name).toArray(new ItemStack[0]))
+					if (is.isItemEqual((ItemStack) obj))
+						return true;
+				return false;
 			}
 
 			return false;
@@ -108,6 +125,12 @@ public abstract class RecipeResource
 		public ItemStack getItemStack()
 		{
 			return OreDictionary.getOres(name).get(0).copy();
+		}
+		
+		@Override
+		public String toString()
+		{
+			return "[OreDictResource {" + name.toString() + "}]";
 		}
 	}
 
