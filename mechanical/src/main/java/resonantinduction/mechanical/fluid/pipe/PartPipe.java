@@ -18,6 +18,7 @@ import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.part.PartFramedConnection;
+import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.utility.WrenchUtility;
@@ -30,10 +31,11 @@ import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private int pressure;

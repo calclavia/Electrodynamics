@@ -134,12 +134,6 @@ public class RenderFramedWire
 		}
 	}
 
-	public static void registerIcons(IconRegister iconReg)
-	{
-		lainWireIcon = iconReg.registerIcon(Reference.PREFIX + "models/lainWire");
-		breakIcon = iconReg.registerIcon(Reference.PREFIX + "wire");
-	}
-
 	public void renderStatic(PartFramedWire wire)
 	{
 		TextureUtils.bindAtlas(0);

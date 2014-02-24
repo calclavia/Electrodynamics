@@ -127,26 +127,11 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)
 	{
-		CCRenderState.reset();
-		RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(renderBlocks.overrideBlockTexture), null);
-	}
-
-	@Override
-	public Iterable<Cuboid6> getOcclusionBoxes()
-	{
-		return getCollisionBoxes();
-	}
-
-	@Override
-	public int getSlotMask()
-	{
-		return PartMap.CENTER.mask;
-	}
-
-	@Override
-	public int getHollowSize()
-	{
-		return isInsulated ? 8 : 6;
+		if (breakIcon != null)
+		{
+			CCRenderState.reset();
+			RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(breakIcon), null);
+		}
 	}
 
 	@Override
@@ -165,6 +150,24 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	public Icon getBrokenIcon(int side)
 	{
 		return breakIcon;
+	}
+
+	@Override
+	public Iterable<Cuboid6> getOcclusionBoxes()
+	{
+		return getCollisionBoxes();
+	}
+
+	@Override
+	public int getSlotMask()
+	{
+		return PartMap.CENTER.mask;
+	}
+
+	@Override
+	public int getHollowSize()
+	{
+		return isInsulated ? 8 : 6;
 	}
 
 	@Override
