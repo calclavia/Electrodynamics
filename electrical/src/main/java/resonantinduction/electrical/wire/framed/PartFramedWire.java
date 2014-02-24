@@ -297,7 +297,7 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	@Override
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Electrical.itemWire);
+		return new ItemStack(Electrical.itemWire, 1, getMaterialID());
 	}
 
 }

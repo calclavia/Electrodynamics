@@ -118,11 +118,11 @@ public class PipeNetwork extends FluidNetwork
 				/**
 				 * Apply "gravity pressure"
 				 */
-				if (i == 0)
+				/*if (i == 0)
 					pressure -= 25;
 				else if (i == 1)
 					pressure += 25;
-
+				 */
 				minPressure = Math.min(pressure, minPressure);
 				maxPressure = Math.max(pressure, maxPressure);
 				totalPressure += pressure;
