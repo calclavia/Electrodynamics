@@ -26,7 +26,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
-		GL11.glRotatef(90, 0, 1, 0);
+		GL11.glRotatef(-90, 0, 1, 0);
 
 		if (tile.worldObj != null)
 			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());

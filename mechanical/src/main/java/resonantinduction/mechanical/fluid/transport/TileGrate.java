@@ -7,8 +7,10 @@ import java.util.PriorityQueue;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
@@ -17,6 +19,7 @@ import calclavia.lib.utility.FluidUtility;
 
 public class TileGrate extends TileAdvanced implements IFluidHandler
 {
+	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private GratePathfinder gratePath;
 
 	@Override
@@ -58,15 +61,17 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null && resource.amount > 0)
+		tank.fill(resource, doFill);
+
+		if (tank.getFluidAmount() > 0)
 		{
 			if (gratePath == null)
 			{
 				gratePath = new GratePathfinder(true);
-				gratePath.startFill(new Vector3(this), resource.fluidID);
+				gratePath.startFill(new Vector3(this), tank.getFluid().getFluid().getID());
 			}
 
-			return gratePath.tryFill(resource.amount, 2000);
+			return tank.drain(gratePath.tryFill(tank.getFluidAmount(), 2000), true).amount;
 		}
 
 		return 0;
@@ -215,33 +220,37 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 		 */
 		public int tryFill(int amount, int tries)
 		{
-			for (int i = 0; i < tries; i++)
+			int filled = 0;
+
+			if (amount >= FluidContainerRegistry.BUCKET_VOLUME)
 			{
-				ComparableVector next = this.workingNodes.poll();
-
-				if (next == null)
+				for (int i = 0; i < tries; i++)
 				{
-					TileGrate.this.resetPath();
-					return 0;
-				}
+					ComparableVector next = workingNodes.poll();
 
-				if (!isConnected(next.position))
-				{
-					TileGrate.this.resetPath();
-					return 0;
-				}
+					if (next == null)
+					{
+						TileGrate.this.resetPath();
+						return 0;
+					}
 
-				int filled = FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType, amount), true);
-				amount -= filled;
+					if (!isConnected(next.position))
+					{
+						TileGrate.this.resetPath();
+						return 0;
+					}
 
-				if (filled > 0)
-				{
-					addNextFill(next);
-					return filled;
+					filled += FluidUtility.fillBlock(TileGrate.this.worldObj, next.position, new FluidStack(fluidType, amount), true);
+
+					if (filled > 0)
+					{
+						addNextFill(next);
+						return filled;
+					}
 				}
 			}
 
-			return 0;
+			return filled;
 		}
 
 		/**
