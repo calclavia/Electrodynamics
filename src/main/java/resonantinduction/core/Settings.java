@@ -14,8 +14,17 @@ import cpw.mods.fml.common.ModMetadata;
 /** @author Calclavia */
 public class Settings
 {
+	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
+
 	/** IDs suggested by Jyzarc and Horfius */
-	public static final IDManager idManager = new IDManager(1200, 20150);
+	public static final IDManager idManager;
+
+	static
+	{
+		CONFIGURATION.load();
+		idManager = new IDManager(CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "BlockIDPrefix", 1200).getInt(1200), CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "ItemIDPrefix", 20150).getInt(20150));
+		CONFIGURATION.save();
+	}
 
 	public static int getNextBlockID()
 	{
@@ -40,7 +49,6 @@ public class Settings
 	}
 
 	/** Settings */
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
 	private static boolean didLoad = false;
 	public static int FURNACE_WATTAGE = 50000;
 	public static boolean SOUND_FXS = true;
@@ -66,6 +74,7 @@ public class Settings
 			LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
 			LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
 			LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
+
 			didLoad = true;
 		}
 	}
