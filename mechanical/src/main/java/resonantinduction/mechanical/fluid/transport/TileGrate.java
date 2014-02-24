@@ -345,7 +345,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 		 */
 		public FluidStack tryDrain(int amount, boolean doDrain)
 		{
-			int tryAmount = 0;
+			int drainedAmount = 0;
 
 			while (!drainNodes.isEmpty())
 			{
@@ -354,37 +354,35 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 				if (!isConnected(fluidCoord.position))
 				{
 					TileGrate.this.resetPath();
-					return new FluidStack(fluidType, tryAmount);
+					return new FluidStack(fluidType, drainedAmount);
 				}
 
-				if (!this.fluidType.equals(FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position)))
+				if (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position) == null || this.fluidType.getID() != FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, fluidCoord.position).getID())
 				{
 					this.drainNodes.poll();
 				}
 				else
 				{
-					int amount1 = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, fluidCoord.position);
+					int checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, fluidCoord.position);
 
-					if (amount1 == 0)
+					if (checkAmount == 0)
 					{
 						this.drainNodes.poll();
 					}
 					else
 					{
-						if (tryAmount + amount1 <= amount)
-						{
-							tryAmount += amount1;
-							fluidCoord.position.setBlock(TileGrate.this.worldObj, 0);
-							this.drainNodes.poll();
-							if (tryAmount == amount)
-								return new FluidStack(fluidType, amount);
-						}
-
 						FluidStack fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain, 3);
 
-						if (fluidStack != null && fluidStack.amount > 0)
+						this.drainNodes.poll();
+
+						if (fluidStack != null)
 						{
-							return new FluidStack(fluidType, fluidStack.amount);
+							drainedAmount += fluidStack.amount;
+
+							if (drainedAmount > amount)
+							{
+								return new FluidStack(fluidType, drainedAmount);
+							}
 						}
 					}
 				}
