@@ -13,7 +13,7 @@ import calclavia.lib.prefab.tile.IRotatable;
 
 public class TilePump extends TileMechanical implements IFluidHandler, IRotatable, IPressure
 {
-	public long maximumPower = 10000;
+	private final long maximumPower = 10000;
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)

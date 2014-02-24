@@ -37,6 +37,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private int pressure;
+	private boolean markPacket = true;
 
 	public PartPipe()
 	{
@@ -60,9 +61,11 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		super.update();
 
-		if (!world().isRemote)
-			if (ticks % 20 == 0)
-				sendFluidUpdate();
+		if (!world().isRemote && markPacket && ticks % 10 == 0)
+		{
+			sendFluidUpdate();
+			markPacket = false;
+		}
 	}
 
 	public void sendFluidUpdate()
@@ -70,6 +73,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 		NBTTagCompound nbt = new NBTTagCompound();
 		tank.writeToNBT(nbt);
 		tile().getWriteStream(this).writeByte(1).writeNBTTagCompound(nbt);
+
 	}
 
 	@Override
@@ -77,7 +81,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		if (packetID == 1)
 		{
-			this.tank.readFromNBT(packet.readNBTTagCompound());
+			tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+			tank.readFromNBT(packet.readNBTTagCompound());
 		}
 		else
 		{
@@ -119,19 +124,28 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return tank.fill(resource, doFill);
+		markPacket = true;
+		if (!world().isRemote)
+			return tank.fill(resource, doFill);
+		return pressure;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return tank.drain(resource.amount, doDrain);
+		markPacket = true;
+		if (!world().isRemote)
+			return tank.drain(resource.amount, doDrain);
+		return null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return tank.drain(maxDrain, doDrain);
+		markPacket = true;
+		if (!world().isRemote)
+			return tank.drain(maxDrain, doDrain);
+		return null;
 	}
 
 	@Override
@@ -149,7 +163,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return this.getNetwork().getTankInfo();
+		return new FluidTankInfo[] { tank.getInfo() };
 	}
 
 	@Override
@@ -164,6 +178,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 		{
 			this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 		}
+
 		return this.tank;
 	}
 
@@ -198,7 +213,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int getMaxFlowRate()
 	{
-		return 50;
+		return 100;
 	}
 
 	@Override

@@ -165,8 +165,9 @@ public class PipeNetwork extends FluidNetwork
 				/**
 				 * Move fluid from higher pressure to lower. In this case, move from tankA to tankB.
 				 */
-				int pressureA = sourcePipe.getPressure(ForgeDirection.getOrientation(i));
-				int pressureB = otherPipe.getPressure(ForgeDirection.getOrientation(i).getOpposite());
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				int pressureA = sourcePipe.getPressure(dir);
+				int pressureB = otherPipe.getPressure(dir.getOpposite());
 
 				if (pressureA >= pressureB)
 				{
@@ -190,8 +191,8 @@ public class PipeNetwork extends FluidNetwork
 
 								if (quantity > 0)
 								{
-									tankA.drain(quantity, true);
-									tankB.fill(new FluidStack(fluidA.getFluid(), quantity), true);
+									sourcePipe.drain(dir.getOpposite(), quantity, true);
+									otherPipe.fill(dir, new FluidStack(fluidA.getFluid(), quantity), true);
 								}
 							}
 						}
