@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +25,8 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.mechanical.fluid.transport.TileGrate;
+import resonantinduction.mechanical.fluid.transport.TileGrate.ComparableVector;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
@@ -144,36 +147,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 					/**
 					 * Normal transportation
 					 */
-					List<ITesla> transferTeslaCoils = new ArrayList<ITesla>();
-
-					for (ITesla teslaReceiver : TeslaGrid.instance().get())
-					{
-						if (new Vector3((TileEntity) teslaReceiver).distance(new Vector3(this)) < this.getRange())
-						{
-							if (teslaReceiver instanceof TileTesla)
-							{
-								if (((TileTesla) teslaReceiver).getHeight() <= 1)
-								{
-									continue;
-								}
-
-								teslaReceiver = ((TileTesla) teslaReceiver).getMultiBlock().get();
-							}
-
-							/**
-							 * Make sure Tesla is not part of this tower.
-							 */
-							if (!this.connectedTeslas.contains(teslaReceiver) && teslaReceiver.canTeslaTransfer(this))
-							{
-								transferTeslaCoils.add(teslaReceiver);
-							}
-						}
-					}
-
-					/**
-					 * Sort by distance.
-					 */
-					Collections.sort(transferTeslaCoils, new Comparator()
+					PriorityQueue<ITesla> teslaToTransfer = new PriorityQueue<ITesla>(1024, new Comparator()
 					{
 						public int compare(ITesla o1, ITesla o2)
 						{
@@ -199,54 +173,79 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 						}
 					});
 
-					if (transferTeslaCoils.size() > 0)
+					for (ITesla teslaReceiver : TeslaGrid.instance().get())
 					{
-						long transferEnergy = this.energy.getEnergy() / transferTeslaCoils.size();
-						int count = 0;
-						boolean sentPacket = false;
-						for (ITesla tesla : transferTeslaCoils)
+						if (new Vector3((TileEntity) teslaReceiver).distance(new Vector3(this)) < this.getRange() && teslaReceiver != this)
 						{
-							if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
+							if (teslaReceiver instanceof TileTesla)
 							{
-								this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
-							}
-
-							Vector3 targetVector = new Vector3((TileEntity) tesla);
-
-							if (tesla instanceof TileTesla)
-							{
-								getMultiBlock().get().outputBlacklist.add(this);
-								targetVector = new Vector3(((TileTesla) tesla).getTopTelsa());
-							}
-
-							double distance = topTeslaVector.distance(targetVector);
-
-							Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
-
-							this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
-
-							if (!sentPacket && transferEnergy > 0)
-							{
-								this.sendPacket(3);
-							}
-
-							if (this.attackEntities && this.zapCounter % 5 == 0)
-							{
-								MovingObjectPosition mop = topTeslaVector.clone().translate(0.5).rayTraceEntities(this.worldObj, targetVector.clone().translate(0.5));
-
-								if (mop != null && mop.entityHit != null)
+								if (((TileTesla) teslaReceiver).getHeight() <= 1)
 								{
-									if (mop.entityHit instanceof EntityLivingBase)
+									continue;
+								}
+
+								teslaReceiver = ((TileTesla) teslaReceiver).getMultiBlock().get();
+							}
+
+							/**
+							 * Make sure Tesla is not part of this tower.
+							 */
+							if (!this.connectedTeslas.contains(teslaReceiver) && teslaReceiver.canTeslaTransfer(this))
+							{
+								teslaToTransfer.add(teslaReceiver);
+							}
+						}
+					}
+
+					if (teslaToTransfer.size() > 0)
+					{
+						long transferEnergy = this.energy.getEnergy() / teslaToTransfer.size();
+
+						boolean sentPacket = false;
+
+						for (int count = 0; count < 10; count++)
+						{
+							if (!teslaToTransfer.isEmpty())
+							{
+								ITesla tesla = teslaToTransfer.poll();
+
+								if (this.zapCounter % 5 == 0 && Settings.SOUND_FXS)
+								{
+									this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, Reference.PREFIX + "electricshock", (float) this.energy.getEnergy() / (float) TRANSFER_CAP, 1.3f - 0.5f * (this.dyeID / 16f));
+								}
+
+								Vector3 targetVector = new Vector3((TileEntity) tesla);
+
+								if (tesla instanceof TileTesla)
+								{
+									getMultiBlock().get().outputBlacklist.add(this);
+									targetVector = new Vector3(((TileTesla) tesla).getTopTelsa());
+								}
+
+								double distance = topTeslaVector.distance(targetVector);
+
+								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
+
+								this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
+
+								if (!sentPacket && transferEnergy > 0)
+								{
+									this.sendPacket(3);
+								}
+
+								if (this.attackEntities && this.zapCounter % 5 == 0)
+								{
+									MovingObjectPosition mop = topTeslaVector.clone().translate(0.5).rayTraceEntities(this.worldObj, targetVector.clone().translate(0.5));
+
+									if (mop != null && mop.entityHit != null)
 									{
-										mop.entityHit.attackEntityFrom(CustomDamageSource.electrocution, 4);
-										Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
+										if (mop.entityHit instanceof EntityLivingBase)
+										{
+											mop.entityHit.attackEntityFrom(CustomDamageSource.electrocution, 4);
+											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
+										}
 									}
 								}
-							}
-
-							if (count++ > 1)
-							{
-								break;
 							}
 						}
 					}

@@ -29,8 +29,12 @@ import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
+import resonantinduction.quantum.gate.BlockGlyph;
+import resonantinduction.quantum.gate.BlockQuantumGate;
+import resonantinduction.quantum.gate.TileQuantumGate;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -89,6 +93,10 @@ public class Electrical
 	public static Block blockArmbot;
 	public static Item itemDisk;
 
+	// Quantum
+	public static Block blockGlyph;
+	public static Block blockQuantumGate;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
@@ -114,6 +122,10 @@ public class Electrical
 		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
 		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
+
+		// Quantum
+		blockGlyph = contentRegistry.createBlock(BlockGlyph.class, ItemBlockMetadata.class);
+		blockQuantumGate = contentRegistry.createTile(BlockQuantumGate.class, TileQuantumGate.class);
 
 		Settings.save();
 
