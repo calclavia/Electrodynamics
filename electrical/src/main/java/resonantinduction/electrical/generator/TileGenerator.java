@@ -89,9 +89,10 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			{
 				if (extract > 0)
 				{
-					long torqueRatio = (long) ((gearRatio + 1) / 3d * (energy.getMaxExtract() / 2));
+					long torqueRatio = (long) ((gearRatio + 1) / 3d * (energy.getMaxExtract()));
 
 					final float maxAngularVelocity = extract / (float) torqueRatio;
+
 					final long maxTorque = (long) (((double) extract) / maxAngularVelocity);
 
 					float setAngularVelocity = maxAngularVelocity;
