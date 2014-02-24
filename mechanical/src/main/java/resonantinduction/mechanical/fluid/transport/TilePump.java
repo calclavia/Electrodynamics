@@ -6,15 +6,14 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
+import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileAdvanced;
 
-public class TilePump extends TileAdvanced implements IFluidHandler, IRotatable, IPressure
+public class TilePump extends TileMechanical implements IFluidHandler, IRotatable, IPressure
 {
-	private int pressure;
+	public long maximumPower = 10000;
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
@@ -75,7 +74,6 @@ public class TilePump extends TileAdvanced implements IFluidHandler, IRotatable,
 	@Override
 	public void setPressure(int amount)
 	{
-		pressure = amount;
 	}
 
 	@Override
@@ -83,14 +81,19 @@ public class TilePump extends TileAdvanced implements IFluidHandler, IRotatable,
 	{
 		if (dir == getDirection())
 		{
-			return 100;
+			return (int) (((double) getPower() / (double) maximumPower) * 100);
 		}
 		else if (dir == getDirection().getOpposite())
 		{
-			return -100;
+			return (int) -(((double) getPower() / (double) maximumPower) * 100);
 		}
 
 		return 0;
 	}
 
+	@Override
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		return true;
+	}
 }

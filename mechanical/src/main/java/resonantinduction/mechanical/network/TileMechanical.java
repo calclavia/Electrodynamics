@@ -8,6 +8,7 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.PartGearShaft;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -43,9 +44,14 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public void updateEntity()
 	{
 		super.updateEntity();
+
 		angle += angularVelocity / 20;
-		torque *= getLoad();
-		angularVelocity *= getLoad();
+
+		if (!worldObj.isRemote)
+		{
+			torque *= getLoad();
+			angularVelocity *= getLoad();
+		}
 
 		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
 		{
@@ -58,6 +64,11 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 			sendRotationPacket();
 			markPacketUpdate = false;
 		}
+	}
+
+	public long getPower()
+	{
+		return (long) (torque * angularVelocity);
 	}
 
 	private void sendRotationPacket()
