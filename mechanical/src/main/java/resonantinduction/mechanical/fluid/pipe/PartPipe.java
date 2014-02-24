@@ -63,7 +63,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		super.update();
 
-		if (!world().isRemote && markPacket && ticks % 10 == 0)
+		if (!world().isRemote && markPacket)
 		{
 			sendFluidUpdate();
 			markPacket = false;
