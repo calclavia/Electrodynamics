@@ -18,7 +18,7 @@ sourceSets {
 	main {
 		java {
 			srcDirs 'src/main/java', 'archaic/src/main/java', 'electrical/src/main/java', 'mechanical/src/main/java'
-			exclude 'resonantinduction/core/nei/**'
+			//exclude 'resonantinduction/core/nei/**'
 		}
 	}
 }
@@ -82,21 +82,22 @@ repositories {
 	}
 	
 	ivy {
-			name 'FMP'
-			artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+		name 'FMP'
+		artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
 	}
-	
-	ivy {
-        name 'CB FS'
-        artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
+
+    ivy {
+		artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
     }
 }
+ 
 dependencies {
 	compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${config.version.universalelectricity}", classifier: "dev"
 	compile group: 'calclaviacore', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
 	compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 	compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-	//compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
+	//compile name: 'NotEnoughItems', version: "1.6.1.8", ext: 'jar'
+	compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
 }
 
 publishing {
