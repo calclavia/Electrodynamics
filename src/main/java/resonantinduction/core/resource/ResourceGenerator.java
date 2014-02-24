@@ -45,6 +45,12 @@ public class ResourceGenerator
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 	public static final Set<String> oreDictBlackList = new HashSet<String>();
+
+	/**
+	 * A list of material names. They are all camelCase reference of ore dictionary names without
+	 * the
+	 * "ore" or "ingot" prefix.
+	 */
 	public static final List<String> materialNames = new ArrayList<String>();
 	public static final HashMap<String, Integer> materialColors = new HashMap<String, Integer>();
 	private static final HashMap<Icon, Integer> iconColorMap = new HashMap<Icon, Integer>();
@@ -59,15 +65,16 @@ public class ResourceGenerator
 	{
 		if (evt.Name.startsWith("ingot") && !oreDictBlackList.contains(evt.Name))
 		{
-			String materialName = evt.Name.replace("ingot", "");
+			String oreDictName = evt.Name.replace("ingot", "");
+			String materialName = LanguageUtility.decapitalizeFirst(oreDictName);
 
 			if (!materialNames.contains(materialName))
 			{
 				Settings.CONFIGURATION.load();
-				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + materialName, true).getBoolean(true);
+				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
 				Settings.CONFIGURATION.save();
 
-				if (!allowMaterial && OreDetectionBlackList.isIngotBlackListed("ingot" + materialName) || OreDetectionBlackList.isOreBlackListed("ore" + materialName))
+				if (!allowMaterial && OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
 					return;
 
 				materialNames.add(materialName);

@@ -69,7 +69,7 @@ public abstract class RecipeResource
 		{
 			return itemStack.copy();
 		}
-		
+
 		@Override
 		public String toString()
 		{
@@ -108,8 +108,11 @@ public abstract class RecipeResource
 
 			if (obj instanceof ItemStackResource)
 			{
-				return OreDictionary.getOres(name).contains(((ItemStackResource) obj).itemStack);
+				for (ItemStack is : OreDictionary.getOres(name).toArray(new ItemStack[0]))
+					if (is.isItemEqual(((ItemStackResource) obj).itemStack))
+						return true;
 			}
+
 			if (obj instanceof ItemStack)
 			{
 				for (ItemStack is : OreDictionary.getOres(name).toArray(new ItemStack[0]))
@@ -126,7 +129,7 @@ public abstract class RecipeResource
 		{
 			return OreDictionary.getOres(name).get(0).copy();
 		}
-		
+
 		@Override
 		public String toString()
 		{
