@@ -390,7 +390,7 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 
 							if (drainedAmount > amount)
 							{
-								return new FluidStack(fluidType, drainedAmount);
+								break;
 							}
 						}
 					}
@@ -398,6 +398,10 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 			}
 
 			TileGrate.this.resetPath();
+
+			if (drainedAmount > 0)
+				return new FluidStack(fluidType, drainedAmount);
+
 			return null;
 		}
 

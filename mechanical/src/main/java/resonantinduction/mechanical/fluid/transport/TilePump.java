@@ -50,7 +50,7 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return false;
+		return from == this.getDirection();
 	}
 
 	@Override
@@ -79,13 +79,16 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 	@Override
 	public int getPressure(ForgeDirection dir)
 	{
-		if (dir == getDirection())
+		if (getPower() > 0)
 		{
-			return (int) (((double) getPower() / (double) maximumPower) * 100);
-		}
-		else if (dir == getDirection().getOpposite())
-		{
-			return (int) -(((double) getPower() / (double) maximumPower) * 100);
+			if (dir == getDirection())
+			{
+				return (int) Math.max((((double) getPower() / (double) maximumPower) * 100), 2);
+			}
+			else if (dir == getDirection().getOpposite())
+			{
+				return (int) -Math.max((((double) getPower() / (double) maximumPower) * 100), 2);
+			}
 		}
 
 		return 0;
