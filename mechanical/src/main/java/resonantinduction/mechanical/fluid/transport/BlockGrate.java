@@ -14,8 +14,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockGrate extends BlockRotatable
 {
-	private Icon drainIcon;
-	private Icon fillIcon;
+	private Icon iconFront;
 
 	public BlockGrate(int id)
 	{
@@ -32,8 +31,7 @@ public class BlockGrate extends BlockRotatable
 	@Override
 	public void registerIcons(IconRegister iconRegister)
 	{
-		this.drainIcon = iconRegister.registerIcon(Reference.PREFIX + "grate_drain");
-		this.fillIcon = iconRegister.registerIcon(Reference.PREFIX + "grate_fill");
+		iconFront = iconRegister.registerIcon(Reference.PREFIX + "grate_front");
 		super.registerIcons(iconRegister);
 	}
 
@@ -55,7 +53,7 @@ public class BlockGrate extends BlockRotatable
 	{
 		if (side == 1)
 		{
-			return drainIcon;
+			return iconFront;
 		}
 
 		return blockIcon;
@@ -71,7 +69,7 @@ public class BlockGrate extends BlockRotatable
 		{
 			if (dir == ((TileGrate) entity).getDirection())
 			{
-				return drainIcon;
+				return iconFront;
 			}
 		}
 
