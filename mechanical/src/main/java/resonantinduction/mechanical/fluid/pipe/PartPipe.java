@@ -126,7 +126,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		markPacket = true;
+		if (doFill)
+			markPacket = true;
 		if (!world().isRemote)
 			return tank.fill(resource, doFill);
 		return pressure;
@@ -135,7 +136,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		markPacket = true;
+		if (doDrain)
+			markPacket = true;
 		if (!world().isRemote)
 			return tank.drain(resource.amount, doDrain);
 		return null;
@@ -144,7 +146,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		markPacket = true;
+		if (doDrain)
+			markPacket = true;
 		if (!world().isRemote)
 			return tank.drain(maxDrain, doDrain);
 		return null;

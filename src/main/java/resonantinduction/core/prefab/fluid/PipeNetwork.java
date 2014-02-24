@@ -191,8 +191,10 @@ public class PipeNetwork extends FluidNetwork
 
 								if (quantity > 0)
 								{
-									sourcePipe.drain(dir.getOpposite(), quantity, true);
-									otherPipe.fill(dir, new FluidStack(fluidA.getFluid(), quantity), true);
+									FluidStack drainStack = sourcePipe.drain(dir.getOpposite(), quantity, false);
+
+									if (drainStack != null)
+										sourcePipe.drain(dir.getOpposite(), otherPipe.fill(dir, drainStack, true), true);
 								}
 							}
 						}
@@ -213,8 +215,8 @@ public class PipeNetwork extends FluidNetwork
 				{
 					if (sourceTank.getFluidAmount() > 0 && transferAmount > 0)
 					{
-						FluidStack drainStack = sourceTank.drain(transferAmount, false);
-						sourceTank.drain(fluidHandler.fill(dir.getOpposite(), drainStack, true), true);
+						FluidStack drainStack = sourcePipe.drain(dir.getOpposite(), transferAmount, false);
+						sourcePipe.drain(dir.getOpposite(), fluidHandler.fill(dir.getOpposite(), drainStack, true), true);
 					}
 				}
 				else if (pressure < tankPressure)
@@ -222,7 +224,7 @@ public class PipeNetwork extends FluidNetwork
 					if (transferAmount > 0)
 					{
 						FluidStack drainStack = fluidHandler.drain(dir.getOpposite(), transferAmount, false);
-						fluidHandler.drain(dir.getOpposite(), sourceTank.fill(drainStack, true), true);
+						fluidHandler.drain(dir.getOpposite(), sourcePipe.fill(dir.getOpposite(), drainStack, true), true);
 					}
 				}
 			}
