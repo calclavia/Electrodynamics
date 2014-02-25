@@ -43,6 +43,15 @@ public class BlockCastingMold extends BlockTile
 	}
 
 	@Override
+	public void onBlockAdded(World world, int x, int y, int z)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile != null)
+			tile.updateEntity();
+	}
+
+	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
@@ -94,7 +103,7 @@ public class BlockCastingMold extends BlockTile
 				InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 				tile.setInventorySlotContents(0, null);
 			}
-			
+
 			return true;
 		}
 

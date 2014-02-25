@@ -159,7 +159,7 @@ public abstract class RecipeResource
 			if (obj instanceof FluidStackResource)
 				return equals(((FluidStackResource) obj).fluidStack);
 
-			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(obj) : false;
+			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(fluidStack) : false;
 		}
 
 		@Override
