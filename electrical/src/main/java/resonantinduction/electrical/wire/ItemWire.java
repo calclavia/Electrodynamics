@@ -27,6 +27,7 @@ import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.TMultiPart;
@@ -55,7 +56,7 @@ public class ItemWire extends JItemMultiPart
 	{
 		BlockCoord onPos = pos.copy().offset(side ^ 1);
 
-		if (player.isSneaking())
+		if (player.isSneaking() && !ControlKeyModifer.isControlDown(player))
 		{
 			PartFramedWire wire = (PartFramedWire) MultiPartRegistry.createPart("resonant_induction_wire", false);
 

@@ -124,7 +124,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 			{
 				TMultiPart part = tile().partMap(i);
 
-				if (part instanceof IEnergyTile)
+				if (part instanceof IEnergyTile && part != this)
 				{
 					foundAnotherPart = true;
 					break;
@@ -154,7 +154,7 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 				{
 					TMultiPart part = tile().partMap(i);
 
-					if (part instanceof IEnergyTile)
+					if (part instanceof IEnergyTile && part != this)
 					{
 						foundAnotherPart = true;
 						break;

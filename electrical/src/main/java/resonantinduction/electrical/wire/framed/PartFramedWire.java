@@ -1,5 +1,9 @@
 package resonantinduction.electrical.wire.framed;
 
+import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.event.EnergyTileUnloadEvent;
+import ic2.api.energy.tile.IEnergyTile;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,11 +17,13 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.PartAdvancedWire;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
@@ -34,12 +40,14 @@ import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.PartMap;
+import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TSlottedPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@UniversalClass
 public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
 {
 	public PartFramedWire()
@@ -64,6 +72,68 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	public String getType()
 	{
 		return "resonant_induction_wire";
+	}
+
+	/**
+	 * IC2 Functions
+	 */
+	@Override
+	public void onWorldJoin()
+	{
+		if (tile() instanceof IEnergyTile && !world().isRemote)
+		{
+			// Check if there's another part that's an IEnergyTile
+			boolean foundAnotherPart = false;
+
+			for (int i = 0; i < tile().partList().size(); i++)
+			{
+				TMultiPart part = tile().partMap(i);
+
+				if (part instanceof IEnergyTile && part != this)
+				{
+					foundAnotherPart = true;
+					break;
+				}
+			}
+
+			if (!foundAnotherPart)
+			{
+				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
+			}
+		}
+	}
+
+	@Override
+	public void preRemove()
+	{
+		if (!world().isRemote)
+		{
+			this.getNetwork().split(this);
+
+			if (tile() instanceof IEnergyTile)
+			{
+				// Check if there's another part that's an IEnergyTile
+				boolean foundAnotherPart = false;
+
+				for (int i = 0; i < tile().partList().size(); i++)
+				{
+					TMultiPart part = tile().partMap(i);
+
+					if (part instanceof IEnergyTile && part != this)
+					{
+						foundAnotherPart = true;
+						break;
+					}
+				}
+
+				if (!foundAnotherPart)
+				{
+					MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) tile()));
+				}
+			}
+		}
+
+		super.preRemove();
 	}
 
 	@Override

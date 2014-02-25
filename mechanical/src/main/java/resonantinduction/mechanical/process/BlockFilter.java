@@ -80,7 +80,7 @@ public class BlockFilter extends BlockTile
 			/**
 			 * Add liquid to bottom.
 			 */
-			checkBelow.setBlock(world, Block.waterStill.blockID, 0, 3);
+			checkBelow.setBlock(world, Block.waterMoving.blockID);
 		}
 	}
 

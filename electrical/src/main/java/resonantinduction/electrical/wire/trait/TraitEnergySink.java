@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
@@ -85,9 +86,9 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 		{
 			TMultiPart part = this.partMap(dir.ordinal());
 
-			if (this.icInterfaces.contains(part))
+			if (part instanceof IEnergySink)
 			{
-				return ((IEnergySink) part).demandedEnergyUnits();
+				demanded += ((IEnergySink) part).demandedEnergyUnits();
 			}
 		}
 
@@ -97,20 +98,30 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	@Override
 	public double injectEnergyUnits(ForgeDirection from, double amount)
 	{
-		if (this.partMap(from.ordinal()) == null)
+		/**
+		 * Try out different sides to try to inject energy into.
+		 */
+		if (partMap(from.ordinal()) instanceof IEnergySink)
 		{
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				if (dir != from.getOpposite())
-				{
-					TMultiPart part = this.partMap(dir.ordinal());
+			return ((IEnergySink) partMap(from.ordinal())).injectEnergyUnits(from, amount);
+		}
 
-					if (this.icInterfaces.contains(part))
-					{
-						return ((IEnergySink) part).injectEnergyUnits(from, amount);
-					}
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (dir != from.getOpposite())
+			{
+				TMultiPart part = this.partMap(dir.ordinal());
+
+				if (part instanceof IEnergySink)
+				{
+					return ((IEnergySink) part).injectEnergyUnits(from, amount);
 				}
 			}
+		}
+
+		if (partMap(PartMap.CENTER.ordinal()) instanceof IEnergySink)
+		{
+			return ((IEnergySink) partMap(PartMap.CENTER.ordinal())).injectEnergyUnits(from, amount);
 		}
 
 		return amount;
@@ -121,5 +132,4 @@ public class TraitEnergySink extends TileMultipart implements IEnergySink
 	{
 		return Integer.MAX_VALUE;
 	}
-
 }
