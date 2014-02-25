@@ -74,7 +74,7 @@ public class ResourceGenerator
 				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
 				Settings.CONFIGURATION.save();
 
-				if (!allowMaterial && OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
+				if (!allowMaterial || OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
 					return;
 
 				materialNames.add(materialName);
