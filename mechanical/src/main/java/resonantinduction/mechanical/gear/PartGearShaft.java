@@ -45,6 +45,7 @@ public class PartGearShaft extends PartMechanical
 		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
 		// Unwind rotation. We can only have "3" axis.
 		this.placementSide = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+		tier = itemDamage;
 	}
 
 	@Override
@@ -54,9 +55,22 @@ public class PartGearShaft extends PartMechanical
 
 		if (!this.world().isRemote)
 		{
-			// Decelerate the gear.
-			torque *= 0.99f;
-			angularVelocity *= 0.99f;
+			// Decelerate the shaft.
+			switch (tier)
+			{
+				default:
+					torque *= 0.997f;
+					angularVelocity *= 0.998f;
+					break;
+				case 1:
+					torque *= 0.998f;
+					angularVelocity *= 0.997f;
+					break;
+				case 2:
+					torque *= 0.99f;
+					angularVelocity *= 0.999f;
+					break;
+			}
 		}
 	}
 

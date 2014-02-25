@@ -1,5 +1,8 @@
 package resonantinduction.mechanical.gear;
 
+import java.util.List;
+
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -28,5 +31,14 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 		}
 
 		return part;
+	}
+
+	@Override
+	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			listToAddTo.add(new ItemStack(itemID, 1, i));
+		}
 	}
 }

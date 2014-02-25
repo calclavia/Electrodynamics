@@ -24,7 +24,20 @@ public class RenderGearShaft implements ISimpleItemRenderer
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glRotatef(90, 1, 0, 0);
-		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+
+		switch (itemStack.getItemDamage())
+		{
+			default:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				break;
+			case 1:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				break;
+			case 2:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				break;
+		}
+
 		MODEL.renderOnly("Shaft");
 	}
 
@@ -51,7 +64,19 @@ public class RenderGearShaft implements ISimpleItemRenderer
 
 		GL11.glRotatef((float) Math.toDegrees(part.angle), 0, 1, 0);
 
-		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+		switch (part.tier)
+		{
+			default:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				break;
+			case 1:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				break;
+			case 2:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				break;
+		}
+
 		MODEL.renderOnly("Shaft");
 
 		GL11.glPopMatrix();
