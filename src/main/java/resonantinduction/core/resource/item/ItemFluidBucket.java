@@ -57,7 +57,8 @@ public class ItemFluidBucket extends ItemBucket
 
     @Override
     public ItemStack onItemRightClick(ItemStack bucket, World world, EntityPlayer player)
-    {
+    {        
+        //TODO pull fluid instance from metadata
         return super.onItemRightClick(bucket, world, player);
     }
 

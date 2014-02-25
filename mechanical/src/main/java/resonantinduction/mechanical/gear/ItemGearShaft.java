@@ -18,6 +18,7 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 	public ItemGearShaft(int id)
 	{
 		super(id);
+		setHasSubtypes(true);
 	}
 
 	@Override
