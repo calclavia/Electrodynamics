@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -17,8 +18,6 @@ import calclavia.lib.utility.WrenchUtility;
 /** @author Darkguardsman */
 public class TileGutter extends TileFluidNetwork implements IFluidPipe
 {
-	private int pressure;
-
 	public TileGutter()
 	{
 		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
@@ -28,11 +27,6 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	public void updateEntity()
 	{
 		super.updateEntity();
-
-		if (!worldObj.isRemote)
-		{
-
-		}
 	}
 
 	@Override
@@ -100,6 +94,11 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	@Override
 	public int getPressure(ForgeDirection dir)
 	{
+		if (dir == ForgeDirection.UP)
+			return  - 3;
+		if (dir == ForgeDirection.DOWN)
+			return  + 3;
+
 		return pressure;
 	}
 
@@ -112,7 +111,42 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	@Override
 	public int getMaxFlowRate()
 	{
-		return 10;
+		return 1;
 	}
 
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		int fill = getInternalTank().fill(resource, doFill);
+		onFluidChanged();
+		return fill;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		FluidStack drain = getInternalTank().drain(resource.amount, doDrain);
+		onFluidChanged();
+		return drain;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		FluidStack drain = getInternalTank().drain(maxDrain, doDrain);
+		onFluidChanged();
+		return drain;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return from != ForgeDirection.UP;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return from != ForgeDirection.UP;
+	}
 }

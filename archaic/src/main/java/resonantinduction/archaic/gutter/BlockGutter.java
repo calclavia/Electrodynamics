@@ -3,10 +3,10 @@ package resonantinduction.archaic.gutter;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -15,6 +15,8 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.fluid.BlockFluidNetwork;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,20 +35,45 @@ public class BlockGutter extends BlockFluidNetwork
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World par1World, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity entity)
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity)
 	{
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.3125F, 1.0F);
-		super.addCollisionBoxesToList(par1World, x, y, z, par5AxisAlignedBB, par6List, entity);
-		float thickness = 0.125F;
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F);
-		super.addCollisionBoxesToList(par1World, x, y, z, par5AxisAlignedBB, par6List, entity);
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, thickness);
-		super.addCollisionBoxesToList(par1World, x, y, z, par5AxisAlignedBB, par6List, entity);
-		this.setBlockBounds(1.0F - thickness, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-		super.addCollisionBoxesToList(par1World, x, y, z, par5AxisAlignedBB, par6List, entity);
-		this.setBlockBounds(0.0F, 0.0F, 1.0F - thickness, 1.0F, 1.0F, 1.0F);
-		super.addCollisionBoxesToList(par1World, x, y, z, par5AxisAlignedBB, par6List, entity);
-		this.setBlockBoundsForItemRender();
+		float thickness = 0.1F;
+
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileGutter)
+		{
+			byte renderSides = ((TileGutter) tile).renderSides;
+
+			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.DOWN))
+			{
+				this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, thickness, 1.0F);
+				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+			}
+
+			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.WEST))
+			{
+				this.setBlockBounds(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F);
+				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+			}
+			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.NORTH))
+			{
+				this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, thickness);
+				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+			}
+			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.EAST))
+			{
+				this.setBlockBounds(1.0F - thickness, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+			}
+			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.SOUTH))
+			{
+				this.setBlockBounds(0.0F, 0.0F, 1.0F - thickness, 1.0F, 1.0F, 1.0F);
+				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
+			}
+		}
+
+		setBlockBounds(0.0F, 0.0F, 0.0F, 1, 0.99f, 1);
 	}
 
 	public void setBlockBoundsForItemRender()
@@ -61,14 +88,44 @@ public class BlockGutter extends BlockFluidNetwork
 
 		if (!world.isRemote && tile instanceof TileGutter)
 		{
-			((TileGutter) tile).fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 10), true);
+			((TileGutter) tile).fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 1), true);
 		}
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World par1World, int x, int y, int z, Entity entity)
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		entity.attackEntityFrom(DamageSource.cactus, 1.0F);
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+		if (tile instanceof TileGutter)
+		{
+			if (((TileGutter) tile).getInternalTank().getFluidAmount() > 0)
+			{
+				int pressure = ((TileGutter) tile).getPressure(null);
+
+				for (int i = 2; i < 6; i++)
+				{
+					ForgeDirection dir = ForgeDirection.getOrientation(i);
+					Vector3 position = new Vector3(x, y, z).translate(dir);
+
+					TileEntity checkTile = position.getTileEntity(world);
+
+					if (checkTile instanceof TileGutter)
+					{
+						int deltaPressure = ((TileGutter) checkTile).getPressure(null) - pressure;
+
+						entity.motionX += 0.01 * dir.offsetX * deltaPressure;
+						entity.motionY += 0.01 * dir.offsetY * deltaPressure;
+						entity.motionZ += 0.01 * dir.offsetZ * deltaPressure;
+					}
+				}
+			}
+		}
+
+		if (entity instanceof EntityItem)
+		{
+			entity.noClip = true;
+		}
 	}
 
 	@Override

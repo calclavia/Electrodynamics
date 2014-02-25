@@ -36,6 +36,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IInformation
 {
+	protected int pressure;
+
 	protected FluidTank tank;
 	protected Object[] connectedBlocks = new Object[6];
 	protected int colorID = 0;
@@ -224,7 +226,8 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 				}
 				else if (id == PACKET_TANK)
 				{
-					this.tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
+					tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
+					pressure = data.readInt();
 					return true;
 				}
 			}
@@ -250,7 +253,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 
 	public void sendTankUpdate()
 	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound())), this.worldObj, new Vector3(this), 60);
+		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()), pressure), this.worldObj, new Vector3(this), 60);
 	}
 
 	@Override
