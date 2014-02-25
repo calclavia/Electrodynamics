@@ -1,5 +1,6 @@
 package resonantinduction.core.prefab.fluid;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
@@ -38,7 +39,6 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	@Override
 	public void update()
 	{
-		// TODO change to distribute fluid
 	}
 
 	@Override
@@ -58,17 +58,14 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	{
 		this.tank = new FluidTank(0);
 
-		synchronized (getConnectors())
+		for (IFluidConnector part : new HashSet<IFluidConnector>(getConnectors()))
 		{
-			for (IFluidConnector part : this.getConnectors())
+			if (part.getNetwork() instanceof IFluidNetwork)
 			{
-				if (part.getNetwork() instanceof IFluidNetwork)
-				{
-					part.setNetwork(this);
-				}
-
-				this.reconstructConnector(part);
+				part.setNetwork(this);
 			}
+
+			this.reconstructConnector(part);
 		}
 
 		this.reconstructTankInfo();
