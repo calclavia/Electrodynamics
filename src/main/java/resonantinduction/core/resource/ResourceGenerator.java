@@ -93,6 +93,8 @@ public class ResourceGenerator
 		OreDictionary.registerOre("oreIron", Block.oreIron);
 		OreDictionary.registerOre("oreLapis", Block.oreLapis);
 
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone));
+
 		for (String materialName : materialNames)
 		{
 			// Caps version of the name

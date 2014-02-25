@@ -1,8 +1,6 @@
 package resonantinduction.archaic.process;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
@@ -12,17 +10,15 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
-import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.FluidUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -83,26 +79,20 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		 * Check blocks above for fluid.
 		 */
 		Vector3 checkPos = new Vector3(this).translate(0, 1, 0);
-		int blockID = checkPos.getBlockID(worldObj);
-		Block block = Block.blocksList[blockID];
+		FluidStack drainStack = FluidUtility.drainBlock(worldObj, checkPos, false);
 
-		if (block instanceof BlockFluidMaterial)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER, drainStack).length > 0)
 		{
-			/**
-			 * Only drain if everything is accepted by the tank.
-			 */
-			FluidStack drainStack = ((BlockFluidMaterial) block).drain(worldObj, checkPos.intX(), checkPos.intY(), checkPos.intZ(), false);
-
 			if (drainStack.amount == tank.fill(drainStack, false))
 			{
-				tank.fill(((BlockFluidMaterial) block).drain(worldObj, checkPos.intX(), checkPos.intY(), checkPos.intZ(), true), true);
+				tank.fill(FluidUtility.drainBlock(worldObj, checkPos, true), true);
 			}
 		}
 
 		/**
 		 * Attempt to cast the fluid
 		 */
-		if (tank.getFluidAmount() > amountPerIngot)
+		while (tank.getFluidAmount() >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize()))
 		{
 			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER, tank.getFluid());
 

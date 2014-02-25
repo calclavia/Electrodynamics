@@ -156,6 +156,9 @@ public abstract class RecipeResource
 		@Override
 		public boolean equals(Object obj)
 		{
+			if (obj instanceof FluidStackResource)
+				return equals(((FluidStackResource) obj).fluidStack);
+
 			return (obj instanceof FluidStack) ? ((FluidStack) obj).equals(obj) : false;
 		}
 

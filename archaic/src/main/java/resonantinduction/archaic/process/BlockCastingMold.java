@@ -72,7 +72,6 @@ public class BlockCastingMold extends BlockTile
 
 				tile.onInventoryChanged();
 			}
-
 		}
 	}
 
@@ -95,6 +94,8 @@ public class BlockCastingMold extends BlockTile
 				InventoryUtility.dropItemStack(world, new Vector3(player), output, 0);
 				tile.setInventorySlotContents(0, null);
 			}
+			
+			return true;
 		}
 
 		return false;
