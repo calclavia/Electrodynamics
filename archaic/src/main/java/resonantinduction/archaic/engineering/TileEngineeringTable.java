@@ -156,6 +156,9 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 	}
 
+	/**
+	 * DO NOT USE THIS INTERNALLY. FOR EXTERNAL USE ONLY!
+	 */
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
@@ -165,7 +168,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 		else if (slot < CRAFTING_OUTPUT_END)
 		{
-			return this.inventory[slot - CRAFTING_MATRIX_END];
+			return inventory[slot - CRAFTING_MATRIX_END];
 		}
 		else if (slot < PLAYER_OUTPUT_END && invPlayer != null)
 		{
@@ -204,6 +207,12 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 		else if (slot < CRAFTING_OUTPUT_END)
 		{
+			/**
+			 * An external inventory is attempting to craft the item from the engineering table.
+			 */
+			if (itemStack == null)
+				onPickUpFromSlot(null, slot, this.inventory[slot - CRAFTING_MATRIX_END]);
+
 			this.inventory[slot - CRAFTING_MATRIX_END] = itemStack;
 		}
 		else if (slot < PLAYER_OUTPUT_END && this.invPlayer != null)
@@ -356,7 +365,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	}
 
 	@Override
-	public void onPickUpFromSlot(EntityPlayer entityPlayer, int s, ItemStack itemStack)
+	public void onPickUpFromSlot(EntityPlayer entityPlayer, int slotID, ItemStack itemStack)
 	{
 		if (!worldObj.isRemote)
 		{
@@ -458,19 +467,58 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return this.getCraftingInv();
+		return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	}
 
+	/**
+	 * Auto-crafting methods.
+	 */
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isItemValidForSlot(slot, itemstack);
+		if (getStackInSlot(4) != null && getStackInSlot(4).getItem() instanceof ItemImprint)
+			return true;
+
+		int minSize = 64;
+		int optimalSlot = -1;
+
+		for (int i = 0; i < craftingMatrix.length; i++)
+		{
+			ItemStack checkStack = getStackInSlot(i);
+
+			if (checkStack != null && checkStack.isItemEqual(itemstack))
+			{
+				if (checkStack.stackSize < minSize || optimalSlot < 0)
+				{
+					optimalSlot = i;
+					minSize = checkStack.stackSize;
+				}
+			}
+		}
+
+		return slot == optimalSlot;
 	}
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		return this.isItemValidForSlot(slot, itemstack);
+		ItemStack outputStack = getStackInSlot(CRAFTING_MATRIX_END);
+
+		if (outputStack != null)
+		{
+			/**
+			 * Only allow take out crafting result when it can be crafted twice!
+			 */
+			Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(outputStack);
+			ItemStack[] doubleResults = ArrayUtils.addAll(idealRecipeItem.right(), idealRecipeItem.right());
+
+			if (!getCraftingManager().consumeItems(false, doubleResults))
+			{
+				return false;
+			}
+		}
+
+		return slot == CRAFTING_MATRIX_END;
 	}
 
 	@Override

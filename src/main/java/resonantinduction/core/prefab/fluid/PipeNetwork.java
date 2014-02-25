@@ -22,12 +22,6 @@ import calclavia.lib.utility.FluidUtility;
  */
 public class PipeNetwork extends FluidNetwork
 {
-	public HashMap<IFluidHandler, EnumSet<ForgeDirection>> sideMap = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>();
-	public HashMap<IFluidHandler, IFluidConnector> connectionMap = new HashMap<IFluidHandler, IFluidConnector>();
-	public int maxFlowRate = 0;
-	public int currentPressure = 0;
-	public int currentFlowRate = 0;
-
 	@Override
 	public void update()
 	{
@@ -39,62 +33,6 @@ public class PipeNetwork extends FluidNetwork
 				distribute((IFluidPipe) connector);
 			}
 		}
-	}
-
-	/**
-	 * Old pipe distribution code.
-	 */
-	@Deprecated
-	public void oldDistribution()
-	{
-		/*
-		 * Slight delay to allow visual effect to take place before draining the pipe's internal
-		 * tank
-		 */
-		FluidStack stack = this.getTank().getFluid().copy();
-		int count = this.sideMap.size();
-
-		Iterator<Entry<IFluidHandler, EnumSet<ForgeDirection>>> it = new HashMap<IFluidHandler, EnumSet<ForgeDirection>>(sideMap).entrySet().iterator();
-
-		while (it.hasNext())
-		{
-			Entry<IFluidHandler, EnumSet<ForgeDirection>> entry = it.next();
-			int sideCount = entry.getValue().size();
-
-			for (ForgeDirection dir : entry.getValue())
-			{
-				int volPer = (stack.amount / count);
-				int volPerSide = (volPer / sideCount);
-				IFluidHandler handler = entry.getKey();
-
-				/*
-				 * Don't input to tanks from the sides where the pipe is extraction mode. This
-				 * prevents feed-back loops.
-				 */
-				if (connectionMap.get(handler).canFlow())
-				{
-					stack.amount -= handler.fill(dir, FluidUtility.getStack(stack, Math.min(volPerSide, this.maxFlowRate)), true);
-				}
-
-				if (sideCount > 1)
-					--sideCount;
-				if (volPer <= 0)
-					break;
-			}
-
-			if (count > 1)
-				count--;
-
-			if (stack == null || stack.amount <= 0)
-			{
-				stack = null;
-				break;
-			}
-		}
-
-		getTank().setFluid(stack);
-		// TODO check for change before rebuilding
-		reconstructTankInfo();
 	}
 
 	/**
@@ -241,36 +179,6 @@ public class PipeNetwork extends FluidNetwork
 	public boolean continueUpdate()
 	{
 		return canUpdate();
-	}
-
-	@Override
-	public void reconstruct()
-	{
-		this.sideMap.clear();
-		this.maxFlowRate = Integer.MAX_VALUE;
-		super.reconstruct();
-	}
-
-	@Override
-	public void reconstructConnector(IFluidConnector connector)
-	{
-		super.reconstructConnector(connector);
-
-		for (int i = 0; i < 6; i++)
-		{
-			if (connector.getConnections()[i] instanceof IFluidHandler && !(connector.getConnections()[i] instanceof IFluidPipe))
-			{
-				EnumSet<ForgeDirection> set = this.sideMap.get(connector.getConnections()[i]);
-				if (set == null)
-				{
-					set = EnumSet.noneOf(ForgeDirection.class);
-				}
-
-				set.add(ForgeDirection.getOrientation(i).getOpposite());
-				sideMap.put((IFluidHandler) connector.getConnections()[i], set);
-				connectionMap.put((IFluidHandler) connector.getConnections()[i], connector);
-			}
-		}
 	}
 
 	@Override
