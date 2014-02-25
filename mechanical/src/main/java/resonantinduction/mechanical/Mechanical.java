@@ -23,6 +23,7 @@ import resonantinduction.mechanical.fluid.transport.TileGrate;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.gear.ItemGearShaft;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import resonantinduction.mechanical.item.ItemPipeGauge;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
@@ -81,6 +82,7 @@ public class Mechanical
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	// Energy
+	public static Item itemHandCrank;
 	public static Item itemGear;
 	public static Item itemGearShaft;
 	public static Block windTurbine;
@@ -115,6 +117,7 @@ public class Mechanical
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
 
+		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
 		windTurbine = contentRegistry.createTile(BlockWindTurbine.class, TileWindTurbine.class);
@@ -159,6 +162,7 @@ public class Mechanical
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		// Add recipes
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 0), "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 1), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 0), 'W', Block.cobblestone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 2), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 1), 'W', Item.ingotIron));

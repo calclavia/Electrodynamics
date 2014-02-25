@@ -117,7 +117,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
 	{
-		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), x(), y(), z()))
+		if (item != null && item.getItem() instanceof ItemHandCrank)
 		{
 			if (player.isSneaking())
 			{
@@ -138,7 +138,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				player.addExhaustion(0.01f);
 			}
 
-			WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), x(), y(), z());
 			return true;
 		}
 		else if (player.isSneaking())

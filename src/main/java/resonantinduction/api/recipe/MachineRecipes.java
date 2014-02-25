@@ -42,6 +42,9 @@ public final class MachineRecipes
 		if (obj instanceof FluidStack)
 			return new FluidStackResource((FluidStack) obj);
 
+		if (obj instanceof RecipeResource)
+			return (RecipeResource) obj;
+
 		return null;
 	}
 

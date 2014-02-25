@@ -9,6 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -87,8 +88,17 @@ public class BlockMillstone extends BlockTile
 		{
 			TileMillstone tile = (TileMillstone) te;
 			ItemStack current = player.inventory.getCurrentItem();
-
 			ItemStack output = tile.getStackInSlot(0);
+
+			if (current != null && current.getItem() instanceof ItemHandCrank)
+			{
+				if (output != null)
+				{
+					tile.doGrind(new Vector3(player));
+					player.addExhaustion(0.3f);
+					return true;
+				}
+			}
 
 			if (output != null)
 			{
@@ -102,27 +112,6 @@ public class BlockMillstone extends BlockTile
 			}
 
 			world.markBlockForUpdate(x, y, z);
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-
-		if (te instanceof TileMillstone)
-		{
-			TileMillstone tile = (TileMillstone) te;
-			ItemStack output = tile.getStackInSlot(0);
-
-			if (output != null)
-			{
-				tile.doGrind(new Vector3(entityPlayer));
-				entityPlayer.addExhaustion(0.3f);
-				return true;
-			}
 		}
 
 		return false;
