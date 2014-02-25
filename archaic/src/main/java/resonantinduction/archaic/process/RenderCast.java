@@ -28,7 +28,7 @@ public class RenderCast extends RenderItemOverlayTile
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-			GL11.glTranslated(0.25, -0.25, -0.25);
+			GL11.glTranslated(0, -0.25, 0);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
 			RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "cast.png");
 			MODEL.renderAll();
