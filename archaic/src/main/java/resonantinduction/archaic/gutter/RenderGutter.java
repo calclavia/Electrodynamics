@@ -1,8 +1,11 @@
-package resonantinduction.archaic.channel;
+package resonantinduction.archaic.gutter;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -11,29 +14,35 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderChannel extends TileEntitySpecialRenderer
+public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
-	public static final RenderChannel INSTANCE = new RenderChannel();
+	public static final RenderGutter INSTANCE = new RenderGutter();
 
-	public static ModelChannel MODEL_TROUGH_PIPE = new ModelChannel();
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "white.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gutter.tcn");
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "gutter.png");
 
 	public static void render(int meta, byte sides)
 	{
-		RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
-		MODEL_TROUGH_PIPE.render(sides, meta == 0 ? true : false);
+		RenderUtility.bind(TEXTURE);
+		MODEL.renderAll();
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f)
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
 	{
-		FluidStack liquid = ((TileChannel) tile).getInternalTank().getFluid();
-		int capacity = ((TileChannel) tile).getInternalTank().getCapacity();
-		byte renderSides = (tile instanceof TileChannel ? ((TileChannel) tile).renderSides : (byte) 0);
+		TileGutter tile = ((TileGutter) tileEntity);
+
+		GL11.glPushMatrix();
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+
+		FluidStack liquid = tile.getInternalTank().getFluid();
+		int capacity = tile.getInternalTank().getCapacity();
+		byte renderSides = (tile instanceof TileGutter ? tile.renderSides : (byte) 0);
 
 		if (liquid != null && liquid.amount > 0)
 		{
@@ -48,7 +57,7 @@ public class RenderChannel extends TileEntitySpecialRenderer
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			GL11.glTranslatef((float) x + 0.3F, (float) y + 0.1F, (float) z + 0.3F);
+			GL11.glTranslatef((float) 0F, (float) 0F, (float) 0.3F);
 			GL11.glScalef(0.4F, 0.4F, 0.4F);
 
 			GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
@@ -92,10 +101,16 @@ public class RenderChannel extends TileEntitySpecialRenderer
 			}
 		}
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
 		render(0, renderSides);
+		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void renderInventoryItem(ItemStack itemStack)
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslated(0.5, 0.5, 0.5);
+		render(itemStack.getItemDamage(), Byte.parseByte("000011", 2));
 		GL11.glPopMatrix();
 	}
 }

@@ -5,8 +5,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.archaic.blocks.BlockTurntable;
-import resonantinduction.archaic.channel.BlockChannel;
-import resonantinduction.archaic.channel.TileChannel;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
@@ -17,6 +15,8 @@ import resonantinduction.archaic.firebox.BlockFirebox;
 import resonantinduction.archaic.firebox.BlockHotPlate;
 import resonantinduction.archaic.firebox.TileFirebox;
 import resonantinduction.archaic.firebox.TileHotPlate;
+import resonantinduction.archaic.gutter.BlockGutter;
+import resonantinduction.archaic.gutter.TileGutter;
 import resonantinduction.archaic.imprint.BlockImprinter;
 import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.archaic.process.BlockCastingMold;
@@ -96,7 +96,7 @@ public class Archaic
 		blockHotPlate = contentRegistry.createTile(BlockHotPlate.class, TileHotPlate.class);
 		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);
 		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
-		blockChannel = contentRegistry.createTile(BlockChannel.class, TileChannel.class);
+		blockChannel = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
 
 		itemImprint = contentRegistry.createItem(ItemImprint.class);
 		itemHammer = contentRegistry.createItem(ItemHammer.class);

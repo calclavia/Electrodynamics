@@ -1,26 +1,25 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.channel.ModelChannel;
-import resonantinduction.archaic.channel.TileChannel;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderPipe
+public class RenderPipe implements ISimpleItemRenderer
 {
 	public static final RenderPipe INSTANCE = new RenderPipe();
 
 	public static ModelPipe MODEL_PIPE = new ModelPipe();
-	public static ModelChannel MODEL_TROUGH_PIPE = new ModelChannel();
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)
@@ -108,5 +107,13 @@ public class RenderPipe
 		RenderUtility.bind(TEXTURE);
 		MODEL_PIPE.render(sides);
 		RenderUtility.disableBlending();
+	}
+
+	@Override
+	public void renderInventoryItem(ItemStack itemStack)
+	{
+		GL11.glPushMatrix();
+		render(itemStack.getItemDamage(), Byte.parseByte("000011", 2));
+		GL11.glPopMatrix();
 	}
 }

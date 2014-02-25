@@ -1,4 +1,4 @@
-package resonantinduction.archaic.channel;
+package resonantinduction.archaic.gutter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,13 +15,13 @@ import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.utility.WrenchUtility;
 
 /** @author Darkguardsman */
-public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFluidPipe
+public class TileGutter extends TileFluidNetwork implements IFluidPipe
 {
-	private boolean isExtracting = false;
+	private int pressure;
 
-	public TileChannel()
+	public TileGutter()
 	{
-		this.getInternalTank().setCapacity(1 * FluidContainerRegistry.BUCKET_VOLUME);
+		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
 	}
 
 	@Override
@@ -31,37 +31,8 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 
 		if (!worldObj.isRemote)
 		{
-			if (isExtracting && getNetwork().getTank().getFluidAmount() < getNetwork().getTank().getCapacity())
-			{
-				for (int i = 0; i < this.getConnections().length; i++)
-				{
-					Object obj = this.getConnections()[i];
 
-					if (obj instanceof IFluidHandler)
-					{
-						FluidStack drain = ((IFluidHandler) obj).drain(ForgeDirection.getOrientation(i).getOpposite(), getMaxFlowRate(), true);
-						fill(null, drain, true);
-					}
-				}
-			}
 		}
-	}
-
-	@Override
-	public boolean onActivated(EntityPlayer player)
-	{
-		if (WrenchUtility.isUsableWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord))
-		{
-			if (!this.worldObj.isRemote)
-			{
-				isExtracting = !isExtracting;
-				player.addChatMessage("Pipe extraction mode: " + isExtracting);
-				WrenchUtility.damageWrench(player, player.getCurrentEquippedItem(), xCoord, yCoord, zCoord);
-			}
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
@@ -71,9 +42,9 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 		{
 			if (tileEntity instanceof IFluidPipe)
 			{
-				if (tileEntity instanceof TileChannel)
+				if (tileEntity instanceof TileGutter)
 				{
-					getNetwork().merge(((TileChannel) tileEntity).getNetwork());
+					getNetwork().merge(((TileGutter) tileEntity).getNetwork());
 					this.setRenderSide(side, true);
 					connectedBlocks[side.ordinal()] = tileEntity;
 				}
@@ -89,7 +60,7 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 	@Override
 	public boolean canFlow()
 	{
-		return !isExtracting;
+		return true;
 	}
 
 	@Override
@@ -129,18 +100,19 @@ public class TileChannel extends TileFluidNetwork implements IBlockActivate, IFl
 	@Override
 	public int getPressure(ForgeDirection dir)
 	{
-		return 0;
-	}
-
-	@Override
-	public int getMaxFlowRate()
-	{
-		return 500;
+		return pressure;
 	}
 
 	@Override
 	public void setPressure(int amount)
 	{
-
+		pressure = amount;
 	}
+
+	@Override
+	public int getMaxFlowRate()
+	{
+		return 10;
+	}
+
 }
