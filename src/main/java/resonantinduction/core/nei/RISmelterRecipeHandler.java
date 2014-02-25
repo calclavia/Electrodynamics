@@ -13,12 +13,6 @@ public class RISmelterRecipeHandler extends RITemplateRecipeHandler
 	}
 
 	@Override
-	public void loadTransferRects()
-	{
-		
-	}
-
-	@Override
 	public RecipeType getMachine()
 	{
 		return RecipeType.SMELTER;
