@@ -14,23 +14,23 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderCast extends RenderItemOverlayTile
+public class RenderCastingMold extends RenderItemOverlayTile
 {
-	public static RenderCast INSTANCE = new RenderCast();
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "cast.tcn");
+	public static RenderCastingMold INSTANCE = new RenderCastingMold();
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "castingMold.tcn");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
-		if (tileEntity instanceof TileCast)
+		if (tileEntity instanceof TileCastingMold)
 		{
-			TileCast tile = (TileCast) tileEntity;
+			TileCastingMold tile = (TileCastingMold) tileEntity;
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 			GL11.glTranslated(0, -0.25, 0);
 			GL11.glScalef(0.5f, 0.5f, 0.5f);
-			RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "cast.png");
+			RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "castingMold.png");
 			MODEL.renderAll();
 			GL11.glPopMatrix();
 

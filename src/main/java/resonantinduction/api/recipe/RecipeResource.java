@@ -73,7 +73,7 @@ public abstract class RecipeResource
 		@Override
 		public String toString()
 		{
-			return "[ItemStackResource {" + itemStack.toString() + "}]";
+			return "[ItemStackResource: " + itemStack.toString() + "]";
 		}
 	}
 
@@ -133,7 +133,7 @@ public abstract class RecipeResource
 		@Override
 		public String toString()
 		{
-			return "[OreDictResource {" + name.toString() + "}]";
+			return "[OreDictResource: " + name + "]";
 		}
 	}
 
@@ -163,6 +163,12 @@ public abstract class RecipeResource
 		public ItemStack getItemStack()
 		{
 			return null;
+		}
+
+		@Override
+		public String toString()
+		{
+			return "[FluidStackResource: " + fluidStack.getFluid().getName() + "]";
 		}
 	}
 }

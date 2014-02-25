@@ -13,12 +13,16 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
+import calclavia.lib.utility.LanguageUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -31,7 +35,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia
  * 
  */
-public class TileCast extends TileExternalInventory implements IFluidHandler, IPacketReceiver
+public class TileCastingMold extends TileExternalInventory implements IFluidHandler, IPacketReceiver
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private final int amountPerIngot = 100;
@@ -100,17 +104,14 @@ public class TileCast extends TileExternalInventory implements IFluidHandler, IP
 		 */
 		if (tank.getFluidAmount() > amountPerIngot)
 		{
-			String fluidName = tank.getFluid().getFluid().getName();
-			String materialName = fluidName.replace("molten", "");
-			String nameCaps = materialName.substring(0, 1).toUpperCase() + materialName.substring(1);
-			String ingotName = "ingot" + nameCaps;
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER, tank.getFluid());
 
-			if (OreDictionary.getOres(ingotName).size() > 0)
+			for (RecipeResource output : outputs)
 			{
-				ItemStack stack = OreDictionary.getOres(ingotName).get(0);
-				incrStackSize(0, stack);
-				tank.drain(amountPerIngot, true);
+				incrStackSize(0, output.getItemStack());
 			}
+
+			tank.drain(amountPerIngot, true);
 		}
 	}
 

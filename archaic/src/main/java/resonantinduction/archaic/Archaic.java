@@ -19,9 +19,9 @@ import resonantinduction.archaic.firebox.TileFirebox;
 import resonantinduction.archaic.firebox.TileHotPlate;
 import resonantinduction.archaic.imprint.BlockImprinter;
 import resonantinduction.archaic.imprint.TileImprinter;
-import resonantinduction.archaic.process.BlockCast;
+import resonantinduction.archaic.process.BlockCastingMold;
 import resonantinduction.archaic.process.BlockMillstone;
-import resonantinduction.archaic.process.TileCast;
+import resonantinduction.archaic.process.TileCastingMold;
 import resonantinduction.archaic.process.TileMillstone;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -95,7 +95,7 @@ public class Archaic
 		blockFirebox = contentRegistry.createBlock(BlockFirebox.class, ItemBlockMetadata.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createTile(BlockHotPlate.class, TileHotPlate.class);
 		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);
-		blockCast = contentRegistry.createTile(BlockCast.class, TileCast.class);
+		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
 		blockChannel = contentRegistry.createTile(BlockChannel.class, TileChannel.class);
 
 		itemImprint = contentRegistry.createItem(ItemImprint.class);

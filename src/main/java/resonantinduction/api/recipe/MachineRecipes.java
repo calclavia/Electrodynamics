@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.api.recipe.RecipeResource.FluidStackResource;
 import resonantinduction.api.recipe.RecipeResource.ItemStackResource;
 import resonantinduction.api.recipe.RecipeResource.OreDictResource;
 
@@ -29,36 +31,41 @@ public final class MachineRecipes
 		}
 	}
 
+	public RecipeResource getResourceFromObject(Object obj)
+	{
+		if (obj instanceof String)
+			return new OreDictResource((String) obj);
+
+		if (obj instanceof ItemStack)
+			return new ItemStackResource((ItemStack) obj);
+
+		if (obj instanceof FluidStack)
+			return new FluidStackResource((FluidStack) obj);
+
+		return null;
+	}
+
 	public void addRecipe(RecipeType machine, RecipeResource[] input, RecipeResource[] output)
 	{
 		this.recipes.get(machine).put(input, output);
 	}
 
-	public void addRecipe(RecipeType machine, ItemStack input, ItemStack output)
+	public void addRecipe(RecipeType machine, Object inputObj, Object... outputObj)
 	{
-		this.addRecipe(machine, new ItemStackResource[] { new ItemStackResource(input) }, new ItemStackResource[] { new ItemStackResource(output) });
-	}
-
-	public void addRecipe(RecipeType machine, String input, ItemStack output)
-	{
-		this.addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, new ItemStackResource[] { new ItemStackResource(output) });
-	}
-
-	public void addRecipe(RecipeType machine, String input, String... oreNameOutputs)
-	{
-		OreDictResource[] outputs = new OreDictResource[oreNameOutputs.length];
+		RecipeResource input = getResourceFromObject(inputObj);
+		RecipeResource[] outputs = new RecipeResource[outputObj.length];
 
 		for (int i = 0; i < outputs.length; i++)
 		{
-			outputs[i] = new OreDictResource(oreNameOutputs[i]);
+			RecipeResource output = getResourceFromObject(outputObj[i]);
+
+			if (input == null || output == null)
+				throw new RuntimeException("Resonant Induction tried to add invalid machine recipe: " + input + " => " + output);
+
+			outputs[i] = output;
 		}
 
-		addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, outputs);
-	}
-
-	public void addRecipe(RecipeType machine, String input, OreDictResource... output)
-	{
-		this.addRecipe(machine, new OreDictResource[] { new OreDictResource(input) }, output);
+		addRecipe(machine, new RecipeResource[] { input }, outputs);
 	}
 
 	public void removeRecipe(RecipeType machine, RecipeResource[] input)
@@ -93,27 +100,15 @@ public final class MachineRecipes
 		return new RecipeResource[] {};
 	}
 
-	public RecipeResource[] getOutput(RecipeType machine, ItemStack... inputs)
+	public RecipeResource[] getOutput(RecipeType machine, Object... inputs)
 	{
 		RecipeResource[] resourceInputs = new RecipeResource[inputs.length];
 
 		for (int i = 0; i < inputs.length; i++)
 		{
-			resourceInputs[i] = new ItemStackResource(inputs[i]);
+			resourceInputs[i] = getResourceFromObject(inputs[i]);
 		}
 
-		return this.getOutput(machine, resourceInputs);
-	}
-
-	public RecipeResource[] getOutput(RecipeType machine, String... oreDictNames)
-	{
-		RecipeResource[] resourceInputs = new RecipeResource[oreDictNames.length];
-
-		for (int i = 0; i < oreDictNames.length; i++)
-		{
-			resourceInputs[i] = new OreDictResource(oreDictNames[i]);
-		}
-
-		return this.getOutput(machine, resourceInputs);
+		return getOutput(machine, resourceInputs);
 	}
 }

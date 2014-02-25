@@ -15,13 +15,9 @@ import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCast extends BlockTile
+public class BlockCastingMold extends BlockTile
 {
-	Icon topIcon;
-	Icon side1Icon;
-	Icon side2Icon;
-
-	public BlockCast(int id)
+	public BlockCastingMold(int id)
 	{
 		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_metal_side");
@@ -46,30 +42,6 @@ public class BlockCast extends BlockTile
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg)
-	{
-		topIcon = iconReg.registerIcon(Reference.PREFIX + "metalCast_top");
-		side1Icon = iconReg.registerIcon(Reference.PREFIX + "metalCast_side_1");
-		side2Icon = iconReg.registerIcon(Reference.PREFIX + "metalCast_side_2");
-		super.registerIcons(iconReg);
-	}
-
-	/** Returns the block texture based on the side being looked at. Args: side */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
-	{
-		if (side == 0)
-			return blockIcon;
-
-		if (side == 1)
-			return topIcon;
-
-		return side % 2 == 0 ? side1Icon : side2Icon;
-	}
-
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
 	{
@@ -86,9 +58,9 @@ public class BlockCast extends BlockTile
 		{
 			TileEntity te = world.getBlockTileEntity(x, y, z);
 
-			if (te instanceof TileCast)
+			if (te instanceof TileCastingMold)
 			{
-				TileCast tile = (TileCast) te;
+				TileCastingMold tile = (TileCastingMold) te;
 
 				ItemStack output = tile.getStackInSlot(0);
 
@@ -109,9 +81,9 @@ public class BlockCast extends BlockTile
 	{
 		TileEntity te = world.getBlockTileEntity(x, y, z);
 
-		if (te instanceof TileCast)
+		if (te instanceof TileCastingMold)
 		{
-			TileCast tile = (TileCast) te;
+			TileCastingMold tile = (TileCastingMold) te;
 			tile.updateEntity();
 
 			ItemStack current = player.inventory.getCurrentItem();
@@ -131,6 +103,6 @@ public class BlockCast extends BlockTile
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileCast();
+		return new TileCastingMold();
 	}
 }

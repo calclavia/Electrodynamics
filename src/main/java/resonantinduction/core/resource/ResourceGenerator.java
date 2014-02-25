@@ -21,7 +21,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.api.recipe.MachineRecipes;
@@ -99,12 +101,12 @@ public class ResourceGenerator
 			/**
 			 * Generate molten fluids
 			 */
-			Fluid fluidMaterial = new Fluid("molten" + nameCaps);
-			fluidMaterial.setDensity(7);
-			fluidMaterial.setViscosity(5000);
-			fluidMaterial.setTemperature(273 + 1538);
-			FluidRegistry.registerFluid(fluidMaterial);
-			Block blockFluidMaterial = new BlockFluidMaterial(fluidMaterial);
+			Fluid fluidMolten = new Fluid("molten" + nameCaps);
+			fluidMolten.setDensity(7);
+			fluidMolten.setViscosity(5000);
+			fluidMolten.setTemperature(273 + 1538);
+			FluidRegistry.registerFluid(fluidMolten);
+			Block blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
 			ResonantInduction.blockFluidMaterials.add(blockFluidMaterial);
 
@@ -126,7 +128,7 @@ public class ResourceGenerator
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, "dust" + nameCaps, "dust" + nameCaps);
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, "dustRefined" + nameCaps);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, "dustRefined" + nameCaps, "ingot" + nameCaps);
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 
 				ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
 				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
