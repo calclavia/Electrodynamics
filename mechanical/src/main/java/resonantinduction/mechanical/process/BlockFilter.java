@@ -6,6 +6,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
@@ -50,9 +54,17 @@ public class BlockFilter extends BlockTile
 		Block bAbove = Block.blocksList[checkAbove.getBlockID(world)];
 		Block bBelow = Block.blocksList[checkAbove.getBlockID(world)];
 
-		if (bAbove instanceof BlockFluidMixture && world.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()))
+		if (bAbove instanceof BlockFluidMixture && (world.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) || checkBelow.getTileEntity(world) instanceof IFluidHandler))
 		{
 			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
+
+			if (checkBelow.getTileEntity(world) instanceof IFluidHandler)
+			{
+				IFluidHandler handler = ((IFluidHandler) checkBelow.getTileEntity(world));
+
+				if (handler.fill(ForgeDirection.UP, new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false) <= 0)
+					return;
+			}
 
 			/**
 			 * Leak the fluid down.
@@ -68,9 +80,9 @@ public class BlockFilter extends BlockTile
 				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}
 
-			//TODO: Check if this is correct?
+			// TODO: Check if this is correct?
 			int remaining = amount - 2;
-			
+
 			/**
 			 * Remove liquid from top.
 			 */
@@ -80,7 +92,15 @@ public class BlockFilter extends BlockTile
 			/**
 			 * Add liquid to bottom.
 			 */
-			checkBelow.setBlock(world, Block.waterMoving.blockID);
+			if (checkBelow.getTileEntity(world) instanceof IFluidHandler)
+			{
+				IFluidHandler handler = ((IFluidHandler) checkBelow.getTileEntity(world));
+				handler.fill(ForgeDirection.UP, new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), true);
+			}
+			else
+			{
+				checkBelow.setBlock(world, Block.waterMoving.blockID);
+			}
 		}
 	}
 

@@ -113,7 +113,9 @@ public class RenderPipe implements ISimpleItemRenderer
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
-		render(itemStack.getItemDamage(), Byte.parseByte("000011", 2));
+		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
+		GL11.glScalef(1.0F, -1F, -1F);
+		render(itemStack.getItemDamage(), Byte.parseByte("001100", 2));
 		GL11.glPopMatrix();
 	}
 }
