@@ -61,6 +61,18 @@ public class BlockWindTurbine extends BlockTurbine
 		return false;
 	}
 
+	@Override
+	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileTurbine)
+			if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
+				world.setBlockMetadataWithNotify(x, y, z, side, 3);
+		
+		return true;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderType()
