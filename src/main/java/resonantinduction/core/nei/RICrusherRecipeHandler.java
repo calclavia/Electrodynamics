@@ -13,12 +13,6 @@ public class RICrusherRecipeHandler extends RITemplateRecipeHandler
 	}
 
 	@Override
-	public void loadTransferRects()
-	{
-		
-	}
-
-	@Override
 	public RecipeType getMachine()
 	{
 		return RecipeType.CRUSHER;

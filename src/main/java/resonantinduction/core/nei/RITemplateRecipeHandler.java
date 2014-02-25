@@ -1,5 +1,6 @@
 package resonantinduction.core.nei;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,15 +36,13 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	@Override
 	public void loadTransferRects()
 	{
-		// transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(57, 26, 52,
-		// 22), getMachine().name().toLowerCase(), new Object[0]));
-		// No point, there is no GUI class to use it... :(
+		transferRects.add(new TemplateRecipeHandler.RecipeTransferRect(new Rectangle(57, 26, 52, 22), getMachine().name().toLowerCase(), new Object[0]));
 	}
 
 	@Override
 	public int recipiesPerPage()
 	{
-		return 1;
+		return 2;
 	}
 
 	@Override
@@ -59,6 +58,23 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	}
 
 	@Override
+	public void loadCraftingRecipes(String outputId, Object... results)
+	{
+		if (outputId.equals(this.getOverlayIdentifier()))
+		{
+			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+			{
+				CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
+				this.arecipes.add(recipe);
+			}
+		}
+        else
+        {
+            super.loadCraftingRecipes(outputId, results);
+        }
+	}
+
+	@Override
 	public void loadCraftingRecipes(ItemStack result)
 	{
 		for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
@@ -69,6 +85,23 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 				this.arecipes.add(recipe);
 			}
 		}
+	}
+
+	@Override
+	public void loadUsageRecipes(String inputId, Object... ingredients)
+	{
+		if (inputId.equals(this.getOverlayIdentifier()))
+		{
+			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+			{
+				CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
+				this.arecipes.add(recipe);
+			}
+		}
+        else
+        {
+            super.loadUsageRecipes(inputId, ingredients);
+        }
 	}
 
 	@Override
@@ -147,7 +180,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 					// inputSlots[i][0], inputSlots[i++][1]));
 					// TODO fluidstack compatibility
 				}
-				
+
 				if (this.inputs.size() > 0)
 					this.inputs.get(this.inputs.size() - 1).generatePermutations();
 			}
