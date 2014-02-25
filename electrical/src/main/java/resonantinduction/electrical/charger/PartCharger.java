@@ -113,7 +113,8 @@ public class PartCharger extends PartFace implements IExternalInventory, ISidedI
 			if (energyLeft <= 0)
 				break;
 		}
-		if (energyUsed > 0 && System.currentTimeMillis() - this.lastPacket >= 50)
+
+		if (!world().isRemote && energyUsed > 0 && System.currentTimeMillis() - this.lastPacket >= 50)
 		{
 			this.lastPacket = System.currentTimeMillis();
 			sendDescUpdate();

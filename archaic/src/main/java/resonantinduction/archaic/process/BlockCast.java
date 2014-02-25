@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
+import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -24,6 +25,25 @@ public class BlockCast extends BlockTile
 	{
 		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_metal_side");
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RIBlockRenderingHandler.ID;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
 	}
 
 	@SideOnly(Side.CLIENT)
