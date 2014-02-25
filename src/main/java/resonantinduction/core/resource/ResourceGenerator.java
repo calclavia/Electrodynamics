@@ -103,23 +103,23 @@ public class ResourceGenerator
 			/**
 			 * Generate molten fluids
 			 */
-			Fluid fluidMolten = new Fluid("molten" + nameCaps);
+			Fluid fluidMolten = new Fluid(materialNameToMolten(materialName));
 			fluidMolten.setDensity(7);
 			fluidMolten.setViscosity(5000);
 			fluidMolten.setTemperature(273 + 1538);
 			FluidRegistry.registerFluid(fluidMolten);
 			Block blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
-			ResonantInduction.blockFluidMaterials.add(blockFluidMaterial);
+			ResonantInduction.blockMoltenFluid.add(blockFluidMaterial);
 
 			/**
 			 * Generate dust mixture fluids
 			 */
-			Fluid fluidMixture = new Fluid("mixture" + nameCaps);
+			Fluid fluidMixture = new Fluid(materialNameToMixture(materialName));
 			FluidRegistry.registerFluid(fluidMixture);
 			Block blockFluidMixture = new BlockFluidMixture(fluidMixture);
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
-			ResonantInduction.blockFluidMixtures.add(blockFluidMixture);
+			ResonantInduction.blockMixtureFluids.add(blockFluidMixture);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 			{
@@ -252,9 +252,44 @@ public class ResourceGenerator
 		return 0xFFFFFF;
 	}
 
-	public static Block getFluidMaterial(String name)
+	public static String moltenNameToMaterial(String fluidName)
 	{
-		return ResonantInduction.blockFluidMaterials.get((getID(name)));
+		return fluidNameToMaterial(fluidName, "molten");
+	}
+
+	public static String materialNameToMolten(String fluidName)
+	{
+		return materialNameToFluid(fluidName, "molten");
+	}
+
+	public static String mixtureToMaterial(String fluidName)
+	{
+		return fluidNameToMaterial(fluidName, "mixture");
+	}
+
+	public static String materialNameToMixture(String fluidName)
+	{
+		return materialNameToFluid(fluidName, "mixture");
+	}
+
+	public static String fluidNameToMaterial(String fluidName, String type)
+	{
+		return LanguageUtility.underscoreToCamel(fluidName).replace(type, "");
+	}
+
+	public static String materialNameToFluid(String materialName, String type)
+	{
+		return type + "_" + LanguageUtility.camelToLowerUnderscore(materialName);
+	}
+
+	public static Block getMixture(String name)
+	{
+		return ResonantInduction.blockMixtureFluids.get((getID(name)));
+	}
+
+	public static Block getMolten(String name)
+	{
+		return ResonantInduction.blockMoltenFluid.get((getID(name)));
 	}
 
 	public static int getID(String name)

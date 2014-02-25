@@ -74,4 +74,9 @@ public class BlockFluidMixture extends BlockFluidFinite
 	{
 		return true;
 	}
+
+	public int getQuantaPerBlock()
+	{
+		return quantaPerBlock;
+	}
 }

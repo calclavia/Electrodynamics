@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
@@ -71,17 +72,18 @@ public class BlockFilter extends BlockTile
 			 */
 			BlockFluidMixture fluidBlock = (BlockFluidMixture) bAbove;
 			int amount = fluidBlock.getQuantaValue(world, checkAbove.intX(), checkAbove.intY(), checkAbove.intZ());
+			int leakAmount = 2;
 
 			/**
 			 * Drop item from fluid.
 			 */
-			for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(fluidBlock.getFluid().getName().replace("mixture", ""))))
+			for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName())))
 			{
 				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}
 
 			// TODO: Check if this is correct?
-			int remaining = amount - 2;
+			int remaining = amount - leakAmount;
 
 			/**
 			 * Remove liquid from top.

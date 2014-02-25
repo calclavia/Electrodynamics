@@ -77,8 +77,8 @@ public class ResonantInduction
 	public static ItemOreResource itemDust;
 	public static ItemOreResource itemRefinedDust;
 	public static Block blockDust;
-	public static final List<Block> blockFluidMixtures = new ArrayList<Block>();
-	public static final List<Block> blockFluidMaterials = new ArrayList<Block>();
+	public static final List<Block> blockMixtureFluids = new ArrayList<Block>();
+	public static final List<Block> blockMoltenFluid = new ArrayList<Block>();
 	public static Block blockMachinePart;
 
 	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();

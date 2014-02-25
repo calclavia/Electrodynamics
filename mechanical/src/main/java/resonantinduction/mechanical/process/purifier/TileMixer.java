@@ -15,6 +15,7 @@ import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
 import resonantinduction.mechanical.process.Timer;
@@ -153,7 +154,7 @@ public class TileMixer extends TileMechanical
 		}
 		else if (worldObj.isAirBlock(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ()) || block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID)
 		{
-			mixPosition.setBlock(worldObj, ResonantInduction.blockFluidMixtures.get(entity.getEntityItem().getItemDamage()).blockID);
+			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem().getItemDamage())).blockID);
 		}
 
 		return false;

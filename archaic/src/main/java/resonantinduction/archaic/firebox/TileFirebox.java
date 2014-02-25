@@ -126,7 +126,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						if (heatEnergy >= getMeltIronEnergy((meta / 8f) * 1000))
 						{
 							// TODO: Make refined dust yield more molten fluid than normal dust.
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getFluidMaterial(name).blockID, meta, 3);
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name).blockID, meta, 3);
 							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
 							if (tile instanceof TileMaterial)

@@ -26,10 +26,10 @@ public class NEIResonantInductionConfig implements IConfigureNEI
 		API.registerRecipeHandler(new RISmelterRecipeHandler());
 		API.registerUsageHandler(new RISmelterRecipeHandler());
 
-		for (Block block : ResonantInduction.blockFluidMixtures)
+		for (Block block : ResonantInduction.blockMixtureFluids)
 			API.hideItem(block.blockID);
 
-		for (Block block : ResonantInduction.blockFluidMaterials)
+		for (Block block : ResonantInduction.blockMoltenFluid)
 			API.hideItem(block.blockID);
 
 		API.hideItem(ResonantInduction.blockDust.blockID);
