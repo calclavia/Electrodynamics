@@ -56,8 +56,9 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 			}
 
 			int blockIDAbove = worldObj.getBlockId(xCoord, yCoord + 1, zCoord);
+			int metadata = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord);
 
-			if (blockIDAbove == Block.waterStill.blockID && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord))
+			if (blockIDAbove == Block.waterStill.blockID && worldObj.isAirBlock(xCoord, yCoord - 1, zCoord) && metadata == 0)
 			{
 				powerTicks = 20;
 				worldObj.setBlockToAir(xCoord, yCoord + 1, zCoord);
