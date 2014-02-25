@@ -184,7 +184,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 					IInventory inventory = (IInventory) tile;
 					int slotID = slot - idDisplacement;
 
-					if (slotID < inventory.getSizeInventory())
+					if (slotID >= 0 && slotID < inventory.getSizeInventory())
 						return inventory.getStackInSlot(slotID);
 
 					idDisplacement += inventory.getSizeInventory();
@@ -229,7 +229,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 					IInventory inventory = (IInventory) tile;
 					int slotID = slot - idDisplacement;
 
-					if (slotID < inventory.getSizeInventory())
+					if (slotID >= 0 && slotID < inventory.getSizeInventory())
 						inventory.setInventorySlotContents(slotID, itemStack);
 
 					idDisplacement += inventory.getSizeInventory();
