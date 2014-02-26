@@ -23,8 +23,8 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
  
-group = "icbm"
-archivesBaseName = "ICBM"
+group = "resonantinduction"
+archivesBaseName = "Resonant-Induction"
  
 minecraft {
     version = "${rootProject.config.version.minecraft}-${rootProject.config.version.forge}"
@@ -92,7 +92,7 @@ allprojects {
 }
  
 subprojects {
-    archivesBaseName = "ICBM"
+    archivesBaseName = "Resonant-Induction"
     
     dependencies {
         compile rootProject
@@ -117,7 +117,7 @@ task copyBuildXml(type: Copy) {
 task apiZip(type: Zip) {
     classifier = 'api'
     from sourceSets*.allSource
-    include 'icbm/api/**'
+    include 'resonantinduction/api/**'
     destinationDir = file 'output'
 }
  
