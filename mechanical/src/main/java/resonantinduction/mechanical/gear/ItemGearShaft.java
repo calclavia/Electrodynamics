@@ -22,6 +22,12 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 	}
 
 	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return super.getUnlocalizedName(itemStack) + "." + itemStack.getItemDamage();
+	}
+
+	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
 		PartGearShaft part = (PartGearShaft) MultiPartRegistry.createPart("resonant_induction_gear_shaft", false);

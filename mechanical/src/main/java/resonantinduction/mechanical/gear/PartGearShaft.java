@@ -128,7 +128,7 @@ public class PartGearShaft extends PartMechanical
 	@Override
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Mechanical.itemGearShaft);
+		return new ItemStack(Mechanical.itemGearShaft, 1, tier);
 	}
 
 	@Override
