@@ -48,6 +48,7 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 				this.setRenderSide(side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
+			getNetwork().markChanged();
 		}
 	}
 
@@ -95,9 +96,9 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	public int getPressure(ForgeDirection dir)
 	{
 		if (dir == ForgeDirection.UP)
-			return  - 3;
+			return -3;
 		if (dir == ForgeDirection.DOWN)
-			return  + 3;
+			return +3;
 
 		return pressure;
 	}

@@ -53,15 +53,6 @@ public class PipeNetwork extends FluidNetwork
 			{
 				int pressure = ((IPressure) obj).getPressure(ForgeDirection.getOrientation(i).getOpposite());
 
-				/**
-				 * Apply "gravity pressure"
-				 */
-				/*
-				 * if (i == 0)
-				 * pressure -= 25;
-				 * else if (i == 1)
-				 * pressure += 25;
-				 */
 				minPressure = Math.min(pressure, minPressure);
 				maxPressure = Math.max(pressure, maxPressure);
 				totalPressure += pressure;

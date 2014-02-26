@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
@@ -14,6 +15,31 @@ import calclavia.lib.prefab.tile.IRotatable;
 public class TilePump extends TileMechanical implements IFluidHandler, IRotatable, IPressure
 {
 	private final long maximumPower = 10000;
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (!worldObj.isRemote && getPower() > 0)
+		{
+			/**
+			 * Try to suck fluid in
+			 */
+			TileEntity tileIn = new Vector3(this).translate(getDirection().getOpposite()).getTileEntity(this.worldObj);
+
+			if (tileIn instanceof IFluidHandler && !(tileIn instanceof IFluidPipe))
+			{
+				int flowRate = (int) (((double) getPower() / (double) maximumPower) * 500);
+				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), flowRate, false);
+
+				if (drain != null)
+				{
+					((IFluidHandler) tileIn).drain(getDirection(), fill(getDirection().getOpposite(), drain, true), true);
+				}
+			}
+		}
+	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)

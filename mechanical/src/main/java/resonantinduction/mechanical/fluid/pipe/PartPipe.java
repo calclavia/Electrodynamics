@@ -68,6 +68,8 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			sendFluidUpdate();
 			markPacket = false;
 		}
+
+		getNetwork().markChanged();
 	}
 
 	public void sendFluidUpdate()
@@ -75,7 +77,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 		NBTTagCompound nbt = new NBTTagCompound();
 		tank.writeToNBT(nbt);
 		tile().getWriteStream(this).writeByte(1).writeNBTTagCompound(nbt);
-
 	}
 
 	@Override
@@ -120,36 +121,55 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			this.network = new PipeNetwork();
 			this.network.addConnector(this);
 		}
+
 		return this.network;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (doFill)
-			markPacket = true;
 		if (!world().isRemote)
+		{
+			if (doFill)
+			{
+				markPacket = true;
+				getNetwork().markChanged();
+			}
+
 			return tank.fill(resource, doFill);
-		return pressure;
+		}
+		return 0;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (doDrain)
-			markPacket = true;
 		if (!world().isRemote)
+		{
+			if (doDrain)
+			{
+				markPacket = true;
+				getNetwork().markChanged();
+			}
+
 			return tank.drain(resource.amount, doDrain);
+		}
 		return null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (doDrain)
-			markPacket = true;
 		if (!world().isRemote)
+		{
+			if (doDrain)
+			{
+				markPacket = true;
+				getNetwork().markChanged();
+			}
+
 			return tank.drain(maxDrain, doDrain);
+		}
 		return null;
 	}
 

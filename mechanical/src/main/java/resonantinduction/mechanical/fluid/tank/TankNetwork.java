@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.core.prefab.fluid.FluidNetwork;
+import universalelectricity.core.net.NetworkTickHandler;
 
 /**
  * Network that handles connected tanks
