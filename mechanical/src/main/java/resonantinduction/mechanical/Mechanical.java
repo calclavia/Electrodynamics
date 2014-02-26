@@ -178,6 +178,7 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "BBB", "B B", "BBB", 'B', Block.fenceIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', itemGear));
 
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3), "BBB", "   ", "BBB", 'B', Item.ingotIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 4), "BBB", "   ", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get()));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
