@@ -1,5 +1,6 @@
 package resonantinduction.core.resource;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -12,7 +13,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -211,10 +214,19 @@ public class BlockDust extends BlockTile
 		return ResonantInduction.itemRefinedDust.itemID;
 	}
 
+	int nextDropMaterialID = 0;
+
 	@Override
-	public int damageDropped(int par1)
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
 	{
-		return par1;
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileMaterial)
+		{
+			nextDropMaterialID = ResourceGenerator.getID(((TileMaterial) tileEntity).name);
+		}
+
+		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
 	@Override
@@ -226,7 +238,13 @@ public class BlockDust extends BlockTile
 		{
 			return ResourceGenerator.getID(((TileMaterial) tileEntity).name);
 		}
-		return 0;
+
+		return damageDropped(0);
+	}
+
+	public int damageDropped(int par1)
+	{
+		return nextDropMaterialID;
 	}
 
 	@SideOnly(Side.CLIENT)
