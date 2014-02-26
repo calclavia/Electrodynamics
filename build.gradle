@@ -53,8 +53,7 @@ allprojects {
             url = "http://files.minecraftforge.net/maven"
         }
 		ivy {
-			name 'CB FS'
-			artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+			artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
 		}
         mavenCentral()
     }
@@ -64,6 +63,7 @@ allprojects {
         compile group: 'calclaviacore', name: 'calclavia-core', version: "${rootProject.config.version.calclaviacore}", classifier: "dev"
     	compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 		compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
+		compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
 	}
     
     jar {

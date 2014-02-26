@@ -50,15 +50,6 @@ public class BlockFilter extends BlockTile
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity entity)
-	{
-		if (entity instanceof EntityItem)
-			return;
-
-		super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, entity);
-	}
-
-	@Override
 	public void updateTick(World world, int x, int y, int z, Random random)
 	{
 		Vector3 position = new Vector3(x, y, z);

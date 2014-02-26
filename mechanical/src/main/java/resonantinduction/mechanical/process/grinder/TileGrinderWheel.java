@@ -135,7 +135,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 			if (!this.worldObj.isRemote)
 			{
-				EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY - 1.2, entity.posZ, outputStack.copy());
+				EntityItem entityItem = new EntityItem(this.worldObj, entity.posX, entity.posY - 1.2, entity.posZ, outputStack);
 				entityItem.delayBeforeCanPickup = 20;
 				entityItem.motionX = 0;
 				entityItem.motionY = 0;

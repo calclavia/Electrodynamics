@@ -115,15 +115,19 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	}
 
 	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
+	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
-		if (item != null && item.getItem() instanceof ItemHandCrank)
+		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
+		{
+			getMultiBlock().get().manualCrankTime = 10;
+			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
+			player.addExhaustion(0.01f);
+			return true;
+		}
+
+		if (WrenchUtility.isWrench(itemStack))
 		{
 			if (player.isSneaking())
-			{
-				getMultiBlock().toggleConstruct();
-			}
-			else if (ControlKeyModifer.isControlDown(player))
 			{
 				if (!world().isRemote)
 				{
@@ -133,9 +137,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			}
 			else
 			{
-				getMultiBlock().get().manualCrankTime = 10;
-				world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
-				player.addExhaustion(0.01f);
+				getMultiBlock().toggleConstruct();
 			}
 
 			return true;
@@ -149,7 +151,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			}
 		}
 
-		return super.activate(player, hit, item);
+		return super.activate(player, hit, itemStack);
 	}
 
 	@Override
