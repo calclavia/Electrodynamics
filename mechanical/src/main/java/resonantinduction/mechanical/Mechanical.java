@@ -33,6 +33,7 @@ import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileRejector;
 import resonantinduction.mechanical.network.PacketNetwork;
 import resonantinduction.mechanical.process.BlockFilter;
+import resonantinduction.mechanical.process.TileFilter;
 import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
 import resonantinduction.mechanical.process.grinder.TileGrinderWheel;
 import resonantinduction.mechanical.process.purifier.BlockMixer;
@@ -138,7 +139,7 @@ public class Mechanical
 		// Machines
 		blockGrinderWheel = contentRegistry.createTile(BlockGrindingWheel.class, TileGrinderWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
-		blockFilter = contentRegistry.createBlock(BlockFilter.class);
+		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
 		OreDictionary.registerOre("gear", itemGear);
 
 		proxy.preInit();
