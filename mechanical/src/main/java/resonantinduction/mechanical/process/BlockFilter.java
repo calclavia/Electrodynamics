@@ -55,6 +55,8 @@ public class BlockFilter extends BlockTile
 		Block bAbove = Block.blocksList[checkAbove.getBlockID(world)];
 		Block bBelow = Block.blocksList[checkAbove.getBlockID(world)];
 
+		world.scheduleBlockUpdate(x, y, z, blockID, 20);
+
 		if (bAbove instanceof BlockFluidMixture && (world.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) || checkBelow.getTileEntity(world) instanceof IFluidHandler))
 		{
 			world.spawnParticle("dripWater", x + 0.5, y, z + 0.5, 0, 0, 0);
@@ -77,7 +79,7 @@ public class BlockFilter extends BlockTile
 			/**
 			 * Drop item from fluid.
 			 */
-			for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName())))
+			for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
 			{
 				InventoryUtility.dropItemStack(world, checkAbove.clone().add(0.5), resoure.getItemStack().copy());
 			}
@@ -104,6 +106,7 @@ public class BlockFilter extends BlockTile
 				checkBelow.setBlock(world, Block.waterMoving.blockID);
 			}
 		}
+
 	}
 
 	@Override

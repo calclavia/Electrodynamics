@@ -2,10 +2,12 @@ package resonantinduction.core.resource;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
@@ -14,6 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -33,6 +37,9 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.nbt.IVirtualObject;
+import calclavia.lib.utility.nbt.NBTUtility;
+import calclavia.lib.utility.nbt.SaveManager;
 
 import com.google.common.collect.HashBiMap;
 
@@ -41,7 +48,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** @author Calclavia */
-public class ResourceGenerator
+public class ResourceGenerator implements IVirtualObject
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 
@@ -59,7 +66,8 @@ public class ResourceGenerator
 
 	static
 	{
-		OreDetectionBlackList.addIngot("refinedIron");
+		OreDetectionBlackList.addIngot("ingotRefinedIron");
+		SaveManager.register(INSTANCE);
 	}
 
 	@ForgeSubscribe
@@ -119,14 +127,16 @@ public class ResourceGenerator
 			FluidRegistry.registerFluid(fluidMolten);
 			Block blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
-			ResonantInduction.blockMoltenFluid.add(blockFluidMaterial);
+			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
+			FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
 
 			/** Generate dust mixture fluids */
 			Fluid fluidMixture = new Fluid(materialNameToMixture(materialName));
 			FluidRegistry.registerFluid(fluidMixture);
 			Block blockFluidMixture = new BlockFluidMixture(fluidMixture);
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
-			ResonantInduction.blockMixtureFluids.add(blockFluidMixture);
+			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
+			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 			{
@@ -279,7 +289,7 @@ public class ResourceGenerator
 
 	public static String fluidNameToMaterial(String fluidName, String type)
 	{
-		return LanguageUtility.underscoreToCamel(fluidName).replace(type, "");
+		return LanguageUtility.decapitalizeFirst(LanguageUtility.underscoreToCamel(fluidName).replace(type, ""));
 	}
 
 	public static String materialNameToFluid(String materialName, String type)
@@ -323,8 +333,59 @@ public class ResourceGenerator
 		return 0xFFFFFF;
 	}
 
-	public static Set<String> getMaterials()
+	public static List<String> getMaterials()
 	{
-		return materials.keySet();
+		List<String> returnMaterials = new ArrayList<String>();
+
+		for (int i = 0; i < materials.size(); i++)
+		{
+			returnMaterials.add(getName(i));
+		}
+
+		return returnMaterials;
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		NBTTagList list = new NBTTagList();
+
+		for (Entry<String, Integer> entry : materials.entrySet())
+		{
+			NBTTagCompound node = new NBTTagCompound();
+			node.setString("materialName", entry.getKey());
+			node.setInteger("materialID", entry.getValue());
+			list.appendTag(node);
+		}
+
+		nbt.setTag("materialIDMap", list);
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		if (nbt.hasKey("materialIDMap"))
+		{
+			materials.clear();
+			NBTTagList nbtList = nbt.getTagList("materialIDMap");
+
+			for (int i = 0; i < nbtList.tagCount(); ++i)
+			{
+				NBTTagCompound node = (NBTTagCompound) nbtList.tagAt(i);
+				materials.put(node.getString("materialName"), node.getInteger("materialID"));
+			}
+		}
+	}
+
+	@Override
+	public File getSaveFile()
+	{
+		return new File(NBTUtility.getSaveDirectory(), "Resource_Generator.dat");
+	}
+
+	@Override
+	public void setSaveFile(File file)
+	{
+
 	}
 }

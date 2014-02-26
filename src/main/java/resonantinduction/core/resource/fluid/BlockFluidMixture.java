@@ -51,7 +51,7 @@ public class BlockFluidMixture extends BlockFluidFinite
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
-		return ResourceGenerator.getColor(getFluid().getName().replace("mixture", ""));
+		return ResourceGenerator.getColor(ResourceGenerator.mixtureToMaterial(getFluid().getName()));
 	}
 
 	public boolean mix(World world, int x, int y, int z, ItemStack stack)

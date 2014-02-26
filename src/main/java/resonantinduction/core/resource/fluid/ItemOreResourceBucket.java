@@ -64,7 +64,7 @@ public class ItemOreResourceBucket extends Item
 					return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
 				}
 			}
-			
+
 			return (FluidRegistry.getFluid(ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName() + " Bucket");
 		}
 		return null;
@@ -253,7 +253,7 @@ public class ItemOreResourceBucket extends Item
 					world.destroyBlock(x, y, z, true);
 				}
 
-				world.setBlock(x, y, z, fluidID, 0, 3);
+				world.setBlock(x, y, z, fluidID, 8, 3);
 
 				return true;
 			}

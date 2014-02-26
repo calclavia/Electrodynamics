@@ -1,6 +1,7 @@
 package resonantinduction.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -8,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -75,8 +77,8 @@ public class ResonantInduction
 	public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
 	public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
 	public static Block blockDust;
-	public static final List<Block> blockMixtureFluids = new ArrayList<Block>();
-	public static final List<Block> blockMoltenFluid = new ArrayList<Block>();
+	public static final HashMap<Integer, Block> blockMixtureFluids = new HashMap<Integer, Block>();
+	public static final HashMap<Integer, Block> blockMoltenFluid = new HashMap<Integer, Block>();
 	public static Block blockMachinePart;
 
 	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
