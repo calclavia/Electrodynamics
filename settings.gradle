@@ -1,2 +1,2 @@
-rootProject.name = 'archaic'
+rootProject.name = 'core'
 include 'mechanical', 'electrical'
