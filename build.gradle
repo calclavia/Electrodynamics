@@ -11,14 +11,6 @@ buildscript {
     }
 }
 
-sourceSets {
-	main {
-		java {
-			srcDirs 'src/main/java', 'archaic/src/main/java'
-		}
-	}
-}
- 
 apply plugin: 'forge'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
