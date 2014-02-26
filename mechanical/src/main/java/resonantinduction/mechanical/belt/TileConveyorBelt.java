@@ -18,7 +18,6 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;

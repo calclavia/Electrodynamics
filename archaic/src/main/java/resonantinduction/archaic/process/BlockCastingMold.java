@@ -1,11 +1,9 @@
 package resonantinduction.archaic.process;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RIBlockRenderingHandler;

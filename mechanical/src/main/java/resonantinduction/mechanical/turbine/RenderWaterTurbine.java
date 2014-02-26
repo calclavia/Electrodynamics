@@ -12,7 +12,6 @@ import resonantinduction.core.Reference;
 import calclavia.lib.prefab.turbine.TileTurbine;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

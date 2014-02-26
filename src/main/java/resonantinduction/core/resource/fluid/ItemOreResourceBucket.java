@@ -2,19 +2,10 @@ package resonantinduction.core.resource.fluid;
 
 import java.util.List;
 
-import calclavia.lib.utility.LanguageUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import resonantinduction.core.Reference;
-import resonantinduction.core.TabRI;
-import resonantinduction.core.resource.ItemOreResource;
-import resonantinduction.core.resource.ResourceGenerator;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
@@ -22,9 +13,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import resonantinduction.core.Reference;
+import resonantinduction.core.TabRI;
+import resonantinduction.core.resource.ItemOreResource;
+import resonantinduction.core.resource.ResourceGenerator;
+import calclavia.lib.utility.LanguageUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Modified version of the MC bucket to meet the needs of a dynamic fluid registry system

@@ -1,11 +1,9 @@
 package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -18,20 +16,15 @@ import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.part.PartFramedConnection;
-import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import resonantinduction.mechanical.Mechanical;
-import universalelectricity.api.energy.IConductor;
-import calclavia.lib.utility.WrenchUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
-import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

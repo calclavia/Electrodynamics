@@ -161,7 +161,7 @@ public class Electrical
 		 * Recipes
 		 */
 		/** Tesla - by Jyzarc */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", " I ", 'W', "wire", 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_PLATE.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTesla, "WEW", " C ", "DID", 'W', "wire", 'E', Item.eyeOfEnder, 'C', UniversalRecipe.BATTERY.get(), 'D', Item.diamond, 'I', UniversalRecipe.PRIMARY_PLATE.get()));
 
 		/** Multimeter */
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
@@ -189,6 +189,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
+
+		/** Quantum */
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockQuantumGate, "TTT", "LBL", "CCC", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));

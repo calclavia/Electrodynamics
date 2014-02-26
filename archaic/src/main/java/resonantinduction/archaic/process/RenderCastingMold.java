@@ -1,15 +1,14 @@
 package resonantinduction.archaic.process;
 
-import org.lwjgl.opengl.GL11;
-
-import calclavia.lib.render.RenderUtility;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+
+import org.lwjgl.opengl.GL11;
+
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderItemOverlayTile;
-import resonantinduction.electrical.battery.RenderBattery;
+import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

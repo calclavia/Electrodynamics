@@ -4,10 +4,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import calclavia.lib.utility.FluidUtility;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import universalelectricity.core.net.Network;
 
 public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork, TileEnergyDistribution>

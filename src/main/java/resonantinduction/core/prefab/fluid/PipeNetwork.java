@@ -1,10 +1,5 @@
 package resonantinduction.core.prefab.fluid;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -13,7 +8,6 @@ import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
-import calclavia.lib.utility.FluidUtility;
 
 /**
  * The network for pipe fluid transfer. getNodes() is NOT used.

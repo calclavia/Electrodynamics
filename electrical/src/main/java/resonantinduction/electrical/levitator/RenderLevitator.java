@@ -1,12 +1,7 @@
 package resonantinduction.electrical.levitator;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -14,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.block.ICustomBlockRenderer;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 

@@ -24,7 +24,6 @@ import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.gear.ItemGearShaft;
 import resonantinduction.mechanical.gear.ItemHandCrank;
-import resonantinduction.mechanical.item.ItemPipeGauge;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
 import resonantinduction.mechanical.logistic.belt.BlockRejector;
@@ -83,7 +82,6 @@ public class Mechanical
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
 
 	// Energy
-	public static Item itemHandCrank;
 	public static Item itemGear;
 	public static Item itemGearShaft;
 	public static Block windTurbine;
@@ -100,9 +98,7 @@ public class Mechanical
 	public static Block blockReleaseValve;
 	public static Block blockGrate;
 	public static Block blockPump;
-
 	public static Item itemPipe;
-	public static Item itemPipeGuage;
 
 	// Machines/Processes
 	public static Block blockGrinderWheel;
@@ -118,7 +114,6 @@ public class Mechanical
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
 
-		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
 		windTurbine = contentRegistry.createTile(BlockWindTurbine.class, TileWindTurbine.class);
@@ -133,7 +128,6 @@ public class Mechanical
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 
-		itemPipeGuage = contentRegistry.createItem(ItemPipeGauge.class);
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
 
 		// Machines
@@ -163,7 +157,6 @@ public class Mechanical
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		// Add recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 0), "SWS", "W W", "SWS", 'W', "plankWood", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 1), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 0), 'W', Block.cobblestone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemGear, 1, 2), " W ", "WGW", " W ", 'G', new ItemStack(itemGear, 1, 1), 'W', Item.ingotIron));
@@ -183,7 +176,6 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', itemGear));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 4), "BBB", "   ", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemPipeGuage, "RRR", "GGG", " S ", 'S', Item.stick, 'G', Block.glass, 'R', Item.redstone));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPurifier, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));

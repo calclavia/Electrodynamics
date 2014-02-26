@@ -4,7 +4,6 @@
 package resonantinduction.electrical.tesla;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -25,8 +24,6 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.Electrical;
-import resonantinduction.mechanical.fluid.transport.TileGrate;
-import resonantinduction.mechanical.fluid.transport.TileGrate.ComparableVector;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;

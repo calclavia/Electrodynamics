@@ -1,6 +1,5 @@
 package resonantinduction.electrical.levitator;
 
-import java.awt.geom.CubicCurve2D;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -35,7 +34,6 @@ import calclavia.lib.utility.WrenchUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
-import codechicken.lib.vec.Cuboid6;
 import codechicken.multipart.TMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

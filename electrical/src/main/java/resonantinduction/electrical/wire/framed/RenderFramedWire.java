@@ -3,7 +3,6 @@ package resonantinduction.electrical.wire.framed;
 import java.nio.FloatBuffer;
 import java.util.Map;
 
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;

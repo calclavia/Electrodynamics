@@ -2,18 +2,15 @@ package resonantinduction.quantum.gate;
 
 import java.util.Random;
 
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.electrical.Electrical;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.electrical.Electrical;
 import calclavia.lib.prefab.block.BlockTile;
-import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -28,6 +28,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.mechanical.gear.ItemHandCrank;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
@@ -82,6 +83,7 @@ public class Archaic
 
 	// Machine and Processing
 	public static Item itemHammer;
+	public static Item itemHandCrank;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -98,6 +100,7 @@ public class Archaic
 		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
 		blockChannel = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
 
+		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemImprint = contentRegistry.createItem(ItemImprint.class);
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
 		proxy.preInit();
@@ -135,6 +138,7 @@ public class Archaic
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockChannel, "S S", "I I", "III", 'S', Item.stick, 'I', "plankWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMillstone, "SPS", "SAS", "SSS", 'P', Block.pistonBase, 'A', Item.pickaxeStone, 'S', Block.stone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, "PPP", "PIP", "PPP", 'P', Item.paper, 'I', new ItemStack(Item.dyePowder, 0)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', Block.cobblestone, 'S', Item.stick));
 		proxy.postInit();

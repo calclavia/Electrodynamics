@@ -24,7 +24,6 @@ import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
-import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;

@@ -1,6 +1,5 @@
 package resonantinduction.archaic.gutter;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -12,8 +11,6 @@ import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.prefab.fluid.PipeNetwork;
 import resonantinduction.core.prefab.fluid.TileFluidNetwork;
-import calclavia.lib.multiblock.fake.IBlockActivate;
-import calclavia.lib.utility.WrenchUtility;
 
 /** @author Darkguardsman */
 public class TileGutter extends TileFluidNetwork implements IFluidPipe

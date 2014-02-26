@@ -14,7 +14,6 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.network.TileMechanical;
