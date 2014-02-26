@@ -1,9 +1,13 @@
 package resonantinduction.mechanical.process;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -43,6 +47,15 @@ public class BlockFilter extends BlockTile
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborID)
 	{
 		world.scheduleBlockUpdate(x, y, z, blockID, 20);
+	}
+
+	@Override
+	public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity entity)
+	{
+		if (entity instanceof EntityItem)
+			return;
+
+		super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, entity);
 	}
 
 	@Override

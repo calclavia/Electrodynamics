@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.tank;
 
+import java.awt.Color;
+
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,6 +47,10 @@ public class RenderTank extends TileEntitySpecialRenderer
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+				Color color = new Color(fluid.getFluid().getColor());
+				GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? 0.5f : 1);
+
 				RenderUtility.bind(RenderFluidHelper.getFluidSheet(fluid));
 				// Prevent Z-fighting
 				GL11.glTranslatef((float) x, (float) y + 0.001f, (float) z);

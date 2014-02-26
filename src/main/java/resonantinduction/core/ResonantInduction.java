@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -77,13 +77,10 @@ public class ResonantInduction
 	public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
 	public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
 	public static Block blockDust;
-	public static final HashMap<Integer, Block> blockMixtureFluids = new HashMap<Integer, Block>();
-	public static final HashMap<Integer, Block> blockMoltenFluid = new HashMap<Integer, Block>();
+	public static final HashMap<Integer, BlockFluidFinite> blockMixtureFluids = new HashMap<Integer, BlockFluidFinite>();
+	public static final HashMap<Integer, BlockFluidFinite> blockMoltenFluid = new HashMap<Integer, BlockFluidFinite>();
 	public static Block blockMachinePart;
-
-	public static List<Fluid> fluidMixtures = new ArrayList<Fluid>();
-	public static List<Fluid> fluidMaterials = new ArrayList<Fluid>();
-
+	
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	@EventHandler
@@ -133,13 +130,13 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
 		Settings.setModMetadata(metadata, ID, NAME);
+		// Generate Resources
+		ResourceGenerator.generateOreResources();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		// Generate Resources
-		ResourceGenerator.generateOreResources();
 		Settings.save();
 	}
 }

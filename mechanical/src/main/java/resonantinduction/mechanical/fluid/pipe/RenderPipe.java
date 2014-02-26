@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import java.awt.Color;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -25,6 +27,12 @@ public class RenderPipe implements ISimpleItemRenderer
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+		GL11.glScalef(1.0F, -1F, -1F);
+		render(0, part.getAllCurrentConnections());
+		GL11.glPopMatrix();
+		
+		GL11.glPushMatrix();
 
 		FluidStack fluid = part.getInternalTank().getFluid();
 		int capacity = part.getInternalTank().getCapacity();
@@ -35,6 +43,8 @@ public class RenderPipe implements ISimpleItemRenderer
 			float percentage = (float) fluid.amount / (float) capacity;
 			int[] displayList = RenderFluidHelper.getFluidDisplayLists(fluid, part.world(), false);
 			RenderUtility.bind(RenderFluidHelper.getFluidSheet(fluid));
+			Color color = new Color(fluid.getFluid().getColor());
+			GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? 0.5f : 1);
 
 			GL11.glPushMatrix();
 			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -94,11 +104,6 @@ public class RenderPipe implements ISimpleItemRenderer
 		}
 		GL11.glPopMatrix();
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-		render(0, part.getAllCurrentConnections());
-		GL11.glPopMatrix();
 	}
 
 	public static void render(int meta, byte sides)

@@ -2,9 +2,11 @@ package resonantinduction.core.handler;
 
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.BlockFluidFinite;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.fluid.FluidColored;
+import resonantinduction.core.resource.ResourceGenerator;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,11 +31,18 @@ public class TextureHookHandler
 
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
-	public void textureHook(TextureStitchEvent.Post event)
+	public void postTextureHook(TextureStitchEvent.Post event)
 	{
-		for (Fluid f : ResonantInduction.fluidMixtures)
-			f.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "mixture_flow"));
-		for (Fluid f : ResonantInduction.fluidMaterials)
-			f.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "molten_flow"));
+		for (BlockFluidFinite block : ResonantInduction.blockMixtureFluids.values())
+		{
+			block.getFluid().setIcons(RenderUtility.getIcon(Reference.PREFIX + "mixture_flow"));
+			((FluidColored) block.getFluid()).setColor(ResourceGenerator.getColor(ResourceGenerator.mixtureToMaterial(block.getFluid().getName())));
+		}
+
+		for (BlockFluidFinite block : ResonantInduction.blockMoltenFluid.values())
+		{
+			block.getFluid().setIcons(RenderUtility.getIcon(Reference.PREFIX + "molten_flow"));
+			((FluidColored) block.getFluid()).setColor(ResourceGenerator.getColor(ResourceGenerator.moltenToMaterial(block.getFluid().getName())));
+		}
 	}
 }

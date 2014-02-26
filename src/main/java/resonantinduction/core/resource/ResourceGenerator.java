@@ -22,7 +22,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,6 +34,7 @@ import resonantinduction.api.recipe.OreDetectionBlackList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import resonantinduction.core.prefab.fluid.FluidColored;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import calclavia.lib.utility.LanguageUtility;
@@ -120,20 +121,20 @@ public class ResourceGenerator implements IVirtualObject
 			String nameCaps = LanguageUtility.capitalizeFirst(materialName);
 
 			/** Generate molten fluids */
-			Fluid fluidMolten = new Fluid(materialNameToMolten(materialName));
+			FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
 			fluidMolten.setDensity(7);
 			fluidMolten.setViscosity(5000);
 			fluidMolten.setTemperature(273 + 1538);
 			FluidRegistry.registerFluid(fluidMolten);
-			Block blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
+			BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
 			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
 			FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
 
 			/** Generate dust mixture fluids */
-			Fluid fluidMixture = new Fluid(materialNameToMixture(materialName));
+			FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
 			FluidRegistry.registerFluid(fluidMixture);
-			Block blockFluidMixture = new BlockFluidMixture(fluidMixture);
+			BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
 			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
 			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
@@ -178,10 +179,11 @@ public class ResourceGenerator implements IVirtualObject
 
 			int colorCount = 0;
 
-			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + material.substring(0, 1).toUpperCase() + material.substring(1)))
+			for (ItemStack ingotStack : OreDictionary.getOres("ingot" + LanguageUtility.capitalizeFirst(material)))
 			{
 				Item theIngot = ingotStack.getItem();
-				materialColorCache.put(material, getAverageColor(ingotStack));
+				int color = getAverageColor(ingotStack);
+				materialColorCache.put(material, color);
 			}
 
 			if (!materialColorCache.containsKey(material))
@@ -267,7 +269,7 @@ public class ResourceGenerator implements IVirtualObject
 		return 0xFFFFFF;
 	}
 
-	public static String moltenNameToMaterial(String fluidName)
+	public static String moltenToMaterial(String fluidName)
 	{
 		return fluidNameToMaterial(fluidName, "molten");
 	}
@@ -297,12 +299,12 @@ public class ResourceGenerator implements IVirtualObject
 		return type + "_" + LanguageUtility.camelToLowerUnderscore(materialName);
 	}
 
-	public static Block getMixture(String name)
+	public static BlockFluidFinite getMixture(String name)
 	{
 		return ResonantInduction.blockMixtureFluids.get(getID(name));
 	}
 
-	public static Block getMolten(String name)
+	public static BlockFluidFinite getMolten(String name)
 	{
 		return ResonantInduction.blockMoltenFluid.get(getID(name));
 	}
