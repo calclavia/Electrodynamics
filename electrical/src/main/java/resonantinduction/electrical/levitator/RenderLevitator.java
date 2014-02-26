@@ -66,7 +66,7 @@ public class RenderLevitator implements ISimpleItemRenderer
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+		GL11.glTranslatef(0f, 0.5f, 0f);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_OFF);
 		MODEL.renderAll();
 		GL11.glPopMatrix();

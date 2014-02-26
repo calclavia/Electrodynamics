@@ -1,4 +1,4 @@
-package resonantinduction.core.resource.item;
+package resonantinduction.core.resource;
 
 import java.util.List;
 
@@ -16,8 +16,6 @@ import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.TabRI;
-import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -206,21 +204,19 @@ public class ItemOreResource extends Item
 	public ItemStack getStackFromMaterial(String name)
 	{
 		ItemStack itemStack = new ItemStack(this);
-		itemStack.setItemDamage(ResourceGenerator.materialNames.indexOf(name));
+		itemStack.setItemDamage(ResourceGenerator.getID(name));
 		return itemStack;
 	}
 
 	public static String getMaterialFromStack(ItemStack itemStack)
 	{
-		if (ResourceGenerator.materialNames.size() > itemStack.getItemDamage())
-			return ResourceGenerator.materialNames.get(itemStack.getItemDamage());
-		return null;
+		return ResourceGenerator.getName(itemStack.getItemDamage());
 	}
 
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (String materialName : ResourceGenerator.materialNames)
+		for (String materialName : ResourceGenerator.getMaterials())
 		{
 			par3List.add(getStackFromMaterial(materialName));
 		}
@@ -235,9 +231,9 @@ public class ItemOreResource extends Item
 		 */
 		String name = ItemOreResource.getMaterialFromStack(itemStack);
 
-		if (ResourceGenerator.materialColors.containsKey(name))
+		if (ResourceGenerator.materialColorCache.containsKey(name))
 		{
-			return ResourceGenerator.materialColors.get(name);
+			return ResourceGenerator.materialColorCache.get(name);
 		}
 
 		return 16777215;

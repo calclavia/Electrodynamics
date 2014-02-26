@@ -16,18 +16,17 @@ import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.BlockMachineMaterial;
+import resonantinduction.core.resource.ItemOreResource;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
+import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
-import resonantinduction.core.resource.item.ItemOreResource;
-import calclavia.components.tool.ToolMode;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.LinkUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -73,9 +72,8 @@ public class ResonantInduction
 
 	/** Blocks and Items */
 	public static Block blockOre;
-	public static ItemOreResource itemRubble;
-	public static ItemOreResource itemDust;
-	public static ItemOreResource itemRefinedDust;
+	public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
+	public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
 	public static Block blockDust;
 	public static final List<Block> blockMixtureFluids = new ArrayList<Block>();
 	public static final List<Block> blockMoltenFluid = new ArrayList<Block>();
@@ -110,10 +108,14 @@ public class ResonantInduction
 		itemRubble = new ItemOreResource(Settings.getNextItemID("oreRubble"), "oreRubble");
 		itemDust = new ItemOreResource(Settings.getNextItemID("oreDust"), "oreDust");
 		itemRefinedDust = new ItemOreResource(Settings.getNextItemID("oreRefinedDust"), "oreRefinedDust");
+		itemBucketMixture = new ItemOreResourceBucket(Settings.getNextItemID("bucketMixture"), "bucketMixture");
+		itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten");
 
 		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
 		GameRegistry.registerItem(itemRefinedDust, itemRefinedDust.getUnlocalizedName());
+		GameRegistry.registerItem(itemBucketMixture, itemBucketMixture.getUnlocalizedName());
+		GameRegistry.registerItem(itemBucketMolten, itemBucketMolten.getUnlocalizedName());
 
 		// Already registered with ContentRegistry
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");

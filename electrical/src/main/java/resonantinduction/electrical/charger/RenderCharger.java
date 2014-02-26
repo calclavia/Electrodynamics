@@ -84,7 +84,7 @@ public class RenderCharger implements ISimpleItemRenderer
 	@Override
 	public void renderInventoryItem(ItemStack itemStack)
 	{
-		GL11.glTranslatef(0.5f, 0.7f, 0.5f);
+		GL11.glTranslatef(0f, 0.5f, 0f);
 		RenderUtility.bind(TEXTURE);
 		MODEL.renderAll();
 	}
