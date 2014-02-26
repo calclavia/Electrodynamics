@@ -30,9 +30,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemOreResourceBucket extends Item
 {
-	public ItemOreResourceBucket(int id, String name)
+	final boolean isMolten;
+
+	public ItemOreResourceBucket(int id, String name, boolean isMolten)
 	{
 		super(id);
+		this.isMolten = isMolten;
 		setMaxStackSize(1);
 		setUnlocalizedName(Reference.PREFIX + name);
 		setTextureName(Reference.PREFIX + name);
@@ -44,7 +47,6 @@ public class ItemOreResourceBucket extends Item
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
-
 		if (getMaterialFromStack(is) != null)
 		{
 			String dustName = getMaterialFromStack(is);
@@ -62,7 +64,7 @@ public class ItemOreResourceBucket extends Item
 				}
 			}
 
-			return (FluidRegistry.getFluid(ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName() + " Bucket");
+			return (FluidRegistry.getFluid(isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName() + " Bucket");
 		}
 		return null;
 	}
@@ -73,7 +75,8 @@ public class ItemOreResourceBucket extends Item
 	 */
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
-		int fluidID = ResourceGenerator.getMixture(ResourceGenerator.getName(itemStack.getItemDamage())).blockID;
+		String materialName = ResourceGenerator.getName(itemStack.getItemDamage());
+		int fluidID = isMolten ? ResourceGenerator.getMolten(materialName).blockID : ResourceGenerator.getMixture(materialName).blockID;
 
 		MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, entityPlayer, false);
 

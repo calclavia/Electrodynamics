@@ -77,7 +77,7 @@ public class ResonantInduction
 	public static final HashMap<Integer, BlockFluidFinite> blockMixtureFluids = new HashMap<Integer, BlockFluidFinite>();
 	public static final HashMap<Integer, BlockFluidFinite> blockMoltenFluid = new HashMap<Integer, BlockFluidFinite>();
 	public static Block blockMachinePart;
-	
+
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
 
 	@EventHandler
@@ -104,8 +104,8 @@ public class ResonantInduction
 		itemRubble = new ItemOreResource(Settings.getNextItemID("oreRubble"), "oreRubble");
 		itemDust = new ItemOreResource(Settings.getNextItemID("oreDust"), "oreDust");
 		itemRefinedDust = new ItemOreResource(Settings.getNextItemID("oreRefinedDust"), "oreRefinedDust");
-		itemBucketMixture = new ItemOreResourceBucket(Settings.getNextItemID("bucketMixture"), "bucketMixture");
-		itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten");
+		itemBucketMixture = new ItemOreResourceBucket(Settings.getNextItemID("bucketMixture"), "bucketMixture", false);
+		itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten", true);
 
 		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
@@ -116,7 +116,7 @@ public class ResonantInduction
 		// Already registered with ContentRegistry
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
-		
+
 		proxy.preInit();
 		TabRI.ITEMSTACK = new ItemStack(blockMachinePart);
 	}
@@ -128,13 +128,13 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
 		Settings.setModMetadata(metadata, ID, NAME);
-		// Generate Resources
-		ResourceGenerator.generateOreResources();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		Settings.save();
+		// Generate Resources
+		ResourceGenerator.generateOreResources();
 	}
 }

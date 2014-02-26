@@ -139,23 +139,24 @@ public class ResourceGenerator implements IVirtualObject
 			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
 			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
 
+			OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
+
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, "dust" + nameCaps, "dust" + nameCaps);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, "dustRefined" + nameCaps);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+
+			ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
+			FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
+			ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
+			ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
+			smeltResult.stackSize = 2;
+			FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
+
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 			{
-				OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
-				OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
-				OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
-
 				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, "dust" + nameCaps, "dust" + nameCaps);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, "dustRefined" + nameCaps);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
-
-				ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
-				FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
-				ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
-				ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
-				smeltResult.stackSize = 2;
-				FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
 			}
 		}
 	}

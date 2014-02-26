@@ -50,7 +50,7 @@ public class BlockFluidMaterial extends BlockFluidFinite
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
 	{
-		return ResourceGenerator.getColor(getFluid().getName().replace("molten", "").toLowerCase());
+		return ResourceGenerator.getColor(ResourceGenerator.moltenToMaterial(getFluid().getName()));
 	}
 
 	@Override
