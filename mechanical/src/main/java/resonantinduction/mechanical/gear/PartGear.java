@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
+import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;

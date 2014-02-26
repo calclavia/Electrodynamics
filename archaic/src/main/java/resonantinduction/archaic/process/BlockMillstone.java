@@ -9,7 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.gear.ItemHandCrank;
+import resonantinduction.core.resource.ItemHandCrank;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.inventory.InventoryUtility;

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.core.resource;
 
 import net.minecraft.item.Item;
 

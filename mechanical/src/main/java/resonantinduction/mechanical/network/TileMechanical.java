@@ -46,6 +46,12 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 		angle += angularVelocity / 20;
 
+		if (angle % (Math.PI * 2) != angle)
+		{
+			revolve(angle <= Math.PI * 2 || angle >= Math.PI * 2);
+			angle = (float) (angle % (Math.PI * 2));
+		}
+
 		if (!worldObj.isRemote)
 		{
 			torque *= getLoad();
@@ -63,6 +69,11 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 			sendRotationPacket();
 			markPacketUpdate = false;
 		}
+	}
+
+	protected void revolve(boolean isAmplitude)
+	{
+
 	}
 
 	public long getPower()

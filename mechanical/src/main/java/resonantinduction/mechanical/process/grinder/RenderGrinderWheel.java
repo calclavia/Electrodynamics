@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.client.model.obj.WavefrontObject;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
@@ -22,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderGrinderWheel extends TileEntitySpecialRenderer
 {
-	public static final WavefrontObject MODEL = (WavefrontObject) AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
+	public static final IModelCustom MODEL =  AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

@@ -28,7 +28,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
-import resonantinduction.mechanical.gear.ItemHandCrank;
+import resonantinduction.core.resource.ItemHandCrank;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;

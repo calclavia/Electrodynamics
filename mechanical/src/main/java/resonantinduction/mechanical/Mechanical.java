@@ -23,7 +23,6 @@ import resonantinduction.mechanical.fluid.transport.TileGrate;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.gear.ItemGear;
 import resonantinduction.mechanical.gear.ItemGearShaft;
-import resonantinduction.mechanical.gear.ItemHandCrank;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
 import resonantinduction.mechanical.logistic.belt.BlockRejector;
@@ -33,6 +32,8 @@ import resonantinduction.mechanical.logistic.belt.TileRejector;
 import resonantinduction.mechanical.network.PacketNetwork;
 import resonantinduction.mechanical.process.BlockFilter;
 import resonantinduction.mechanical.process.TileFilter;
+import resonantinduction.mechanical.process.crusher.BlockMechanicalPiston;
+import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
 import resonantinduction.mechanical.process.grinder.TileGrinderWheel;
 import resonantinduction.mechanical.process.purifier.BlockMixer;
@@ -104,6 +105,7 @@ public class Mechanical
 	public static Block blockGrinderWheel;
 	public static Block blockPurifier;
 	public static Block blockFilter;
+	public static Block blockMechanicalPiston;
 
 	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
 
@@ -134,6 +136,7 @@ public class Mechanical
 		blockGrinderWheel = contentRegistry.createTile(BlockGrindingWheel.class, TileGrinderWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
 		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
+		blockMechanicalPiston = contentRegistry.createTile(BlockMechanicalPiston.class, TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);
 
 		proxy.preInit();
