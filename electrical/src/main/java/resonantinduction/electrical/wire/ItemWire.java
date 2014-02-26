@@ -46,7 +46,7 @@ public class ItemWire extends JItemMultiPart
 		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
 		this.setUnlocalizedName(Reference.PREFIX + "wire");
 		this.setTextureName(Reference.PREFIX + "wire");
-		this.setCreativeTab(TabRI.CORE);
+		this.setCreativeTab(TabRI.DEFAULT);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}

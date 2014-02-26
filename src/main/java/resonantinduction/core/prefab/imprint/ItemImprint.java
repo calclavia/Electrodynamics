@@ -24,7 +24,7 @@ public class ItemImprint extends Item
 		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
 		this.setUnlocalizedName(Reference.PREFIX + "imprint");
 		this.setTextureName(Reference.PREFIX + "imprint");
-		this.setCreativeTab(TabRI.CORE);
+		this.setCreativeTab(TabRI.DEFAULT);
 		this.setHasSubtypes(true);
 		this.maxStackSize = 1;
 	}

@@ -119,6 +119,7 @@ public class ResonantInduction
 		// Already registered with ContentRegistry
 		// GameRegistry.registerTileEntity(TileMaterial.class, "ri_material");
 		GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
+		
 		proxy.preInit();
 		TabRI.ITEMSTACK = new ItemStack(blockMachinePart);
 	}
