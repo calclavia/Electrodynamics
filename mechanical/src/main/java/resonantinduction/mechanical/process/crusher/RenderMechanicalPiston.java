@@ -55,7 +55,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		 * Render Piston Rotor
 		 */
 		GL11.glPushMatrix();
-		GL11.glTranslated(0, 0, (0.5 * Math.cos(angle)) - 0.5);
+		GL11.glTranslated(0, 0, (0.5 * Math.cos(angle - Math.PI)) - 0.5);
 		MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
 		GL11.glPopMatrix();
 
