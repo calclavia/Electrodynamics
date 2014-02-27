@@ -15,6 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -74,6 +75,12 @@ public class BlockFirebox extends BlockTile
 		if (tileEntity instanceof TileFirebox)
 		{
 			TileFirebox tile = (TileFirebox) tileEntity;
+
+			if (FluidUtility.playerActivatedFluidItem(world, x, y, z, player, side))
+			{
+				return true;
+			}
+
 			return interactCurrentItem(tile, 0, player);
 		}
 
@@ -83,6 +90,9 @@ public class BlockFirebox extends BlockTile
 	@Override
 	public Icon getBlockTexture(IBlockAccess access, int x, int y, int z, int side)
 	{
+		if (side == 0)
+			return blockIcon;
+
 		boolean isElectric = access.getBlockMetadata(x, y, z) == 1;
 		boolean isBurning = false;
 		TileEntity tile = access.getBlockTileEntity(x, y, z);
@@ -104,6 +114,9 @@ public class BlockFirebox extends BlockTile
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
+		if (side == 0)
+			return blockIcon;
+
 		boolean isElectric = meta == 1;
 		boolean isBurning = false;
 

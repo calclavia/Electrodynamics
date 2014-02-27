@@ -26,7 +26,6 @@ import codechicken.multipart.TMultiPart;
  */
 public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanical
 {
-
 	private IMechanicalNetwork network;
 
 	/** The mechanical connections this connector has made */

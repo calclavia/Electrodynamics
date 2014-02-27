@@ -270,7 +270,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource == null || !resource.isFluidEqual(tank.getFluid()))
+		if (resource == null || resource.getFluid() == FluidRegistry.LAVA)
 		{
 			return null;
 		}
