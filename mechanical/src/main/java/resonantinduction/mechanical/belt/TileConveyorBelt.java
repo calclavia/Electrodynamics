@@ -16,7 +16,7 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.TileMechanical;
+import resonantinduction.mechanical.energy.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

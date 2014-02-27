@@ -27,7 +27,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 	public TileGenerator()
 	{
-		energy = new EnergyStorageHandler(100000);
+		energy = new EnergyStorageHandler(1000000);
 	}
 
 	public byte toggleGearRatio()
@@ -63,12 +63,12 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 			if (mech != null)
 			{
-				long receive = energy.receiveEnergy((long) Math.abs(mech.getTorque() * mech.getAngularVelocity()), true);
+				long power = (long) Math.abs(mech.getTorque() * mech.getAngularVelocity());
+				long receive = energy.receiveEnergy(power, true);
 
 				if (receive > 0)
 				{
-					double percentageUsed = (double) receive / ((double) mech.getTorque() * (double) mech.getAngularVelocity());
-					// TODO: Make sure this calculation/decrease is correct!
+					double percentageUsed = (double) receive / (double) power;
 					mech.setTorque((long) (mech.getTorque() - (mech.getTorque() * percentageUsed)));
 					mech.setAngularVelocity((float) (mech.getAngularVelocity() - (mech.getAngularVelocity() * percentageUsed)));
 				}
@@ -90,7 +90,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			{
 				if (extract > 0)
 				{
-					long torqueRatio = (long) ((gearRatio + 1) / 5d * (extract));
+					long torqueRatio = (long) ((gearRatio + 1) / 4d * (extract));
 
 					final float maxAngularVelocity = extract / (float) torqueRatio;
 

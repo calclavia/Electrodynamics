@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import java.lang.reflect.Method;
 

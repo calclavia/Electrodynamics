@@ -1,10 +1,10 @@
 package resonantinduction.mechanical;
 
 import net.minecraftforge.client.MinecraftForgeClient;
+import resonantinduction.mechanical.energy.gear.RenderGear;
+import resonantinduction.mechanical.energy.gear.RenderGearShaft;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import resonantinduction.mechanical.fluid.tank.ItemTankRenderer;
-import resonantinduction.mechanical.gear.RenderGear;
-import resonantinduction.mechanical.gear.RenderGearShaft;
 import calclavia.lib.render.item.GlobalItemRenderer;
 
 public class ClientProxy extends CommonProxy

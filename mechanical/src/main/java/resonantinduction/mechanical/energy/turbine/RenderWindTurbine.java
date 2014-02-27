@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -44,14 +44,14 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer
 			if (tile.getMultiBlock().isConstructed())
 			{
 				GL11.glScalef(0.3f, 1, 0.3f);
-				GL11.glScalef(tile.multiBlockRadius * 2 + 1, 1, tile.multiBlockRadius * 2 + 1);
+				GL11.glScalef(tile.multiBlockRadius * 2 + 1, Math.min(tile.multiBlockRadius, 2), tile.multiBlockRadius * 2 + 1);
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
 				MODEL.renderOnly("LargeBladeArm");
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "wool_colored_white.png");
 				MODEL.renderOnly("LargeBlade");
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
 				GL11.glScalef(1f, 2f, 1f);
-				GL11.glTranslatef(0, -0.08f, 0);
+				GL11.glTranslatef(0, -0.05f, 0);
 				MODEL.renderOnly("LargeHub");
 			}
 			else

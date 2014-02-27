@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.energy.gear;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.PartMechanical;
+import resonantinduction.mechanical.energy.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.utility.WrenchUtility;

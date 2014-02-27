@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.energy.gear;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.network.PartMechanical;
+import resonantinduction.mechanical.energy.network.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;

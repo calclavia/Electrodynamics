@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
@@ -35,9 +35,9 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		{
 			maxPower = 1000;
 		}
-
+		
 		if (getMultiBlock().isConstructed())
-			torque = (long) (defaultTorque / (9f / multiBlockRadius));
+			torque = (long) (defaultTorque / (2.5f / multiBlockRadius));
 		else
 			torque = defaultTorque / 12;
 
@@ -52,6 +52,6 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord))
 			return 0;
 
-		return (long) (((((float) yCoord + 4) / 256) * maxPower) * (hasBonus ? 2 : 1)) * (worldObj.isRaining() ? 2 : 1);
+		return (long) (((((float) yCoord + 4) / 256) * maxPower) * (hasBonus ? 2 : 1) * (worldObj.isRaining() ? 1.5 : 1));
 	}
 }

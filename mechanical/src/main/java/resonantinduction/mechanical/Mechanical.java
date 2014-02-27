@@ -13,6 +13,15 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
+import resonantinduction.mechanical.energy.gear.ItemGear;
+import resonantinduction.mechanical.energy.gear.ItemGearShaft;
+import resonantinduction.mechanical.energy.network.PacketNetwork;
+import resonantinduction.mechanical.energy.turbine.BlockWaterTurbine;
+import resonantinduction.mechanical.energy.turbine.BlockWindTurbine;
+import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
+import resonantinduction.mechanical.energy.turbine.SchematicWindTurbine;
+import resonantinduction.mechanical.energy.turbine.TileWaterTurbine;
+import resonantinduction.mechanical.energy.turbine.TileWindTurbine;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
@@ -21,15 +30,12 @@ import resonantinduction.mechanical.fluid.transport.BlockGrate;
 import resonantinduction.mechanical.fluid.transport.BlockPump;
 import resonantinduction.mechanical.fluid.transport.TileGrate;
 import resonantinduction.mechanical.fluid.transport.TilePump;
-import resonantinduction.mechanical.gear.ItemGear;
-import resonantinduction.mechanical.gear.ItemGearShaft;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
 import resonantinduction.mechanical.logistic.belt.BlockRejector;
 import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileRejector;
-import resonantinduction.mechanical.network.PacketNetwork;
 import resonantinduction.mechanical.process.BlockFilter;
 import resonantinduction.mechanical.process.TileFilter;
 import resonantinduction.mechanical.process.crusher.BlockMechanicalPiston;
@@ -38,13 +44,11 @@ import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
 import resonantinduction.mechanical.process.grinder.TileGrinderWheel;
 import resonantinduction.mechanical.process.purifier.BlockMixer;
 import resonantinduction.mechanical.process.purifier.TileMixer;
-import resonantinduction.mechanical.turbine.BlockWaterTurbine;
-import resonantinduction.mechanical.turbine.BlockWindTurbine;
-import resonantinduction.mechanical.turbine.TileWaterTurbine;
-import resonantinduction.mechanical.turbine.TileWindTurbine;
+import calclavia.components.creative.BlockCreativeBuilder;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -85,8 +89,8 @@ public class Mechanical
 	// Energy
 	public static Item itemGear;
 	public static Item itemGearShaft;
-	public static Block windTurbine;
-	public static Block waterTurbine;
+	public static Block blockWindTurbine;
+	public static Block blockWaterTurbine;
 
 	// Transport
 	public static Block blockConveyorBelt;
@@ -115,11 +119,13 @@ public class Mechanical
 		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
+		BlockCreativeBuilder.register(new SchematicWindTurbine());
+		BlockCreativeBuilder.register(new SchematicWaterTurbine());
 
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
-		windTurbine = contentRegistry.createTile(BlockWindTurbine.class, TileWindTurbine.class);
-		waterTurbine = contentRegistry.createTile(BlockWaterTurbine.class, TileWaterTurbine.class);
+		blockWindTurbine = contentRegistry.createBlock(BlockWindTurbine.class, ItemBlockMetadata.class, TileWindTurbine.class);
+		blockWaterTurbine = contentRegistry.createBlock(BlockWaterTurbine.class, ItemBlockMetadata.class, TileWaterTurbine.class);
 
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);
@@ -171,8 +177,8 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(windTurbine, "CWC", "WGW", "CWC", 'G', itemGear, 'C', Block.cloth, 'W', "plankWood"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(waterTurbine, " W ", "WGW", " W ", 'G', itemGear, 'W', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWindTurbine, 1, 0), "CWC", "WGW", "CWC", 'G', itemGear, 'C', Block.cloth, 'W', "plankWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 0), " W ", "WGW", " W ", 'G', itemGear, 'W', UniversalRecipe.PRIMARY_METAL.get()));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "BBB", "B B", "BBB", 'B', Block.fenceIron));

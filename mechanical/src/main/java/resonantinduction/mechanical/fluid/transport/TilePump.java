@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
-import resonantinduction.mechanical.network.TileMechanical;
+import resonantinduction.mechanical.energy.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

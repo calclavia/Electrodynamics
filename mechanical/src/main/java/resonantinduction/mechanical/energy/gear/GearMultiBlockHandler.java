@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.energy.gear;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

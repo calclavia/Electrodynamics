@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.energy.gear;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.AdvancedModelLoader;

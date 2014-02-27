@@ -1,15 +1,21 @@
-package resonantinduction.mechanical.turbine;
+package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.IMechanicalNetwork;
-import resonantinduction.mechanical.network.MechanicalNetwork;
+import resonantinduction.mechanical.energy.network.MechanicalNetwork;
+import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
 public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 {
+	public TileMechanicalTurbine()
+	{
+		super();
+		energy = new EnergyStorageHandler(0);
+	}
 
 	/**
 	 * Mechanical Methods

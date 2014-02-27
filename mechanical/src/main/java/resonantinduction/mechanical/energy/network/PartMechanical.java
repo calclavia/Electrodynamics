@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.network;
+package resonantinduction.mechanical.energy.network;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
