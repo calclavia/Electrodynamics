@@ -18,7 +18,7 @@ public class RenderHotPlate extends RenderItemOverlayTile
 		if (tileEntity instanceof TileHotPlate)
 		{
 			TileHotPlate tile = (TileHotPlate) tileEntity;
-			renderTopOverlay(tileEntity, tile.getInventory().getContainedItems(), ForgeDirection.EAST, 2, 2, x, y - 0.8, z);
+			renderTopOverlay(tileEntity, tile.getInventory().getContainedItems(), ForgeDirection.EAST, 2, 2, x, y - 0.8, z, 0.8f);
 		}
 	}
 }

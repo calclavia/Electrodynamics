@@ -41,10 +41,10 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
 	{
-		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z);
+		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z, 0.7f);
 	}
 
-	public static void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z)
+	public static void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, int matrixX, int matrixZ, double x, double y, double z, float scale)
 	{
 		GL11.glPushMatrix();
 
@@ -69,7 +69,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
 				RenderUtility.rotateBlockBasedOnDirection(dir);
 				GL11.glTranslated(translation.x, translation.y, translation.z);
-				GL11.glScalef(0.7f, 0.7f, 0.7f);
+				GL11.glScalef(scale,scale,scale);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 4);
 				GL11.glPopMatrix();

@@ -33,6 +33,7 @@ import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
+import calclavia.lib.prefab.item.ItemBlockSaved;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -90,7 +91,7 @@ public class Archaic
 	{
 		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		blockEngineeringTable = contentRegistry.createTile(BlockEngineeringTable.class, TileEngineeringTable.class);
+		blockEngineeringTable = contentRegistry.createBlock(BlockEngineeringTable.class, ItemBlockSaved.class, TileEngineeringTable.class);
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
 		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);

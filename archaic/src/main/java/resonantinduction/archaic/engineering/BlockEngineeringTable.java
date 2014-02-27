@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockRotatable;
+import calclavia.lib.prefab.item.ItemBlockSaved;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
@@ -44,14 +45,19 @@ public class BlockEngineeringTable extends BlockRotatable
 	@Override
 	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
 	{
-		if (!world.isRemote)
+		if (!world.isRemote && isControlDown(player))
 		{
-			dropEntireInventory(world, x, y, z, 0, 0);
+			dropInventory(world, x, y, z, 0, 0);
 		}
 	}
 
 	@Override
 	public void dropEntireInventory(World world, int x, int y, int z, int par5, int par6)
+	{
+
+	}
+
+	public void dropInventory(World world, int x, int y, int z, int par5, int par6)
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
@@ -102,6 +108,8 @@ public class BlockEngineeringTable extends BlockRotatable
 							}
 						}
 					}
+
+					inventory.setInventorySlotContents(i, null);
 				}
 
 				inventory.onInventoryChanged();
@@ -257,4 +265,17 @@ public class BlockEngineeringTable extends BlockRotatable
 		return false;
 	}
 
+	@Override
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+	{
+		ItemBlockSaved.dropBlockWithNBT(this, world, x, y, z);
+		super.breakBlock(world, x, y, z, par5, par6);
+	}
+
+	/** To cancel the vanilla method of dropping the itemEntity */
+	@Override
+	protected void dropBlockAsItem_do(World world, int x, int y, int z, ItemStack stack)
+	{
+
+	}
 }

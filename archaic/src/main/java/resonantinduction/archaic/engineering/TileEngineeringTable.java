@@ -51,12 +51,14 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
 	/** The output inventory containing slots. */
-	public ItemStack[] inventory = new ItemStack[1];
-	public static int[] inventorySlots;
+	public ItemStack[] outputInventory = new ItemStack[1];
 
-	/** The ability for the engineering table to serach nearby inventories. */
+	/** The ability for the engineering table to search nearby inventories. */
 	public boolean searchInventories = true;
 
+	/**
+	 * Temporary player inventory stored to draw the player's items.
+	 */
 	private InventoryPlayer invPlayer = null;
 	private int[] playerSlots;
 
@@ -168,7 +170,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		}
 		else if (slot < CRAFTING_OUTPUT_END)
 		{
-			return inventory[slot - CRAFTING_MATRIX_END];
+			return outputInventory[slot - CRAFTING_MATRIX_END];
 		}
 		else if (slot < PLAYER_OUTPUT_END && invPlayer != null)
 		{
@@ -211,9 +213,9 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 			 * An external inventory is attempting to craft the item from the engineering table.
 			 */
 			if (itemStack == null)
-				onPickUpFromSlot(null, slot, this.inventory[slot - CRAFTING_MATRIX_END]);
+				onPickUpFromSlot(null, slot, this.outputInventory[slot - CRAFTING_MATRIX_END]);
 
-			this.inventory[slot - CRAFTING_MATRIX_END] = itemStack;
+			this.outputInventory[slot - CRAFTING_MATRIX_END] = itemStack;
 		}
 		else if (slot < PLAYER_OUTPUT_END && this.invPlayer != null)
 		{
@@ -311,7 +313,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 		{
 			if (!worldObj.isRemote)
 			{
-				this.inventory[CRAFTING_OUTPUT_SLOT] = null;
+				this.outputInventory[CRAFTING_OUTPUT_SLOT] = null;
 
 				/** Try to craft from crafting grid. If not possible, then craft from imprint. */
 				boolean didCraft = false;
@@ -323,7 +325,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 				if (matrixOutput != null && this.getCraftingManager().getIdealRecipe(matrixOutput) != null)
 				{
-					this.inventory[CRAFTING_OUTPUT_SLOT] = matrixOutput;
+					this.outputInventory[CRAFTING_OUTPUT_SLOT] = matrixOutput;
 					didCraft = true;
 				}
 
@@ -349,7 +351,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 									ItemStack recipeOutput = idealRecipe.left();
 									if (recipeOutput != null & recipeOutput.stackSize > 0)
 									{
-										this.inventory[CRAFTING_OUTPUT_SLOT] = recipeOutput;
+										this.outputInventory[CRAFTING_OUTPUT_SLOT] = recipeOutput;
 										didCraft = true;
 										break;
 									}
@@ -396,7 +398,7 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 
 		NBTTagList nbtList = nbt.getTagList("Items");
 		this.craftingMatrix = new ItemStack[9];
-		this.inventory = new ItemStack[1];
+		this.outputInventory = new ItemStack[1];
 
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
