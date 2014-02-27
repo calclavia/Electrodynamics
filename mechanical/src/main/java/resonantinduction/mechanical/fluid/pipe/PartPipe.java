@@ -61,8 +61,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			sendFluidUpdate();
 			markPacket = false;
 		}
-
-		getNetwork().markChanged();
 	}
 
 	public void sendFluidUpdate()
@@ -126,7 +124,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			if (doFill)
 			{
 				markPacket = true;
-				getNetwork().markChanged();
 			}
 
 			return tank.fill(resource, doFill);
@@ -142,7 +139,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			if (doDrain)
 			{
 				markPacket = true;
-				getNetwork().markChanged();
 			}
 
 			return tank.drain(resource.amount, doDrain);
@@ -158,7 +154,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 			if (doDrain)
 			{
 				markPacket = true;
-				getNetwork().markChanged();
 			}
 
 			return tank.drain(maxDrain, doDrain);

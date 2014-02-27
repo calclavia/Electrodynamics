@@ -179,7 +179,6 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		super.update();
 
 		this.ticks++;
-		getNetwork().addConnector(this);
 
 		if (!world().isRemote)
 		{

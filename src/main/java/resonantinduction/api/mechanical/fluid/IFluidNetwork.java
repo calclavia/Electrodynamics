@@ -57,6 +57,4 @@ public interface IFluidNetwork extends INodeNetwork<IFluidNetwork, IFluidConnect
 	/** Information about the network's tank */
 	FluidTankInfo[] getTankInfo();
 
-	void markChanged();
-
 }

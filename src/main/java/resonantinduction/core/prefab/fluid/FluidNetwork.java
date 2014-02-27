@@ -32,8 +32,8 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	@Override
 	public void addConnector(IFluidConnector connector)
 	{
-		markChanged();
 		super.addConnector(connector);
+		NetworkTickHandler.addNetwork(this);
 	}
 
 	@Override
@@ -106,8 +106,8 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 			this.tankInfo[0] = null;
 		}
 
-		this.distributeConnectors();
-		markChanged();
+		distributeConnectors();
+		NetworkTickHandler.addNetwork(this);
 	}
 
 	@Override
@@ -204,11 +204,4 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	{
 		return super.toString() + "  Vol:" + this.tank.getFluidAmount();
 	}
-
-	@Override
-	public void markChanged()
-	{
-		NetworkTickHandler.addNetwork(this);
-	}
-
 }

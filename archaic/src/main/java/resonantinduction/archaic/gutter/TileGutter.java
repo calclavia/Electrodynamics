@@ -45,7 +45,6 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 				this.setRenderSide(side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
-			getNetwork().markChanged();
 		}
 	}
 

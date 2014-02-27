@@ -32,12 +32,16 @@ import universalelectricity.core.net.NetworkTickHandler;
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
 	public static final float ACCELERATION = 0.2f;
+	
 	/** The current rotation of the network */
 	private float rotation = 0;
+	
 	private long lastRotateTime;
 
-	/** The direction in which a conductor is placed relative to a specific conductor. */
-	protected final HashMap<Object, EnumSet<ForgeDirection>> handlerDirectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
+	/**
+	 * The cached connections of the mechanical network.
+	 */
+	private final HashMap<Object, EnumSet<ForgeDirection>> connectionMap = new LinkedHashMap<Object, EnumSet<ForgeDirection>>();
 
 	private boolean markUpdateRotation = true;
 

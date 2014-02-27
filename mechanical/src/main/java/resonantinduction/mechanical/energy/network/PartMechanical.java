@@ -67,8 +67,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 					i++;
 
 			System.out.println("Connected with: " + i + ":" + getNetwork());
-			// efresh();
-
+			// refresh();
 		}
 
 		return false;
@@ -77,9 +76,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void update()
 	{
-		// TODO: Fix gear network somehow tick while network is invalid.
-		getNetwork().addConnector(this);
-
 		ticks++;
 		angle += angularVelocity / 20;
 
