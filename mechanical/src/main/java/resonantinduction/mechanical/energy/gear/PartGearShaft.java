@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.energy.gear;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -78,9 +77,9 @@ public class PartGearShaft extends PartMechanical
 	 * Refresh should be called sparingly.
 	 */
 	@Override
-	public void refresh()
+	public Object[] getConnections()
 	{
-		connections = new WeakReference[6];
+		Object[] connections = new Object[6];
 
 		/** Check for internal connections, the FRONT and BACK. */
 		for (int i = 0; i < 6; i++)
@@ -93,8 +92,7 @@ public class PartGearShaft extends PartMechanical
 
 				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 				{
-					connections[checkDir.ordinal()] = new WeakReference(instance);
-					getNetwork().merge(instance.getNetwork());
+					connections[checkDir.ordinal()] = instance;
 				}
 			}
 		}
@@ -115,14 +113,13 @@ public class PartGearShaft extends PartMechanical
 					// Only connect to shafts outside of this block space.
 					if (instance != null && instance != this && instance instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
 					{
-						connections[checkDir.ordinal()] = new WeakReference(instance);
-						getNetwork().merge(instance.getNetwork());
+						connections[checkDir.ordinal()] = instance;
 					}
 				}
 			}
 		}
 
-		getNetwork().reconstruct();
+		return connections;
 	}
 
 	@Override

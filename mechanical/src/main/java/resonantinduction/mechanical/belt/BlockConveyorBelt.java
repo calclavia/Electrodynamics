@@ -43,7 +43,7 @@ public class BlockConveyorBelt extends BlockTile
 		if (t != null && t instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			tileEntity.refresh();
+			tileEntity.getNetwork().reconstruct();
 		}
 	}
 
@@ -55,7 +55,7 @@ public class BlockConveyorBelt extends BlockTile
 		if (t != null && t instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			tileEntity.refresh();
+			tileEntity.getNetwork().reconstruct();
 		}
 	}
 

@@ -49,9 +49,15 @@ public class ItemOreResourceBucket extends Item
 	{
 		if (getMaterialFromStack(is) != null)
 		{
-			String fluidName = FluidRegistry.getFluid(isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName();
-			return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", fluidName).replace("  ", " ");
+			String fluidID = isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is));
+
+			if (fluidID != null)
+			{
+				String fluidName = FluidRegistry.getFluid(fluidID).getLocalizedName();
+				return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", fluidName).replace("  ", " ");
+			}
 		}
+		
 		return null;
 	}
 

@@ -58,15 +58,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	{
 		this.tank = new FluidTank(0);
 
-		for (IFluidConnector connector : new HashSet<IFluidConnector>(getConnectors()))
-		{
-			if (connector.getNetwork() instanceof IFluidNetwork)
-			{
-				connector.setNetwork(this);
-			}
-
-			this.reconstructConnector(connector);
-		}
+		super.reconstruct();
 
 		this.reconstructTankInfo();
 		this.distributeConnectors();
@@ -75,6 +67,9 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	@Override
 	public void reconstructConnector(IFluidConnector connector)
 	{
+		if (connector.getNetwork() instanceof IFluidNetwork)
+			connector.setNetwork(this);
+
 		FluidTank tank = connector.getInternalTank();
 
 		if (tank != null)

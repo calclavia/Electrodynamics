@@ -132,8 +132,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		if (id == PACKET_SLANT)
 			this.slantType = SlantType.values()[data.readInt()];
 		else if (id == PACKET_REFRESH)
-			refresh();
-
+			getNetwork().reconstruct();
 	}
 
 	public SlantType getSlant()
@@ -149,7 +148,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		}
 
 		this.slantType = slantType;
-		refresh();
+		getNetwork().reconstruct();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -208,8 +207,9 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	}
 
 	@Override
-	public void refresh()
+	public Object[] getConnections()
 	{
+		Object[] connections = new Object[6];
 		boolean didRefresh = false;
 
 		for (int i = 2; i < 6; i++)
@@ -248,7 +248,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				if (tile instanceof IBelt)
 				{
 					connections[dir.ordinal()] = tile;
-					getNetwork().merge(((IBelt) tile).getNetwork());
 					didRefresh = true;
 				}
 			}
@@ -259,7 +258,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				if (mechanical != null)
 				{
 					connections[dir.ordinal()] = mechanical;
-					getNetwork().merge(mechanical.getNetwork());
 				}
 			}
 		}
@@ -271,6 +269,8 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 				markRefresh = true;
 			}
 		}
+
+		return connections;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.energy.gear;
 
-import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -117,15 +116,10 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
+		if (!world().isRemote)
+			System.out.println(getNetwork());
+		
 		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
-		{
-			getMultiBlock().get().manualCrankTime = 10;
-			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
-			player.addExhaustion(0.01f);
-			return true;
-		}
-
-		if (WrenchUtility.isWrench(itemStack))
 		{
 			if (player.isSneaking())
 			{
@@ -134,21 +128,20 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 					getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
 					player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 				}
+				
+				return true;
 			}
-			else
-			{
-				getMultiBlock().toggleConstruct();
-			}
-
+			
+			getMultiBlock().get().manualCrankTime = 10;
+			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
+			player.addExhaustion(0.01f);
 			return true;
 		}
-		else if (player.isSneaking())
+
+		if (WrenchUtility.isWrench(itemStack))
 		{
-			if (!world().isRemote)
-			{
-				getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
-				player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
-			}
+			getMultiBlock().toggleConstruct();
+			return true;
 		}
 
 		return super.activate(player, hit, itemStack);
@@ -165,16 +158,16 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	 * Refresh should be called sparingly.
 	 */
 	@Override
-	public void refresh()
+	public Object[] getConnections()
 	{
-		connections = new WeakReference[6];
+		Object[] connections = new Object[6];
 
 		/**
 		 * Only call refresh if this is the main block of a multiblock gear or a single gear block.
 		 */
-		if (!getMultiBlock().isPrimary())
+		if (!getMultiBlock().isPrimary() || world() == null)
 		{
-			return;
+			return connections;
 		}
 
 		/** Look for gears that are back-to-back with this gear. Equate torque. */
@@ -186,10 +179,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 			if (instance != null && instance != this && !(instance instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
 			{
-				connections[placementSide.ordinal()] = new WeakReference(instance);
-				getNetwork().merge(instance.getNetwork());
+				connections[placementSide.ordinal()] = instance;
 			}
-
 		}
 
 		/**
@@ -217,8 +208,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 				{
-					connections[checkDir.ordinal()] = new WeakReference(instance);
-					getNetwork().merge(instance.getNetwork());
+					connections[checkDir.ordinal()] = instance;
 				}
 			}
 		}
@@ -242,13 +232,12 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance instanceof PartGearShaft))
 				{
-					connections[checkDir.ordinal()] = new WeakReference(instance);
-					getNetwork().merge(instance.getNetwork());
+					connections[checkDir.ordinal()] = instance;
 				}
 			}
 		}
 
-		getNetwork().reconstruct();
+		return connections;
 	}
 
 	/**
@@ -282,17 +271,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		}
 
 		return false;
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		if (!getMultiBlock().isPrimary())
-		{
-			return new Object[6];
-		}
-
-		return super.getConnections();
 	}
 
 	@Override

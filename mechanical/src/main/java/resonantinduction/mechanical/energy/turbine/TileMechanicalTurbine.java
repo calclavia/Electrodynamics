@@ -17,36 +17,6 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 		energy = new EnergyStorageHandler(0);
 	}
 
-	/**
-	 * Mechanical Methods
-	 * 
-	 * @return The connections.
-	 */
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
-
-			if (tile instanceof IMechanical)
-			{
-				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
-
-				// Don't connect with shafts
-				if (mech != null && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
-				{
-					connections[dir.ordinal()] = mech;
-					getNetwork().merge(mech.getNetwork());
-				}
-			}
-		}
-
-		return connections;
-	}
-
 	private IMechanicalNetwork network;
 
 	@Override
@@ -119,5 +89,11 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Object[] getConnections()
+	{
+		return null;
 	}
 }

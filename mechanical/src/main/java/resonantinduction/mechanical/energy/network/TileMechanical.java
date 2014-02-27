@@ -20,8 +20,6 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 {
 	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
-	/** The mechanical connections this connector has made */
-	protected Object[] connections = new Object[6];
 	private IMechanicalNetwork network;
 	protected float angularVelocity;
 	protected long torque;
@@ -36,7 +34,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	@Override
 	public void initiate()
 	{
-		refresh();
+		getNetwork().reconstruct();
 	}
 
 	@Override
@@ -105,14 +103,6 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 		super.invalidate();
 	}
 
-	/**
-	 * Refreshes all the connections of this block.
-	 */
-	public void refresh()
-	{
-
-	}
-
 	protected float getLoad()
 	{
 		return 0.95f;
@@ -121,26 +111,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	@Override
 	public Object[] getConnections()
 	{
-		connections = new Object[6];
-
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity tile = new Vector3(this).translate(dir).getTileEntity(worldObj);
-
-			if (tile instanceof IMechanical)
-			{
-				IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
-
-				// Don't connect with shafts
-				if (mech != null && !(mech instanceof PartGearShaft) && canConnect(dir, this) && mech.canConnect(dir.getOpposite(), this))
-				{
-					connections[dir.ordinal()] = mech;
-					getNetwork().merge(mech.getNetwork());
-				}
-			}
-		}
-
-		return connections;
+		return null;
 	}
 
 	@Override

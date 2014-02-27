@@ -28,11 +28,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 {
 	private IMechanicalNetwork network;
 
-	/** The mechanical connections this connector has made */
-	protected WeakReference[] connections = new WeakReference[6];
-
 	protected float prevAngularVelocity, angularVelocity;
-
 	protected long torque;
 
 	/**
@@ -53,23 +49,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	{
 		this.placementSide = ForgeDirection.getOrientation((byte) (side));
 		this.tier = itemDamage;
-	}
-
-	@Override
-	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack item)
-	{
-		if (!world().isRemote)
-		{
-			int i = 0;
-			for (Object obj : connections)
-				if (obj != null)
-					i++;
-
-			System.out.println("Connected with: " + i + ":" + getNetwork());
-			// refresh();
-		}
-
-		return false;
 	}
 
 	@Override
@@ -102,33 +81,19 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	@Override
 	public void onWorldJoin()
 	{
-		refresh();
+		getNetwork().reconstruct();
 	}
 
 	@Override
 	public void onNeighborChanged()
 	{
-		refresh();
+		getNetwork().reconstruct();
 	}
 
 	@Override
 	public void onPartChanged(TMultiPart part)
 	{
-		refresh();
-	}
-
-	protected abstract void refresh();
-
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] actualConnections = new Object[6];
-
-		for (int i = 0; i < connections.length; i++)
-			if (connections[i] != null)
-				actualConnections[i] = connections[i].get();
-
-		return actualConnections;
+		getNetwork().reconstruct();
 	}
 
 	@Override
