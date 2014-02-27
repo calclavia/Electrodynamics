@@ -68,6 +68,7 @@ public class ResourceGenerator implements IVirtualObject
 	static
 	{
 		OreDetectionBlackList.addIngot("ingotRefinedIron");
+		SaveManager.registerClass("resourceGenerator", ResourceGenerator.class);
 		SaveManager.register(INSTANCE);
 	}
 
