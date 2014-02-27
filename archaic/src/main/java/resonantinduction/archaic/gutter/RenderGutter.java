@@ -46,7 +46,21 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 		}
 
 		if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+		{
 			MODEL.renderOnly("base");
+		}
+		else
+		{
+			GL11.glPushMatrix();
+			GL11.glRotatef(-90, 0, 0, 1);
+			MODEL.renderOnly("backCornerL", "frontCornerL");
+			GL11.glPopMatrix();
+			GL11.glPushMatrix();
+			GL11.glRotatef(90, 0, 1, 0);
+			GL11.glRotatef(-90, 0, 0, 1);
+			MODEL.renderOnly("backCornerL", "frontCornerL");
+			GL11.glPopMatrix();
+		}
 	}
 
 	@Override

@@ -88,7 +88,7 @@ public class BlockGutter extends BlockFluidNetwork
 
 		if (!world.isRemote && tile instanceof TileGutter)
 		{
-			((TileGutter) tile).fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 1), true);
+			((TileGutter) tile).fill(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, 10), true);
 		}
 	}
 
