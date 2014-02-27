@@ -16,8 +16,8 @@ import resonantinduction.core.prefab.fluid.BlockFluidNetwork;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -45,28 +45,28 @@ public class BlockGutter extends BlockFluidNetwork
 		{
 			byte renderSides = ((TileGutter) tile).renderSides;
 
-			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.DOWN))
+			if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.DOWN))
 			{
 				this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, thickness, 1.0F);
 				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
 			}
 
-			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.WEST))
+			if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.WEST))
 			{
 				this.setBlockBounds(0.0F, 0.0F, 0.0F, thickness, 1.0F, 1.0F);
 				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
 			}
-			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.NORTH))
+			if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.NORTH))
 			{
 				this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, thickness);
 				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
 			}
-			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.EAST))
+			if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.EAST))
 			{
 				this.setBlockBounds(1.0F - thickness, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);
 			}
-			if (!RenderUtility.canRenderSide(renderSides, ForgeDirection.SOUTH))
+			if (!WorldUtility.isEnabledSide(renderSides, ForgeDirection.SOUTH))
 			{
 				this.setBlockBounds(0.0F, 0.0F, 1.0F - thickness, 1.0F, 1.0F, 1.0F);
 				super.addCollisionBoxesToList(world, x, y, z, aabb, list, entity);

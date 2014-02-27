@@ -13,6 +13,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -63,7 +64,7 @@ public class RenderPipe implements ISimpleItemRenderer
 
 			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 			{
-				if (RenderUtility.canRenderSide(renderSides, direction))
+				if (WorldUtility.isEnabledSide(renderSides, direction))
 				{
 					GL11.glPushMatrix();
 					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

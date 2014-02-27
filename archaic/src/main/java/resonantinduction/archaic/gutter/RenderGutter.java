@@ -15,6 +15,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,7 +35,7 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 		{
 			if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
 			{
-				if (!RenderUtility.canRenderSide(sides, dir))
+				if (!WorldUtility.isEnabledSide(sides, dir))
 				{
 					GL11.glPushMatrix();
 					RenderUtility.rotateBlockBasedOnDirection(dir);
@@ -44,7 +45,7 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 			}
 		}
 
-		if (!RenderUtility.canRenderSide(sides, ForgeDirection.DOWN))
+		if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
 			MODEL.renderOnly("base");
 	}
 
@@ -75,8 +76,8 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			float xScale = RenderUtility.canRenderSide(renderSides, ForgeDirection.EAST) || RenderUtility.canRenderSide(renderSides, ForgeDirection.WEST) ? 1.01f : 0.8f;
-			float zScale = RenderUtility.canRenderSide(renderSides, ForgeDirection.NORTH) || RenderUtility.canRenderSide(renderSides, ForgeDirection.SOUTH) ? 1.01f : 0.8f;
+			float xScale = WorldUtility.isEnabledSide(renderSides, ForgeDirection.EAST) || WorldUtility.isEnabledSide(renderSides, ForgeDirection.WEST) ? 1.01f : 0.8f;
+			float zScale = WorldUtility.isEnabledSide(renderSides, ForgeDirection.NORTH) || WorldUtility.isEnabledSide(renderSides, ForgeDirection.SOUTH) ? 1.01f : 0.8f;
 			GL11.glTranslatef(-xScale / 2, -0.45f, -zScale / 2);
 			GL11.glScalef(xScale, 0.9f, zScale);
 

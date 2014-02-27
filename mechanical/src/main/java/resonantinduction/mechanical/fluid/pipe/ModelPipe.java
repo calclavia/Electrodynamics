@@ -3,7 +3,7 @@ package resonantinduction.mechanical.fluid.pipe;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.ForgeDirection;
-import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -154,17 +154,17 @@ public class ModelPipe extends ModelBase
 
 	public void render(byte side)
 	{
-		if (RenderUtility.canRenderSide(side, ForgeDirection.DOWN))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.DOWN))
 			renderBottom();
-		if (RenderUtility.canRenderSide(side, ForgeDirection.UP))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.UP))
 			renderUp();
-		if (RenderUtility.canRenderSide(side, ForgeDirection.NORTH))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.NORTH))
 			renderSouth();
-		if (RenderUtility.canRenderSide(side, ForgeDirection.SOUTH))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.SOUTH))
 			renderNorth();
-		if (RenderUtility.canRenderSide(side, ForgeDirection.WEST))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.WEST))
 			renderEast();
-		if (RenderUtility.canRenderSide(side, ForgeDirection.EAST))
+		if (WorldUtility.isEnabledSide(side, ForgeDirection.EAST))
 			renderWest();
 
 		renderMiddle();
