@@ -51,6 +51,8 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 	private long heatEnergy = 0;
 
+	private int boiledVolume;
+
 	public TileFirebox()
 	{
 		energy = new EnergyStorageHandler(POWER, (POWER * 2) / 20);
@@ -142,13 +144,22 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				else if (blockID == Block.waterStill.blockID)
 				{
 					usedHeat = true;
+					int volume = 100;
 
-					if (heatEnergy >= getRequiredBoilWaterEnergy())
+					if (heatEnergy >= getRequiredBoilWaterEnergy(volume))
 					{
 						if (FluidRegistry.getFluid("steam") != null)
-							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), new FluidStack(FluidRegistry.getFluid("steam"), FluidContainerRegistry.BUCKET_VOLUME), 2));
+						{
+							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+							boiledVolume += volume;
+						}
 
-						worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
+						if (boiledVolume >= FluidContainerRegistry.BUCKET_VOLUME)
+						{
+							boiledVolume = 0;
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, 0);
+						}
+
 						heatEnergy = 0;
 					}
 				}
@@ -174,11 +185,15 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	/**
 	 * Approximately 327600 + 2257000 = 2584600.
 	 * 
+	 * @param volume
+	 * 
 	 * @return
 	 */
-	public long getRequiredBoilWaterEnergy()
+	public long getRequiredBoilWaterEnergy(int volume)
 	{
-		return ThermalPhysics.getRequiredBoilWaterEnergy(worldObj, xCoord, zCoord);
+		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
+		int mass = ThermalPhysics.getMass(volume, 1);
+		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000);
 	}
 
 	public long getMeltIronEnergy(float volume)

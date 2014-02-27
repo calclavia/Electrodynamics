@@ -33,8 +33,15 @@ public class BlockWaterTurbine extends BlockTurbine
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileTurbine)
+		{
 			if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
-				world.setBlockMetadataWithNotify(x, y, z, side, 3);
+			{
+				if (side == ((TileTurbine) tileEntity).getDirection().ordinal())
+					world.setBlockMetadataWithNotify(x, y, z, side ^ 1, 3);
+				else
+					world.setBlockMetadataWithNotify(x, y, z, side, 3);
+			}
+		}
 
 		return true;
 	}
