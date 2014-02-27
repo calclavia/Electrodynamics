@@ -49,22 +49,8 @@ public class ItemOreResourceBucket extends Item
 	{
 		if (getMaterialFromStack(is) != null)
 		{
-			String dustName = getMaterialFromStack(is);
-
-			if (dustName != null)
-			{
-				List<ItemStack> list = OreDictionary.getOres("ingot" + dustName.substring(0, 1).toUpperCase() + dustName.substring(1));
-
-				if (list.size() > 0)
-				{
-					ItemStack type = list.get(0);
-
-					String name = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
-					return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", name).replace("  ", " ");
-				}
-			}
-
-			return (FluidRegistry.getFluid(isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName() + " Bucket");
+			String fluidName = FluidRegistry.getFluid(isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is))).getLocalizedName();
+			return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", fluidName).replace("  ", " ");
 		}
 		return null;
 	}

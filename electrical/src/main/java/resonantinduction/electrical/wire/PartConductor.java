@@ -181,13 +181,13 @@ public abstract class PartConductor extends PartAdvanced implements IConductor
 	public void save(NBTTagCompound nbt)
 	{
 		super.save(nbt);
-		nbt.setLong("savedBuffer", this.getNetwork().getBufferOf(this));
+		nbt.setLong("savedBuffer", getNetwork().getBufferOf(this));
 	}
 
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
 		super.load(nbt);
-		this.getNetwork().setBufferFor(this, nbt.getLong("savedBuffer"));
+		getNetwork().setBufferFor(this, nbt.getLong("savedBuffer"));
 	}
 }

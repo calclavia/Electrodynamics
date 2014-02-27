@@ -45,6 +45,7 @@ import calclavia.lib.utility.nbt.SaveManager;
 import com.google.common.collect.HashBiMap;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -120,6 +121,15 @@ public class ResourceGenerator implements IVirtualObject
 		{
 			// Caps version of the name
 			String nameCaps = LanguageUtility.capitalizeFirst(materialName);
+			String localizedName = materialName;
+
+			List<ItemStack> list = OreDictionary.getOres("ingot" + materialName.substring(0, 1).toUpperCase() + materialName.substring(1));
+
+			if (list.size() > 0)
+			{
+				ItemStack type = list.get(0);
+				localizedName = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
+			}
 
 			/** Generate molten fluids */
 			FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
@@ -127,6 +137,7 @@ public class ResourceGenerator implements IVirtualObject
 			fluidMolten.setViscosity(5000);
 			fluidMolten.setTemperature(273 + 1538);
 			FluidRegistry.registerFluid(fluidMolten);
+			LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), "Molten " + localizedName);
 			BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
 			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
@@ -136,6 +147,7 @@ public class ResourceGenerator implements IVirtualObject
 			FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
 			FluidRegistry.registerFluid(fluidMixture);
 			BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
+			LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " Mixture");
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
 			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
 			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
@@ -326,10 +338,10 @@ public class ResourceGenerator implements IVirtualObject
 	{
 		return materials.inverse().get(id);
 	}
-	
+
 	public static String getName(ItemStack itemStack)
 	{
-		return LanguageUtility.decapitalizeFirst(OreDictionary.getOreName(OreDictionary.getOreID(itemStack)).replace("dust", "").replace("ore", "").replace("ingot", ""));	
+		return LanguageUtility.decapitalizeFirst(OreDictionary.getOreName(OreDictionary.getOreID(itemStack)).replace("dust", "").replace("ore", "").replace("ingot", ""));
 	}
 
 	public static int getColor(String name)

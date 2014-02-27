@@ -92,25 +92,28 @@ public class TileGenerator extends TileElectrical implements IRotatable
 				{
 					long torqueRatio = (long) ((gearRatio + 1) / 4d * (extract));
 
-					final float maxAngularVelocity = extract / (float) torqueRatio;
+					if (torqueRatio > 0)
+					{
+						final float maxAngularVelocity = extract / (float) torqueRatio;
 
-					final long maxTorque = (long) (((double) extract) / maxAngularVelocity);
+						final long maxTorque = (long) (((double) extract) / maxAngularVelocity);
 
-					float setAngularVelocity = maxAngularVelocity;
-					long setTorque = maxTorque;
+						float setAngularVelocity = maxAngularVelocity;
+						long setTorque = maxTorque;
 
-					long currentTorque = Math.abs(mech.getTorque());
+						long currentTorque = Math.abs(mech.getTorque());
 
-					if (currentTorque != 0)
-						setTorque = Math.min(setTorque, maxTorque) * (mech.getTorque() / currentTorque);
+						if (currentTorque != 0)
+							setTorque = Math.min(setTorque, maxTorque) * (mech.getTorque() / currentTorque);
 
-					float currentVelo = Math.abs(mech.getAngularVelocity());
-					if (currentVelo != 0)
-						setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
+						float currentVelo = Math.abs(mech.getAngularVelocity());
+						if (currentVelo != 0)
+							setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
 
-					mech.setTorque(setTorque);
-					mech.setAngularVelocity(setAngularVelocity);
-					energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
+						mech.setTorque(setTorque);
+						mech.setAngularVelocity(setAngularVelocity);
+						energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
+					}
 				}
 			}
 		}
