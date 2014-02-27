@@ -189,24 +189,6 @@ public class RenderMultimeter implements ISimpleItemRenderer
 
 			List<String> information = new ArrayList<String>();
 
-			if (part.getNetwork().energyGraph.get(0) > 0 && part.getNetwork().energyGraph.points.size() > 0)
-			{
-				/**
-				 * Compute power
-				 */
-				long power = 0;
-
-				for (long point : part.getNetwork().energyGraph.points)
-				{
-					power += point;
-				}
-
-				power /= part.getNetwork().energyGraph.points.size();
-
-				if (power > 0)
-					information.add("Power: " + UnitDisplay.getDisplay(power * 20, Unit.WATT));
-			}
-
 			for (int i = 0; i < part.getNetwork().graphs.size(); i++)
 			{
 				if (part.getNetwork().graphs.get(i).get() != null && !part.getNetwork().graphs.get(i).get().equals(part.getNetwork().graphs.get(i).getDefault()))

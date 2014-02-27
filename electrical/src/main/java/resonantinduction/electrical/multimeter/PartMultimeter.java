@@ -20,6 +20,8 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.net.IConnector;
 import atomicscience.api.ITemperature;
 import calclavia.lib.network.IPacketReceiver;
@@ -260,6 +262,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 				{
 					IEnergyNetwork network = instance.getNetwork();
 					getNetwork().energyGraph.queue(Math.max(network.getBuffer(), network.getLastBuffer()));
+					getNetwork().powerGraph.queue(getNetwork().energyGraph.getAverage() * 20);
 
 					if (instance.getNetwork() instanceof IElectricalNetwork)
 						getNetwork().voltageGraph.queue(((IElectricalNetwork) network).getVoltage());
@@ -286,6 +289,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 				getNetwork().torqueGraph.queue(instance.getTorque());
 				getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
 				getNetwork().energyGraph.queue((long) (instance.getTorque() * instance.getAngularVelocity()));
+				getNetwork().powerGraph.queue(getNetwork().energyGraph.getAverage() * 20);
 			}
 		}
 

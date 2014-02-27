@@ -65,4 +65,24 @@ public class GraphL extends Graph<Long>
 		return get();
 	}
 
+	@Override
+	public Long getAverage()
+	{
+		if (points.size() > 0)
+		{
+			long average = 0;
+
+			for (long point : points)
+			{
+				average += point;
+			}
+
+			average /= points.size();
+
+			return average;
+		}
+
+		return 0L;
+	}
+
 }

@@ -65,4 +65,23 @@ public class GraphI extends Graph<Integer>
 		return get();
 	}
 
+	@Override
+	public Integer getAverage()
+	{
+		if (points.size() > 0)
+		{
+			int average = 0;
+
+			for (int point : points)
+			{
+				average += point;
+			}
+
+			average /= points.size();
+
+			return average;
+		}
+
+		return 0;
+	}
 }

@@ -66,4 +66,23 @@ public class GraphF extends Graph<Float>
 		return get();
 	}
 
+	@Override
+	public Float getAverage()
+	{
+		if (points.size() > 0)
+		{
+			float average = 0;
+
+			for (float point : points)
+			{
+				average += point;
+			}
+
+			average /= points.size();
+
+			return average;
+		}
+
+		return 0f;
+	}
 }

@@ -18,14 +18,18 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public final List<String> displayInformation = new ArrayList<String>();
 
 	/**
+	 * Maximum data points a graph can store.
+	 */
+	private int maxData = 1;
+	/**
 	 * The available graphs to be handled.
 	 */
-	private int maxData = 20 * 10;
 	public final List<Graph> graphs = new ArrayList<Graph>();
 	/**
 	 * Energy Related
 	 */
 	public final GraphL energyGraph = new GraphL("Energy", maxData);
+	public final GraphL powerGraph = new GraphL("Power", maxData);
 	public final GraphL energyCapacityGraph = new GraphL("Capacity", 1);
 	public final GraphL voltageGraph = new GraphL("Voltage", maxData);
 	public final GraphL torqueGraph = new GraphL("Torque", maxData);
@@ -63,6 +67,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public MultimeterNetwork()
 	{
 		graphs.add(energyGraph);
+		graphs.add(powerGraph);
 		graphs.add(energyCapacityGraph);
 		graphs.add(voltageGraph);
 		graphs.add(torqueGraph);
@@ -80,6 +85,9 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 		if (graph == energyGraph)
 			graphValue = UnitDisplay.getDisplay(energyGraph.get(), Unit.JOULES);
+
+		if (graph == powerGraph)
+			graphValue = UnitDisplay.getDisplay(powerGraph.get(), Unit.WATT);
 
 		if (graph == energyCapacityGraph)
 			graphValue = UnitDisplay.getDisplay(energyCapacityGraph.get(), Unit.JOULES);
