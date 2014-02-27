@@ -31,7 +31,7 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
-	public static final float ACCELERATION = 0.1f;
+	public static final float ACCELERATION = 0.2f;
 	/** The current rotation of the network */
 	private float rotation = 0;
 	private long lastRotateTime;

@@ -63,7 +63,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 
 			if (mech != null)
 			{
-				long power = (long) Math.abs(mech.getTorque() * mech.getAngularVelocity());
+				long power = (long) Math.abs(mech.getTorque() * mech.getAngularVelocity()) / 2;
 				long receive = energy.receiveEnergy(power, true);
 
 				if (receive > 0)
