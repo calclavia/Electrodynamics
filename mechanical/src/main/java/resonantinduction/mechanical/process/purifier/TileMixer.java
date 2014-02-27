@@ -4,12 +4,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
@@ -151,9 +153,9 @@ public class TileMixer extends TileMechanical
 				return true;
 			}
 		}
-		else if (worldObj.isAirBlock(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ()) || block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID)
+		else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
 		{
-			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem().getItemDamage())).blockID);
+			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.materialNameToMixture(ResourceGenerator.getName(entity.getEntityItem()))).blockID);
 		}
 
 		return false;

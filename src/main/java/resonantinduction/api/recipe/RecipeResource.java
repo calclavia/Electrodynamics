@@ -103,14 +103,12 @@ public abstract class RecipeResource
 		{
 			if (obj instanceof OreDictResource)
 			{
-				return this.name.equals(((OreDictResource) obj).name);
+				return name.equals(((OreDictResource) obj).name);
 			}
 
 			if (obj instanceof ItemStackResource)
 			{
-				for (ItemStack is : OreDictionary.getOres(name).toArray(new ItemStack[0]))
-					if (is.isItemEqual(((ItemStackResource) obj).itemStack))
-						return true;
+				return equals(((ItemStackResource) obj).itemStack);
 			}
 
 			if (obj instanceof ItemStack)
@@ -118,7 +116,6 @@ public abstract class RecipeResource
 				for (ItemStack is : OreDictionary.getOres(name).toArray(new ItemStack[0]))
 					if (is.isItemEqual((ItemStack) obj))
 						return true;
-				return false;
 			}
 
 			return false;

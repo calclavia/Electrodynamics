@@ -326,6 +326,11 @@ public class ResourceGenerator implements IVirtualObject
 	{
 		return materials.inverse().get(id);
 	}
+	
+	public static String getName(ItemStack itemStack)
+	{
+		return LanguageUtility.decapitalizeFirst(OreDictionary.getOreName(OreDictionary.getOreID(itemStack)).replace("dust", "").replace("ore", "").replace("ingot", ""));	
+	}
 
 	public static int getColor(String name)
 	{
