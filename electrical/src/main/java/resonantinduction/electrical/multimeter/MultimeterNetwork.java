@@ -66,6 +66,7 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 
 	public MultimeterNetwork()
 	{
+		super(PartMultimeter.class);
 		graphs.add(energyGraph);
 		graphs.add(powerGraph);
 		graphs.add(energyCapacityGraph);
@@ -155,9 +156,9 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	}
 
 	@Override
-	public boolean isValidConnector(PartMultimeter node)
+	public boolean isValidConnector(Object node)
 	{
-		return node.world() != null && node.tile() != null;
+		return node instanceof PartMultimeter && ((PartMultimeter) node).world() != null && ((PartMultimeter) node).tile() != null;
 	}
 
 	@Override

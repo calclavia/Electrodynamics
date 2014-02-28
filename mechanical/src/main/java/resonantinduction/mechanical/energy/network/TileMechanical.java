@@ -99,8 +99,8 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	@Override
 	public void invalidate()
 	{
-		getNetwork().split(this);
 		super.invalidate();
+		getNetwork().split(this);
 	}
 
 	protected float getLoad()

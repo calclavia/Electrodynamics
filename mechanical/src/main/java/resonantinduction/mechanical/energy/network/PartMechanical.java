@@ -1,10 +1,8 @@
 package resonantinduction.mechanical.energy.network;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
@@ -97,7 +95,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public void preRemove()
+	public void onWorldSeparate()
 	{
 		getNetwork().split(this);
 	}

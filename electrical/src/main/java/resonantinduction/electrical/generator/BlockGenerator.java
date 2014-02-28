@@ -28,8 +28,8 @@ public class BlockGenerator extends BlockRotatable
 		{
 			if (!world.isRemote)
 			{
-				((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
-				entityPlayer.addChatMessage("Generator now producing " + (((TileGenerator) tileEntity).isInversed ? "mechanical" : "electrical") + " energy.");
+				int gear = ((TileGenerator) tileEntity).toggleGearRatio();
+				entityPlayer.addChatMessage("Generator set to " + (gear == 0 ? "low" : gear == 1 ? "medium" : "high") + " gear.");
 			}
 
 			return true;
@@ -47,8 +47,8 @@ public class BlockGenerator extends BlockRotatable
 		{
 			if (!world.isRemote)
 			{
-				int gear = ((TileGenerator) tileEntity).toggleGearRatio();
-				entityPlayer.addChatMessage("Generator set to " + (gear == 0 ? "low" : gear == 1 ? "medium" : "high") + " gear.");
+				((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
+				entityPlayer.addChatMessage("Generator now producing " + (((TileGenerator) tileEntity).isInversed ? "mechanical" : "electrical") + " energy.");
 			}
 
 			return true;

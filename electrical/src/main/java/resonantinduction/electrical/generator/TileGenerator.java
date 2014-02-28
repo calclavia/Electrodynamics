@@ -90,7 +90,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			{
 				if (extract > 0)
 				{
-					long torqueRatio = (long) ((gearRatio + 1) / 4d * (extract));
+					long torqueRatio = (long) ((gearRatio + 1) / 2.2d * (extract));
 
 					if (torqueRatio > 0)
 					{

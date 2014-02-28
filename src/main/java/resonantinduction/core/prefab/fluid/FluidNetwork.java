@@ -23,22 +23,23 @@ import calclavia.lib.utility.FluidUtility;
  */
 public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork, IUpdate
 {
+
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
 
 	// TODO: Make animated distribution to create a smooth flow transition.
 	public boolean animateDistribution = false;
 
+	public FluidNetwork()
+	{
+		super(IFluidConnector.class);
+	}
+
 	@Override
 	public void addConnector(IFluidConnector connector)
 	{
 		super.addConnector(connector);
 		NetworkTickHandler.addNetwork(this);
-	}
-
-	@Override
-	public void update()
-	{
 	}
 
 	@Override

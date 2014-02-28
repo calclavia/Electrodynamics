@@ -8,6 +8,11 @@ import universalelectricity.core.net.Network;
 
 public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork, TileEnergyDistribution>
 {
+	public EnergyDistributionNetwork()
+	{
+		super(TileEnergyDistribution.class);
+	}
+
 	public void redistribute(TileEnergyDistribution... exclusion)
 	{
 		long totalEnergy = 0;

@@ -1,7 +1,9 @@
 package resonantinduction.mechanical.energy.network;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.minecraft.tileentity.TileEntity;
@@ -31,19 +33,21 @@ import universalelectricity.core.net.NetworkTickHandler;
  */
 public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
 {
+	public MechanicalNetwork()
+	{
+		super(IMechanical.class);
+	}
+
 	public static final float ACCELERATION = 0.2f;
 
-	/** The current rotation of the network */
+	/** The current rotation of the network. Used by covneyor belts. */
 	private float rotation = 0;
-
 	private long lastRotateTime;
 
 	/**
 	 * The cached connections of the mechanical network.
 	 */
 	private final WeakHashMap<IMechanical, WeakReference[]> connectionCache = new WeakHashMap<IMechanical, WeakReference[]>();
-
-	private boolean markUpdateRotation = true;
 
 	/**
 	 * Only add the exact instance of the connector into the network. Multipart tiles allowed!
@@ -53,7 +57,6 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	{
 		super.addConnector(connector);
 		NetworkTickHandler.addNetwork(this);
-		markUpdateRotation = true;
 	}
 
 	/**
@@ -125,6 +128,13 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	}
 
 	@Override
+	public void reconstruct()
+	{
+		connectionCache.clear();
+		super.reconstruct();
+	}
+
+	@Override
 	protected void reconstructConnector(IMechanical node)
 	{
 		node.setNetwork(this);
@@ -189,9 +199,12 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 		Object[] conn = new Object[6];
 		WeakReference[] connections = connectionCache.get(connector);
 
-		for (int i = 0; i < connections.length; i++)
-			if (connections[i] != null)
-				conn[i] = connections[i].get();
+		if (connections != null)
+		{
+			for (int i = 0; i < connections.length; i++)
+				if (connections[i] != null)
+					conn[i] = connections[i].get();
+		}
 
 		return conn;
 	}
