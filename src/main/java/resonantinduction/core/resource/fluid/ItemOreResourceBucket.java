@@ -47,17 +47,20 @@ public class ItemOreResourceBucket extends Item
 	@Override
 	public String getItemDisplayName(ItemStack is)
 	{
-		if (getMaterialFromStack(is) != null)
+		String material = getMaterialFromStack(is);
+		if (material != null)
 		{
-			String fluidID = isMolten ? ResourceGenerator.materialNameToMolten(getMaterialFromStack(is)) : ResourceGenerator.materialNameToMixture(getMaterialFromStack(is));
+			String fluidID = isMolten ? ResourceGenerator.materialNameToMolten(material) : ResourceGenerator.materialNameToMixture(material);
 
-			if (fluidID != null)
+			if (fluidID != null && FluidRegistry.getFluid(fluidID) != null)
 			{
 				String fluidName = FluidRegistry.getFluid(fluidID).getLocalizedName();
 				return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", fluidName).replace("  ", " ");
 			}
+
+			return material;
 		}
-		
+
 		return null;
 	}
 
