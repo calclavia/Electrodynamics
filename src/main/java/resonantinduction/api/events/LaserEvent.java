@@ -123,7 +123,7 @@ public class LaserEvent extends Event
 	public static void onLaserHitBlock(World world, Object player, Vector3 vec, ForgeDirection side)
 	{
 		int id = vec.getBlockID(world);
-		int meta = vec.getBlockID(world);
+		int meta = vec.getBlockMetadata(world);
 		Block block = Block.blocksList[id];
 
 		Vector3 faceVec = vec.clone().translate(side);
