@@ -114,7 +114,7 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource.getFluid().isGaseous())
+		if (!resource.getFluid().isGaseous())
 		{
 			int fill = getInternalTank().fill(resource, doFill);
 			onFluidChanged();
@@ -143,12 +143,12 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return from != ForgeDirection.UP && fluid.isGaseous();
+		return from != ForgeDirection.UP && !fluid.isGaseous();
 	}
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
-		return from != ForgeDirection.UP && fluid.isGaseous();
+		return from != ForgeDirection.UP && !fluid.isGaseous();
 	}
 }
