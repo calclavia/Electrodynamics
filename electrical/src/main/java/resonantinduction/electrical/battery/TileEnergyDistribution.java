@@ -12,7 +12,7 @@ public class TileEnergyDistribution extends TileElectrical implements IConnector
 
 	public boolean markClientUpdate = false;
 	public boolean markDistributionUpdate = false;
-	
+
 	public long renderEnergyAmount = 0;
 
 	@Override
@@ -41,6 +41,19 @@ public class TileEnergyDistribution extends TileElectrical implements IConnector
 			}
 		}
 	}
+
+	@Override
+	public long getEnergy(ForgeDirection from)
+	{
+		return getNetwork().totalEnergy;
+	}
+	@Override
+	public long getEnergyCapacity(ForgeDirection from)
+	{
+		return getNetwork().totalCapacity;
+
+	}
+
 
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)

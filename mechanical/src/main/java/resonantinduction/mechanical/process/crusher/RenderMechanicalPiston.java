@@ -38,7 +38,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		// Length of piston arm
 		float length = 1f;
 
-		double beta = Math.asin((radius * Math.sin(angle)) / length);
+		double beta = Math.asin((radius * Math.sin(angle)) / (length/2));
 
 		/**
 		 * Render Piston Rod
@@ -47,8 +47,9 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		double pistonTranslateX = 2 * length * Math.cos(beta);
 		double pistonTranslateY = 2 * length * Math.sin(beta);
 
-		GL11.glTranslated(pistonTranslateX, 0, pistonTranslateY);
-		GL11.glRotated(Math.toDegrees(beta), 0, 0, 1);
+		GL11.glTranslated(0, pistonTranslateY, pistonTranslateX);
+		GL11.glRotated(-Math.toDegrees(beta), 1, 0, 0);
+		//MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
 		GL11.glPopMatrix();
 
 		/**
