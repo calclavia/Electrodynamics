@@ -1,14 +1,18 @@
 package resonantinduction.mechanical.process;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.IFilterable;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
@@ -16,8 +20,13 @@ import calclavia.lib.prefab.tile.TileExternalInventory;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
-public class TileFilter extends TileExternalInventory
+public class TileFilter extends TileFilterable implements IFilterable
 {
+	public TileFilter()
+	{
+		maxSlots = 1;
+	}
+
 	@Override
 	public void updateEntity()
 	{
@@ -81,5 +90,23 @@ public class TileFilter extends TileExternalInventory
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+	{
+		return slot == 0 && stack.getItem() instanceof ItemImprint;
+	}
+
+	@Override
+	public void setFilter(ItemStack filter)
+	{
+		setInventorySlotContents(0, filter);
+	}
+
+	@Override
+	public ItemStack getFilter()
+	{
+		return getStackInSlot(0);
 	}
 }

@@ -29,38 +29,35 @@ public abstract class BlockImprintable extends BlockRotatable
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity != null)
+		if (tileEntity instanceof IFilterable)
 		{
-			if (tileEntity instanceof IFilterable)
+			ItemStack containingStack = ((IFilterable) tileEntity).getFilter();
+
+			if (containingStack != null)
 			{
-				ItemStack containingStack = ((IFilterable) tileEntity).getFilter();
-
-				if (containingStack != null)
+				if (!world.isRemote)
 				{
-					if (!world.isRemote)
-					{
-						EntityItem dropStack = new EntityItem(world, player.posX, player.posY, player.posZ, containingStack);
-						dropStack.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(dropStack);
-					}
-
-					((IFilterable) tileEntity).setFilter(null);
-					return true;
-				}
-				else
-				{
-					if (player.getCurrentEquippedItem() != null)
-					{
-						if (player.getCurrentEquippedItem().getItem() instanceof ItemImprint)
-						{
-							((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-							return true;
-						}
-					}
+					EntityItem dropStack = new EntityItem(world, player.posX, player.posY, player.posZ, containingStack);
+					dropStack.delayBeforeCanPickup = 0;
+					world.spawnEntityInWorld(dropStack);
 				}
 
+				((IFilterable) tileEntity).setFilter(null);
+				return true;
 			}
+			else
+			{
+				if (player.getCurrentEquippedItem() != null)
+				{
+					if (player.getCurrentEquippedItem().getItem() instanceof ItemImprint)
+					{
+						((IFilterable) tileEntity).setFilter(player.getCurrentEquippedItem());
+						player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+						return true;
+					}
+				}
+			}
+
 		}
 
 		return false;
@@ -80,65 +77,6 @@ public abstract class BlockImprintable extends BlockRotatable
 				world.markBlockForUpdate(x, y, z);
 			}
 		}
-
-		return true;
-	}
-
-	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-	{
-		return this.onMachineActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
-	{
-		int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		int change = 2;
-
-		switch (angle)
-		{
-			case 0:
-				change = 2;
-				break;
-			case 1:
-				change = 5;
-				break;
-			case 2:
-				change = 3;
-				break;
-			case 3:
-				change = 4;
-				break;
-
-		}
-		world.setBlockMetadataWithNotify(x, y, z, change, 3);
-	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		int original = world.getBlockMetadata(x, y, z);
-		int change = 2;
-
-		switch (original)
-		{
-			case 2:
-				change = 4;
-				break;
-			case 3:
-				change = 5;
-				break;
-			case 4:
-				change = 3;
-				break;
-			case 5:
-				change = 2;
-				break;
-
-		}
-
-		world.setBlockMetadataWithNotify(x, y, z, change, 3);
 
 		return true;
 	}

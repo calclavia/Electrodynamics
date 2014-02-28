@@ -38,7 +38,7 @@ public class BlockGutter extends BlockFluidNetwork
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB aabb, List list, Entity entity)
 	{
 		float thickness = 0.1F;
-
+		
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 
 		if (tile instanceof TileGutter)
