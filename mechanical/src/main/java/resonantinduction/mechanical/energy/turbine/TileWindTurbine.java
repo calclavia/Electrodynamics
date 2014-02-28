@@ -1,8 +1,13 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
  * The vertical wind turbine collects airflow.
@@ -28,8 +33,10 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		 */
 		if (getDirection().offsetY == 0)
 		{
-			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() > 0.99)
+			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() > 0.00000008)
 			{
+				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(3)));
+				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 4 + worldObj.rand.nextInt(8)));
 				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 				return;
 			}
