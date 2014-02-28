@@ -15,8 +15,6 @@ import calclavia.lib.prefab.turbine.TileTurbine;
 
 public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 {
-	@Synced()
-	public int tier;
 
 	public TileMechanicalTurbine()
 	{
