@@ -28,6 +28,12 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		 */
 		if (getDirection().offsetY == 0)
 		{
+			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() > 0.99)
+			{
+				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+				return;
+			}
+
 			maxPower = 120;
 			getMultiBlock().get().power += getWindPower();
 		}
@@ -35,7 +41,7 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		{
 			maxPower = 1000;
 		}
-		
+
 		if (getMultiBlock().isConstructed())
 			torque = (long) (defaultTorque / (2.5f / multiBlockRadius));
 		else
