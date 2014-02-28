@@ -35,16 +35,25 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
 
 			if (tile.getDirection().offsetY != 0)
-				renderWaterTurbine(tile.getMultiBlock().isConstructed());
+				renderWaterTurbine(tile.tier, tile.getMultiBlock().isConstructed());
 			else
-				renderWaterWheel(tile.getMultiBlock().isConstructed());
+				renderWaterWheel(tile.tier, tile.getMultiBlock().isConstructed());
 
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 		}
 	}
 
-	public void renderWaterWheel(boolean isLarge)
+	@Override
+	public void renderInventoryItem(ItemStack itemStack)
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) 0.5f, (float) 0.5f, (float) 0.5f);
+		renderWaterTurbine(itemStack.getItemDamage(), false);
+		GL11.glPopMatrix();
+	}
+
+	public void renderWaterWheel(int tier, boolean isLarge)
 	{
 		if (isLarge)
 		{
@@ -58,7 +67,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glScalef(1, 1.4f, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_spruce.png");
 			MODEL.renderOnly("bigwheel_supporters");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			bindTexture(tier);
 			MODEL.renderOnly("bigwheel_scoops", "bigwheel_supportercircle");
 			GL11.glPopMatrix();
 
@@ -69,42 +78,45 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glScalef(0.7f, 1, 0.7f);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
 			MODEL.renderOnly("small_waterwheel_endknot");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+			bindTexture(tier);
 			MODEL.renderOnly("small_waterwheel", "small_waterwheel_supporters", "horizontal_centre_shaft");
 			GL11.glPopMatrix();
 		}
 	}
 
-	public void renderWaterTurbine(boolean isLarge)
+	public void renderWaterTurbine(int tier, boolean isLarge)
 	{
 		if (isLarge)
 		{
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			bindTexture(tier);
 			MODEL.renderOnly("turbine_centre");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
 			MODEL.renderOnly("turbine_blades");
-
 		}
 		else
 		{
 			GL11.glPushMatrix();
 			GL11.glScalef(0.9f, 1f, 0.9f);
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "log_oak.png");
 			MODEL.renderOnly("small_waterwheel_endknot");
-			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+			bindTexture(tier);
 			MODEL.renderOnly("small_turbine_blades");
 			GL11.glPopMatrix();
 		}
 	}
 
-	@Override
-	public void renderInventoryItem(ItemStack itemStack)
+	public void bindTexture(int tier)
 	{
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) 0.5f, (float) 0.5f, (float) 0.5f);
-		renderWaterWheel(false);
-		GL11.glPopMatrix();
-
+		switch (tier)
+		{
+			case 0:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
+				break;
+			case 1:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
+				break;
+			case 2:
+				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
+				break;
+		}
 	}
-
 }

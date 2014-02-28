@@ -1,7 +1,11 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import java.util.List;
+
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
@@ -16,6 +20,13 @@ public class BlockWaterTurbine extends BlockMechanicalTurbine
 	public BlockWaterTurbine(int id)
 	{
 		super(id);
+	}
+
+	@Override
+	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	{
+		for (int i = 0; i < 3; i++)
+			par3List.add(new ItemStack(par1, 1, i));
 	}
 
 	@SideOnly(Side.CLIENT)
