@@ -7,6 +7,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.api.mechanical.IMechanical;
+import resonantinduction.archaic.fluid.grate.BlockGrate;
+import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -26,9 +28,7 @@ import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.tank.BlockTank;
 import resonantinduction.mechanical.fluid.tank.TileTank;
-import resonantinduction.mechanical.fluid.transport.BlockGrate;
 import resonantinduction.mechanical.fluid.transport.BlockPump;
-import resonantinduction.mechanical.fluid.transport.TileGrate;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
@@ -101,7 +101,6 @@ public class Mechanical
 	// Fluids
 	public static Block blockTank;
 	public static Block blockReleaseValve;
-	public static Block blockGrate;
 	public static Block blockPump;
 	public static Item itemPipe;
 
@@ -133,7 +132,6 @@ public class Mechanical
 		blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
 
 		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
-		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
@@ -181,7 +179,6 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 0), " W ", "WGW", " W ", 'G', itemGear, 'W', UniversalRecipe.PRIMARY_METAL.get()));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "BBB", "B B", "BBB", 'B', Block.fenceIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', itemGear));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3), "BBB", "   ", "BBB", 'B', Item.ingotIron));

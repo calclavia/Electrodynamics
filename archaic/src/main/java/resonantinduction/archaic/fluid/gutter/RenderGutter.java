@@ -1,4 +1,4 @@
-package resonantinduction.archaic.gutter;
+package resonantinduction.archaic.fluid.gutter;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
