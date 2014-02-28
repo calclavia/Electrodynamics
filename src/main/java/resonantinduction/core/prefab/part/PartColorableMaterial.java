@@ -7,11 +7,13 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.core.MultipartUtility;
+import resonantinduction.electrical.charger.PartCharger;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 
@@ -26,6 +28,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 
 	public M material;
 	public boolean isInsulated = false;
+	public boolean requiresInsulation = true;
 
 	/**
 	 * Material Methods
@@ -90,18 +93,19 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 	 */
 	public int getColor()
 	{
-		return this.isInsulated ? this.color : -1;
+		return isInsulated || !requiresInsulation ? color : -1;
 	}
 
 	public void setColor(int dye)
 	{
-		if (this.isInsulated)
+		if (isInsulated || !requiresInsulation)
 		{
 			this.color = dye;
 
-			if (!this.world().isRemote)
+			if (!world().isRemote)
 			{
 				tile().notifyPartChange(this);
+				onPartChanged(this);
 				this.sendColorUpdate();
 			}
 		}
@@ -122,9 +126,9 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 		{
 			int dyeColor = MultipartUtility.isDye(itemStack);
 
-			if (dyeColor != -1 && this.isInsulated())
+			if (dyeColor != -1 && (isInsulated() || !requiresInsulation))
 			{
-				if (!player.capabilities.isCreativeMode)
+				if (!player.capabilities.isCreativeMode && requiresInsulation)
 				{
 					player.inventory.decrStackSize(player.inventory.currentItem, 1);
 				}
@@ -132,37 +136,40 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 				this.setColor(dyeColor);
 				return true;
 			}
-			else if (itemStack.itemID == Block.cloth.blockID)
+			else if (requiresInsulation)
 			{
-				if (this.isInsulated())
+				if (itemStack.itemID == Block.cloth.blockID)
 				{
-					if (!world().isRemote && player.capabilities.isCreativeMode)
+					if (this.isInsulated())
+					{
+						if (!world().isRemote && player.capabilities.isCreativeMode)
+						{
+							tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
+						}
+
+						this.setInsulated(false);
+						return true;
+					}
+					else
+					{
+						if (!player.capabilities.isCreativeMode)
+						{
+							player.inventory.decrStackSize(player.inventory.currentItem, 1);
+						}
+
+						this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
+						return true;
+					}
+				}
+				else if (itemStack.getItem() instanceof ItemShears && isInsulated())
+				{
+					if (!world().isRemote && !player.capabilities.isCreativeMode)
 					{
 						tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
 					}
 
 					this.setInsulated(false);
-					return true;
 				}
-				else
-				{
-					if (!player.capabilities.isCreativeMode)
-					{
-						player.inventory.decrStackSize(player.inventory.currentItem, 1);
-					}
-
-					this.setInsulated(BlockColored.getDyeFromBlock(itemStack.getItemDamage()));
-					return true;
-				}
-			}
-			else if (itemStack.getItem() instanceof ItemShears && isInsulated())
-			{
-				if (!world().isRemote && !player.capabilities.isCreativeMode)
-				{
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
-				}
-
-				this.setInsulated(false);
 				return true;
 			}
 		}
@@ -176,7 +183,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 		drops.add(getItem());
 
-		if (this.isInsulated)
+		if (requiresInsulation && isInsulated)
 		{
 			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color)));
 		}

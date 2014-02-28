@@ -25,6 +25,7 @@ import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
+import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,15 +35,16 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	private int pressure;
 	private boolean markPacket = true;
 
-	public PartPipe()
-	{
-		super();
-		material = EnumPipeMaterial.COPPER;
-	}
-
 	public PartPipe(int typeID)
 	{
+		super();
 		material = EnumPipeMaterial.values()[typeID];
+		requiresInsulation = false;
+	}
+
+	public PartPipe()
+	{
+		this(EnumPipeMaterial.COPPER.ordinal());
 	}
 
 	@Override
@@ -67,13 +69,13 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		tank.writeToNBT(nbt);
-		tile().getWriteStream(this).writeByte(1).writeNBTTagCompound(nbt);
+		tile().getWriteStream(this).writeByte(3).writeNBTTagCompound(nbt);
 	}
 
 	@Override
 	public void read(MCDataInput packet, int packetID)
 	{
-		if (packetID == 1)
+		if (packetID == 3)
 		{
 			tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 			tank.readFromNBT(packet.readNBTTagCompound());
@@ -198,7 +200,19 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	@Override
 	protected boolean canConnectTo(TileEntity tile, ForgeDirection dir)
 	{
-		return tile instanceof IFluidHandler;// && (((IFluidHandler) tile).canFill(dir.getOpposite(), null) || ((IFluidHandler) tile).canDrain(dir.getOpposite(), null));
+		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
+
+		if (obj instanceof PartPipe)
+		{
+			if (this.getMaterial() == ((PartPipe) obj).getMaterial())
+			{
+				return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
+			}
+
+			return false;
+		}
+
+		return tile instanceof IFluidHandler;
 	}
 
 	@Override

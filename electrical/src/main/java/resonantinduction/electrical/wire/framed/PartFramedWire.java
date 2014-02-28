@@ -256,14 +256,11 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	@Override
 	protected boolean canConnectTo(TileEntity tile, ForgeDirection side)
 	{
-		return tile instanceof IConductor || canConnectToObj(tile, side);
-	}
+		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
 
-	protected boolean canConnectToObj(Object obj, ForgeDirection dir)
-	{
-		if (obj != null && (obj.getClass().isAssignableFrom(this.getClass()) || this.getClass().isAssignableFrom(obj.getClass())))
+		if (obj instanceof PartFramedWire)
 		{
-			PartAdvancedWire wire = (PartAdvancedWire) obj;
+			PartFramedWire wire = (PartFramedWire) obj;
 
 			if (this.getMaterial() == wire.getMaterial())
 			{
@@ -274,13 +271,11 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 
 				return true;
 			}
-		}
-		else if (!(obj instanceof IConductor))
-		{
-			return CompatibilityModule.canConnect(obj, dir.getOpposite(), this);
+
+			return false;
 		}
 
-		return false;
+		return CompatibilityModule.canConnect(obj, side.getOpposite(), this);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package resonantinduction.mechanical.fluid.pipe;
 
 import java.awt.Color;
 
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
@@ -9,6 +10,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import codechicken.lib.colour.Colour;
+import codechicken.lib.colour.ColourARGB;
 import resonantinduction.core.Reference;
 import resonantinduction.core.render.RenderFluidHelper;
 import calclavia.lib.render.RenderUtility;
@@ -30,9 +33,20 @@ public class RenderPipe implements ISimpleItemRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
+
+		if (part.getColor() > 0)
+		{
+			Color insulationColour = new Color(ItemDye.dyeColors[part.getColor()]);
+			GL11.glColor4f(insulationColour.getRed() / 255f, insulationColour.getGreen() / 255f, insulationColour.getBlue() / 255f, 1);
+		}
+		else
+		{
+			GL11.glColor4f(1, 1, 1, 1);
+		}
+
 		render(0, part.getAllCurrentConnections());
 		GL11.glPopMatrix();
-		
+
 		GL11.glPushMatrix();
 
 		FluidStack fluid = part.getInternalTank().getFluid();
