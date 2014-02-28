@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import net.minecraftforge.client.model.obj.WavefrontObject;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;

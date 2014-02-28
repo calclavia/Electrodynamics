@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.tank;
+package resonantinduction.archaic.fluid.tank;
 
 import java.awt.Color;
 
@@ -9,9 +9,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.archaic.Archaic;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.render.RenderFluidHelper;
-import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;
@@ -55,7 +55,7 @@ public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItem
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-			RenderUtility.renderBlockWithConnectedTextures(renderSides, Mechanical.blockTank, null, ResonantInduction.blockMachinePart, null);
+			RenderUtility.renderBlockWithConnectedTextures(renderSides, Archaic.blockTank, null, ResonantInduction.blockMachinePart, null);
 			GL11.glPopMatrix();
 
 			if (fluid != null)

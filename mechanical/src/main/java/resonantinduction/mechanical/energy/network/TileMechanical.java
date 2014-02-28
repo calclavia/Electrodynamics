@@ -2,13 +2,11 @@ package resonantinduction.mechanical.energy.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;

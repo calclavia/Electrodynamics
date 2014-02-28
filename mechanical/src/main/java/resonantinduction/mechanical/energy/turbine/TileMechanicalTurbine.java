@@ -7,8 +7,6 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.mechanical.energy.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.Synced;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.turbine.TileTurbine;

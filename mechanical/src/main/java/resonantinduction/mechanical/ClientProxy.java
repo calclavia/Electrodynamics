@@ -3,7 +3,6 @@ package resonantinduction.mechanical;
 import resonantinduction.mechanical.energy.gear.RenderGear;
 import resonantinduction.mechanical.energy.gear.RenderGearShaft;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
-import resonantinduction.mechanical.fluid.tank.RenderTank;
 import calclavia.lib.render.item.GlobalItemRenderer;
 
 public class ClientProxy extends CommonProxy
@@ -14,6 +13,5 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Mechanical.itemGear.itemID, RenderGear.INSTANCE);
 		GlobalItemRenderer.register(Mechanical.itemGearShaft.itemID, RenderGearShaft.INSTANCE);
 		GlobalItemRenderer.register(Mechanical.itemPipe.itemID, RenderPipe.INSTANCE);
-		GlobalItemRenderer.register(Mechanical.blockTank.blockID, RenderTank.INSTANCE);
 	}
 }

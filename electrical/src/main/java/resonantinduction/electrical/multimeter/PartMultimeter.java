@@ -20,8 +20,6 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.net.IConnector;
 import atomicscience.api.ITemperature;
 import calclavia.lib.network.IPacketReceiver;

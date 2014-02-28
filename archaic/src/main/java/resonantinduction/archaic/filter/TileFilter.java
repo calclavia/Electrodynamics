@@ -16,7 +16,6 @@ import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileExternalInventory;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 

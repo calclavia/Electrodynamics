@@ -4,14 +4,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;

@@ -1,6 +1,5 @@
 package resonantinduction.core.prefab.fluid;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
@@ -23,7 +22,6 @@ import calclavia.lib.utility.FluidUtility;
  */
 public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork, IUpdate
 {
-
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
 

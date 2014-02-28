@@ -7,10 +7,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.archaic.filter.BlockFilter;
-import resonantinduction.archaic.filter.TileFilter;
-import resonantinduction.archaic.fluid.grate.BlockGrate;
-import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -26,10 +22,7 @@ import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.SchematicWindTurbine;
 import resonantinduction.mechanical.energy.turbine.TileWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.TileWindTurbine;
-import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
-import resonantinduction.mechanical.fluid.tank.BlockTank;
-import resonantinduction.mechanical.fluid.tank.TileTank;
 import resonantinduction.mechanical.fluid.transport.BlockPump;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
@@ -99,7 +92,6 @@ public class Mechanical
 	public static Block blockRejector;
 
 	// Fluids
-	public static Block blockTank;
 	public static Block blockReleaseValve;
 	public static Block blockPump;
 	public static Item itemPipe;
@@ -130,7 +122,6 @@ public class Mechanical
 		blockDetector = contentRegistry.createTile(BlockDetector.class, TileDetector.class);
 		blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
 
-		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
@@ -180,7 +171,6 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 1), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 0), 'W', Block.stone, 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWaterTurbine, 1, 2), "SWS", "WGW", "SWS", 'G', new ItemStack(blockWaterTurbine, 1, 1), 'W', UniversalRecipe.PRIMARY_METAL.get(), 'S', Item.stick));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3), "BBB", "   ", "BBB", 'B', Item.ingotIron));

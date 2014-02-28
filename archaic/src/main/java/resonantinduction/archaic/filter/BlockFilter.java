@@ -5,11 +5,9 @@ import java.util.List;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import resonantinduction.api.IFilterable;
 import resonantinduction.core.prefab.imprint.BlockImprintable;
 
 /**

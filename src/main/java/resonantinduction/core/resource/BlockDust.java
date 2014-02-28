@@ -1,6 +1,5 @@
 package resonantinduction.core.resource;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -13,9 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

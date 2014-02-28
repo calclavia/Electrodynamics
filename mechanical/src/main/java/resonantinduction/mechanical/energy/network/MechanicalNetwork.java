@@ -1,9 +1,7 @@
 package resonantinduction.mechanical.energy.network;
 
 import java.lang.ref.WeakReference;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.minecraft.tileentity.TileEntity;

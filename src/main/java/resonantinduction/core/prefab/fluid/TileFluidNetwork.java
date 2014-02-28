@@ -109,7 +109,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	@Override
 	public Object[] getConnections()
 	{
-		return this.connectedBlocks;
+		return connectedBlocks;
 	}
 
 	public void refresh()
@@ -117,19 +117,19 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			byte previousConnections = renderSides;
-			this.connectedBlocks = new Object[6];
-			this.renderSides = 0;
+			connectedBlocks = new Object[6];
+			renderSides = 0;
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				this.validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(this.worldObj), dir);
-
+				this.validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
 			}
+			
 			/** Only send packet updates if visuallyConnected changed. */
 			if (previousConnections != renderSides)
 			{
-				this.sendRenderUpdate();
-				this.getNetwork().reconstruct();
+				sendRenderUpdate();
+				getNetwork().reconstruct();
 			}
 		}
 

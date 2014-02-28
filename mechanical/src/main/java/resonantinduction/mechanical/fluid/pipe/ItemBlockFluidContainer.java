@@ -14,9 +14,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.archaic.Archaic;
+import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.core.prefab.fluid.TileFluidNetwork;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.fluid.tank.TileTank;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
@@ -57,9 +57,11 @@ public class ItemBlockFluidContainer extends ItemBlock
 	public static ItemStack getWrenchedItem(World world, Vector3 vec)
 	{
 		TileEntity entity = vec.getTileEntity(world);
+
 		if (entity instanceof TileTank && ((TileTank) entity).getInternalTank() != null && ((TileTank) entity).getInternalTank().getFluid() != null)
 		{
-			ItemStack itemStack = new ItemStack(Mechanical.blockTank);
+			ItemStack itemStack = new ItemStack(Archaic.blockTank);
+
 			FluidStack stack = ((TileTank) entity).getInternalTank().getFluid();
 
 			if (itemStack.getTagCompound() == null)
@@ -73,6 +75,7 @@ public class ItemBlockFluidContainer extends ItemBlock
 			}
 			return itemStack;
 		}
+
 		return null;
 	}
 

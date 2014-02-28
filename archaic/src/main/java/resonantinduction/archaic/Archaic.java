@@ -23,6 +23,8 @@ import resonantinduction.archaic.fluid.grate.BlockGrate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.archaic.fluid.gutter.BlockGutter;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
+import resonantinduction.archaic.fluid.tank.BlockTank;
+import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.archaic.process.BlockCastingMold;
 import resonantinduction.archaic.process.BlockMillstone;
 import resonantinduction.archaic.process.TileCastingMold;
@@ -33,6 +35,7 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.resource.ItemHandCrank;
+import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
@@ -93,6 +96,7 @@ public class Archaic
 	// Fluid
 	public static Block blockGrate;
 	public static Block blockGutter;
+	public static Block blockTank;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -110,6 +114,7 @@ public class Archaic
 		blockGutter = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
+		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
 
 		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemImprint = contentRegistry.createItem(ItemImprint.class);
@@ -152,6 +157,8 @@ public class Archaic
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "WBW", "B B", "WBW", 'B', Block.fenceIron, 'W', "plankWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMillstone, "SPS", "SAS", "SSS", 'P', Block.pistonBase, 'A', Item.pickaxeStone, 'S', Block.stone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
+
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, "PPP", "PIP", "PPP", 'P', Item.paper, 'I', new ItemStack(Item.dyePowder, 0)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', Block.cobblestone, 'S', Item.stick));

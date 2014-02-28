@@ -29,6 +29,18 @@ public class PipeNetwork extends FluidNetwork
 		}
 	}
 
+	@Override
+	public boolean canUpdate()
+	{
+		return getConnectors().size() > 0;
+	}
+
+	@Override
+	public boolean continueUpdate()
+	{
+		return canUpdate();
+	}
+
 	/**
 	 * Calculate pressure in this pipe.
 	 */
@@ -75,7 +87,7 @@ public class PipeNetwork extends FluidNetwork
 	/**
 	 * Distribute fluid in this pipe based on pressure.
 	 */
-	public static void distribute(IFluidPipe sourcePipe)
+	public void distribute(IFluidPipe sourcePipe)
 	{
 		for (int i = 0; i < 6; i++)
 		{
@@ -109,7 +121,7 @@ public class PipeNetwork extends FluidNetwork
 							{
 								int amountB = tankB.getFluidAmount();
 
-								int quantity = Math.max(pressureA > pressureB ? 25 : 0, (amountA - amountB) / 2);
+								int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * sourcePipe.getMaxFlowRate() : 0, (amountA - amountB) / 2);
 								quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
 
 								if (quantity > 0)
@@ -155,18 +167,6 @@ public class PipeNetwork extends FluidNetwork
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
-		return getConnectors().size() > 0;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return canUpdate();
-	}
-
-	@Override
 	public FluidStack drain(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		return null;
@@ -188,5 +188,23 @@ public class PipeNetwork extends FluidNetwork
 	public IFluidNetwork newInstance()
 	{
 		return new PipeNetwork();
+	}
+
+	@Override
+	public void reconstructConnector(IFluidConnector connector)
+	{
+		connector.setNetwork(this);
+	}
+
+	@Override
+	public void distributeConnectors()
+	{
+
+	}
+
+	@Override
+	public void reconstructTankInfo()
+	{
+
 	}
 }

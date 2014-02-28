@@ -79,7 +79,7 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 
 		if (liquid != null && liquid.amount > 0)
 		{
-			float percentage = (float) liquid.amount / (float) capacity;
+			float percentage = Math.min((float) liquid.amount / (float) capacity, 1);
 			int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, tile.worldObj, false);
 			bindTexture(RenderFluidHelper.getFluidSheet(liquid));
 

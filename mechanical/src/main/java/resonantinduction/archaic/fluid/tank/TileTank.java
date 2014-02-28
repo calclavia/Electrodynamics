@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.tank;
+package resonantinduction.archaic.fluid.tank;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

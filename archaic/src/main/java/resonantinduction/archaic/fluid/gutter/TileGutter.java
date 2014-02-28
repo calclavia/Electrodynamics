@@ -6,6 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
@@ -21,28 +22,19 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	}
 
 	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-	}
-
-	@Override
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		if (!this.worldObj.isRemote)
 		{
-			if (tileEntity instanceof IFluidPipe)
+			if (tileEntity instanceof TileGutter)
 			{
-				if (tileEntity instanceof TileGutter)
-				{
-					getNetwork().merge(((TileGutter) tileEntity).getNetwork());
-					this.setRenderSide(side, true);
-					connectedBlocks[side.ordinal()] = tileEntity;
-				}
+				getNetwork().merge(((TileGutter) tileEntity).getNetwork());
+				setRenderSide(side, true);
+				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 			else if (tileEntity instanceof IFluidHandler)
 			{
-				this.setRenderSide(side, true);
+				setRenderSide(side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
@@ -62,16 +54,14 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 			this.network = new PipeNetwork();
 			this.network.addConnector(this);
 		}
+
 		return this.network;
 	}
 
 	@Override
 	public void setNetwork(IFluidNetwork network)
 	{
-		if (network instanceof PipeNetwork)
-		{
-			this.network = network;
-		}
+		this.network = network;
 	}
 
 	@Override
@@ -120,7 +110,7 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 			onFluidChanged();
 			return fill;
 		}
-		
+
 		return 0;
 	}
 
@@ -150,5 +140,11 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return from != ForgeDirection.UP && !fluid.isGaseous();
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[] { getInternalTank().getInfo() };
 	}
 }
