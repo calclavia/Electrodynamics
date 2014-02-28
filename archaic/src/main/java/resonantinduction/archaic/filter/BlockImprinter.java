@@ -1,4 +1,4 @@
-package resonantinduction.archaic.imprint;
+package resonantinduction.archaic.filter;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;

@@ -7,6 +7,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.api.mechanical.IMechanical;
+import resonantinduction.archaic.filter.BlockFilter;
+import resonantinduction.archaic.filter.TileFilter;
 import resonantinduction.archaic.fluid.grate.BlockGrate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
@@ -36,8 +38,6 @@ import resonantinduction.mechanical.logistic.belt.BlockRejector;
 import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileRejector;
-import resonantinduction.mechanical.process.BlockFilter;
-import resonantinduction.mechanical.process.TileFilter;
 import resonantinduction.mechanical.process.crusher.BlockMechanicalPiston;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
@@ -107,7 +107,6 @@ public class Mechanical
 	// Machines/Processes
 	public static Block blockGrinderWheel;
 	public static Block blockPurifier;
-	public static Block blockFilter;
 	public static Block blockMechanicalPiston;
 
 	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
@@ -139,7 +138,6 @@ public class Mechanical
 		// Machines
 		blockGrinderWheel = contentRegistry.createTile(BlockGrindingWheel.class, TileGrinderWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
-		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
 		blockMechanicalPiston = contentRegistry.createTile(BlockMechanicalPiston.class, TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);
 
@@ -190,6 +188,5 @@ public class Mechanical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPurifier, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockFilter, "BBB", "PPP", "BBB", 'B', Block.fenceIron, 'P', Item.paper));
 	}
 }

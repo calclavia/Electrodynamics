@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process;
+package resonantinduction.archaic.filter;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;

@@ -11,10 +11,10 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.energy.network.TileMechanical;
-import resonantinduction.mechanical.process.Timer;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

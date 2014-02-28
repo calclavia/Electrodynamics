@@ -1,4 +1,4 @@
-package resonantinduction.archaic.imprint;
+package resonantinduction.archaic.filter;
 
 import java.util.HashSet;
 import java.util.Iterator;

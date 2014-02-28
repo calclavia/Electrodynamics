@@ -11,6 +11,10 @@ import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.BlockEngineeringTable;
 import resonantinduction.archaic.engineering.ItemHammer;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
+import resonantinduction.archaic.filter.BlockFilter;
+import resonantinduction.archaic.filter.BlockImprinter;
+import resonantinduction.archaic.filter.TileFilter;
+import resonantinduction.archaic.filter.TileImprinter;
 import resonantinduction.archaic.firebox.BlockFirebox;
 import resonantinduction.archaic.firebox.BlockHotPlate;
 import resonantinduction.archaic.firebox.TileFirebox;
@@ -19,8 +23,6 @@ import resonantinduction.archaic.fluid.grate.BlockGrate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.archaic.fluid.gutter.BlockGutter;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
-import resonantinduction.archaic.imprint.BlockImprinter;
-import resonantinduction.archaic.imprint.TileImprinter;
 import resonantinduction.archaic.process.BlockCastingMold;
 import resonantinduction.archaic.process.BlockMillstone;
 import resonantinduction.archaic.process.TileCastingMold;
@@ -86,6 +88,7 @@ public class Archaic
 	// Machine and Processing
 	public static Item itemHammer;
 	public static Item itemHandCrank;
+	public static Block blockFilter;
 
 	// Fluid
 	public static Block blockGrate;
@@ -106,10 +109,12 @@ public class Archaic
 		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
 		blockGutter = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
+		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
 
 		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemImprint = contentRegistry.createItem(ItemImprint.class);
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
+
 		proxy.preInit();
 		Settings.save();
 		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
@@ -130,6 +135,7 @@ public class Archaic
 	{
 		// Add recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "P", "C", 'P', Block.pressurePlatePlanks, 'C', Block.workbench));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockFilter, "B", "P", "B", 'B', Block.fenceIron, 'P', Item.paper));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', Item.stick, 'W', "logWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 0), 'W', "ingotIron"));
