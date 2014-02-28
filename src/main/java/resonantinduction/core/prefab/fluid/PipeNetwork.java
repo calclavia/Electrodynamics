@@ -1,5 +1,7 @@
 package resonantinduction.core.prefab.fluid;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -8,6 +10,8 @@ import resonantinduction.api.mechanical.fluid.IFluidConnector;
 import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
+import resonantinduction.archaic.fluid.gutter.TileGutter;
+import universalelectricity.core.net.NetworkTickHandler;
 
 /**
  * The network for pipe fluid transfer. getNodes() is NOT used.
@@ -89,9 +93,11 @@ public class PipeNetwork extends FluidNetwork
 	 */
 	public void distribute(IFluidPipe sourcePipe)
 	{
-		for (int i = 0; i < 6; i++)
+		Object[] connections = sourcePipe.getConnections();
+
+		for (int i = 0; i < connections.length; i++)
 		{
-			Object obj = sourcePipe.getConnections()[i];
+			Object obj = connections[i];
 
 			if (obj instanceof IFluidPipe)
 			{
@@ -159,7 +165,11 @@ public class PipeNetwork extends FluidNetwork
 					if (transferAmount > 0)
 					{
 						FluidStack drainStack = fluidHandler.drain(dir.getOpposite(), transferAmount, false);
-						fluidHandler.drain(dir.getOpposite(), sourcePipe.fill(dir.getOpposite(), drainStack, true), true);
+
+						if (drainStack != null)
+						{
+							fluidHandler.drain(dir.getOpposite(), sourcePipe.fill(dir.getOpposite(), drainStack, true), true);
+						}
 					}
 				}
 			}
@@ -205,6 +215,6 @@ public class PipeNetwork extends FluidNetwork
 	@Override
 	public void reconstructTankInfo()
 	{
-
+		NetworkTickHandler.addNetwork(this);
 	}
 }

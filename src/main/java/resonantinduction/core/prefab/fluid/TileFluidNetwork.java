@@ -124,7 +124,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 			{
 				this.validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
 			}
-			
+
 			/** Only send packet updates if visuallyConnected changed. */
 			if (previousConnections != renderSides)
 			{
@@ -248,12 +248,14 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 
 	public void sendRenderUpdate()
 	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
+		if (!this.worldObj.isRemote)
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
 	}
 
 	public void sendTankUpdate()
 	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()), pressure), this.worldObj, new Vector3(this), 60);
+		if (!this.worldObj.isRemote)
+			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()), pressure), this.worldObj, new Vector3(this), 60);
 	}
 
 	@Override

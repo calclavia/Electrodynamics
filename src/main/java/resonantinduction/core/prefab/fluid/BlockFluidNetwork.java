@@ -33,6 +33,7 @@ public abstract class BlockFluidNetwork extends BlockTile
 		if (tile instanceof TileFluidNetwork)
 		{
 			((TileFluidNetwork) tile).refresh();
+			((TileFluidNetwork) tile).getNetwork().reconstruct();
 		}
 	}
 

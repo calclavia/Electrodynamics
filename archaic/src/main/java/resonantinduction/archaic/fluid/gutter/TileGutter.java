@@ -22,6 +22,17 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	}
 
 	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+		
+		//TODO: Packet before doing.
+		if (!this.worldObj.isRemote)
+			sendTankUpdate();
+
+	}
+
+	@Override
 	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
 	{
 		if (!this.worldObj.isRemote)
