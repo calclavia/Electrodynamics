@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
@@ -18,6 +19,11 @@ import calclavia.lib.utility.inventory.InventoryUtility;
  */
 public class TileWindTurbine extends TileMechanicalTurbine
 {
+	private final byte[] openBlockCache = new byte[224];
+	private int checkCount = 0;
+	private float efficiency = 0;
+	private long windPower = 0;
+
 	@Override
 	public void invalidate()
 	{
@@ -29,20 +35,32 @@ public class TileWindTurbine extends TileMechanicalTurbine
 	public void updateEntity()
 	{
 		/**
+		 * Only the primary turbine ticks.
+		 */
+		if (!getMultiBlock().isPrimary())
+			return;
+
+		/**
 		 * If this is a vertical turbine.
 		 */
 		if (getDirection().offsetY == 0)
 		{
-			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() > 0.00000008)
+			if (ticks % 20 == 0 && !worldObj.isRemote)
+				computePower();
+
+			/**
+			 * Break under storm.
+			 */
+			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() < 0.00000008)
 			{
-				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(3)));
-				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 4 + worldObj.rand.nextInt(8)));
+				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(2)));
+				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 3 + worldObj.rand.nextInt(8)));
 				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 				return;
 			}
 
 			maxPower = 120;
-			getMultiBlock().get().power += getWindPower();
+			getMultiBlock().get().power += windPower;
 		}
 		else
 		{
@@ -57,14 +75,52 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		super.updateEntity();
 	}
 
-	public long getWindPower()
+	private void computePower()
 	{
+		int checkSize = 10;
+		int height = yCoord + checkCount / 28;
+		int deviation = checkCount % 7;
+		ForgeDirection checkDir;
+
+		Vector3 check = new Vector3(this);
+
+		switch (checkCount / 7 % 4)
+		{
+			case 0:
+				checkDir = ForgeDirection.NORTH;
+				check = new Vector3(xCoord - 3 + deviation, height, zCoord - 4);
+				break;
+			case 1:
+				checkDir = ForgeDirection.WEST;
+				check = new Vector3(xCoord - 4, height, zCoord - 3 + deviation);
+				break;
+			case 2:
+				checkDir = ForgeDirection.SOUTH;
+				check = new Vector3(xCoord - 3 + deviation, height, zCoord + 4);
+				break;
+			default:
+				checkDir = ForgeDirection.EAST;
+				check = new Vector3(xCoord + 4, height, zCoord - 3 + deviation);
+		}
+
+		byte openAirBlocks = 0;
+
+		while (openAirBlocks < checkSize && worldObj.isAirBlock(check.intX(), check.intY(), check.intZ()))
+		{
+			check.translate(checkDir);
+			openAirBlocks++;
+		}
+
+		efficiency = efficiency - openBlockCache[checkCount] + openAirBlocks;
+		openBlockCache[checkCount] = openAirBlocks;
+		checkCount = (checkCount + 1) % (openBlockCache.length - 1);
+
+		float multiblockMultiplier = (multiBlockRadius + 0.5f) * 2;
+
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
 
-		if (!worldObj.canBlockSeeTheSky(xCoord, yCoord + 4, zCoord))
-			return 0;
-
-		return (long) (((((float) yCoord + 4) / 256) * maxPower) * (hasBonus ? 2 : 1) * (worldObj.isRaining() ? 1.5 : 1));
+		float windSpeed = (worldObj.rand.nextFloat() / 8) + (yCoord / 256f) * (hasBonus ? 1.2f : 1) + worldObj.getRainStrength(1.5f);
+		windPower = (long) ((multiblockMultiplier * windSpeed * efficiency * 0.01f) * maxPower);
 	}
 }
