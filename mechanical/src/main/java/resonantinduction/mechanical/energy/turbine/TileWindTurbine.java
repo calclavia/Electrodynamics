@@ -35,6 +35,17 @@ public class TileWindTurbine extends TileMechanicalTurbine
 	public void updateEntity()
 	{
 		/**
+		 * Break under storm.
+		 */
+		if (tier == 0 && getDirection().offsetY == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() < 0.00000008)
+		{
+			InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(2)));
+			InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 3 + worldObj.rand.nextInt(8)));
+			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			return;
+		}
+		
+		/**
 		 * Only the primary turbine ticks.
 		 */
 		if (!getMultiBlock().isPrimary())
@@ -45,21 +56,11 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		 */
 		if (getDirection().offsetY == 0)
 		{
+			maxPower = 120;
+
 			if (ticks % 20 == 0 && !worldObj.isRemote)
 				computePower();
 
-			/**
-			 * Break under storm.
-			 */
-			if (tier == 0 && worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextFloat() < 0.00000008)
-			{
-				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Block.cloth, 1 + worldObj.rand.nextInt(2)));
-				InventoryUtility.dropItemStack(worldObj, new Vector3(this), new ItemStack(Item.stick, 3 + worldObj.rand.nextInt(8)));
-				worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-				return;
-			}
-
-			maxPower = 120;
 			getMultiBlock().get().power += windPower;
 		}
 		else
@@ -116,11 +117,12 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		checkCount = (checkCount + 1) % (openBlockCache.length - 1);
 
 		float multiblockMultiplier = (multiBlockRadius + 0.5f) * 2;
+		float materialMultiplier = tier == 0 ? 1.1f : tier == 1 ? 0.9f : 1;
 
 		BiomeGenBase biome = worldObj.getBiomeGenForCoords(xCoord, zCoord);
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
 
 		float windSpeed = (worldObj.rand.nextFloat() / 8) + (yCoord / 256f) * (hasBonus ? 1.2f : 1) + worldObj.getRainStrength(1.5f);
-		windPower = (long) ((multiblockMultiplier * windSpeed * efficiency * 0.01f) * maxPower);
+		windPower = (long) (materialMultiplier * multiblockMultiplier * windSpeed * efficiency * 0.01f) * maxPower;
 	}
 }
