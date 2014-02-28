@@ -3,6 +3,7 @@ package resonantinduction.mechanical.fluid.tank;
 import java.awt.Color;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -12,18 +13,38 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.render.RenderFluidHelper;
 import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderTank extends TileEntitySpecialRenderer
+public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static final RenderTank INSTANCE = new RenderTank();
+	private final TileTank tileTank = new TileTank();
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
 		this.renderTank(tileEntity, x, y, z, tileEntity instanceof TileTank ? ((TileTank) tileEntity).getInternalTank().getFluid() : null);
+	}
+
+	@Override
+	public void renderInventoryItem(ItemStack itemStack)
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslated(0, -0.1, 0);
+
+		FluidStack fluid = null;
+
+		if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("fluid"))
+		{
+			fluid = FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound().getCompoundTag("fluid"));
+		}
+
+		renderTank(tileTank, 0, 0, 0, fluid);
+		GL11.glPopMatrix();
+
 	}
 
 	public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
@@ -61,4 +82,5 @@ public class RenderTank extends TileEntitySpecialRenderer
 			}
 		}
 	}
+
 }
