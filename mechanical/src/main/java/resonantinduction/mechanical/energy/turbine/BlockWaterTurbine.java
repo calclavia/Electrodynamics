@@ -11,13 +11,11 @@ import calclavia.lib.prefab.turbine.TileTurbine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockWaterTurbine extends BlockTurbine
+public class BlockWaterTurbine extends BlockMechanicalTurbine
 {
 	public BlockWaterTurbine(int id)
 	{
-		super(id, Material.iron);
-		setTextureName(Reference.PREFIX + "material_wood_surface");
-		rotationMask = Byte.parseByte("111111", 2);
+		super(id);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -25,25 +23,6 @@ public class BlockWaterTurbine extends BlockTurbine
 	public int getRenderType()
 	{
 		return RIBlockRenderingHandler.ID;
-	}
-
-	@Override
-	public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileTurbine)
-		{
-			if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
-			{
-				if (side == ((TileTurbine) tileEntity).getDirection().ordinal())
-					world.setBlockMetadataWithNotify(x, y, z, side ^ 1, 3);
-				else
-					world.setBlockMetadataWithNotify(x, y, z, side, 3);
-			}
-		}
-
-		return true;
 	}
 
 	@Override

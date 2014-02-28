@@ -83,16 +83,16 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				switch (tier)
 				{
 					default:
-						torque *= 0.97f;
-						angularVelocity *= 0.98f;
-						break;
-					case 1:
-						torque *= 0.98f;
+						torque *= 0.96f;
 						angularVelocity *= 0.97f;
 						break;
+					case 1:
+						torque *= 0.97f;
+						angularVelocity *= 0.96f;
+						break;
 					case 2:
-						torque *= 0.99f;
-						angularVelocity *= 0.99f;
+						torque *= 0.98f;
+						angularVelocity *= 0.98f;
 						break;
 				}
 			}

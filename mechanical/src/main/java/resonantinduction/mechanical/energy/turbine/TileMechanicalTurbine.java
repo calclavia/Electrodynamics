@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IMechanical;
@@ -7,10 +8,16 @@ import resonantinduction.api.mechanical.IMechanicalNetwork;
 import resonantinduction.mechanical.energy.network.MechanicalNetwork;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.network.Synced;
+import calclavia.lib.network.Synced.SyncedInput;
+import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
 public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 {
+	@Synced()
+	public int tier;
+
 	public TileMechanicalTurbine()
 	{
 		super();
@@ -95,5 +102,24 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 	public Object[] getConnections()
 	{
 		return null;
+	}
+
+	@Override
+	@SyncedInput
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		tier = nbt.getInteger("tier");
+	}
+
+	/**
+	 * Writes a tile entity to NBT.
+	 */
+	@Override
+	@SyncedOutput
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("tier", tier);
 	}
 }
