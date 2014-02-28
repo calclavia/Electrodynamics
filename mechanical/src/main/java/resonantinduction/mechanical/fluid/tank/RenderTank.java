@@ -58,8 +58,11 @@ public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItem
 			RenderUtility.renderBlockWithConnectedTextures(renderSides, Mechanical.blockTank, null, ResonantInduction.blockMachinePart, null);
 			GL11.glPopMatrix();
 
-			if (fluid != null && fluid.amount > 100)
+			if (fluid != null)
 			{
+				int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getInternalTank().getCapacity() : fluid.amount;
+				double filledPercentage = (double) fluid.amount / (double) capacity;
+				double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
 				int[] displayList = RenderFluidHelper.getFluidDisplayLists(fluid, tileEntity.worldObj, false);
 
 				GL11.glPushMatrix();
@@ -70,13 +73,14 @@ public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItem
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 				Color color = new Color(fluid.getFluid().getColor());
-				GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? 0.5f : 1);
+				RenderUtility.enableBlending();
+				GL11.glColor4d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? filledPercentage : 1);
 
 				RenderUtility.bind(RenderFluidHelper.getFluidSheet(fluid));
 				// Prevent Z-fighting
 				GL11.glTranslatef((float) x, (float) y + 0.001f, (float) z);
-				int cap = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getInternalTank().getCapacity() : fluid.amount;
-				GL11.glCallList(displayList[(int) ((float) fluid.amount / (float) (cap) * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+				GL11.glCallList(displayList[(int) (renderPercentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+				RenderUtility.disableBlending();
 				GL11.glPopAttrib();
 				GL11.glPopMatrix();
 			}
