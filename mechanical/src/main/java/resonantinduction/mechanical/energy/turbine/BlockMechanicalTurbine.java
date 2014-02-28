@@ -40,48 +40,28 @@ public class BlockMechanicalTurbine extends BlockTurbine
 		{
 			if (!world.isRemote)
 			{
-				return ((TileTurbine) tileEntity).getMultiBlock().toggleConstruct();
-			}
+				TileTurbine tile = (TileTurbine) tileEntity;
 
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (entityPlayer.getCurrentEquippedItem() == null)
-		{
-			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-			if (tileEntity instanceof TileTurbine)
-			{
-				if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
+				if (tile.getMultiBlock().isConstructed())
 				{
-					((TileTurbine) tileEntity).multiBlockRadius = Math.max(((TileTurbine) tileEntity).multiBlockRadius + 1, 1);
-					entityPlayer.addChatMessage("Turbine radius: " + ((TileTurbine) tileEntity).multiBlockRadius);
+					tile.getMultiBlock().deconstruct();
+					tile.multiBlockRadius++;
+
+					if (!tile.getMultiBlock().construct())
+					{
+						tile.multiBlockRadius = 1;
+					}
+
+					return true;
 				}
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileTurbine)
-		{
-			if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
-			{
-				((TileTurbine) tileEntity).multiBlockRadius = Math.max(((TileTurbine) tileEntity).multiBlockRadius - 1, 1);
-				entityPlayer.addChatMessage("Turbine radius: " + ((TileTurbine) tileEntity).multiBlockRadius);
+				else
+				{
+					if (!tile.getMultiBlock().construct())
+					{
+						tile.multiBlockRadius = 1;
+						tile.getMultiBlock().construct();
+					}
+				}
 			}
 
 			return true;
