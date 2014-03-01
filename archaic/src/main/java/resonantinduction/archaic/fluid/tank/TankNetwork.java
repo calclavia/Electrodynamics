@@ -28,19 +28,20 @@ public class TankNetwork extends FluidDistributionetwork
 	@Override
 	public void update()
 	{
-		final FluidStack totalFluid = getTank().getFluid();
+		final FluidStack networkTankFluid = getTank().getFluid();
 		int lowestY = 255, highestY = 0;
 
-		if (totalFluid != null && getConnectors().size() > 0)
+		if (getConnectors().size() > 0)
 		{
-			FluidStack distributeFluid = totalFluid.copy();
+			int totalFluid = networkTankFluid != null ? networkTankFluid.amount : 0;
+
 			HashMap<Integer, Integer> heightCount = new HashMap<Integer, Integer>();
 			PriorityQueue<IFluidDistribution> heightPriorityQueue = new PriorityQueue<IFluidDistribution>(1024, new Comparator()
 			{
 				@Override
 				public int compare(Object a, Object b)
 				{
-					if (totalFluid.getFluid().isGaseous())
+					if (networkTankFluid.getFluid().isGaseous())
 						return 0;
 
 					TileEntity wa = (TileEntity) a;
@@ -78,23 +79,23 @@ public class TankNetwork extends FluidDistributionetwork
 				int yCoord = ((TileEntity) distributeNode).yCoord;
 				int connectorCount = heightCount.get(yCoord);
 
-				if (distributeFluid == null || distributeFluid.amount <= 0)
+				if (totalFluid <= 0)
 				{
 					distributeNode.getInternalTank().setFluid(null);
 					distributeNode.onFluidChanged();
 					continue;
 				}
 
-				int fluidPer = distributeFluid.amount / connectorCount;
+				int fluidPer = totalFluid / connectorCount;
 				int deltaFluidAmount = fluidPer - distributeNode.getInternalTank().getFluidAmount();
 
 				int current = distributeNode.getInternalTank().getFluidAmount();
 
 				if (deltaFluidAmount > 0)
 				{
-					int filled = distributeNode.getInternalTank().fill(FluidUtility.getStack(distributeFluid, deltaFluidAmount), false);
-					distributeNode.getInternalTank().fill(FluidUtility.getStack(distributeFluid, deltaFluidAmount / 10), true);
-					distributeFluid.amount -= current + filled;
+					int filled = distributeNode.getInternalTank().fill(FluidUtility.getStack(networkTankFluid, deltaFluidAmount), false);
+					distributeNode.getInternalTank().fill(FluidUtility.getStack(networkTankFluid, deltaFluidAmount / 10), true);
+					totalFluid -= current + filled;
 				}
 				else
 				{
@@ -102,7 +103,7 @@ public class TankNetwork extends FluidDistributionetwork
 					distributeNode.getInternalTank().drain(Math.abs(deltaFluidAmount / 10), true);
 
 					if (drain != null)
-						distributeFluid.amount -= current - drain.amount;
+						totalFluid -= current - drain.amount;
 				}
 
 				if (deltaFluidAmount != 0)

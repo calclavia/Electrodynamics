@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
-import resonantinduction.core.fluid.BlockFluidNetwork;
+import resonantinduction.core.fluid.BlockFluidNode;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Darkguardsman
  */
-public class BlockGutter extends BlockFluidNetwork
+public class BlockGutter extends BlockFluidNode
 {
 	public BlockGutter(int id)
 	{

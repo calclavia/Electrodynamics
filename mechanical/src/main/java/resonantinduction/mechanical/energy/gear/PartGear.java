@@ -116,9 +116,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
-		if (!world().isRemote)
-			System.out.println(getNetwork());
-		
 		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
 		{
 			if (player.isSneaking())
@@ -128,10 +125,10 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 					getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
 					player.addChatMessage("Flipped gear to rotate " + (angularVelocity > 0 ? "clockwise" : "anticlockwise") + ".");
 				}
-				
+
 				return true;
 			}
-			
+
 			getMultiBlock().get().manualCrankTime = 10;
 			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
 			player.addExhaustion(0.01f);

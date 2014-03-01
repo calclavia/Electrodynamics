@@ -28,26 +28,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public abstract class TilePressurizedNode extends TileAdvanced implements IPressurizedNode, IPacketReceiverWithID
+public abstract class TilePressurizedNode extends TileFluidNode implements IPressurizedNode, IPacketReceiverWithID
 {
-	protected int pressure;
-
-	protected FluidTank tank;
 	protected Object[] connectedBlocks = new Object[6];
-	protected int colorID = 0;
-
-	/** Copy of the tank's content last time it updated */
-	protected FluidStack prevStack = null;
 
 	/** Network used to link all parts together */
 	protected PressureNetwork network;
-
-	public static final int PACKET_DESCRIPTION = 0;
-	public static final int PACKET_RENDER = 1;
-	public static final int PACKET_TANK = 2;
-
-	/** Bitmask that handles connections for the renderer **/
-	public byte renderSides = 0;
 
 	public TilePressurizedNode()
 	{
@@ -78,22 +64,15 @@ public abstract class TilePressurizedNode extends TileAdvanced implements IPress
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (!resource.getFluid().isGaseous())
-		{
-			int fill = getInternalTank().fill(resource, doFill);
-			onFluidChanged();
-			return fill;
-		}
-
-		return 0;
+		int fill = getInternalTank().fill(resource, doFill);
+		onFluidChanged();
+		return fill;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		FluidStack drain = getInternalTank().drain(resource.amount, doDrain);
-		onFluidChanged();
-		return drain;
+		return drain(from, resource.amount, doDrain);
 	}
 
 	@Override
@@ -118,7 +97,7 @@ public abstract class TilePressurizedNode extends TileAdvanced implements IPress
 
 	public void refresh()
 	{
-		if (this.worldObj != null && !this.worldObj.isRemote)
+		if (!this.worldObj.isRemote)
 		{
 			byte previousConnections = renderSides;
 			connectedBlocks = new Object[6];
@@ -126,15 +105,16 @@ public abstract class TilePressurizedNode extends TileAdvanced implements IPress
 
 			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				this.validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
+				validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
 			}
 
 			/** Only send packet updates if visuallyConnected changed. */
 			if (previousConnections != renderSides)
 			{
 				sendRenderUpdate();
-				getNetwork().reconstruct();
 			}
+
+			getNetwork().reconstruct();
 		}
 
 	}
@@ -145,110 +125,7 @@ public abstract class TilePressurizedNode extends TileAdvanced implements IPress
 	 * @param tileEntity - the tileEntity being checked
 	 * @param side - side the connection is too
 	 */
-	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-	{
-		if (!this.worldObj.isRemote)
-		{
-			if (tileEntity instanceof IFluidDistribution)
-			{
-				this.getNetwork().merge(((IPressurizedNode) tileEntity).getNetwork());
-				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
-				connectedBlocks[side.ordinal()] = tileEntity;
-			}
-		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.colorID = nbt.getInteger("subID");
-		getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("subID", this.colorID);
-		nbt.setCompoundTag("FluidTank", this.getInternalTank().writeToNBT(new NBTTagCompound()));
-	}
-
-	@Override
-	public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		try
-		{
-			if (this.worldObj.isRemote)
-			{
-				if (id == PACKET_DESCRIPTION)
-				{
-					this.colorID = data.readInt();
-					this.renderSides = data.readByte();
-					this.tank = new FluidTank(data.readInt());
-					this.getInternalTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-					return true;
-				}
-				else if (id == PACKET_RENDER)
-				{
-					this.colorID = data.readInt();
-					this.renderSides = data.readByte();
-					return true;
-				}
-				else if (id == PACKET_TANK)
-				{
-					tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
-					pressure = data.readInt();
-					return true;
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
-	}
-
-	public void sendRenderUpdate()
-	{
-		if (!this.worldObj.isRemote)
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
-	}
-
-	public void sendTankUpdate()
-	{
-		if (!this.worldObj.isRemote)
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()), pressure), this.worldObj, new Vector3(this), 60);
-	}
-
-	@Override
-	public void onFluidChanged()
-	{
-		if (!worldObj.isRemote)
-		{
-			if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
-			{
-				sendTankUpdate();
-			}
-
-			prevStack = tank.getFluid();
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
-	}
+	public abstract void validateConnectionSide(TileEntity tileEntity, ForgeDirection side);
 
 	public int getSubID()
 	{
@@ -305,5 +182,4 @@ public abstract class TilePressurizedNode extends TileAdvanced implements IPress
 	{
 		this.network = network;
 	}
-
 }

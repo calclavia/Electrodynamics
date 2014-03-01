@@ -32,26 +32,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileFluidDistribution extends TileAdvanced implements IFluidDistribution, IPacketReceiverWithID, IInformation
+public abstract class TileFluidDistribution extends TileFluidNode implements IFluidDistribution
 {
-	protected int pressure;
-
-	protected FluidTank tank;
 	protected Object[] connectedBlocks = new Object[6];
-	protected int colorID = 0;
-
-	/** Copy of the tank's content last time it updated */
-	protected FluidStack prevStack = null;
 
 	/** Network used to link all parts together */
 	protected FluidDistributionetwork network;
-
-	public static final int PACKET_DESCRIPTION = 0;
-	public static final int PACKET_RENDER = 1;
-	public static final int PACKET_TANK = 2;
-
-	/** Bitmask that handles connections for the renderer **/
-	public byte renderSides = 0;
 
 	@Override
 	public void initiate()
@@ -152,97 +138,6 @@ public abstract class TileFluidDistribution extends TileAdvanced implements IFlu
 		}
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.colorID = nbt.getInteger("subID");
-		getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("subID", this.colorID);
-		nbt.setCompoundTag("FluidTank", this.getInternalTank().writeToNBT(new NBTTagCompound()));
-	}
-
-	@Override
-	public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		try
-		{
-			if (this.worldObj.isRemote)
-			{
-				if (id == PACKET_DESCRIPTION)
-				{
-					this.colorID = data.readInt();
-					this.renderSides = data.readByte();
-					this.tank = new FluidTank(data.readInt());
-					this.getInternalTank().readFromNBT(PacketHandler.readNBTTagCompound(data));
-					return true;
-				}
-				else if (id == PACKET_RENDER)
-				{
-					this.colorID = data.readInt();
-					this.renderSides = data.readByte();
-					return true;
-				}
-				else if (id == PACKET_TANK)
-				{
-					tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
-					pressure = data.readInt();
-					return true;
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
-	}
-
-	public void sendRenderUpdate()
-	{
-		if (!this.worldObj.isRemote)
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_RENDER, this, this.colorID, this.renderSides));
-	}
-
-	public void sendTankUpdate()
-	{
-		if (!this.worldObj.isRemote)
-			PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_TANK, this, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()), pressure), this.worldObj, new Vector3(this), 60);
-	}
-
-	@Override
-	public void onFluidChanged()
-	{
-		if (!worldObj.isRemote)
-		{
-			if (!FluidUtility.matchExact(prevStack, getInternalTank().getFluid()))
-			{
-				sendTankUpdate();
-				prevStack = tank.getFluid() != null ? tank.getFluid().copy() : null;
-			}
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1);
-	}
-
 	public int getSubID()
 	{
 		return this.colorID;
@@ -257,22 +152,6 @@ public abstract class TileFluidDistribution extends TileAdvanced implements IFlu
 	public boolean canConnect(ForgeDirection direction, Object obj)
 	{
 		return true;
-	}
-
-	@Override
-	public FluidTank getInternalTank()
-	{
-		if (this.tank == null)
-		{
-			this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-		}
-		return this.tank;
-	}
-
-	@Override
-	public void getInformation(List<String> info)
-	{
-		info.add(this.getNetwork().toString());
 	}
 
 	@Override

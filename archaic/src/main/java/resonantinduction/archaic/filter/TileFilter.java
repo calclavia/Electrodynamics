@@ -3,9 +3,6 @@ package resonantinduction.archaic.filter;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.IFilterable;
 import resonantinduction.api.recipe.MachineRecipes;
@@ -44,14 +41,6 @@ public class TileFilter extends TileFilterable implements IFilterable
 			{
 				worldObj.spawnParticle("dripWater", xCoord + 0.5, yCoord, zCoord + 0.5, 0, 0, 0);
 
-				if (checkBelow.getTileEntity(worldObj) instanceof IFluidHandler)
-				{
-					IFluidHandler handler = ((IFluidHandler) checkBelow.getTileEntity(worldObj));
-
-					if (handler.fill(ForgeDirection.UP, new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), false) <= 0)
-						return;
-				}
-
 				/**
 				 * Leak the fluid down.
 				 */
@@ -78,15 +67,7 @@ public class TileFilter extends TileFilterable implements IFilterable
 				/**
 				 * Add liquid to bottom.
 				 */
-				if (checkBelow.getTileEntity(worldObj) instanceof IFluidHandler)
-				{
-					IFluidHandler handler = ((IFluidHandler) checkBelow.getTileEntity(worldObj));
-					handler.fill(ForgeDirection.UP, new FluidStack(FluidRegistry.WATER, FluidContainerRegistry.BUCKET_VOLUME), true);
-				}
-				else
-				{
-					checkBelow.setBlock(worldObj, Block.waterMoving.blockID);
-				}
+				checkBelow.setBlock(worldObj, Block.waterMoving.blockID);
 			}
 		}
 	}

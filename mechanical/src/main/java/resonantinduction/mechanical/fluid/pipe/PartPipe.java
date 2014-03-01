@@ -135,16 +135,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (!world().isRemote)
-		{
-			if (doDrain)
-			{
-				markPacket = true;
-			}
-
-			return tank.drain(resource.amount, doDrain);
-		}
-		return null;
+		return drain(from, resource.amount, doDrain);
 	}
 
 	@Override

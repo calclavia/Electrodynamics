@@ -5,10 +5,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import calclavia.lib.prefab.block.BlockTile;
 
-/** @author Calclavia */
-public abstract class BlockFluidNetwork extends BlockTile
+/**
+ * @author Calclavia
+ */
+public abstract class BlockFluidNode extends BlockTile
 {
-	public BlockFluidNetwork(int id, Material material)
+	public BlockFluidNode(int id, Material material)
 	{
 		super(id, material);
 	}

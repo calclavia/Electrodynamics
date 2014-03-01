@@ -12,7 +12,7 @@ import universalelectricity.core.net.NodeNetwork;
 /**
  * The network for pipe fluid transfer. getNodes() is NOT used.
  * 
- * @author DarkGuardsman
+ * @author Calclavia
  */
 public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNode, IFluidHandler> implements IUpdate
 {
@@ -26,10 +26,8 @@ public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNo
 	{
 		for (IPressurizedNode connector : getConnectors())
 		{
-
 			calculatePressure((IPressurizedNode) connector);
 			distribute((IPressurizedNode) connector);
-
 		}
 	}
 
@@ -55,18 +53,23 @@ public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNo
 		int minPressure = 0;
 		int maxPressure = 0;
 
-		for (int i = 0; i < 6; i++)
+		Object[] connections = sourcePipe.getConnections();
+
+		if (connections != null)
 		{
-			Object obj = sourcePipe.getConnections()[i];
-
-			if (obj instanceof IPressure)
+			for (int i = 0; i < connections.length; i++)
 			{
-				int pressure = ((IPressure) obj).getPressure(ForgeDirection.getOrientation(i).getOpposite());
+				Object obj = connections[i];
 
-				minPressure = Math.min(pressure, minPressure);
-				maxPressure = Math.max(pressure, maxPressure);
-				totalPressure += pressure;
-				findCount++;
+				if (obj instanceof IPressure)
+				{
+					int pressure = ((IPressure) obj).getPressure(ForgeDirection.getOrientation(i).getOpposite());
+
+					minPressure = Math.min(pressure, minPressure);
+					maxPressure = Math.max(pressure, maxPressure);
+					totalPressure += pressure;
+					findCount++;
+				}
 			}
 		}
 
@@ -127,14 +130,14 @@ public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNo
 							{
 								int amountB = tankB.getFluidAmount();
 
-								int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * sourcePipe.getMaxFlowRate() : 0, (amountA - amountB) / 2);
+								int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * sourcePipe.getMaxFlowRate() : 0, Math.min((amountA - amountB) / 2, sourcePipe.getMaxFlowRate()));
 								quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
 
 								if (quantity > 0)
 								{
 									FluidStack drainStack = sourcePipe.drain(dir.getOpposite(), quantity, false);
 
-									if (drainStack != null)
+									if (drainStack != null && drainStack.amount > 0)
 										sourcePipe.drain(dir.getOpposite(), otherPipe.fill(dir, drainStack, true), true);
 								}
 							}
@@ -198,5 +201,6 @@ public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNo
 	public void reconstruct()
 	{
 		NetworkTickHandler.addNetwork(this);
+		super.reconstruct();
 	}
 }

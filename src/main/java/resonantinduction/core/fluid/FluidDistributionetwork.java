@@ -99,8 +99,7 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
 	{
 		if (resource != null && resource.isFluidEqual(getTank().getFluid()))
 		{
-			FluidStack before = this.getTank().getFluid();
-			FluidStack drain = this.getTank().drain(resource.amount, doDrain);
+			FluidStack drain = getTank().drain(resource.amount, doDrain);
 			needsUpdate = true;
 			NetworkTickHandler.addNetwork(this);
 			return drain;
@@ -111,10 +110,10 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
 
 	public FluidStack drain(IFluidDistribution source, ForgeDirection from, int resource, boolean doDrain)
 	{
-		if (getTank().getFluid() != null)
-			return this.drain(source, from, FluidUtility.getStack(getTank().getFluid(), resource), doDrain);
-
-		return null;
+		FluidStack drain = getTank().drain(resource, doDrain);
+		needsUpdate = true;
+		NetworkTickHandler.addNetwork(this);
+		return drain;
 	}
 
 	public FluidTank getTank()
