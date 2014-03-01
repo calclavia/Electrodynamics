@@ -1,4 +1,4 @@
-package resonantinduction.api.mechanical.fluid;
+package resonantinduction.core.fluid;
 
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -10,12 +10,10 @@ import universalelectricity.api.net.IConnector;
  * 
  * @author DarkGuardsman
  */
-public interface IFluidConnector extends IConnector<IFluidNetwork>, IFluidHandler
+public interface IFluidDistribution extends IConnector<FluidDistributionetwork>, IFluidHandler
 {
 	/** FluidTank that the network will have access to fill or drain */
 	public FluidTank getInternalTank();
 
 	public void onFluidChanged();
-
-	public boolean canFlow();
 }

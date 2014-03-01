@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import resonantinduction.core.prefab.fluid.BlockFluidNetwork;
+import resonantinduction.core.fluid.BlockFluidNetwork;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import universalelectricity.api.UniversalElectricity;

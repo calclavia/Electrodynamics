@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.fluid;
+package resonantinduction.core.fluid;
 
 import java.util.Set;
 
@@ -7,34 +7,31 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidConnector;
-import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
 import universalelectricity.core.net.NodeNetwork;
 import calclavia.lib.utility.FluidUtility;
 
 /**
- * The fluid network.
+ * The fluid network for instantaneous equal distribution between all nodes. Used for tanks.
  * 
  * @author DarkCow, Calclavia
  * 
  */
-public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConnector, IFluidHandler> implements IFluidNetwork, IUpdate
+public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistributionetwork, IFluidDistribution, IFluidHandler> implements IUpdate
 {
 	protected FluidTank tank = new FluidTank(0);
 	protected final FluidTankInfo[] tankInfo = new FluidTankInfo[1];
 
-	// TODO: Make animated distribution to create a smooth flow transition.
 	public boolean animateDistribution = false;
 
-	public FluidNetwork()
+	public FluidDistributionetwork()
 	{
-		super(IFluidConnector.class);
+		super(IFluidDistribution.class);
 	}
 
 	@Override
-	public void addConnector(IFluidConnector connector)
+	public void addConnector(IFluidDistribution connector)
 	{
 		super.addConnector(connector);
 		NetworkTickHandler.addNetwork(this);
@@ -64,9 +61,9 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	}
 
 	@Override
-	public void reconstructConnector(IFluidConnector connector)
+	public void reconstructConnector(IFluidDistribution connector)
 	{
-		if (connector.getNetwork() instanceof IFluidNetwork)
+		if (connector.getNetwork() instanceof FluidDistributionetwork)
 			connector.setNetwork(this);
 
 		FluidTank tank = connector.getInternalTank();
@@ -104,8 +101,7 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		NetworkTickHandler.addNetwork(this);
 	}
 
-	@Override
-	public int fill(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doFill)
+	public int fill(IFluidDistribution source, ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		int prev = this.getTank().getFluidAmount();
 		int fill = this.getTank().fill(resource, doFill);
@@ -118,10 +114,9 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		return fill;
 	}
 
-	@Override
-	public FluidStack drain(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doDrain)
+	public FluidStack drain(IFluidDistribution source, ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (resource != null && resource.isFluidEqual(this.getTank().getFluid()))
+		if (resource != null && resource.isFluidEqual(getTank().getFluid()))
 		{
 			FluidStack before = this.getTank().getFluid();
 			FluidStack drain = this.getTank().drain(resource.amount, doDrain);
@@ -136,12 +131,11 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		return null;
 	}
 
-	@Override
-	public FluidStack drain(IFluidConnector source, ForgeDirection from, int resource, boolean doDrain)
+	public FluidStack drain(IFluidDistribution source, ForgeDirection from, int resource, boolean doDrain)
 	{
-		if (this.getTank().getFluid() != null)
+		if (getTank().getFluid() != null)
 		{
-			return this.drain(source, from, FluidUtility.getStack(this.getTank().getFluid(), resource), doDrain);
+			return this.drain(source, from, FluidUtility.getStack(getTank().getFluid(), resource), doDrain);
 		}
 		return null;
 	}
@@ -152,26 +146,26 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		this.fillTankSet(stack != null ? stack.copy() : null, this.getConnectors());
 	}
 
-	public void fillTankSet(FluidStack stack, Set<IFluidConnector> connectors)
+	public void fillTankSet(FluidStack stack, Set<IFluidDistribution> connectors)
 	{
-		int parts = connectors.size();
-		for (IFluidConnector part : connectors)
+		int connectorCount = connectors.size();
+
+		for (IFluidDistribution part : connectors)
 		{
 			part.getInternalTank().setFluid(null);
 			if (stack != null)
 			{
-				int fillPer = (stack.amount / parts) + (stack.amount % parts);
+				int fillPer = (stack.amount / connectorCount) + (stack.amount % connectorCount);
 				stack.amount -= part.getInternalTank().fill(FluidUtility.getStack(stack, fillPer), true);
 
-				if (parts > 1)
-					parts--;
+				if (connectorCount > 1)
+					connectorCount--;
 			}
 
 			part.onFluidChanged();
 		}
 	}
 
-	@Override
 	public FluidTank getTank()
 	{
 		if (this.tank == null)
@@ -181,13 +175,11 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 		return this.tank;
 	}
 
-	@Override
 	public Class getConnectorClass()
 	{
-		return IFluidConnector.class;
+		return IFluidDistribution.class;
 	}
 
-	@Override
 	public FluidTankInfo[] getTankInfo()
 	{
 		return tankInfo;
@@ -196,6 +188,6 @@ public abstract class FluidNetwork extends NodeNetwork<IFluidNetwork, IFluidConn
 	@Override
 	public String toString()
 	{
-		return super.toString() + "  Vol:" + this.tank.getFluidAmount();
+		return super.toString() + " Volume: " + this.tank.getFluidAmount();
 	}
 }

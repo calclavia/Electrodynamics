@@ -8,13 +8,17 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RenderFluidHelper;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
+import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -77,27 +81,19 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 
 		render(0, renderSides);
 
-		if (liquid != null && liquid.amount > 0)
+		if (tileEntity.worldObj != null)
 		{
-			float percentage = Math.min((float) liquid.amount / (float) capacity, 1);
-			int[] displayList = RenderFluidHelper.getFluidDisplayLists(liquid, tile.worldObj, false);
-			bindTexture(RenderFluidHelper.getFluidSheet(liquid));
-
 			GL11.glPushMatrix();
-			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glScaled(0.99, 0.99, 0.99);
+			FluidTank tank = ((TileGutter) tileEntity).getInternalTank();
+			double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
-			float xScale = WorldUtility.isEnabledSide(renderSides, ForgeDirection.EAST) || WorldUtility.isEnabledSide(renderSides, ForgeDirection.WEST) ? 1.01f : 0.8f;
-			float zScale = WorldUtility.isEnabledSide(renderSides, ForgeDirection.NORTH) || WorldUtility.isEnabledSide(renderSides, ForgeDirection.SOUTH) ? 1.01f : 0.8f;
-			GL11.glTranslatef(-xScale / 2, -0.45f, -zScale / 2);
-			GL11.glScalef(xScale, 0.9f, zScale);
+			double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
+			double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
+			double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
+			double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
 
-			GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
-
-			GL11.glPopAttrib();
+			FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
 			GL11.glPopMatrix();
 		}
 

@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RenderFluidHelper;
+import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 import calclavia.lib.utility.WorldUtility;
@@ -56,8 +56,8 @@ public class RenderPipe implements ISimpleItemRenderer
 		if (fluid != null && fluid.amount > 0)
 		{
 			float percentage = (float) fluid.amount / (float) capacity;
-			int[] displayList = RenderFluidHelper.getFluidDisplayLists(fluid, part.world(), false);
-			RenderUtility.bind(RenderFluidHelper.getFluidSheet(fluid));
+			int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, part.world(), false);
+			RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid));
 			Color color = new Color(fluid.getFluid().getColor());
 			GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? 0.5f : 1);
 
@@ -71,7 +71,7 @@ public class RenderPipe implements ISimpleItemRenderer
 			GL11.glTranslatef((float) x + 0.35f, (float) y + 0.35f, (float) z + 0.35f);
 			GL11.glScalef(0.3f, 0.3f, 0.3f);
 
-			GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+			GL11.glCallList(displayList[(int) (percentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
 			GL11.glPopAttrib();
 			GL11.glPopMatrix();
@@ -110,7 +110,7 @@ public class RenderPipe implements ISimpleItemRenderer
 					}
 
 					GL11.glScalef(0.3f, 0.3f, 0.3f);
-					GL11.glCallList(displayList[(int) (percentage * (RenderFluidHelper.DISPLAY_STAGES - 1))]);
+					GL11.glCallList(displayList[(int) (percentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
 					GL11.glPopAttrib();
 					GL11.glPopMatrix();

@@ -1,35 +1,29 @@
 package resonantinduction.archaic.fluid.gutter;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidNetwork;
-import resonantinduction.api.mechanical.fluid.IFluidPipe;
-import resonantinduction.core.prefab.fluid.PipeNetwork;
-import resonantinduction.core.prefab.fluid.TileFluidNetwork;
+import resonantinduction.core.fluid.IPressurizedNode;
+import resonantinduction.core.fluid.TilePressurizedNode;
+import calclavia.lib.utility.WorldUtility;
 
-/** @author Darkguardsman */
-public class TileGutter extends TileFluidNetwork implements IFluidPipe
+/**
+ * The gutter, used for fluid transfer.
+ * 
+ * @author Calclavia
+ * 
+ */
+public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 {
-	public TileGutter()
-	{
-		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
-	}
-
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
-		//TODO: Packet before doing.
+
+		// TODO: Packet before doing.
 		if (!this.worldObj.isRemote)
 			sendTankUpdate();
-
 	}
 
 	@Override
@@ -40,53 +34,15 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 			if (tileEntity instanceof TileGutter)
 			{
 				getNetwork().merge(((TileGutter) tileEntity).getNetwork());
-				setRenderSide(side, true);
+				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 			else if (tileEntity instanceof IFluidHandler)
 			{
-				setRenderSide(side, true);
+				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
-	}
-
-	@Override
-	public boolean canFlow()
-	{
-		return true;
-	}
-
-	@Override
-	public IFluidNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new PipeNetwork();
-			this.network.addConnector(this);
-		}
-
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(IFluidNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		tank.writeToNBT(nbt);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		tank.readFromNBT(nbt);
 	}
 
 	@Override
@@ -101,44 +57,9 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	}
 
 	@Override
-	public void setPressure(int amount)
-	{
-		pressure = amount;
-	}
-
-	@Override
 	public int getMaxFlowRate()
 	{
 		return 1;
-	}
-
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (!resource.getFluid().isGaseous())
-		{
-			int fill = getInternalTank().fill(resource, doFill);
-			onFluidChanged();
-			return fill;
-		}
-
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		FluidStack drain = getInternalTank().drain(resource.amount, doDrain);
-		onFluidChanged();
-		return drain;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		FluidStack drain = getInternalTank().drain(maxDrain, doDrain);
-		onFluidChanged();
-		return drain;
 	}
 
 	@Override
@@ -151,11 +72,5 @@ public class TileGutter extends TileFluidNetwork implements IFluidPipe
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return from != ForgeDirection.UP && !fluid.isGaseous();
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		return new FluidTankInfo[] { getInternalTank().getInfo() };
 	}
 }

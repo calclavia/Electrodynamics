@@ -11,10 +11,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidNetwork;
-import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.fluid.PipeNetwork;
+import resonantinduction.core.fluid.IPressurizedNode;
+import resonantinduction.core.fluid.PressureNetwork;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.Mechanical;
 import codechicken.lib.data.MCDataInput;
@@ -29,7 +28,7 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe, IFluidNetwork> implements IFluidPipe, TSlottedPart, JNormalOcclusion, IHollowConnect
+public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurizedNode, PressureNetwork> implements IPressurizedNode, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private int pressure;
@@ -107,11 +106,11 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 
 	/** Fluid network methods. */
 	@Override
-	public IFluidNetwork getNetwork()
+	public PressureNetwork getNetwork()
 	{
 		if (this.network == null)
 		{
-			this.network = new PipeNetwork();
+			this.network = new PressureNetwork();
 			this.network.addConnector(this);
 		}
 
@@ -216,11 +215,11 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IFluidPipe,
 	}
 
 	@Override
-	protected IFluidPipe getConnector(TileEntity tile)
+	protected IPressurizedNode getConnector(TileEntity tile)
 	{
-		if (tile instanceof IFluidPipe)
-			if (((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN) instanceof IFluidPipe)
-				return (IFluidPipe) ((IFluidPipe) tile).getInstance(ForgeDirection.UNKNOWN);
+		if (tile instanceof IPressurizedNode)
+			if (((IPressurizedNode) tile).getInstance(ForgeDirection.UNKNOWN) instanceof IPressurizedNode)
+				return (IPressurizedNode) ((IPressurizedNode) tile).getInstance(ForgeDirection.UNKNOWN);
 
 		return null;
 	}

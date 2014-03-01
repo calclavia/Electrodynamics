@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.fluid;
+package resonantinduction.core.fluid;
 
 import net.minecraftforge.fluids.Fluid;
 

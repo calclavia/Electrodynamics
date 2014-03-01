@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.core.prefab.fluid.TileFluidNetwork;
+import resonantinduction.core.fluid.TileFluidDistribution;
 
 /**
  * Enum to hold info about each pipe material. Values are by default and some can change with pipe
@@ -114,9 +114,9 @@ public enum EnumPipeMaterial
 		int meta = world.getBlockMetadata(x, y, z);
 		TileEntity ent = world.getBlockTileEntity(x, y, z);
 		meta *= spacing;
-		if (ent instanceof TileFluidNetwork)
+		if (ent instanceof TileFluidDistribution)
 		{
-			meta += ((TileFluidNetwork) ent).getSubID();
+			meta += ((TileFluidDistribution) ent).getSubID();
 		}
 		return meta;
 	}

@@ -1,6 +1,4 @@
-package resonantinduction.core.prefab.fluid;
-
-import java.util.List;
+package resonantinduction.core.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,21 +6,17 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.api.IInformation;
-import resonantinduction.api.mechanical.fluid.IFluidConnector;
-import resonantinduction.api.mechanical.fluid.IFluidNetwork;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
+import calclavia.lib.utility.WorldUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -34,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileFluidNetwork extends TileAdvanced implements IFluidConnector, IPacketReceiverWithID, IInformation
+public abstract class TilePressurizedNode extends TileAdvanced implements IPressurizedNode, IPacketReceiverWithID
 {
 	protected int pressure;
 
@@ -46,7 +40,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	protected FluidStack prevStack = null;
 
 	/** Network used to link all parts together */
-	protected IFluidNetwork network;
+	protected PressureNetwork network;
 
 	public static final int PACKET_DESCRIPTION = 0;
 	public static final int PACKET_RENDER = 1;
@@ -54,6 +48,11 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 
 	/** Bitmask that handles connections for the renderer **/
 	public byte renderSides = 0;
+
+	public TilePressurizedNode()
+	{
+		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
+	}
 
 	@Override
 	public void initiate()
@@ -71,39 +70,44 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	}
 
 	@Override
+	public void setPressure(int amount)
+	{
+		pressure = amount;
+	}
+
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return this.getNetwork().fill(this, from, resource, doFill);
+		if (!resource.getFluid().isGaseous())
+		{
+			int fill = getInternalTank().fill(resource, doFill);
+			onFluidChanged();
+			return fill;
+		}
+
+		return 0;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		return this.getNetwork().drain(this, from, resource, doDrain);
+		FluidStack drain = getInternalTank().drain(resource.amount, doDrain);
+		onFluidChanged();
+		return drain;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		return this.getNetwork().drain(this, from, maxDrain, doDrain);
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return true;
+		FluidStack drain = getInternalTank().drain(maxDrain, doDrain);
+		onFluidChanged();
+		return drain;
 	}
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return this.getNetwork().getTankInfo();
+		return new FluidTankInfo[] { getInternalTank().getInfo() };
 	}
 
 	@Override
@@ -145,31 +149,13 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	{
 		if (!this.worldObj.isRemote)
 		{
-			if (tileEntity instanceof IFluidConnector)
+			if (tileEntity instanceof IFluidDistribution)
 			{
-				this.getNetwork().merge(((IFluidConnector) tileEntity).getNetwork());
-				this.setRenderSide(side, true);
+				this.getNetwork().merge(((IPressurizedNode) tileEntity).getNetwork());
+				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
-	}
-
-	public void setRenderSide(ForgeDirection direction, boolean doRender)
-	{
-		if (doRender)
-		{
-			renderSides = (byte) (renderSides | (1 << direction.ordinal()));
-		}
-		else
-		{
-			renderSides = (byte) (renderSides & ~(1 << direction.ordinal()));
-
-		}
-	}
-
-	public boolean canRenderSide(ForgeDirection direction)
-	{
-		return (renderSides & (1 << direction.ordinal())) != 0;
 	}
 
 	@Override
@@ -177,22 +163,7 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	{
 		super.readFromNBT(nbt);
 		this.colorID = nbt.getInteger("subID");
-		if (nbt.hasKey("stored"))
-		{
-			NBTTagCompound tag = nbt.getCompoundTag("stored");
-			String name = tag.getString("LiquidName");
-			int amount = nbt.getInteger("Amount");
-			Fluid fluid = FluidRegistry.getFluid(name);
-			if (fluid != null)
-			{
-				FluidStack liquid = new FluidStack(fluid, amount);
-				this.getInternalTank().setFluid(liquid);
-			}
-		}
-		else
-		{
-			this.getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
-		}
+		getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
 	}
 
 	@Override
@@ -306,14 +277,33 @@ public abstract class TileFluidNetwork extends TileAdvanced implements IFluidCon
 	}
 
 	@Override
-	public void getInformation(List<String> info)
-	{
-		info.add(this.getNetwork().toString());
-	}
-
-	@Override
-	public IFluidConnector getInstance(ForgeDirection from)
+	public IPressurizedNode getInstance(ForgeDirection from)
 	{
 		return this;
 	}
+
+	@Override
+	public boolean canFlow()
+	{
+		return true;
+	}
+
+	@Override
+	public PressureNetwork getNetwork()
+	{
+		if (this.network == null)
+		{
+			this.network = new PressureNetwork();
+			this.network.addConnector(this);
+		}
+
+		return this.network;
+	}
+
+	@Override
+	public void setNetwork(PressureNetwork network)
+	{
+		this.network = network;
+	}
+
 }

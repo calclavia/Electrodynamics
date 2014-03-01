@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.fluid.BlockFluidNetwork;
+import resonantinduction.core.fluid.BlockFluidNetwork;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
@@ -112,7 +112,7 @@ public class BlockGutter extends BlockFluidNetwork
 
 					if (checkTile instanceof TileGutter)
 					{
-						int deltaPressure =pressure- ((TileGutter) checkTile).getPressure(null) ;
+						int deltaPressure = pressure - ((TileGutter) checkTile).getPressure(null);
 
 						entity.motionX += 0.01 * dir.offsetX * deltaPressure;
 						entity.motionY += 0.01 * dir.offsetY * deltaPressure;

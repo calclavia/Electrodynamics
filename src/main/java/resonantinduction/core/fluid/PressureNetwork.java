@@ -1,35 +1,35 @@
-package resonantinduction.core.prefab.fluid;
+package resonantinduction.core.fluid;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IFluidConnector;
-import resonantinduction.api.mechanical.fluid.IFluidNetwork;
-import resonantinduction.api.mechanical.fluid.IFluidPipe;
 import resonantinduction.api.mechanical.fluid.IPressure;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
+import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
+import universalelectricity.core.net.NodeNetwork;
 
 /**
  * The network for pipe fluid transfer. getNodes() is NOT used.
  * 
  * @author DarkGuardsman
  */
-public class PipeNetwork extends FluidNetwork
+public class PressureNetwork extends NodeNetwork<PressureNetwork, IPressurizedNode, IFluidHandler> implements IUpdate
 {
+	public PressureNetwork()
+	{
+		super(IPressurizedNode.class);
+	}
+
 	@Override
 	public void update()
 	{
-		for (IFluidConnector connector : getConnectors())
+		for (IPressurizedNode connector : getConnectors())
 		{
-			if (connector instanceof IFluidPipe)
-			{
-				calculatePressure((IFluidPipe) connector);
-				distribute((IFluidPipe) connector);
-			}
+
+			calculatePressure((IPressurizedNode) connector);
+			distribute((IPressurizedNode) connector);
+
 		}
 	}
 
@@ -48,7 +48,7 @@ public class PipeNetwork extends FluidNetwork
 	/**
 	 * Calculate pressure in this pipe.
 	 */
-	public void calculatePressure(IFluidPipe sourcePipe)
+	public void calculatePressure(IPressurizedNode sourcePipe)
 	{
 		int totalPressure = 0;
 		int findCount = 0;
@@ -91,7 +91,7 @@ public class PipeNetwork extends FluidNetwork
 	/**
 	 * Distribute fluid in this pipe based on pressure.
 	 */
-	public void distribute(IFluidPipe sourcePipe)
+	public void distribute(IPressurizedNode sourcePipe)
 	{
 		Object[] connections = sourcePipe.getConnections();
 
@@ -99,9 +99,9 @@ public class PipeNetwork extends FluidNetwork
 		{
 			Object obj = connections[i];
 
-			if (obj instanceof IFluidPipe)
+			if (obj instanceof IPressurizedNode)
 			{
-				IFluidPipe otherPipe = (IFluidPipe) obj;
+				IPressurizedNode otherPipe = (IPressurizedNode) obj;
 
 				/**
 				 * Move fluid from higher pressure to lower. In this case, move from tankA to tankB.
@@ -177,43 +177,25 @@ public class PipeNetwork extends FluidNetwork
 	}
 
 	@Override
-	public FluidStack drain(IFluidConnector source, ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(IFluidConnector source, ForgeDirection from, int resource, boolean doDrain)
-	{
-		return null;
-	}
-
-	@Override
 	public Class getConnectorClass()
 	{
-		return IFluidPipe.class;
+		return IPressurizedNode.class;
 	}
 
 	@Override
-	public IFluidNetwork newInstance()
+	public PressureNetwork newInstance()
 	{
-		return new PipeNetwork();
+		return new PressureNetwork();
 	}
 
 	@Override
-	public void reconstructConnector(IFluidConnector connector)
+	public void reconstructConnector(IPressurizedNode connector)
 	{
 		connector.setNetwork(this);
 	}
 
 	@Override
-	public void distributeConnectors()
-	{
-
-	}
-
-	@Override
-	public void reconstructTankInfo()
+	public void reconstruct()
 	{
 		NetworkTickHandler.addNetwork(this);
 	}
