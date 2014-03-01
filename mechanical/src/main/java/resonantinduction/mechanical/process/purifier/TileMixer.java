@@ -30,7 +30,7 @@ import calclavia.lib.utility.inventory.InventoryUtility;
 public class TileMixer extends TileMechanical implements IInventory
 {
 	public static final long POWER = 500000;
-	public static final int PROCESS_TIME = 5 * 20;
+	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
 
 	@Override
@@ -156,7 +156,7 @@ public class TileMixer extends TileMechanical implements IInventory
 		}
 		else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
 		{
-			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.materialNameToMixture(ResourceGenerator.getName(entity.getEntityItem()))).blockID);
+			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem())).blockID);
 		}
 
 		return false;
