@@ -228,12 +228,11 @@ public abstract class TileFluidDistribution extends TileAdvanced implements IFlu
 	{
 		if (!worldObj.isRemote)
 		{
-			if (!FluidUtility.matchExact(prevStack, this.getInternalTank().getFluid()))
+			if (!FluidUtility.matchExact(prevStack, getInternalTank().getFluid()))
 			{
 				sendTankUpdate();
+				prevStack = tank.getFluid() != null ? tank.getFluid().copy() : null;
 			}
-
-			prevStack = tank.getFluid();
 		}
 	}
 

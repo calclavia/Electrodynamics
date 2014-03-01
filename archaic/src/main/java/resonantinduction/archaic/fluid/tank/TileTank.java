@@ -19,18 +19,6 @@ public class TileTank extends TileFluidDistribution implements IPressure
 	}
 
 	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		if (!worldObj.isRemote)
-		{
-			getNetwork().distributeConnectors();
-			sendTankUpdate();
-		}
-	}
-
-	@Override
 	public FluidDistributionetwork getNetwork()
 	{
 		if (this.network == null)
@@ -73,7 +61,7 @@ public class TileTank extends TileFluidDistribution implements IPressure
 	@Override
 	public int getPressure(ForgeDirection dir)
 	{
-		return (getInternalTank().getCapacity() - getInternalTank().getFluidAmount()) / 10;
+		return 0;//(getInternalTank().getCapacity() - getInternalTank().getFluidAmount()) / 10;
 	}
 
 }

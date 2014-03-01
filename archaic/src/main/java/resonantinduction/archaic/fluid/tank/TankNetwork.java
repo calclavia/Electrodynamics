@@ -1,6 +1,5 @@
 package resonantinduction.archaic.fluid.tank;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -10,6 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 import calclavia.lib.utility.FluidUtility;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Network that handles connected tanks
@@ -21,29 +22,16 @@ public class TankNetwork extends FluidDistributionetwork
 	public TankNetwork()
 	{
 		super();
-		animateDistribution = true;
+		needsUpdate = true;
 	}
 
 	@Override
 	public void update()
 	{
-		// if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-		// distributeConnectors();
-	}
-
-	@Override
-	public void distributeConnectors()
-	{
-		int animateRate = 0;
-
-		FluidStack totalFluid = getTank().getFluid();
+		final FluidStack totalFluid = getTank().getFluid();
 		int lowestY = 255, highestY = 0;
 
-		if (totalFluid == null || totalFluid.getFluid().isGaseous())
-		{
-			super.distributeConnectors();
-		}
-		else if (getConnectors().size() > 0)
+		if (totalFluid != null && getConnectors().size() > 0)
 		{
 			FluidStack distributeFluid = totalFluid.copy();
 			HashMap<Integer, Integer> heightCount = new HashMap<Integer, Integer>();
@@ -52,6 +40,9 @@ public class TankNetwork extends FluidDistributionetwork
 				@Override
 				public int compare(Object a, Object b)
 				{
+					if (totalFluid.getFluid().isGaseous())
+						return 0;
+
 					TileEntity wa = (TileEntity) a;
 					TileEntity wb = (TileEntity) b;
 					return wa.yCoord - wb.yCoord;
@@ -80,7 +71,7 @@ public class TankNetwork extends FluidDistributionetwork
 			}
 
 			boolean didChange = false;
-			//System.out.println("TANK UPDATE " + distributeFluid.amount);
+
 			while (!heightPriorityQueue.isEmpty())
 			{
 				IFluidDistribution distributeNode = heightPriorityQueue.poll();
@@ -89,28 +80,30 @@ public class TankNetwork extends FluidDistributionetwork
 
 				if (distributeFluid == null || distributeFluid.amount <= 0)
 				{
-					break;
+					distributeNode.getInternalTank().setFluid(null);
+					distributeNode.onFluidChanged();
+					continue;
 				}
 
-				int fluidPer = (distributeFluid.amount / connectorCount) + (distributeFluid.amount % connectorCount);
-				int deltaFluidAmount = (fluidPer - distributeNode.getInternalTank().getFluidAmount()) / 10;
-				
-				distributeNode.getInternalTank().setFluid(FluidUtility.getStack(distributeFluid,  fluidPer));
-				
-				/*
-				 * 				System.out.println(connectorCount + " : " + fluidPer);
+				int fluidPer = distributeFluid.amount / connectorCount;
+				int deltaFluidAmount = fluidPer - distributeNode.getInternalTank().getFluidAmount();
+
+				int current = distributeNode.getInternalTank().getFluidAmount();
 
 				if (deltaFluidAmount > 0)
 				{
-					distributeNode.getInternalTank().fill(FluidUtility.getStack(distributeFluid, deltaFluidAmount), true);
+					int filled = distributeNode.getInternalTank().fill(FluidUtility.getStack(distributeFluid, deltaFluidAmount), false);
+					distributeNode.getInternalTank().fill(FluidUtility.getStack(distributeFluid, deltaFluidAmount / 10), true);
+					distributeFluid.amount -= current + filled;
 				}
 				else
 				{
-					//TODO: This causes quite a lot of issues.
-					FluidStack drained = distributeNode.getInternalTank().drain(Math.abs(deltaFluidAmount), true);
-				}*/
+					FluidStack drain = distributeNode.getInternalTank().drain(Math.abs(deltaFluidAmount), false);
+					distributeNode.getInternalTank().drain(Math.abs(deltaFluidAmount / 10), true);
 
-				distributeFluid.amount -= distributeNode.getInternalTank().getFluidAmount();
+					if (drain != null)
+						distributeFluid.amount -= current - drain.amount;
+				}
 
 				if (deltaFluidAmount != 0)
 					didChange = true;
@@ -121,6 +114,9 @@ public class TankNetwork extends FluidDistributionetwork
 				heightCount.put(yCoord, connectorCount);
 				distributeNode.onFluidChanged();
 			}
+
+			if (!didChange)
+				needsUpdate = false;
 		}
 	}
 
