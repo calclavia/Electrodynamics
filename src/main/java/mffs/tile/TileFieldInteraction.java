@@ -412,7 +412,7 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 			}
 		}
 
-		if (this.getModeStack().getItem() instanceof ICache)
+		if (getModeStack() != null && getModeStack().getItem() instanceof ICache)
 		{
 			((ICache) this.getModeStack().getItem()).clearCache();
 		}
