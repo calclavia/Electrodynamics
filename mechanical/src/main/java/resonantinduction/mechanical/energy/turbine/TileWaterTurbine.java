@@ -75,7 +75,6 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 
 			if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)
 			{
-
 				try
 				{
 					Method m = ReflectionHelper.findMethod(BlockFluid.class, null, new String[] { "getFlowVector", "func_72202_i" }, IBlockAccess.class, Integer.TYPE, Integer.TYPE, Integer.TYPE);

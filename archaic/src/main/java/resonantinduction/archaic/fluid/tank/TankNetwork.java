@@ -41,7 +41,7 @@ public class TankNetwork extends FluidDistributionetwork
 				@Override
 				public int compare(Object a, Object b)
 				{
-					if (networkTankFluid.getFluid().isGaseous())
+					if (networkTankFluid != null && networkTankFluid.getFluid().isGaseous())
 						return 0;
 
 					TileEntity wa = (TileEntity) a;
