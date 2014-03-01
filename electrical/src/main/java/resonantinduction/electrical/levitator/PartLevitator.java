@@ -141,7 +141,7 @@ public class PartLevitator extends PartFace
 
 	public PartLevitator getLink()
 	{
-		return linked != null ? linked.get() : null;
+		return linked != null ? linked.get().world() != null ? linked.get() : null : null;
 	}
 
 	@Override
