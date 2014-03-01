@@ -20,25 +20,19 @@ import calclavia.lib.utility.WorldUtility;
 public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 {
 	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-
-		// TODO: Packet before doing.
-		if (!this.worldObj.isRemote)
-			sendTankUpdate();
-	}
-
-	@Override
 	public void refresh()
 	{
 		/**
 		 * Drain block above if it is a fluid.
 		 */
-		FluidStack drain = FluidUtility.drainBlock(worldObj, new Vector3(this).translate(0, 1, 0), true);
+		Vector3 drainPos = new Vector3(this).translate(0, 1, 0);
+		FluidStack drain = FluidUtility.drainBlock(worldObj, drainPos, false);
 
 		if (drain != null)
-			fill(ForgeDirection.UP, drain, true);
+		{
+			if (fill(ForgeDirection.UP, drain, true) > 0)
+				FluidUtility.drainBlock(worldObj, drainPos, true);
+		}
 
 		super.refresh();
 	}
