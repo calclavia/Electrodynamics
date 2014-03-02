@@ -30,7 +30,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 
 	public EntityItem grindingItem = null;
 
-	private final long requiredTorque = 2000;
+	private final long requiredTorque = 1000;
 	private long counter = 0;
 
 	@Override

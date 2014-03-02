@@ -40,6 +40,11 @@ public class BlockGrindingWheel extends BlockRotatable implements ITileEntityPro
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
+		if (entity instanceof EntityItem)
+		{
+			((EntityItem) entity).age--;
+		}
+		
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileGrinderWheel)
@@ -66,8 +71,6 @@ public class BlockGrindingWheel extends BlockRotatable implements ITileEntityPro
 					{
 						entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
 					}
-
-					((EntityItem) entity).age--;
 				}
 				else
 				{
