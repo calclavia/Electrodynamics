@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.BlockFluidNode;
 import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
@@ -131,6 +132,11 @@ public class BlockGutter extends BlockFluidNode
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityplayer, int side, float hitX, float hitY, float hitZ)
 	{
+		if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() == ResonantInduction.itemDust)
+		{
+			return false;
+		}
+
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
 
 		if (!world.isRemote && tile instanceof TileGutter)

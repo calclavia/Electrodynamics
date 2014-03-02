@@ -9,14 +9,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.archaic.Archaic;
+import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.TabRI;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -64,18 +69,18 @@ public class ItemOreResource extends Item
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
 	{
 		/**
 		 * Allow refined dust to be placed down.
 		 */
-		if (stack.getItem() == ResonantInduction.itemRefinedDust)
+		if (itemStack.getItem() == ResonantInduction.itemRefinedDust)
 		{
-			if (stack.stackSize == 0)
+			if (itemStack.stackSize == 0)
 			{
 				return false;
 			}
-			else if (!player.canPlayerEdit(x, y, z, side, stack))
+			else if (!player.canPlayerEdit(x, y, z, side, itemStack))
 			{
 				return false;
 			}
@@ -85,7 +90,7 @@ public class ItemOreResource extends Item
 
 				if (world.getBlockId(x, y, z) == blockID && tile instanceof TileMaterial)
 				{
-					if (getMaterialFromStack(stack).equals(((TileMaterial) tile).name))
+					if (getMaterialFromStack(itemStack).equals(((TileMaterial) tile).name))
 					{
 						Block block = Block.blocksList[blockID];
 						int j1 = world.getBlockMetadata(x, y, z);
@@ -94,7 +99,7 @@ public class ItemOreResource extends Item
 						if (k1 <= 6 && world.checkNoEntityCollision(block.getCollisionBoundingBoxFromPool(world, x, y, z)) && world.setBlockMetadataWithNotify(x, y, z, k1 + 1 | j1 & -8, 2))
 						{
 							world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-							--stack.stackSize;
+							--itemStack.stackSize;
 							return true;
 						}
 					}
@@ -130,16 +135,16 @@ public class ItemOreResource extends Item
 					++x;
 				}
 
-				if (world.canPlaceEntityOnSide(blockID, x, y, z, false, side, player, stack))
+				if (world.canPlaceEntityOnSide(blockID, x, y, z, false, side, player, itemStack))
 				{
 					Block block = Block.blocksList[blockID];
-					int j1 = this.getMetadata(stack.getItemDamage());
+					int j1 = this.getMetadata(itemStack.getItemDamage());
 					int k1 = Block.blocksList[blockID].onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, j1);
 
-					if (placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, k1))
+					if (placeBlockAt(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ, k1))
 					{
 						world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, block.stepSound.getPlaceSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-						--stack.stackSize;
+						--itemStack.stackSize;
 					}
 
 					return true;
@@ -147,41 +152,71 @@ public class ItemOreResource extends Item
 			}
 		}
 
-		/**
-		 * Manually wash dust into refined dust.
-		 */
-		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack);
-
-		if (outputs.length > 0)
+		if (itemStack.getItem() == ResonantInduction.itemDust && !world.isRemote)
 		{
-			int blockId = world.getBlockId(x, y, z);
-			int metadata = world.getBlockMetadata(x, y, z);
-			Block block = Block.blocksList[blockId];
+			/**
+			 * Manually wash dust into refined dust.
+			 */
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack);
 
-			if (block == Block.cauldron)
+			if (outputs.length > 0)
 			{
-				if (metadata > 0)
+				int blockId = world.getBlockId(x, y, z);
+				int metadata = world.getBlockMetadata(x, y, z);
+				Block block = Block.blocksList[blockId];
+
+				if (block == Block.cauldron)
 				{
-					if (world.rand.nextFloat() > 0.9)
+					if (metadata > 0)
 					{
-						for (RecipeResource res : outputs)
+						if (world.rand.nextFloat() > 0.9)
 						{
-							InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
+							for (RecipeResource res : outputs)
+								InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
+
+							itemStack.stackSize--;
+
+							if (itemStack.stackSize <= 0)
+								itemStack = null;
+
+							player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack);
 						}
 
-						stack.splitStack(1);
-
-						if (stack.stackSize <= 0)
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+						world.setBlockMetadataWithNotify(x, y, z, metadata - 1, 3);
+						world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1);
 					}
 
-					world.setBlockMetadataWithNotify(x, y, z, metadata - 1, 3);
-					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1);
+					return true;
 				}
 
-				return true;
+				TileEntity tile = world.getBlockTileEntity(x, y, z);
+
+				if (tile instanceof TileGutter)
+				{
+					int drainAmount = 50 + world.rand.nextInt(50);
+					FluidStack drain = ((TileGutter) tile).drain(ForgeDirection.UP, drainAmount, false);
+
+					if (drain != null && drain.amount > 0 && world.rand.nextFloat() > 0.9)
+					{
+						for (RecipeResource res : outputs)
+							InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
+
+						itemStack.stackSize--;
+
+						if (itemStack.stackSize <= 0)
+							itemStack = null;
+
+						player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack);
+					}
+
+					((TileGutter) tile).drain(ForgeDirection.UP, drainAmount, true);
+
+					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1);
+					return true;
+				}
 			}
 		}
+
 		return false;
 	}
 
