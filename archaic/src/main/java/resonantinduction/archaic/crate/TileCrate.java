@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.ResonantInduction;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
@@ -130,16 +131,18 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 		{
 			this.buildSampleStack();
 			boolean flag = false;
+
 			if (this.sampleStack == null)
 			{
 				this.sampleStack = stack;
 				flag = true;
 			}
-			else if (this.sampleStack.isItemEqual(stack))
+			else if (this.sampleStack.isItemEqual(stack) || OreDictionary.getOreID(sampleStack) == OreDictionary.getOreID(stack))
 			{
 				this.sampleStack.stackSize += stack.stackSize;
 				flag = true;
 			}
+
 			if (flag)
 			{
 				this.getInventory().buildInventory(this.sampleStack);
@@ -165,7 +168,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 	@Override
 	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
 	{
-		return this.sampleStack == null || stack != null && stack.isItemEqual(sampleStack);
+		return sampleStack == null || stack != null && (stack.isItemEqual(sampleStack) || OreDictionary.getOreID(sampleStack) == OreDictionary.getOreID(stack));
 	}
 
 	/** Gets the current slot count for the crate */

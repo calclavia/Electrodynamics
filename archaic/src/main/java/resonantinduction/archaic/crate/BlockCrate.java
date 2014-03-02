@@ -1,5 +1,6 @@
 package resonantinduction.archaic.crate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -11,9 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.utility.WrenchUtility;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -87,39 +90,62 @@ public class BlockCrate extends BlockTile
 		{
 			if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
 			{
-				TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
+				TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+
+				if (player.getCurrentEquippedItem() != null && WrenchUtility.isWrench(player.getCurrentEquippedItem()))
+				{
+					/**
+					 * Swap oredict nodes if the player is wrenching the crate.
+					 */
+					ItemStack sampleStack = tile.getSampleStack();
+
+					int oreID = OreDictionary.getOreID(sampleStack);
+
+					if (oreID != -1)
+					{
+						ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+
+						for (int i = 0; i < ores.size(); i++)
+						{
+							if (ores.get(i).isItemEqual(sampleStack))
+							{
+								int nextIndex = (i + 1) % ores.size();
+								ItemStack desiredStack = ores.get(nextIndex).copy();
+								desiredStack.stackSize = sampleStack.stackSize;
+
+								for (int index = 0; index < tile.getSizeInventory(); index++)
+									tile.setInventorySlotContents(index, null);
+
+								tile.addStackToStorage(desiredStack);
+								break;
+							}
+						}
+					}
+				}
 
 				/** Make double clicking input all stacks. */
-				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
+				boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
 
-				tileEntity.prevClickTime = world.getWorldTime();
+				tile.prevClickTime = world.getWorldTime();
 
 				if (ControlKeyModifer.isControlDown(player))
 				{
-					this.tryEject(tileEntity, player, allMode);
+					tryEject(tile, player, allMode);
 				}
 				else
 				{
 					ItemStack current = player.inventory.getCurrentItem();
 					if (side == 1 && player.capabilities.isCreativeMode)
 					{
-						if (current != null && tileEntity.getSampleStack() == null)
+						if (current != null && tile.getSampleStack() == null)
 						{
 							ItemStack cStack = current.copy();
 							cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
-							BlockCrate.addStackToCrate(tileEntity, cStack);
+							addStackToCrate(tile, cStack);
 						}
 					}
-					// Add items
-					if (side == 1 || (side > 1 && hitY > 0.5) || !player.capabilities.isCreativeMode)
-					{
-						this.tryInsert(tileEntity, player, allMode);
-					}
-					// Remove items
-					else if (side == 0 || (side > 1 && hitY <= 0.5))
-					{
-						this.tryEject(tileEntity, player, allMode);
-					}
+
+					tryInsert(tile, player, allMode);
 				}
 			}
 		}
@@ -160,7 +186,7 @@ public class BlockCrate extends BlockTile
 
 	public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode)
 	{
-		this.tryInsert(tileEntity, player, allMode, true);
+		tryInsert(tileEntity, player, allMode, true);
 	}
 
 	public void tryEject(TileCrate tileEntity, EntityPlayer player, boolean allMode)
@@ -209,7 +235,7 @@ public class BlockCrate extends BlockTile
 			{
 				if (tileEntity.getSampleStack() != null)
 				{
-					if (!tileEntity.getSampleStack().isItemEqual(currentStack))
+					if (!(tileEntity.getSampleStack().isItemEqual(currentStack) || OreDictionary.getOreID(tileEntity.getSampleStack()) == OreDictionary.getOreID(currentStack)))
 					{
 						return false;
 					}
@@ -339,7 +365,7 @@ public class BlockCrate extends BlockTile
 
 		ItemStack containingStack = tileEntity.getSampleStack();
 
-		if (containingStack == null || containingStack != null && containingStack.isItemEqual(itemStack))
+		if (containingStack == null || (containingStack.isItemEqual(itemStack) || OreDictionary.getOreID(containingStack) == OreDictionary.getOreID(itemStack)))
 		{
 			int room = Math.max((tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0), 0);
 			if (itemStack.stackSize <= room)
