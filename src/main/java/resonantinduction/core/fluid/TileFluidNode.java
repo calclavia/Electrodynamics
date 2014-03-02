@@ -94,7 +94,7 @@ public abstract class TileFluidNode extends TileAdvanced implements IPacketRecei
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, this.getInternalTank().getCapacity(), this.getInternalTank().writeToNBT(new NBTTagCompound()));
+		return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()));
 	}
 
 	public void sendRenderUpdate()

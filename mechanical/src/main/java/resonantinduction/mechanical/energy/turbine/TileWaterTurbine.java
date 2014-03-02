@@ -105,7 +105,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 	 */
 	private long getWaterPower()
 	{
-		return maxPower / 2;
+		return maxPower / (2 - tier + 1);
 	}
 
 	@Override
