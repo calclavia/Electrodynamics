@@ -65,10 +65,10 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 				worldObj.setBlock(xCoord, yCoord - 1, zCoord, Block.waterStill.blockID);
 			}
 		}
-		else if (getMultiBlock().isPrimary())
+		else
 		{
 			int checkX = xCoord;
-			int checkY = yCoord - (this.getMultiBlock().isConstructed() ? 1 + multiBlockRadius : 1);
+			int checkY = yCoord - 1;
 			int checkZ = zCoord;
 			int blockID = worldObj.getBlockId(xCoord, checkY, checkZ);
 			int metadata = worldObj.getBlockMetadata(xCoord, checkY, checkZ);
