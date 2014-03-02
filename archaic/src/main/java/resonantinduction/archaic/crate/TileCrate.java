@@ -156,12 +156,9 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 	{
 		super.onInventoryChanged();
 
-		if (this.worldObj != null)
+		if (worldObj != null && !worldObj.isRemote)
 		{
-			if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-			{
-				PacketHandler.sendPacketToClients(this.getDescriptionPacket(), this.worldObj);
-			}
+			PacketHandler.sendPacketToClients(getDescriptionPacket(), this.worldObj);
 		}
 	}
 
