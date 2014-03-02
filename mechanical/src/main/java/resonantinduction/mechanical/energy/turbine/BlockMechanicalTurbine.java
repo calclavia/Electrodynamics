@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,6 +19,35 @@ public class BlockMechanicalTurbine extends BlockTurbine
 		super(id, Material.iron);
 		setTextureName(Reference.PREFIX + "material_wood_surface");
 		rotationMask = Byte.parseByte("111111", 2);
+	}
+
+	@Override
+	public int getDamageValue(World world, int x, int y, int z)
+	{
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		System.out.println(world.isRemote + " : " + tile);
+		if (tile instanceof TileTurbine)
+			return ((TileTurbine) tile).tier;
+
+		return 0;
+	}
+
+	/**
+	 * Temporarily "cheat" var for dropping with damage.
+	 */
+	int dropDamage = 0;
+
+	@Override
+	public int damageDropped(int par1)
+	{
+		return dropDamage;
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+	{
+		dropDamage = getDamageValue(world, x, y, z);
+		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
 	@Override

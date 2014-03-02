@@ -2,6 +2,7 @@ package resonantinduction.mechanical.energy.turbine;
 
 import java.util.List;
 
+import calclavia.lib.prefab.turbine.TileTurbine;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
