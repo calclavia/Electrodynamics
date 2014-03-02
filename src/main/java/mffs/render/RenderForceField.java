@@ -36,7 +36,7 @@ public class RenderForceField implements ISimpleBlockRenderingHandler
 		{
 			camoStack = ((TileForceField) tileEntity).camoStack;
 
-			if (camoStack != null)
+			if (camoStack != null && camoStack.getItem() instanceof ItemBlock)
 			{
 				camoBlock = Block.blocksList[((ItemBlock) camoStack.getItem()).getBlockID()];
 
