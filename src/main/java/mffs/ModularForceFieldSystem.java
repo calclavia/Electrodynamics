@@ -269,6 +269,7 @@ public class ModularForceFieldSystem
 		 * The Fortron Liquid
 		 */
 		FortronHelper.FLUID_FORTRON = new Fluid("fortron");
+		FortronHelper.FLUID_FORTRON.setGaseous(true);
 		FluidRegistry.registerFluid(FortronHelper.FLUID_FORTRON);
 		FortronHelper.FLUIDSTACK_FORTRON = new FluidStack(FortronHelper.FLUID_FORTRON, 0);
 
