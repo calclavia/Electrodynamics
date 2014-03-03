@@ -70,7 +70,7 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 		/**
 		 * Apply energy loss.
 		 */
-		double percentageLoss = Math.max(0, (1 - (getConnectors().size() * 6 / 100d)));
+		double percentageLoss = 0;//Math.max(0, (1 - (getConnectors().size() * 6 / 100d)));
 		long energyLoss = (long) (percentageLoss * 100);
 		totalEnergy -= energyLoss;
 
@@ -87,13 +87,13 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 				if (node != firstNode && !Arrays.asList(exclusion).contains(node))
 				{
 					double percentage = ((double) node.energy.getEnergyCapacity() / (double) totalCapacity);
-					long energyForBattery = Math.round(totalEnergy * percentage);
+					long energyForBattery = Math.max(Math.round(totalEnergy * percentage), 0);
 					node.energy.setEnergy(energyForBattery);
 					remainingEnergy -= energyForBattery;
 				}
 			}
 
-			firstNode.energy.setEnergy(remainingEnergy);
+			firstNode.energy.setEnergy(Math.max(remainingEnergy, 0));
 		}
 	}
 
