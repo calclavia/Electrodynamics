@@ -47,10 +47,11 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	private AutoCraftingManager craftManager;
 
 	/** 9 slots for crafting, 1 slot for a output. */
-	public ItemStack[] craftingMatrix = new ItemStack[9];
+	public static final int CRAFTING_MATRIX_SIZE=9;
+	public ItemStack[] craftingMatrix = new ItemStack[CRAFTING_MATRIX_SIZE];
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-	/** The output inventory containing slots. */
+	/** The output inventory containing slots.*/
 	public ItemStack[] outputInventory = new ItemStack[1];
 
 	/** The ability for the engineering table to search nearby inventories. */

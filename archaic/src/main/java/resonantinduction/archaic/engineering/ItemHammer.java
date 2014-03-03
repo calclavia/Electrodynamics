@@ -30,38 +30,46 @@ public class ItemHammer extends Item
 		if (tileEntity instanceof TileEngineeringTable)
 		{
 			TileEngineeringTable tile = (TileEngineeringTable) tileEntity;
-			ItemStack inputStack = tile.getStackInSlot(TileEngineeringTable.CENTER_SLOT);
 
-			if (inputStack != null)
+			// We don't want to bash the output slots
+			for (int i = 0; i < TileEngineeringTable.CRAFTING_OUTPUT_END; i++)
 			{
-				String oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack));
+				ItemStack inputStack = tile.getStackInSlot(i);
 
-				if (oreName != null && !oreName.equals("Unknown"))
+				if (inputStack != null)
 				{
-					if (!world.isRemote && world.rand.nextFloat() < 0.04)
+					String oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack));
+
+					if (oreName != null && !oreName.equals("Unknown"))
 					{
 						RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
 
-						for (RecipeResource resource : outputs)
+						if (outputs.length > 0)
 						{
-							ItemStack outputStack = resource.getItemStack().copy();
-
-							if (outputStack != null)
+							if (!world.isRemote && world.rand.nextFloat() < 0.04)
 							{
-								InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0);
-								tile.setInventorySlotContents(TileEngineeringTable.CENTER_SLOT, --inputStack.stackSize <= 0 ? null : inputStack);
+								for (RecipeResource resource : outputs)
+								{
+									ItemStack outputStack = resource.getItemStack().copy();
+
+									if (outputStack != null)
+									{
+										InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0);
+										tile.setInventorySlotContents(TileEngineeringTable.CENTER_SLOT, --inputStack.stackSize <= 0 ? null : inputStack);
+									}
+								}
 							}
+
+							world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat()));
+							player.addExhaustion(0.3f);
+							stack.damageItem(1, player);
+							return true;
 						}
 					}
-
-					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat()));
-					player.addExhaustion(0.3f);
-					stack.damageItem(1, player);
 				}
 			}
-
-			return true;
 		}
+
 		return false;
 	}
 }
