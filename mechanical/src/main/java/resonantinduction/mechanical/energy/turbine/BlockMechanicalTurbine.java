@@ -25,7 +25,7 @@ public class BlockMechanicalTurbine extends BlockTurbine
 	public int getDamageValue(World world, int x, int y, int z)
 	{
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		System.out.println(world.isRemote + " : " + tile);
+
 		if (tile instanceof TileTurbine)
 			return ((TileTurbine) tile).tier;
 
