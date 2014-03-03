@@ -69,7 +69,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 				GL11.glTranslated(x + 0.5f, y + 0.5f, z + 0.5f);
 				RenderUtility.rotateBlockBasedOnDirection(dir);
 				GL11.glTranslated(translation.x, translation.y, translation.z);
-				GL11.glScalef(scale,scale,scale);
+				GL11.glScalef(scale, scale, scale);
 				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 				renderItem(tileEntity.worldObj, ForgeDirection.UP, inventory[i], new Vector3(0, 0, 0), 0, 4);
 				GL11.glPopMatrix();
@@ -131,14 +131,12 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
 			RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
 			RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
-
+			RenderUtility.disableLightmap();
 		}
 	}
 
 	protected static void renderItemOnSide(TileEntity tile, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
 	{
-		setupLight(tile, direction.offsetX, direction.offsetZ);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
 		if (itemStack != null)
 		{
@@ -169,6 +167,8 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 			TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
 
+			setupLight(tile, direction.offsetX, direction.offsetZ);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			GL11.glDisable(2896);
 
 			if (!ForgeHooksClient.renderInventoryItem(renderBlocks, renderEngine, itemStack, true, 0.0F, 0.0F, 0.0F))
@@ -193,7 +193,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		int br = world.getLightBrightnessForSkyBlocks(tileEntity.xCoord + xDifference, tileEntity.yCoord, tileEntity.zCoord + zDifference, 0);
 		int var11 = br % 65536;
 		int var12 = br / 65536;
-		float scale = 0.6F;
+		float scale = 1;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var11 * scale, var12 * scale);
 	}
 

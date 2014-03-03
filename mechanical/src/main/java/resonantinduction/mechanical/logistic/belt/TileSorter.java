@@ -1,28 +1,122 @@
 package resonantinduction.mechanical.logistic.belt;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.api.IFilterable;
 import resonantinduction.core.Reference;
+import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileBase;
 import calclavia.lib.content.module.TileRender;
+import calclavia.lib.content.module.prefab.TileInventory;
+import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileSorter extends TileBase
+public class TileSorter extends TileInventory
 {
+	private boolean isInverted = false;
+
 	public TileSorter()
 	{
 		super(UniversalElectricity.machine);
 		textureName = "material_metal_side";
+		maxSlots = 6;
 		normalRender = false;
 		isOpaqueCube = false;
+		bounds = Cuboid.full().expand(-0.1);
+	}
+
+	@Override
+	public boolean use(EntityPlayer player, int side, Vector3 vector3)
+	{
+		return interactCurrentItem(side, player);
+	}
+
+	protected boolean configure(EntityPlayer player, int side, Vector3 vector3)
+	{
+		isInverted = !isInverted;
+
+		if (world().isRemote)
+		{
+			player.addChatMessage("Sorter filter inversion: " + isInverted);
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+	{
+		return stack.getItem() instanceof IFilterable;
+	}
+
+	@Override
+	public void collide(Entity entity)
+	{
+		if (entity instanceof EntityItem)
+		{
+			EntityItem entityItem = (EntityItem) entity;
+			List<ForgeDirection> possibleDirections = new ArrayList<ForgeDirection>();
+
+			/**
+			 * Move item to position where a filter allows it.
+			 */
+			for (int i = 0; i < getSizeInventory(); i++)
+			{
+				ItemStack stack = getStackInSlot(i);
+
+				if (isInverted == ItemImprint.isFiltering(stack, entityItem.getEntityItem()))
+				{
+					possibleDirections.add(ForgeDirection.getOrientation(i));
+				}
+			}
+
+			int size = possibleDirections.size();
+
+			if (size > 0)
+			{
+				ForgeDirection dir = possibleDirections.get(size > 1 ? world().rand.nextInt(size - 1) : 0);
+				Vector3 set = center().translate(dir, 0.9);
+				entityItem.posX = set.x;
+				entityItem.posY = set.y;
+				entityItem.posZ = set.z;
+			}
+		}
+	}
+
+	@Override
+	public Cuboid getSelectBounds()
+	{
+		return Cuboid.full();
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		nbt.getBoolean("isInverted");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("isInverted", isInverted);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -40,7 +134,7 @@ public class TileSorter extends TileBase
 				RenderUtility.enableBlending();
 				GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5);
 				RenderUtility.bind(TEXTURE);
-				MODEL.renderAll();
+				MODEL.renderAllExcept("port");
 				RenderUtility.disableBlending();
 				GL11.glPopMatrix();
 			}

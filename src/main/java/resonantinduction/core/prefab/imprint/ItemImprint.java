@@ -41,7 +41,7 @@ public class ItemImprint extends Item
 		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
 		{
 			String stringName = EntityList.getEntityString(entity);
-			// TODO add to filter
+			// TODO Add to filter
 			// player.sendChatToPlayer("Target: " + stringName);
 			return true;
 		}
@@ -89,6 +89,27 @@ public class ItemImprint extends Item
 		}
 
 		itemStack.getTagCompound().setTag("Items", nbt);
+	}
+
+	public static boolean isFiltering(ItemStack filter, ItemStack itemStack)
+	{
+		if (filter != null && itemStack != null)
+		{
+			Set<ItemStack> checkStacks = getFilters(filter);
+
+			if (checkStacks != null)
+			{
+				for (ItemStack stack : checkStacks)
+				{
+					if (stack.isItemEqual(itemStack))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public static HashSet<ItemStack> getFilters(ItemStack itemStack)
