@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,7 +25,7 @@ public class BlockCastingMold extends BlockTile
 	@Override
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override

@@ -7,12 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.components.CalclaviaLoader;
 import calclavia.lib.multiblock.fake.IBlockActivate;
 import calclavia.lib.multiblock.fake.IMultiBlock;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -90,7 +90,7 @@ public class BlockArmbot extends BlockTile
 	@Override
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override

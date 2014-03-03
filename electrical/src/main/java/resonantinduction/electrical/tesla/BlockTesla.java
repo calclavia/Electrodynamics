@@ -11,10 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.prefab.block.BlockSidedIO;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.LinkUtility;
 import calclavia.lib.utility.WrenchUtility;
@@ -131,7 +131,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
 		TileEntity tile = world.getBlockTileEntity(x, y, z);
-		
+
 		if (tile instanceof TileTesla)
 		{
 			((TileTesla) tile).updatePositionStatus();
@@ -148,7 +148,7 @@ public class BlockTesla extends BlockSidedIO implements ITileEntityProvider
 	@Override
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.INSTANCE.getRenderId();
+		return BlockRenderingHandler.INSTANCE.getRenderId();
 	}
 
 	@Override

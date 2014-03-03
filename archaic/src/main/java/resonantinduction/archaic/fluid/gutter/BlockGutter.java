@@ -14,9 +14,9 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.BlockFluidNode;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -157,7 +157,7 @@ public class BlockGutter extends BlockFluidNode
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override

@@ -6,8 +6,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.imprint.BlockImprintable;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -93,7 +93,7 @@ public class BlockManipulator extends BlockImprintable
 	@Override
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override

@@ -11,10 +11,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.fluid.BlockFluidNode;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -46,7 +46,7 @@ public class BlockTank extends BlockFluidNode
 	@SideOnly(Side.CLIENT)
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override

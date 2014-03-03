@@ -9,8 +9,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RIBlockRenderingHandler;
 import calclavia.lib.prefab.block.BlockRotatable;
+import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,7 +34,7 @@ public class BlockGrindingWheel extends BlockRotatable implements ITileEntityPro
 	@Override
 	public int getRenderType()
 	{
-		return RIBlockRenderingHandler.ID;
+		return BlockRenderingHandler.ID;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class BlockGrindingWheel extends BlockRotatable implements ITileEntityPro
 		{
 			((EntityItem) entity).age--;
 		}
-		
+
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
 		if (tileEntity instanceof TileGrinderWheel)

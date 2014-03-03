@@ -27,7 +27,7 @@ public class TileSorter extends TileBase
 
 	@SideOnly(Side.CLIENT)
 	protected TileRender renderer()
-	{System.out.println("TEST");
+	{
 		return new TileRender()
 		{
 			final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "sorter.tcn");
