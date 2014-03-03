@@ -90,7 +90,7 @@ public class Mechanical
 	public static Block blockConveyorBelt;
 	public static Block blockManipulator;
 	public static Block blockDetector;
-	public static Block blockRejector;
+	// public static Block blockRejector;
 	public static Block blockSorter;
 
 	// Fluids
@@ -122,8 +122,8 @@ public class Mechanical
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);
 		blockDetector = contentRegistry.createTile(BlockDetector.class, TileDetector.class);
-		//blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
-		blockRejector = contentRegistry.newBlock(TileSorter.class);
+		// blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
+		blockSorter = contentRegistry.newBlock(TileSorter.class);
 
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 
@@ -142,6 +142,7 @@ public class Mechanical
 
 		PacketAnnotation.register(TileWindTurbine.class);
 		PacketAnnotation.register(TileWaterTurbine.class);
+		PacketAnnotation.register(TileSorter.class);
 	}
 
 	@EventHandler
@@ -165,7 +166,9 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), "III", "GGG", 'I', Item.ingotIron, 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
+		// GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P',
+		// Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockSorter, "SSS", "SPS", "SRS", 'P', Block.pistonStickyBase, 'S', Item.ingotIron, 'R', Block.blockRedstone));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWindTurbine, 1, 0), "CWC", "WGW", "CWC", 'G', itemGear, 'C', Block.cloth, 'W', Item.stick));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWindTurbine, 1, 1), "CWC", "WGW", "CWC", 'G', new ItemStack(blockWindTurbine, 1, 0), 'C', Block.stone, 'W', Item.stick));
