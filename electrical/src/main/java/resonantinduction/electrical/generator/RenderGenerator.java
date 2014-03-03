@@ -3,6 +3,7 @@ package resonantinduction.electrical.generator;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -14,13 +15,13 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.block.ICustomBlockRenderer;
+import calclavia.lib.render.item.ISimpleItemRenderer;
 
 /**
  * @author Calclavia
  * 
  */
-public class RenderGenerator extends TileEntitySpecialRenderer implements ICustomBlockRenderer
+public class RenderGenerator extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "generator.tcn");
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "generator.png");
@@ -28,10 +29,10 @@ public class RenderGenerator extends TileEntitySpecialRenderer implements ICusto
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		doRender(t, t.getBlockMetadata(), x, y, z, f);
+		doRender(t.getBlockMetadata(), x, y, z, f);
 	}
 
-	private void doRender(TileEntity t, int facingDirection, double x, double y, double z, float f)
+	private void doRender(int facingDirection, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
@@ -43,19 +44,8 @@ public class RenderGenerator extends TileEntitySpecialRenderer implements ICusto
 	}
 
 	@Override
-	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
+	public void renderInventoryItem(ItemStack itemStack)
 	{
-	}
-
-	@Override
-	public boolean renderStatic(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
-	{
-		return false;
-	}
-
-	@Override
-	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
-	{
-		doRender(tile, 2, 0, 0, 0, 0);
+		doRender(2, 0, 0, 0, 0);
 	}
 }

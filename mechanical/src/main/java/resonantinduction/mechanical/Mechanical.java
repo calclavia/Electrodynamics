@@ -31,6 +31,7 @@ import resonantinduction.mechanical.logistic.belt.BlockRejector;
 import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileRejector;
+import resonantinduction.mechanical.logistic.belt.TileSorter;
 import resonantinduction.mechanical.process.crusher.BlockMechanicalPiston;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
@@ -90,6 +91,7 @@ public class Mechanical
 	public static Block blockManipulator;
 	public static Block blockDetector;
 	public static Block blockRejector;
+	public static Block blockSorter;
 
 	// Fluids
 	public static Block blockReleaseValve;
@@ -120,7 +122,8 @@ public class Mechanical
 		blockConveyorBelt = contentRegistry.createTile(BlockConveyorBelt.class, TileConveyorBelt.class);
 		blockManipulator = contentRegistry.createTile(BlockManipulator.class, TileManipulator.class);
 		blockDetector = contentRegistry.createTile(BlockDetector.class, TileDetector.class);
-		blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
+		//blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
+		blockRejector = contentRegistry.newBlock(TileSorter.class);
 
 		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
 

@@ -1,23 +1,21 @@
 package resonantinduction.mechanical.belt;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
-import calclavia.lib.render.block.ICustomBlockRenderer;
+import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ICustomBlockRenderer
+public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static final ModelConveyorBelt MODEL = new ModelConveyorBelt();
 	public static final ModelAngledBelt MODEL2 = new ModelAngledBelt();
@@ -134,19 +132,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ICu
 	}
 
 	@Override
-	public void renderInventory(Block block, int metadata, int modelID, RenderBlocks renderer)
-	{
-
-	}
-
-	@Override
-	public boolean renderStatic(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
-	{
-		return false;
-	}
-
-	@Override
-	public void renderDynamic(TileEntity tile, Block block, int metadata, int modelID, RenderBlocks renderer)
+	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5f, 1.7F, 0.5f);
