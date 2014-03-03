@@ -84,23 +84,33 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		return true;
 	}
 
-	@Override
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
-	{
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+	/**
+	 * Temporarily "cheat" var for dropping with damage.
+	 */
+	ItemStack dropStack = null;
 
+	@Override
+	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+	{
 		ItemStack itemStack = new ItemStack(this, 1);
 
 		if (world.getBlockTileEntity(x, y, z) instanceof TileBattery)
 		{
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
-			ItemBlockBattery.setTier(itemStack, (byte) metadata);
+			ItemBlockBattery.setTier(itemStack, (byte) world.getBlockMetadata(x, y, z));
 			itemBlock.setEnergy(itemStack, battery.energy.getEnergy());
 		}
 
-		ret.add(itemStack);
+		dropStack = itemStack;
+		super.breakBlock(world, x, y, z, par5, par6);
+	}
 
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ret.add(dropStack);
 		return ret;
 	}
 
