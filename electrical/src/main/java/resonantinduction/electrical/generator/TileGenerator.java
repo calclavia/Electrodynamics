@@ -86,7 +86,7 @@ public class TileGenerator extends TileElectrical implements IRotatable
 			IMechanical mech = ((IMechanical) tile).getInstance(outputDir.getOpposite());
 			long extract = energy.extractEnergy(energy.getEnergy() / 2, false);
 
-			if (mech != null)
+			if (mech != null && mech.canConnect(outputDir.getOpposite(), this))
 			{
 				if (extract > 0)
 				{

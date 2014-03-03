@@ -26,7 +26,7 @@ public class ItemImprint extends Item
 		this.setTextureName(Reference.PREFIX + "imprint");
 		this.setCreativeTab(TabRI.DEFAULT);
 		this.setHasSubtypes(true);
-		this.maxStackSize = 1;
+		this.setMaxStackSize(1);
 	}
 
 	@Override
