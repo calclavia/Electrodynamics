@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.vector.Region3;
+import calclavia.lib.prefab.vector.Cuboid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -78,7 +78,7 @@ public class ItemModeCube extends ItemMode
 		projectorPos.add(projector.getTranslation());
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
-		Region3 region = new Region3(projector.getNegativeScale().clone().scale(-1), projector.getPositiveScale());
+		Cuboid region = new Cuboid(projector.getNegativeScale().clone().scale(-1), projector.getPositiveScale());
 		return region.isIn(relativePosition);
 	}
 
