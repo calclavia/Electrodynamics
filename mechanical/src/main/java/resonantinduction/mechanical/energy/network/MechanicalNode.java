@@ -68,14 +68,14 @@ public class MechanicalNode extends EnergyNode
 			angle = angle % (Math.PI * 2);
 		}
 
-		//TODO: Remove upon split.
+		// TODO: Remove upon split.
 		if (world() != null && !world().isRemote)
 		{
 			/**
 			 * Loss energy
 			 */
-			torque -= torque * getTorqueLoad() * deltaTime;
-			angularVelocity -= angularVelocity * getAngularVelocityLoad() * deltaTime;
+			torque -= getTorque() * getTorqueLoad() * deltaTime;
+			angularVelocity -= getAngularVelocity() * getAngularVelocityLoad() * deltaTime;
 
 			synchronized (connections)
 			{
@@ -105,7 +105,7 @@ public class MechanicalNode extends EnergyNode
 					/**
 					 * Set all current rotations
 					 */
-					adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
 				}
 			}
 		}

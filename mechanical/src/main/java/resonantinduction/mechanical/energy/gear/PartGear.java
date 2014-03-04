@@ -365,6 +365,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 	{
 		if (!world().isRemote)
 			System.out.println(node.getGrid());
+		
 		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
 		{
 			if (!world().isRemote && ControlKeyModifer.isControlDown(player))

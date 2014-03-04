@@ -36,6 +36,7 @@ public abstract class Node<G extends IGrid> implements INode<G>
 
 	}
 
+	// TODO: Fix this.
 	public void split()
 	{
 
