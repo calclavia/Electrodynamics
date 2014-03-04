@@ -259,7 +259,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
 											if (checkPart instanceof PartGear)
 											{
-												ForgeDirection requiredDirection = ((PartGear) checkPart).position().subtract(position()).toForgeDirection();
+												ForgeDirection requiredDirection = ((PartGear) checkPart).getPosition().subtract(position()).toForgeDirection();
 												return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
 											}
 										}
@@ -410,7 +410,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 			return true;
 		}
 
-		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().position();
+		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().getPosition();
 
 		if (primaryPos.intX() == x() && placementSide.offsetX == 0)
 		{

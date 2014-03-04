@@ -25,13 +25,6 @@ public class TileWindTurbine extends TileMechanicalTurbine
 	private long windPower = 0;
 
 	@Override
-	public void invalidate()
-	{
-		getNetwork().split(this);
-		super.invalidate();
-	}
-
-	@Override
 	public void updateEntity()
 	{
 		/**
@@ -44,7 +37,7 @@ public class TileWindTurbine extends TileMechanicalTurbine
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 			return;
 		}
-		
+
 		/**
 		 * Only the primary turbine ticks.
 		 */

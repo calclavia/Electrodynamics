@@ -31,6 +31,8 @@ public class MechanicalNode extends EnergyNode
 	protected double load = 1;
 	protected byte connectionMap = Byte.parseByte("111111", 2);
 
+	private double power = 0;
+
 	public MechanicalNode(IMechanicalNodeProvider parent)
 	{
 		this.parent = parent;
@@ -52,6 +54,7 @@ public class MechanicalNode extends EnergyNode
 	public void update(float deltaTime)
 	{
 		float acceleration = this.acceleration * deltaTime;
+		power = getEnergy() / deltaTime;
 
 		prevAngularVelocity = angularVelocity;
 
@@ -210,6 +213,12 @@ public class MechanicalNode extends EnergyNode
 	public double getEnergy()
 	{
 		return torque * angularVelocity;
+	}
+
+	@Override
+	public double getPower()
+	{
+		return power;
 	}
 
 	@Override

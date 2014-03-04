@@ -16,7 +16,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 {
 	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
-	protected MechanicalNode mechanicalNode = new PacketMechanicalNode(this).setLoad(0.5f);;
+	public MechanicalNode mechanicalNode = new PacketMechanicalNode(this).setLoad(0.5f);
 
 	protected class PacketMechanicalNode extends MechanicalNode
 	{

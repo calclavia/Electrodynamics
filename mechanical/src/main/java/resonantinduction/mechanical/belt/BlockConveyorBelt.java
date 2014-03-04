@@ -43,7 +43,7 @@ public class BlockConveyorBelt extends BlockTile
 		if (t != null && t instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			tileEntity.getNetwork().reconstruct();
+			tileEntity.mechanicalNode.reconstruct();
 		}
 	}
 
@@ -55,7 +55,7 @@ public class BlockConveyorBelt extends BlockTile
 		if (t != null && t instanceof TileConveyorBelt)
 		{
 			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			tileEntity.getNetwork().reconstruct();
+			tileEntity.mechanicalNode.reconstruct();
 		}
 	}
 
@@ -291,7 +291,7 @@ public class BlockConveyorBelt extends BlockTile
 
 			if (!world.isBlockIndirectlyGettingPowered(x, y, z))
 			{
-				float maxSpeed = tile.getMoveVelocity() / 20;
+				double maxSpeed = tile.getMoveVelocity() / 20;
 
 				if (maxSpeed > 0)
 				{

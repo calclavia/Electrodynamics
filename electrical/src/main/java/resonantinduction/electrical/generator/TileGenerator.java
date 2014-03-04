@@ -19,7 +19,15 @@ import calclavia.lib.prefab.tile.TileElectrical;
  */
 public class TileGenerator extends TileElectrical implements IRotatable, IMechanicalNodeProvider
 {
-	protected MechanicalNode node = new MechanicalNode(this).setLoad(0.5f);;
+	protected MechanicalNode node = new MechanicalNode(this)
+	{
+		@Override
+		public boolean canConnect(ForgeDirection from, Object source)
+		{
+			return from == getDirection() || from == getDirection().getOpposite();
+		}
+
+	}.setLoad(0.5f);
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = true;
@@ -40,83 +48,61 @@ public class TileGenerator extends TileElectrical implements IRotatable, IMechan
 	{
 		if (!isInversed)
 		{
-			receiveMechanical(getDirection());
-			receiveMechanical(getDirection().getOpposite());
+			receiveMechanical();
 			produce();
 		}
 		else
 		{
-			produceMechanical(getDirection());
-			produceMechanical(getDirection().getOpposite());
+			produceMechanical();
 		}
 
 	}
 
-	public void receiveMechanical(ForgeDirection inputDir)
+	public void receiveMechanical()
 	{
-		Vector3 inputVector = new Vector3(this).translate(inputDir);
-		TileEntity tile = inputVector.getTileEntity(worldObj);
+		double power = node.getEnergy();
+		long receive = energy.receiveEnergy((long) power, true);
 
-		if (tile instanceof IMechanical)
+		if (receive > 0)
 		{
-			IMechanical mech = ((IMechanical) tile).getInstance(inputDir.getOpposite());
-
-			if (mech != null)
-			{
-				long power = (long) Math.abs(mech.getTorque() * mech.getAngularVelocity()) / 2;
-				long receive = energy.receiveEnergy(power, true);
-
-				if (receive > 0)
-				{
-					double percentageUsed = (double) receive / (double) power;
-					mech.setTorque((long) (mech.getTorque() - (mech.getTorque() * percentageUsed)));
-					mech.setAngularVelocity((float) (mech.getAngularVelocity() - (mech.getAngularVelocity() * percentageUsed)));
-				}
-			}
+			double percentageUsed = (double) receive / (double) power;
+			node.torque = (node.getTorque() - (node.getTorque() * percentageUsed));
+			node.angularVelocity = (node.getAngularVelocity() - (node.getAngularVelocity() * percentageUsed));
 		}
 	}
 
-	public void produceMechanical(ForgeDirection outputDir)
+	public void produceMechanical()
 	{
-		Vector3 outputVector = new Vector3(this).translate(outputDir);
-		TileEntity tile = outputVector.getTileEntity(worldObj);
+		long extract = energy.extractEnergy(energy.getEnergy(), false);
 
-		if (tile instanceof IMechanical)
+		if (extract > 0)
 		{
-			IMechanical mech = ((IMechanical) tile).getInstance(outputDir.getOpposite());
-			long extract = energy.extractEnergy(energy.getEnergy() / 2, false);
+			long torqueRatio = (long) ((gearRatio + 1) / 2.2d * (extract));
 
-			if (mech != null && mech.canConnect(outputDir.getOpposite(), this))
+			if (torqueRatio > 0)
 			{
-				if (extract > 0)
-				{
-					long torqueRatio = (long) ((gearRatio + 1) / 2.2d * (extract));
+				final double maxAngularVelocity = extract / (float) torqueRatio;
 
-					if (torqueRatio > 0)
-					{
-						final float maxAngularVelocity = extract / (float) torqueRatio;
+				final double maxTorque = ((double) extract) / maxAngularVelocity;
 
-						final long maxTorque = (long) (((double) extract) / maxAngularVelocity);
+				double setAngularVelocity = maxAngularVelocity;
+				double setTorque = maxTorque;
 
-						float setAngularVelocity = maxAngularVelocity;
-						long setTorque = maxTorque;
+				double currentTorque = Math.abs(node.getTorque());
 
-						long currentTorque = Math.abs(mech.getTorque());
+				if (currentTorque != 0)
+					setTorque = Math.min(setTorque, maxTorque) * (node.getTorque() / currentTorque);
 
-						if (currentTorque != 0)
-							setTorque = Math.min(setTorque, maxTorque) * (mech.getTorque() / currentTorque);
+				double currentVelo = Math.abs(node.getAngularVelocity());
+				if (currentVelo != 0)
+					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (node.getAngularVelocity() / currentVelo);
 
-						float currentVelo = Math.abs(mech.getAngularVelocity());
-						if (currentVelo != 0)
-							setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (mech.getAngularVelocity() / currentVelo);
-
-						mech.setTorque(setTorque);
-						mech.setAngularVelocity(setAngularVelocity);
-						energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
-					}
-				}
+				node.torque = setTorque;
+				node.angularVelocity = setAngularVelocity;
+				energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 			}
 		}
+
 	}
 
 	@Override

@@ -12,15 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IBelt;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
 import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.TileMechanical;
-import resonantinduction.mechanical.energy.network.TileMechanical.PacketMechanicalNode;
-import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

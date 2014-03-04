@@ -55,7 +55,7 @@ public class RenderGear implements ISimpleItemRenderer
 			// Center the model first.
 			GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
 			GL11.glPushMatrix();
-			renderGear(part.placementSide.ordinal(), part.tier, part.getMultiBlock().isConstructed(), Math.toDegrees(part.angle));
+			renderGear(part.placementSide.ordinal(), part.tier, part.getMultiBlock().isConstructed(), Math.toDegrees(part.node.angle));
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 		}

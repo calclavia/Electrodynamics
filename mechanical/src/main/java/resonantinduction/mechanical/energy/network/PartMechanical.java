@@ -22,8 +22,7 @@ import codechicken.multipart.TMultiPart;
  */
 public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalNodeProvider
 {
-	protected MechanicalNode node;
-
+	public MechanicalNode node;
 	protected double prevAngularVelocity;
 
 	/**
@@ -189,7 +188,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		return getItem();
 	}
 
-	public universalelectricity.api.vector.Vector3 position()
+	public universalelectricity.api.vector.Vector3 getPosition()
 	{
 		return new universalelectricity.api.vector.Vector3(x(), y(), z());
 	}

@@ -7,13 +7,13 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -31,13 +31,36 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public EntityItem grindingItem = null;
 
 	private final long requiredTorque = 1000;
-	private long counter = 0;
+	private double counter = 0;
+
+	public TileGrinderWheel()
+	{
+		mechanicalNode = new PacketMechanicalNode(this)
+		{
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{
+				if (getDirection().ordinal() < 2)
+				{
+					return from.offsetY != 0;
+				}
+
+				return getDirection().getRotation(ForgeDirection.UP) == from || getDirection().getRotation(ForgeDirection.DOWN) == from;
+			}
+
+			@Override
+			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			{
+				return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
+			}
+		};
+	}
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		counter = Math.max(counter + torque, 0);
+		counter = Math.max(counter + mechanicalNode.torque, 0);
 		doWork();
 	}
 
@@ -162,23 +185,6 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	public void setDirection(ForgeDirection direction)
 	{
 		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (getDirection().ordinal() < 2)
-		{
-			return from.offsetY != 0;
-		}
-
-		return getDirection().getRotation(ForgeDirection.UP) == from || getDirection().getRotation(ForgeDirection.DOWN) == from;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
 	}
 
 }

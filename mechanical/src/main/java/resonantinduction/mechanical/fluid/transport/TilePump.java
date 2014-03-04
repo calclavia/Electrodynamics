@@ -21,7 +21,7 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 	{
 		super.updateEntity();
 
-		if (!worldObj.isRemote && getPower() > 0)
+		if (!worldObj.isRemote && mechanicalNode.getPower() > 0)
 		{
 			/**
 			 * Try to suck fluid in
@@ -30,7 +30,7 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 
 			if (tileIn instanceof IFluidHandler && !(tileIn instanceof IPressurizedNode))
 			{
-				int flowRate = (int) (((double) getPower() / (double) maximumPower) * 500);
+				int flowRate = (int) (((double) mechanicalNode.getPower() / (double) maximumPower) * 500);
 				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), flowRate, false);
 
 				if (drain != null)
@@ -105,24 +105,19 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 	@Override
 	public int getPressure(ForgeDirection dir)
 	{
-		if (getPower() > 0)
+		if (mechanicalNode.getPower() > 0)
 		{
 			if (dir == getDirection())
 			{
-				return (int) Math.max((((double) getPower() / (double) maximumPower) * 100), 2);
+				return (int) Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
 			}
 			else if (dir == getDirection().getOpposite())
 			{
-				return (int) -Math.max((((double) getPower() / (double) maximumPower) * 100), 2);
+				return (int) -Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
 			}
 		}
 
 		return 0;
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		return true;
-	}
 }

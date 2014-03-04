@@ -36,7 +36,7 @@ public class RenderGrinderWheel extends TileEntitySpecialRenderer
 			ForgeDirection dir = tile.getDirection();
 			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
 			RenderUtility.rotateBlockBasedOnDirection(dir);
-			glRotatef((float) Math.toDegrees(tile.angle), 0, 0, 1);
+			glRotatef((float) Math.toDegrees(tile.mechanicalNode.angle), 0, 0, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "planks_oak.png");
 			MODEL.renderAllExcept("teeth");
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
