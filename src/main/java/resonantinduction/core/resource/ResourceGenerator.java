@@ -164,7 +164,6 @@ public class ResourceGenerator implements IVirtualObject
 			FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
 			ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
 			ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
-			smeltResult.stackSize = 2;
 			FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
