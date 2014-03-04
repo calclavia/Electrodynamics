@@ -28,7 +28,7 @@ public class MechanicalNode extends EnergyNode
 	 */
 	public double angle = 0;
 
-	protected double load = 1;
+	protected double load = 5;
 	protected byte connectionMap = Byte.parseByte("111111", 2);
 
 	private double power = 0;
@@ -68,13 +68,14 @@ public class MechanicalNode extends EnergyNode
 			angle = angle % (Math.PI * 2);
 		}
 
-		if (!world().isRemote)
+		//TODO: Remove upon split.
+		if (world() != null && !world().isRemote)
 		{
 			/**
 			 * Loss energy
 			 */
-			torque -= torque * torque * getTorqueLoad() * deltaTime;
-			angularVelocity -= angularVelocity * angularVelocity * getAngularVelocityLoad() * deltaTime;
+			torque -= torque * getTorqueLoad() * deltaTime;
+			angularVelocity -= angularVelocity * getAngularVelocityLoad() * deltaTime;
 
 			synchronized (connections)
 			{

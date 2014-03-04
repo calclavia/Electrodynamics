@@ -133,9 +133,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
 					/**
 					 * Look for gears that are internal and adjacent to this gear. (The 4 sides +
-					 * the
-					 * internal
-					 * center)
+					 * the internal center)
 					 */
 					for (int i = 0; i < 6; i++)
 					{
@@ -365,6 +363,8 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
+		if (!world().isRemote)
+			System.out.println(node.getGrid());
 		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
 		{
 			if (!world().isRemote && ControlKeyModifer.isControlDown(player))

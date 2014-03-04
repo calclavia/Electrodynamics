@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.energy.network;
 
 import resonantinduction.core.grid.NodeGrid;
+import universalelectricity.core.net.NetworkTickHandler;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -24,5 +25,6 @@ public class MechanicalNetwork extends NodeGrid<MechanicalNode>
 	{
 		super(MechanicalNode.class);
 		add(node);
+		NetworkTickHandler.addNetwork(this);
 	}
 }
