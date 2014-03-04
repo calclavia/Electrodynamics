@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
  * 
  * @Author DarkGuardsman
  */
-public interface IBelt extends IMechanical
+public interface IBelt
 {
 	/**
 	 * Used to get a list of entities the belt exerts an effect upon.

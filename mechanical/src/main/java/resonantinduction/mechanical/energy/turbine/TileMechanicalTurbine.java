@@ -83,7 +83,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 			/**
 			 * Face to face stick connection.
 			 */
-			TileEntity sourceTile = getPosition().translate(from).getTileEntity(getWorld());
+			TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
 
 			if (sourceTile instanceof IMechanical)
 			{

@@ -236,7 +236,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			return true;
 		}
 
-		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().getPosition();
+		universalelectricity.api.vector.Vector3 primaryPos = getMultiBlock().getPrimary().position();
 
 		if (primaryPos.intX() == x() && placementSide.offsetX == 0)
 		{
@@ -360,7 +360,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		if (source instanceof IMechanical)
 		{
-			universalelectricity.api.vector.Vector3 deltaPos = ((IMechanical) source).getPosition().subtract(getPosition());
+			universalelectricity.api.vector.Vector3 deltaPos = ((IMechanical) source).position().subtract(position());
 
 			boolean caseX = placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0;
 			boolean caseY = placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0;
@@ -445,7 +445,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 
 									if (checkPart instanceof PartGear)
 									{
-										ForgeDirection requiredDirection = ((PartGear) checkPart).getPosition().subtract(getPosition()).toForgeDirection();
+										ForgeDirection requiredDirection = ((PartGear) checkPart).position().subtract(position()).toForgeDirection();
 										return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
 									}
 								}
@@ -455,7 +455,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 				}
 
 				/** Face to face stick connection. */
-				TileEntity sourceTile = getPosition().translate(from.getOpposite()).getTileEntity(world());
+				TileEntity sourceTile = position().translate(from.getOpposite()).getTileEntity(world());
 
 				if (sourceTile instanceof IMechanical)
 				{
@@ -466,7 +466,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			else if (from == placementSide)
 			{
 				/** Face to face stick connection. */
-				TileEntity sourceTile = getPosition().translate(from).getTileEntity(world());
+				TileEntity sourceTile = position().translate(from).getTileEntity(world());
 
 				if (sourceTile instanceof IMechanical)
 				{
@@ -476,7 +476,7 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 			}
 			else
 			{
-				TileEntity destinationTile = ((IMechanical) source).getPosition().translate(from.getOpposite()).getTileEntity(world());
+				TileEntity destinationTile = ((IMechanical) source).position().translate(from.getOpposite()).getTileEntity(world());
 
 				if (destinationTile instanceof IMechanical && destinationTile instanceof TileMultipart)
 				{

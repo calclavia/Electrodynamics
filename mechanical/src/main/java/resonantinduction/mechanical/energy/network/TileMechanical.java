@@ -14,7 +14,7 @@ import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileMechanical extends TileAdvanced implements IMechanical, IPacketReceiver
+public abstract class TileMechanical extends TileAdvanced implements IMechanicalNodeProvider, IPacketReceiver
 {
 	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
@@ -166,7 +166,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public Vector3 getPosition()
+	public Vector3 position()
 	{
 		return new Vector3(this);
 	}

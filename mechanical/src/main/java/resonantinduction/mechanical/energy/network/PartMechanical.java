@@ -63,7 +63,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	public void checkClientUpdate()
 	{
-		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f)
+		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f || (prevAngularVelocity != angularVelocity && (prevAngularVelocity == 0 || angularVelocity == 0)))
 		{
 			prevAngularVelocity = angularVelocity;
 			markPacketUpdate = true;
@@ -251,7 +251,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public universalelectricity.api.vector.Vector3 getPosition()
+	public universalelectricity.api.vector.Vector3 position()
 	{
 		return new universalelectricity.api.vector.Vector3(x(), y(), z());
 	}

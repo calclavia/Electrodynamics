@@ -2,15 +2,12 @@ package resonantinduction.mechanical.energy.network;
 
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
-import java.util.WeakHashMap;
 
+import resonantinduction.core.grid.Grid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
 
 /**
@@ -29,100 +26,18 @@ import universalelectricity.core.net.NetworkTickHandler;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> implements IMechanicalNetwork, IUpdate
+public class MechanicalNetwork extends Grid<MechanicalNode>
 {
 	public MechanicalNetwork()
 	{
-		super(IMechanical.class);
+		super(MechanicalNode.class);
 	}
 
-	public static final float ACCELERATION = 0.2f;
-
-	/** The current rotation of the network. Used by covneyor belts. */
-	private float rotation = 0;
-	private long lastRotateTime;
-
-	/**
-	 * The cached connections of the mechanical network.
-	 */
-	private final WeakHashMap<IMechanical, WeakReference[]> connectionCache = new WeakHashMap<IMechanical, WeakReference[]>();
-
-	/**
-	 * Only add the exact instance of the connector into the network. Multipart tiles allowed!
-	 */
 	@Override
-	public void addConnector(IMechanical connector)
+	public void add(MechanicalNode node)
 	{
-		super.addConnector(connector);
+		super.add(node);
 		NetworkTickHandler.addNetwork(this);
-	}
-
-	/**
-	 * An network update called only server side.
-	 */
-	@Override
-	public void update()
-	{
-		synchronized (getConnectors())
-		{
-			/**
-			 * Update all mechanical nodes.
-			 */
-			Iterator<IMechanical> it = getConnectors().iterator();
-
-			while (it.hasNext())
-			{
-				IMechanical mechanical = it.next();
-				WeakReference[] connections = connectionCache.get(mechanical);
-
-				if (connections != null)
-				{
-					for (int i = 0; i < connections.length; i++)
-					{
-						if (connections[i] != null)
-						{
-							ForgeDirection dir = ForgeDirection.getOrientation(i);
-							Object adjacent = connections[i].get();
-
-							if (adjacent instanceof IMechanical)
-							{
-								IMechanical adjacentMech = ((IMechanical) adjacent).getInstance(dir.getOpposite());
-
-								if (adjacentMech != null && adjacent != mechanical)
-								{
-									float ratio = adjacentMech.getRatio(dir.getOpposite(), mechanical) / mechanical.getRatio(dir, adjacentMech);
-									long torque = mechanical.getTorque();
-
-									boolean inverseRotation = mechanical.inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), mechanical);
-
-									int inversion = inverseRotation ? -1 : 1;
-
-									if (Math.abs(torque + inversion * (adjacentMech.getTorque() / ratio * ACCELERATION)) < Math.abs(adjacentMech.getTorque() / ratio))
-										mechanical.setTorque((long) (torque + inversion * ((adjacentMech.getTorque() / ratio * ACCELERATION))));
-
-									float velocity = mechanical.getAngularVelocity();
-
-									if (Math.abs(velocity + inversion * (adjacentMech.getAngularVelocity() * ratio * ACCELERATION)) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
-										mechanical.setAngularVelocity(velocity + (inversion * adjacentMech.getAngularVelocity() * ratio * ACCELERATION));
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return getConnectors().size() > 0;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return canUpdate();
 	}
 
 	@Override
@@ -225,11 +140,5 @@ public class MechanicalNetwork extends Network<IMechanicalNetwork, IMechanical> 
 	public IMechanicalNetwork newInstance()
 	{
 		return new MechanicalNetwork();
-	}
-
-	@Override
-	public Class getConnectorClass()
-	{
-		return IMechanical.class;
 	}
 }
