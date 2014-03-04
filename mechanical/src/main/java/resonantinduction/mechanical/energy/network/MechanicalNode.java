@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
-import resonantinduction.core.grid.IGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.IGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -17,7 +17,7 @@ public class MechanicalNode extends EnergyNode
 {
 	protected final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
 
-	protected final IMechanicalNodeProvider parent;
+	public final IMechanicalNodeProvider parent;
 
 	public double torque = 0;
 	public double prevAngularVelocity, angularVelocity = 0;
@@ -29,6 +29,7 @@ public class MechanicalNode extends EnergyNode
 	public double angle = 0;
 
 	protected double load = 1;
+	protected byte connectionMap = Byte.parseByte("111111", 2);
 
 	public MechanicalNode(IMechanicalNodeProvider parent)
 	{
@@ -41,21 +42,20 @@ public class MechanicalNode extends EnergyNode
 		return this;
 	}
 
+	public MechanicalNode setConnection(byte connectionMap)
+	{
+		this.connectionMap = connectionMap;
+		return this;
+	}
+
 	@Override
 	public void update(float deltaTime)
 	{
 		float acceleration = this.acceleration * deltaTime;
-		double load = getLoad() * deltaTime;
 
 		prevAngularVelocity = angularVelocity;
 
 		onUpdate();
-
-		/**
-		 * Loss energy
-		 */
-		torque -= torque * torque * load;
-		angularVelocity -= angularVelocity * angularVelocity * load;
 
 		angle += angularVelocity / 20;
 
@@ -65,35 +65,44 @@ public class MechanicalNode extends EnergyNode
 			angle = angle % (Math.PI * 2);
 		}
 
-		synchronized (connections)
+		if (!world().isRemote)
 		{
-			Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
+			/**
+			 * Loss energy
+			 */
+			torque -= torque * torque * getTorqueLoad() * deltaTime;
+			angularVelocity -= angularVelocity * angularVelocity * getAngularVelocityLoad() * deltaTime;
 
-			while (it.hasNext())
+			synchronized (connections)
 			{
-				Entry<MechanicalNode, ForgeDirection> entry = it.next();
+				Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
 
-				ForgeDirection dir = entry.getValue();
-				MechanicalNode adjacentMech = entry.getKey();
+				while (it.hasNext())
+				{
+					Entry<MechanicalNode, ForgeDirection> entry = it.next();
 
-				/**
-				 * Calculate angular velocity and torque.
-				 */
-				float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
-				boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
+					ForgeDirection dir = entry.getValue();
+					MechanicalNode adjacentMech = entry.getKey();
 
-				int inversion = inverseRotation ? -1 : 1;
+					/**
+					 * Calculate angular velocity and torque.
+					 */
+					float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
+					boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
 
-				if (Math.abs(torque + inversion * (adjacentMech.getTorque() / ratio * acceleration)) < Math.abs(adjacentMech.getTorque() / ratio))
-					torque = torque + inversion * (adjacentMech.getTorque() / ratio * acceleration);
+					int inversion = inverseRotation ? -1 : 1;
 
-				if (Math.abs(angularVelocity + inversion * (adjacentMech.getAngularVelocity() * ratio * acceleration)) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
-					angularVelocity = angularVelocity + (inversion * adjacentMech.getAngularVelocity() * ratio * acceleration);
+					if (Math.abs(torque + inversion * (adjacentMech.getTorque() / ratio * acceleration)) < Math.abs(adjacentMech.getTorque() / ratio))
+						torque = torque + inversion * (adjacentMech.getTorque() / ratio * acceleration);
 
-				/**
-				 * Set all current rotations
-				 */
-				adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+					if (Math.abs(angularVelocity + inversion * (adjacentMech.getAngularVelocity() * ratio * acceleration)) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
+						angularVelocity = angularVelocity + (inversion * adjacentMech.getAngularVelocity() * ratio * acceleration);
+
+					/**
+					 * Set all current rotations
+					 */
+					adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+				}
 			}
 		}
 	}
@@ -119,12 +128,12 @@ public class MechanicalNode extends EnergyNode
 
 	public double getTorque()
 	{
-		return torque;
+		return angularVelocity != 0 ? torque : 0;
 	}
 
 	public double getAngularVelocity()
 	{
-		return angularVelocity;
+		return torque != 0 ? angularVelocity : 0;
 	}
 
 	public float getRatio(ForgeDirection dir, MechanicalNode with)
@@ -140,7 +149,12 @@ public class MechanicalNode extends EnergyNode
 	/**
 	 * The energy percentage loss due to resistance in seconds.
 	 */
-	public double getLoad()
+	public double getTorqueLoad()
+	{
+		return load;
+	}
+
+	public double getAngularVelocityLoad()
 	{
 		return load;
 	}
@@ -189,7 +203,7 @@ public class MechanicalNode extends EnergyNode
 
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return true;
+		return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
 	}
 
 	@Override
@@ -219,4 +233,5 @@ public class MechanicalNode extends EnergyNode
 		nbt.setDouble("torque", torque);
 		nbt.setDouble("angularVelocity", angularVelocity);
 	}
+
 }

@@ -7,8 +7,9 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
@@ -47,79 +48,114 @@ public class PartGearShaft extends PartMechanical
 		tier = itemDamage;
 	}
 
-	@Override
-	public void update()
+	public PartGearShaft()
 	{
-		super.update();
+		super();
 
-		if (!this.world().isRemote)
+		node = new MechanicalNode(this)
 		{
-			// Decelerate the shaft.
-			switch (tier)
+			@Override
+			public double getTorqueLoad()
 			{
-				default:
-					torque *= 0.997f;
-					angularVelocity *= 0.998f;
-					break;
-				case 1:
-					torque *= 0.998f;
-					angularVelocity *= 0.997f;
-					break;
-				case 2:
-					torque *= 0.99f;
-					angularVelocity *= 0.999f;
-					break;
-			}
-		}
-	}
-
-	/**
-	 * Refresh should be called sparingly.
-	 */
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-
-		/** Check for internal connections, the FRONT and BACK. */
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-			if (checkDir == placementSide || checkDir == placementSide.getOpposite())
-			{
-				IMechanical instance = ((IMechanical) tile()).getInstance(checkDir);
-
-				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+				// Decelerate the gear based on tier.
+				switch (tier)
 				{
-					connections[checkDir.ordinal()] = instance;
+					default:
+						return 0.04;
+					case 1:
+						return 0.03;
+					case 2:
+						return 0.02;
 				}
 			}
-		}
 
-		/** Look for connections outside this block space, the relative FRONT and BACK */
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-			if (connections[checkDir.ordinal()] == null && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
+			@Override
+			public double getAngularVelocityLoad()
 			{
-				TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-
-				if (checkTile instanceof IMechanical)
+				// Decelerate the gear based on tier.
+				switch (tier)
 				{
-					IMechanical instance = ((IMechanical) checkTile).getInstance(checkDir.getOpposite());
+					default:
+						return 0.03;
+					case 1:
+						return 0.04;
+					case 2:
+						return 0.02;
+				}
+			}
 
-					// Only connect to shafts outside of this block space.
-					if (instance != null && instance != this && instance instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+			@Override
+			public void recache()
+			{
+				synchronized (connections)
+				{
+					connections.clear();
+
+					/** Check for internal connections, the FRONT and BACK. */
+					for (int i = 0; i < 6; i++)
 					{
-						connections[checkDir.ordinal()] = instance;
+						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
+						if (checkDir == placementSide || checkDir == placementSide.getOpposite())
+						{
+							MechanicalNode instance = ((IMechanicalNodeProvider) tile()).getNode(checkDir);
+
+							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+							{
+								connections.put(instance, checkDir);
+							}
+						}
+					}
+
+					/** Look for connections outside this block space, the relative FRONT and BACK */
+					for (int i = 0; i < 6; i++)
+					{
+						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
+						if (!connections.containsValue(checkDir) && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
+						{
+							TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
+
+							if (checkTile instanceof IMechanicalNodeProvider)
+							{
+								MechanicalNode instance = ((IMechanicalNodeProvider) checkTile).getNode(checkDir.getOpposite());
+
+								// Only connect to shafts outside of this block space.
+								if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+								{
+									connections.put(instance, checkDir);
+								}
+							}
+						}
 					}
 				}
 			}
-		}
 
-		return connections;
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{
+				if (source instanceof PartGear)
+				{
+					PartGear gear = (PartGear) source;
+
+					if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
+						return false;
+				}
+
+				return from == placementSide || from == placementSide.getOpposite();
+			}
+
+			@Override
+			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			{
+				if (placementSide.offsetY != 0 || placementSide.offsetZ != 0)
+				{
+					return dir == placementSide.getOpposite();
+				}
+
+				return dir == placementSide;
+			}
+		};
 	}
 
 	@Override
@@ -142,20 +178,6 @@ public class PartGearShaft extends PartMechanical
 	public String getType()
 	{
 		return "resonant_induction_gear_shaft";
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (source instanceof PartGear)
-		{
-			PartGear gear = (PartGear) source;
-
-			if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
-				return false;
-		}
-
-		return from == placementSide || from == placementSide.getOpposite();
 	}
 
 	/**
@@ -205,17 +227,6 @@ public class PartGearShaft extends PartMechanical
 	public Cuboid6 getBounds()
 	{
 		return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625);
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		if (placementSide.offsetY != 0 || placementSide.offsetZ != 0)
-		{
-			return dir == placementSide.getOpposite();
-		}
-
-		return dir == placementSide;
 	}
 
 }

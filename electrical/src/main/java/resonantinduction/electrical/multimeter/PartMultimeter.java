@@ -11,11 +11,12 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.mechanical.fluid.IPressure;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
@@ -267,9 +268,9 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 			}
 		}
 
-		if (tileEntity instanceof IMechanical)
+		if (tileEntity instanceof IMechanicalNodeProvider)
 		{
-			IMechanical instance = ((IMechanical) tileEntity).getInstance(receivingSide);
+			MechanicalNode instance = ((IMechanicalNodeProvider) tileEntity).getNode(receivingSide);
 
 			for (ForgeDirection dir : ForgeDirection.values())
 			{
@@ -278,14 +279,14 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 					break;
 				}
 
-				instance = ((IMechanical) tileEntity).getInstance(dir);
+				instance = ((IMechanicalNodeProvider) tileEntity).getNode(dir);
 			}
 
 			if (instance != null)
 			{
 				getNetwork().torqueGraph.queue(instance.getTorque());
 				getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
-				getNetwork().energyGraph.queue((long) (instance.getTorque() * instance.getAngularVelocity()));
+				getNetwork().energyGraph.queue((long) (instance.getEnergy()));
 				getNetwork().powerGraph.queue(getNetwork().energyGraph.getAverage() * 20);
 			}
 		}

@@ -5,8 +5,8 @@ import java.util.EnumSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -17,9 +17,9 @@ import calclavia.lib.prefab.tile.TileElectrical;
  * 
  * @author Calclavia
  */
-public class TileGenerator extends TileElectrical implements IRotatable
+public class TileGenerator extends TileElectrical implements IRotatable, IMechanicalNodeProvider
 {
-	private IMechanicalNetwork network;
+	protected MechanicalNode node = new MechanicalNode(this).setLoad(0.5f);;
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = true;
@@ -160,5 +160,11 @@ public class TileGenerator extends TileElectrical implements IRotatable
 		super.writeToNBT(nbt);
 		nbt.setBoolean("isInversed", isInversed);
 		nbt.setByte("gear", gearRatio);
+	}
+
+	@Override
+	public MechanicalNode getNode(ForgeDirection from)
+	{
+		return node;
 	}
 }

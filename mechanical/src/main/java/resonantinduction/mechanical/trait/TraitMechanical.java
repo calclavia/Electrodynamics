@@ -4,16 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
-import universalelectricity.api.vector.Vector3;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class TraitMechanical extends TileMultipart implements IMechanical
+public class TraitMechanical extends TileMultipart implements IMechanicalNodeProvider
 {
-	public Set<IMechanical> mechanicalInterfaces = new HashSet<IMechanical>();
+	public Set<IMechanicalNodeProvider> mechanicalInterfaces = new HashSet<IMechanicalNodeProvider>();
 
 	@Override
 	public void copyFrom(TileMultipart that)
@@ -31,9 +30,9 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	{
 		super.bindPart(part);
 
-		if (part instanceof IMechanical)
+		if (part instanceof IMechanicalNodeProvider)
 		{
-			this.mechanicalInterfaces.add((IMechanical) part);
+			this.mechanicalInterfaces.add((IMechanicalNodeProvider) part);
 		}
 	}
 
@@ -42,7 +41,7 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	{
 		super.partRemoved(part, p);
 
-		if (part instanceof IMechanical)
+		if (part instanceof IMechanicalNodeProvider)
 		{
 			this.mechanicalInterfaces.remove(part);
 		}
@@ -56,19 +55,7 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 	}
 
 	@Override
-	public Object[] getConnections()
-	{
-		return null;
-	}
-
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		return null;
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection from)
+	public MechanicalNode getNode(ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 
@@ -79,67 +66,13 @@ public class TraitMechanical extends TileMultipart implements IMechanical
 
 		if (part != null)
 		{
-			if (part instanceof IMechanical)
+			if (part instanceof IMechanicalNodeProvider)
 			{
-				return ((IMechanical) part).getInstance(from);
+				return ((IMechanicalNodeProvider) part).getNode(from);
 			}
 		}
 
 		return null;
 
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-
-	}
-
-	@Override
-	public float getAngularVelocity()
-	{
-		return 0;
-	}
-
-	@Override
-	public void setAngularVelocity(float velocity)
-	{
-
-	}
-
-	@Override
-	public long getTorque()
-	{
-		return 0;
-	}
-
-	@Override
-	public void setTorque(long torque)
-	{
-
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, Object source)
-	{
-		return 0;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		return false;
-	}
-
-	@Override
-	public Vector3 getPosition()
-	{
-		return null;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return false;
 	}
 }

@@ -12,13 +12,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -32,6 +32,19 @@ public class TileMixer extends TileMechanical implements IInventory
 	public static final long POWER = 500000;
 	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
+
+	public TileMixer()
+	{
+		mechanicalNode = new PacketMechanicalNode(this)
+		{
+			@Override
+			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			{
+				return dir == ForgeDirection.DOWN;
+			}
+
+		}.setConnection(Byte.parseByte("000011", 2));
+	}
 
 	@Override
 	public void updateEntity()
@@ -51,7 +64,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return angularVelocity != 0;
+		return mechanicalNode.getAngularVelocity() != 0;
 	}
 
 	public void doWork()
@@ -70,7 +83,7 @@ public class TileMixer extends TileMechanical implements IInventory
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(-angularVelocity, 0, 0);
+			relativePosition.rotate(-mechanicalNode.getAngularVelocity(), 0, 0);
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 
@@ -160,18 +173,6 @@ public class TileMixer extends TileMechanical implements IInventory
 		}
 
 		return false;
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		return from == ForgeDirection.UP || from == ForgeDirection.DOWN;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return dir == ForgeDirection.DOWN;
 	}
 
 	@Override

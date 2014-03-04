@@ -11,10 +11,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
@@ -35,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author Calclavia
  */
-public class PartGear extends PartMechanical implements IMechanical, IMultiBlockStructure<PartGear>
+public class PartGear extends PartMechanical implements IMultiBlockStructure<PartGear>
 {
 	public static Cuboid6[][] oBoxes = new Cuboid6[6][2];
 
@@ -55,6 +56,287 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	private int manualCrankTime = 0;
 	private int multiBlockRadius = 1;
 
+	public PartGear()
+	{
+		super();
+		node = new MechanicalNode(this)
+		{
+			@Override
+			public void onUpdate()
+			{
+				if (!getMultiBlock().isPrimary())
+				{
+					torque = 0;
+					angularVelocity = 0;
+				}
+			}
+
+			@Override
+			public double getTorqueLoad()
+			{
+				// Decelerate the gear based on tier.
+				switch (tier)
+				{
+					default:
+						return 0.4;
+					case 1:
+						return 0.3;
+					case 2:
+						return 0.2;
+				}
+			}
+
+			@Override
+			public double getAngularVelocityLoad()
+			{
+				// Decelerate the gear based on tier.
+				switch (tier)
+				{
+					default:
+						return 0.3;
+					case 1:
+						return 0.4;
+					case 2:
+						return 0.2;
+				}
+			}
+
+			@Override
+			public void recache()
+			{
+				synchronized (connections)
+				{
+					connections.clear();
+
+					/**
+					 * Only call refresh if this is the main block of a multiblock gear or a single
+					 * gear
+					 * block.
+					 */
+					if (!getMultiBlock().isPrimary() || world() == null)
+					{
+						return;
+					}
+
+					/** Look for gears that are back-to-back with this gear. Equate torque. */
+					TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
+
+					if (tileBehind instanceof IMechanicalNodeProvider)
+					{
+						MechanicalNode instance = ((IMechanicalNodeProvider) tileBehind).getNode(placementSide.getOpposite());
+
+						if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
+						{
+							connections.put(instance, placementSide);
+						}
+					}
+
+					/**
+					 * Look for gears that are internal and adjacent to this gear. (The 4 sides +
+					 * the
+					 * internal
+					 * center)
+					 */
+					for (int i = 0; i < 6; i++)
+					{
+						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
+						TileEntity tile = tile();
+
+						if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
+						{
+							tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
+						}
+
+						if (tile instanceof IMechanicalNodeProvider)
+						{
+							/**
+							 * If we're checking for the block that is opposite to the gear's
+							 * placement
+							 * side
+							 * (the center), then we try to look for a gear shaft in the center.
+							 */
+							MechanicalNode instance = ((IMechanicalNodeProvider) tile).getNode(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
+
+							if (!connections.containsValue(checkDir) && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
+							{
+								connections.put(instance, checkDir);
+							}
+						}
+					}
+
+					int displaceCheck = 1;
+
+					if (getMultiBlock().isPrimary() && getMultiBlock().isConstructed())
+					{
+						displaceCheck = 2;
+					}
+
+					/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
+					for (int i = 0; i < 4; i++)
+					{
+						ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(PartGear.this.placementSide.ordinal(), i));
+						TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir, displaceCheck).getTileEntity(world());
+
+						if (!connections.containsValue(checkDir) && checkTile instanceof IMechanicalNodeProvider)
+						{
+							MechanicalNode instance = ((IMechanicalNodeProvider) checkTile).getNode(placementSide);
+
+							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
+							{
+								connections.put(instance, checkDir);
+							}
+						}
+					}
+				}
+			}
+
+			/**
+			 * Can this gear be connected BY the source?
+			 * 
+			 * @param from - Direction source is coming from.
+			 * @param source - The source of the connection.
+			 * @return True is so.
+			 */
+			@Override
+			public boolean canConnect(ForgeDirection from, Object with)
+			{
+				if (!getMultiBlock().isPrimary())
+				{
+					return false;
+				}
+
+				if (with instanceof MechanicalNode)
+				{
+					IMechanicalNodeProvider source = ((MechanicalNode) with).parent;
+
+					/**
+					 * Check for flat connections (gear face on gear face) to make sure it's
+					 * actually on
+					 * this gear block.
+					 */
+					if (from == placementSide.getOpposite())
+					{
+						if (source instanceof PartGear || source instanceof PartGearShaft)
+						{
+							if (source instanceof PartGearShaft)
+							{
+								PartGearShaft shaft = (PartGearShaft) source;
+								return shaft.tile().partMap(from.getOpposite().ordinal()) == PartGear.this && Math.abs(shaft.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(placementSide.offsetZ);
+							}
+							else if (source instanceof PartGear)
+							{
+								if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+								{
+									return true;
+								}
+
+								if (((PartGear) source).placementSide != placementSide)
+								{
+									TMultiPart part = tile().partMap(((PartGear) source).placementSide.ordinal());
+
+									if (part instanceof PartGear)
+									{
+										/**
+										 * Case when we connect gears via edges internally. Large
+										 * gear
+										 * attempt to connect to small gear.
+										 */
+										PartGear sourceGear = (PartGear) part;
+
+										if (sourceGear.isCenterMultiBlock() && !sourceGear.getMultiBlock().isPrimary())
+										{
+											// For large gear to small gear on edge connection.
+											return true;
+										}
+									}
+									else
+									{
+										/** Small gear attempting to connect to large gear. */
+										if (getMultiBlock().isConstructed())
+										{
+											TMultiPart checkPart = ((PartGear) source).tile().partMap(placementSide.ordinal());
+
+											if (checkPart instanceof PartGear)
+											{
+												ForgeDirection requiredDirection = ((PartGear) checkPart).position().subtract(position()).toForgeDirection();
+												return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						/** Face to face stick connection. */
+						TileEntity sourceTile = position().translate(from.getOpposite()).getTileEntity(world());
+
+						if (sourceTile instanceof IMechanicalNodeProvider)
+						{
+							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from);
+							return sourceInstance == source;
+						}
+					}
+					else if (from == placementSide)
+					{
+						/** Face to face stick connection. */
+						TileEntity sourceTile = position().translate(from).getTileEntity(world());
+
+						if (sourceTile instanceof IMechanicalNodeProvider)
+						{
+							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from.getOpposite());
+							return sourceInstance == source;
+						}
+					}
+					else
+					{
+						TileEntity destinationTile = ((MechanicalNode) with).position().translate(from.getOpposite()).getTileEntity(world());
+
+						if (destinationTile instanceof IMechanicalNodeProvider && destinationTile instanceof TileMultipart)
+						{
+							TMultiPart destinationPart = ((TileMultipart) destinationTile).partMap(placementSide.ordinal());
+
+							if (destinationPart instanceof PartGear)
+							{
+								if (PartGear.this != destinationPart)
+								{
+									return ((PartGear) destinationPart).isCenterMultiBlock();
+								}
+								else
+								{
+									return true;
+								}
+							}
+							else
+							{
+								return true;
+							}
+						}
+					}
+				}
+
+				return false;
+			}
+
+			@Override
+			public float getRatio(ForgeDirection dir, MechanicalNode with)
+			{
+				universalelectricity.api.vector.Vector3 deltaPos = with.position().subtract(position());
+
+				boolean caseX = placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0;
+				boolean caseY = placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0;
+				boolean caseZ = placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0;
+
+				if (caseX || caseY || caseZ)
+				{
+					return super.getRatio(dir, with);
+				}
+
+				return getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir, with);
+			}
+		};
+	}
+
 	@Override
 	public void update()
 	{
@@ -64,36 +346,10 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			if (manualCrankTime > 0)
 			{
-				torque += isClockwiseCrank ? 4 : -4;
-				angularVelocity += isClockwiseCrank ? 0.03f : -0.03f;
-
+				node.apply(isClockwiseCrank ? 4 : -4, isClockwiseCrank ? 0.03f : -0.03f);
 				manualCrankTime--;
 			}
 
-			if (getMultiBlock().isPrimary())
-			{
-				// Decelerate the gear based on tier.
-				switch (tier)
-				{
-					default:
-						torque *= 0.96f;
-						angularVelocity *= 0.97f;
-						break;
-					case 1:
-						torque *= 0.97f;
-						angularVelocity *= 0.96f;
-						break;
-					case 2:
-						torque *= 0.98f;
-						angularVelocity *= 0.98f;
-						break;
-				}
-			}
-			else
-			{
-				torque = 0;
-				angularVelocity = 0;
-			}
 		}
 
 		getMultiBlock().update();
@@ -113,8 +369,8 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 		{
 			if (!world().isRemote && ControlKeyModifer.isControlDown(player))
 			{
-				getMultiBlock().get().torque = -getMultiBlock().get().torque;
-				getMultiBlock().get().angularVelocity = -getMultiBlock().get().angularVelocity;
+				getMultiBlock().get().node.torque = -getMultiBlock().get().node.torque;
+				getMultiBlock().get().node.angularVelocity = -getMultiBlock().get().node.angularVelocity;
 				return true;
 			}
 
@@ -139,88 +395,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	{
 		super.preRemove();
 		getMultiBlock().deconstruct();
-	}
-
-	/** Refresh should be called sparingly. */
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-
-		/** Only call refresh if this is the main block of a multiblock gear or a single gear block. */
-		if (!getMultiBlock().isPrimary() || world() == null)
-		{
-			return connections;
-		}
-
-		/** Look for gears that are back-to-back with this gear. Equate torque. */
-		TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
-
-		if (tileBehind instanceof IMechanical)
-		{
-			IMechanical instance = ((IMechanical) tileBehind).getInstance(placementSide.getOpposite());
-
-			if (instance != null && instance != this && !(instance instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
-			{
-				connections[placementSide.ordinal()] = instance;
-			}
-		}
-
-		/**
-		 * Look for gears that are internal and adjacent to this gear. (The 4 sides + the internal
-		 * center)
-		 */
-		for (int i = 0; i < 6; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-			TileEntity tile = tile();
-
-			if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
-			{
-				tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-			}
-
-			if (tile instanceof IMechanical)
-			{
-				/**
-				 * If we're checking for the block that is opposite to the gear's placement side
-				 * (the center), then we try to look for a gear shaft in the center.
-				 */
-				IMechanical instance = ((IMechanical) tile).getInstance(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
-
-				if (connections[checkDir.ordinal()] == null && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
-				{
-					connections[checkDir.ordinal()] = instance;
-				}
-			}
-		}
-
-		int displaceCheck = 1;
-
-		if (getMultiBlock().isPrimary() && getMultiBlock().isConstructed())
-		{
-			displaceCheck = 2;
-		}
-
-		/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
-		for (int i = 0; i < 4; i++)
-		{
-			ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(this.placementSide.ordinal(), i));
-			TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir, displaceCheck).getTileEntity(world());
-
-			if (connections[checkDir.ordinal()] == null && checkTile instanceof IMechanical)
-			{
-				IMechanical instance = ((IMechanical) checkTile).getInstance(placementSide);
-
-				if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance instanceof PartGearShaft))
-				{
-					connections[checkDir.ordinal()] = instance;
-				}
-			}
-		}
-
-		return connections;
 	}
 
 	/**
@@ -356,152 +530,9 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir, Object source)
+	public MechanicalNode getNode(ForgeDirection from)
 	{
-		if (source instanceof IMechanical)
-		{
-			universalelectricity.api.vector.Vector3 deltaPos = ((IMechanical) source).position().subtract(position());
-
-			boolean caseX = placementSide.offsetX != 0 && deltaPos.y == 0 && deltaPos.z == 0;
-			boolean caseY = placementSide.offsetY != 0 && deltaPos.x == 0 && deltaPos.z == 0;
-			boolean caseZ = placementSide.offsetZ != 0 && deltaPos.x == 0 && deltaPos.y == 0;
-
-			if (caseX || caseY || caseZ)
-			{
-				return super.getRatio(dir, source);
-			}
-		}
-
-		return getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir, source);
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection from)
-	{
-		return getMultiBlock().get();
-	}
-
-	/**
-	 * Can this gear be connected BY the source?
-	 * 
-	 * @param from - Direction source is coming from.
-	 * @param source - The source of the connection.
-	 * @return True is so.
-	 */
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (!getMultiBlock().isPrimary())
-		{
-			return false;
-		}
-
-		if (source instanceof IMechanical)
-		{
-			/**
-			 * Check for flat connections (gear face on gear face) to make sure it's actually on
-			 * this gear block.
-			 */
-			if (from == placementSide.getOpposite())
-			{
-				if (source instanceof PartGear || source instanceof PartGearShaft)
-				{
-					if (source instanceof PartGearShaft)
-					{
-						PartGearShaft shaft = (PartGearShaft) source;
-						return shaft.tile().partMap(from.getOpposite().ordinal()) == this && Math.abs(shaft.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(placementSide.offsetZ);
-					}
-					else if (source instanceof PartGear)
-					{
-						if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
-						{
-							return true;
-						}
-
-						if (((PartGear) source).placementSide != placementSide)
-						{
-							TMultiPart part = tile().partMap(((PartGear) source).placementSide.ordinal());
-
-							if (part instanceof PartGear)
-							{
-								/**
-								 * Case when we connect gears via edges internally. Large gear
-								 * attempt to connect to small gear.
-								 */
-								PartGear sourceGear = (PartGear) part;
-
-								if (sourceGear.isCenterMultiBlock() && !sourceGear.getMultiBlock().isPrimary())
-								{
-									// For large gear to small gear on edge connection.
-									return true;
-								}
-							}
-							else
-							{
-								/** Small gear attempting to connect to large gear. */
-								if (getMultiBlock().isConstructed())
-								{
-									TMultiPart checkPart = ((PartGear) source).tile().partMap(placementSide.ordinal());
-
-									if (checkPart instanceof PartGear)
-									{
-										ForgeDirection requiredDirection = ((PartGear) checkPart).position().subtract(position()).toForgeDirection();
-										return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
-									}
-								}
-							}
-						}
-					}
-				}
-
-				/** Face to face stick connection. */
-				TileEntity sourceTile = position().translate(from.getOpposite()).getTileEntity(world());
-
-				if (sourceTile instanceof IMechanical)
-				{
-					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from);
-					return sourceInstance == source;
-				}
-			}
-			else if (from == placementSide)
-			{
-				/** Face to face stick connection. */
-				TileEntity sourceTile = position().translate(from).getTileEntity(world());
-
-				if (sourceTile instanceof IMechanical)
-				{
-					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
-					return sourceInstance == source;
-				}
-			}
-			else
-			{
-				TileEntity destinationTile = ((IMechanical) source).position().translate(from.getOpposite()).getTileEntity(world());
-
-				if (destinationTile instanceof IMechanical && destinationTile instanceof TileMultipart)
-				{
-					TMultiPart destinationPart = ((TileMultipart) destinationTile).partMap(placementSide.ordinal());
-
-					if (destinationPart instanceof PartGear)
-					{
-						if (this != destinationPart)
-						{
-							return ((PartGear) destinationPart).isCenterMultiBlock();
-						}
-						else
-						{
-							return true;
-						}
-					}
-					else
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
+		return getMultiBlock().get().node;
 	}
 
 	/** Multipart Bounds */
@@ -521,12 +552,6 @@ public class PartGear extends PartMechanical implements IMechanical, IMultiBlock
 	public Cuboid6 getBounds()
 	{
 		return FaceMicroClass.aBounds()[0x10 | this.placementSide.ordinal()];
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return true;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package resonantinduction.core.grid;
 
+import resonantinduction.mechanical.energy.network.PartMechanical;
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class Node<G extends IGrid> implements INode<G>
@@ -31,6 +32,11 @@ public abstract class Node<G extends IGrid> implements INode<G>
 	}
 
 	public void recache()
+	{
+
+	}
+
+	public void split()
 	{
 
 	}

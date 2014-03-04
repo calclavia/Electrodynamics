@@ -3,101 +3,62 @@ package resonantinduction.mechanical.energy.turbine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
-import resonantinduction.mechanical.energy.network.MechanicalNetwork;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
-public class TileMechanicalTurbine extends TileTurbine implements IMechanical
+public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNodeProvider
 {
+	protected MechanicalNode node;
 
 	public TileMechanicalTurbine()
 	{
 		super();
 		energy = new EnergyStorageHandler(0);
-	}
-
-	private IMechanicalNetwork network;
-
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		if (this.network == null)
+		node = new MechanicalNode(this)
 		{
-			this.network = new MechanicalNetwork();
-			this.network.addConnector(this);
-		}
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, Object source)
-	{
-		return 0.5f;
-	}
-
-	@Override
-	public float getAngularVelocity()
-	{
-		return angularVelocity;
-	}
-
-	@Override
-	public void setAngularVelocity(float velocity)
-	{
-		this.angularVelocity = velocity;
-	}
-
-	@Override
-	public void setTorque(long torque)
-	{
-		this.torque = torque;
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return true;
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection dir)
-	{
-		return (IMechanical) getMultiBlock().get();
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (source instanceof IMechanical && !(source instanceof TileMechanicalTurbine))
-		{
-			/**
-			 * Face to face stick connection.
-			 */
-			TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
-
-			if (sourceTile instanceof IMechanical)
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
 			{
-				IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
-				return sourceInstance == source && from == getDirection().getOpposite();
+				if (source instanceof MechanicalNode && !(source instanceof TileMechanicalTurbine))
+				{
+					/**
+					 * Face to face stick connection.
+					 */
+					TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
+
+					if (sourceTile instanceof IMechanicalNodeProvider)
+					{
+						MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from.getOpposite());
+						return sourceInstance == source && from == getDirection().getOpposite();
+					}
+				}
+
+				return false;
 			}
-		}
-		return false;
+
+			@Override
+			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			{
+				return false;
+			}
+		};
 	}
 
 	@Override
-	public Object[] getConnections()
+	public MechanicalNode getNode(ForgeDirection dir)
 	{
-		return null;
+		return ((TileMechanicalTurbine) getMultiBlock().get()).node;
+	}
+
+	@Override
+	public void invalidate()
+	{
+		node.split();
+		super.invalidate();
 	}
 
 	@Override
@@ -106,6 +67,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 	{
 		super.readFromNBT(nbt);
 		tier = nbt.getInteger("tier");
+		node.load(nbt);
 	}
 
 	/**
@@ -117,5 +79,6 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanical
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("tier", tier);
+		node.save(nbt);
 	}
 }

@@ -7,8 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
-import resonantinduction.api.mechanical.IMechanicalNetwork;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.JCuboidPart;
@@ -22,12 +20,11 @@ import codechicken.multipart.TMultiPart;
  * @author Calclavia
  * 
  */
-public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanical
+public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalNodeProvider
 {
-	private IMechanicalNetwork network;
+	protected MechanicalNode node;
 
-	protected float prevAngularVelocity, angularVelocity;
-	protected long torque;
+	protected double prevAngularVelocity;
 
 	/**
 	 * Packets
@@ -37,9 +34,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	/** Side of the block this is placed on */
 	public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
-
-	/** The current angle the gear is on. In radians. */
-	public float angle = 0;
 
 	public int tier;
 
@@ -53,7 +47,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	public void update()
 	{
 		ticks++;
-		angle += angularVelocity / 20;
 
 		if (!world().isRemote)
 			checkClientUpdate();
@@ -63,9 +56,9 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
 	public void checkClientUpdate()
 	{
-		if (Math.abs(prevAngularVelocity - angularVelocity) > 0.05f || (prevAngularVelocity != angularVelocity && (prevAngularVelocity == 0 || angularVelocity == 0)))
+		if (Math.abs(prevAngularVelocity - node.angularVelocity) > 0.05f || (prevAngularVelocity != node.angularVelocity && (prevAngularVelocity == 0 || node.angularVelocity == 0)))
 		{
-			prevAngularVelocity = angularVelocity;
+			prevAngularVelocity = node.angularVelocity;
 			markPacketUpdate = true;
 		}
 
@@ -76,28 +69,33 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		}
 	}
 
+	public MechanicalNode getNode(ForgeDirection dir)
+	{
+		return node;
+	}
+
 	@Override
 	public void onWorldJoin()
 	{
-		getNetwork().reconstruct();
+		node.reconstruct();
 	}
 
 	@Override
 	public void onNeighborChanged()
 	{
-		getNetwork().reconstruct();
+		node.reconstruct();
 	}
 
 	@Override
 	public void onPartChanged(TMultiPart part)
 	{
-		getNetwork().reconstruct();
+		node.reconstruct();
 	}
 
 	@Override
 	public void onWorldSeparate()
 	{
-		getNetwork().split(this);
+		node.split();
 	}
 
 	/** Packet Code. */
@@ -119,7 +117,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 				readDesc(packet);
 				break;
 			case 1:
-				angularVelocity = packet.readFloat();
+				node.angularVelocity = packet.readFloat();
 				break;
 		}
 	}
@@ -163,16 +161,16 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	public void load(NBTTagCompound nbt)
 	{
 		placementSide = ForgeDirection.getOrientation(nbt.getByte("side"));
-		angularVelocity = nbt.getFloat("angularVelocity");
 		tier = nbt.getByte("tier");
+		node.load(nbt);
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
 		nbt.setByte("side", (byte) placementSide.ordinal());
-		nbt.setFloat("angularVelocity", angularVelocity);
 		nbt.setByte("tier", (byte) tier);
+		node.save(nbt);
 	}
 
 	protected abstract ItemStack getItem();
@@ -191,66 +189,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		return getItem();
 	}
 
-	/**
-	 * Mechanical implementations
-	 */
-	@Override
-	public IMechanicalNetwork getNetwork()
-	{
-		if (network == null)
-		{
-			network = new MechanicalNetwork();
-			network.addConnector(this);
-		}
-
-		return network;
-	}
-
-	@Override
-	public void setNetwork(IMechanicalNetwork network)
-	{
-		this.network = network;
-	}
-
-	@Override
-	public float getAngularVelocity()
-	{
-		return torque != 0 ? angularVelocity : 0;
-	}
-
-	@Override
-	public void setAngularVelocity(float velocity)
-	{
-		if (world() != null && !world().isRemote)
-			this.angularVelocity = velocity;
-	}
-
-	@Override
-	public long getTorque()
-	{
-		return angularVelocity != 0 ? torque : 0;
-	}
-
-	@Override
-	public void setTorque(long torque)
-	{
-		if (world() != null && !world().isRemote)
-			this.torque = torque;
-	}
-
-	@Override
-	public float getRatio(ForgeDirection dir, Object source)
-	{
-		return 0.5f;
-	}
-
-	@Override
-	public IMechanical getInstance(ForgeDirection from)
-	{
-		return this;
-	}
-
-	@Override
 	public universalelectricity.api.vector.Vector3 position()
 	{
 		return new universalelectricity.api.vector.Vector3(x(), y(), z());

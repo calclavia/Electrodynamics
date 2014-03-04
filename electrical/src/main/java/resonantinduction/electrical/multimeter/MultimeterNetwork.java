@@ -32,8 +32,8 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	public final GraphL powerGraph = new GraphL("Power", maxData);
 	public final GraphL energyCapacityGraph = new GraphL("Capacity", 1);
 	public final GraphL voltageGraph = new GraphL("Voltage", maxData);
-	public final GraphL torqueGraph = new GraphL("Torque", maxData);
-	public final GraphF angularVelocityGraph = new GraphF("Speed", maxData);
+	public final GraphD torqueGraph = new GraphD("Torque", maxData);
+	public final GraphD angularVelocityGraph = new GraphD("Speed", maxData);
 	public final GraphI fluidGraph = new GraphI("Fluid", maxData);
 	public final GraphF thermalGraph = new GraphF("Temperature", maxData);
 	public final GraphI pressureGraph = new GraphI("Pressure", maxData);

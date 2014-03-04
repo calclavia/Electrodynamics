@@ -612,7 +612,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 
 			if (t instanceof TileTesla)
 			{
-				vectors.add(checkPosition.clone().subtract(getPosition()));
+				vectors.add(checkPosition.clone().subtract(position()));
 			}
 			else
 			{
@@ -656,7 +656,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	}
 
 	@Override
-	public Vector3 getPosition()
+	public Vector3 position()
 	{
 		return new Vector3(this);
 	}

@@ -4,11 +4,9 @@ import java.lang.reflect.Method;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IMechanical;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -27,13 +25,6 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 	{
 		maxPower = 200;
 		torque = defaultTorque;
-	}
-
-	@Override
-	public void invalidate()
-	{
-		getNetwork().split(this);
-		super.invalidate();
 	}
 
 	@Override
@@ -106,34 +97,5 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 	private long getWaterPower()
 	{
 		return maxPower / (2 - tier + 1);
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		if (getDirection().offsetY == 0)
-		{
-			if (source instanceof IMechanical)
-			{
-				/**
-				 * Face to face stick connection.
-				 */
-				TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
-
-				if (sourceTile instanceof IMechanical)
-				{
-					IMechanical sourceInstance = ((IMechanical) sourceTile).getInstance(from.getOpposite());
-					return sourceInstance == source && from == getDirection();
-				}
-			}
-		}
-
-		return super.canConnect(from, source);
-	}
-
-	@Override
-	public boolean inverseRotation(ForgeDirection dir, IMechanical with)
-	{
-		return false;
 	}
 }
