@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
  * 
  * @Author DarkGuardsman
  */
+@Deprecated
 public interface IBelt
 {
 	/**

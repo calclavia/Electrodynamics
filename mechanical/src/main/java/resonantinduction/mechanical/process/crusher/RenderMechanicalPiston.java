@@ -33,12 +33,12 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		RenderUtility.bind(TEXTURE);
 
 		// Angle in radians of the rotor.
-		float angle = tile.angle;
+		float angle = (float) tile.getNode(null).angle;
 		float radius = 0.5f;
 		// Length of piston arm
 		float length = 1f;
 
-		double beta = Math.asin((radius * Math.sin(angle)) / (length/2));
+		double beta = Math.asin((radius * Math.sin(angle)) / (length / 2));
 
 		/**
 		 * Render Piston Rod
@@ -49,7 +49,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 
 		GL11.glTranslated(0, pistonTranslateY, pistonTranslateX);
 		GL11.glRotated(-Math.toDegrees(beta), 1, 0, 0);
-		//MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
+		// MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
 		GL11.glPopMatrix();
 
 		/**

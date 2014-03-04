@@ -2,7 +2,7 @@ package resonantinduction.core.grid;
 
 import java.util.Set;
 
-public interface IGrid<N extends INode>
+public interface IGrid<N>
 {
 	public void add(N node);
 

@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
+import resonantinduction.core.grid.IGrid;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,30 +17,45 @@ public class MechanicalNode extends EnergyNode
 {
 	protected final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
 
-	protected final Object parent;
+	protected final IMechanicalNodeProvider parent;
 
 	public double torque = 0;
-	public double angularVelocity = 0;
-	public float acceleration = 0.1f;
+	public double prevAngularVelocity, angularVelocity = 0;
+	public float acceleration = 2f;
 
 	/**
 	 * The current rotation of the mechanical node.
 	 */
 	public double angle = 0;
 
-	public MechanicalNode(Object parent)
+	protected double load = 1;
+
+	public MechanicalNode(IMechanicalNodeProvider parent)
 	{
 		this.parent = parent;
 	}
 
-	@Override
-	public void update()
+	public MechanicalNode setLoad(double load)
 	{
+		this.load = load;
+		return this;
+	}
+
+	@Override
+	public void update(float deltaTime)
+	{
+		float acceleration = this.acceleration * deltaTime;
+		double load = getLoad() * deltaTime;
+
+		prevAngularVelocity = angularVelocity;
+
+		onUpdate();
+
 		/**
 		 * Loss energy
 		 */
-		torque -= torque * torque * getLoad();
-		angularVelocity -= angularVelocity * angularVelocity * getLoad();
+		torque -= torque * torque * load;
+		angularVelocity -= angularVelocity * angularVelocity * load;
 
 		angle += angularVelocity / 20;
 
@@ -81,6 +98,11 @@ public class MechanicalNode extends EnergyNode
 		}
 	}
 
+	protected void onUpdate()
+	{
+
+	}
+
 	/**
 	 * Called when one revolution is made.
 	 */
@@ -115,9 +137,12 @@ public class MechanicalNode extends EnergyNode
 		return true;
 	}
 
+	/**
+	 * The energy percentage loss due to resistance in seconds.
+	 */
 	public double getLoad()
 	{
-		return 0.01;
+		return load;
 	}
 
 	/**
@@ -171,5 +196,27 @@ public class MechanicalNode extends EnergyNode
 	public double getEnergy()
 	{
 		return torque * angularVelocity;
+	}
+
+	@Override
+	public IGrid newGrid()
+	{
+		return new MechanicalNetwork(this);
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		torque = nbt.getDouble("torque");
+		angularVelocity = nbt.getDouble("angularVelocity");
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setDouble("torque", torque);
+		nbt.setDouble("angularVelocity", angularVelocity);
 	}
 }

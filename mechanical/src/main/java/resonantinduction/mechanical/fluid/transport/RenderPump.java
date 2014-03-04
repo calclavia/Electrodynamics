@@ -36,7 +36,7 @@ public class RenderPump extends TileEntitySpecialRenderer
 		List<String> notRendered = new ArrayList<String>();
 
 		GL11.glPushMatrix();
-		GL11.glRotated(Math.toDegrees(tile.angle), 0, 0, 1);
+		GL11.glRotated(Math.toDegrees((float) tile.getNode(null).angle), 0, 0, 1);
 
 		for (int i = 1; i <= 12; i++)
 		{

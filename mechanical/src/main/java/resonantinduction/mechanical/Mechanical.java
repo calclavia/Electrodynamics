@@ -6,7 +6,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -15,7 +14,6 @@ import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.energy.gear.ItemGear;
 import resonantinduction.mechanical.energy.gear.ItemGearShaft;
-import resonantinduction.mechanical.energy.network.PacketNetwork;
 import resonantinduction.mechanical.energy.turbine.BlockWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.BlockWindTurbine;
 import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
@@ -27,10 +25,8 @@ import resonantinduction.mechanical.fluid.transport.BlockPump;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
-import resonantinduction.mechanical.logistic.belt.BlockRejector;
 import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
-import resonantinduction.mechanical.logistic.belt.TileRejector;
 import resonantinduction.mechanical.logistic.belt.TileSorter;
 import resonantinduction.mechanical.process.crusher.BlockMechanicalPiston;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
@@ -102,8 +98,6 @@ public class Mechanical
 	public static Block blockGrinderWheel;
 	public static Block blockPurifier;
 	public static Block blockMechanicalPiston;
-
-	public static final PacketNetwork PACKET_NETWORK = new PacketNetwork(IMechanical.class, Reference.CHANNEL);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)

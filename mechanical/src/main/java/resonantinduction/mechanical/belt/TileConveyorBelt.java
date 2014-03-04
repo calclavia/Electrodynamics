@@ -16,7 +16,11 @@ import resonantinduction.api.mechanical.IMechanical;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
+import resonantinduction.mechanical.energy.network.MechanicalNode;
 import resonantinduction.mechanical.energy.network.TileMechanical;
+import resonantinduction.mechanical.energy.network.TileMechanical.PacketMechanicalNode;
+import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
@@ -34,6 +38,84 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 	public enum SlantType
 	{
 		NONE, UP, DOWN, TOP
+	}
+
+	public TileConveyorBelt()
+	{
+		mechanicalNode = new PacketMechanicalNode(this)
+		{
+			@Override
+			public void recache()
+			{
+				synchronized (connections)
+				{
+					connections.clear();
+
+					boolean didRefresh = false;
+
+					for (int i = 2; i < 6; i++)
+					{
+						ForgeDirection dir = ForgeDirection.getOrientation(i);
+						Vector3 pos = new Vector3(TileConveyorBelt.this).translate(dir);
+						TileEntity tile = pos.getTileEntity(TileConveyorBelt.this.worldObj);
+
+						if (dir == TileConveyorBelt.this.getDirection() || dir == TileConveyorBelt.this.getDirection().getOpposite())
+						{
+							if (dir == TileConveyorBelt.this.getDirection())
+							{
+								if (TileConveyorBelt.this.slantType == SlantType.DOWN)
+								{
+									pos.translate(new Vector3(0, -1, 0));
+								}
+								else if (TileConveyorBelt.this.slantType == SlantType.UP)
+								{
+									pos.translate(new Vector3(0, 1, 0));
+								}
+							}
+							else if (dir == TileConveyorBelt.this.getDirection().getOpposite())
+							{
+								if (TileConveyorBelt.this.slantType == SlantType.DOWN)
+								{
+									pos.translate(new Vector3(0, 1, 0));
+								}
+								else if (TileConveyorBelt.this.slantType == SlantType.UP)
+								{
+									pos.translate(new Vector3(0, -1, 0));
+								}
+							}
+
+							tile = pos.getTileEntity(worldObj);
+
+							if (tile instanceof TileConveyorBelt)
+							{
+								connections.put(((TileConveyorBelt) tile).getNode(dir.getOpposite()), dir);
+								didRefresh = true;
+							}
+						}
+						else if (tile instanceof IMechanicalNodeProvider)
+						{
+							MechanicalNode mechanical = ((IMechanicalNodeProvider) tile).getNode(dir.getOpposite());
+
+							if (mechanical != null)
+							{
+								connections.put(mechanical, dir);
+							}
+						}
+					}
+
+					if (!worldObj.isRemote)
+					{
+						markRefresh = true;
+					}
+				}
+			}
+
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{
+				return from != getDirection() || from != getDirection().getOpposite();
+			}
+		}.setLoad(0.5f);
 	}
 
 	/**
@@ -63,6 +145,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
 		Iterator<Entity> it = this.ignoreList.iterator();
+
 		while (it.hasNext())
 		{
 			if (!this.getAffectedEntities().contains(it.next()))
@@ -75,11 +158,10 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		{
 			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
-				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * getMoveVelocity(), true);
+				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
 			}
 
-			angle = getNetwork().getRotation(getMoveVelocity());
-			double beltPercentage = angle / (2 * Math.PI);
+			double beltPercentage = mechanicalNode.angle / (2 * Math.PI);
 
 			// Sync the animation. Slant belts are slower.
 			if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
@@ -132,7 +214,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		if (id == PACKET_SLANT)
 			this.slantType = SlantType.values()[data.readInt()];
 		else if (id == PACKET_REFRESH)
-			getNetwork().reconstruct();
+			mechanicalNode.reconstruct();
 	}
 
 	public SlantType getSlant()
@@ -148,7 +230,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		}
 
 		this.slantType = slantType;
-		getNetwork().reconstruct();
+		mechanicalNode.reconstruct();
 		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
@@ -200,88 +282,8 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		}
 	}
 
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
+	public double getMoveVelocity()
 	{
-		return from != getDirection() || from != getDirection().getOpposite();
-	}
-
-	@Override
-	public Object[] getConnections()
-	{
-		Object[] connections = new Object[6];
-		boolean didRefresh = false;
-
-		for (int i = 2; i < 6; i++)
-		{
-			ForgeDirection dir = ForgeDirection.getOrientation(i);
-			Vector3 pos = new Vector3(this).translate(dir);
-			TileEntity tile = pos.getTileEntity(this.worldObj);
-
-			if (dir == this.getDirection() || dir == this.getDirection().getOpposite())
-			{
-				if (dir == this.getDirection())
-				{
-					if (this.slantType == SlantType.DOWN)
-					{
-						pos.translate(new Vector3(0, -1, 0));
-					}
-					else if (this.slantType == SlantType.UP)
-					{
-						pos.translate(new Vector3(0, 1, 0));
-					}
-				}
-				else if (dir == this.getDirection().getOpposite())
-				{
-					if (this.slantType == SlantType.DOWN)
-					{
-						pos.translate(new Vector3(0, 1, 0));
-					}
-					else if (this.slantType == SlantType.UP)
-					{
-						pos.translate(new Vector3(0, -1, 0));
-					}
-				}
-
-				tile = pos.getTileEntity(this.worldObj);
-
-				if (tile instanceof IBelt)
-				{
-					connections[dir.ordinal()] = tile;
-					didRefresh = true;
-				}
-			}
-			else if (tile instanceof IMechanical)
-			{
-				IMechanical mechanical = ((IMechanical) tile).getInstance(dir.getOpposite());
-
-				if (mechanical != null)
-				{
-					connections[dir.ordinal()] = mechanical;
-				}
-			}
-		}
-
-		if (didRefresh)
-		{
-			if (!worldObj.isRemote)
-			{
-				markRefresh = true;
-			}
-		}
-
-		return connections;
-	}
-
-	@Override
-	public void invalidate()
-	{
-		getNetwork().split(this);
-		super.invalidate();
-	}
-
-	public float getMoveVelocity()
-	{
-		return Math.abs(angularVelocity);
+		return Math.abs(mechanicalNode.getAngularVelocity());
 	}
 }

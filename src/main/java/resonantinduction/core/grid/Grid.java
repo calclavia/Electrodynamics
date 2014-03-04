@@ -16,21 +16,18 @@ import universalelectricity.core.net.ConnectionPathfinder;
  * 
  * @param <N> - The node type.
  */
-public abstract class Grid<N extends INode> implements IGrid<N>, IUpdate
+public abstract class Grid<N> implements IGrid<N>
 {
 	/**
 	 * A set of connectors (e.g conductors).
 	 */
-	private final Set<N> nodes = Collections.newSetFromMap(new WeakHashMap<N, Boolean>());
-
+	protected final Set<N> nodes = Collections.newSetFromMap(new WeakHashMap<N, Boolean>());
 	private final Class<? extends N> nodeType;
 
 	public Grid(Class<? extends N> type)
 	{
 		nodeType = type;
 	}
-
-	public abstract N newInstance();
 
 	@Override
 	public void add(N node)
@@ -57,51 +54,27 @@ public abstract class Grid<N extends INode> implements IGrid<N>, IUpdate
 	}
 
 	/**
-	 * An grid update called only server side.
-	 */
-	@Override
-	public void update()
-	{
-		synchronized (nodes)
-		{
-			for (INode node : nodes)
-			{
-				node.update();
-			}
-		}
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return nodes.size() > 0;
-	}
-
-	@Override
-	public boolean continueUpdate()
-	{
-		return canUpdate();
-	}
-
-	/**
 	 * A simple reconstruct class to rebuild the grid.
 	 */
 	@Override
 	public void reconstruct()
 	{
-		Iterator<N> it = new HashSet<N>(getNodes()).iterator();
-
-		while (it.hasNext())
+		synchronized (nodes)
 		{
-			N node = it.next();
+			Iterator<N> it = nodes.iterator();
 
-			if (isValidNode(node))
+			while (it.hasNext())
 			{
-				reconstructNode(node);
-			}
-			else
-			{
-				it.remove();
+				N node = it.next();
+
+				if (isValidNode(node))
+				{
+					reconstructNode(node);
+				}
+				else
+				{
+					it.remove();
+				}
 			}
 		}
 	}

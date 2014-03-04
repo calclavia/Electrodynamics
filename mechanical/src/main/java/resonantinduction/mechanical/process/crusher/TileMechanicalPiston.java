@@ -15,6 +15,32 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TileMechanicalPiston extends TileMechanical
 {
+	public TileMechanicalPiston()
+	{
+		mechanicalNode = new PacketMechanicalNode(this)
+		{
+			@Override
+			protected void revolve()
+			{
+				if (!worldObj.isRemote)
+				{
+					Vector3 movePosition = new Vector3(TileMechanicalPiston.this).translate(getDirection());
+					Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
+
+					if (canMove(movePosition, moveNewPosition))
+						move(movePosition, moveNewPosition);
+				}
+			}
+
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{
+				return from != getDirection();
+			}
+
+		}.setLoad(0.5f);
+	}
+
 	@Override
 	public void updateEntity()
 	{
@@ -24,20 +50,7 @@ public class TileMechanicalPiston extends TileMechanical
 		Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
 
 		if (!canMove(movePosition, moveNewPosition))
-			angle = 0;
-	}
-
-	@Override
-	protected void revolve(boolean isAmplitude)
-	{
-		if (!worldObj.isRemote && isAmplitude)
-		{
-			Vector3 movePosition = new Vector3(this).translate(getDirection());
-			Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
-
-			if (canMove(movePosition, moveNewPosition))
-				move(movePosition, moveNewPosition);
-		}
+			mechanicalNode.angle = 0;
 	}
 
 	public boolean canMove(Vector3 from, Vector3 to)
@@ -160,11 +173,5 @@ public class TileMechanicalPiston extends TileMechanical
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean canConnect(ForgeDirection from, Object source)
-	{
-		return from != getDirection();
 	}
 }

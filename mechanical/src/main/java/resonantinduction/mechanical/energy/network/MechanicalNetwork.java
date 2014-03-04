@@ -1,14 +1,6 @@
 package resonantinduction.mechanical.energy.network;
 
-import java.lang.ref.WeakReference;
-import java.util.Iterator;
-
-import resonantinduction.core.grid.Grid;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.net.IUpdate;
-import universalelectricity.api.vector.Vector3;
-import universalelectricity.core.net.NetworkTickHandler;
+import resonantinduction.core.grid.NodeGrid;
 
 /**
  * A mechanical network for translate speed and force using mechanical rotations.
@@ -26,119 +18,11 @@ import universalelectricity.core.net.NetworkTickHandler;
  * 
  * @author Calclavia
  */
-public class MechanicalNetwork extends Grid<MechanicalNode>
+public class MechanicalNetwork extends NodeGrid<MechanicalNode>
 {
-	public MechanicalNetwork()
+	public MechanicalNetwork(MechanicalNode node)
 	{
 		super(MechanicalNode.class);
-	}
-
-	@Override
-	public void add(MechanicalNode node)
-	{
-		super.add(node);
-		NetworkTickHandler.addNetwork(this);
-	}
-
-	@Override
-	public void reconstruct()
-	{
-		connectionCache.clear();
-		super.reconstruct();
-	}
-
-	@Override
-	protected void reconstructConnector(IMechanical node)
-	{
-		node.setNetwork(this);
-
-		/**
-		 * Cache connections.
-		 */
-		Object[] conn = node.getConnections();
-
-		if (conn == null && node instanceof TileEntity)
-		{
-			/**
-			 * Default connection implementation
-			 */
-			conn = new Object[6];
-
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				TileEntity tile = new Vector3((TileEntity) node).translate(dir).getTileEntity(((TileEntity) node).worldObj);
-
-				if (tile instanceof IMechanical)
-				{
-					IMechanical mech = ((IMechanical) tile).getInstance(dir.getOpposite());
-
-					if (mech != null && node.canConnect(dir, mech) && mech.canConnect(dir.getOpposite(), node))
-					{
-						conn[dir.ordinal()] = mech;
-					}
-				}
-			}
-		}
-
-		WeakReference[] connections = new WeakReference[conn.length];
-
-		for (int i = 0; i < connections.length; i++)
-		{
-			if (conn[i] != null)
-			{
-				if (conn[i] instanceof IMechanical)
-				{
-					IMechanical connected = ((IMechanical) conn[i]);
-
-					if (connected.getNetwork() != this)
-					{
-						connected.getNetwork().getConnectors().clear();
-						connected.setNetwork(this);
-						addConnector(connected);
-						reconstructConnector(connected);
-					}
-				}
-
-				connections[i] = new WeakReference(conn[i]);
-			}
-		}
-
-		connectionCache.put(node, connections);
-	}
-
-	@Override
-	public Object[] getConnectionsFor(IMechanical connector)
-	{
-		Object[] conn = new Object[6];
-		WeakReference[] connections = connectionCache.get(connector);
-
-		if (connections != null)
-		{
-			for (int i = 0; i < connections.length; i++)
-				if (connections[i] != null)
-					conn[i] = connections[i].get();
-		}
-
-		return conn;
-	}
-
-	@Override
-	public float getRotation(float velocity)
-	{
-		long deltaTime = System.currentTimeMillis() - lastRotateTime;
-
-		if (deltaTime > 1)
-		{
-			rotation = (float) (((velocity) * (deltaTime / 1000d) + rotation) % (2 * Math.PI));
-			lastRotateTime = System.currentTimeMillis();
-		}
-
-		return rotation;
-	}
-
-	@Override
-	public IMechanicalNetwork newInstance()
-	{
-		return new MechanicalNetwork();
+		add(node);
 	}
 }
