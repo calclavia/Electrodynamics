@@ -43,15 +43,22 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 			@Override
 			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
 			{
-				return false;
+				return true;
+			}
+
+			@Override
+			public float getRatio(ForgeDirection dir, MechanicalNode with)
+			{
+				return getMultiBlock().isConstructed() ? multiBlockRadius - 0.5f : 0.5f;
 			}
 		};
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection dir)
+	public void initiate()
 	{
-		return ((TileMechanicalTurbine) getMultiBlock().get()).node;
+		node.reconstruct();
+		super.initiate();
 	}
 
 	@Override
@@ -59,6 +66,19 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 	{
 		node.deconstruct();
 		super.invalidate();
+	}
+
+	@Override
+	public void onProduce()
+	{
+		node.torque += (torque - node.torque) / 10;
+		node.angularVelocity += (angularVelocity - node.angularVelocity) / 10;
+	}
+
+	@Override
+	public MechanicalNode getNode(ForgeDirection dir)
+	{
+		return ((TileMechanicalTurbine) getMultiBlock().get()).node;
 	}
 
 	@Override

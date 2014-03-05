@@ -127,7 +127,7 @@ public class MechanicalNode extends EnergyNode
 					/**
 					 * Set all current rotations
 					 */
-					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+					//adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
 				}
 			}
 		}

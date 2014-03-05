@@ -73,7 +73,9 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISim
 
 			if (tier == 2)
 			{
-				MODEL.renderOnly("LargeMetalHub", "LargeMetalBlade");
+				GL11.glTranslatef(0, -0.11f, 0);
+				MODEL.renderOnly("LargeMetalBlade");
+				MODEL.renderOnly("LargeMetalHub");
 			}
 			else
 			{
