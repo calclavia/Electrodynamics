@@ -66,8 +66,6 @@ public class MechanicalNode extends EnergyNode
 	@Override
 	public void update(float deltaTime)
 	{
-		power = getEnergy() / deltaTime;
-
 		prevAngularVelocity = angularVelocity;
 
 		onUpdate();
@@ -80,16 +78,28 @@ public class MechanicalNode extends EnergyNode
 			angle = angle % (Math.PI * 2);
 		}
 
-		// TODO: Remove upon split.
 		if (world() != null && !world().isRemote)
 		{
 			double acceleration = this.acceleration * deltaTime;
 
 			/**
-			 * Loss energy
+			 * Energy loss
 			 */
-			torque -= getTorque() * getTorqueLoad() * deltaTime;
-			angularVelocity -= getAngularVelocity() * getAngularVelocityLoad() * deltaTime;
+			double torqueLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
+
+			if (torque > 0)
+				torque -= torqueLoss;
+			else
+				torque += torqueLoss;
+
+			double velocityLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getAngularVelocity() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
+
+			if (angularVelocity > 0)
+				angularVelocity -= velocityLoss;
+			else
+				angularVelocity += velocityLoss;
+
+			power = getEnergy() / deltaTime;
 
 			synchronized (connections)
 			{

@@ -78,11 +78,11 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 				switch (tier)
 				{
 					default:
-						return 0.4;
+						return 0.8;
 					case 1:
-						return 0.3;
+						return 0.6;
 					case 2:
-						return 0.2;
+						return 0.4;
 				}
 			}
 
@@ -93,11 +93,11 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 				switch (tier)
 				{
 					default:
-						return 0.3;
+						return 0.6;
 					case 1:
-						return 0.4;
+						return 0.8;
 					case 2:
-						return 0.2;
+						return 0.4;
 				}
 			}
 
@@ -344,7 +344,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 		{
 			if (manualCrankTime > 0)
 			{
-				node.apply(isClockwiseCrank ? 4 : -4, isClockwiseCrank ? 0.03f : -0.03f);
+				node.apply(isClockwiseCrank ? 2 : -2, isClockwiseCrank ? 0.02f : -0.02f);
 				manualCrankTime--;
 			}
 
@@ -363,9 +363,6 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
-		if (!world().isRemote)
-			System.out.println(node.getGrid());
-		
 		if (itemStack != null && itemStack.getItem() instanceof ItemHandCrank)
 		{
 			if (!world().isRemote && ControlKeyModifer.isControlDown(player))

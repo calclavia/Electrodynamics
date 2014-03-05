@@ -61,11 +61,11 @@ public class PartGearShaft extends PartMechanical
 				switch (tier)
 				{
 					default:
-						return 0.04;
+						return 0.08;
 					case 1:
-						return 0.03;
+						return 0.06;
 					case 2:
-						return 0.02;
+						return 0.04;
 				}
 			}
 
@@ -76,11 +76,11 @@ public class PartGearShaft extends PartMechanical
 				switch (tier)
 				{
 					default:
-						return 0.03;
+						return 0.06;
 					case 1:
-						return 0.04;
+						return 0.08;
 					case 2:
-						return 0.02;
+						return 0.04;
 				}
 			}
 
