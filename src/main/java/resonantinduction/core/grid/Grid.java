@@ -16,7 +16,7 @@ import universalelectricity.core.net.ConnectionPathfinder;
  * 
  * @param <N> - The node type.
  */
-public abstract class Grid<N> implements IGrid<N>
+public abstract class Grid<N>
 {
 	/**
 	 * A set of connectors (e.g conductors).
@@ -29,7 +29,6 @@ public abstract class Grid<N> implements IGrid<N>
 		nodeType = type;
 	}
 
-	@Override
 	public void add(N node)
 	{
 		synchronized (nodes)
@@ -38,7 +37,6 @@ public abstract class Grid<N> implements IGrid<N>
 		}
 	}
 
-	@Override
 	public void remove(N node)
 	{
 		synchronized (nodes)
@@ -47,21 +45,20 @@ public abstract class Grid<N> implements IGrid<N>
 		}
 	}
 
-	@Override
 	public Set<N> getNodes()
 	{
 		return nodes;
 	}
 
 	/**
-	 * A simple reconstruct class to rebuild the grid.
+	 * A simple reconstruct class to rebuild the grid. The set "nodes" is copied due to the fact
+	 * that this method will allow the modification of nodes while looping.
 	 */
-	@Override
 	public void reconstruct()
 	{
 		synchronized (nodes)
 		{
-			Iterator<N> it = nodes.iterator();
+			Iterator<N> it = new HashSet<N>(nodes).iterator();
 
 			while (it.hasNext())
 			{
@@ -84,6 +81,19 @@ public abstract class Grid<N> implements IGrid<N>
 		return nodeType.isAssignableFrom(node.getClass());
 	}
 
+	protected void reconstructNode(N node)
+	{
+
+	}
+
+	public void deconstruct()
+	{
+		synchronized (nodes)
+		{
+			nodes.clear();
+		}
+	}
+
 	/**
 	 * Gets the first connector in the set.
 	 * 
@@ -91,22 +101,19 @@ public abstract class Grid<N> implements IGrid<N>
 	 */
 	public N getFirstNode()
 	{
-		for (N node : getNodes())
+		synchronized (nodes)
 		{
-			return node;
+			for (N node : nodes)
+			{
+				return node;
+			}
 		}
-
 		return null;
-	}
-
-	protected void reconstructNode(N node)
-	{
-
 	}
 
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + "[" + hashCode() + ", Connectors: " + nodes.size() + "]";
+		return getClass().getSimpleName() + "[" + hashCode() + ", Nodes: " + nodes.size() + "]";
 	}
 }

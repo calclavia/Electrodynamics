@@ -48,18 +48,6 @@ public class BlockConveyorBelt extends BlockTile
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int par5)
-	{
-		TileEntity t = world.getBlockTileEntity(x, y, z);
-
-		if (t != null && t instanceof TileConveyorBelt)
-		{
-			TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-			tileEntity.mechanicalNode.reconstruct();
-		}
-	}
-
-	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		if (world.getBlockTileEntity(x, y, z) instanceof TileConveyorBelt)

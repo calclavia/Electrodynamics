@@ -80,21 +80,9 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public void onNeighborChanged()
-	{
-		node.reconstruct();
-	}
-
-	@Override
-	public void onPartChanged(TMultiPart part)
-	{
-		node.reconstruct();
-	}
-
-	@Override
 	public void onWorldSeparate()
 	{
-		node.split();
+		node.deconstruct();
 	}
 
 	/** Packet Code. */

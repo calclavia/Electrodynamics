@@ -1,13 +1,17 @@
 package resonantinduction.core.grid;
 
-import resonantinduction.mechanical.energy.network.PartMechanical;
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.AbstractMap;
+import java.util.WeakHashMap;
 
-public abstract class Node<G extends IGrid> implements INode<G>
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.ForgeDirection;
+
+public abstract class Node<G extends Grid, N>
 {
+	protected final AbstractMap<N, ForgeDirection> connections = new WeakHashMap<N, ForgeDirection>();
+
 	public G grid = null;
 
-	@Override
 	public final G getGrid()
 	{
 		if (grid == null)
@@ -18,37 +22,90 @@ public abstract class Node<G extends IGrid> implements INode<G>
 
 	protected abstract G newGrid();
 
-	@Override
 	public final void setGrid(G grid)
 	{
 		this.grid = grid;
 	}
 
-	@Override
+	public void update(float deltaTime)
+	{
+
+	}
+
+	/**
+	 * This constructs the node. It should be called whenever the connections of the node are
+	 * updated OR when the node is first initiated and can access its connections.
+	 */
 	public void reconstruct()
 	{
-		recache();
-		getGrid().reconstruct();
+		synchronized (connections)
+		{
+			recache();
+			getGrid().add(this);
+			getGrid().reconstruct();
+		}
 	}
 
-	// TODO: Fix this.
-	public void split()
+	/**
+	 * This destroys the node, removing it from the grid and also destroying all references to it.
+	 */
+	public void deconstruct()
 	{
+		synchronized (connections)
+		{
+			/**
+			 * Remove self from all connections.
+			 */
+			for (N connection : connections.keySet())
+			{
+				if (getGrid().isValidNode(connection))
+				{
+					((Node) connection).getConnections().remove(this);
+				}
+			}
 
+			getGrid().remove(this);
+			getGrid().deconstruct();
+		}
 	}
 
+	/**
+	 * Called for a node to recache all its connections.
+	 */
 	public void recache()
 	{
 
 	}
 
+	/**
+	 * Returns all the connections in this node.
+	 * 
+	 * @return
+	 */
+	public AbstractMap<N, ForgeDirection> getConnections()
+	{
+		return connections;
+	}
+
+	/**
+	 * Must be called to load the node's data.
+	 */
 	public void load(NBTTagCompound nbt)
 	{
 
 	}
 
+	/**
+	 * Must be called to save the node's data.
+	 */
 	public void save(NBTTagCompound nbt)
 	{
 
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + "[" + hashCode() + ", Connections: " + connections.size() + ", Grid:" + getGrid() + "]";
 	}
 }

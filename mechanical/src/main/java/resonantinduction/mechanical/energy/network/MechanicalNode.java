@@ -1,22 +1,35 @@
 package resonantinduction.mechanical.energy.network;
 
-import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.WeakHashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.grid.IGrid;
+import resonantinduction.core.grid.Grid;
+import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
+/**
+ * A mechanical node for mechanical energy.
+ * 
+ * Useful Formula:
+ * 
+ * Power is the work per unit time.
+ * Power (W) = Torque (Strength of the rotation, Newton Meters) x Speed (Angular Velocity, RADIAN
+ * PER SECOND).
+ * *OR*
+ * Power = Torque / Time
+ * 
+ * Torque = r (Radius) * F (Force) * sin0 (Direction/Angle of the force applied. 90 degrees if
+ * optimal.)
+ * 
+ * @author Calclavia
+ */
 public class MechanicalNode extends EnergyNode
 {
-	protected final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
-
 	public final IMechanicalNodeProvider parent;
 
 	public double torque = 0;
@@ -54,7 +67,7 @@ public class MechanicalNode extends EnergyNode
 	public void update(float deltaTime)
 	{
 		power = getEnergy() / deltaTime;
-		
+
 		prevAngularVelocity = angularVelocity;
 
 		onUpdate();
@@ -71,7 +84,7 @@ public class MechanicalNode extends EnergyNode
 		if (world() != null && !world().isRemote)
 		{
 			double acceleration = this.acceleration * deltaTime;
-System.out.println("UPDATED");
+
 			/**
 			 * Loss energy
 			 */
@@ -190,12 +203,6 @@ System.out.println("UPDATED");
 		}
 	}
 
-	@Override
-	public AbstractMap<MechanicalNode, ForgeDirection> getConnections()
-	{
-		return connections;
-	}
-
 	public World world()
 	{
 		return parent instanceof TMultiPart ? ((TMultiPart) parent).world() : parent instanceof TileEntity ? ((TileEntity) parent).getWorldObj() : null;
@@ -224,9 +231,9 @@ System.out.println("UPDATED");
 	}
 
 	@Override
-	public IGrid newGrid()
+	public Grid newGrid()
 	{
-		return new MechanicalNetwork(this);
+		return new TickingGrid<MechanicalNode>(this);
 	}
 
 	@Override

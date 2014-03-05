@@ -57,7 +57,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 	@Override
 	public void invalidate()
 	{
-		node.split();
+		node.deconstruct();
 		super.invalidate();
 	}
 
