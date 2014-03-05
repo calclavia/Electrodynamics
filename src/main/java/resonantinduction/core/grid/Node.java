@@ -33,6 +33,7 @@ public abstract class Node<G extends Grid, N>
 	}
 
 	/**
+	 * TODO: Try inject tile validate and invalidate events so this does not have to be called.
 	 * This constructs the node. It should be called whenever the connections of the node are
 	 * updated OR when the node is first initiated and can access its connections.
 	 */

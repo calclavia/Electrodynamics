@@ -13,24 +13,28 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 		NetworkTickHandler.addNetwork(this);
 	}
 
-	public TickingGrid(N node)
-	{
-		this(node, node.getClass());
-	}
-
 	/**
 	 * An grid update called only server side.
+	 * TODO: Make actual ticker an independent thread.
 	 */
 	@Override
 	public void update()
 	{
-		synchronized (nodes)
+		new Thread()
 		{
-			for (Node node : nodes)
+			@Override
+			public void run()
 			{
-				node.update(1 / 20f);
+				synchronized (nodes)
+				{
+					for (Node node : nodes)
+					{
+						node.update(1 / 20f);
+					}
+				}
 			}
-		}
+		}.start();
+
 	}
 
 	@Override

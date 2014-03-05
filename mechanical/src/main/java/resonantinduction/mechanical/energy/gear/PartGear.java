@@ -206,32 +206,31 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
 				if (with instanceof MechanicalNode)
 				{
-					IMechanicalNodeProvider source = ((MechanicalNode) with).parent;
+					IMechanicalNodeProvider parent = ((MechanicalNode) with).parent;
 
 					/**
 					 * Check for flat connections (gear face on gear face) to make sure it's
-					 * actually on
-					 * this gear block.
+					 * actually on this gear block.
 					 */
 					if (from == placementSide.getOpposite())
 					{
-						if (source instanceof PartGear || source instanceof PartGearShaft)
+						if (parent instanceof PartGear || parent instanceof PartGearShaft)
 						{
-							if (source instanceof PartGearShaft)
+							if (parent instanceof PartGearShaft)
 							{
-								PartGearShaft shaft = (PartGearShaft) source;
+								PartGearShaft shaft = (PartGearShaft) parent;
 								return shaft.tile().partMap(from.getOpposite().ordinal()) == PartGear.this && Math.abs(shaft.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(shaft.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(shaft.placementSide.offsetZ) == Math.abs(placementSide.offsetZ);
 							}
-							else if (source instanceof PartGear)
+							else if (parent instanceof PartGear)
 							{
-								if (((PartGear) source).tile() == tile() && !getMultiBlock().isConstructed())
+								if (((PartGear) parent).tile() == tile() && !getMultiBlock().isConstructed())
 								{
 									return true;
 								}
 
-								if (((PartGear) source).placementSide != placementSide)
+								if (((PartGear) parent).placementSide != placementSide)
 								{
-									TMultiPart part = tile().partMap(((PartGear) source).placementSide.ordinal());
+									TMultiPart part = tile().partMap(((PartGear) parent).placementSide.ordinal());
 
 									if (part instanceof PartGear)
 									{
@@ -253,12 +252,12 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 										/** Small gear attempting to connect to large gear. */
 										if (getMultiBlock().isConstructed())
 										{
-											TMultiPart checkPart = ((PartGear) source).tile().partMap(placementSide.ordinal());
+											TMultiPart checkPart = ((PartGear) parent).tile().partMap(placementSide.ordinal());
 
 											if (checkPart instanceof PartGear)
 											{
 												ForgeDirection requiredDirection = ((PartGear) checkPart).getPosition().subtract(position()).toForgeDirection();
-												return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) source).placementSide == requiredDirection;
+												return ((PartGear) checkPart).isCenterMultiBlock() && ((PartGear) parent).placementSide == requiredDirection;
 											}
 										}
 									}
@@ -272,7 +271,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 						if (sourceTile instanceof IMechanicalNodeProvider)
 						{
 							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from);
-							return sourceInstance == source;
+							return sourceInstance == with;
 						}
 					}
 					else if (from == placementSide)
@@ -283,7 +282,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 						if (sourceTile instanceof IMechanicalNodeProvider)
 						{
 							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from.getOpposite());
-							return sourceInstance == source;
+							return sourceInstance == with;
 						}
 					}
 					else

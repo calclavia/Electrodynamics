@@ -64,12 +64,9 @@ public class TraitMechanical extends TileMultipart implements IMechanicalNodePro
 			part = partMap(PartMap.CENTER.ordinal());
 		}
 
-		if (part != null)
+		if (part instanceof IMechanicalNodeProvider)
 		{
-			if (part instanceof IMechanicalNodeProvider)
-			{
-				return ((IMechanicalNodeProvider) part).getNode(from);
-			}
+			return ((IMechanicalNodeProvider) part).getNode(from);
 		}
 
 		return null;

@@ -44,8 +44,22 @@ public class TileGenerator extends TileElectrical implements IRotatable, IMechan
 	}
 
 	@Override
+	public void initiate()
+	{
+		node.reconstruct();
+	}
+
+	@Override
+	public void invalidate()
+	{
+		node.deconstruct();
+	}
+
+	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
+
 		if (!isInversed)
 		{
 			receiveMechanical();
@@ -61,6 +75,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, IMechan
 	public void receiveMechanical()
 	{
 		double power = node.getEnergy();
+		// System.out.println(power);
 		long receive = energy.receiveEnergy((long) power, true);
 
 		if (receive > 0)

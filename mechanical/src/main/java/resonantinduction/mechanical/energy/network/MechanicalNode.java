@@ -85,7 +85,7 @@ public class MechanicalNode extends EnergyNode
 			/**
 			 * Energy loss
 			 */
-			double torqueLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
+			double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
 
 			if (torque > 0)
 				torque -= torqueLoss;
@@ -231,7 +231,7 @@ public class MechanicalNode extends EnergyNode
 	@Override
 	public double getEnergy()
 	{
-		return torque * angularVelocity;
+		return getTorque() * getAngularVelocity();
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class MechanicalNode extends EnergyNode
 	@Override
 	public Grid newGrid()
 	{
-		return new TickingGrid<MechanicalNode>(this);
+		return new TickingGrid<MechanicalNode>(this, MechanicalNode.class);
 	}
 
 	@Override
