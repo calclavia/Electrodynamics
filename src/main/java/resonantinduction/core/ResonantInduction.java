@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonantinduction.core.grid.ThreadedGridTicker;
 import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
@@ -35,6 +36,8 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -138,5 +141,19 @@ public class ResonantInduction
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
+	}
+
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event)
+	{
+		if (!ThreadedGridTicker.INSTANCE.isAlive())
+			ThreadedGridTicker.INSTANCE.start();
+		ThreadedGridTicker.INSTANCE.pause = false;
+	}
+
+	@EventHandler
+	public void onServerStopping(FMLServerStoppingEvent evt)
+	{
+		ThreadedGridTicker.INSTANCE.pause = true;
 	}
 }

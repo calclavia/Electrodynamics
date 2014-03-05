@@ -14,12 +14,6 @@ import calclavia.lib.prefab.ProxyBase;
  */
 public class CommonProxy extends ProxyBase
 {
-	@Override
-	public void postInit()
-	{
-		ThreadedGridTicker.INSTANCE.start();
-	}
-
 	public boolean isPaused()
 	{
 		return false;

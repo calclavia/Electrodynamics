@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.Grid;
 import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
@@ -68,7 +69,8 @@ public class MechanicalNode extends EnergyNode
 	{
 		prevAngularVelocity = angularVelocity;
 
-		angle += angularVelocity * deltaTime;
+		if (!ResonantInduction.proxy.isPaused())
+			angle += angularVelocity * deltaTime;
 
 		if (angle % (Math.PI * 2) != angle)
 		{
@@ -127,7 +129,7 @@ public class MechanicalNode extends EnergyNode
 					/**
 					 * Set all current rotations
 					 */
-					//adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
 				}
 			}
 		}

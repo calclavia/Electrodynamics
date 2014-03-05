@@ -25,7 +25,9 @@ public class ThreadedGridTicker extends Thread
 	/** For queuing Forge events to be invoked the next tick. */
 	private final Queue<Event> queuedEvents = new ConcurrentLinkedQueue<Event>();
 
-	private ThreadedGridTicker()
+	public boolean pause = false;
+
+	public ThreadedGridTicker()
 	{
 		setName("Universal Electricity");
 		setPriority(MIN_PRIORITY);
@@ -56,49 +58,52 @@ public class ThreadedGridTicker extends Thread
 
 			while (true)
 			{
-				long current = System.currentTimeMillis();
-				long delta = current - last;
-
-				/** Tick all updaters. */
-				synchronized (updaters)
+				if (!pause)
 				{
-					Set<IUpdate> removeUpdaters = Collections.newSetFromMap(new WeakHashMap<IUpdate, Boolean>());
+					long current = System.currentTimeMillis();
+					long delta = current - last;
 
-					Iterator<IUpdate> updaterIt = new HashSet<IUpdate>(updaters).iterator();
-
-					try
+					/** Tick all updaters. */
+					synchronized (updaters)
 					{
-						while (updaterIt.hasNext())
+						Set<IUpdate> removeUpdaters = Collections.newSetFromMap(new WeakHashMap<IUpdate, Boolean>());
+
+						Iterator<IUpdate> updaterIt = new HashSet<IUpdate>(updaters).iterator();
+
+						try
 						{
-							IUpdate updater = updaterIt.next();
-
-							if (updater.canUpdate())
+							while (updaterIt.hasNext())
 							{
-								updater.update();
+								IUpdate updater = updaterIt.next();
+
+								if (updater.canUpdate())
+								{
+									updater.update();
+								}
+
+								if (!updater.continueUpdate())
+								{
+									removeUpdaters.add(updater);
+								}
 							}
 
-							if (!updater.continueUpdate())
-							{
-								removeUpdaters.add(updater);
-							}
+							updaters.removeAll(removeUpdaters);
 						}
-
-						updaters.removeAll(removeUpdaters);
+						catch (Exception e)
+						{
+							System.out.println("Universal Electricity Threaded Ticker: Failed while tcking updater. This is a bug! Clearing all tickers for self repair.");
+							updaters.clear();
+							e.printStackTrace();
+						}
 					}
-					catch (Exception e)
-					{
-						System.out.println("Universal Electricity Threaded Ticker: Failed while tcking updater. This is a bug! Clearing all tickers for self repair.");
-						updaters.clear();
-						e.printStackTrace();
-					}
-				}
 
-				/** Perform all queued events */
-				synchronized (queuedEvents)
-				{
-					while (!queuedEvents.isEmpty())
+					/** Perform all queued events */
+					synchronized (queuedEvents)
 					{
-						MinecraftForge.EVENT_BUS.post(queuedEvents.poll());
+						while (!queuedEvents.isEmpty())
+						{
+							MinecraftForge.EVENT_BUS.post(queuedEvents.poll());
+						}
 					}
 				}
 
