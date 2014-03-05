@@ -104,7 +104,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 				readDesc(packet);
 				break;
 			case 1:
-				node.angularVelocity = packet.readFloat();
+				node.angularVelocity = packet.readDouble();
 				break;
 		}
 	}

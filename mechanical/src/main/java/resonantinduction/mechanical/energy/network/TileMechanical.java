@@ -79,7 +79,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
 		if (id == PACKET_VELOCITY)
-			mechanicalNode.angularVelocity = data.readFloat();
+			mechanicalNode.angularVelocity = data.readDouble();
 	}
 
 	@Override
