@@ -10,7 +10,7 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	{
 		super(type);
 		add(node);
-		NetworkTickHandler.addNetwork(this);
+		ThreadedGridTicker.addNetwork(this);
 	}
 
 	/**
@@ -20,21 +20,13 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	@Override
 	public void update()
 	{
-		new Thread()
+		synchronized (nodes)
 		{
-			@Override
-			public void run()
+			for (Node node : nodes)
 			{
-				synchronized (nodes)
-				{
-					for (Node node : nodes)
-					{
-						node.update(1 / 20f);
-					}
-				}
+				node.update(1 / 20f);
 			}
-		}.start();
-
+		}
 	}
 
 	@Override

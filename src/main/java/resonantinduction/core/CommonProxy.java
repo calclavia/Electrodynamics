@@ -3,6 +3,7 @@
  */
 package resonantinduction.core;
 
+import resonantinduction.core.grid.ThreadedGridTicker;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.ProxyBase;
@@ -13,6 +14,12 @@ import calclavia.lib.prefab.ProxyBase;
  */
 public class CommonProxy extends ProxyBase
 {
+	@Override
+	public void postInit()
+	{
+		ThreadedGridTicker.INSTANCE.start();
+	}
+
 	public boolean isPaused()
 	{
 		return false;

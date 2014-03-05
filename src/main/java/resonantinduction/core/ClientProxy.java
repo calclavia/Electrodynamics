@@ -25,11 +25,6 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void postInit()
-	{
-	}
-
-	@Override
 	public boolean isPaused()
 	{
 		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())

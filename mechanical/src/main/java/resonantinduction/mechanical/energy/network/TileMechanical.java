@@ -28,7 +28,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 		@Override
 		protected void onUpdate()
 		{
-			if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
+			if (Math.abs(prevAngularVelocity - angularVelocity) > 0.001 || (prevAngularVelocity != angularVelocity && (prevAngularVelocity == 0 || angularVelocity == 0)))
 			{
 				prevAngularVelocity = angularVelocity;
 				markPacketUpdate = true;

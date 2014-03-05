@@ -53,7 +53,7 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 			{
 				return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
 			}
-		};
+		}.setLoad(3);
 	}
 
 	@Override

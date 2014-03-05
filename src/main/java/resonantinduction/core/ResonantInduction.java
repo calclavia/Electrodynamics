@@ -128,6 +128,7 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.fine("Languages Loaded:" + LanguageUtility.loadLanguages(Reference.LANGUAGE_DIRECTORY, Reference.LANGUAGES));
 		// Set Mod Metadata
 		Settings.setModMetadata(metadata, ID, NAME);
+		proxy.init();
 	}
 
 	@EventHandler
@@ -136,5 +137,6 @@ public class ResonantInduction
 		Settings.save();
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
+		proxy.postInit();
 	}
 }

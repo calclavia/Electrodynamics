@@ -68,8 +68,6 @@ public class MechanicalNode extends EnergyNode
 	{
 		prevAngularVelocity = angularVelocity;
 
-		onUpdate();
-
 		angle += angularVelocity / 20;
 
 		if (angle % (Math.PI * 2) != angle)
@@ -117,7 +115,7 @@ public class MechanicalNode extends EnergyNode
 					 */
 					float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
 					boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
-
+System.out.println(ratio);
 					int inversion = inverseRotation ? -1 : 1;
 
 					if (Math.abs(torque + inversion * (adjacentMech.getTorque() / ratio * acceleration)) < Math.abs(adjacentMech.getTorque() / ratio))
@@ -133,6 +131,8 @@ public class MechanicalNode extends EnergyNode
 				}
 			}
 		}
+		
+		onUpdate();
 	}
 
 	protected void onUpdate()
