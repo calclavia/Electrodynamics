@@ -1,5 +1,6 @@
 package resonantinduction.core.fluid;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -8,9 +9,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.module.TileBase;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileAdvanced;
 import calclavia.lib.utility.FluidUtility;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -20,8 +21,13 @@ import com.google.common.io.ByteArrayDataInput;
  * 
  * @author DarkGuardsman
  */
-public abstract class TileFluidNode extends TileAdvanced implements IPacketReceiverWithID
+public abstract class TileFluidNode extends TileBase implements IPacketReceiverWithID
 {
+	public TileFluidNode(Material material)
+	{
+		super(material);
+	}
+
 	protected int pressure;
 
 	protected FluidTank tank;
@@ -79,6 +85,7 @@ public abstract class TileFluidNode extends TileAdvanced implements IPacketRecei
 				{
 					tank = new FluidTank(data.readInt()).readFromNBT(PacketHandler.readNBTTagCompound(data));
 					pressure = data.readInt();
+					updateLight();
 					return true;
 				}
 			}

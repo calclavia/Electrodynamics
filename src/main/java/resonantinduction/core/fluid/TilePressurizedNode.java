@@ -1,27 +1,14 @@
 package resonantinduction.core.fluid;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileAdvanced;
-import calclavia.lib.utility.FluidUtility;
-import calclavia.lib.utility.WorldUtility;
-
-import com.google.common.io.ByteArrayDataInput;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A prefab class for tiles that use the fluid network.
@@ -35,8 +22,9 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	/** Network used to link all parts together */
 	protected PressureNetwork network;
 
-	public TilePressurizedNode()
+	public TilePressurizedNode(Material material)
 	{
+		super(material);
 		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
 	}
 

@@ -23,7 +23,6 @@ import resonantinduction.archaic.fluid.grate.BlockGrate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.archaic.fluid.gutter.BlockGutter;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
-import resonantinduction.archaic.fluid.tank.BlockTank;
 import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.archaic.process.BlockCastingMold;
 import resonantinduction.archaic.process.BlockMillstone;
@@ -35,7 +34,6 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.resource.ItemHandCrank;
-import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
@@ -114,7 +112,7 @@ public class Archaic
 		blockGutter = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
-		blockTank = contentRegistry.createBlock(BlockTank.class, ItemBlockFluidContainer.class, TileTank.class);
+		blockTank = contentRegistry.newBlock(TileTank.class);
 
 		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
 		itemImprint = contentRegistry.createItem(ItemImprint.class);

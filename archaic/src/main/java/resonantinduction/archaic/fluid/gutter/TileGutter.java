@@ -1,5 +1,6 @@
 package resonantinduction.archaic.fluid.gutter;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -19,6 +20,11 @@ import calclavia.lib.utility.WorldUtility;
  */
 public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 {
+	public TileGutter()
+	{
+		super(Material.wood);
+	}
+
 	@Override
 	public void refresh()
 	{

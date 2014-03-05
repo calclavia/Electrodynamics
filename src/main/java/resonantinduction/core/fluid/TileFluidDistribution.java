@@ -2,6 +2,7 @@ package resonantinduction.core.fluid;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -34,6 +35,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public abstract class TileFluidDistribution extends TileFluidNode implements IFluidDistribution
 {
+	public TileFluidDistribution(Material material)
+	{
+		super(material);
+	}
+
 	protected Object[] connectedBlocks = new Object[6];
 
 	/** Network used to link all parts together */
@@ -43,6 +49,13 @@ public abstract class TileFluidDistribution extends TileFluidNode implements IFl
 	public void initiate()
 	{
 		super.initiate();
+		refresh();
+		getNetwork().reconstruct();
+	}
+
+	@Override
+	protected void onNeighborChanged()
+	{
 		refresh();
 		getNetwork().reconstruct();
 	}
