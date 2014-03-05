@@ -57,6 +57,7 @@ public class NodeGrid<N extends INode> extends Grid<N> implements IUpdate
 				{
 					connectedNode.getGrid().getNodes().clear();
 					connectedNode.setGrid(this);
+					add((N) connectedNode);
 					reconstructNode((N) connectedNode);
 				}
 			}

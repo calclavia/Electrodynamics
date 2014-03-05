@@ -53,9 +53,8 @@ public class MechanicalNode extends EnergyNode
 	@Override
 	public void update(float deltaTime)
 	{
-		float acceleration = this.acceleration * deltaTime;
 		power = getEnergy() / deltaTime;
-
+		
 		prevAngularVelocity = angularVelocity;
 
 		onUpdate();
@@ -71,6 +70,8 @@ public class MechanicalNode extends EnergyNode
 		// TODO: Remove upon split.
 		if (world() != null && !world().isRemote)
 		{
+			double acceleration = this.acceleration * deltaTime;
+System.out.println("UPDATED");
 			/**
 			 * Loss energy
 			 */

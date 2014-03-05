@@ -31,13 +31,13 @@ public abstract class Node<G extends IGrid> implements INode<G>
 		getGrid().reconstruct();
 	}
 
-	public void recache()
+	// TODO: Fix this.
+	public void split()
 	{
 
 	}
 
-	// TODO: Fix this.
-	public void split()
+	public void recache()
 	{
 
 	}
