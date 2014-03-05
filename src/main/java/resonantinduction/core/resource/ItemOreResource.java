@@ -161,34 +161,6 @@ public class ItemOreResource extends Item
 
 			if (outputs.length > 0)
 			{
-				int blockId = world.getBlockId(x, y, z);
-				int metadata = world.getBlockMetadata(x, y, z);
-				Block block = Block.blocksList[blockId];
-
-				if (block == Block.cauldron)
-				{
-					if (metadata > 0)
-					{
-						if (world.rand.nextFloat() > 0.9)
-						{
-							for (RecipeResource res : outputs)
-								InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
-
-							itemStack.stackSize--;
-
-							if (itemStack.stackSize <= 0)
-								itemStack = null;
-
-							player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack);
-						}
-
-						world.setBlockMetadataWithNotify(x, y, z, metadata - 1, 3);
-						world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1);
-					}
-
-					return true;
-				}
-
 				TileEntity tile = world.getBlockTileEntity(x, y, z);
 
 				if (tile instanceof TileGutter)
@@ -198,8 +170,9 @@ public class ItemOreResource extends Item
 
 					if (drain != null && drain.amount > 0 && world.rand.nextFloat() > 0.9)
 					{
-						for (RecipeResource res : outputs)
-							InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
+						if (world.rand.nextFloat() > 0.1)
+							for (RecipeResource res : outputs)
+								InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
 
 						itemStack.stackSize--;
 
