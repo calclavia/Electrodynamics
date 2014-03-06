@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * 
  * @author Calclavia
  */
-public class ThreadedGridTicker extends Thread
+public class UpdateTicker extends Thread
 {
-	public static final ThreadedGridTicker INSTANCE = new ThreadedGridTicker();
+	public static final UpdateTicker INSTANCE = new UpdateTicker();
 
 	/** For updaters to be ticked. */
 	private final Set<IUpdate> updaters = Collections.newSetFromMap(new WeakHashMap<IUpdate, Boolean>());
@@ -27,7 +27,7 @@ public class ThreadedGridTicker extends Thread
 
 	public boolean pause = false;
 
-	public ThreadedGridTicker()
+	public UpdateTicker()
 	{
 		setName("Universal Electricity");
 		setPriority(MIN_PRIORITY);
@@ -105,6 +105,8 @@ public class ThreadedGridTicker extends Thread
 							MinecraftForge.EVENT_BUS.post(queuedEvents.poll());
 						}
 					}
+
+					last = current;
 				}
 
 				Thread.sleep(50L);

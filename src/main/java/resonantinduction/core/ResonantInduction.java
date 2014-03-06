@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.core.grid.ThreadedGridTicker;
+import resonantinduction.core.grid.UpdateTicker;
 import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
@@ -146,14 +146,14 @@ public class ResonantInduction
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event)
 	{
-		if (!ThreadedGridTicker.INSTANCE.isAlive())
-			ThreadedGridTicker.INSTANCE.start();
-		ThreadedGridTicker.INSTANCE.pause = false;
+		if (!UpdateTicker.INSTANCE.isAlive())
+			UpdateTicker.INSTANCE.start();
+		UpdateTicker.INSTANCE.pause = false;
 	}
 
 	@EventHandler
 	public void onServerStopping(FMLServerStoppingEvent evt)
 	{
-		ThreadedGridTicker.INSTANCE.pause = true;
+		UpdateTicker.INSTANCE.pause = true;
 	}
 }
