@@ -21,7 +21,6 @@ import resonantinduction.archaic.firebox.TileFirebox;
 import resonantinduction.archaic.firebox.TileHotPlate;
 import resonantinduction.archaic.fluid.grate.BlockGrate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
-import resonantinduction.archaic.fluid.gutter.BlockGutter;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.archaic.process.BlockCastingMold;
@@ -109,7 +108,7 @@ public class Archaic
 		blockHotPlate = contentRegistry.createTile(BlockHotPlate.class, TileHotPlate.class);
 		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);
 		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
-		blockGutter = contentRegistry.createTile(BlockGutter.class, TileGutter.class);
+		blockGutter = contentRegistry.newBlock(TileGutter.class);
 		blockGrate = contentRegistry.createTile(BlockGrate.class, TileGrate.class);
 		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
 		blockTank = contentRegistry.newBlock(TileTank.class);
