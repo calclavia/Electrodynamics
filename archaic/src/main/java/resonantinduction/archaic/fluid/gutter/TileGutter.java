@@ -13,10 +13,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.IPressurizedNode;
 import resonantinduction.core.fluid.TilePressurizedNode;
+import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.utility.FluidUtility;
@@ -28,7 +30,7 @@ import calclavia.lib.utility.WorldUtility;
  * @author Calclavia
  * 
  */
-public class TileGutter extends TilePressurizedNode implements IPressurizedNode
+public class TileGutter extends TilePressurizedNode
 {
 	public TileGutter()
 	{
@@ -36,6 +38,27 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 		textureName = "material_wood_surface";
 		isOpaqueCube = false;
 		normalRender = false;
+
+		node = new ExtendedPressureNode(this)
+		{
+			@Override
+			public int getPressure(ForgeDirection dir)
+			{
+				if (dir == ForgeDirection.UP)
+					return -3;
+
+				if (dir == ForgeDirection.DOWN)
+					return +3;
+
+				return pressure;
+			}
+
+			@Override
+			public int getMaxFlowRate()
+			{
+				return 20;
+			}
+		};
 	}
 
 	@Override
@@ -95,6 +118,11 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 					entity.motionZ += 0.01 * dir.offsetZ * deltaPressure;
 				}
 			}
+
+			if (getInternalTank().getFluid().getFluid().getTemperature() >= 373)
+			{
+				entity.setFire(5);
+			}
 		}
 
 		if (entity instanceof EntityItem)
@@ -129,7 +157,7 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 	}
 
 	@Override
-	public void refresh()
+	public void onNeighborChanged()
 	{
 		/**
 		 * Drain block above if it is a fluid.
@@ -142,8 +170,6 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 			if (fill(ForgeDirection.UP, drain, true) > 0)
 				FluidUtility.drainBlock(worldObj, drainPos, true);
 		}
-
-		super.refresh();
 	}
 
 	@Override
@@ -153,13 +179,8 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 		{
 			if (tileEntity instanceof IFluidHandler)
 			{
-				if (tileEntity instanceof TileGutter)
-				{
-					getNetwork().merge(((TileGutter) tileEntity).getNetwork());
-				}
-
 				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
-				connectedBlocks[side.ordinal()] = tileEntity;
+				node.getConnections().connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
 	}
@@ -176,24 +197,6 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 	}
 
 	@Override
-	public int getPressure(ForgeDirection dir)
-	{
-		if (dir == ForgeDirection.UP)
-			return -3;
-
-		if (dir == ForgeDirection.DOWN)
-			return +3;
-
-		return pressure;
-	}
-
-	@Override
-	public int getMaxFlowRate()
-	{
-		return 20;
-	}
-
-	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
 		return from != ForgeDirection.UP && !fluid.isGaseous();
@@ -204,4 +207,5 @@ public class TileGutter extends TilePressurizedNode implements IPressurizedNode
 	{
 		return from != ForgeDirection.UP && !fluid.isGaseous();
 	}
+
 }

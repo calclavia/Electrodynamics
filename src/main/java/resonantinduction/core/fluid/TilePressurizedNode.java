@@ -7,6 +7,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
+import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiverWithID;
 
@@ -15,12 +17,40 @@ import calclavia.lib.network.IPacketReceiverWithID;
  * 
  * @author DarkGuardsman
  */
-public abstract class TilePressurizedNode extends TileFluidNode implements IPressurizedNode, IPacketReceiverWithID
+public abstract class TilePressurizedNode extends TileFluidNode implements IPressureNodeProvider, IPacketReceiverWithID
 {
-	protected Object[] connectedBlocks = new Object[6];
+	protected PressureNode node;
 
-	/** Network used to link all parts together */
-	protected PressureNetwork network;
+	static class ExtendedPressureNode extends PressureNode
+	{
+		public ExtendedPressureNode(IPressureNodeProvider parent)
+		{
+			super(parent);
+		}
+
+		@Override
+		public void recache()
+		{
+			if (!world().isRemote)
+			{
+				byte previousConnections = renderSides;
+				connectedBlocks = new Object[6];
+				renderSides = 0;
+
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				{
+					validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
+				}
+
+				/** Only send packet updates if visuallyConnected changed. */
+				if (previousConnections != renderSides)
+				{
+					sendRenderUpdate();
+				}
+			}
+
+		}
+	};
 
 	public TilePressurizedNode(Material material)
 	{
@@ -32,21 +62,14 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	public void initiate()
 	{
 		super.initiate();
-		refresh();
-		getNetwork().reconstruct();
+		node.reconstruct();
 	}
 
 	@Override
 	public void invalidate()
 	{
-		this.getNetwork().split(this);
+		node.deconstruct();
 		super.invalidate();
-	}
-
-	@Override
-	public void setPressure(int amount)
-	{
-		pressure = amount;
 	}
 
 	@Override
@@ -77,36 +100,6 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 		return new FluidTankInfo[] { getInternalTank().getInfo() };
 	}
 
-	@Override
-	public Object[] getConnections()
-	{
-		return connectedBlocks;
-	}
-
-	public void refresh()
-	{
-		if (!this.worldObj.isRemote)
-		{
-			byte previousConnections = renderSides;
-			connectedBlocks = new Object[6];
-			renderSides = 0;
-
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			{
-				validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
-			}
-
-			/** Only send packet updates if visuallyConnected changed. */
-			if (previousConnections != renderSides)
-			{
-				sendRenderUpdate();
-			}
-
-			getNetwork().reconstruct();
-		}
-
-	}
-
 	/**
 	 * Checks to make sure the connection is valid to the tileEntity
 	 * 
@@ -126,12 +119,6 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	}
 
 	@Override
-	public boolean canConnect(ForgeDirection direction, Object obj)
-	{
-		return true;
-	}
-
-	@Override
 	public FluidTank getInternalTank()
 	{
 		if (this.tank == null)
@@ -142,32 +129,14 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	}
 
 	@Override
-	public IPressurizedNode getInstance(ForgeDirection from)
+	public FluidTank getPressureTank()
 	{
-		return this;
+		return getInternalTank();
 	}
 
 	@Override
-	public boolean canFlow()
+	public PressureNode getNode(ForgeDirection from)
 	{
-		return true;
-	}
-
-	@Override
-	public PressureNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new PressureNetwork();
-			this.network.addConnector(this);
-		}
-
-		return this.network;
-	}
-
-	@Override
-	public void setNetwork(PressureNetwork network)
-	{
-		this.network = network;
+		return node;
 	}
 }

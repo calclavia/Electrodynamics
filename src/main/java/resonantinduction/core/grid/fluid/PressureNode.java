@@ -169,7 +169,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 		}
 	}
 
-	private int getMaxFlowRate()
+	protected int getMaxFlowRate()
 	{
 		return 10;
 	}
