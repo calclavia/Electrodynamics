@@ -3,14 +3,22 @@ package resonantinduction.core.grid;
 import java.util.AbstractMap;
 import java.util.WeakHashMap;
 
+import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 
-public abstract class Node<G extends Grid, N>
+public abstract class Node<P extends INodeProvider, G extends Grid, N>
 {
+	public final P parent;
+
 	protected final AbstractMap<N, ForgeDirection> connections = new WeakHashMap<N, ForgeDirection>();
 
 	public G grid = null;
+
+	public Node(P parent)
+	{
+		this.parent = parent;
+	}
 
 	public final G getGrid()
 	{

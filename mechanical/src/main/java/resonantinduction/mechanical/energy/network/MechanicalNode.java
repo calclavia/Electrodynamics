@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.Grid;
+import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
@@ -29,10 +30,8 @@ import codechicken.multipart.TMultiPart;
  * 
  * @author Calclavia
  */
-public class MechanicalNode extends EnergyNode
+public class MechanicalNode extends EnergyNode<IMechanicalNodeProvider, TickingGrid, MechanicalNode>
 {
-	public final IMechanicalNodeProvider parent;
-
 	public double torque = 0;
 	public double prevAngularVelocity, angularVelocity = 0;
 	public float acceleration = 2f;
@@ -49,7 +48,7 @@ public class MechanicalNode extends EnergyNode
 
 	public MechanicalNode(IMechanicalNodeProvider parent)
 	{
-		this.parent = parent;
+		super(parent);
 	}
 
 	public MechanicalNode setLoad(double load)
@@ -243,7 +242,7 @@ public class MechanicalNode extends EnergyNode
 	}
 
 	@Override
-	public Grid newGrid()
+	public TickingGrid newGrid()
 	{
 		return new TickingGrid<MechanicalNode>(this, MechanicalNode.class);
 	}

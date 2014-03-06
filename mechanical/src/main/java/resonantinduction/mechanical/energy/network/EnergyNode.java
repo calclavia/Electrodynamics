@@ -1,9 +1,16 @@
 package resonantinduction.mechanical.energy.network;
 
+import resonantinduction.core.grid.Grid;
+import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.Node;
 
-public abstract class EnergyNode extends Node
+public abstract class EnergyNode<P extends INodeProvider, G extends Grid, N> extends Node<P, G, N>
 {
+	public EnergyNode(P parent)
+	{
+		super(parent);
+	}
+
 	/**
 	 * @return Gets the power of this node. Note that power by definition is energy per second.
 	 */
