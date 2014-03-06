@@ -35,9 +35,9 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
 
 			if (tile.getDirection().offsetY != 0)
-				renderWaterTurbine(tile.tier, tile.getMultiBlock().isConstructed());
+				renderWaterTurbine(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());
 			else
-				renderWaterWheel(tile.tier, tile.getMultiBlock().isConstructed());
+				renderWaterWheel(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());
 
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
@@ -49,14 +49,17 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) 0.5f, (float) 0.5f, (float) 0.5f);
-		renderWaterTurbine(itemStack.getItemDamage(), false);
+		renderWaterTurbine(itemStack.getItemDamage(), 1, false);
 		GL11.glPopMatrix();
 	}
 
-	public void renderWaterWheel(int tier, boolean isLarge)
+	public void renderWaterWheel(int tier, int size, boolean isLarge)
 	{
 		if (isLarge)
 		{
+			GL11.glScalef(0.3f, 1, 0.3f);
+			GL11.glScalef(size * 2 + 1, Math.min(size, 2), size * 2 + 1);
+
 			GL11.glPushMatrix();
 			GL11.glScalef(1, 1.6f, 1);
 			RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "cobblestone.png");
@@ -84,10 +87,12 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 		}
 	}
 
-	public void renderWaterTurbine(int tier, boolean isLarge)
+	public void renderWaterTurbine(int tier, int size, boolean isLarge)
 	{
 		if (isLarge)
 		{
+			GL11.glScalef(0.3f, 1, 0.3f);
+			GL11.glScalef(size * 2 + 1, Math.min(size, 2), size * 2 + 1);
 			bindTexture(tier);
 			MODEL.renderOnly("turbine_centre");
 			MODEL.renderOnly("turbine_blades");
