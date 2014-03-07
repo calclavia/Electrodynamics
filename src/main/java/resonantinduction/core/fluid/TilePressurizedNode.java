@@ -21,37 +21,6 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 {
 	protected PressureNode node;
 
-	static class ExtendedPressureNode extends PressureNode
-	{
-		public ExtendedPressureNode(IPressureNodeProvider parent)
-		{
-			super(parent);
-		}
-
-		@Override
-		public void recache()
-		{
-			if (!world().isRemote)
-			{
-				byte previousConnections = renderSides;
-				connectedBlocks = new Object[6];
-				renderSides = 0;
-
-				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				{
-					validateConnectionSide(new Vector3(this).translate(dir).getTileEntity(worldObj), dir);
-				}
-
-				/** Only send packet updates if visuallyConnected changed. */
-				if (previousConnections != renderSides)
-				{
-					sendRenderUpdate();
-				}
-			}
-
-		}
-	};
-
 	public TilePressurizedNode(Material material)
 	{
 		super(material);
@@ -99,14 +68,6 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	{
 		return new FluidTankInfo[] { getInternalTank().getInfo() };
 	}
-
-	/**
-	 * Checks to make sure the connection is valid to the tileEntity
-	 * 
-	 * @param tileEntity - the tileEntity being checked
-	 * @param side - side the connection is too
-	 */
-	public abstract void validateConnectionSide(TileEntity tileEntity, ForgeDirection side);
 
 	public int getSubID()
 	{
