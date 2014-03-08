@@ -4,7 +4,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.grid.INodeProvider;
 
-public interface IPressureNodeProvider extends INodeProvider<PressureNode>, IFluidHandler
+public interface IPressureNodeProvider extends INodeProvider, IFluidHandler
 {
 	FluidTank getPressureTank();
 }

@@ -4,17 +4,43 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IPressure;
-import resonantinduction.core.fluid.IPressurizedNode;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
+import resonantinduction.core.grid.fluid.PressureNode;
 import resonantinduction.mechanical.energy.network.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
-public class TilePump extends TileMechanical implements IFluidHandler, IRotatable, IPressure
+public class TilePump extends TileMechanical implements IPressureNodeProvider, IRotatable
 {
 	private final long maximumPower = 100000;
+	private final PressureNode pressureNode;
+
+	public TilePump()
+	{
+		pressureNode = new PressureNode(this)
+		{
+			@Override
+			public int getPressure(ForgeDirection dir)
+			{
+				if (mechanicalNode.getPower() > 0)
+				{
+					if (dir == getDirection())
+					{
+						return (int) Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
+					}
+					else if (dir == getDirection().getOpposite())
+					{
+						return (int) -Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
+					}
+				}
+
+				return 0;
+			}
+		}
+	}
 
 	@Override
 	public void updateEntity()
@@ -28,7 +54,7 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 			 */
 			TileEntity tileIn = new Vector3(this).translate(getDirection().getOpposite()).getTileEntity(this.worldObj);
 
-			if (tileIn instanceof IFluidHandler && !(tileIn instanceof IPressurizedNode))
+			if (tileIn instanceof IFluidHandler && !(tileIn instanceof IPressureNodeProvider))
 			{
 				int flowRate = (int) (((double) mechanicalNode.getPower() / (double) maximumPower) * 500);
 				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), flowRate, false);
@@ -98,26 +124,9 @@ public class TilePump extends TileMechanical implements IFluidHandler, IRotatabl
 	}
 
 	@Override
-	public void setPressure(int amount)
+	public FluidTank getPressureTank()
 	{
-	}
-
-	@Override
-	public int getPressure(ForgeDirection dir)
-	{
-		if (mechanicalNode.getPower() > 0)
-		{
-			if (dir == getDirection())
-			{
-				return (int) Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
-			}
-			else if (dir == getDirection().getOpposite())
-			{
-				return (int) -Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
-			}
-		}
-
-		return 0;
+		return null;
 	}
 
 }

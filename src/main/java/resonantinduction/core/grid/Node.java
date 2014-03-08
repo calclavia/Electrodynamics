@@ -95,6 +95,11 @@ public abstract class Node<P extends INodeProvider, G extends Grid, N>
 		return connections;
 	}
 
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		return false;
+	}
+
 	/**
 	 * Must be called to load the node's data.
 	 */

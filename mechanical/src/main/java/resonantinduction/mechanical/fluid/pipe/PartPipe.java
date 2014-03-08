@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import calclavia.lib.utility.WorldUtility;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +13,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.fluid.IPressurizedNode;
-import resonantinduction.core.fluid.PressureNetwork;
-import resonantinduction.core.prefab.part.PartFramedConnection;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
+import resonantinduction.core.grid.fluid.PressureNode;
+import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
@@ -28,10 +29,9 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurizedNode, PressureNetwork> implements IPressurizedNode, TSlottedPart, JNormalOcclusion, IHollowConnect
+public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-	private int pressure;
 	private boolean markPacket = true;
 
 	public PartPipe(int typeID)
@@ -39,6 +39,76 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 		super();
 		material = EnumPipeMaterial.values()[typeID];
 		requiresInsulation = false;
+
+		node = new PressureNode(this)
+		{
+			@Override
+			public void recache()
+			{
+				synchronized (connections)
+				{
+					connections.clear();
+					byte previousConnections = getAllCurrentConnections();
+					currentConnections = 0;
+
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					{
+						TileEntity tile = position().translate(dir).getTileEntity(world());
+
+						if (tile instanceof IFluidHandler)
+						{
+							if (tile instanceof IPressureNodeProvider)
+							{
+								PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
+
+								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+								{
+									currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+									connections.put(check, dir);
+
+								}
+							}
+							else
+							{	
+								currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+								connections.put(tile, dir);
+							}
+						}
+					}
+
+					/** Only send packet updates if visuallyConnected changed. */
+					if (previousConnections != currentConnections)
+					{
+						sendConnectionUpdate();
+					}
+				}
+			}
+			
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{return
+				super.canConnect(from, source);
+				/*Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
+
+				if (obj instanceof PartPipe)
+				{
+					if (this.getMaterial() == ((PartPipe) obj).getMaterial())
+					{
+						return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
+					}
+
+					return false;
+				}
+
+				return tile instanceof IFluidHandler;*/
+			}
+
+			@Override
+			public int getMaxFlowRate()
+			{
+				return 100;
+			}
+		};
 	}
 
 	public PartPipe()
@@ -104,19 +174,6 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 		return new ItemStack(Mechanical.itemPipe);
 	}
 
-	/** Fluid network methods. */
-	@Override
-	public PressureNetwork getNetwork()
-	{
-		if (this.network == null)
-		{
-			this.network = new PressureNetwork();
-			this.network.addConnector(this);
-		}
-
-		return this.network;
-	}
-
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
@@ -172,12 +229,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 	}
 
 	@Override
-	public void onFluidChanged()
-	{
-	}
-
-	@Override
-	public FluidTank getInternalTank()
+	public FluidTank getPressureTank()
 	{
 		if (this.tank == null)
 		{
@@ -187,51 +239,7 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 		return this.tank;
 	}
 
-	@Override
-	protected boolean canConnectTo(TileEntity tile, ForgeDirection dir)
-	{
-		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
 
-		if (obj instanceof PartPipe)
-		{
-			if (this.getMaterial() == ((PartPipe) obj).getMaterial())
-			{
-				return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
-			}
-
-			return false;
-		}
-
-		return tile instanceof IFluidHandler;
-	}
-
-	@Override
-	protected IPressurizedNode getConnector(TileEntity tile)
-	{
-		if (tile instanceof IPressurizedNode)
-			if (((IPressurizedNode) tile).getInstance(ForgeDirection.UNKNOWN) instanceof IPressurizedNode)
-				return (IPressurizedNode) ((IPressurizedNode) tile).getInstance(ForgeDirection.UNKNOWN);
-
-		return null;
-	}
-
-	@Override
-	public int getPressure(ForgeDirection dir)
-	{
-		return pressure;
-	}
-
-	@Override
-	public void setPressure(int amount)
-	{
-		pressure = amount;
-	}
-
-	@Override
-	public int getMaxFlowRate()
-	{
-		return 100;
-	}
 
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)
@@ -253,11 +261,4 @@ public class PartPipe extends PartFramedConnection<EnumPipeMaterial, IPressurize
 		super.load(nbt);
 		tank.readFromNBT(nbt);
 	}
-
-	@Override
-	public boolean canFlow()
-	{
-		return true;
-	}
-
 }

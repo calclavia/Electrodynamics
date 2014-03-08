@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.grid.Node;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.network.IPacketReceiver;
@@ -68,7 +69,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection dir)
+	public MechanicalNode getNode(Class<? extends Node> clazz, ForgeDirection dir)
 	{
 		return mechanicalNode;
 	}

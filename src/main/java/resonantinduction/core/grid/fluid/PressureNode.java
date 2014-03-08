@@ -10,7 +10,6 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.api.mechanical.fluid.IPressure;
 import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
@@ -53,9 +52,9 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			Entry<Object, ForgeDirection> entry = it.next();
 			Object obj = entry.getKey();
 
-			if (obj instanceof IPressure)
+			if (obj instanceof PressureNode)
 			{
-				int pressure = ((IPressure) obj).getPressure(entry.getValue().getOpposite());
+				int pressure = ((PressureNode) obj).getPressure(entry.getValue().getOpposite());
 
 				minPressure = Math.min(pressure, minPressure);
 				maxPressure = Math.max(pressure, maxPressure);
@@ -138,7 +137,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			{
 				IFluidHandler fluidHandler = (IFluidHandler) obj;
 				int pressure = getPressure(dir);
-				int tankPressure = fluidHandler instanceof IPressure ? ((IPressure) fluidHandler).getPressure(dir.getOpposite()) : 0;
+				int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(getClass(),dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
 				FluidTank sourceTank = parent.getPressureTank();
 
 				int transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate();
