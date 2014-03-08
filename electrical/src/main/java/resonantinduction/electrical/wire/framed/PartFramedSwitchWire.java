@@ -37,7 +37,7 @@ public class PartFramedSwitchWire extends PartFramedWire
 		TileMultipart tile = tile();
 		World w = world();
 
-		if (item.getItem().itemID == Block.lever.blockID)
+		if (item != null && item.getItem().itemID == Block.lever.blockID)
 		{
 			if (!w.isRemote)
 			{
