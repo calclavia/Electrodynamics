@@ -16,11 +16,11 @@ import calclavia.lib.network.IPacketReceiverWithID;
  * 
  * @author DarkGuardsman
  */
-public abstract class TilePressurizedNode extends TileFluidNode implements IPressureNodeProvider, IPacketReceiverWithID
+public abstract class TilePressureNode extends TileFluidNode implements IPressureNodeProvider, IPacketReceiverWithID
 {
 	protected PressureNode node;
 
-	public TilePressurizedNode(Material material)
+	public TilePressureNode(Material material)
 	{
 		super(material);
 		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);

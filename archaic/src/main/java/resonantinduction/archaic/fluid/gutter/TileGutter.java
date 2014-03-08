@@ -13,8 +13,9 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.fluid.TilePressurizedNode;
+import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
@@ -28,7 +29,7 @@ import calclavia.lib.utility.WorldUtility;
  * @author Calclavia
  * 
  */
-public class TileGutter extends TilePressurizedNode
+public class TileGutter extends TilePressureNode
 {
 	public TileGutter()
 	{
@@ -69,6 +70,11 @@ public class TileGutter extends TilePressurizedNode
 							else
 							{
 								connections.put(tile, dir);
+
+								if (tile instanceof TileGrate)
+								{
+									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+								}
 							}
 						}
 					}
@@ -85,12 +91,12 @@ public class TileGutter extends TilePressurizedNode
 			public int getPressure(ForgeDirection dir)
 			{
 				if (dir == ForgeDirection.UP)
-					return -3;
+					return -1;
 
 				if (dir == ForgeDirection.DOWN)
-					return +3;
+					return 2;
 
-				return pressure;
+				return 0;
 			}
 
 			@Override

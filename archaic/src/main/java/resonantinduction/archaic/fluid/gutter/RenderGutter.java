@@ -83,18 +83,22 @@ public class RenderGutter extends TileEntitySpecialRenderer implements ISimpleIt
 
 		if (tileEntity.worldObj != null)
 		{
-			GL11.glPushMatrix();
-			GL11.glScaled(0.99, 0.99, 0.99);
 			FluidTank tank = ((TileGutter) tileEntity).getInternalTank();
 			double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
-			double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
-			double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
-			double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
-			double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+			if (percentageFilled > 0.1)
+			{
+				GL11.glPushMatrix();
+				GL11.glScaled(0.95, 0.95, 0.95);
 
-			FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
-			GL11.glPopMatrix();
+				double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
+				double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
+				double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
+				double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+
+				FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+				GL11.glPopMatrix();
+			}
 		}
 
 		GL11.glPopMatrix();

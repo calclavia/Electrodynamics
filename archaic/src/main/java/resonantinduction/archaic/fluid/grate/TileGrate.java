@@ -5,6 +5,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -12,15 +16,50 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.core.Reference;
+import resonantinduction.core.fluid.TilePressureNode;
+import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileAdvanced;
+import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.FluidUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileGrate extends TileAdvanced implements IFluidHandler
+public class TileGrate extends TilePressureNode implements IRotatable
 {
-	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	@SideOnly(Side.CLIENT)
+	private static Icon iconFront, iconSide;
+
 	private GratePathfinder gratePath;
+
+	public TileGrate()
+	{
+		super(Material.rock);
+		isOpaqueCube = false;
+		normalRender = true;
+		rotationMask = Byte.parseByte("111111", 2);
+		node = new PressureNode(this);
+	}
+
+	@Override
+	public Icon getIcon(IBlockAccess world, int side)
+	{
+		return side == getDirection().ordinal() ? iconFront : iconSide;
+	}
+
+	@Override
+	public Icon getIcon(int side, int metadata)
+	{
+		return side == 1 ? iconFront : iconSide;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister)
+	{
+		iconFront = iconRegister.registerIcon(Reference.PREFIX + "grate_front");
+		iconSide = iconRegister.registerIcon(Reference.PREFIX + "grate");
+	}
 
 	@Override
 	public boolean canUpdate()
@@ -61,17 +100,17 @@ public class TileGrate extends TileAdvanced implements IFluidHandler
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		tank.fill(resource, doFill);
+		getPressureTank().fill(resource, doFill);
 
-		if (tank.getFluidAmount() > 0)
+		if (getPressureTank().getFluidAmount() > 0)
 		{
 			if (gratePath == null)
 			{
 				gratePath = new GratePathfinder(true);
-				gratePath.startFill(new Vector3(this), tank.getFluid().getFluid().getID());
+				gratePath.startFill(new Vector3(this), getPressureTank().getFluid().getFluid().getID());
 			}
 
-			return tank.drain(gratePath.tryFill(tank.getFluidAmount(), 2000), true).amount;
+			return getPressureTank().drain(gratePath.tryFill(getPressureTank().getFluidAmount(), 2000), true).amount;
 		}
 
 		return 0;
