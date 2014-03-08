@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.energy.turbine;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -106,18 +107,31 @@ public class BlockMechanicalTurbine extends BlockTurbine
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileTurbine)
+		if (!world.isRemote && tileEntity instanceof TileTurbine)
 		{
-			if (!world.isRemote && !((TileTurbine) tileEntity).getMultiBlock().isConstructed())
+			Set<TileTurbine> toFlip = new HashSet<TileTurbine>();
+
+			if (!((TileTurbine) tileEntity).getMultiBlock().isConstructed())
 			{
-				if (side == ((TileTurbine) tileEntity).getDirection().ordinal())
-					world.setBlockMetadataWithNotify(x, y, z, side ^ 1, 3);
+				toFlip.add((TileTurbine) tileEntity);
+			}
+			else
+			{
+				Set<TileTurbine> str = ((TileTurbine) tileEntity).getMultiBlock().getPrimary().getMultiBlock().getStructure();
+
+				if (str != null)
+					toFlip.addAll(str);
+			}
+
+			for (TileTurbine turbine : toFlip)
+			{
+				if (side == turbine.getDirection().ordinal())
+					world.setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side ^ 1, 3);
 				else
-					world.setBlockMetadataWithNotify(x, y, z, side, 3);
+					world.setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side, 3);
 			}
 		}
 
 		return true;
 	}
-
 }
