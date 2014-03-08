@@ -151,7 +151,6 @@ public class TileImprinter extends TileAdvanced implements ISidedInventory, IPac
 			if (fitlerStack != null && fitlerStack.getItem() instanceof ItemImprint)
 			{
 				ItemStack outputStack = fitlerStack.copy();
-				outputStack.stackSize = 1;
 				Set<ItemStack> filters = ItemImprint.getFilters(outputStack);
 				Set<ItemStack> toAdd = new HashSet<ItemStack>();
 

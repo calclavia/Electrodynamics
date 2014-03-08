@@ -1,12 +1,14 @@
 package resonantinduction.mechanical.logistic.belt;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,6 +30,7 @@ import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -39,7 +42,7 @@ public class TileSorter extends TileInventory
 	{
 		super(UniversalElectricity.machine);
 		textureName = "material_metal_side";
-		maxSlots = 6;
+		maxSlots = 12;
 		normalRender = false;
 		isOpaqueCube = false;
 		bounds = Cuboid.full().expand(-0.1);
@@ -64,9 +67,17 @@ public class TileSorter extends TileInventory
 	}
 
 	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		if (slot < 6)
+			return stack.getItem() instanceof ItemImprint;
+		return true;
+	}
+
+	@Override
 	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
 	{
-		return stack.getItem() instanceof IFilterable;
+		return true;
 	}
 
 	@Override
@@ -77,39 +88,110 @@ public class TileSorter extends TileInventory
 			if (entity instanceof EntityItem)
 			{
 				EntityItem entityItem = (EntityItem) entity;
-				List<ForgeDirection> possibleDirections = new ArrayList<ForgeDirection>();
+				sortItem(entityItem.getEntityItem());
+				entityItem.setDead();
+			}
+		}
+	}
 
-				/**
-				 * Move item to position where a filter allows it.
-				 */
-				for (int i = 0; i < getSizeInventory(); i++)
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		if (i < 6)
+			return this.getInventory().getStackInSlot(i);
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemStack)
+	{
+		if (i >= 6)
+		{
+			if (itemStack != null)
+				sortItem(itemStack);
+			return;
+		}
+
+		super.setInventorySlotContents(i, itemStack);
+	}
+
+	public void sortItem(ItemStack sortStack)
+	{
+		List<ForgeDirection> possibleDirections = new ArrayList<ForgeDirection>();
+
+		/**
+		 * Move item to position where a filter allows it.
+		 */
+		for (int i = 0; i < 6; i++)
+		{
+			ItemStack stack = getStackInSlot(i);
+
+			if (!isInverted == ItemImprint.isFiltering(stack, sortStack))
+			{
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+
+				int blockID = position().translate(dir).getBlockID(world());
+				Block block = Block.blocksList[blockID];
+
+				if (block == null || !block.isNormalCube(blockID))
 				{
-					ItemStack stack = getStackInSlot(i);
-
-					if (isInverted == ItemImprint.isFiltering(stack, entityItem.getEntityItem()))
-					{
-						ForgeDirection dir = ForgeDirection.getOrientation(i);
-
-						int blockID = position().translate(dir).getBlockID(world());
-						Block block = Block.blocksList[blockID];
-
-						if (block == null || block.isNormalCube(blockID))
-						{
-							possibleDirections.add(dir);
-						}
-					}
-				}
-
-				int size = possibleDirections.size();
-
-				if (size > 0)
-				{
-					ForgeDirection dir = possibleDirections.get(size > 1 ? world().rand.nextInt(size - 1) : 0);
-					Vector3 set = center().translate(dir, 1);
-					entityItem.setPosition(set.x, set.y, set.z);
+					possibleDirections.add(dir);
 				}
 			}
 		}
+
+		if (possibleDirections.size() == 0)
+		{
+			List<ForgeDirection> inventoryDirections = new ArrayList<ForgeDirection>();
+
+			for (int i = 0; i < 6; i++)
+			{
+				ForgeDirection dir = ForgeDirection.getOrientation(i);
+
+				int blockID = position().translate(dir).getBlockID(world());
+				Block block = Block.blocksList[blockID];
+
+				if (block == null || !block.isNormalCube(blockID))
+				{
+					possibleDirections.add(dir);
+				}
+
+				if (position().translate(dir).getTileEntity(world()) instanceof IInventory)
+				{
+					inventoryDirections.add(dir);
+				}
+			}
+
+			if (inventoryDirections.size() > 0)
+				possibleDirections = inventoryDirections;
+		}
+
+		int size = possibleDirections.size();
+
+		ForgeDirection dir = possibleDirections.get(size > 1 ? world().rand.nextInt(size - 1) : 0);
+
+		Vector3 spawn = center().translate(dir, 1);
+
+		TileEntity tile = spawn.getTileEntity(world());
+		ItemStack remain = sortStack;
+
+		if (tile instanceof IInventory)
+			remain = InventoryUtility.putStackInInventory((IInventory) tile, remain, dir.ordinal(), false);
+
+		if (remain != null)
+		{
+			if (!world().isRemote)
+				InventoryUtility.dropItemStack(world(), spawn, remain, 20, 0);
+
+			remain = null;
+		}
+
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return new int[] { side + 6 };
 	}
 
 	@Override
@@ -143,6 +225,12 @@ public class TileSorter extends TileInventory
 			final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "sorter.png");
 
 			@Override
+			public boolean renderStatic(Vector3 position)
+			{
+				return true;
+			}
+
+			@Override
 			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
 			{
 				GL11.glPushMatrix();
@@ -171,7 +259,7 @@ public class TileSorter extends TileInventory
 						}
 					}
 				}
-				
+
 				MODEL.renderAllExcept("port");
 				RenderUtility.disableBlending();
 				GL11.glPopMatrix();
