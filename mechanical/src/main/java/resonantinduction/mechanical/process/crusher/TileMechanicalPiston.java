@@ -2,6 +2,7 @@ package resonantinduction.mechanical.process.crusher;
 
 import java.lang.reflect.Method;
 
+import codechicken.multipart.MultipartHelper;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -57,7 +58,7 @@ public class TileMechanicalPiston extends TileMechanical
 	{
 		TileEntity tileEntity = from.getTileEntity(worldObj);
 
-		if (to.getTileEntity(worldObj) == this)
+		if (to.getTileEntity(getWorldObj()).equals(this))
 		{
 			return false;
 		}
@@ -174,4 +175,18 @@ public class TileMechanicalPiston extends TileMechanical
 			}
 		}
 	}
+
+    public void hitOreBlock(Block oreBlock, Vector3 blockPos)
+    {
+        if (worldObj.isRemote)
+        {
+            // Spawn hit particles logic only, all other information is done Server Side
+            return;
+        }
+        else
+        {
+
+        }
+
+    }
 }
