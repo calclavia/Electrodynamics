@@ -39,7 +39,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 		renderBlocks = new RenderBlocks();
 	}
 
-	public void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
+	public static void renderTopOverlay(TileEntity tileEntity, ItemStack[] inventory, ForgeDirection dir, double x, double y, double z)
 	{
 		renderTopOverlay(tileEntity, inventory, dir, 3, 3, x, y, z, 0.7f);
 	}

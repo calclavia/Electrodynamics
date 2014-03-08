@@ -9,7 +9,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -19,7 +19,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.api.IFilterable;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
@@ -136,7 +135,7 @@ public class TileSorter extends TileInventory
 	}
 
 	@SideOnly(Side.CLIENT)
-	protected TileRender renderer()
+	protected TileRender newRenderer()
 	{
 		return new TileRender()
 		{
@@ -144,35 +143,39 @@ public class TileSorter extends TileInventory
 			final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "sorter.png");
 
 			@Override
-			public void renderDynamic(Vector3 position, float frame)
+			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
 			{
 				GL11.glPushMatrix();
 				RenderUtility.enableBlending();
 				GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5);
 				RenderUtility.bind(TEXTURE);
 
-				for (int i = 0; i < TileSorter.this.getSizeInventory(); i++)
+				if (!isItem)
 				{
-					if (TileSorter.this.getStackInSlot(i) != null)
+					for (int i = 0; i < TileSorter.this.getSizeInventory(); i++)
 					{
-						ForgeDirection dir = ForgeDirection.getOrientation(i);
-						GL11.glPushMatrix();
+						if (TileSorter.this.getStackInSlot(i) != null)
+						{
+							ForgeDirection dir = ForgeDirection.getOrientation(i);
+							GL11.glPushMatrix();
 
-						if (dir.ordinal() == 0)
-							GL11.glRotatef(-90, 0, 0, 1);
+							if (dir.ordinal() == 0)
+								GL11.glRotatef(-90, 0, 0, 1);
 
-						if (dir.ordinal() == 1)
-							GL11.glRotatef(90, 0, 0, 1);
+							if (dir.ordinal() == 1)
+								GL11.glRotatef(90, 0, 0, 1);
 
-						RenderUtility.rotateBlockBasedOnDirection(dir);
-						MODEL.renderOnly("port");
-						GL11.glPopMatrix();
+							RenderUtility.rotateBlockBasedOnDirection(dir);
+							MODEL.renderOnly("port");
+							GL11.glPopMatrix();
+						}
 					}
 				}
-
+				
 				MODEL.renderAllExcept("port");
 				RenderUtility.disableBlending();
 				GL11.glPopMatrix();
+				return true;
 			}
 
 		};

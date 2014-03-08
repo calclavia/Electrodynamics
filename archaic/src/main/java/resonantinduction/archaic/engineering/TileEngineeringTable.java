@@ -1,6 +1,5 @@
 package resonantinduction.archaic.engineering;
 
-import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.material.Material;
@@ -18,17 +17,18 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileBlock;
+import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
 import calclavia.lib.network.IPacketReceiver;
@@ -39,8 +39,8 @@ import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
 
 import com.builtbroken.common.Pair;
@@ -80,9 +80,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	private int[] playerSlots;
 
 	@SideOnly(Side.CLIENT)
-	private Icon iconTop;
-	@SideOnly(Side.CLIENT)
-	private Icon iconFront;
+	private static Icon iconTop, iconFront, iconSide;
 
 	public TileEngineeringTable()
 	{
@@ -97,16 +95,16 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
-		return side == 1 ? iconTop : (side == meta ? iconFront : icon);
+		return side == 1 ? iconTop : (side == meta ? iconFront : iconSide);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister)
 	{
-		iconTop = iconRegister.registerIcon(this.getTextureName() + "_top");
-		iconFront = iconRegister.registerIcon(this.getTextureName() + "_front");
-		icon = iconRegister.registerIcon(this.getTextureName() + "_side");
+		iconTop = iconRegister.registerIcon(getTextureName() + "_top");
+		iconFront = iconRegister.registerIcon(getTextureName() + "_front");
+		iconSide = iconRegister.registerIcon(getTextureName() + "_side");
 	}
 
 	@Override
@@ -154,7 +152,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 				Vector3 hitVector = new Vector3(hit.x, 0, hit.z);
 				final double regionLength = 1d / 3d;
 
-				// Rotate the hit vector baed on direction of the tile.
+				// Rotate the hit vector based on direction of the tile.
 				hitVector.translate(new Vector3(-0.5, 0, -0.5));
 				hitVector.rotate(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.UP());
 				hitVector.translate(new Vector3(0.5, 0, 0.5));
@@ -221,20 +219,25 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	}
 
 	@Override
-	protected boolean configure(EntityPlayer player, int hitSide, Vector3 hit)
+	protected boolean configure(EntityPlayer player, int side, Vector3 hit)
 	{
-		searchInventories = !searchInventories;
-
-		if (!world().isRemote)
+		if (player.isSneaking())
 		{
-			if (searchInventories)
-				player.addChatMessage("Engineering table will now search for nearby inventories for resources.");
-			else
-				player.addChatMessage("Engineering table will not search for nearby inventories for resources.");
+			searchInventories = !searchInventories;
+
+			if (!world().isRemote)
+			{
+				if (searchInventories)
+					player.addChatMessage("Engineering table will now search for nearby inventories for resources.");
+				else
+					player.addChatMessage("Engineering table will not search for nearby inventories for resources.");
+			}
+
+			markUpdate();
+			return true;
 		}
 
-		markUpdate();
-		return true;
+		return super.configure(player, side, hit);
 	}
 
 	@Override
@@ -305,7 +308,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	{
 		try
 		{
-			this.readFromNBT(PacketHandler.readNBTTagCompound(data));
+			readFromNBT(PacketHandler.readNBTTagCompound(data));
 		}
 		catch (Exception e)
 		{
@@ -752,5 +755,27 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 		}
 
 		return slots;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected TileRender newRenderer()
+	{
+		return new TileRender()
+		{
+			@Override
+			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
+			{
+				if (!isItem)
+				{
+					GL11.glPushMatrix();
+					RenderItemOverlayTile.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x, position.y, position.z);
+					RenderItemOverlayTile.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection(), position.x, position.y - 0.1, position.z);
+					GL11.glPopMatrix();
+				}
+
+				return false;
+			}
+		};
 	}
 }
