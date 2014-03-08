@@ -45,6 +45,8 @@ public class TileGutter extends TilePressurizedNode
 				synchronized (connections)
 				{
 					connections.clear();
+					byte previousConnections = renderSides;
+					renderSides = 0;
 
 					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 					{
@@ -65,10 +67,15 @@ public class TileGutter extends TilePressurizedNode
 							}
 							else
 							{
-								renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
 								connections.put(tile, dir);
 							}
 						}
+					}
+
+					/** Only send packet updates if visuallyConnected changed. */
+					if (previousConnections != renderSides)
+					{
+						sendRenderUpdate();
 					}
 				}
 			}
@@ -125,6 +132,12 @@ public class TileGutter extends TilePressurizedNode
 		}
 
 		return list;
+	}
+
+	@Override
+	public Cuboid getSelectBounds()
+	{
+		return null;
 	}
 
 	@Override
