@@ -21,7 +21,7 @@ import codechicken.multipart.TMultiPart;
 public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
 {
 	protected byte connectionMap = Byte.parseByte("111111", 2);
-	protected int pressure = 0;
+	public int pressure = 0;
 
 	public PressureNode(IPressureNodeProvider parent)
 	{
@@ -174,7 +174,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 		return 10;
 	}
 
-	protected int getPressure(ForgeDirection dir)
+	public int getPressure(ForgeDirection dir)
 	{
 		return pressure;
 	}

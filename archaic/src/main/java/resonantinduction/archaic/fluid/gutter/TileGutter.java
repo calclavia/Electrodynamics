@@ -8,16 +8,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.fluid.IPressurizedNode;
 import resonantinduction.core.fluid.TilePressurizedNode;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.vector.Cuboid;
@@ -39,8 +37,42 @@ public class TileGutter extends TilePressurizedNode
 		isOpaqueCube = false;
 		normalRender = false;
 
-		node = new ExtendedPressureNode(this)
+		node = new PressureNode(this)
 		{
+			@Override
+			public void recache()
+			{
+				synchronized (connections)
+				{
+					connections.clear();
+
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					{
+						TileEntity tile = position().translate(dir).getTileEntity(world());
+
+						if (tile instanceof IFluidHandler)
+						{
+							if (tile instanceof IPressureNodeProvider)
+							{
+								PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
+
+								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+								{
+									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+									connections.put(check, dir);
+
+								}
+							}
+							else
+							{
+								renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+								connections.put(tile, dir);
+							}
+						}
+					}
+				}
+			}
+
 			@Override
 			public int getPressure(ForgeDirection dir)
 			{
@@ -100,7 +132,7 @@ public class TileGutter extends TilePressurizedNode
 	{
 		if (getInternalTank().getFluidAmount() > 0)
 		{
-			int pressure = getPressure(null);
+			int pressure = node.pressure;
 
 			for (int i = 2; i < 6; i++)
 			{
@@ -111,7 +143,7 @@ public class TileGutter extends TilePressurizedNode
 
 				if (checkTile instanceof TileGutter)
 				{
-					int deltaPressure = pressure - ((TileGutter) checkTile).getPressure(null);
+					int deltaPressure = pressure - ((TileGutter) checkTile).node.getPressure(dir.getOpposite());
 
 					entity.motionX += 0.01 * dir.offsetX * deltaPressure;
 					entity.motionY += 0.01 * dir.offsetY * deltaPressure;
@@ -169,19 +201,6 @@ public class TileGutter extends TilePressurizedNode
 		{
 			if (fill(ForgeDirection.UP, drain, true) > 0)
 				FluidUtility.drainBlock(worldObj, drainPos, true);
-		}
-	}
-
-	@Override
-	public void validateConnectionSide(TileEntity tileEntity, ForgeDirection side)
-	{
-		if (!this.worldObj.isRemote)
-		{
-			if (tileEntity instanceof IFluidHandler)
-			{
-				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
-				node.getConnections().connectedBlocks[side.ordinal()] = tileEntity;
-			}
 		}
 	}
 
