@@ -36,6 +36,7 @@ public class TileGutter extends TilePressurizedNode
 		textureName = "material_wood_surface";
 		isOpaqueCube = false;
 		normalRender = false;
+		bounds = new Cuboid(0, 0, 0, 1, 0.99, 1);
 
 		node = new PressureNode(this)
 		{
@@ -132,12 +133,6 @@ public class TileGutter extends TilePressurizedNode
 		}
 
 		return list;
-	}
-
-	@Override
-	public Cuboid getSelectBounds()
-	{
-		return null;
 	}
 
 	@Override
