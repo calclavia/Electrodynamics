@@ -3,7 +3,6 @@ package resonantinduction.core.grid;
 import java.util.AbstractMap;
 import java.util.WeakHashMap;
 
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 

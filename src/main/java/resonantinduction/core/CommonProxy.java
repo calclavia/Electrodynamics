@@ -3,7 +3,6 @@
  */
 package resonantinduction.core;
 
-import resonantinduction.core.grid.UpdateTicker;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.ProxyBase;

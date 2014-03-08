@@ -1,7 +1,5 @@
 package resonantinduction.core.fluid;
 
-import java.util.Set;
-
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -10,7 +8,6 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.NetworkTickHandler;
 import universalelectricity.core.net.NodeNetwork;
-import calclavia.lib.utility.FluidUtility;
 
 /**
  * The fluid network for instantaneous equal distribution between all nodes. Used for tanks.

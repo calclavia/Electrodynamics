@@ -11,10 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.api.mechanical.fluid.IPressure;
-import resonantinduction.core.grid.Grid;
 import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.TickingGrid;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -192,7 +190,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			{
 				TileEntity tile = position().translate(dir).getTileEntity(world());
 
-				if (tile instanceof IMechanicalNodeProvider)
+				if (tile instanceof IPressureNodeProvider)
 				{
 					PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
 

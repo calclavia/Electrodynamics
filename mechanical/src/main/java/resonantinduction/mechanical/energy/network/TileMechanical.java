@@ -45,6 +45,14 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	public void initiate()
 	{
 		mechanicalNode.reconstruct();
+		super.initiate();
+	}
+
+	@Override
+	public void invalidate()
+	{
+		mechanicalNode.deconstruct();
+		super.invalidate();
 	}
 
 	@Override

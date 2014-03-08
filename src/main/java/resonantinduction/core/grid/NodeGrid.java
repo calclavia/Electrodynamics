@@ -1,18 +1,10 @@
 package resonantinduction.core.grid;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import universalelectricity.api.net.IConnectable;
-import universalelectricity.api.net.IUpdate;
 
 public abstract class NodeGrid<N extends Node> extends Grid<N>
 {

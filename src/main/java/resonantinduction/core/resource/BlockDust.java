@@ -12,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import scala.annotation.meta.setter;
 import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,17 +35,6 @@ public class BlockDust extends BlockTile
 		setStepSound(soundGravelFootstep);
 	}
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack itemStack)
-	{
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-
-		if (tileEntity instanceof TileMaterial)
-		{
-			((TileMaterial) tileEntity).name = ItemOreResource.getMaterialFromStack(itemStack);
-		}
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int colorMultiplier(IBlockAccess access, int x, int y, int z)
@@ -60,9 +50,26 @@ public class BlockDust extends BlockTile
 	}
 
 	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack itemStack)
+	{
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+		if (tileEntity instanceof TileMaterial)
+		{
+			((TileMaterial) tileEntity).name = ItemOreResource.getMaterialFromStack(itemStack);
+		}
+	}
+
+	@Override
+	public void onPostBlockPlaced(World world, int x, int y, int z, int metadata)
+	{
+		tryToFall(world, y, x, z);
+	}
+
+	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		tryToFall(world, x, y, z);
+		tryToFall(world, y, x, z);
 	}
 
 	@Override
@@ -78,28 +85,32 @@ public class BlockDust extends BlockTile
 		if (tile instanceof TileMaterial)
 		{
 			String materialName = ((TileMaterial) tile).name;
-			int metadata = world.getBlockMetadata(x, y, z);
 
-			if (canFallBelow(world, x, y - 1, z) && y >= 0)
+			if (materialName != null)
 			{
-				byte b0 = 32;
+				int metadata = world.getBlockMetadata(x, y, z);
 
-				world.setBlockToAir(x, y, z);
-
-				while (canFallBelow(world, x, y - 1, z) && y > 0)
+				if (canFallBelow(world, x, y - 1, z) && y >= 0)
 				{
-					--y;
-				}
+					byte b0 = 32;
 
-				if (y > 0)
-				{
-					world.setBlock(x, y, z, this.blockID, metadata, 3);
+					world.setBlockToAir(x, y, z);
 
-					TileEntity newTile = world.getBlockTileEntity(x, y, z);
-
-					if (newTile instanceof TileMaterial)
+					while (canFallBelow(world, x, y - 1, z) && y > 0)
 					{
-						((TileMaterial) newTile).name = materialName;
+						--y;
+					}
+
+					if (y > 0)
+					{
+						world.setBlock(x, y, z, this.blockID, metadata, 3);
+
+						TileEntity newTile = world.getBlockTileEntity(x, y, z);
+
+						if (newTile instanceof TileMaterial)
+						{
+							((TileMaterial) newTile).name = materialName;
+						}
 					}
 				}
 			}

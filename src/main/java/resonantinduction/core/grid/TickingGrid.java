@@ -1,8 +1,6 @@
 package resonantinduction.core.grid;
 
-import resonantinduction.mechanical.energy.network.MechanicalNode;
 import universalelectricity.api.net.IUpdate;
-import universalelectricity.core.net.NetworkTickHandler;
 
 public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 {

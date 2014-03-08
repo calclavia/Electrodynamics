@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import universalelectricity.api.net.IUpdate;
-import universalelectricity.core.net.ConnectionPathfinder;
-
 /**
  * A grid specifying a connection with a series of nodes.
  * 
