@@ -29,6 +29,7 @@ import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
@@ -239,14 +240,9 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     public ArrayList<ItemStack> getDrops(int metadata, int fortune)
     {
         ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-        list.add(ItemBlockSaved.getItemStackWithNBT(blockType, world(), x(), y(), z()));
+        ItemStack stack = ItemBlockSaved.getItemStackWithNBT(this.getBlockType(), world(), x(), y(), z());
+        list.add(stack);
         return list;
-    }
-
-    @Override
-    public int quantityDropped(int meta, int fortune)
-    {
-        return 0;
     }
 
     @Override
