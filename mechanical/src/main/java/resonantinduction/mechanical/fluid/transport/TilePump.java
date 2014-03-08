@@ -16,7 +16,6 @@ import calclavia.lib.prefab.tile.IRotatable;
 
 public class TilePump extends TileMechanical implements IPressureNodeProvider, IRotatable
 {
-	private final long maximumPower = 100000;
 	private final PressureNode pressureNode;
 
 	public TilePump()
@@ -30,17 +29,44 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 				{
 					if (dir == getDirection())
 					{
-						return (int) Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
+						return (int) Math.max(Math.abs(mechanicalNode.getTorque() / 1000d), 2);
 					}
 					else if (dir == getDirection().getOpposite())
 					{
-						return (int) -Math.max((((double) mechanicalNode.getPower() / (double) maximumPower) * 100), 2);
+						return (int) -Math.max(Math.abs(mechanicalNode.getTorque() / 1000d), 2);
 					}
 				}
 
 				return 0;
 			}
+
+			@Override
+			public int getMaxFlowRate()
+			{
+				return (int) Math.abs(mechanicalNode.getAngularVelocity() * 20);
+			}
+
+			@Override
+			public boolean canConnect(ForgeDirection from, Object source)
+			{
+				return super.canConnect(from, source) && (from == getDirection() || from == getDirection().getOpposite());
+			}
+
 		};
+	}
+
+	@Override
+	public void initiate()
+	{
+		pressureNode.reconstruct();
+		super.initiate();
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		pressureNode.deconstruct();
 	}
 
 	@Override
@@ -55,10 +81,9 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 			 */
 			TileEntity tileIn = new Vector3(this).translate(getDirection().getOpposite()).getTileEntity(this.worldObj);
 
-			if (tileIn instanceof IFluidHandler && !(tileIn instanceof IPressureNodeProvider))
+			if (tileIn instanceof IFluidHandler)
 			{
-				int flowRate = (int) (((double) mechanicalNode.getPower() / (double) maximumPower) * 500);
-				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), flowRate, false);
+				FluidStack drain = ((IFluidHandler) tileIn).drain(getDirection(), pressureNode.getMaxFlowRate(), false);
 
 				if (drain != null)
 				{

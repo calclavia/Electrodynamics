@@ -104,29 +104,33 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 				if (pressureA >= pressureB)
 				{
 					FluidTank tankA = parent.getPressureTank();
-					FluidStack fluidA = tankA.getFluid();
 
-					if (tankA != null && fluidA != null)
+					if (tankA != null)
 					{
-						int amountA = fluidA.amount;
+						FluidStack fluidA = tankA.getFluid();
 
-						if (amountA > 0)
+						if (fluidA != null)
 						{
-							FluidTank tankB = otherPipe.parent.getPressureTank();
+							int amountA = fluidA.amount;
 
-							if (tankB != null)
+							if (amountA > 0)
 							{
-								int amountB = tankB.getFluidAmount();
+								FluidTank tankB = otherPipe.parent.getPressureTank();
 
-								int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * getMaxFlowRate() : 0, Math.min((amountA - amountB) / 2, getMaxFlowRate()));
-								quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
-
-								if (quantity > 0)
+								if (tankB != null)
 								{
-									FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
+									int amountB = tankB.getFluidAmount();
 
-									if (drainStack != null && drainStack.amount > 0)
-										parent.drain(dir.getOpposite(), otherPipe.parent.fill(dir, drainStack, true), true);
+									int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * getMaxFlowRate() : 0, Math.min((amountA - amountB) / 2, getMaxFlowRate()));
+									quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
+
+									if (quantity > 0)
+									{
+										FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
+
+										if (drainStack != null && drainStack.amount > 0)
+											parent.drain(dir.getOpposite(), otherPipe.parent.fill(dir, drainStack, true), true);
+									}
 								}
 							}
 						}
@@ -166,7 +170,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 		}
 	}
 
-	protected int getMaxFlowRate()
+	public int getMaxFlowRate()
 	{
 		return 10;
 	}

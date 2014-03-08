@@ -218,6 +218,12 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 	{
 		node.reconstruct();
 	}
+	
+	@Override
+	public void onNeighborChanged()
+	{
+		node.reconstruct();
+	}
 
 	@Override
 	public void onWorldSeparate()

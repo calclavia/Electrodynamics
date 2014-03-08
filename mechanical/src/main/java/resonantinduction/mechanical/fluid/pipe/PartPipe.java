@@ -49,59 +49,64 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 				synchronized (connections)
 				{
 					connections.clear();
-					byte previousConnections = getAllCurrentConnections();
-					currentConnections = 0;
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					if (world() != null)
 					{
-						TileEntity tile = position().translate(dir).getTileEntity(world());
+						byte previousConnections = getAllCurrentConnections();
+						currentConnections = 0;
 
-						if (tile instanceof IFluidHandler)
+						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 						{
-							if (tile instanceof IPressureNodeProvider)
-							{
-								PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
+							TileEntity tile = position().translate(dir).getTileEntity(world());
 
-								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+							if (tile instanceof IFluidHandler)
+							{
+								if (tile instanceof IPressureNodeProvider)
+								{
+									PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
+
+									if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+									{
+										currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+										connections.put(check, dir);
+
+									}
+								}
+								else
 								{
 									currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-									connections.put(check, dir);
-
+									connections.put(tile, dir);
 								}
 							}
-							else
-							{	
-								currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-								connections.put(tile, dir);
-							}
 						}
-					}
 
-					/** Only send packet updates if visuallyConnected changed. */
-					if (previousConnections != currentConnections)
-					{
-						sendConnectionUpdate();
+						/** Only send packet updates if visuallyConnected changed. */
+						if (!world().isRemote && previousConnections != currentConnections)
+						{
+							sendConnectionUpdate();
+						}
 					}
 				}
 			}
-			
+
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
-			{return
-				super.canConnect(from, source);
-				/*Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
-
-				if (obj instanceof PartPipe)
-				{
-					if (this.getMaterial() == ((PartPipe) obj).getMaterial())
-					{
-						return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
-					}
-
-					return false;
-				}
-
-				return tile instanceof IFluidHandler;*/
+			{
+				return super.canConnect(from, source);
+				/*
+				 * Object obj = tile instanceof TileMultipart ? ((TileMultipart)
+				 * tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
+				 * if (obj instanceof PartPipe)
+				 * {
+				 * if (this.getMaterial() == ((PartPipe) obj).getMaterial())
+				 * {
+				 * return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR
+				 * || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
+				 * }
+				 * return false;
+				 * }
+				 * return tile instanceof IFluidHandler;
+				 */
 			}
 
 			@Override
@@ -232,12 +237,12 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 	@Override
 	public FluidTank getPressureTank()
 	{
-		if (this.tank == null)
+		if (tank == null)
 		{
-			this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+			tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 		}
 
-		return this.tank;
+		return tank;
 	}
 
 	@Override
