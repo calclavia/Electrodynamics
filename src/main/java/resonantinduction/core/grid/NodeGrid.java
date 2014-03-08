@@ -26,10 +26,14 @@ public abstract class NodeGrid<N extends Node> extends Grid<N>
 			if (isValidNode(connection) && connection instanceof Node)
 			{
 				Node connectedNode = (Node) connection;
-				
+
 				if (connectedNode.getGrid() != this)
 				{
-					connectedNode.getGrid().getNodes().clear();
+					synchronized (connectedNode.getGrid().getNodes())
+					{
+						connectedNode.getGrid().getNodes().clear();
+					}
+					
 					add((N) connectedNode);
 					reconstructNode((N) connectedNode);
 				}
