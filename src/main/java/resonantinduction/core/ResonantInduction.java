@@ -141,6 +141,9 @@ public class ResonantInduction
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
+		
+		if (!UpdateTicker.INSTANCE.isAlive())
+			UpdateTicker.INSTANCE.start();
 	}
 
 	@EventHandler
