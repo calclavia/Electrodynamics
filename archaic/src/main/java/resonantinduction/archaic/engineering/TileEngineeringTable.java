@@ -1,7 +1,10 @@
 package resonantinduction.archaic.engineering;
 
+import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -14,26 +17,39 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.imprint.ItemImprint;
+import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.module.TileBlock;
+import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.item.ItemBlockSaved;
 import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileAdvanced;
+import calclavia.lib.prefab.vector.Cuboid;
+import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
+import codechicken.multipart.ControlKeyModifer;
 
 import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
-public class TileEngineeringTable extends TileAdvanced implements IPacketReceiver, IRotatable, ISidedInventory, ISlotPickResult, IAutoCrafter
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class TileEngineeringTable extends TileInventory implements IPacketReceiver, IRotatable, ISidedInventory, ISlotPickResult, IAutoCrafter
 {
 	public static final int CRAFTING_MATRIX_END = 9;
 	public static final int CRAFTING_OUTPUT_END = CRAFTING_MATRIX_END + 1;
@@ -47,11 +63,11 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	private AutoCraftingManager craftManager;
 
 	/** 9 slots for crafting, 1 slot for a output. */
-	public static final int CRAFTING_MATRIX_SIZE=9;
+	public static final int CRAFTING_MATRIX_SIZE = 9;
 	public ItemStack[] craftingMatrix = new ItemStack[CRAFTING_MATRIX_SIZE];
 	public static final int[] craftingSlots = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-	/** The output inventory containing slots.*/
+	/** The output inventory containing slots. */
 	public ItemStack[] outputInventory = new ItemStack[1];
 
 	/** The ability for the engineering table to search nearby inventories. */
@@ -62,6 +78,181 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	 */
 	private InventoryPlayer invPlayer = null;
 	private int[] playerSlots;
+
+	@SideOnly(Side.CLIENT)
+	private Icon iconTop;
+	@SideOnly(Side.CLIENT)
+	private Icon iconFront;
+
+	public TileEngineeringTable()
+	{
+		super(Material.wood);
+		bounds = new Cuboid(0, 0, 0, 1, 0.9f, 1);
+		isOpaqueCube = false;
+		normalRender = false;
+		itemBlock = ItemBlockSaved.class;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(int side, int meta)
+	{
+		return side == 1 ? iconTop : (side == meta ? iconFront : icon);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister)
+	{
+		iconTop = iconRegister.registerIcon(this.getTextureName() + "_top");
+		iconFront = iconRegister.registerIcon(this.getTextureName() + "_front");
+		icon = iconRegister.registerIcon(this.getTextureName() + "_side");
+	}
+
+	@Override
+	public void click(EntityPlayer player)
+	{
+		if (!world().isRemote && ControlKeyModifer.isControlDown(player))
+		{
+			if (this instanceof IInventory)
+			{
+				IInventory inventory = (IInventory) this;
+
+				// Don't drop the output, so subtract by one.
+				for (int i = 0; i < inventory.getSizeInventory() - 1; ++i)
+				{
+					ItemStack dropStack = inventory.getStackInSlot(i);
+
+					if (dropStack != null)
+					{
+						int var11 = dropStack.stackSize;
+						dropStack.stackSize -= var11;
+						InventoryUtility.dropItemStack(world(), center(), dropStack);
+
+						if (dropStack.stackSize <= 0)
+							inventory.setInventorySlotContents(i, null);
+					}
+				}
+
+				inventory.onInventoryChanged();
+			}
+		}
+	}
+
+	@Override
+	protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHammer)
+		{
+			return false;
+		}
+
+		if (hitSide == 1)
+		{
+			if (!world().isRemote)
+			{
+				Vector3 hitVector = new Vector3(hit.x, 0, hit.z);
+				final double regionLength = 1d / 3d;
+
+				// Rotate the hit vector baed on direction of the tile.
+				hitVector.translate(new Vector3(-0.5, 0, -0.5));
+				hitVector.rotate(WorldUtility.getAngleFromForgeDirection(getDirection()), Vector3.UP());
+				hitVector.translate(new Vector3(0.5, 0, 0.5));
+
+				/**
+				 * Crafting Matrix
+				 */
+				matrix:
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						Vector2 check = new Vector2(j, k).scale(regionLength);
+
+						if (check.distance(hitVector.toVector2()) < regionLength)
+						{
+							int slotID = j * 3 + k;
+							interactCurrentItem(this, slotID, player);
+							break matrix;
+						}
+					}
+				}
+
+				onInventoryChanged();
+			}
+
+			return true;
+		}
+		else if (hitSide != 0)
+		{
+			/**
+			 * Take out of engineering table.
+			 */
+			if (!world().isRemote)
+			{
+				setPlayerInventory(player.inventory);
+
+				ItemStack output = getStackInSlot(9);
+				boolean firstLoop = true;
+
+				while (output != null && (firstLoop || ControlKeyModifer.isControlDown(player)))
+				{
+					onPickUpFromSlot(player, 9, output);
+
+					if (output.stackSize > 0)
+					{
+						InventoryUtility.dropItemStack(world(), new Vector3(player), output, 0);
+					}
+
+					setInventorySlotContents(9, null);
+					onInventoryChanged();
+
+					output = getStackInSlot(9);
+					firstLoop = false;
+				}
+
+				setPlayerInventory(null);
+			}
+
+			return true;
+
+		}
+		return false;
+	}
+
+	@Override
+	protected boolean configure(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		searchInventories = !searchInventories;
+
+		if (!world().isRemote)
+		{
+			if (searchInventories)
+				player.addChatMessage("Engineering table will now search for nearby inventories for resources.");
+			else
+				player.addChatMessage("Engineering table will not search for nearby inventories for resources.");
+		}
+
+		markUpdate();
+		return true;
+	}
+
+	@Override
+	public void onRemove(int par5, int par6)
+	{
+		ItemBlockSaved.dropBlockWithNBT(getBlockType(), world(), x(), y(), z());
+	}
+
+	@Override
+	public int quantityDropped(int meta, int fortune)
+	{
+		return 0;
+	}
+
+	@Override
+	public void dropEntireInventory(int par5, int par6)
+	{
+	}
 
 	/**
 	 * Creates a "fake inventory" and hook the player up to the crafter to use the player's items.
@@ -470,7 +661,10 @@ public class TileEngineeringTable extends TileAdvanced implements IPacketReceive
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		if (Settings.ALLOW_ENGINEERING_AUTOCRAFT)
+			return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+		return new int[0];
 	}
 
 	/**

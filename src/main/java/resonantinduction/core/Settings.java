@@ -50,7 +50,7 @@ public class Settings
 
 	/** Settings */
 	private static boolean didLoad = false;
-	public static int FURNACE_WATTAGE = 50000;
+	public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
 	public static boolean SOUND_FXS = true;
 	public static boolean SHINY_SILVER = true;
 	public static int MAX_CONTRACTOR_DISTANCE = 200;
@@ -65,7 +65,7 @@ public class Settings
 		if (!didLoad)
 		{
 			// Config
-			FURNACE_WATTAGE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Furnace Wattage Per Tick", FURNACE_WATTAGE).getInt(FURNACE_WATTAGE);
+			ALLOW_ENGINEERING_AUTOCRAFT = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Engineering Table Autocraft", ALLOW_ENGINEERING_AUTOCRAFT).getBoolean(ALLOW_ENGINEERING_AUTOCRAFT);
 			SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
 			SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
 			MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);

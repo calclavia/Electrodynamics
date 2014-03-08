@@ -8,7 +8,6 @@ import resonantinduction.archaic.blocks.BlockTurntable;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
-import resonantinduction.archaic.engineering.BlockEngineeringTable;
 import resonantinduction.archaic.engineering.ItemHammer;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
 import resonantinduction.archaic.filter.BlockFilter;
@@ -37,7 +36,6 @@ import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockMetadata;
-import calclavia.lib.prefab.item.ItemBlockSaved;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -100,7 +98,7 @@ public class Archaic
 	{
 		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
-		blockEngineeringTable = contentRegistry.createBlock(BlockEngineeringTable.class, ItemBlockSaved.class, TileEngineeringTable.class);
+		blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class);
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
 		blockTurntable = contentRegistry.createBlock(BlockTurntable.class);
