@@ -3,12 +3,11 @@ package resonantinduction.electrical.generator;
 import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
+import resonantinduction.core.grid.INodeProvider;
+import resonantinduction.core.grid.Node;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileElectrical;
 
@@ -17,7 +16,7 @@ import calclavia.lib.prefab.tile.TileElectrical;
  * 
  * @author Calclavia
  */
-public class TileGenerator extends TileElectrical implements IRotatable, IMechanicalNodeProvider
+public class TileGenerator extends TileElectrical implements IRotatable, INodeProvider
 {
 	protected MechanicalNode node = new MechanicalNode(this)
 	{
@@ -164,8 +163,10 @@ public class TileGenerator extends TileElectrical implements IRotatable, IMechan
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection from)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return node;
+		if (nodeType.isAssignableFrom(node.getClass()))
+			return (N) node;
+		return null;
 	}
 }

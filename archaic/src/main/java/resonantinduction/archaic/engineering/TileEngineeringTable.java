@@ -753,17 +753,4 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
 		return slots;
 	}
-
-	@Override
-	public ForgeDirection getDirection()
-	{
-		return ForgeDirection.getOrientation(getBlockMetadata());
-	}
-
-	@Override
-	public void setDirection(ForgeDirection direction)
-	{
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
-	}
-
 }

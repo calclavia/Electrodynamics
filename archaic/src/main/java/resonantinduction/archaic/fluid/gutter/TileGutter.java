@@ -57,7 +57,7 @@ public class TileGutter extends TilePressurizedNode
 						{
 							if (tile instanceof IPressureNodeProvider)
 							{
-								PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
+								PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
 
 								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 								{

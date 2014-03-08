@@ -224,7 +224,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 	{
 		node.deconstruct();
 	}
-	
+
 	public void copyFrom(PartFramedNode<M, N, T> other)
 	{
 		this.isInsulated = other.isInsulated;
@@ -264,7 +264,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 	{
 		if (packetID == 0)
 		{
-			currentConnections= packet.readByte();
+			currentConnections = packet.readByte();
 			tile().markRender();
 		}
 		else
@@ -273,8 +273,12 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 		}
 	}
 
-	public N getNode(ForgeDirection from)
+	@SuppressWarnings("hiding")
+	@Override
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return node;
+		if (nodeType.isAssignableFrom(node.getClass()))
+			return (N) node;
+		return null;
 	}
 }

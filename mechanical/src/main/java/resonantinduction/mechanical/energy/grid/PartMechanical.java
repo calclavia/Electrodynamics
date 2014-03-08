@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.network;
+package resonantinduction.mechanical.energy.grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.INodeProvider;
+import resonantinduction.core.grid.Node;
+import resonantinduction.mechanical.energy.turbine.TileMechanicalTurbine;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TFacePart;
-import codechicken.multipart.TMultiPart;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -20,7 +22,7 @@ import codechicken.multipart.TMultiPart;
  * @author Calclavia
  * 
  */
-public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, IMechanicalNodeProvider
+public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, INodeProvider
 {
 	public MechanicalNode node;
 	protected double prevAngularVelocity;
@@ -68,9 +70,12 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		}
 	}
 
-	public MechanicalNode getNode(ForgeDirection dir)
+	@Override
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return node;
+		if (nodeType.isAssignableFrom(node.getClass()))
+			return (N) node;
+		return null;
 	}
 
 	@Override

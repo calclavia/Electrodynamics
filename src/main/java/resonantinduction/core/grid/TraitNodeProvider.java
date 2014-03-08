@@ -1,27 +1,25 @@
-package resonantinduction.mechanical.trait;
+package resonantinduction.core.grid;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class TraitMechanical extends TileMultipart implements IMechanicalNodeProvider
+public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
-	public Set<IMechanicalNodeProvider> mechanicalInterfaces = new HashSet<IMechanicalNodeProvider>();
+	public Set<INodeProvider> mechanicalInterfaces = new HashSet<INodeProvider>();
 
 	@Override
 	public void copyFrom(TileMultipart that)
 	{
 		super.copyFrom(that);
 
-		if (that instanceof TraitMechanical)
+		if (that instanceof TraitNodeProvider)
 		{
-			this.mechanicalInterfaces = ((TraitMechanical) that).mechanicalInterfaces;
+			this.mechanicalInterfaces = ((TraitNodeProvider) that).mechanicalInterfaces;
 		}
 	}
 
@@ -30,9 +28,9 @@ public class TraitMechanical extends TileMultipart implements IMechanicalNodePro
 	{
 		super.bindPart(part);
 
-		if (part instanceof IMechanicalNodeProvider)
+		if (part instanceof INodeProvider)
 		{
-			this.mechanicalInterfaces.add((IMechanicalNodeProvider) part);
+			this.mechanicalInterfaces.add((INodeProvider) part);
 		}
 	}
 
@@ -41,7 +39,7 @@ public class TraitMechanical extends TileMultipart implements IMechanicalNodePro
 	{
 		super.partRemoved(part, p);
 
-		if (part instanceof IMechanicalNodeProvider)
+		if (part instanceof INodeProvider)
 		{
 			this.mechanicalInterfaces.remove(part);
 		}
@@ -55,7 +53,7 @@ public class TraitMechanical extends TileMultipart implements IMechanicalNodePro
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection from)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 
@@ -64,12 +62,11 @@ public class TraitMechanical extends TileMultipart implements IMechanicalNodePro
 			part = partMap(PartMap.CENTER.ordinal());
 		}
 
-		if (part instanceof IMechanicalNodeProvider)
+		if (part instanceof INodeProvider)
 		{
-			return ((IMechanicalNodeProvider) part).getNode(from);
+			return ((INodeProvider) part).getNode(nodeType, from);
 		}
 
 		return null;
-
 	}
 }

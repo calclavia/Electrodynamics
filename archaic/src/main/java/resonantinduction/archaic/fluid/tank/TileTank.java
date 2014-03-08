@@ -1,16 +1,11 @@
 package resonantinduction.archaic.fluid.tank;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import resonantinduction.api.mechanical.fluid.IPressure;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 import resonantinduction.core.fluid.TileFluidDistribution;
@@ -22,7 +17,7 @@ import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
-public class TileTank extends TileFluidDistribution implements IPressure, IComparatorInputOverride
+public class TileTank extends TileFluidDistribution implements IComparatorInputOverride
 {
 	public static final int VOLUME = 16;
 
@@ -62,7 +57,7 @@ public class TileTank extends TileFluidDistribution implements IPressure, ICompa
 
 		return true;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(int side)
 	{
@@ -112,17 +107,4 @@ public class TileTank extends TileFluidDistribution implements IPressure, ICompa
 			}
 		}
 	}
-
-	@Override
-	public void setPressure(int amount)
-	{
-		pressure = amount;
-	}
-
-	@Override
-	public int getPressure(ForgeDirection dir)
-	{
-		return 0;// (getInternalTank().getCapacity() - getInternalTank().getFluidAmount()) / 10;
-	}
-
 }

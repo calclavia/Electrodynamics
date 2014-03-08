@@ -13,8 +13,8 @@ import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import resonantinduction.mechanical.energy.network.TileMechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 

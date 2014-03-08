@@ -7,10 +7,10 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import resonantinduction.mechanical.energy.network.PartMechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
@@ -98,7 +98,7 @@ public class PartGearShaft extends PartMechanical
 
 						if (checkDir == placementSide || checkDir == placementSide.getOpposite())
 						{
-							MechanicalNode instance = ((IMechanicalNodeProvider) tile()).getNode(checkDir);
+							MechanicalNode instance = ((INodeProvider) tile()).getNode(MechanicalNode.class, checkDir);
 
 							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 							{
@@ -116,9 +116,9 @@ public class PartGearShaft extends PartMechanical
 						{
 							TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 
-							if (checkTile instanceof IMechanicalNodeProvider)
+							if (checkTile instanceof INodeProvider)
 							{
-								MechanicalNode instance = ((IMechanicalNodeProvider) checkTile).getNode(checkDir.getOpposite());
+								MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
 
 								// Only connect to shafts outside of this block space.
 								if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))

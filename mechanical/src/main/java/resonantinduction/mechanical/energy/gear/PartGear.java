@@ -12,11 +12,12 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
+import resonantinduction.core.grid.INodeProvider;
+import resonantinduction.core.grid.Node;
 import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import resonantinduction.mechanical.energy.network.PartMechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.PartMechanical;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.utility.WrenchUtility;
@@ -121,9 +122,9 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 					/** Look for gears that are back-to-back with this gear. Equate torque. */
 					TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
 
-					if (tileBehind instanceof IMechanicalNodeProvider)
+					if (tileBehind instanceof INodeProvider)
 					{
-						MechanicalNode instance = ((IMechanicalNodeProvider) tileBehind).getNode(placementSide.getOpposite());
+						MechanicalNode instance = ((INodeProvider) tileBehind).getNode(MechanicalNode.class, placementSide.getOpposite());
 
 						if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
 						{
@@ -146,7 +147,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 							tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 						}
 
-						if (tile instanceof IMechanicalNodeProvider)
+						if (tile instanceof INodeProvider)
 						{
 							/**
 							 * If we're checking for the block that is opposite to the gear's
@@ -154,7 +155,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 							 * side
 							 * (the center), then we try to look for a gear shaft in the center.
 							 */
-							MechanicalNode instance = ((IMechanicalNodeProvider) tile).getNode(checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
+							MechanicalNode instance = ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
 							if (!connections.containsValue(checkDir) && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 							{
@@ -176,9 +177,9 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 						ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(PartGear.this.placementSide.ordinal(), i));
 						TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir, displaceCheck).getTileEntity(world());
 
-						if (!connections.containsValue(checkDir) && checkTile instanceof IMechanicalNodeProvider)
+						if (!connections.containsValue(checkDir) && checkTile instanceof INodeProvider)
 						{
-							MechanicalNode instance = ((IMechanicalNodeProvider) checkTile).getNode(placementSide);
+							MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, placementSide);
 
 							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
 							{
@@ -206,7 +207,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
 				if (with instanceof MechanicalNode)
 				{
-					IMechanicalNodeProvider parent = ((MechanicalNode) with).parent;
+					INodeProvider parent = ((MechanicalNode) with).parent;
 
 					/**
 					 * Check for flat connections (gear face on gear face) to make sure it's
@@ -268,9 +269,9 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 						/** Face to face stick connection. */
 						TileEntity sourceTile = position().translate(from.getOpposite()).getTileEntity(world());
 
-						if (sourceTile instanceof IMechanicalNodeProvider)
+						if (sourceTile instanceof INodeProvider)
 						{
-							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from);
+							MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from);
 							return sourceInstance == with;
 						}
 					}
@@ -279,9 +280,9 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 						/** Face to face stick connection. */
 						TileEntity sourceTile = position().translate(from).getTileEntity(world());
 
-						if (sourceTile instanceof IMechanicalNodeProvider)
+						if (sourceTile instanceof INodeProvider)
 						{
-							MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from.getOpposite());
+							MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
 							return sourceInstance == with;
 						}
 					}
@@ -289,7 +290,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 					{
 						TileEntity destinationTile = ((MechanicalNode) with).position().translate(from.getOpposite()).getTileEntity(world());
 
-						if (destinationTile instanceof IMechanicalNodeProvider && destinationTile instanceof TileMultipart)
+						if (destinationTile instanceof INodeProvider && destinationTile instanceof TileMultipart)
 						{
 							TMultiPart destinationPart = ((TileMultipart) destinationTile).partMap(placementSide.ordinal());
 
@@ -527,9 +528,11 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection from)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return getMultiBlock().get().node;
+		if (nodeType.isAssignableFrom(node.getClass()))
+			return (N) getMultiBlock().get().node;
+		return null;
 	}
 
 	/** Multipart Bounds */

@@ -137,7 +137,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			{
 				IFluidHandler fluidHandler = (IFluidHandler) obj;
 				int pressure = getPressure(dir);
-				int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(getClass(),dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
+				int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(PressureNode.class, dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
 				FluidTank sourceTank = parent.getPressureTank();
 
 				int transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate();
@@ -191,7 +191,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 
 				if (tile instanceof IPressureNodeProvider)
 				{
-					PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
+					PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
 
 					if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 					{

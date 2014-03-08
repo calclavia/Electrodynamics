@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import resonantinduction.core.prefab.part.PartFramedNode;
@@ -59,7 +60,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 						{
 							if (tile instanceof IPressureNodeProvider)
 							{
-								PressureNode check = ((IPressureNodeProvider) tile).getNode(dir.getOpposite());
+								PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
 
 								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 								{
@@ -238,8 +239,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 
 		return this.tank;
 	}
-
-
 
 	@Override
 	public void drawBreaking(RenderBlocks renderBlocks)

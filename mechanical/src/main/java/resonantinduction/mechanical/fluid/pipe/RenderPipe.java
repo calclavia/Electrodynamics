@@ -49,8 +49,8 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		GL11.glPushMatrix();
 
-		FluidStack fluid = part.getInternalTank().getFluid();
-		int capacity = part.getInternalTank().getCapacity();
+		FluidStack fluid = part.getPressureTank().getFluid();
+		int capacity = part.getPressureTank().getCapacity();
 		byte renderSides = part.getAllCurrentConnections();
 
 		if (fluid != null && fluid.amount > 0)

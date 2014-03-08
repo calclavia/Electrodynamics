@@ -1,9 +1,10 @@
-package resonantinduction.mechanical.energy.network;
+package resonantinduction.mechanical.energy.grid;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.Node;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
@@ -13,7 +14,7 @@ import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileMechanical extends TileAdvanced implements IMechanicalNodeProvider, IPacketReceiver
+public abstract class TileMechanical extends TileAdvanced implements INodeProvider, IPacketReceiver
 {
 	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
@@ -21,7 +22,7 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 
 	protected class PacketMechanicalNode extends MechanicalNode
 	{
-		public PacketMechanicalNode(IMechanicalNodeProvider parent)
+		public PacketMechanicalNode(INodeProvider parent)
 		{
 			super(parent);
 		}
@@ -69,9 +70,11 @@ public abstract class TileMechanical extends TileAdvanced implements IMechanical
 	}
 
 	@Override
-	public MechanicalNode getNode(Class<? extends Node> clazz, ForgeDirection dir)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return mechanicalNode;
+		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
+			return (N) mechanicalNode;
+		return null;
 	}
 
 	private void sendRotationPacket()

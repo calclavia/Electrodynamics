@@ -3,8 +3,6 @@ package resonantinduction.core.grid;
 import net.minecraftforge.common.ForgeDirection;
 
 /**
- * Any inheritance of INodeProvider should have a method "getNode()"
- * 
  * @author Calclavia
  * 
  * @param <N> - Node type.
@@ -16,5 +14,5 @@ public interface INodeProvider
 	 * @param from - The direction.
 	 * @return Returns the node object.
 	 */
-	public Object getNode(Class<? extends Node> nodeType, ForgeDirection from);
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from);
 }

@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import calclavia.lib.network.IPacketReceiverWithID;
@@ -94,8 +95,10 @@ public abstract class TilePressurizedNode extends TileFluidNode implements IPres
 	}
 
 	@Override
-	public PressureNode getNode(ForgeDirection from)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return node;
+		if (nodeType.isAssignableFrom(node.getClass()))
+			return (N) node;
+		return null;
 	}
 }

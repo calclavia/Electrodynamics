@@ -3,22 +3,23 @@ package resonantinduction.mechanical.energy.turbine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
+import resonantinduction.core.grid.INodeProvider;
+import resonantinduction.core.grid.Node;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
-public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNodeProvider
+public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 {
-	protected MechanicalNode node;
+	protected MechanicalNode mechanicalNode;
 
 	public TileMechanicalTurbine()
 	{
 		super();
 		energy = new EnergyStorageHandler(0);
-		node = new MechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
@@ -30,9 +31,9 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 					 */
 					TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
 
-					if (sourceTile instanceof IMechanicalNodeProvider)
+					if (sourceTile instanceof INodeProvider)
 					{
-						MechanicalNode sourceInstance = ((IMechanicalNodeProvider) sourceTile).getNode(from.getOpposite());
+						MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
 						return sourceInstance == source && from == getDirection().getOpposite();
 					}
 				}
@@ -57,28 +58,30 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 	@Override
 	public void initiate()
 	{
-		node.reconstruct();
+		mechanicalNode.reconstruct();
 		super.initiate();
 	}
 
 	@Override
 	public void invalidate()
 	{
-		node.deconstruct();
+		mechanicalNode.deconstruct();
 		super.invalidate();
 	}
 
 	@Override
 	public void onProduce()
 	{
-		node.torque += (torque - node.torque) / 10;
-		node.angularVelocity += (angularVelocity - node.angularVelocity) / 10;
+		mechanicalNode.torque += (torque - mechanicalNode.torque) / 10;
+		mechanicalNode.angularVelocity += (angularVelocity - mechanicalNode.angularVelocity) / 10;
 	}
 
 	@Override
-	public MechanicalNode getNode(ForgeDirection dir)
+	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		return ((TileMechanicalTurbine) getMultiBlock().get()).node;
+		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
+			return (N) ((TileMechanicalTurbine) getMultiBlock().get()).mechanicalNode;
+		return null;
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 	{
 		super.readFromNBT(nbt);
 		tier = nbt.getInteger("tier");
-		node.load(nbt);
+		mechanicalNode.load(nbt);
 	}
 
 	/**
@@ -99,6 +102,6 @@ public class TileMechanicalTurbine extends TileTurbine implements IMechanicalNod
 	{
 		super.writeToNBT(nbt);
 		nbt.setInteger("tier", tier);
-		node.save(nbt);
+		mechanicalNode.save(nbt);
 	}
 }

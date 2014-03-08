@@ -18,8 +18,8 @@ import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import resonantinduction.mechanical.energy.network.TileMechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
@@ -205,7 +205,7 @@ public class TileMixer extends TileMechanical implements IInventory
 		if (!worldObj.isRemote)
 		{
 			Vector3 spawnVector = new Vector3(this).translate(ForgeDirection.getOrientation(worldObj.rand.nextInt(4) + 2)).translate(0.5);
-			InventoryUtility.dropItemStack(worldObj, spawnVector, itemstack, 20, false);
+			InventoryUtility.dropItemStack(worldObj, spawnVector, itemstack, 20, 0);
 		}
 	}
 

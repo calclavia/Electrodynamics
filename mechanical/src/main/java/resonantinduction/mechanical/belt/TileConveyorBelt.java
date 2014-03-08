@@ -14,10 +14,10 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.mechanical.IBelt;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.network.IMechanicalNodeProvider;
-import resonantinduction.mechanical.energy.network.MechanicalNode;
-import resonantinduction.mechanical.energy.network.TileMechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
@@ -85,13 +85,13 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 
 							if (tile instanceof TileConveyorBelt)
 							{
-								connections.put(((TileConveyorBelt) tile).getNode(dir.getOpposite()), dir);
+								connections.put(((TileConveyorBelt) tile).getNode(MechanicalNode.class, dir.getOpposite()), dir);
 								didRefresh = true;
 							}
 						}
-						else if (tile instanceof IMechanicalNodeProvider)
+						else if (tile instanceof INodeProvider)
 						{
-							MechanicalNode mechanical = ((IMechanicalNodeProvider) tile).getNode(dir.getOpposite());
+							MechanicalNode mechanical = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
 
 							if (mechanical != null)
 							{

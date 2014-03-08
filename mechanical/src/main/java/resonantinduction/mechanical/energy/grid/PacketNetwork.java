@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.network;
+package resonantinduction.mechanical.energy.grid;
 
 import java.util.ArrayList;
 import java.util.List;

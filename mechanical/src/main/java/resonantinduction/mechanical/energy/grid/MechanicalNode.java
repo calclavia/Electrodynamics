@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.network;
+package resonantinduction.mechanical.energy.grid;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -8,7 +8,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.Grid;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
@@ -30,7 +29,7 @@ import codechicken.multipart.TMultiPart;
  * 
  * @author Calclavia
  */
-public class MechanicalNode extends EnergyNode<IMechanicalNodeProvider, TickingGrid, MechanicalNode>
+public class MechanicalNode extends EnergyNode<INodeProvider, TickingGrid, MechanicalNode>
 {
 	public double torque = 0;
 	public double prevAngularVelocity, angularVelocity = 0;
@@ -46,7 +45,7 @@ public class MechanicalNode extends EnergyNode<IMechanicalNodeProvider, TickingG
 
 	private double power = 0;
 
-	public MechanicalNode(IMechanicalNodeProvider parent)
+	public MechanicalNode(INodeProvider parent)
 	{
 		super(parent);
 	}
@@ -201,9 +200,9 @@ public class MechanicalNode extends EnergyNode<IMechanicalNodeProvider, TickingG
 			{
 				TileEntity tile = position().translate(dir).getTileEntity(world());
 
-				if (tile instanceof IMechanicalNodeProvider)
+				if (tile instanceof INodeProvider)
 				{
-					MechanicalNode check = ((IMechanicalNodeProvider) tile).getNode(dir.getOpposite());
+					MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
 
 					if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 					{

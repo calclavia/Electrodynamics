@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.network;
+package resonantinduction.mechanical.energy.grid;
 
 import resonantinduction.core.grid.Grid;
 import resonantinduction.core.grid.INodeProvider;

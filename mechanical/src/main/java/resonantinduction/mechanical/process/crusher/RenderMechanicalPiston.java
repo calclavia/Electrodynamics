@@ -9,6 +9,7 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.core.grid.fluid.PressureNode;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,7 +34,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		RenderUtility.bind(TEXTURE);
 
 		// Angle in radians of the rotor.
-		float angle = (float) tile.getNode(null).angle;
+		float angle = (float) tile.mechanicalNode.angle;
 		float radius = 0.5f;
 		// Length of piston arm
 		float length = 1f;
