@@ -2,6 +2,8 @@ package resonantinduction.electrical.multimeter;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +12,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.part.IHighlight;
 import resonantinduction.electrical.wire.EnumWireMaterial;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
@@ -45,20 +50,15 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
 	{
-		par3List.add(LanguageUtility.getLocal("tooltip.multimeter.line1"));
-		par3List.add(LanguageUtility.getLocal("tooltip.multimeter.line2"));
-
-		float detection = this.getDetection(itemStack);
-
-		if (detection != -1)
+		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 		{
-			par3List.add(LanguageUtility.getLocal("tooltip.multimeter.lastSave").replace("%v", detection + ""));
+			list.add(LanguageUtility.getLocal("tooltip.noShift").replace("%0", EnumColor.AQUA.toString()).replace("%1", EnumColor.GREY.toString()));
 		}
 		else
 		{
-			par3List.add(LanguageUtility.getLocal("tooltip.multimeter.noSave"));
+			list.addAll(LanguageUtility.splitStringPerWord(LanguageUtility.getLocal("item.resonantinduction:multimeter.tooltip"), 5));
 		}
 	}
 

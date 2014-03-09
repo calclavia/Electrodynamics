@@ -85,86 +85,90 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 
 	public void distribute()
 	{
-		Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
-
-		while (it.hasNext())
+		synchronized (getConnections())
 		{
-			Entry<?, ForgeDirection> entry = it.next();
-			Object obj = entry.getKey();
-			ForgeDirection dir = entry.getValue();
+			Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
 
-			if (obj instanceof PressureNode)
+			while (it.hasNext())
 			{
-				PressureNode otherPipe = (PressureNode) obj;
+				Entry<?, ForgeDirection> entry = it.next();
+				Object obj = entry.getKey();
+				ForgeDirection dir = entry.getValue();
 
-				/**
-				 * Move fluid from higher pressure to lower. In this case, move from tankA to tankB.
-				 */
-				int pressureA = getPressure(dir);
-				int pressureB = otherPipe.getPressure(dir.getOpposite());
-
-				if (pressureA >= pressureB)
+				if (obj instanceof PressureNode)
 				{
-					FluidTank tankA = parent.getPressureTank();
+					PressureNode otherPipe = (PressureNode) obj;
 
-					if (tankA != null)
+					/**
+					 * Move fluid from higher pressure to lower. In this case, move from tankA to
+					 * tankB.
+					 */
+					int pressureA = getPressure(dir);
+					int pressureB = otherPipe.getPressure(dir.getOpposite());
+
+					if (pressureA >= pressureB)
 					{
-						FluidStack fluidA = tankA.getFluid();
+						FluidTank tankA = parent.getPressureTank();
 
-						if (fluidA != null)
+						if (tankA != null)
 						{
-							int amountA = fluidA.amount;
+							FluidStack fluidA = tankA.getFluid();
 
-							if (amountA > 0)
+							if (fluidA != null)
 							{
-								FluidTank tankB = otherPipe.parent.getPressureTank();
+								int amountA = fluidA.amount;
 
-								if (tankB != null)
+								if (amountA > 0)
 								{
-									int amountB = tankB.getFluidAmount();
+									FluidTank tankB = otherPipe.parent.getPressureTank();
 
-									int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * getMaxFlowRate() : 0, Math.min((amountA - amountB) / 2, getMaxFlowRate()));
-									quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
-
-									if (quantity > 0)
+									if (tankB != null)
 									{
-										FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
+										int amountB = tankB.getFluidAmount();
 
-										if (drainStack != null && drainStack.amount > 0)
-											parent.drain(dir.getOpposite(), otherPipe.parent.fill(dir, drainStack, true), true);
+										int quantity = Math.max(pressureA > pressureB ? (pressureA - pressureB) * getMaxFlowRate() : 0, Math.min((amountA - amountB) / 2, getMaxFlowRate()));
+										quantity = Math.min(Math.min(quantity, tankB.getCapacity() - amountB), amountA);
+
+										if (quantity > 0)
+										{
+											FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
+
+											if (drainStack != null && drainStack.amount > 0)
+												parent.drain(dir.getOpposite(), otherPipe.parent.fill(dir, drainStack, true), true);
+										}
 									}
 								}
 							}
 						}
 					}
 				}
-			}
-			else if (obj instanceof IFluidHandler)
-			{
-				IFluidHandler fluidHandler = (IFluidHandler) obj;
-				int pressure = getPressure(dir);
-				int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(PressureNode.class, dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
-				FluidTank sourceTank = parent.getPressureTank();
-
-				int transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate();
-
-				if (pressure > tankPressure)
+				else if (obj instanceof IFluidHandler)
 				{
-					if (sourceTank.getFluidAmount() > 0 && transferAmount > 0)
-					{
-						FluidStack drainStack = parent.drain(dir.getOpposite(), transferAmount, false);
-						parent.drain(dir.getOpposite(), fluidHandler.fill(dir.getOpposite(), drainStack, true), true);
-					}
-				}
-				else if (pressure < tankPressure)
-				{
-					if (transferAmount > 0)
-					{
-						FluidStack drainStack = fluidHandler.drain(dir.getOpposite(), transferAmount, false);
+					IFluidHandler fluidHandler = (IFluidHandler) obj;
+					int pressure = getPressure(dir);
+					int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(PressureNode.class, dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
+					FluidTank sourceTank = parent.getPressureTank();
 
-						if (drainStack != null)
+					int transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate();
+
+					if (pressure > tankPressure)
+					{
+						if (sourceTank.getFluidAmount() > 0 && transferAmount > 0)
 						{
-							fluidHandler.drain(dir.getOpposite(), parent.fill(dir.getOpposite(), drainStack, true), true);
+							FluidStack drainStack = parent.drain(dir.getOpposite(), transferAmount, false);
+							parent.drain(dir.getOpposite(), fluidHandler.fill(dir.getOpposite(), drainStack, true), true);
+						}
+					}
+					else if (pressure < tankPressure)
+					{
+						if (transferAmount > 0)
+						{
+							FluidStack drainStack = fluidHandler.drain(dir.getOpposite(), transferAmount, false);
+
+							if (drainStack != null)
+							{
+								fluidHandler.drain(dir.getOpposite(), parent.fill(dir.getOpposite(), drainStack, true), true);
+							}
 						}
 					}
 				}

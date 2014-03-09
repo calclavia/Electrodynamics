@@ -17,7 +17,7 @@ import codechicken.multipart.TSlottedPart;
  * @author Calclavia
  * 
  */
-public class PartRailing extends PartFramedConnection<EnumPipeMaterial, IRailing, INodeNetwork> implements IRailing, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartRailing extends PartFramedConnection<EnumPipeMaterial, IRailing, INodeNetwork> implements IRailing, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	RedstoneControl control;
 

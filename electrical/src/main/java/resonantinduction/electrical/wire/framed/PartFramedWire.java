@@ -48,7 +48,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @UniversalClass
-public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	public PartFramedWire()
 	{
@@ -101,6 +101,8 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) tile()));
 			}
 		}
+
+		super.onWorldJoin();
 	}
 
 	@Override
@@ -145,6 +147,9 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack item)
 	{
+		if (!world().isRemote)
+			System.out.println(getNetwork());
+
 		if (item != null)
 		{
 			if (item.getItem().itemID == Block.lever.blockID)
@@ -186,7 +191,6 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	{
 		Set<Cuboid6> collisionBoxes = new HashSet<Cuboid6>();
 		collisionBoxes.addAll((Collection<? extends Cuboid6>) getSubParts());
-
 		return collisionBoxes;
 	}
 
@@ -242,40 +246,10 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 	}
 
 	@Override
-	public Cuboid6 getBounds()
-	{
-		return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625);
-	}
-
-	@Override
-	public Icon getBreakingIcon(Object subPart, int side)
-	{
-		return RenderFramedWire.breakIcon;
-	}
-
-	@Override
 	protected boolean canConnectTo(TileEntity tile, ForgeDirection side)
 	{
 		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
-
-		if (obj instanceof PartFramedWire)
-		{
-			PartFramedWire wire = (PartFramedWire) obj;
-
-			if (this.getMaterial() == wire.getMaterial())
-			{
-				if (this.isInsulated() && wire.isInsulated())
-				{
-					return this.getColor() == wire.getColor() || (this.getColor() == DEFAULT_COLOR || wire.getColor() == DEFAULT_COLOR);
-				}
-
-				return true;
-			}
-
-			return false;
-		}
-
-		return CompatibilityModule.canConnect(obj, side.getOpposite(), this);
+		return canConnect(side, obj);
 	}
 
 	@Override
@@ -289,8 +263,11 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 
 	/** Shouldn't need to be overridden. Override connectionPrevented instead */
 	@Override
-	public boolean canConnect(ForgeDirection direction, Object obj)
+	public boolean canConnect(ForgeDirection from, Object obj)
 	{
+		if (isBlockedOnSide(from))
+			return false;
+
 		if (obj instanceof PartFramedWire)
 		{
 			if (world().isBlockIndirectlyGettingPowered(x(), y(), z()))
@@ -298,12 +275,22 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 				return false;
 			}
 
-			Vector3 connectPos = new Vector3(tile()).translate(direction);
-			TileEntity connectTile = connectPos.getTileEntity(world());
-			return !isConnectionPrevented(connectTile, direction);
+			PartFramedWire wire = (PartFramedWire) obj;
+
+			if (this.getMaterial() == wire.getMaterial())
+			{
+				if (isInsulated() && wire.isInsulated())
+				{
+					return getColor() == wire.getColor() || (getColor() == DEFAULT_COLOR || wire.getColor() == DEFAULT_COLOR);
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
-		return false;
+		return CompatibilityModule.canConnect(obj, from.getOpposite(), this);
 	}
 
 	@Override

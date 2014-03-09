@@ -35,7 +35,7 @@ import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INodeNetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect, JIconHitEffects
+public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INodeNetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
@@ -135,24 +135,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	}
 
 	@Override
-	public Cuboid6 getBounds()
-	{
-		return new Cuboid6(0.375, 0.375, 0.375, 0.625, 0.625, 0.625);
-	}
-
-	@Override
-	public Icon getBreakingIcon(Object subPart, int side)
-	{
-		return breakIcon;
-	}
-
-	@Override
-	public Icon getBrokenIcon(int side)
-	{
-		return breakIcon;
-	}
-
-	@Override
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
 		return getCollisionBoxes();
@@ -168,18 +150,6 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	public int getHollowSize()
 	{
 		return isInsulated ? 8 : 6;
-	}
-
-	@Override
-	public void addHitEffects(MovingObjectPosition hit, EffectRenderer effectRenderer)
-	{
-		IconHitEffects.addHitEffects(this, hit, effectRenderer);
-	}
-
-	@Override
-	public void addDestroyEffects(EffectRenderer effectRenderer)
-	{
-		IconHitEffects.addDestroyEffects(this, effectRenderer, false);
 	}
 
 	public boolean isBlockedOnSide(ForgeDirection side)
@@ -309,7 +279,7 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
 						if (getConnector(tileEntity) != null)
 						{
-							this.getNetwork().merge(getConnector(tileEntity).getNetwork());
+							getNetwork().merge(getConnector(tileEntity).getNetwork());
 						}
 					}
 				}
@@ -373,15 +343,8 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 	}
 
 	@Override
-	public void onMoved()
+	public void onWorldJoin()
 	{
-		this.refresh();
-	}
-
-	@Override
-	public void onChunkLoad()
-	{
-		super.onChunkLoad();
 		refresh();
 	}
 
