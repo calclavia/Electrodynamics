@@ -91,6 +91,7 @@ public class QuantumGateManager
 		if (entity != null && location != null)
 		{
 			location.world.markBlockForUpdate((int) location.x, (int) location.y, (int) location.z);
+			
 			if (entity instanceof EntityPlayerMP)
 			{
 				if (coolDown.get(((EntityPlayerMP) entity).username) == null || (System.currentTimeMillis() - coolDown.get(((EntityPlayerMP) entity).username) > 30))

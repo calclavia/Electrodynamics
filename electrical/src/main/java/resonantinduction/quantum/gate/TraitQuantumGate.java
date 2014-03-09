@@ -2,16 +2,26 @@ package resonantinduction.quantum.gate;
 
 import icbm.api.IBlockFrequency;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-import net.minecraft.block.Block;
-import scala.collection.Seq;
-import universalelectricity.api.vector.Vector3;
+import mffs.api.fortron.FrequencyGrid;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.vector.VectorWorld;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 
-public class TraitFrequency extends TileMultipart implements IBlockFrequency
+public class TraitQuantumGate extends TileMultipart implements IQuantumGate
 {
+	@Override
+	public void transport(Entity entity)
+	{
+
+	}
+
 	@Override
 	public int getFrequency()
 	{
@@ -29,7 +39,7 @@ public class TraitFrequency extends TileMultipart implements IBlockFrequency
 		}
 		if (i >= 8)
 			return frequency;
-		
+
 		return -1;
 	}
 
