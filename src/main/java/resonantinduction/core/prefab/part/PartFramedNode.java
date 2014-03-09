@@ -7,6 +7,7 @@ import java.util.Set;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
@@ -218,7 +219,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 	{
 		node.reconstruct();
 	}
-	
+
 	@Override
 	public void onNeighborChanged()
 	{
@@ -286,5 +287,19 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 		if (nodeType.isAssignableFrom(node.getClass()))
 			return (N) node;
 		return null;
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		node.save(nbt);
+	}
+
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		node.load(nbt);
 	}
 }

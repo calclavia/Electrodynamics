@@ -18,7 +18,9 @@ import codechicken.multipart.TMultiPart;
 public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
 {
 	protected byte connectionMap = Byte.parseByte("111111", 2);
-	public int pressure = 0;
+	private int pressure = 0;
+	public int maxFlowRate = 10;
+	public int maxPressure = 10;
 
 	public PressureNode(IPressureNodeProvider parent)
 	{
@@ -65,7 +67,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 
 		if (findCount == 0)
 		{
-			pressure = 0;
+			setPressure(0);
 		}
 		else
 		{
@@ -77,7 +79,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			if (maxPressure > 0)
 				maxPressure -= 1;
 
-			pressure = Math.max(minPressure, Math.min(maxPressure, totalPressure / findCount + Integer.signum(totalPressure)));
+			setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / findCount + Integer.signum(totalPressure))));
 		}
 	}
 
@@ -172,7 +174,15 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 
 	public int getMaxFlowRate()
 	{
-		return 10;
+		return maxFlowRate;
+	}
+
+	public void setPressure(int newPressure)
+	{
+		if (newPressure > 0)
+			pressure = Math.min(maxPressure, newPressure);
+		else
+			pressure = Math.max(-maxPressure, newPressure);
 	}
 
 	public int getPressure(ForgeDirection dir)
@@ -216,6 +226,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 		return parent instanceof TMultiPart ? new Vector3(((TMultiPart) parent).x(), ((TMultiPart) parent).y(), ((TMultiPart) parent).z()) : parent instanceof TileEntity ? new Vector3((TileEntity) parent) : null;
 	}
 
+	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
 		return (source instanceof PressureNode) && (connectionMap & (1 << from.ordinal())) != 0;

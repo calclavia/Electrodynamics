@@ -95,6 +95,13 @@ public abstract class Node<P extends INodeProvider, G extends Grid, N>
 		return connections;
 	}
 
+	/**
+	 * Can this node connect with the source?
+	 * 
+	 * @param from - Direction coming from.
+	 * @param source - Object trying to connect with this node. This should either extend Node or be
+	 * an object that can interface with the node.
+	 */
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
 		return false;

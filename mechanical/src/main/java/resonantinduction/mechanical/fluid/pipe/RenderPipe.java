@@ -5,13 +5,13 @@ import java.awt.Color;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import codechicken.lib.colour.Colour;
-import codechicken.lib.colour.ColourARGB;
 import resonantinduction.core.Reference;
 import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
@@ -25,26 +25,14 @@ public class RenderPipe implements ISimpleItemRenderer
 {
 	public static final RenderPipe INSTANCE = new RenderPipe();
 
-	public static ModelPipe MODEL_PIPE = new ModelPipe();
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "pipe.tcn");
 	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "pipe.png");
 
 	public void render(PartPipe part, double x, double y, double z, float f)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-
-		if (part.getColor() > 0)
-		{
-			Color insulationColour = new Color(ItemDye.dyeColors[part.getColor()]);
-			GL11.glColor4f(insulationColour.getRed() / 255f, insulationColour.getGreen() / 255f, insulationColour.getBlue() / 255f, 1);
-		}
-		else
-		{
-			GL11.glColor4f(1, 1, 1, 1);
-		}
-
-		render(0, part.getAllCurrentConnections());
+		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+		render(part.getMaterialID(), part.getColor() > 0 ? ItemDye.dyeColors[part.getColor()] : -1, part.getAllCurrentConnections());
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
@@ -121,11 +109,60 @@ public class RenderPipe implements ISimpleItemRenderer
 
 	}
 
-	public static void render(int meta, byte sides)
+	@SuppressWarnings("incomplete-switch")
+	public static void render(int meta, int colorCode, byte sides)
 	{
 		RenderUtility.enableBlending();
 		RenderUtility.bind(TEXTURE);
-		MODEL_PIPE.render(sides);
+		EnumPipeMaterial material = EnumPipeMaterial.values()[meta];
+
+		GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
+		MODEL.renderOnly("Mid");
+		
+		/**
+		 * Render each side
+		 */
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (WorldUtility.isEnabledSide(sides, dir))
+			{
+				GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
+				String prefix = null;
+
+				switch (dir)
+				{
+					case DOWN:
+						prefix = "Bottom";
+						break;
+					case UP:
+						prefix = "Top";
+						break;
+					case NORTH:
+						prefix = "Front";
+						break;
+					case SOUTH:
+						prefix = "Back";
+						break;
+					case WEST:
+						prefix = "Right";
+						break;
+					case EAST:
+						prefix = "Left";
+						break;
+				}
+
+				MODEL.renderOnly(prefix + "Inter", prefix + "Connect");
+
+				if (colorCode > 0)
+				{
+					Color color = new Color(colorCode);
+					GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
+				}
+
+				MODEL.renderOnly(prefix + "Pipe");
+			}
+		}
+
 		RenderUtility.disableBlending();
 	}
 
@@ -133,9 +170,8 @@ public class RenderPipe implements ISimpleItemRenderer
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-		render(itemStack.getItemDamage(), Byte.parseByte("001100", 2));
+		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+		render(itemStack.getItemDamage(), -1, Byte.parseByte("001100", 2));
 		GL11.glPopMatrix();
 	}
 }

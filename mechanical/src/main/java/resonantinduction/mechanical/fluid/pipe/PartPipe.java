@@ -1,6 +1,5 @@
 package resonantinduction.mechanical.fluid.pipe;
 
-import calclavia.lib.utility.WorldUtility;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,11 +12,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
+import calclavia.lib.utility.WorldUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
@@ -26,7 +25,6 @@ import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
-import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -92,21 +90,24 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
 			{
+				if (source instanceof PressureNode)
+				{
+					PressureNode otherNode = (PressureNode) source;
+
+					if (otherNode.parent instanceof PartPipe)
+					{
+						PartPipe otherPipe = (PartPipe) otherNode.parent;
+
+						if (getMaterial() == otherPipe.getMaterial())
+						{
+							return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
+						}
+
+						return false;
+					}
+				}
+
 				return super.canConnect(from, source);
-				/*
-				 * Object obj = tile instanceof TileMultipart ? ((TileMultipart)
-				 * tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
-				 * if (obj instanceof PartPipe)
-				 * {
-				 * if (this.getMaterial() == ((PartPipe) obj).getMaterial())
-				 * {
-				 * return getColor() == ((PartPipe) obj).getColor() || (getColor() == DEFAULT_COLOR
-				 * || ((PartPipe) obj).getColor() == DEFAULT_COLOR);
-				 * }
-				 * return false;
-				 * }
-				 * return tile instanceof IFluidHandler;
-				 */
 			}
 
 			@Override
@@ -115,11 +116,14 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 				return 100;
 			}
 		};
+
+		node.maxFlowRate = getMaterial().maxFlowRate;
+		node.maxPressure = getMaterial().maxPressure;
 	}
 
 	public PartPipe()
 	{
-		this(EnumPipeMaterial.COPPER.ordinal());
+		this(0);
 	}
 
 	@Override
@@ -177,7 +181,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 	@Override
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Mechanical.itemPipe);
+		return new ItemStack(Mechanical.itemPipe, 1, getMaterialID());
 	}
 
 	@Override
@@ -264,5 +268,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 	{
 		super.load(nbt);
 		tank.readFromNBT(nbt);
+		node.maxFlowRate = getMaterial().maxFlowRate;
+		node.maxPressure = getMaterial().maxPressure;
 	}
 }

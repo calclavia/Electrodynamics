@@ -1,5 +1,15 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import java.util.List;
+
+import org.lwjgl.input.Keyboard;
+
+import resonantinduction.electrical.wire.EnumWireMaterial;
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LanguageUtility;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -31,14 +41,34 @@ public class ItemPipe extends JItemMultiPart
 	{
 		return damage;
 	}
-	/*
-	 * @Override
-	 * public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
-	 * {
-	 * for (EnumPipeMaterial material : EnumPipeMaterial.values())
-	 * {
-	 * listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
-	 * }
-	 * }
-	 */
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return super.getUnlocalizedName(itemStack) + "." + LanguageUtility.underscoreToCamel(EnumPipeMaterial.values()[itemStack.getItemDamage()].name());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
+	{
+		if (!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		{
+			list.add(LanguageUtility.getLocal("tooltip.noShift").replace("%0", EnumColor.AQUA.toString()).replace("%1", EnumColor.GREY.toString()));
+		}
+		else
+		{
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.rate").replace("%v", "" + EnumColor.ORANGE + UnitDisplay.getDisplay(EnumPipeMaterial.values()[itemstack.getItemDamage()].maxFlowRate * 20, Unit.LITER) + "/s"));
+			list.add(EnumColor.AQUA + LanguageUtility.getLocal("tooltip.pipe.pressure").replace("%v", "" + EnumColor.ORANGE + EnumPipeMaterial.values()[itemstack.getItemDamage()].maxPressure + " Pa"));
+		}
+	}
+
+	@Override
+	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
+	{
+		for (EnumPipeMaterial material : EnumPipeMaterial.values())
+		{
+			listToAddTo.add(new ItemStack(itemID, 1, material.ordinal()));
+		}
+	}
 }

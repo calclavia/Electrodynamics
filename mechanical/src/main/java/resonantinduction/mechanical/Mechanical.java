@@ -20,6 +20,7 @@ import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.SchematicWindTurbine;
 import resonantinduction.mechanical.energy.turbine.TileWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.TileWindTurbine;
+import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
 import resonantinduction.mechanical.fluid.transport.BlockPump;
 import resonantinduction.mechanical.fluid.transport.TilePump;
@@ -173,8 +174,12 @@ public class Mechanical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3), "BBB", "   ", "BBB", 'B', Item.ingotIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 4), "BBB", "   ", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Item.brick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', "rubber"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Item.diamond));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPurifier, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));

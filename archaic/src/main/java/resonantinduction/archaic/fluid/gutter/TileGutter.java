@@ -146,11 +146,10 @@ public class TileGutter extends TilePressureNode
 	{
 		if (getInternalTank().getFluidAmount() > 0)
 		{
-			int pressure = node.pressure;
-
 			for (int i = 2; i < 6; i++)
 			{
 				ForgeDirection dir = ForgeDirection.getOrientation(i);
+				int pressure = node.getPressure(dir);
 				Vector3 position = position().translate(dir);
 
 				TileEntity checkTile = position.getTileEntity(world());
