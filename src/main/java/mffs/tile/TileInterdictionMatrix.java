@@ -96,7 +96,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 						isGranted = true;
 					}
 
-					if (!isGranted && this.worldObj.rand.nextInt(3) == 0)
+					if (!isGranted && this.worldObj.rand.nextInt(3) == 0 && getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 					{
 						player.addChatMessage("[" + this.getInvName() + "] " + LanguageUtility.getLocal("message.interdictionMatrix.warn"));
 					}
