@@ -3,11 +3,11 @@ package resonantinduction.archaic.fluid.gutter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +22,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
+
+import org.lwjgl.opengl.GL11;
+
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -35,6 +38,8 @@ import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The gutter, used for fluid transfer.
@@ -75,8 +80,10 @@ public class TileGutter extends TilePressureNode
 
 								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 								{
-									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
 									connections.put(check, dir);
+
+									if (tile instanceof TileGutter)
+										renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
 
 								}
 							}
@@ -85,9 +92,7 @@ public class TileGutter extends TilePressureNode
 								connections.put(tile, dir);
 
 								if (tile instanceof TileGrate)
-								{
 									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
-								}
 							}
 						}
 					}
@@ -263,7 +268,7 @@ public class TileGutter extends TilePressureNode
 			public final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "gutter.png");
 
 			@Override
-			public boolean renderStatic(Vector3 position)
+			public boolean renderStatic(RenderBlocks renderer, Vector3 position)
 			{
 				return true;
 			}
@@ -314,18 +319,36 @@ public class TileGutter extends TilePressureNode
 			public void render(int meta, byte sides)
 			{
 				RenderUtility.bind(TEXTURE);
+				// RenderUtility.bind(TextureMap.locationBlocksTexture);
+				double thickness = 0.055;
+				double height = 0.5;
 
 				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
 					if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
 					{
+						GL11.glPushMatrix();
+						RenderUtility.rotateBlockBasedOnDirection(dir);
+
+						if (WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+						{
+							GL11.glTranslatef(0, -0.075f, 0);
+							GL11.glScalef(1, 1.15f, 1);
+						}
+
 						if (!WorldUtility.isEnabledSide(sides, dir))
 						{
-							GL11.glPushMatrix();
-							RenderUtility.rotateBlockBasedOnDirection(dir);
-							MODEL.renderOnly("left", "backCornerL", "frontCornerL");
-							GL11.glPopMatrix();
+							/**
+							 * Render sides
+							 */
+							MODEL.renderOnly("left");
 						}
+
+						/**
+						 * Render strips
+						 */
+						MODEL.renderOnly("backCornerL");
+						GL11.glPopMatrix();
 					}
 				}
 
@@ -333,18 +356,7 @@ public class TileGutter extends TilePressureNode
 				{
 					MODEL.renderOnly("base");
 				}
-				else
-				{
-					GL11.glPushMatrix();
-					GL11.glRotatef(-90, 0, 0, 1);
-					MODEL.renderOnly("backCornerL", "frontCornerL");
-					GL11.glPopMatrix();
-					GL11.glPushMatrix();
-					GL11.glRotatef(90, 0, 1, 0);
-					GL11.glRotatef(-90, 0, 0, 1);
-					MODEL.renderOnly("backCornerL", "frontCornerL");
-					GL11.glPopMatrix();
-				}
+
 			}
 		};
 	}

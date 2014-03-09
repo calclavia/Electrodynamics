@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -217,6 +218,7 @@ public class TileSorter extends TileInventory
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Override
 	protected TileRender newRenderer()
 	{
 		return new TileRender()
@@ -225,7 +227,7 @@ public class TileSorter extends TileInventory
 			final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "sorter.png");
 
 			@Override
-			public boolean renderStatic(Vector3 position)
+			public boolean renderStatic(RenderBlocks renderer, Vector3 position)
 			{
 				return true;
 			}

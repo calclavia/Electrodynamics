@@ -53,7 +53,7 @@ public class Settings
 	public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
 	public static boolean SOUND_FXS = true;
 	public static boolean SHINY_SILVER = true;
-	public static int MAX_CONTRACTOR_DISTANCE = 200;
+	public static int MAX_LEVITATOR_DISTANCE = 200;
 
 	/**
 	 * Called from RI's core.
@@ -68,7 +68,7 @@ public class Settings
 			ALLOW_ENGINEERING_AUTOCRAFT = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Engineering Table Autocraft", ALLOW_ENGINEERING_AUTOCRAFT).getBoolean(ALLOW_ENGINEERING_AUTOCRAFT);
 			SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
 			SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
-			MAX_CONTRACTOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_CONTRACTOR_DISTANCE).getInt(MAX_CONTRACTOR_DISTANCE);
+			MAX_LEVITATOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_LEVITATOR_DISTANCE).getInt(MAX_LEVITATOR_DISTANCE);
 
 			LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
 			LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);

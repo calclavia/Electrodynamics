@@ -623,7 +623,7 @@ public class PartLevitator extends PartFace
 			Vector3 start = getPosition();
 			Vector3 target = new Vector3(getLink().x(), getLink().y(), getLink().z());
 
-			if (start.distance(target) < Settings.MAX_CONTRACTOR_DISTANCE)
+			if (start.distance(target) < Settings.MAX_LEVITATOR_DISTANCE)
 			{
 				if (canBeMovePath(world(), start) && canBeMovePath(world(), target))
 				{
