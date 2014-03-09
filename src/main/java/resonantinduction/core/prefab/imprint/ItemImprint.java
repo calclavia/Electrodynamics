@@ -30,12 +30,6 @@ public class ItemImprint extends Item
 	}
 
 	@Override
-	public int getItemStackLimit()
-	{
-		return 1;
-	}
-
-	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
 		if (entity != null && !(entity instanceof IProjectile) && !(entity instanceof EntityPlayer))
