@@ -74,7 +74,7 @@ public class BlockQuantumGate extends BlockTile
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float f1, float f2, float f3)
 	{
-		if (player != null && player.getHeldItem() == null || player.getHeldItem().itemID != (Electrical.blockGlyph.blockID))
+		if (player != null && player.getHeldItem() == null)
 		{
 			TileEntity tile = world.getBlockTileEntity(x, y, z);
 

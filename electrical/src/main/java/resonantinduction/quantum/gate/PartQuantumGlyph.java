@@ -1,16 +1,17 @@
 package resonantinduction.quantum.gate;
 
+import icbm.api.IBlockFrequency;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
-import calclavia.lib.render.RenderUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -20,8 +21,9 @@ import codechicken.multipart.JNormalOcclusion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion
+public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, IBlockFrequency
 {
+	public static final int MAX_GLYPH = 4;
 	static final Cuboid6[] bounds = new Cuboid6[8];
 
 	static
@@ -44,6 +46,42 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion
 	{
 		this.side = (byte) side;
 		this.number = (byte) itemDamage;
+	}
+
+	@Override
+	public void update()
+	{
+		if (world().isRemote)
+		{
+			int frequency = ((IBlockFrequency) tile()).getFrequency();
+
+			if (frequency > 0)
+			{
+				// Spawn particle effects.
+				universalelectricity.api.vector.Vector3 center = new universalelectricity.api.vector.Vector3(x() + 0.5, y() + 0.5, z() + 0.5);
+				Electrical.proxy.renderElectricShock(world(), center, center.clone().translate(Math.random() * 1 - 0.5, Math.random() * 1 - 0.5, Math.random() * 1 - 0.5));
+			}
+		}
+	}
+
+	@Override
+	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
+	{
+		if (!world().isRemote)
+		{
+			int frequency = ((IBlockFrequency) tile()).getFrequency();
+
+			if (frequency > -1)
+			{
+				player.addChatMessage("Quantum Gate Frequency: " + frequency);
+			}
+			else
+			{
+				player.addChatMessage("Quantum Gate not set up.");
+			}
+		}
+
+		return true;
 	}
 
 	@Override
@@ -77,7 +115,7 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion
 
 	protected ItemStack getItem()
 	{
-		return new ItemStack(Electrical.itemQuantumGlyph);
+		return new ItemStack(Electrical.itemQuantumGlyph, 1, number);
 	}
 
 	@Override
@@ -122,6 +160,18 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion
 	{
 		nbt.setByte("side", side);
 		nbt.setByte("number", number);
+	}
+
+	@Override
+	public int getFrequency()
+	{
+		return number;
+	}
+
+	@Override
+	public void setFrequency(int frequency)
+	{
+
 	}
 
 }

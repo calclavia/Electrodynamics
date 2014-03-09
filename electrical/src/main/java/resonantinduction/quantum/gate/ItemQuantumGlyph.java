@@ -81,7 +81,7 @@ public class ItemQuantumGlyph extends JItemMultiPart implements IHighlight
 	@Override
 	public void getSubItems(int itemID, CreativeTabs tab, List listToAddTo)
 	{
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < PartQuantumGlyph.MAX_GLYPH; i++)
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, i));
 		}

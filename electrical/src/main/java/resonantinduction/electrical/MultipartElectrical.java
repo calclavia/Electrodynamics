@@ -24,6 +24,7 @@ public class MultipartElectrical implements IPartFactory
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
 		MultipartGenerator.registerPassThroughInterface("universalelectricity.api.electricity.IVoltageOutput");
+		MultipartGenerator.registerTrait("icbm.api.IBlockFrequency", "resonantinduction.quantum.gate.TraitFrequency");
 		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.electrical.wire.trait.TraitConductor");
 		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "resonantinduction.electrical.wire.trait.TraitEnergyHandler");
 		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.electrical.wire.trait.TraitEnergySink");
