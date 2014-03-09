@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.utility.inventory.IExternalInventoryBox;
 import mffs.api.fortron.FrequencyGrid;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -107,6 +110,94 @@ public class TraitQuantumGate extends TileMultipart implements IQuantumGate
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		return get().getTankInfo(from);
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return get().getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return get().getStackInSlot(i);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j)
+	{
+		return get().decrStackSize(i, j);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i)
+	{
+		return get().getStackInSlotOnClosing(i);
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		get().setInventorySlotContents(i, itemstack);
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return get().getInvName();
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return get().isInvNameLocalized();
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return get().getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return get().isUseableByPlayer(entityplayer);
+	}
+
+	@Override
+	public void openChest()
+	{
+	}
+
+	@Override
+	public void closeChest()
+	{
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return get().isItemValidForSlot(i, itemstack);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1)
+	{
+		return get().getAccessibleSlotsFromSide(var1);
+	}
+
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	{
+		return get().canInsertItem(i, itemstack, j);
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
+	{
+		return get().canExtractItem(i, itemstack, j);
 	}
 
 }

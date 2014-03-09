@@ -21,10 +21,11 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.utility.inventory.ExternalInventory;
+import calclavia.lib.utility.inventory.IExternalInventory;
+import calclavia.lib.utility.inventory.IExternalInventoryBox;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Cuboid6;
@@ -35,7 +36,7 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNormalOcclusion, IQuantumGate
+public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNormalOcclusion, IQuantumGate, IExternalInventory
 {
 	public static final int MAX_GLYPH = 4;
 	static final Cuboid6[] bounds = new Cuboid6[15];
@@ -126,7 +127,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 		if (ticks == 0)
 			FrequencyGrid.instance().register((IQuantumGate) tile());
-		
+
 		ticks++;
 
 		if (world().isRemote)
@@ -162,7 +163,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 			{
 				if (!world().isRemote)
 				{
-					System.out.println(getQuantumTank());
+					System.out.println(getStackInSlot(0));
 					player.addChatMessage("Quantum Gate Frequency: " + frequency);
 				}
 
@@ -330,6 +331,150 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		return new FluidTankInfo[] { getQuantumTank().getInfo() };
+	}
+
+	/**
+	 * Inventory Capabilities
+	 */
+	static final HashMap<Integer, IExternalInventoryBox> quantumInventories = new HashMap<Integer, IExternalInventoryBox>();
+
+	@Override
+	public IExternalInventoryBox getInventory()
+	{
+		int frequency = ((IQuantumGate) tile()).getFrequency();
+
+		if (frequency > -1)
+		{
+			if (!quantumInventories.containsKey(frequency))
+				quantumInventories.put(frequency, new ExternalInventory(null, this, 1));
+
+			return quantumInventories.get(frequency);
+		}
+
+		return null;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 1;// getInventory().getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return getInventory().getStackInSlot(i);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j)
+	{
+		return this.getInventory().decrStackSize(i, j);
+	}
+
+	public void incrStackSize(int slot, ItemStack itemStack)
+	{
+		if (this.getStackInSlot(slot) == null)
+		{
+			setInventorySlotContents(slot, itemStack.copy());
+		}
+		else if (this.getStackInSlot(slot).isItemEqual(itemStack))
+		{
+			getStackInSlot(slot).stackSize += itemStack.stackSize;
+		}
+
+		onInventoryChanged();
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i)
+	{
+		return this.getInventory().getStackInSlotOnClosing(i);
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemStack)
+	{
+		this.getInventory().setInventorySlotContents(i, itemStack);
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return "Quantum Gate";
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return true;
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return this.getInventory().getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return this.getInventory().isUseableByPlayer(entityplayer);
+	}
+
+	@Override
+	public void openChest()
+	{
+		this.getInventory().openChest();
+
+	}
+
+	@Override
+	public void closeChest()
+	{
+		this.getInventory().closeChest();
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return getInventory().isItemValidForSlot(i, itemstack);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1)
+	{
+		return getInventory().getAccessibleSlotsFromSide(var1);
+	}
+
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	{
+		return getInventory().canInsertItem(i, itemstack, j);
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
+	{
+		return getInventory().canExtractItem(i, itemstack, j);
+	}
+
+	@Override
+	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
+	{
+		return true;
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+
 	}
 
 }
