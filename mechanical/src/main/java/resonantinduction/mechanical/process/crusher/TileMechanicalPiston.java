@@ -3,6 +3,8 @@ package resonantinduction.mechanical.process.crusher;
 import java.lang.reflect.Method;
 
 import codechicken.multipart.MultipartHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +18,9 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class TileMechanicalPiston extends TileMechanical
 {
+    // Planned CalCore option @ConfigInt()
+    private int breakCount = 5;
+
 	public TileMechanicalPiston()
 	{
 		mechanicalNode = new PacketMechanicalNode(this)
@@ -58,7 +63,7 @@ public class TileMechanicalPiston extends TileMechanical
 	{
 		TileEntity tileEntity = from.getTileEntity(worldObj);
 
-		if (to.getTileEntity(getWorldObj()).equals(this))
+        if (this.equals(to.getTileEntity(getWorldObj())))
 		{
 			return false;
 		}
@@ -163,7 +168,7 @@ public class TileMechanicalPiston extends TileMechanical
 				{
 					Class clazz = Class.forName("buildcraft.factory.TileQuarry");
 
-					if (clazz == newTile.getClass())
+					if (newTile.equals(clazz))
 					{
 						ReflectionHelper.setPrivateValue(clazz, newTile, true, "isAlive");
 					}
@@ -185,8 +190,19 @@ public class TileMechanicalPiston extends TileMechanical
         }
         else
         {
+            if (this.breakCount <= 0)
+            {
+                getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
 
+            }
+            this.breakCount--;
         }
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    private void spawnParticles(Vector3 blockPos)
+    {
 
     }
 }
