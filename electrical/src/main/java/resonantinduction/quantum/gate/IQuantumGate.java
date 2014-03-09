@@ -1,7 +1,9 @@
 package resonantinduction.quantum.gate;
 
-import net.minecraft.entity.Entity;
 import icbm.api.IBlockFrequency;
+import net.minecraft.entity.Entity;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
 
 /**
  * Only TileEntities should implement this.
@@ -9,7 +11,9 @@ import icbm.api.IBlockFrequency;
  * @author Calclavia
  * 
  */
-public interface IQuantumGate extends IBlockFrequency
+public interface IQuantumGate extends IBlockFrequency, IFluidHandler
 {
 	public void transport(Entity entity);
+
+	FluidTank getQuantumTank();
 }

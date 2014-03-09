@@ -52,7 +52,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Calclavia
  * 
  */
-@Mod(modid = Electrical.ID, name = Electrical.NAME, version = Reference.VERSION, dependencies = "before:ThermalExpansion;after:ResonantInduction|Mechanical;required-after:" + ResonantInduction.ID)
+@Mod(modid = Electrical.ID, name = Electrical.NAME, version = Reference.VERSION, dependencies = "before:ThermalExpansion;before:Mekanism;after:ResonantInduction|Mechanical;required-after:" + ResonantInduction.ID)
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Electrical
 {

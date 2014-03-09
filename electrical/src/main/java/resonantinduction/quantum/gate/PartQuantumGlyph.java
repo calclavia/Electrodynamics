@@ -4,6 +4,7 @@ import icbm.api.IBlockFrequency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.vector.VectorWorld;
 import codechicken.lib.data.MCDataInput;
@@ -60,7 +69,9 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	public void onWorldJoin()
 	{
 		if (((IQuantumGate) tile()).getFrequency() != -1)
+		{
 			FrequencyGrid.instance().register((IQuantumGate) tile());
+		}
 	}
 
 	@Override
@@ -134,24 +145,25 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
 	{
-		if (!world().isRemote)
+		if (player.isSneaking())
 		{
-			if (player.isSneaking())
+			if (!world().isRemote)
 			{
 				transport(player);
 			}
-			else
-			{
-				int frequency = ((IBlockFrequency) tile()).getFrequency();
+		}
+		else
+		{
+			int frequency = ((IBlockFrequency) tile()).getFrequency();
 
-				if (frequency > -1)
+			if (frequency > -1)
+			{
+				if (!world().isRemote)
 				{
+					System.out.println(getQuantumTank());
 					player.addChatMessage("Quantum Gate Frequency: " + frequency);
 				}
-				else
-				{
-					player.addChatMessage("Quantum Gate not set up.");
-				}
+				return false;
 			}
 		}
 
@@ -252,6 +264,69 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	public void setFrequency(int frequency)
 	{
 
+	}
+
+	/**
+	 * Synced Fluid
+	 */
+	static final HashMap<Integer, FluidTank> quantumTanks = new HashMap<Integer, FluidTank>();
+
+	@Override
+	public FluidTank getQuantumTank()
+	{
+		int frequency = ((IQuantumGate) tile()).getFrequency();
+
+		if (frequency > -1)
+		{
+			if (!quantumTanks.containsKey(frequency))
+				quantumTanks.put(frequency, new FluidTank(FluidContainerRegistry.BUCKET_VOLUME));
+
+			return quantumTanks.get(frequency);
+		}
+
+		return null;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (((IQuantumGate) tile()).getFrequency() != -1)
+			return getQuantumTank().fill(resource, doFill);
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		if (((IQuantumGate) tile()).getFrequency() != -1)
+			return getQuantumTank().drain(resource.amount, doDrain);
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		if (((IQuantumGate) tile()).getFrequency() != -1)
+			return getQuantumTank().drain(maxDrain, doDrain);
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return ((IQuantumGate) tile()).getFrequency() != -1;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return ((IQuantumGate) tile()).getFrequency() != -1;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[] { getQuantumTank().getInfo() };
 	}
 
 }

@@ -47,7 +47,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * 
  * @author Calclavia
  */
-@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:CalclaviaCore;before:IC2")
+@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:CalclaviaCore;before:ThermalExpansion;before:Mekanism")
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction

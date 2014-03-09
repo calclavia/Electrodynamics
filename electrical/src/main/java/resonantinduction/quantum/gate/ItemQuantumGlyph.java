@@ -68,7 +68,7 @@ public class ItemQuantumGlyph extends JItemMultiPart implements IHighlight
 			}
 			else
 			{
-				pos.offset(side);
+				//pos.offset(side);
 			}
 		}
 

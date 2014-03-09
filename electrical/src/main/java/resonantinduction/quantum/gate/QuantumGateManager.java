@@ -32,7 +32,7 @@ public class QuantumGateManager
 
 			if (currentEntity instanceof EntityPlayerMP)
 			{
-				if (playerCooldown.get(((EntityPlayerMP) currentEntity).username) == null || (System.currentTimeMillis() - playerCooldown.get(((EntityPlayerMP) currentEntity).username) > 2000))
+				if (playerCooldown.get(((EntityPlayerMP) currentEntity).username) == null || (System.currentTimeMillis() - playerCooldown.get(((EntityPlayerMP) currentEntity).username) > 1000))
 				{
 					EntityPlayerMP player = (EntityPlayerMP) currentEntity;
 
