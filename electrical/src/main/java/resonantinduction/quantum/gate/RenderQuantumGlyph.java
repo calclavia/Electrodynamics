@@ -25,8 +25,7 @@ public class RenderQuantumGlyph implements ISimpleItemRenderer
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		Cuboid6 bound = part.getBounds().copy();
-		bound.expand(-0.02);
+		Cuboid6 bound = part.getBounds();
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		RenderUtility.renderCube(bound.min.x, bound.min.y, bound.min.z, bound.max.x, bound.max.y, bound.max.z, Block.stone, RenderUtility.getIcon(Reference.PREFIX + "glyph_" + part.number));
 		GL11.glPopMatrix();

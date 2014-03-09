@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.vector.VectorWorld;
 import codechicken.lib.data.MCDataInput;
@@ -33,19 +32,21 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 
 	static
 	{
-		bounds[0] = new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5);
-		bounds[1] = new Cuboid6(0, 0, 0.5, 0.5, 0.5, 1);
-		bounds[2] = new Cuboid6(0.5, 0, 0, 1, 0.5, 0.5);
-		bounds[3] = new Cuboid6(0.5, 0, 0.5, 1, 0.5, 1);
+		float expansion = -0.02f;
+		bounds[0] = new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5).expand(expansion);
+		bounds[1] = new Cuboid6(0, 0, 0.5, 0.5, 0.5, 1).expand(expansion);
+		bounds[2] = new Cuboid6(0.5, 0, 0, 1, 0.5, 0.5).expand(expansion);
+		bounds[3] = new Cuboid6(0.5, 0, 0.5, 1, 0.5, 1).expand(expansion);
 
-		bounds[4] = new Cuboid6(0, 0.5, 0, 0.5, 1, 0.5);
-		bounds[5] = new Cuboid6(0, 0.5, 0.5, 0.5, 1, 1);
-		bounds[6] = new Cuboid6(0.5, 0.5, 0, 1, 1, 0.5);
-		bounds[7] = new Cuboid6(0.5, 0.5, 0.5, 1, 1, 1);
+		bounds[4] = new Cuboid6(0, 0.5, 0, 0.5, 1, 0.5).expand(expansion);
+		bounds[5] = new Cuboid6(0, 0.5, 0.5, 0.5, 1, 1).expand(expansion);
+		bounds[6] = new Cuboid6(0.5, 0.5, 0, 1, 1, 0.5).expand(expansion);
+		bounds[7] = new Cuboid6(0.5, 0.5, 0.5, 1, 1, 1).expand(expansion);
 	}
 
 	private byte side;
 	byte number;
+	int ticks;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
@@ -69,7 +70,14 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 	@Override
 	public void onEntityCollision(Entity entity)
 	{
-		transport(entity);
+		if (!world().isRemote)
+		{
+			if (entity instanceof EntityPlayer)
+				if (!((EntityPlayer) entity).isSneaking())
+					return;
+
+			transport(entity);
+		}
 	}
 
 	@Override
@@ -94,7 +102,8 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 			{
 				IQuantumGate gate = gates.get(gates.size() > 1 ? entity.worldObj.rand.nextInt(gates.size() - 1) : 0);
 				VectorWorld position = new VectorWorld((TileEntity) gate).translate(0.5, 2, 0.5);
-				QuantumGateManager.moveEntity(entity, position);
+				if (QuantumGateManager.moveEntity(entity, position))
+					world().playSoundAtEntity(entity, "mob.endermen.portal", 1.0F, 1.0F);
 			}
 		}
 	}
@@ -102,6 +111,10 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 	@Override
 	public void update()
 	{
+		if (ticks == 0)
+			FrequencyGrid.instance().register((IQuantumGate) tile());
+		ticks++;
+
 		if (world().isRemote)
 		{
 			int frequency = ((IBlockFrequency) tile()).getFrequency();

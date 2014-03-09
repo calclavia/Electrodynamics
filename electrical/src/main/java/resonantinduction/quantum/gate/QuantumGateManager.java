@@ -8,102 +8,109 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 public class QuantumGateManager
 {
-	private static HashMap<Integer, QuantumGateManager> managerList = new HashMap<Integer, QuantumGateManager>();
-	private HashSet<TileQuantumGate> teleporters = new HashSet<TileQuantumGate>();
-	private static HashMap<String, Long> coolDown = new HashMap<String, Long>();
+	private static HashMap<String, Long> playerCooldown = new HashMap<String, Long>();
 
-	public static QuantumGateManager getManagerForDim(int dim)
+	protected static boolean moveEntity(Entity currentEntity, final VectorWorld location)
 	{
-		if (managerList.get(dim) == null)
+		if (currentEntity != null && location != null && location.world instanceof WorldServer)
 		{
-			managerList.put(dim, new QuantumGateManager());
-		}
-		
-		return managerList.get(dim);
-	}
+			location.world.markBlockForUpdate(location.intX(), location.intY(), location.intZ());
 
-	/** Adds a teleport anchor to this list or anchors */
-	public static void addAnchor(TileQuantumGate anch)
-	{
-		if (anch != null)
-		{
-			QuantumGateManager manager = getManagerForDim(anch.worldObj.provider.dimensionId);
-			
-			if (!manager.teleporters.contains(anch))
+			int dimID = location.world.provider.dimensionId;
+
+			if (currentEntity instanceof EntityPlayerMP)
 			{
-				manager.teleporters.add(anch);
-			}
-		}
-	}
-
-	/** Removes a teleport anchor to this list or anchors */
-	public static void remAnchor(TileQuantumGate anch)
-	{
-		if (anch != null)
-		{
-			QuantumGateManager manager = getManagerForDim(anch.worldObj.provider.dimensionId);
-			manager.teleporters.remove(anch);
-		}
-	}
-
-	public static HashSet<TileQuantumGate> getConnectedAnchors(World world)
-	{
-		return getManagerForDim(world.provider.dimensionId).teleporters;
-	}
-
-	public boolean contains(TileQuantumGate anch)
-	{
-		return teleporters.contains(anch);
-	}
-
-	public static TileQuantumGate getClosestWithFrequency(VectorWorld vec, int frequency, TileQuantumGate... anchors)
-	{
-		TileQuantumGate tele = null;
-		List<TileQuantumGate> ignore = new ArrayList<TileQuantumGate>();
-		if (anchors != null)
-		{
-			ignore.addAll(Arrays.asList(anchors));
-		}
-		Iterator<TileQuantumGate> it = new ArrayList(QuantumGateManager.getConnectedAnchors(vec.world)).iterator();
-		while (it.hasNext())
-		{
-			TileQuantumGate teleporter = it.next();
-			if (!ignore.contains(teleporter) && teleporter.getFrequency() == frequency)
-			{
-				if (tele == null || new Vector3(tele).distance(vec) > new Vector3(teleporter).distance(vec))
+				if (playerCooldown.get(((EntityPlayerMP) currentEntity).username) == null || (System.currentTimeMillis() - playerCooldown.get(((EntityPlayerMP) currentEntity).username) > 2000))
 				{
-					tele = teleporter;
-				}
-			}
-		}
-		return tele;
-	}
+					EntityPlayerMP player = (EntityPlayerMP) currentEntity;
 
-	protected static void moveEntity(Entity entity, VectorWorld location)
-	{
-		if (entity != null && location != null)
-		{
-			location.world.markBlockForUpdate((int) location.x, (int) location.y, (int) location.z);
-			
-			if (entity instanceof EntityPlayerMP)
-			{
-				if (coolDown.get(((EntityPlayerMP) entity).username) == null || (System.currentTimeMillis() - coolDown.get(((EntityPlayerMP) entity).username) > 30))
-				{
-					((EntityPlayerMP) entity).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, 0, 0);
-					coolDown.put(((EntityPlayerMP) entity).username, System.currentTimeMillis());
+					if (location.world != currentEntity.worldObj)
+					{
+						Teleporter dummyTeleporter = new Teleporter((WorldServer) location.world)
+						{
+							@Override
+							public void placeInPortal(Entity teleportEntity, double x, double y, double z, float par8)
+							{
+								teleportEntity.setLocationAndAngles(location.x, location.y, location.z, teleportEntity.rotationYaw, 0.0F);
+								teleportEntity.motionX = teleportEntity.motionY = teleportEntity.motionZ = 0.0D;
+							}
+						};
+
+						player.mcServer.getConfigurationManager().transferPlayerToDimension(player, dimID, dummyTeleporter);
+					}
+					else
+					{
+						player.playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, 0, 0);
+					}
+
+					playerCooldown.put(((EntityPlayerMP) currentEntity).username, System.currentTimeMillis());
+					return true;
 				}
 			}
 			else
 			{
-				entity.setPosition(location.x, location.y, location.z);
+				if (location.world != currentEntity.worldObj)
+				{
+
+					currentEntity.worldObj.theProfiler.startSection("changeDimension");
+					MinecraftServer minecraftserver = MinecraftServer.getServer();
+					int j = currentEntity.dimension;
+					WorldServer worldserver = minecraftserver.worldServerForDimension(j);
+					WorldServer worldserver1 = minecraftserver.worldServerForDimension(dimID);
+					currentEntity.dimension = dimID;
+
+					if (j == 1 && dimID == 1)
+					{
+						worldserver1 = minecraftserver.worldServerForDimension(0);
+						currentEntity.dimension = 0;
+					}
+
+					currentEntity.worldObj.removeEntity(currentEntity);
+					currentEntity.isDead = false;
+					currentEntity.worldObj.theProfiler.startSection("reposition");
+					minecraftserver.getConfigurationManager().transferEntityToWorld(currentEntity, j, worldserver, worldserver1);
+					currentEntity.worldObj.theProfiler.endStartSection("reloading");
+					Entity entity = EntityList.createEntityByName(EntityList.getEntityString(currentEntity), worldserver1);
+
+					if (entity != null)
+					{
+						entity.copyDataFrom(currentEntity, true);
+
+						if (j == 1 && dimID == 1)
+						{
+							ChunkCoordinates chunkcoordinates = worldserver1.getSpawnPoint();
+							chunkcoordinates.posY = currentEntity.worldObj.getTopSolidOrLiquidBlock(chunkcoordinates.posX, chunkcoordinates.posZ);
+							entity.setLocationAndAngles((double) chunkcoordinates.posX, (double) chunkcoordinates.posY, (double) chunkcoordinates.posZ, entity.rotationYaw, entity.rotationPitch);
+						}
+
+						worldserver1.spawnEntityInWorld(entity);
+					}
+
+					currentEntity.isDead = true;
+					currentEntity.worldObj.theProfiler.endSection();
+					worldserver.resetUpdateEntityTick();
+					worldserver1.resetUpdateEntityTick();
+					currentEntity.worldObj.theProfiler.endSection();
+					return true;
+				}
+
+				currentEntity.setPosition(location.x, location.y, location.z);
+				return true;
 			}
+
 		}
+		return false;
 	}
 }
