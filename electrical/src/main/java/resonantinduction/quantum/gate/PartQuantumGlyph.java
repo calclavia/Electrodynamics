@@ -249,6 +249,22 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 		slot = nbt.getByte("side");
 		number = nbt.getByte("number");
+
+		if (nbt.hasKey("frequency"))
+		{
+			int frequency = nbt.getInteger("frequency");
+
+			if (frequency != -1)
+			{
+				ExternalInventory savedInventory = new ExternalInventory(null, this, 1);
+				savedInventory.load(nbt);
+				quantumInventories.put(frequency, savedInventory);
+
+				FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+				tank.readFromNBT(nbt);
+				quantumTanks.put(frequency, tank);
+			}
+		}
 	}
 
 	@Override
@@ -256,6 +272,14 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 		nbt.setByte("side", slot);
 		nbt.setByte("number", number);
+		int frequency = ((IQuantumGate) tile()).getFrequency();
+		nbt.setInteger("frequency", frequency);
+
+		if (frequency != -1)
+		{
+			getInventory().save(nbt);
+			getQuantumTank().writeToNBT(nbt);
+		}
 	}
 
 	@Override
@@ -476,5 +500,4 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 
 	}
-
 }
