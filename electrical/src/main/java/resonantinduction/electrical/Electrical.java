@@ -29,13 +29,9 @@ import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
-import resonantinduction.quantum.gate.BlockGlyph;
-import resonantinduction.quantum.gate.BlockQuantumGate;
 import resonantinduction.quantum.gate.ItemQuantumGlyph;
-import resonantinduction.quantum.gate.TileQuantumGate;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.item.ItemBlockMetadata;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -125,7 +121,6 @@ public class Electrical
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
 		// Quantum
-		blockQuantumGate = contentRegistry.createTile(BlockQuantumGate.class, TileQuantumGate.class);
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
 		Settings.save();
 
@@ -190,8 +185,8 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
-		/** Quantum */
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockQuantumGate, "TTT", "LBL", "CCC", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
+		/** Quantum Gates */
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumGlyph, "TTT", "LBL", "CCC", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));

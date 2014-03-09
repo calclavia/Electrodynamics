@@ -31,7 +31,7 @@ public class TraitQuantumGate extends TileMultipart implements IQuantumGate
 
 		for (TMultiPart part : jPartList())
 		{
-			if (part instanceof IBlockFrequency)
+			if (part instanceof IQuantumGate)
 			{
 				frequency += Math.pow(PartQuantumGlyph.MAX_GLYPH, i) * ((IBlockFrequency) part).getFrequency();
 				i++;

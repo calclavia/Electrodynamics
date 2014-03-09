@@ -22,35 +22,37 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JCuboidPart;
 import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, IQuantumGate
+public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNormalOcclusion, IQuantumGate
 {
 	public static final int MAX_GLYPH = 4;
-	static final Cuboid6[] bounds = new Cuboid6[8];
+	static final Cuboid6[] bounds = new Cuboid6[15];
 
 	static
 	{
 		float expansion = -0.02f;
-		bounds[0] = new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5).expand(expansion);
-		bounds[1] = new Cuboid6(0, 0, 0.5, 0.5, 0.5, 1).expand(expansion);
-		bounds[2] = new Cuboid6(0.5, 0, 0, 1, 0.5, 0.5).expand(expansion);
-		bounds[3] = new Cuboid6(0.5, 0, 0.5, 1, 0.5, 1).expand(expansion);
 
-		bounds[4] = new Cuboid6(0, 0.5, 0, 0.5, 1, 0.5).expand(expansion);
-		bounds[5] = new Cuboid6(0, 0.5, 0.5, 0.5, 1, 1).expand(expansion);
-		bounds[6] = new Cuboid6(0.5, 0.5, 0, 1, 1, 0.5).expand(expansion);
-		bounds[7] = new Cuboid6(0.5, 0.5, 0.5, 1, 1, 1).expand(expansion);
+		bounds[7] = new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5).expand(expansion);
+		bounds[9] = new Cuboid6(0, 0, 0.5, 0.5, 0.5, 1).expand(expansion);
+		bounds[11] = new Cuboid6(0.5, 0, 0, 1, 0.5, 0.5).expand(expansion);
+		bounds[13] = new Cuboid6(0.5, 0, 0.5, 1, 0.5, 1).expand(expansion);
+
+		bounds[8] = new Cuboid6(0, 0.5, 0, 0.5, 1, 0.5).expand(expansion);
+		bounds[10] = new Cuboid6(0, 0.5, 0.5, 0.5, 1, 1).expand(expansion);
+		bounds[12] = new Cuboid6(0.5, 0.5, 0, 1, 1, 0.5).expand(expansion);
+		bounds[14] = new Cuboid6(0.5, 0.5, 0.5, 1, 1, 1).expand(expansion);
 	}
 
-	private byte side;
+	private byte slot;
 	byte number;
 	int ticks;
 
 	public void preparePlacement(int side, int itemDamage)
 	{
-		this.side = (byte) side;
+		this.slot = (byte) side;
 		this.number = (byte) itemDamage;
 	}
 
@@ -172,9 +174,9 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 	@Override
 	public Cuboid6 getBounds()
 	{
-		if (side < bounds.length)
-			if (bounds[side] != null)
-				return bounds[side];
+		if (slot < bounds.length)
+			if (bounds[slot] != null)
+				return bounds[slot];
 
 		return new Cuboid6(0, 0, 0, 0.5, 0.5, 0.5);
 	}
@@ -183,6 +185,12 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 	public Iterable<Cuboid6> getOcclusionBoxes()
 	{
 		return Arrays.asList(new Cuboid6[] { getBounds() });
+	}
+
+	@Override
+	public int getSlotMask()
+	{
+		return 1 << slot;
 	}
 
 	protected ItemStack getItem()
@@ -223,14 +231,14 @@ public class PartQuantumGlyph extends JCuboidPart implements JNormalOcclusion, I
 	@Override
 	public void load(NBTTagCompound nbt)
 	{
-		side = nbt.getByte("side");
+		slot = nbt.getByte("side");
 		number = nbt.getByte("number");
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt)
 	{
-		nbt.setByte("side", side);
+		nbt.setByte("side", slot);
 		nbt.setByte("number", number);
 	}
 
