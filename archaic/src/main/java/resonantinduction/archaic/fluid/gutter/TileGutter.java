@@ -3,23 +3,36 @@ package resonantinduction.archaic.fluid.gutter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.archaic.fluid.grate.TileGrate;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.module.TileRender;
 import calclavia.lib.prefab.vector.Cuboid;
+import calclavia.lib.render.FluidRenderUtility;
+import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
 
@@ -238,6 +251,102 @@ public class TileGutter extends TilePressureNode
 	public boolean canDrain(ForgeDirection from, Fluid fluid)
 	{
 		return from != ForgeDirection.UP && !fluid.isGaseous();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected TileRender newRenderer()
+	{
+		return new TileRender()
+		{
+			public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gutter.tcn");
+			public final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "gutter.png");
+
+			@Override
+			public boolean renderStatic(Vector3 position)
+			{
+				return true;
+			}
+
+			@Override
+			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
+			{
+				GL11.glPushMatrix();
+				GL11.glTranslated(position.x + 0.5, position.y + 0.5, position.z + 0.5);
+
+				FluidStack liquid = getInternalTank().getFluid();
+				int capacity = getInternalTank().getCapacity();
+
+				render(0, renderSides);
+
+				if (world() != null)
+				{
+					FluidTank tank = getInternalTank();
+					double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+
+					if (percentageFilled > 0.1)
+					{
+						GL11.glPushMatrix();
+						GL11.glScaled(0.990, 0.99, 0.990);
+
+						double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.EAST);
+						double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.EAST);
+						double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.SOUTH, ForgeDirection.WEST);
+						double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileGutter.class, percentageFilled, world(), position(), ForgeDirection.NORTH, ForgeDirection.WEST);
+
+						FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+						GL11.glPopMatrix();
+					}
+				}
+
+				GL11.glPopMatrix();
+				return true;
+			}
+
+			@Override
+			public boolean renderItem(ItemStack itemStack)
+			{
+				GL11.glTranslated(0.5, 0.5, 0.5);
+				render(itemStack.getItemDamage(), Byte.parseByte("001100", 2));
+				return true;
+			}
+
+			public void render(int meta, byte sides)
+			{
+				RenderUtility.bind(TEXTURE);
+
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+				{
+					if (dir != ForgeDirection.UP && dir != ForgeDirection.DOWN)
+					{
+						if (!WorldUtility.isEnabledSide(sides, dir))
+						{
+							GL11.glPushMatrix();
+							RenderUtility.rotateBlockBasedOnDirection(dir);
+							MODEL.renderOnly("left", "backCornerL", "frontCornerL");
+							GL11.glPopMatrix();
+						}
+					}
+				}
+
+				if (!WorldUtility.isEnabledSide(sides, ForgeDirection.DOWN))
+				{
+					MODEL.renderOnly("base");
+				}
+				else
+				{
+					GL11.glPushMatrix();
+					GL11.glRotatef(-90, 0, 0, 1);
+					MODEL.renderOnly("backCornerL", "frontCornerL");
+					GL11.glPopMatrix();
+					GL11.glPushMatrix();
+					GL11.glRotatef(90, 0, 1, 0);
+					GL11.glRotatef(-90, 0, 0, 1);
+					MODEL.renderOnly("backCornerL", "frontCornerL");
+					GL11.glPopMatrix();
+				}
+			}
+		};
 	}
 
 }
