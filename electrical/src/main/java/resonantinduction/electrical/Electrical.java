@@ -99,8 +99,6 @@ public class Electrical
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
-		Settings.load();
-
 		// Energy
 		itemWire = contentRegistry.createItem(ItemWire.class);
 		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);

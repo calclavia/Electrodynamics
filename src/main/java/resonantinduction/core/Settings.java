@@ -3,6 +3,7 @@ package resonantinduction.core;
 import java.io.File;
 import java.util.Arrays;
 
+import calclavia.lib.configurable.Config;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import calclavia.lib.content.IDManager;
@@ -48,36 +49,14 @@ public class Settings
 		return Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, key, id).getInt(id);
 	}
 
-	/** Settings */
-	private static boolean didLoad = false;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Engineering Table Autocraft")
 	public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Tesla Sound FXs")
 	public static boolean SOUND_FXS = true;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Shiny silver Wires")
 	public static boolean SHINY_SILVER = true;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Max EM Contractor Path")
 	public static int MAX_LEVITATOR_DISTANCE = 200;
-
-	/**
-	 * Called from RI's core.
-	 */
-	public static void load()
-	{
-		CONFIGURATION.load();
-
-		if (!didLoad)
-		{
-			// Config
-			ALLOW_ENGINEERING_AUTOCRAFT = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Engineering Table Autocraft", ALLOW_ENGINEERING_AUTOCRAFT).getBoolean(ALLOW_ENGINEERING_AUTOCRAFT);
-			SOUND_FXS = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Tesla Sound FXs", SOUND_FXS).getBoolean(SOUND_FXS);
-			SHINY_SILVER = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Shiny silver wires", SHINY_SILVER).getBoolean(SHINY_SILVER);
-			MAX_LEVITATOR_DISTANCE = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max EM Contractor Path", MAX_LEVITATOR_DISTANCE).getInt(MAX_LEVITATOR_DISTANCE);
-
-			LEVITATOR_ACCELERATION = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Acceleration", Settings.LEVITATOR_ACCELERATION).getDouble(Settings.LEVITATOR_ACCELERATION);
-			LEVITATOR_MAX_REACH = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Reach", Settings.LEVITATOR_MAX_REACH).getInt(Settings.LEVITATOR_MAX_REACH);
-			LEVITATOR_MAX_SPEED = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Max Item Speed", Settings.LEVITATOR_MAX_SPEED).getDouble(Settings.LEVITATOR_MAX_SPEED);
-			LEVITATOR_PUSH_DELAY = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Levitator Item Push Delay", Settings.LEVITATOR_PUSH_DELAY).getInt(Settings.LEVITATOR_PUSH_DELAY);
-
-			didLoad = true;
-		}
-	}
 
 	public static void save()
 	{
@@ -115,8 +94,12 @@ public class Settings
 		return false;
 	}
 
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
 	public static int LEVITATOR_MAX_REACH = 40;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
 	public static int LEVITATOR_PUSH_DELAY = 5;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
 	public static double LEVITATOR_MAX_SPEED = .2;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
 	public static double LEVITATOR_ACCELERATION = .02;
 }

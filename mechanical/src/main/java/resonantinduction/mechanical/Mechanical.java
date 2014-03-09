@@ -103,7 +103,6 @@ public class Mechanical
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
-		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
 		BlockCreativeBuilder.register(new SchematicWindTurbine());

@@ -3,6 +3,7 @@ package resonantinduction.core;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import calclavia.lib.configurable.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -90,8 +91,6 @@ public class ResonantInduction
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		Modstats.instance().getReporter().registerMod(this);
 
-		Settings.load();
-
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
@@ -137,7 +136,16 @@ public class ResonantInduction
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		Settings.save();
+        try
+        {
+            ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Settings.save();
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();

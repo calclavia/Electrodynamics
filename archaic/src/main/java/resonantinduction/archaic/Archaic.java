@@ -95,7 +95,6 @@ public class Archaic
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
-		Settings.load();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class);
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
