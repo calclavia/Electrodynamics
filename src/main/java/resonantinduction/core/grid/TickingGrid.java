@@ -1,6 +1,7 @@
 package resonantinduction.core.grid;
 
 import universalelectricity.api.net.IUpdate;
+import universalelectricity.core.net.NetworkTickHandler;
 
 public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 {
@@ -8,7 +9,8 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	{
 		super(type);
 		add(node);
-		UpdateTicker.addNetwork(this);
+		NetworkTickHandler.addNetwork(this);
+		// UpdateTicker.addNetwork(this);
 	}
 
 	/**
@@ -18,7 +20,7 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	@Override
 	public void update()
 	{
-		//synchronized (nodes)
+		// synchronized (nodes)
 		{
 			for (Node node : nodes)
 			{

@@ -126,6 +126,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 		if (ticks == 0)
 			FrequencyGrid.instance().register((IQuantumGate) tile());
+		
 		ticks++;
 
 		if (world().isRemote)
@@ -150,6 +151,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 			if (!world().isRemote)
 			{
 				transport(player);
+				return true;
 			}
 		}
 		else
@@ -163,11 +165,12 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 					System.out.println(getQuantumTank());
 					player.addChatMessage("Quantum Gate Frequency: " + frequency);
 				}
-				return false;
+
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
