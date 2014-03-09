@@ -34,4 +34,10 @@ public class ItemCharger extends JItemMultiPart implements IHighlight
 
 		return part;
 	}
+
+	@Override
+	public int getHighlightType()
+	{
+		return 0;
+	}
 }

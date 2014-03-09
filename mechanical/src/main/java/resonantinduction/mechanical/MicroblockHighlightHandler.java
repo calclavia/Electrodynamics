@@ -10,6 +10,7 @@ import resonantinduction.core.prefab.part.IHighlight;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
+import codechicken.microblock.CornerPlacementGrid$;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,7 +25,16 @@ public class MicroblockHighlightHandler
 			GL11.glPushMatrix();
 			RenderUtils.translateToWorldCoords(event.player, event.partialTicks);
 			Vector3 hit = new Vector3(event.target.hitVec);
-			FacePlacementGrid$.MODULE$.render(hit, event.target.sideHit);
+
+			switch (((IHighlight) event.currentItem.getItem()).getHighlightType())
+			{
+				case 0:
+					FacePlacementGrid$.MODULE$.render(hit, event.target.sideHit);
+					break;
+				case 1:
+					CornerPlacementGrid$.MODULE$.render(hit, event.target.sideHit);
+			}
+
 			event.setCanceled(true);
 			GL11.glPopMatrix();
 		}

@@ -81,4 +81,10 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 
 		itemStack.stackTagCompound.setFloat("detection", detection);
 	}
+
+	@Override
+	public int getHighlightType()
+	{
+		return 0;
+	}
 }

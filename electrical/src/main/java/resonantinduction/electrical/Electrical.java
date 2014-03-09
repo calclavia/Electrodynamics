@@ -31,6 +31,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.quantum.gate.BlockGlyph;
 import resonantinduction.quantum.gate.BlockQuantumGate;
+import resonantinduction.quantum.gate.ItemQuantumGlyph;
 import resonantinduction.quantum.gate.TileQuantumGate;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketHandler;
@@ -94,8 +95,8 @@ public class Electrical
 	public static Item itemDisk;
 
 	// Quantum
-	public static Block blockGlyph;
 	public static Block blockQuantumGate;
+	public static Item itemQuantumGlyph;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -124,9 +125,8 @@ public class Electrical
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
 		// Quantum
-		blockGlyph = contentRegistry.createBlock(BlockGlyph.class, ItemBlockMetadata.class);
 		blockQuantumGate = contentRegistry.createTile(BlockQuantumGate.class, TileQuantumGate.class);
-
+		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
 		Settings.save();
 
 		OreDictionary.registerOre("wire", itemWire);

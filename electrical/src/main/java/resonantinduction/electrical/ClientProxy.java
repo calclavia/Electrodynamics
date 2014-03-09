@@ -18,6 +18,8 @@ import resonantinduction.electrical.render.FXElectricBolt;
 import resonantinduction.electrical.tesla.RenderTesla;
 import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.RenderTransformer;
+import resonantinduction.mechanical.energy.gear.RenderGear;
+import resonantinduction.quantum.gate.RenderQuantumGlyph;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.item.GlobalItemRenderer;
 import codechicken.multipart.TMultiPart;
@@ -39,6 +41,7 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Electrical.itemTransformer.itemID, RenderTransformer.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemCharger.itemID, RenderCharger.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemLevitator.itemID, RenderLevitator.INSTANCE);
+		GlobalItemRenderer.register(Electrical.itemQuantumGlyph.itemID, RenderQuantumGlyph.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());

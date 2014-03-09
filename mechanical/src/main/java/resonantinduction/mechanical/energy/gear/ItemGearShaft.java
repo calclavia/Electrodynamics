@@ -48,4 +48,10 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 			listToAddTo.add(new ItemStack(itemID, 1, i));
 		}
 	}
+
+	@Override
+	public int getHighlightType()
+	{
+		return 0;
+	}
 }

@@ -36,14 +36,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemWire extends JItemMultiPart
 {
-	public ItemWire()
-	{
-		this(Settings.getNextItemID());
-	}
-
 	public ItemWire(int id)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
+		super(id);
 		this.setUnlocalizedName(Reference.PREFIX + "wire");
 		this.setTextureName(Reference.PREFIX + "wire");
 		this.setCreativeTab(TabRI.DEFAULT);

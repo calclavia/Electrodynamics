@@ -8,6 +8,7 @@ import resonantinduction.electrical.wire.flat.PartFlatSwitchWire;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedSwitchWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
+import resonantinduction.quantum.gate.PartQuantumGlyph;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
@@ -17,7 +18,7 @@ public class MultipartElectrical implements IPartFactory
 {
 	public static MultipartElectrical INSTANCE;
 
-	public static final String[] PART_TYPES = { "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger", "resonant_induction_levitator" };
+	public static final String[] PART_TYPES = { "resonant_induction_quantum_glyph", "resonant_induction_wire", "resonant_induction_switch_wire", "resonant_induction_flat_wire", "resonant_induction_flat_switch_wire", "resonant_induction_multimeter", "resonant_induction_transformer", "resonant_induction_charger", "resonant_induction_levitator" };
 
 	public MultipartElectrical()
 	{
@@ -47,6 +48,8 @@ public class MultipartElectrical implements IPartFactory
 			return new PartCharger();
 		else if (name.equals("resonant_induction_levitator"))
 			return new PartLevitator();
+		else if (name.equals("resonant_induction_quantum_glyph"))
+			return new PartQuantumGlyph();
 
 		return null;
 	}
