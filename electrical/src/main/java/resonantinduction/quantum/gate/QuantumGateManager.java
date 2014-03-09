@@ -45,6 +45,7 @@ public class QuantumGateManager
 							{
 								teleportEntity.setLocationAndAngles(location.x, location.y, location.z, teleportEntity.rotationYaw, 0.0F);
 								teleportEntity.motionX = teleportEntity.motionY = teleportEntity.motionZ = 0.0D;
+								teleportEntity.setSneaking(false);
 							}
 						};
 

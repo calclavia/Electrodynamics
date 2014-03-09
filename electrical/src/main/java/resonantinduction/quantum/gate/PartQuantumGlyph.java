@@ -76,7 +76,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	}
 
 	@Override
-	public void onWorldSeparate()
+	public void preRemove()
 	{
 		FrequencyGrid.instance().unregister((IQuantumGate) tile());
 	}
@@ -272,13 +272,17 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	{
 		nbt.setByte("side", slot);
 		nbt.setByte("number", number);
-		int frequency = ((IQuantumGate) tile()).getFrequency();
-		nbt.setInteger("frequency", frequency);
 
-		if (frequency != -1)
+		if (tile() != null)
 		{
-			getInventory().save(nbt);
-			getQuantumTank().writeToNBT(nbt);
+			int frequency = ((IQuantumGate) tile()).getFrequency();
+			nbt.setInteger("frequency", frequency);
+
+			if (frequency != -1)
+			{
+				getInventory().save(nbt);
+				getQuantumTank().writeToNBT(nbt);
+			}
 		}
 	}
 
