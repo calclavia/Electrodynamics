@@ -2,9 +2,11 @@ package mffs.api.fortron;
 
 import icbm.api.IBlockFrequency;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import net.minecraft.server.ServerListenThread;
 import net.minecraft.server.ThreadMinecraftServer;
@@ -24,54 +26,60 @@ public class FrequencyGrid
 	private static FrequencyGrid CLIENT_INSTANCE = new FrequencyGrid();
 	private static FrequencyGrid SERVER_INSTANCE = new FrequencyGrid();
 
-	private final Set<IBlockFrequency> frequencyGrid = new HashSet<IBlockFrequency>();
+	private final Set<IBlockFrequency> frequencyGrid = Collections.newSetFromMap(new WeakHashMap<IBlockFrequency, Boolean>());
 
 	public void register(IBlockFrequency tileEntity)
 	{
-		try
+		synchronized (frequencyGrid)
 		{
-			Iterator<IBlockFrequency> it = this.frequencyGrid.iterator();
-
-			while (it.hasNext())
+			try
 			{
-				IBlockFrequency frequency = it.next();
+				Iterator<IBlockFrequency> it = this.frequencyGrid.iterator();
 
-				if (frequency == null)
+				while (it.hasNext())
 				{
-					it.remove();
-					continue;
-				}
+					IBlockFrequency frequency = it.next();
 
-				if (((TileEntity) frequency).isInvalid())
-				{
-					it.remove();
-					continue;
-				}
+					if (frequency == null)
+					{
+						it.remove();
+						continue;
+					}
 
-				if (new Vector3((TileEntity) frequency).equals(new Vector3((TileEntity) tileEntity)))
-				{
-					it.remove();
-					continue;
+					if (((TileEntity) frequency).isInvalid())
+					{
+						it.remove();
+						continue;
+					}
+
+					if (new Vector3((TileEntity) frequency).equals(new Vector3((TileEntity) tileEntity)))
+					{
+						it.remove();
+						continue;
+					}
 				}
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 
-		this.frequencyGrid.add(tileEntity);
+			frequencyGrid.add(tileEntity);
+		}
 	}
 
 	public void unregister(IBlockFrequency tileEntity)
 	{
-		this.frequencyGrid.remove(tileEntity);
-		this.cleanUp();
+		synchronized (frequencyGrid)
+		{
+			frequencyGrid.remove(tileEntity);
+			cleanUp();
+		}
 	}
 
 	public Set<IBlockFrequency> get()
 	{
-		return this.frequencyGrid;
+		return frequencyGrid;
 	}
 
 	/**
