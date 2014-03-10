@@ -391,6 +391,8 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
+		if (getInventory() == null)
+			return null;
 		return getInventory().getStackInSlot(i);
 	}
 
@@ -402,11 +404,11 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 
 	public void incrStackSize(int slot, ItemStack itemStack)
 	{
-		if (this.getStackInSlot(slot) == null)
+		if (getStackInSlot(slot) == null)
 		{
 			setInventorySlotContents(slot, itemStack.copy());
 		}
-		else if (this.getStackInSlot(slot).isItemEqual(itemStack))
+		else if (getStackInSlot(slot).isItemEqual(itemStack))
 		{
 			getStackInSlot(slot).stackSize += itemStack.stackSize;
 		}
@@ -417,13 +419,16 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{
+		if (getInventory() == null)
+			return null;
 		return this.getInventory().getStackInSlotOnClosing(i);
 	}
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemStack)
 	{
-		this.getInventory().setInventorySlotContents(i, itemStack);
+		if (getInventory() != null)
+			this.getInventory().setInventorySlotContents(i, itemStack);
 	}
 
 	@Override
@@ -441,62 +446,72 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	@Override
 	public int getInventoryStackLimit()
 	{
+		if (getInventory() == null)
+			return 0;
 		return this.getInventory().getInventoryStackLimit();
 	}
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer)
 	{
+		if (getInventory() == null)
+			return false;
 		return this.getInventory().isUseableByPlayer(entityplayer);
 	}
 
 	@Override
 	public void openChest()
 	{
-		this.getInventory().openChest();
 
 	}
 
 	@Override
 	public void closeChest()
 	{
-		this.getInventory().closeChest();
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
+		if (getInventory() == null)
+			return false;
 		return getInventory().isItemValidForSlot(i, itemstack);
 	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int var1)
 	{
+		if (getInventory() == null)
+			return new int[0];
 		return getInventory().getAccessibleSlotsFromSide(var1);
 	}
 
 	@Override
 	public boolean canInsertItem(int i, ItemStack itemstack, int j)
 	{
+		if (getInventory() == null)
+			return false;
 		return getInventory().canInsertItem(i, itemstack, j);
 	}
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemstack, int j)
 	{
+		if (getInventory() == null)
+			return false;
 		return getInventory().canExtractItem(i, itemstack, j);
 	}
 
 	@Override
 	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
 	{
-		return true;
+		return getInventory() != null;
 	}
 
 	@Override
 	public boolean canRemove(ItemStack stack, int slot, ForgeDirection side)
 	{
-		return true;
+		return getInventory() != null;
 	}
 
 	@Override
