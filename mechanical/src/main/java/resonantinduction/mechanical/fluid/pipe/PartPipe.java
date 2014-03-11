@@ -33,10 +33,10 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private boolean markPacket = true;
 
-	public PartPipe(int typeID)
+	public PartPipe()
 	{
 		super();
-		material = EnumPipeMaterial.values()[typeID];
+		material = EnumPipeMaterial.values()[0];
 		requiresInsulation = false;
 
 		node = new FluidPressureNode(this)
@@ -109,21 +109,23 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 
 				return super.canConnect(from, source);
 			}
-
-			@Override
-			public int getMaxFlowRate()
-			{
-				return 100;
-			}
 		};
 
-		node.maxFlowRate = getMaterial().maxFlowRate;
-		node.maxPressure = getMaterial().maxPressure;
 	}
 
-	public PartPipe()
+	@Override
+	public void setMaterial(int i)
 	{
-		this(0);
+		setMaterial(EnumPipeMaterial.values()[i]);
+
+	}
+
+	@Override
+	public void setMaterial(EnumPipeMaterial material)
+	{
+		this.material = material;
+		node.maxFlowRate = getMaterial().maxFlowRate;
+		node.maxPressure = getMaterial().maxPressure;
 	}
 
 	@Override
@@ -170,12 +172,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
 	{
 		RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame);
-	}
-
-	@Override
-	public void setMaterial(int i)
-	{
-		setMaterial(EnumPipeMaterial.values()[i]);
 	}
 
 	@Override

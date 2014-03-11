@@ -7,10 +7,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.core.Reference;
 import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
@@ -20,6 +22,8 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 
 	public TilePump()
 	{
+		super(UniversalElectricity.machine);
+
 		pressureNode = new FluidPressureNode(this)
 		{
 			@Override
@@ -29,11 +33,11 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 				{
 					if (dir == getDirection())
 					{
-						return (int) Math.max(Math.abs(mechanicalNode.getTorque() / 1000d), 2);
+						return (int) Math.max(Math.abs(mechanicalNode.getTorque() / 8000d), 2);
 					}
 					else if (dir == getDirection().getOpposite())
 					{
-						return (int) -Math.max(Math.abs(mechanicalNode.getTorque() / 1000d), 2);
+						return (int) -Math.max(Math.abs(mechanicalNode.getTorque() / 8000d), 2);
 					}
 				}
 
@@ -53,6 +57,12 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 			}
 
 		};
+
+		normalRender = false;
+		isOpaqueCube = false;
+		customItemRender = true;
+		rotationMask = Byte.parseByte("111111", 2);
+		textureName = "material_steel";
 	}
 
 	@Override
@@ -138,18 +148,6 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	}
 
 	@Override
-	public ForgeDirection getDirection()
-	{
-		return ForgeDirection.getOrientation(this.worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-	}
-
-	@Override
-	public void setDirection(ForgeDirection direction)
-	{
-		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
-	}
-
-	@Override
 	public FluidTank getPressureTank()
 	{
 		return null;
@@ -167,6 +165,6 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	@Override
 	public void onFluidChanged()
 	{
-		
+
 	}
 }

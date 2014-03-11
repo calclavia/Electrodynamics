@@ -22,7 +22,6 @@ import resonantinduction.mechanical.energy.turbine.TileWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.TileWindTurbine;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import resonantinduction.mechanical.fluid.pipe.ItemPipe;
-import resonantinduction.mechanical.fluid.transport.BlockPump;
 import resonantinduction.mechanical.fluid.transport.TilePump;
 import resonantinduction.mechanical.logistic.belt.BlockDetector;
 import resonantinduction.mechanical.logistic.belt.BlockManipulator;
@@ -119,7 +118,7 @@ public class Mechanical
 		// blockRejector = contentRegistry.createTile(BlockRejector.class, TileRejector.class);
 		blockSorter = contentRegistry.newBlock(TileSorter.class);
 
-		blockPump = contentRegistry.createTile(BlockPump.class, TilePump.class);
+		blockPump = contentRegistry.newBlock(TilePump.class);
 
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
 

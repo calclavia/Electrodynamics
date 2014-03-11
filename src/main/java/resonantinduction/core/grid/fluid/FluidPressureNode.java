@@ -19,8 +19,8 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 {
 	protected byte connectionMap = Byte.parseByte("111111", 2);
 	private int pressure = 0;
-	public int maxFlowRate = 10;
-	public int maxPressure = 10;
+	public int maxFlowRate = 20;
+	public int maxPressure = 100;
 
 	public FluidPressureNode(IPressureNodeProvider parent)
 	{
