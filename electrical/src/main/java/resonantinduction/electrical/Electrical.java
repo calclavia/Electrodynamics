@@ -184,7 +184,10 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Quantum Gates */
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemQuantumGlyph, "TTT", "LBL", "CCC", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 1), "TCT", "LBL", " CT", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 2), "TC ", "LBL", "TCT", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 3), "TCT", "LBL", "TC ", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));
