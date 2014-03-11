@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileGrate extends TilePressureNode implements IRotatable
 {
 	@Config(comment = "The multiplier for the influence of the grate. This is multiplied by the pressure applied.")
-	private static final double grateEffectMultiplier = 10;
+	private static double grateEffectMultiplier = 10;
 
 	@SideOnly(Side.CLIENT)
 	private static Icon iconFront, iconSide;

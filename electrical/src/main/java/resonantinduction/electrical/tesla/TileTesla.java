@@ -170,26 +170,26 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 						}
 					});
 
-					for (ITesla teslaReceiver : TeslaGrid.instance().get())
+					for (ITesla otherTesla : TeslaGrid.instance().get())
 					{
-						if (new Vector3((TileEntity) teslaReceiver).distance(new Vector3(this)) < this.getRange() && teslaReceiver != this)
+						if (new Vector3((TileEntity) otherTesla).distance(new Vector3(this)) < this.getRange() && otherTesla != this)
 						{
-							if (teslaReceiver instanceof TileTesla)
+							if (otherTesla instanceof TileTesla)
 							{
-								if (((TileTesla) teslaReceiver).getHeight() <= 1)
+								if (((TileTesla) otherTesla).getHeight() <= 1)
 								{
 									continue;
 								}
 
-								teslaReceiver = ((TileTesla) teslaReceiver).getMultiBlock().get();
+								otherTesla = ((TileTesla) otherTesla).getMultiBlock().get();
 							}
 
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(teslaReceiver) && teslaReceiver.canTeslaTransfer(this))
+							if (!this.connectedTeslas.contains(otherTesla) && otherTesla.canTeslaTransfer(this))
 							{
-								teslaToTransfer.add(teslaReceiver);
+								teslaToTransfer.add(otherTesla);
 							}
 						}
 					}
@@ -275,6 +275,17 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	@Override
 	public boolean canTeslaTransfer(TileEntity tileEntity)
 	{
+		if (tileEntity instanceof TileTesla)
+		{
+			TileTesla otherTesla = (TileTesla) tileEntity;
+
+			// Make sure Tesla is the same color
+			if (!(otherTesla.dyeID == dyeID || (otherTesla.dyeID == DEFAULT_COLOR || dyeID == DEFAULT_COLOR)))
+			{
+				return false;
+			}
+		}
+
 		return canReceive && tileEntity != getMultiBlock().get() && !this.outputBlacklist.contains(tileEntity);
 	}
 
