@@ -100,14 +100,16 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 
 				if (obj instanceof FluidPressureNode)
 				{
-					FluidPressureNode otherPipe = (FluidPressureNode) obj;
-
 					/**
 					 * Move fluid from higher pressure to lower. In this case, move from tankA to
 					 * tankB.
 					 */
+					FluidPressureNode otherNode = (FluidPressureNode) obj;
+
+					// A is the pressure in the current node while B is the pressure in the node we
+					// are iterating through.
 					int pressureA = getPressure(dir);
-					int pressureB = otherPipe.getPressure(dir.getOpposite());
+					int pressureB = otherNode.getPressure(dir.getOpposite());
 
 					if (pressureA >= pressureB)
 					{
@@ -123,7 +125,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 
 								if (amountA > 0)
 								{
-									FluidTank tankB = otherPipe.parent.getPressureTank();
+									FluidTank tankB = otherNode.parent.getPressureTank();
 
 									if (tankB != null)
 									{
@@ -137,7 +139,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 											FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
 
 											if (drainStack != null && drainStack.amount > 0)
-												parent.drain(dir.getOpposite(), otherPipe.parent.fill(dir, drainStack, true), true);
+												parent.drain(dir.getOpposite(), otherNode.parent.fill(dir, drainStack, true), true);
 										}
 									}
 								}

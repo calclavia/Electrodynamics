@@ -61,24 +61,6 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	}
 
 	@Override
-	public boolean canUpdate()
-	{
-		return false;
-	}
-
-	@Override
-	public ForgeDirection getDirection()
-	{
-		return ForgeDirection.getOrientation(getBlockMetadata());
-	}
-
-	@Override
-	public void setDirection(ForgeDirection direction)
-	{
-		this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, direction.ordinal(), 3);
-	}
-
-	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
 		return null;
@@ -97,10 +79,17 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	}
 
 	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		System.out.println("" + getPressureTank().getFluidAmount());
+	}
+
+	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
 		int filled = getPressureTank().fill(resource, doFill);
-		System.out.println("FILL");
 
 		if (getPressureTank().getFluidAmount() > 0)
 		{
@@ -110,10 +99,11 @@ public class TileGrate extends TilePressureNode implements IRotatable
 				gratePath.startFill(new Vector3(this), getPressureTank().getFluid().getFluid().getID());
 			}
 
-			return getPressureTank().drain(gratePath.tryFill(getPressureTank().getFluidAmount(), 2000), true).amount;
+			int filledInWorld = gratePath.tryFill(getPressureTank().getFluidAmount(), 2000);
+			getPressureTank().drain(filledInWorld, true);
 		}
 
-		return 0;
+		return filled;
 	}
 
 	@Override
@@ -127,6 +117,8 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
+		System.out.println("DRAIN");
+
 		if (maxDrain > 0)
 		{
 			if (gratePath == null)

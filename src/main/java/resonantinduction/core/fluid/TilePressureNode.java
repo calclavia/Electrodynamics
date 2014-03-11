@@ -84,6 +84,7 @@ public abstract class TilePressureNode extends TileFluidNode implements IPressur
 		{
 			this.tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 		}
+
 		return this.tank;
 	}
 
