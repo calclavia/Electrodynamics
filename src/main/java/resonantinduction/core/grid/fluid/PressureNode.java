@@ -36,8 +36,11 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 	@Override
 	public void update(float deltaTime)
 	{
-		updatePressure();
-		distribute();
+		if (!world().isRemote)
+		{
+			updatePressure();
+			distribute();
+		}
 	}
 
 	protected void updatePressure()

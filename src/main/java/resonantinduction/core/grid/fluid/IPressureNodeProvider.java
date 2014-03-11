@@ -6,5 +6,7 @@ import resonantinduction.core.grid.INodeProvider;
 
 public interface IPressureNodeProvider extends INodeProvider, IFluidHandler
 {
-	FluidTank getPressureTank();
+	public FluidTank getPressureTank();
+
+	public void onFluidChanged();
 }

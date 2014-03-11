@@ -3,11 +3,8 @@ package resonantinduction.archaic.fluid.gutter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,11 +15,11 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
 
@@ -205,7 +202,36 @@ public class TileGutter extends TilePressureNode
 
 		if (!world().isRemote)
 		{
-			return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
+			ArrayList<IFluidTank> tanks = new ArrayList<IFluidTank>();
+
+			synchronized (node.getGrid().getNodes())
+			{
+				for (Object check : node.getGrid().getNodes())
+				{
+					if (check instanceof PressureNode)
+					{
+						tanks.add(((PressureNode) check).parent.getPressureTank());
+					}
+				}
+			}
+			if (FluidUtility.playerActivatedFluidItem(tanks, player, side))
+			{
+				synchronized (node.getGrid().getNodes())
+				{
+					for (Object check : node.getGrid().getNodes())
+					{
+						if (check instanceof PressureNode)
+						{
+							((PressureNode) check).parent.onFluidChanged();
+						}
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+
 		}
 
 		return true;
@@ -241,37 +267,10 @@ public class TileGutter extends TilePressureNode
 	{
 		if (!resource.getFluid().isGaseous())
 		{
-			int totalFill = 0;
-			int trials = 0;
-			FluidStack fillStack = resource.copy();
-
-			// Handle overflow.
-			do
-			{
-				int filled = super.fill(from, fillStack, doFill);
-				totalFill += filled;
-				int remain = fillStack.amount - filled;
-				fillStack.amount -= filled;
-				node.update(1 / 20f);
-				trials++;
-			}
-			while (fillStack.amount > totalFill && trials < 20);
-
-			return totalFill;
+			return super.fill(from, resource, doFill);
 		}
 
 		return 0;
-	}
-
-	@Override
-	public FluidTank getInternalTank()
-	{
-		if (tank == null)
-		{
-			tank = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
-		}
-
-		return tank;
 	}
 
 	@Override

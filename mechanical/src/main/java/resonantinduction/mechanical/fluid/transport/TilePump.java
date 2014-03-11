@@ -163,4 +163,10 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 
 		return super.getNode(nodeType, from);
 	}
+
+	@Override
+	public void onFluidChanged()
+	{
+		
+	}
 }

@@ -271,4 +271,9 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 		node.maxFlowRate = getMaterial().maxFlowRate;
 		node.maxPressure = getMaterial().maxPressure;
 	}
+
+	@Override
+	public void onFluidChanged()
+	{
+	}
 }

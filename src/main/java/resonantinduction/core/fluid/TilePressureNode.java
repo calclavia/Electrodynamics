@@ -23,7 +23,6 @@ public abstract class TilePressureNode extends TileFluidNode implements IPressur
 	public TilePressureNode(Material material)
 	{
 		super(material);
-		getInternalTank().setCapacity(FluidContainerRegistry.BUCKET_VOLUME);
 	}
 
 	@Override
