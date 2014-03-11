@@ -21,24 +21,21 @@ public abstract class NodeGrid<N extends Node> extends Grid<N>
 
 		AbstractMap<Object, ForgeDirection> connections = node.getConnections();
 
-		synchronized (connections)
+		for (Object connection : connections.keySet())
 		{
-			for (Object connection : connections.keySet())
+			if (isValidNode(connection) && connection instanceof Node)
 			{
-				if (isValidNode(connection) && connection instanceof Node)
+				Node connectedNode = (Node) connection;
+
+				if (connectedNode.getGrid() != this)
 				{
-					Node connectedNode = (Node) connection;
-
-					if (connectedNode.getGrid() != this)
+					synchronized (connectedNode.getGrid().getNodes())
 					{
-						synchronized (connectedNode.getGrid().getNodes())
-						{
-							connectedNode.getGrid().getNodes().clear();
-						}
-
-						add((N) connectedNode);
-						reconstructNode((N) connectedNode);
+						connectedNode.getGrid().getNodes().clear();
 					}
+
+					add((N) connectedNode);
+					reconstructNode((N) connectedNode);
 				}
 			}
 		}

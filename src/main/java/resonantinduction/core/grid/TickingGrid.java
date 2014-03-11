@@ -20,7 +20,7 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	@Override
 	public void update()
 	{
-		// synchronized (nodes)
+		synchronized (nodes)
 		{
 			for (Node node : nodes)
 			{
