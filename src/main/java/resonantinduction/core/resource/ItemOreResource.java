@@ -150,44 +150,6 @@ public class ItemOreResource extends Item
 			}
 		}
 
-		if (itemStack.getItem() == ResonantInduction.itemDust && !world.isRemote)
-		{
-			/**
-			 * Manually wash dust into refined dust.
-			 */
-			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack);
-
-			if (outputs.length > 0)
-			{
-				TileEntity tile = world.getBlockTileEntity(x, y, z);
-
-				if (tile instanceof TileGutter)
-				{
-					int drainAmount = 50 + world.rand.nextInt(50);
-					FluidStack drain = ((TileGutter) tile).drain(ForgeDirection.UP, drainAmount, false);
-
-					if (drain != null && drain.amount > 0 && world.rand.nextFloat() > 0.9)
-					{
-						if (world.rand.nextFloat() > 0.1)
-							for (RecipeResource res : outputs)
-								InventoryUtility.dropItemStack(world, new Vector3(player), res.getItemStack().copy(), 0);
-
-						itemStack.stackSize--;
-
-						if (itemStack.stackSize <= 0)
-							itemStack = null;
-
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack);
-					}
-
-					((TileGutter) tile).drain(ForgeDirection.UP, drainAmount, true);
-
-					world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "liquid.water", 0.5f, 1);
-					return true;
-				}
-			}
-		}
-
 		return false;
 	}
 

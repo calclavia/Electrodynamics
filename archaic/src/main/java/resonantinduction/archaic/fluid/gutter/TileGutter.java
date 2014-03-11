@@ -23,6 +23,9 @@ import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.api.recipe.MachineRecipes;
+import resonantinduction.api.recipe.RecipeResource;
+import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -36,6 +39,7 @@ import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -183,7 +187,42 @@ public class TileGutter extends TilePressureNode
 	{
 		if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ResonantInduction.itemDust)
 		{
-			return false;
+			if (!world().isRemote)
+			{
+				/**
+				 * Manually wash dust into refined dust.
+				 */
+				ItemStack itemStack = player.getCurrentEquippedItem();
+
+				RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack);
+
+				if (outputs.length > 0)
+				{
+					int drainAmount = 50 + world().rand.nextInt(50);
+					FluidStack drain = drain(ForgeDirection.UP, drainAmount, false);
+
+					if (drain != null && drain.amount > 0 && world().rand.nextFloat() > 0.9)
+					{
+						if (world().rand.nextFloat() > 0.1)
+							for (RecipeResource res : outputs)
+								InventoryUtility.dropItemStack(world(), new Vector3(player), res.getItemStack().copy(), 0);
+
+						itemStack.stackSize--;
+
+						if (itemStack.stackSize <= 0)
+							itemStack = null;
+
+						player.inventory.setInventorySlotContents(player.inventory.currentItem, itemStack);
+					}
+
+					drain(ForgeDirection.UP, drainAmount, true);
+
+					world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "liquid.water", 0.5f, 1);
+					return true;
+				}
+			}
+
+			return true;
 		}
 
 		if (!world().isRemote)
