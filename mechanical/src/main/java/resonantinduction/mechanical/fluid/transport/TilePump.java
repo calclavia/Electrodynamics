@@ -9,18 +9,18 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import resonantinduction.core.grid.fluid.PressureNode;
+import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 
 public class TilePump extends TileMechanical implements IPressureNodeProvider, IRotatable
 {
-	private final PressureNode pressureNode;
+	private final FluidPressureNode pressureNode;
 
 	public TilePump()
 	{
-		pressureNode = new PressureNode(this)
+		pressureNode = new FluidPressureNode(this)
 		{
 			@Override
 			public int getPressure(ForgeDirection dir)

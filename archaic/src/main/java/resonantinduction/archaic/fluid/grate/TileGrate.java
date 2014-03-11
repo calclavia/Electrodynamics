@@ -14,11 +14,10 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import resonantinduction.archaic.fluid.gutter.FluidGravityNode;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
-import resonantinduction.core.grid.fluid.PressureNode;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.FluidUtility;
@@ -38,7 +37,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		isOpaqueCube = false;
 		normalRender = true;
 		rotationMask = Byte.parseByte("111111", 2);
-		node = new PressureNode(this);
+		node = new FluidGravityNode(this);
 	}
 
 	@Override
@@ -100,7 +99,8 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		getPressureTank().fill(resource, doFill);
+		int filled = getPressureTank().fill(resource, doFill);
+		System.out.println("FILL");
 
 		if (getPressureTank().getFluidAmount() > 0)
 		{

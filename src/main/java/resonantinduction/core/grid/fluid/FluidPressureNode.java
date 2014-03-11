@@ -15,19 +15,19 @@ import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
-public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
+public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
 {
 	protected byte connectionMap = Byte.parseByte("111111", 2);
 	private int pressure = 0;
 	public int maxFlowRate = 10;
 	public int maxPressure = 10;
 
-	public PressureNode(IPressureNodeProvider parent)
+	public FluidPressureNode(IPressureNodeProvider parent)
 	{
 		super(parent);
 	}
 
-	public PressureNode setConnection(byte connectionMap)
+	public FluidPressureNode setConnection(byte connectionMap)
 	{
 		this.connectionMap = connectionMap;
 		return this;
@@ -57,9 +57,9 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 			Entry<Object, ForgeDirection> entry = it.next();
 			Object obj = entry.getKey();
 
-			if (obj instanceof PressureNode)
+			if (obj instanceof FluidPressureNode)
 			{
-				int pressure = ((PressureNode) obj).getPressure(entry.getValue().getOpposite());
+				int pressure = ((FluidPressureNode) obj).getPressure(entry.getValue().getOpposite());
 
 				minPressure = Math.min(pressure, minPressure);
 				maxPressure = Math.max(pressure, maxPressure);
@@ -98,9 +98,9 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 				Object obj = entry.getKey();
 				ForgeDirection dir = entry.getValue();
 
-				if (obj instanceof PressureNode)
+				if (obj instanceof FluidPressureNode)
 				{
-					PressureNode otherPipe = (PressureNode) obj;
+					FluidPressureNode otherPipe = (FluidPressureNode) obj;
 
 					/**
 					 * Move fluid from higher pressure to lower. In this case, move from tankA to
@@ -149,7 +149,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 				{
 					IFluidHandler fluidHandler = (IFluidHandler) obj;
 					int pressure = getPressure(dir);
-					int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(PressureNode.class, dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
+					int tankPressure = fluidHandler instanceof IPressureNodeProvider ? ((IPressureNodeProvider) fluidHandler).getNode(FluidPressureNode.class, dir.getOpposite()).getPressure(dir.getOpposite()) : 0;
 					FluidTank sourceTank = parent.getPressureTank();
 
 					int transferAmount = (Math.max(pressure, tankPressure) - Math.min(pressure, tankPressure)) * getMaxFlowRate();
@@ -212,7 +212,7 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 
 				if (tile instanceof IPressureNodeProvider)
 				{
-					PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
+					FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
 					if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 					{
@@ -236,13 +236,13 @@ public class PressureNode extends Node<IPressureNodeProvider, TickingGrid, Objec
 	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
-		return (source instanceof PressureNode) && (connectionMap & (1 << from.ordinal())) != 0;
+		return (source instanceof FluidPressureNode) && (connectionMap & (1 << from.ordinal())) != 0;
 	}
 
 	@Override
 	public TickingGrid newGrid()
 	{
-		return new TickingGrid<PressureNode>(this, PressureNode.class);
+		return new TickingGrid<FluidPressureNode>(this, FluidPressureNode.class);
 	}
 
 	@Override

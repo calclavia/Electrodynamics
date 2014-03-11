@@ -28,7 +28,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import resonantinduction.core.grid.fluid.PressureNode;
+import resonantinduction.core.grid.fluid.FluidPressureNode;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.prefab.vector.Cuboid;
@@ -55,7 +55,7 @@ public class TileGutter extends TilePressureNode
 		normalRender = false;
 		bounds = new Cuboid(0, 0, 0, 1, 0.99, 1);
 
-		node = new PressureNode(this)
+		node = new FluidGravityNode(this)
 		{
 			@Override
 			public void recache()
@@ -74,7 +74,7 @@ public class TileGutter extends TilePressureNode
 						{
 							if (tile instanceof IPressureNodeProvider)
 							{
-								PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
+								FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
 								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 								{
@@ -101,24 +101,6 @@ public class TileGutter extends TilePressureNode
 						sendRenderUpdate();
 					}
 				}
-			}
-
-			@Override
-			public int getPressure(ForgeDirection dir)
-			{
-				if (dir == ForgeDirection.UP)
-					return -1;
-
-				if (dir == ForgeDirection.DOWN)
-					return 2;
-
-				return 0;
-			}
-
-			@Override
-			public int getMaxFlowRate()
-			{
-				return 20;
 			}
 		};
 	}
@@ -184,6 +166,10 @@ public class TileGutter extends TilePressureNode
 			{
 				entity.setFire(5);
 			}
+			else
+			{
+				entity.extinguish();
+			}
 		}
 
 		if (entity instanceof EntityItem)
@@ -208,9 +194,9 @@ public class TileGutter extends TilePressureNode
 			{
 				for (Object check : node.getGrid().getNodes())
 				{
-					if (check instanceof PressureNode)
+					if (check instanceof FluidPressureNode)
 					{
-						tanks.add(((PressureNode) check).parent.getPressureTank());
+						tanks.add(((FluidPressureNode) check).parent.getPressureTank());
 					}
 				}
 			}
@@ -220,9 +206,9 @@ public class TileGutter extends TilePressureNode
 				{
 					for (Object check : node.getGrid().getNodes())
 					{
-						if (check instanceof PressureNode)
+						if (check instanceof FluidPressureNode)
 						{
-							((PressureNode) check).parent.onFluidChanged();
+							((FluidPressureNode) check).parent.onFluidChanged();
 						}
 					}
 				}
@@ -346,7 +332,7 @@ public class TileGutter extends TilePressureNode
 			public void render(int meta, byte sides)
 			{
 				RenderUtility.bind(TEXTURE);
-				// RenderUtility.bind(TextureMap.locationBlocksTexture);
+
 				double thickness = 0.055;
 				double height = 0.5;
 
@@ -370,11 +356,14 @@ public class TileGutter extends TilePressureNode
 							 */
 							MODEL.renderOnly("left");
 						}
-
+						
+						if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
+						{
 						/**
 						 * Render strips
 						 */
 						MODEL.renderOnly("backCornerL");
+						}
 						GL11.glPopMatrix();
 					}
 				}

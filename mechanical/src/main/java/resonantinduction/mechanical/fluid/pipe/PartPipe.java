@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import resonantinduction.core.grid.fluid.PressureNode;
+import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
 import calclavia.lib.utility.WorldUtility;
@@ -28,7 +28,7 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
+public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	private boolean markPacket = true;
@@ -39,7 +39,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 		material = EnumPipeMaterial.values()[typeID];
 		requiresInsulation = false;
 
-		node = new PressureNode(this)
+		node = new FluidPressureNode(this)
 		{
 			@Override
 			public void recache()
@@ -61,7 +61,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 							{
 								if (tile instanceof IPressureNodeProvider)
 								{
-									PressureNode check = ((IPressureNodeProvider) tile).getNode(PressureNode.class, dir.getOpposite());
+									FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
 									if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 									{
@@ -90,9 +90,9 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, PressureNode, IPr
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
 			{
-				if (source instanceof PressureNode)
+				if (source instanceof FluidPressureNode)
 				{
-					PressureNode otherNode = (PressureNode) source;
+					FluidPressureNode otherNode = (FluidPressureNode) source;
 
 					if (otherNode.parent instanceof PartPipe)
 					{

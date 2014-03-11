@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import resonantinduction.core.grid.fluid.PressureNode;
+import resonantinduction.core.grid.fluid.FluidPressureNode;
 import calclavia.lib.network.IPacketReceiverWithID;
 
 /**
@@ -18,7 +18,7 @@ import calclavia.lib.network.IPacketReceiverWithID;
  */
 public abstract class TilePressureNode extends TileFluidNode implements IPressureNodeProvider, IPacketReceiverWithID
 {
-	protected PressureNode node;
+	protected FluidPressureNode node;
 
 	public TilePressureNode(Material material)
 	{
