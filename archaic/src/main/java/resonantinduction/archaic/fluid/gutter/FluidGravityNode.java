@@ -19,10 +19,10 @@ public class FluidGravityNode extends FluidPressureNode
 	public int getPressure(ForgeDirection dir)
 	{
 		if (dir == ForgeDirection.UP)
-			return -1;
+			return -2;
 
 		if (dir == ForgeDirection.DOWN)
-			return 1;
+			return 2;
 
 		return 0;
 	}

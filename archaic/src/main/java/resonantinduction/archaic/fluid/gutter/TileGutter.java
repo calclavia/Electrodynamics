@@ -232,6 +232,11 @@ public class TileGutter extends TilePressureNode
 		}
 	}
 
+	protected void onWorldJoin()
+	{
+		onNeighborChanged();
+	}
+
 	@Override
 	public void onNeighborChanged()
 	{
@@ -356,13 +361,13 @@ public class TileGutter extends TilePressureNode
 							 */
 							MODEL.renderOnly("left");
 						}
-						
+
 						if (!WorldUtility.isEnabledSide(sides, dir) || !WorldUtility.isEnabledSide(sides, dir.getRotation(ForgeDirection.UP)))
 						{
-						/**
-						 * Render strips
-						 */
-						MODEL.renderOnly("backCornerL");
+							/**
+							 * Render strips
+							 */
+							MODEL.renderOnly("backCornerL");
 						}
 						GL11.glPopMatrix();
 					}

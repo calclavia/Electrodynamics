@@ -15,10 +15,11 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import resonantinduction.archaic.fluid.gutter.FluidGravityNode;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
+import resonantinduction.core.grid.fluid.FluidPressureNode;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.configurable.Config;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -26,6 +27,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileGrate extends TilePressureNode implements IRotatable
 {
+	@Config(comment = "The multiplier for the influence of the grate. This is multiplied by the pressure applied.")
+	private static final double grateEffectMultiplier = 10;
+
 	@SideOnly(Side.CLIENT)
 	private static Icon iconFront, iconSide;
 
@@ -37,7 +41,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		isOpaqueCube = false;
 		normalRender = true;
 		rotationMask = Byte.parseByte("111111", 2);
-		node = new FluidGravityNode(this);
+		node = new FluidPressureNode(this);
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return null;
+		return new FluidTankInfo[] { getPressureTank().getInfo() };
 	}
 
 	@Override
@@ -83,27 +87,59 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	{
 		super.updateEntity();
 
-		System.out.println("" + getPressureTank().getFluidAmount());
+		if (!world().isRemote)
+		{
+			if (ticks % 20 == 0)
+			{
+				int pressure = node.getPressure(getDirection());
+				int blockEffect = (int) Math.abs(pressure * grateEffectMultiplier);
+
+				if (pressure > 0)
+				{
+					// Fill
+					if (getPressureTank().getFluidAmount() >= FluidContainerRegistry.BUCKET_VOLUME)
+					{
+						if (gratePath == null)
+						{
+							gratePath = new GratePathfinder(true);
+							gratePath.startFill(new Vector3(this), getPressureTank().getFluid().getFluid().getID());
+						}
+
+						int filledInWorld = gratePath.tryFill(getPressureTank().getFluidAmount(), blockEffect);
+						getPressureTank().drain(filledInWorld, true);
+					}
+				}
+				else if (pressure < 0)
+				{
+					// Drain
+					int maxDrain = getPressureTank().getCapacity() - getPressureTank().getFluidAmount();
+
+					if (maxDrain > 0)
+					{
+						if (gratePath == null)
+						{
+							gratePath = new GratePathfinder(false);
+
+							if (!gratePath.startDrain(new Vector3(this)))
+							{
+								resetPath();
+							}
+						}
+
+						if (gratePath != null && gratePath.tryPopulateDrainMap(blockEffect))
+						{
+							getPressureTank().fill(gratePath.tryDrain(maxDrain, true), true);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		int filled = getPressureTank().fill(resource, doFill);
-
-		if (getPressureTank().getFluidAmount() > 0)
-		{
-			if (gratePath == null)
-			{
-				gratePath = new GratePathfinder(true);
-				gratePath.startFill(new Vector3(this), getPressureTank().getFluid().getFluid().getID());
-			}
-
-			int filledInWorld = gratePath.tryFill(getPressureTank().getFluidAmount(), 2000);
-			getPressureTank().drain(filledInWorld, true);
-		}
-
-		return filled;
+		return getPressureTank().fill(resource, doFill);
 	}
 
 	@Override
@@ -117,8 +153,6 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		System.out.println("DRAIN");
-
 		if (maxDrain > 0)
 		{
 			if (gratePath == null)
@@ -137,7 +171,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			}
 		}
 
-		return null;
+		return getPressureTank().drain(maxDrain, doDrain);
 	}
 
 	/**
