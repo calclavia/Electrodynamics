@@ -153,18 +153,4 @@ public class ResonantInduction
 		if (!UpdateTicker.INSTANCE.isAlive())
 			UpdateTicker.INSTANCE.start();
 	}
-
-	@EventHandler
-	public void serverStarting(FMLServerStartingEvent event)
-	{
-		if (!UpdateTicker.INSTANCE.isAlive())
-			UpdateTicker.INSTANCE.start();
-		UpdateTicker.INSTANCE.pause = false;
-	}
-
-	@EventHandler
-	public void onServerStopping(FMLServerStoppingEvent evt)
-	{
-		UpdateTicker.INSTANCE.pause = true;
-	}
 }
