@@ -63,19 +63,19 @@ public class BlockDust extends BlockTile
 	@Override
 	public void onPostBlockPlaced(World world, int x, int y, int z, int metadata)
 	{
-		tryToFall(world, y, x, z);
+		tryToFall(world, x, y, z);
 	}
 
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		tryToFall(world, y, x, z);
+		tryToFall(world, x, y, z);
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int y, int x, int z, int id)
+	public void onNeighborBlockChange(World world, int x, int y, int z, int id)
 	{
-		tryToFall(world, y, x, z);
+		tryToFall(world, x, y, z);
 	}
 
 	private void tryToFall(World world, int x, int y, int z)
