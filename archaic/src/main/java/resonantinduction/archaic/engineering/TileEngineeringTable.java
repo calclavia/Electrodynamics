@@ -387,7 +387,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack)
 	{
-		System.out.println("SET" + slot + " : " + itemStack);
 		if (slot < CRAFTING_MATRIX_END)
 		{
 			craftingMatrix[slot] = itemStack;
