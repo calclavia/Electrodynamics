@@ -49,13 +49,13 @@ public class Settings
 		return Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, key, id).getInt(id);
 	}
 
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Engineering Table Autocraft")
+	@Config(key = "Engineering Table Autocraft")
 	public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Tesla Sound FXs")
+	@Config(key = "Tesla Sound FXs")
 	public static boolean SOUND_FXS = true;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Shiny silver Wires")
+	@Config(key = "Shiny silver Wires")
 	public static boolean SHINY_SILVER = true;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Max EM Contractor Path")
+	@Config(key = "Max EM Contractor Path")
 	public static int MAX_LEVITATOR_DISTANCE = 200;
 
 	public static void setModMetadata(ModMetadata metadata, String id, String name)
@@ -89,12 +89,12 @@ public class Settings
 		return false;
 	}
 
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
 	public static int LEVITATOR_MAX_REACH = 40;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
 	public static int LEVITATOR_PUSH_DELAY = 5;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
 	public static double LEVITATOR_MAX_SPEED = .2;
-    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
 	public static double LEVITATOR_ACCELERATION = .02;
 }
