@@ -9,8 +9,8 @@ public class TickingGrid<N extends Node> extends NodeGrid<N> implements IUpdate
 	{
 		super(type);
 		add(node);
-		NetworkTickHandler.addNetwork(this);
-		// UpdateTicker.addNetwork(this);
+		// NetworkTickHandler.addNetwork(this);
+		UpdateTicker.addNetwork(this);
 	}
 
 	/**

@@ -90,7 +90,7 @@ public class ResonantInduction
 		ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		Modstats.instance().getReporter().registerMod(this);
-
+		Settings.CONFIGURATION.load();
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
@@ -136,20 +136,20 @@ public class ResonantInduction
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-        try
-        {
-            ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+		try
+		{
+			ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
-        Settings.save();
+		Settings.CONFIGURATION.save();
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
-		
+
 		if (!UpdateTicker.INSTANCE.isAlive())
 			UpdateTicker.INSTANCE.start();
 	}

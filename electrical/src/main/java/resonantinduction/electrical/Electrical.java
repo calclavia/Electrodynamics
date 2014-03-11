@@ -99,6 +99,7 @@ public class Electrical
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
+		Settings.CONFIGURATION.load();
 		// Energy
 		itemWire = contentRegistry.createItem(ItemWire.class);
 		itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
@@ -120,7 +121,7 @@ public class Electrical
 
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
-		Settings.save();
+		Settings.CONFIGURATION.save();
 
 		OreDictionary.registerOre("wire", itemWire);
 		OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));

@@ -58,11 +58,6 @@ public class Settings
     @Config(category = Configuration.CATEGORY_GENERAL, key = "Max EM Contractor Path")
 	public static int MAX_LEVITATOR_DISTANCE = 200;
 
-	public static void save()
-	{
-		CONFIGURATION.save();
-	}
-
 	public static void setModMetadata(ModMetadata metadata, String id, String name)
 	{
 		setModMetadata(metadata, id, name, "");

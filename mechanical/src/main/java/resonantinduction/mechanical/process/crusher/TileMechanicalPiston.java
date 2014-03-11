@@ -2,9 +2,6 @@ package resonantinduction.mechanical.process.crusher;
 
 import java.lang.reflect.Method;
 
-import codechicken.multipart.MultipartHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,15 +10,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.configurable.Config;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.MovementUtility;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
-	// Planned CalCore option @ConfigInt()
-	private int breakCount = 5;
+	@Config
+	private int mechanicalPistonBreakCount = 5;
 
 	public TileMechanicalPiston()
 	{
@@ -200,12 +200,12 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 		}
 		else
 		{
-			if (this.breakCount <= 0)
+			if (this.mechanicalPistonBreakCount <= 0)
 			{
 				getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
 
 			}
-			this.breakCount--;
+			this.mechanicalPistonBreakCount--;
 		}
 
 	}

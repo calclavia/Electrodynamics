@@ -96,6 +96,7 @@ public class Archaic
 	public void preInit(FMLPreInitializationEvent evt)
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
+		Settings.CONFIGURATION.load();
 		blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class);
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
@@ -114,7 +115,7 @@ public class Archaic
 		itemHammer = contentRegistry.createItem(ItemHammer.class);
 
 		proxy.preInit();
-		Settings.save();
+		Settings.CONFIGURATION.save();
 		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
 
 		PacketAnnotation.register(TileFirebox.class);

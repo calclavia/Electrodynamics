@@ -106,6 +106,7 @@ public class Mechanical
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
 		BlockCreativeBuilder.register(new SchematicWindTurbine());
 		BlockCreativeBuilder.register(new SchematicWaterTurbine());
+		Settings.CONFIGURATION.load();
 
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
@@ -129,7 +130,7 @@ public class Mechanical
 		OreDictionary.registerOre("gear", itemGear);
 
 		proxy.preInit();
-		Settings.save();
+		Settings.CONFIGURATION.save();
 
 		TabRI.ITEMSTACK = new ItemStack(blockGrinderWheel);
 
