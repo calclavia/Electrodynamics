@@ -18,6 +18,7 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -240,10 +241,37 @@ public class TileGutter extends TilePressureNode
 	{
 		if (!resource.getFluid().isGaseous())
 		{
-			return super.fill(from, resource, doFill);
+			int totalFill = 0;
+			int trials = 0;
+			FluidStack fillStack = resource.copy();
+
+			// Handle overflow.
+			do
+			{
+				int filled = super.fill(from, fillStack, doFill);
+				totalFill += filled;
+				int remain = fillStack.amount - filled;
+				fillStack.amount -= filled;
+				node.update(1 / 20f);
+				trials++;
+			}
+			while (fillStack.amount > totalFill && trials < 20);
+
+			return totalFill;
 		}
 
 		return 0;
+	}
+
+	@Override
+	public FluidTank getInternalTank()
+	{
+		if (tank == null)
+		{
+			tank = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
+		}
+
+		return tank;
 	}
 
 	@Override
