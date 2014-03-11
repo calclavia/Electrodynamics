@@ -44,6 +44,20 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 	/** Bitmask that handles connections for the renderer **/
 	public byte renderSides = 0;
 
+	protected boolean markTankUpdate;
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (markTankUpdate)
+		{
+			sendTankUpdate();
+			markTankUpdate = false;
+		}
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -124,7 +138,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 		{
 			if (!FluidUtility.matchExact(prevStack, getInternalTank().getFluid()))
 			{
-				sendTankUpdate();
+				markTankUpdate = true;
 				prevStack = tank.getFluid() != null ? tank.getFluid().copy() : null;
 			}
 		}
