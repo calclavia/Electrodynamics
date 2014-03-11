@@ -6,23 +6,27 @@ import codechicken.multipart.MultipartHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.MovementUtility;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
-public class TileMechanicalPiston extends TileMechanical
+public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
-    // Planned CalCore option @ConfigInt()
-    private int breakCount = 5;
+	// Planned CalCore option @ConfigInt()
+	private int breakCount = 5;
 
 	public TileMechanicalPiston()
 	{
+		super(Material.piston);
+
 		mechanicalNode = new PacketMechanicalNode(this)
 		{
 			@Override
@@ -45,6 +49,12 @@ public class TileMechanicalPiston extends TileMechanical
 			}
 
 		}.setLoad(0.5f);
+
+		isOpaqueCube = false;
+		normalRender = false;
+		customItemRender = true;
+		rotationMask = Byte.parseByte("111111", 2);
+		textureName = "material_steel_dark";
 	}
 
 	@Override
@@ -63,7 +73,7 @@ public class TileMechanicalPiston extends TileMechanical
 	{
 		TileEntity tileEntity = from.getTileEntity(worldObj);
 
-        if (this.equals(to.getTileEntity(getWorldObj())))
+		if (this.equals(to.getTileEntity(getWorldObj())))
 		{
 			return false;
 		}
@@ -181,28 +191,28 @@ public class TileMechanicalPiston extends TileMechanical
 		}
 	}
 
-    public void hitOreBlock(Block oreBlock, Vector3 blockPos)
-    {
-        if (worldObj.isRemote)
-        {
-            // Spawn hit particles logic only, all other information is done Server Side
-            return;
-        }
-        else
-        {
-            if (this.breakCount <= 0)
-            {
-                getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
+	public void hitOreBlock(Block oreBlock, Vector3 blockPos)
+	{
+		if (worldObj.isRemote)
+		{
+			// Spawn hit particles logic only, all other information is done Server Side
+			return;
+		}
+		else
+		{
+			if (this.breakCount <= 0)
+			{
+				getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
 
-            }
-            this.breakCount--;
-        }
+			}
+			this.breakCount--;
+		}
 
-    }
+	}
 
-    @SideOnly(Side.CLIENT)
-    private void spawnParticles(Vector3 blockPos)
-    {
+	@SideOnly(Side.CLIENT)
+	private void spawnParticles(Vector3 blockPos)
+	{
 
-    }
+	}
 }

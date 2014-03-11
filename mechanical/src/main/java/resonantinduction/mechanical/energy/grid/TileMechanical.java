@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.energy.grid;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,14 +9,25 @@ import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.Node;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.module.TileBase;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 
-public abstract class TileMechanical extends TileAdvanced implements INodeProvider, IPacketReceiver
+public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiver
 {
+	@Deprecated
+	public TileMechanical()
+	{
+		super(null);
+	}
+
+	public TileMechanical(Material material)
+	{
+		super(material);
+	}
+
 	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
 	public MechanicalNode mechanicalNode = new PacketMechanicalNode(this).setLoad(0.5f);
