@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.INodeProvider;
+import resonantinduction.core.grid.Node;
 import resonantinduction.core.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
@@ -29,7 +30,7 @@ import codechicken.multipart.TMultiPart;
  * 
  * @author Calclavia
  */
-public class MechanicalNode extends EnergyNode<INodeProvider, TickingGrid, MechanicalNode>
+public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalNode> implements IMechanicalNode
 {
 	public double torque = 0;
 	public double prevAngularVelocity, angularVelocity = 0;
@@ -148,27 +149,32 @@ public class MechanicalNode extends EnergyNode<INodeProvider, TickingGrid, Mecha
 
 	}
 
+	@Override
 	public void apply(double torque, double angularVelocity)
 	{
 		this.torque += torque;
 		this.angularVelocity += angularVelocity;
 	}
 
+	@Override
 	public double getTorque()
 	{
 		return angularVelocity != 0 ? torque : 0;
 	}
 
+	@Override
 	public double getAngularVelocity()
 	{
 		return torque != 0 ? angularVelocity : 0;
 	}
 
+	@Override
 	public float getRatio(ForgeDirection dir, MechanicalNode with)
 	{
 		return 0.5f;
 	}
 
+	@Override
 	public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
 	{
 		return true;
@@ -223,6 +229,7 @@ public class MechanicalNode extends EnergyNode<INodeProvider, TickingGrid, Mecha
 		return parent instanceof TMultiPart ? new Vector3(((TMultiPart) parent).x(), ((TMultiPart) parent).y(), ((TMultiPart) parent).z()) : parent instanceof TileEntity ? new Vector3((TileEntity) parent) : null;
 	}
 
+	@Override
 	public boolean canConnect(ForgeDirection from, Object source)
 	{
 		return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;

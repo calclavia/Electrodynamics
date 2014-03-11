@@ -103,7 +103,11 @@ public class ResourceGenerator implements IVirtualObject
 		OreDictionary.registerOre("oreGold", Block.oreGold);
 		OreDictionary.registerOre("oreIron", Block.oreIron);
 		OreDictionary.registerOre("oreLapis", Block.oreLapis);
+		regenerateOreResources();
+	}
 
+	public static void regenerateOreResources()
+	{
 		// Vanilla fluid recipes
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone));
 
