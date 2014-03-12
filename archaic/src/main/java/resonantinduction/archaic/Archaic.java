@@ -145,7 +145,7 @@ public class Archaic
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockImprinter, "SSS", "W W", "PPP", 'S', Block.stone, 'P', Block.pistonBase, 'W', "logWood"));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', UniversalRecipe.MOTOR.get(), 'P', Block.pistonBase, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockCast, "I I", "IBI", "III", 'S', Item.ingotIron, 'B', Block.fenceIron));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGutter, "S S", "I I", "III", 'S', Item.stick, 'I', Block.cobblestone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "WBW", "B B", "WBW", 'B', Block.fenceIron, 'W', "plankWood"));

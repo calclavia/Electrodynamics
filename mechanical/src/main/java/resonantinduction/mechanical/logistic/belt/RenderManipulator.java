@@ -21,41 +21,45 @@ public class RenderManipulator extends RenderImprintable
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
 	{
 		TileManipulator tile = (TileManipulator) tileEntity;
-		int face = tile.getDirection().ordinal();
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		GL11.glRotatef(180f, 0f, 0f, 1f);
+		if (tile.worldObj != null)
+		{
+			int face = tile.getDirection().ordinal();
 
-		if (tile.isOutput())
-		{
-			bindTexture(TEXTURE_INPUT);
-		}
-		else
-		{
-			bindTexture(TEXTURE_OUTPUT);
-		}
+			GL11.glPushMatrix();
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+			GL11.glRotatef(180f, 0f, 0f, 1f);
 
-		if (face == 2)
-		{
-			GL11.glRotatef(0f, 0f, 1f, 0f);
-		}
-		else if (face == 3)
-		{
-			GL11.glRotatef(180f, 0f, 1f, 0f);
-		}
-		else if (face == 4)
-		{
-			GL11.glRotatef(270f, 0f, 1f, 0f);
-		}
-		else if (face == 5)
-		{
-			GL11.glRotatef(90f, 0f, 1f, 0f);
-		}
+			if (tile.isOutput())
+			{
+				bindTexture(TEXTURE_INPUT);
+			}
+			else
+			{
+				bindTexture(TEXTURE_OUTPUT);
+			}
 
-		MODEL.render(0.0625F, true, 0);
+			if (face == 2)
+			{
+				GL11.glRotatef(0f, 0f, 1f, 0f);
+			}
+			else if (face == 3)
+			{
+				GL11.glRotatef(180f, 0f, 1f, 0f);
+			}
+			else if (face == 4)
+			{
+				GL11.glRotatef(270f, 0f, 1f, 0f);
+			}
+			else if (face == 5)
+			{
+				GL11.glRotatef(90f, 0f, 1f, 0f);
+			}
 
-		GL11.glPopMatrix();
+			MODEL.render(0.0625F, true, 0);
+
+			GL11.glPopMatrix();
+		}
 	}
 
 }

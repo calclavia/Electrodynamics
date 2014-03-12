@@ -122,12 +122,8 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
 					if (dropStack != null)
 					{
-						int var11 = dropStack.stackSize;
-						dropStack.stackSize -= var11;
-						InventoryUtility.dropItemStack(world(), center(), dropStack);
-
-						if (dropStack.stackSize <= 0)
-							inventory.setInventorySlotContents(i, null);
+						InventoryUtility.dropItemStack(world(), new Vector3(player), dropStack);
+						inventory.setInventorySlotContents(i, null);
 					}
 				}
 
@@ -238,15 +234,14 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	@Override
 	public ArrayList<ItemStack> getDrops(int metadata, int fortune)
 	{
-		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
-		ItemStack stack = ItemBlockSaved.getItemStackWithNBT(this.getBlockType(), world(), x(), y(), z());
-		list.add(stack);
-		return list;
+		return new ArrayList<ItemStack>();
 	}
 
 	@Override
-	public void dropEntireInventory(int par5, int par6)
+	public void onRemove(int par5, int par6)
 	{
+		ItemStack stack = ItemBlockSaved.getItemStackWithNBT(this.getBlockType(), world(), x(), y(), z());
+		InventoryUtility.dropItemStack(world(), center(), stack);
 	}
 
 	/** Creates a "fake inventory" and hook the player up to the crafter to use the player's items. */
@@ -392,10 +387,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 		}
 		else if (slot < CRAFTING_OUTPUT_END)
 		{
-			/** An external inventory is attempting to craft the item from the engineering table. */
-			if (itemStack == null)
-				onPickUpFromSlot(null, slot, this.outputInventory[slot - CRAFTING_MATRIX_END]);
-
 			outputInventory[slot - CRAFTING_MATRIX_END] = itemStack;
 		}
 		else if (slot < PLAYER_OUTPUT_END && this.invPlayer != null)
@@ -552,11 +543,11 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 		{
 			if (itemStack != null)
 			{
-				Pair<ItemStack, ItemStack[]> idealRecipeItem = this.getCraftingManager().getIdealRecipe(itemStack);
+				Pair<ItemStack, ItemStack[]> idealRecipeItem = getCraftingManager().getIdealRecipe(itemStack);
 
 				if (idealRecipeItem != null)
 				{
-					this.getCraftingManager().consumeItems(idealRecipeItem.right().clone());
+					getCraftingManager().consumeItems(idealRecipeItem.right().clone());
 				}
 				else
 				{
@@ -648,12 +639,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		if (Settings.ALLOW_ENGINEERING_AUTOCRAFT)
-		{
-			if (side != 0)
-				return new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-		}
-
 		return new int[0];
 	}
 
