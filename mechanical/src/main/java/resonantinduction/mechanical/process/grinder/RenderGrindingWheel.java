@@ -20,16 +20,16 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  */
 @SideOnly(Side.CLIENT)
-public class RenderGrinderWheel extends TileEntitySpecialRenderer
+public class RenderGrindingWheel extends TileEntitySpecialRenderer
 {
 	public static final IModelCustom MODEL =  AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		if (t instanceof TileGrinderWheel)
+		if (t instanceof TileGrindingWheel)
 		{
-			TileGrinderWheel tile = (TileGrinderWheel) t;
+			TileGrindingWheel tile = (TileGrindingWheel) t;
 			glPushMatrix();
 			glTranslatef((float) x + 0.5F, (float) y + 0.5f, (float) z + 0.5F);
 			glScalef(0.51f, 0.5f, 0.5f);

@@ -29,8 +29,7 @@ import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileSorter;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
-import resonantinduction.mechanical.process.grinder.BlockGrindingWheel;
-import resonantinduction.mechanical.process.grinder.TileGrinderWheel;
+import resonantinduction.mechanical.process.grinder.TileGrindingWheel;
 import resonantinduction.mechanical.process.purifier.BlockMixer;
 import resonantinduction.mechanical.process.purifier.TileMixer;
 import calclavia.components.creative.BlockCreativeBuilder;
@@ -123,7 +122,7 @@ public class Mechanical
 		itemPipe = contentRegistry.createItem(ItemPipe.class);
 
 		// Machines
-		blockGrinderWheel = contentRegistry.createTile(BlockGrindingWheel.class, TileGrinderWheel.class);
+		blockGrinderWheel = contentRegistry.newBlock(TileGrindingWheel.class);
 		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
 		blockMechanicalPiston = contentRegistry.newBlock(TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);

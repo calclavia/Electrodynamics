@@ -1,8 +1,11 @@
 package resonantinduction.mechanical.process.grinder;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -17,12 +20,13 @@ import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
+import calclavia.lib.prefab.vector.Cuboid;
 
 /**
  * @author Calclavia
  * 
  */
-public class TileGrinderWheel extends TileMechanical implements IRotatable
+public class TileGrindingWheel extends TileMechanical implements IRotatable
 {
 	public static final int PROCESS_TIME = 20 * 20;
 	/** A map of ItemStacks and their remaining grind-time left. */
@@ -33,8 +37,10 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 	private final long requiredTorque = 1000;
 	private double counter = 0;
 
-	public TileGrinderWheel()
+	public TileGrindingWheel()
 	{
+		super(Material.rock);
+
 		mechanicalNode = new PacketMechanicalNode(this)
 		{
 			@Override
@@ -54,6 +60,59 @@ public class TileGrinderWheel extends TileMechanical implements IRotatable
 				return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
 			}
 		}.setLoad(2);
+
+		bounds = new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
+		isOpaqueCube = false;
+		normalRender = false;
+		customItemRender = true;
+		rotationMask = Byte.parseByte("111111", 2);
+		textureName = "material_steel_dark";
+	}
+
+	@Override
+	public void collide(Entity entity)
+	{
+		if (entity instanceof EntityItem)
+		{
+			((EntityItem) entity).age--;
+		}
+
+		if (canWork())
+		{
+			if (entity instanceof EntityItem)
+			{
+				if (canGrind(((EntityItem) entity).getEntityItem()))
+				{
+					if (grindingItem == null)
+					{
+						grindingItem = (EntityItem) entity;
+					}
+
+					if (!TileGrindingWheel.timer.containsKey((EntityItem) entity))
+					{
+						TileGrindingWheel.timer.put((EntityItem) entity, TileGrindingWheel.PROCESS_TIME);
+					}
+				}
+				else
+				{
+					entity.setPosition(entity.posX, entity.posY - 1.2, entity.posZ);
+				}
+			}
+			else
+			{
+				entity.attackEntityFrom(DamageSource.cactus, 2);
+			}
+
+		}
+
+		if (mechanicalNode.getAngularVelocity() != 0)
+		{
+			// Move entity based on the direction of the block.
+			ForgeDirection dir = getDirection();
+			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal()).getOpposite();
+			double speed = mechanicalNode.getAngularVelocity() / 20;
+			entity.addVelocity(dir.offsetX * speed, Math.random() * speed, dir.offsetZ * speed);
+		}
 	}
 
 	@Override
