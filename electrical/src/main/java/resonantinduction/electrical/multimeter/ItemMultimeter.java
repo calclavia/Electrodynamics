@@ -7,11 +7,13 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.part.IHighlight;
 import resonantinduction.electrical.wire.EnumWireMaterial;
+import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.render.EnumColor;
@@ -21,7 +23,9 @@ import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FacePlacementGrid$;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
 public class ItemMultimeter extends JItemMultiPart implements IHighlight
 {
@@ -36,6 +40,18 @@ public class ItemMultimeter extends JItemMultiPart implements IHighlight
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
 		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
+
+		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+
+		if (tile instanceof TileMultipart)
+		{
+			TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
+
+			if (centerPart != null && !player.isSneaking())
+			{
+				pos.offset(side ^ 1);
+			}
+		}
 
 		PartMultimeter part = (PartMultimeter) MultiPartRegistry.createPart("resonant_induction_multimeter", false);
 
