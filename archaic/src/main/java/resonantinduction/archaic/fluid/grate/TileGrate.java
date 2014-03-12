@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
@@ -42,6 +43,18 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		normalRender = true;
 		rotationMask = Byte.parseByte("111111", 2);
 		node = new FluidPressureNode(this);
+		node.maxFlowRate = getPressureTank().getCapacity();
+	}
+
+	@Override
+	public FluidTank getInternalTank()
+	{
+		if (this.tank == null)
+		{
+			this.tank = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
+		}
+
+		return this.tank;
 	}
 
 	@Override
@@ -89,7 +102,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 		if (!world().isRemote)
 		{
-			if (ticks % 20 == 0)
+			if (ticks % 10 == 0)
 			{
 				int pressure = node.getPressure(getDirection());
 				int blockEffect = (int) Math.abs(pressure * grateEffectMultiplier);
@@ -113,7 +126,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 				{
 					// Drain
 					int maxDrain = getPressureTank().getCapacity() - getPressureTank().getFluidAmount();
-
+					// System.out.println(maxDrain);
 					if (maxDrain > 0)
 					{
 						if (gratePath == null)
@@ -153,24 +166,6 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		if (maxDrain > 0)
-		{
-			if (gratePath == null)
-			{
-				gratePath = new GratePathfinder(false);
-
-				if (!gratePath.startDrain(new Vector3(this)))
-				{
-					resetPath();
-				}
-			}
-
-			if (gratePath != null && gratePath.tryPopulateDrainMap(500))
-			{
-				return gratePath.tryDrain(maxDrain, doDrain);
-			}
-		}
-
 		return getPressureTank().drain(maxDrain, doDrain);
 	}
 
@@ -417,7 +412,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		 * 
 		 * @return - The amount drained.
 		 */
-		public FluidStack tryDrain(int amount, boolean doDrain)
+		public FluidStack tryDrain(int targetAmount, boolean doDrain)
 		{
 			int drainedAmount = 0;
 
@@ -439,13 +434,16 @@ public class TileGrate extends TilePressureNode implements IRotatable
 				{
 					int checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, fluidCoord.position);
 
+					if (drainedAmount + checkAmount > targetAmount)
+						break;
+
 					if (checkAmount == 0)
 					{
 						this.drainNodes.poll();
 					}
 					else
 					{
-						FluidStack fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain, 3);
+						FluidStack fluidStack = FluidUtility.drainBlock(TileGrate.this.worldObj, fluidCoord.position, doDrain);
 
 						this.drainNodes.poll();
 
@@ -453,7 +451,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 						{
 							drainedAmount += fluidStack.amount;
 
-							if (drainedAmount > amount)
+							if (drainedAmount >= targetAmount)
 							{
 								break;
 							}

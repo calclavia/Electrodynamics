@@ -97,7 +97,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 	@Override
 	public void transport(Entity entity)
 	{
-		if (((IQuantumGate) tile()).getFrequency() != -1)
+		if (ticks % 10 == 0 && ((IQuantumGate) tile()).getFrequency() != -1)
 		{
 			Set<IBlockFrequency> frequencyBlocks = FrequencyGrid.instance().get(((IQuantumGate) tile()).getFrequency());
 			List<IQuantumGate> gates = new ArrayList<IQuantumGate>();
