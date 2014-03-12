@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.fluid.pipe;
+package resonantinduction.archaic.fluid.tank;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.archaic.Archaic;
-import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.core.fluid.TileFluidDistribution;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;

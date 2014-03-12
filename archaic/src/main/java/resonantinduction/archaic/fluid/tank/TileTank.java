@@ -9,7 +9,6 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 import resonantinduction.core.fluid.TileFluidDistribution;
-import resonantinduction.mechanical.fluid.pipe.ItemBlockFluidContainer;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileBlock.IComparatorInputOverride;

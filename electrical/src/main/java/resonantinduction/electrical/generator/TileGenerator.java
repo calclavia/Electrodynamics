@@ -45,6 +45,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	@Override
 	public void initiate()
 	{
+		super.initiate();
 		node.reconstruct();
 	}
 
@@ -52,6 +53,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	public void invalidate()
 	{
 		node.deconstruct();
+		super.invalidate();
 	}
 
 	@Override

@@ -86,13 +86,14 @@ public class GuiMultimeter extends GuiContainerBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		String graphName = multimeter.getNetwork().getLocalized(multimeter.getNetwork().graphs.get(multimeter.graphType));
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		String s = LanguageUtility.getLocal("item.resonantinduction:multimeter.name");
 		this.fontRenderer.drawString(s, this.xSize / 2 - this.fontRenderer.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRenderer.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
 		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectType), 9, 60, 4210752);
 		this.fontRenderer.drawString("Logic: " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
-		this.fontRenderer.drawString(multimeter.getNetwork().getLocalized(multimeter.getNetwork().graphs.get(multimeter.graphType)), 95, 115, 4210752);
+		this.fontRenderer.drawString(graphName, 95, 115, 4210752);
 		this.textFieldLimit.drawTextBox();
 	}
 
