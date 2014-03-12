@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -90,7 +91,7 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 
 	public static void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z)
 	{
-		renderItemOnSides(tile, itemStack, x, y, z, "No Output");
+		renderItemOnSides(tile, itemStack, x, y, z, LanguageUtility.getLocal("tooltip.noOutput"));
 	}
 
 	public static void renderItemOnSides(TileEntity tile, ItemStack itemStack, double x, double y, double z, String renderText)
@@ -110,9 +111,17 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			{
 				continue;
 			}
+
 			renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
+
+			GL11.glPushMatrix();
+			setupLight(tile, direction.offsetX, direction.offsetZ);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			GL11.glDisable(2896);
 			RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
 			RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
+			GL11.glEnable(2896);
+			GL11.glPopMatrix();
 		}
 	}
 
@@ -129,15 +138,20 @@ public abstract class RenderItemOverlayTile extends TileEntitySpecialRenderer
 			}
 
 			renderItemOnSide(tile, itemStack, direction, x, y, z, renderText, amount);
+
+			GL11.glPushMatrix();
+			setupLight(tile, direction.offsetX, direction.offsetZ);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			GL11.glDisable(2896);
 			RenderUtility.renderText(renderText, direction, 0.02f, x, y - 0.35f, z);
 			RenderUtility.renderText(amount, direction, 0.02f, x, y - 0.15f, z);
-			RenderUtility.disableLightmap();
+			GL11.glEnable(2896);
+			GL11.glPopMatrix();
 		}
 	}
 
 	protected static void renderItemOnSide(TileEntity tile, ItemStack itemStack, ForgeDirection direction, double x, double y, double z, String renderText, String amount)
 	{
-
 		if (itemStack != null)
 		{
 			GL11.glPushMatrix();

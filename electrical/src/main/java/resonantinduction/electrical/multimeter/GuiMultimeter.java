@@ -92,7 +92,7 @@ public class GuiMultimeter extends GuiContainerBase
 		this.fontRenderer.drawString(EnumColor.INDIGO + "Detection Type", 9, 20, 4210752);
 		this.fontRenderer.drawString(multimeter.getNetwork().getDisplay(multimeter.detectType), 9, 60, 4210752);
 		this.fontRenderer.drawString("Logic: " + EnumColor.RED + LanguageUtility.getLocal("gui.resonantinduction.multimeter." + this.multimeter.getMode().display), 9, 75, 4210752);
-		this.fontRenderer.drawString(multimeter.getNetwork().graphs.get(multimeter.graphType).name, 95, 115, 4210752);
+		this.fontRenderer.drawString(multimeter.getNetwork().getLocalized(multimeter.getNetwork().graphs.get(multimeter.graphType)), 95, 115, 4210752);
 		this.textFieldLimit.drawTextBox();
 	}
 

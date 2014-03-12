@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.api.energy.UnitDisplay;
@@ -25,18 +26,16 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 	 * The available graphs to be handled.
 	 */
 	public final List<Graph> graphs = new ArrayList<Graph>();
-	/**
-	 * Energy Related
-	 */
-	public final GraphL energyGraph = new GraphL("Energy", maxData);
-	public final GraphL powerGraph = new GraphL("Power", maxData);
-	public final GraphL energyCapacityGraph = new GraphL("Capacity", 1);
-	public final GraphL voltageGraph = new GraphL("Voltage", maxData);
-	public final GraphD torqueGraph = new GraphD("Torque", maxData);
-	public final GraphD angularVelocityGraph = new GraphD("Speed", maxData);
-	public final GraphI fluidGraph = new GraphI("Fluid", maxData);
-	public final GraphF thermalGraph = new GraphF("Temperature", maxData);
-	public final GraphI pressureGraph = new GraphI("Pressure", maxData);
+
+	public final GraphL energyGraph = new GraphL("energy", maxData);
+	public final GraphL powerGraph = new GraphL("power", maxData);
+	public final GraphL energyCapacityGraph = new GraphL("capacity", 1);
+	public final GraphL voltageGraph = new GraphL("voltage", maxData);
+	public final GraphD torqueGraph = new GraphD("torque", maxData);
+	public final GraphD angularVelocityGraph = new GraphD("speed", maxData);
+	public final GraphI fluidGraph = new GraphI("fluid", maxData);
+	public final GraphF thermalGraph = new GraphF("temperature", maxData);
+	public final GraphI pressureGraph = new GraphI("pressure", maxData);
 
 	/**
 	 * The absolute center of the multimeter screens.
@@ -111,8 +110,13 @@ public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter
 		if (graph == pressureGraph)
 			graphValue = UnitDisplay.roundDecimals(pressureGraph.get()) + " Pa";
 
-		return graph.name + ": " + graphValue;
+		return getLocalized(graph) + ": " + graphValue;
 
+	}
+
+	public String getLocalized(Graph graph)
+	{
+		return LanguageUtility.getLocal("tooltip.graph." + graph.name);
 	}
 
 	public boolean isPrimary(PartMultimeter check)

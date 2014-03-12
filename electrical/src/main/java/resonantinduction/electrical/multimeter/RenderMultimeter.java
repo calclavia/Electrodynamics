@@ -15,6 +15,7 @@ import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -196,7 +197,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			}
 
 			if (information.size() <= 0)
-				information.add("No information");
+				information.add(LanguageUtility.getLocal("tooltip.noInformation"));
 
 			float displacement = 0.72f / information.size();
 			float maxScale = (float) (part.getNetwork().size.x + part.getNetwork().size.z) * 0.004f;
