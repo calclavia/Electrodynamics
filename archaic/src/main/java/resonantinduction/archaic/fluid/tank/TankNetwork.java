@@ -9,8 +9,6 @@ import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 import calclavia.lib.utility.FluidUtility;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * Network that handles connected tanks

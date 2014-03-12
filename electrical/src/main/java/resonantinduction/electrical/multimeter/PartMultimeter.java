@@ -11,13 +11,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
@@ -271,7 +271,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 		if (tileEntity instanceof INodeProvider)
 		{
-			MechanicalNode instance = ((INodeProvider) tileEntity).getNode(MechanicalNode.class, receivingSide);
+			IMechanicalNode instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, receivingSide);
 
 			for (ForgeDirection dir : ForgeDirection.values())
 			{
@@ -280,7 +280,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 					break;
 				}
 
-				instance = ((INodeProvider) tileEntity).getNode(MechanicalNode.class, dir);
+				instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, dir);
 			}
 
 			if (instance != null)
@@ -370,28 +370,34 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
 	public void read(MCDataInput packet, int packetID)
 	{
-		if (packetID == 0)
+		switch (packetID)
 		{
-			placementSide = ForgeDirection.getOrientation(packet.readByte());
-			facing = packet.readByte();
-			detectMode = DetectMode.values()[packet.readByte()];
-			detectType = packet.readByte();
-			graphType = packet.readByte();
-			getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-			getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
-			getNetwork().isEnabled = packet.readBoolean();
-			refresh();
-		}
-		else if (packetID == 1)
-		{
-			redstoneTriggerLimit = packet.readLong();
-		}
-		else if (packetID == 2)
-		{
-			isPrimary = packet.readBoolean();
+			case 0:
+			{
+				placementSide = ForgeDirection.getOrientation(packet.readByte());
+				facing = packet.readByte();
+				detectMode = DetectMode.values()[packet.readByte()];
+				detectType = packet.readByte();
+				graphType = packet.readByte();
+				getNetwork().center = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+				getNetwork().size = new universalelectricity.api.vector.Vector3(packet.readNBTTagCompound());
+				getNetwork().isEnabled = packet.readBoolean();
+				refresh();
+				break;
+			}
+			case 1:
+			{
+				redstoneTriggerLimit = packet.readLong();
+				break;
+			}
+			case 2:
+			{
+				isPrimary = packet.readBoolean();
 
-			if (isPrimary)
-				getNetwork().load(packet.readNBTTagCompound());
+				if (isPrimary)
+					getNetwork().load(packet.readNBTTagCompound());
+				break;
+			}
 		}
 	}
 
@@ -485,6 +491,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		return true;
 	}
 
+	@Override
 	protected ItemStack getItem()
 	{
 		return new ItemStack(Electrical.itemMultimeter);

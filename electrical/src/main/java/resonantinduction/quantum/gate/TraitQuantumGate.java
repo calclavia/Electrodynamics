@@ -1,24 +1,14 @@
 package resonantinduction.quantum.gate;
 
 import icbm.api.IBlockFrequency;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import calclavia.lib.utility.inventory.IExternalInventoryBox;
-import mffs.api.fortron.FrequencyGrid;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import universalelectricity.api.vector.VectorWorld;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

@@ -3,19 +3,13 @@ package resonantinduction.quantum.gate;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
-import codechicken.lib.vec.Cuboid6;
-import codechicken.lib.vec.Vector3;
 import resonantinduction.core.Reference;
-import resonantinduction.electrical.Electrical;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
-import cpw.mods.fml.client.FMLClientHandler;
+import codechicken.lib.vec.Cuboid6;
 
 public class RenderQuantumGlyph implements ISimpleItemRenderer
 {

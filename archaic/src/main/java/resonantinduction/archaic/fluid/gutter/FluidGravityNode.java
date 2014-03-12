@@ -1,12 +1,8 @@
 package resonantinduction.archaic.fluid.gutter;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.archaic.fluid.grate.TileGrate;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
-import calclavia.lib.utility.WorldUtility;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 
 public class FluidGravityNode extends FluidPressureNode
 {

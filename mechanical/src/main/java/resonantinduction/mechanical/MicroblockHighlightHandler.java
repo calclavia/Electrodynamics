@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.core.prefab.part.IHighlight;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Vector3;
-import codechicken.microblock.FacePlacementGrid$;
 import codechicken.microblock.CornerPlacementGrid$;
+import codechicken.microblock.FacePlacementGrid$;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

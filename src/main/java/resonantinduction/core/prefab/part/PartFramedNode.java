@@ -8,14 +8,12 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.Node;
-import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorHelper;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
@@ -192,7 +190,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 
 	public byte getAllCurrentConnections()
 	{
-		return (byte) (currentConnections);
+		return (currentConnections);
 	}
 
 	public static boolean connectionMapContainsSide(byte connections, ForgeDirection side)
@@ -282,7 +280,7 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
 
 	@SuppressWarnings("hiding")
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(node.getClass()))
 			return (N) node;

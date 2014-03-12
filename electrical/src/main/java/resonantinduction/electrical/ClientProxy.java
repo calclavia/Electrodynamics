@@ -18,7 +18,6 @@ import resonantinduction.electrical.render.FXElectricBolt;
 import resonantinduction.electrical.tesla.RenderTesla;
 import resonantinduction.electrical.tesla.TileTesla;
 import resonantinduction.electrical.transformer.RenderTransformer;
-import resonantinduction.mechanical.energy.gear.RenderGear;
 import resonantinduction.quantum.gate.RenderQuantumGlyph;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.render.item.GlobalItemRenderer;

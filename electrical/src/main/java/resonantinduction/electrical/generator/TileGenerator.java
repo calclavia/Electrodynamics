@@ -4,8 +4,10 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.Node;
+import resonantinduction.core.grid.NodeRegistry;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -18,15 +20,7 @@ import calclavia.lib.prefab.tile.TileElectrical;
  */
 public class TileGenerator extends TileElectrical implements IRotatable, INodeProvider
 {
-	protected MechanicalNode node = new MechanicalNode(this)
-	{
-		@Override
-		public boolean canConnect(ForgeDirection from, Object source)
-		{
-			return from == getDirection() || from == getDirection().getOpposite();
-		}
-
-	}.setLoad(0.5f);
+	protected IMechanicalNode node;
 
 	/** Generator turns KE -> EE. Inverted one will turn EE -> KE. */
 	public boolean isInversed = true;
@@ -35,6 +29,10 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	public TileGenerator()
 	{
 		energy = new EnergyStorageHandler(1000000);
+		node = NodeRegistry.get(this, IMechanicalNode.class);
+
+		if (node != null)
+			node.setLoad(0.5);
 	}
 
 	public byte toggleGearRatio()
@@ -61,29 +59,30 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	{
 		super.updateEntity();
 
-		if (!isInversed)
+		if (node != null)
 		{
-			receiveMechanical();
-			produce();
+			if (!isInversed)
+			{
+				receiveMechanical();
+				produce();
+			}
+			else
+			{
+				produceMechanical();
+			}
 		}
-		else
-		{
-			produceMechanical();
-		}
-
 	}
 
 	public void receiveMechanical()
 	{
 		double power = node.getEnergy();
-		// System.out.println(power);
+
 		long receive = energy.receiveEnergy((long) power, true);
 
 		if (receive > 0)
 		{
-			double percentageUsed = (double) receive / (double) power;
-			node.torque = (node.getTorque() - (node.getTorque() * percentageUsed));
-			node.angularVelocity = (node.getAngularVelocity() - (node.getAngularVelocity() * percentageUsed));
+			double percentageUsed = receive / power;
+			node.apply(-node.getTorque() * percentageUsed, -node.getAngularVelocity() * percentageUsed);
 		}
 	}
 
@@ -99,7 +98,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 			{
 				final double maxAngularVelocity = extract / (float) torqueRatio;
 
-				final double maxTorque = ((double) extract) / maxAngularVelocity;
+				final double maxTorque = (extract) / maxAngularVelocity;
 
 				double setAngularVelocity = maxAngularVelocity;
 				double setTorque = maxTorque;
@@ -113,8 +112,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 				if (currentVelo != 0)
 					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (node.getAngularVelocity() / currentVelo);
 
-				node.torque = setTorque;
-				node.angularVelocity = setAngularVelocity;
+				node.apply(setTorque - node.getTorque(), setAngularVelocity - node.getAngularVelocity());
 				energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 			}
 		}
@@ -165,10 +163,14 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
-		if (nodeType.isAssignableFrom(node.getClass()))
-			return (N) node;
+		if (from == getDirection() || from == getDirection().getOpposite())
+		{
+			if (nodeType.isAssignableFrom(node.getClass()))
+				return (N) node;
+		}
+
 		return null;
 	}
 }

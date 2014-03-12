@@ -110,7 +110,7 @@ public class PartQuantumGlyph extends JCuboidPart implements TSlottedPart, JNorm
 				}
 			}
 
-			gates.remove((IQuantumGate) tile());
+			gates.remove(tile());
 
 			if (gates.size() > 0)
 			{

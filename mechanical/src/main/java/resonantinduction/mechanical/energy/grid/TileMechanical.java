@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.Node;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileBase;
@@ -82,7 +82,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
 			return (N) mechanicalNode;

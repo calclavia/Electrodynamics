@@ -202,6 +202,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 	/**
 	 * Recache the connections. This is the default connection implementation.
 	 */
+	@Override
 	public void recache()
 	{
 		synchronized (connections)

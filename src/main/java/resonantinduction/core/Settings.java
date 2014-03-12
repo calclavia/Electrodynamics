@@ -3,9 +3,9 @@ package resonantinduction.core;
 import java.io.File;
 import java.util.Arrays;
 
-import calclavia.lib.configurable.Config;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
+import calclavia.lib.configurable.Config;
 import calclavia.lib.content.IDManager;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLCommonHandler;

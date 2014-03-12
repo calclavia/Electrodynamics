@@ -12,8 +12,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.Node;
 import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -344,7 +344,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 		{
 			if (manualCrankTime > 0)
 			{
-				node.apply(isClockwiseCrank ? 2 : -2, isClockwiseCrank ? 0.02f : -0.02f);
+				node.apply(isClockwiseCrank ? 5 : -5, isClockwiseCrank ? 0.025f : -0.025f);
 				manualCrankTime--;
 			}
 
@@ -528,7 +528,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(node.getClass()))
 			return (N) getMultiBlock().get().node;

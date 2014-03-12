@@ -1,6 +1,8 @@
-package resonantinduction.mechanical.energy.grid;
+package resonantinduction.api;
 
-public interface IEnergyNode
+import resonantinduction.core.grid.INode;
+
+public interface IEnergyNode extends INode
 {
 	/**
 	 * @return Gets the power of this node. Note that power by definition is energy per second.

@@ -40,6 +40,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 	/** Amount to mulitply the step by (up x2. down /2) */
 	public byte multiplier = 2;
 
+	@Override
 	public void preparePlacement(int side, int facing)
 	{
 		this.placementSide = ForgeDirection.getOrientation(side);
@@ -71,6 +72,7 @@ public class PartTransformer extends PartFace implements IVoltageOutput, IEnergy
 		return false;
 	}
 
+	@Override
 	protected ItemStack getItem()
 	{
 		return new ItemStack(Electrical.itemTransformer);

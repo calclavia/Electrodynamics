@@ -48,7 +48,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) 0.5f, (float) 0.5f, (float) 0.5f);
+		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
 		renderWaterTurbine(itemStack.getItemDamage(), 1, false);
 		GL11.glPopMatrix();
 	}

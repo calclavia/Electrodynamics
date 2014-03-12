@@ -118,7 +118,7 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		GL11.glColor4f(material.color.getRed() / 255f, material.color.getGreen() / 255f, material.color.getBlue() / 255f, 1);
 		MODEL.renderOnly("Mid");
-		
+
 		/**
 		 * Render each side
 		 */

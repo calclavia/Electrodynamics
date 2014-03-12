@@ -8,14 +8,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import universalelectricity.api.energy.UnitDisplay;
@@ -13,6 +12,7 @@ import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
+import calclavia.lib.utility.LanguageUtility;
 
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {

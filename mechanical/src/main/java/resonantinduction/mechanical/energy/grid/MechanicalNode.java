@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.Node;
@@ -51,6 +52,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 		super(parent);
 	}
 
+	@Override
 	public MechanicalNode setLoad(double load)
 	{
 		this.load = load;
@@ -196,6 +198,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 	/**
 	 * Recache the connections. This is the default connection implementation.
 	 */
+	@Override
 	public void recache()
 	{
 		synchronized (connections)

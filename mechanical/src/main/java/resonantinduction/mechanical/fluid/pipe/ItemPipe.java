@@ -2,17 +2,17 @@ package resonantinduction.mechanical.fluid.pipe;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
-import resonantinduction.electrical.wire.EnumWireMaterial;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import org.lwjgl.input.Keyboard;
+
+import universalelectricity.api.energy.UnitDisplay;
+import universalelectricity.api.energy.UnitDisplay.Unit;
+import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;

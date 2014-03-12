@@ -70,7 +70,7 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 		/**
 		 * Apply energy loss.
 		 */
-		double percentageLoss = 0;//Math.max(0, (1 - (getConnectors().size() * 6 / 100d)));
+		double percentageLoss = 0;// Math.max(0, (1 - (getConnectors().size() * 6 / 100d)));
 		long energyLoss = (long) (percentageLoss * 100);
 		totalEnergy -= energyLoss;
 

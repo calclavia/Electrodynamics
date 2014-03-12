@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderGrindingWheel extends TileEntitySpecialRenderer
 {
-	public static final IModelCustom MODEL =  AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "grinder.obj");
 
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)

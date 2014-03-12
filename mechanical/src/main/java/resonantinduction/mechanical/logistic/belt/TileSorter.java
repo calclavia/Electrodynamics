@@ -1,7 +1,6 @@
 package resonantinduction.mechanical.logistic.belt;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -20,7 +19,6 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.api.IFilterable;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
@@ -55,6 +53,7 @@ public class TileSorter extends TileInventory
 		return interactCurrentItem(side, player);
 	}
 
+	@Override
 	protected boolean configure(EntityPlayer player, int side, Vector3 vector3)
 	{
 		isInverted = !isInverted;
@@ -134,7 +133,7 @@ public class TileSorter extends TileInventory
 				int blockID = position().translate(dir).getBlockID(world());
 				Block block = Block.blocksList[blockID];
 
-				if (block == null || !block.isNormalCube(blockID))
+				if (block == null || !Block.isNormalCube(blockID))
 				{
 					possibleDirections.add(dir);
 				}
@@ -152,7 +151,7 @@ public class TileSorter extends TileInventory
 				int blockID = position().translate(dir).getBlockID(world());
 				Block block = Block.blocksList[blockID];
 
-				if (block == null || !block.isNormalCube(blockID))
+				if (block == null || !Block.isNormalCube(blockID))
 				{
 					possibleDirections.add(dir);
 				}

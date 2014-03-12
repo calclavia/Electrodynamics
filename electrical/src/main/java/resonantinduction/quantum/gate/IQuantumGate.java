@@ -5,7 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
-import calclavia.lib.utility.inventory.IExternalInventoryBox;
 
 /**
  * Only TileEntities should implement this.

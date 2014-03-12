@@ -1,10 +1,11 @@
 package resonantinduction.archaic.crate;
 
+import net.minecraft.tileentity.TileEntity;
+
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.utility.LanguageUtility;
-import net.minecraft.tileentity.TileEntity;
 import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

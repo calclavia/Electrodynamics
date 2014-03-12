@@ -6,7 +6,7 @@ import java.util.WeakHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 
-public abstract class Node<P extends INodeProvider, G extends Grid, N>
+public abstract class Node<P extends INodeProvider, G extends Grid, N> implements INode
 {
 	public final P parent;
 
@@ -54,9 +54,6 @@ public abstract class Node<P extends INodeProvider, G extends Grid, N>
 		}
 	}
 
-	/**
-	 * This destroys the node, removing it from the grid and also destroying all references to it.
-	 */
 	public void deconstruct()
 	{
 		synchronized (connections)

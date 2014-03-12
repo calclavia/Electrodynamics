@@ -48,7 +48,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	 */
 	public static long getEnergyForTier(int tier)
 	{
-		return (long) (Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000));
+		return Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000);
 	}
 
 	@Override

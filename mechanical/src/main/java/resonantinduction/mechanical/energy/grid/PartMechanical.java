@@ -7,9 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.Node;
-import resonantinduction.mechanical.energy.turbine.TileMechanicalTurbine;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.JCuboidPart;
@@ -71,7 +70,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(node.getClass()))
 			return (N) node;
@@ -95,10 +94,15 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	{
 		if (world() != null && !world().isRemote)
 		{
-			sendDescUpdate();
-			// TODO: Make packets more efficient.
-			// getWriteStream().writeByte(1).writeFloat(angularVelocity);
+			getWriteStream().writeByte(1).writeDouble(node.angularVelocity);
 		}
+	}
+
+	/** Packet Code. */
+	@Override
+	public void read(MCDataInput packet)
+	{
+		read(packet, packet.readUByte());
 	}
 
 	public void read(MCDataInput packet, int packetID)
@@ -106,7 +110,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		switch (packetID)
 		{
 			case 0:
-				readDesc(packet);
+				load(packet.readNBTTagCompound());
 				break;
 			case 1:
 				node.angularVelocity = packet.readDouble();
@@ -114,27 +118,20 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 		}
 	}
 
-	/** Packet Code. */
 	@Override
 	public void readDesc(MCDataInput packet)
 	{
+		packet.readByte();
 		load(packet.readNBTTagCompound());
 	}
 
 	@Override
 	public void writeDesc(MCDataOutput packet)
 	{
-		// packet.writeByte(0);
+		packet.writeByte(0);
 		NBTTagCompound nbt = new NBTTagCompound();
 		save(nbt);
 		packet.writeNBTTagCompound(nbt);
-	}
-
-	@Override
-	public void read(MCDataInput packet)
-	{
-		super.read(packet);
-		// read(packet, packet.readUByte());
 	}
 
 	@Override

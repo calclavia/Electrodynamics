@@ -74,7 +74,7 @@ public class BlockDetector extends BlockImprintable
 			((TileDetector) tileEntity).toggleInversion();
 			return true;
 		}
-		
+
 		return false;
 	}
 

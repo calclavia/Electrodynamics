@@ -86,6 +86,6 @@ public abstract class Graph<V extends Comparable<V>>
 	public abstract NBTTagCompound save();
 
 	public abstract double getDouble();
-	
+
 	public abstract V getAverage();
 }

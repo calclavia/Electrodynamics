@@ -27,7 +27,7 @@ public class TextureHookHandler
 			RenderUtility.registerIcon(Reference.PREFIX + "glyph_1", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "glyph_2", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "glyph_3", event.map);
-			
+
 			RenderUtility.registerIcon(Reference.PREFIX + "mixture_flow", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "molten_flow", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "multimeter_screen", event.map);

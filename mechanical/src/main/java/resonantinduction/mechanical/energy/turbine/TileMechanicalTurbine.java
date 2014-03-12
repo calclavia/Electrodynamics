@@ -3,8 +3,8 @@ package resonantinduction.mechanical.energy.turbine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
-import resonantinduction.core.grid.Node;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.network.Synced.SyncedInput;
@@ -77,7 +77,7 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
 			return (N) ((TileMechanicalTurbine) getMultiBlock().get()).mechanicalNode;

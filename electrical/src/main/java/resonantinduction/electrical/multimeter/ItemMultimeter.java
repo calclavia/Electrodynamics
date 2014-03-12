@@ -2,8 +2,6 @@ package resonantinduction.electrical.multimeter;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,11 +9,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
+import org.lwjgl.input.Keyboard;
+
 import resonantinduction.core.prefab.part.IHighlight;
 import resonantinduction.electrical.wire.EnumWireMaterial;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
 import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;

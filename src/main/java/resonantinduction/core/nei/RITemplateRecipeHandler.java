@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import calclavia.lib.utility.LanguageUtility;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,6 +18,7 @@ import resonantinduction.api.recipe.RecipeResource.FluidStackResource;
 import resonantinduction.api.recipe.RecipeResource.ItemStackResource;
 import resonantinduction.api.recipe.RecipeResource.OreDictResource;
 import resonantinduction.core.Reference;
+import calclavia.lib.utility.LanguageUtility;
 import codechicken.core.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
@@ -97,70 +96,70 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 				FluidStack fluid = recipe.inputFluids[i];
 				if (fluid == null)
 					break;
-				
+
 				gui.drawTexturedModelRectFromIcon(inputSlots[i][0], inputSlots[i][1], fluid.getFluid().getIcon(), 16, 16);
 			}
-			
+
 			for (int i = 0; i < recipe.outputFluids.length; i++)
 			{
 				FluidStack fluid = recipe.outputFluids[i];
 				if (fluid == null)
 					break;
-				
+
 				gui.drawTexturedModelRectFromIcon(outputSlots[i][0], outputSlots[i][1], fluid.getFluid().getIcon(), 16, 16);
 			}
 		}
 	}
-	
-    @Override
-    public List<String> handleTooltip(GuiRecipe gui, List<String> currenttip, int recipeID)
-    {
-        if(currenttip.size() == 0)
-        {
-            Point offset = gui.getRecipePosition(recipeID);
-            Point mouse = GuiDraw.getMousePosition();
 
-    		CachedRecipe cachedRecipe = this.arecipes.get(recipeID);
-            
-    		if (cachedRecipe instanceof CachedRIRecipe)
-    		{
-    			CachedRIRecipe recipe = (CachedRIRecipe) cachedRecipe;
-    			FluidStack fluid;
-        		Rectangle rect;
-    			
-    			for (int i = 0; i < recipe.inputFluids.length; i++)
-    			{
-    				fluid = recipe.inputFluids[i];
-    				if (fluid == null)
-    					break;
-    				
-    				rect = new Rectangle(offset.x + inputSlots[i][0] - 1, offset.y + inputSlots[i][1] - 1, 18, 18);
-    				if (rect.contains(mouse))
-    				{
-    					currenttip.add(fluid.getFluid().getLocalizedName());
-    					currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
-    			        return currenttip;
-    				}
-    			}
-    			
-    			for (int i = 0; i < recipe.outputFluids.length; i++)
-    			{
-    				fluid = recipe.outputFluids[i];
-    				if (fluid == null)
-    					break;
+	@Override
+	public List<String> handleTooltip(GuiRecipe gui, List<String> currenttip, int recipeID)
+	{
+		if (currenttip.size() == 0)
+		{
+			Point offset = gui.getRecipePosition(recipeID);
+			Point mouse = GuiDraw.getMousePosition();
 
-    				rect = new Rectangle(offset.x + outputSlots[i][0] - 1, offset.y + outputSlots[i][1] - 1, 18, 18);
-    				if (rect.contains(mouse))
-    				{
-    					currenttip.add(fluid.getFluid().getLocalizedName());
-    					currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
-    			        return currenttip;
-    				}
-    			}
-    		}
-        }
-        return currenttip;
-    }
+			CachedRecipe cachedRecipe = this.arecipes.get(recipeID);
+
+			if (cachedRecipe instanceof CachedRIRecipe)
+			{
+				CachedRIRecipe recipe = (CachedRIRecipe) cachedRecipe;
+				FluidStack fluid;
+				Rectangle rect;
+
+				for (int i = 0; i < recipe.inputFluids.length; i++)
+				{
+					fluid = recipe.inputFluids[i];
+					if (fluid == null)
+						break;
+
+					rect = new Rectangle(offset.x + inputSlots[i][0] - 1, offset.y + inputSlots[i][1] - 1, 18, 18);
+					if (rect.contains(mouse))
+					{
+						currenttip.add(fluid.getFluid().getLocalizedName());
+						currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
+						return currenttip;
+					}
+				}
+
+				for (int i = 0; i < recipe.outputFluids.length; i++)
+				{
+					fluid = recipe.outputFluids[i];
+					if (fluid == null)
+						break;
+
+					rect = new Rectangle(offset.x + outputSlots[i][0] - 1, offset.y + outputSlots[i][1] - 1, 18, 18);
+					if (rect.contains(mouse))
+					{
+						currenttip.add(fluid.getFluid().getLocalizedName());
+						currenttip.add(LanguageUtility.getLocal("tooltip.ri.amount").replace("%s", fluid.amount + ""));
+						return currenttip;
+					}
+				}
+			}
+		}
+		return currenttip;
+	}
 
 	@Override
 	public void loadCraftingRecipes(ItemStack result)

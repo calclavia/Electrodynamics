@@ -6,14 +6,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
+import resonantinduction.core.grid.NodeRegistry;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.energy.gear.ItemGear;
 import resonantinduction.mechanical.energy.gear.ItemGearShaft;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.turbine.BlockWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.BlockWindTurbine;
 import resonantinduction.mechanical.energy.turbine.SchematicWaterTurbine;
@@ -55,7 +58,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * 
  * @author DarkCow, Calclavia
  */
-@Mod(modid = Mechanical.ID, name = Mechanical.NAME, version = Reference.VERSION, dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID)
+@Mod(modid = Mechanical.ID, name = Mechanical.NAME, version = Reference.VERSION, dependencies = "before:ThermalExpansion;required-after:" + ResonantInduction.ID + ";after:ResonantInduction|Archaic")
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Mechanical
 {
@@ -104,6 +107,8 @@ public class Mechanical
 		MinecraftForge.EVENT_BUS.register(new MicroblockHighlightHandler());
 		BlockCreativeBuilder.register(new SchematicWindTurbine());
 		BlockCreativeBuilder.register(new SchematicWaterTurbine());
+		NodeRegistry.register(IMechanicalNode.class, MechanicalNode.class);
+
 		Settings.CONFIGURATION.load();
 
 		itemGear = contentRegistry.createItem(ItemGear.class);

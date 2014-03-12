@@ -123,6 +123,7 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
 		return this.tank;
 	}
 
+	@Override
 	public Class getConnectorClass()
 	{
 		return IFluidDistribution.class;

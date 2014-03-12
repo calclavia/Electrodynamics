@@ -11,6 +11,7 @@ public class FluidColored extends Fluid
 		super(fluidName);
 	}
 
+	@Override
 	public int getColor()
 	{
 		return color;

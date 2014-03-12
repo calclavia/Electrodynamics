@@ -12,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import scala.annotation.meta.setter;
 import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -250,6 +249,7 @@ public class BlockDust extends BlockTile
 		return damageDropped(0);
 	}
 
+	@Override
 	public int damageDropped(int par1)
 	{
 		return nextDropMaterialID;

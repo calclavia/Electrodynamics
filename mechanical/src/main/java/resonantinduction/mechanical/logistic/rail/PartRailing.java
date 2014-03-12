@@ -7,7 +7,6 @@ import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;
 import universalelectricity.api.net.INodeNetwork;
 import codechicken.microblock.IHollowConnect;
-import codechicken.multipart.JIconHitEffects;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 

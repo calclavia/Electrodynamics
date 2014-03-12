@@ -7,10 +7,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonantinduction.core.Reference;
-import resonantinduction.core.grid.Node;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
+import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
@@ -154,7 +153,7 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(pressureNode.getClass()))
 			return (N) pressureNode;

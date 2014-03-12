@@ -53,7 +53,7 @@ public class TraitNodeProvider extends TileMultipart implements INodeProvider
 	}
 
 	@Override
-	public <N extends Node> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 

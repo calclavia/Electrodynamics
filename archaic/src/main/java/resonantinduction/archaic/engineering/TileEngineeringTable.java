@@ -29,7 +29,6 @@ import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
@@ -114,7 +113,7 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 		{
 			if (this instanceof IInventory)
 			{
-				IInventory inventory = (IInventory) this;
+				IInventory inventory = this;
 
 				// Don't drop the output, so subtract by one.
 				for (int i = 0; i < inventory.getSizeInventory() - 1; ++i)

@@ -67,6 +67,7 @@ public class ItemOreResourceBucket extends Item
 	 * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack,
 	 * world, entityPlayer
 	 */
+	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
 	{
 		String materialName = ResourceGenerator.getName(itemStack.getItemDamage());

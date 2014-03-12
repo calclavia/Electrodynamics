@@ -1,11 +1,6 @@
 package resonantinduction.quantum.gate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -13,9 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.Teleporter;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 public class QuantumGateManager
@@ -93,7 +86,7 @@ public class QuantumGateManager
 						{
 							ChunkCoordinates chunkcoordinates = worldserver1.getSpawnPoint();
 							chunkcoordinates.posY = currentEntity.worldObj.getTopSolidOrLiquidBlock(chunkcoordinates.posX, chunkcoordinates.posZ);
-							entity.setLocationAndAngles((double) chunkcoordinates.posX, (double) chunkcoordinates.posY, (double) chunkcoordinates.posZ, entity.rotationYaw, entity.rotationPitch);
+							entity.setLocationAndAngles(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, entity.rotationYaw, entity.rotationPitch);
 						}
 
 						worldserver1.spawnEntityInWorld(entity);

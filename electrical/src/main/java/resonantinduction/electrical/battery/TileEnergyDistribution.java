@@ -47,13 +47,13 @@ public class TileEnergyDistribution extends TileElectrical implements IConnector
 	{
 		return getNetwork().totalEnergy;
 	}
+
 	@Override
 	public long getEnergyCapacity(ForgeDirection from)
 	{
 		return getNetwork().totalCapacity;
 
 	}
-
 
 	@Override
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)

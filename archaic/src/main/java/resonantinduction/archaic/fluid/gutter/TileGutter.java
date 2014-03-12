@@ -24,14 +24,14 @@ import net.minecraftforge.fluids.IFluidTank;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
+import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.TilePressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.prefab.vector.Cuboid;
@@ -271,6 +271,7 @@ public class TileGutter extends TilePressureNode
 		}
 	}
 
+	@Override
 	protected void onWorldJoin()
 	{
 		onNeighborChanged();

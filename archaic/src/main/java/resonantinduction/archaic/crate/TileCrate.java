@@ -14,9 +14,6 @@ import calclavia.lib.utility.inventory.IExtendedStorage;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-
 /**
  * Basic single stack inventory.
  * 

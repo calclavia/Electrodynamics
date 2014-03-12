@@ -483,6 +483,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			this.iterations = iterations;
 		}
 
+		@Override
 		public int compareTo(Object obj)
 		{
 			ComparableVector wr = (ComparableVector) obj;
