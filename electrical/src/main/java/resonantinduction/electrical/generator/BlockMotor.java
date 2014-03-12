@@ -10,9 +10,9 @@ import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGenerator extends BlockRotatable
+public class BlockMotor extends BlockRotatable
 {
-	public BlockGenerator(int id)
+	public BlockMotor(int id)
 	{
 		super(id, UniversalElectricity.machine);
 		setTextureName(Reference.PREFIX + "material_stone");
@@ -24,11 +24,11 @@ public class BlockGenerator extends BlockRotatable
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileGenerator)
+		if (tileEntity instanceof TileMotor)
 		{
 			if (!world.isRemote)
 			{
-				int gear = ((TileGenerator) tileEntity).toggleGearRatio();
+				int gear = ((TileMotor) tileEntity).toggleGearRatio();
 				entityPlayer.addChatMessage("Generator set to " + (gear == 0 ? "low" : gear == 1 ? "medium" : "high") + " gear.");
 			}
 
@@ -43,12 +43,12 @@ public class BlockGenerator extends BlockRotatable
 	{
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-		if (tileEntity instanceof TileGenerator)
+		if (tileEntity instanceof TileMotor)
 		{
 			if (!world.isRemote)
 			{
-				((TileGenerator) tileEntity).isInversed = !((TileGenerator) tileEntity).isInversed;
-				entityPlayer.addChatMessage("Generator now producing " + (((TileGenerator) tileEntity).isInversed ? "mechanical" : "electrical") + " energy.");
+				((TileMotor) tileEntity).isInversed = !((TileMotor) tileEntity).isInversed;
+				entityPlayer.addChatMessage("Generator now producing " + (((TileMotor) tileEntity).isInversed ? "mechanical" : "electrical") + " energy.");
 			}
 
 			return true;
@@ -59,7 +59,7 @@ public class BlockGenerator extends BlockRotatable
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileGenerator();
+		return new TileMotor();
 	}
 
 	@Override

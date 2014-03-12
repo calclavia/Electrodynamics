@@ -18,7 +18,7 @@ import calclavia.lib.render.item.ISimpleItemRenderer;
  * @author Calclavia
  * 
  */
-public class RenderGenerator extends TileEntitySpecialRenderer implements ISimpleItemRenderer
+public class RenderMotor extends TileEntitySpecialRenderer implements ISimpleItemRenderer
 {
 	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "generator.tcn");
 	public static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "generator.png");

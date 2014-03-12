@@ -17,7 +17,7 @@ import calclavia.lib.prefab.tile.TileElectrical;
  * 
  * @author Calclavia
  */
-public class TileGenerator extends TileElectrical implements IRotatable, INodeProvider
+public class TileMotor extends TileElectrical implements IRotatable, INodeProvider
 {
 	protected IMechanicalNode node;
 
@@ -25,7 +25,7 @@ public class TileGenerator extends TileElectrical implements IRotatable, INodePr
 	public boolean isInversed = true;
 	private byte gearRatio;
 
-	public TileGenerator()
+	public TileMotor()
 	{
 		energy = new EnergyStorageHandler(1000000);
 		node = NodeRegistry.get(this, IMechanicalNode.class);

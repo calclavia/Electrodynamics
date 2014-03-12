@@ -16,8 +16,8 @@ import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.ItemCharger;
 import resonantinduction.electrical.encoder.ItemDisk;
-import resonantinduction.electrical.generator.BlockGenerator;
-import resonantinduction.electrical.generator.TileGenerator;
+import resonantinduction.electrical.generator.BlockMotor;
+import resonantinduction.electrical.generator.TileMotor;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
@@ -82,7 +82,7 @@ public class Electrical
 
 	// Generators
 	public static BlockSolarPanel blockSolarPanel;
-	public static Block blockGenerator;
+	public static Block blockMotor;
 	public static Block blockThermopile;
 
 	// Transport
@@ -116,14 +116,15 @@ public class Electrical
 
 		// Generator
 		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
-		blockGenerator = contentRegistry.createTile(BlockGenerator.class, TileGenerator.class);
+		blockMotor = contentRegistry.createTile(BlockMotor.class, TileMotor.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
 		Settings.CONFIGURATION.save();
-
+		
 		OreDictionary.registerOre("wire", itemWire);
+		OreDictionary.registerOre("motor", blockMotor);
 		OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 		OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 
@@ -192,7 +193,7 @@ public class Electrical
 
 		/** Generators **/
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSolarPanel, "CCC", "WWW", "III", 'W', "wire", 'C', Item.coal, 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockGenerator, "SRS", "SMS", "SWS", 'W', "wire", 'R', Item.redstone, 'M', UniversalRecipe.MOTOR.get(), 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMotor, "SRS", "SMS", "SWS", 'W', "wire", 'R', Item.redstone, 'M', UniversalRecipe.MOTOR.get(), 'S', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockThermopile, "ORO", "OWO", "OOO", 'W', "wire", 'O', Block.obsidian, 'R', Item.redstone));
 
 		/** Wire Compatiblity **/
