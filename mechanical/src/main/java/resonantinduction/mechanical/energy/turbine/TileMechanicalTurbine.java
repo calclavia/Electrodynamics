@@ -3,6 +3,7 @@ package resonantinduction.mechanical.energy.turbine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -42,13 +43,13 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 			}
 
 			@Override
-			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
 			{
 				return true;
 			}
 
 			@Override
-			public float getRatio(ForgeDirection dir, MechanicalNode with)
+			public float getRatio(ForgeDirection dir, IMechanicalNode with)
 			{
 				return getMultiBlock().isConstructed() ? multiBlockRadius - 0.5f : 0.5f;
 			}

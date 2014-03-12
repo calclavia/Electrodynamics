@@ -10,13 +10,13 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.prefab.tile.IRotatable;
@@ -55,7 +55,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 			}
 
 			@Override
-			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
 			{
 				return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
 			}

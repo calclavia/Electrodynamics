@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.Reference;
 import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
@@ -317,7 +318,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 			}
 
 			@Override
-			public float getRatio(ForgeDirection dir, MechanicalNode with)
+			public float getRatio(ForgeDirection dir, IMechanicalNode with)
 			{
 				universalelectricity.api.vector.Vector3 deltaPos = with.position().subtract(position());
 

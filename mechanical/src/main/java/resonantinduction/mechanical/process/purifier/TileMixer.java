@@ -12,13 +12,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.api.recipe.MachineRecipes;
 import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.archaic.filter.Timer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.utility.inventory.InventoryUtility;
@@ -38,7 +38,7 @@ public class TileMixer extends TileMechanical implements IInventory
 		mechanicalNode = new PacketMechanicalNode(this)
 		{
 			@Override
-			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
 			{
 				return dir == ForgeDirection.DOWN;
 			}

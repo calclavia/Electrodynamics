@@ -7,6 +7,7 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -146,7 +147,7 @@ public class PartGearShaft extends PartMechanical
 			}
 
 			@Override
-			public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
 			{
 				if (placementSide.offsetY != 0 || placementSide.offsetZ != 0)
 				{

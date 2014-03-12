@@ -171,13 +171,13 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 	}
 
 	@Override
-	public float getRatio(ForgeDirection dir, MechanicalNode with)
+	public float getRatio(ForgeDirection dir, IMechanicalNode with)
 	{
 		return 0.5f;
 	}
 
 	@Override
-	public boolean inverseRotation(ForgeDirection dir, MechanicalNode with)
+	public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
 	{
 		return true;
 	}

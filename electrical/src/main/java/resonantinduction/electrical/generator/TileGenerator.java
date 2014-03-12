@@ -8,7 +8,6 @@ import resonantinduction.api.IMechanicalNode;
 import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.core.grid.NodeRegistry;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileElectrical;
