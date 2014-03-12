@@ -1,9 +1,11 @@
 package resonantinduction.core.prefab.imprint;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import calclavia.lib.utility.nbt.NBTUtility;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -110,12 +112,23 @@ public class ItemImprint extends Item
 	{
 		HashSet<ItemStack> filterStacks = new HashSet<ItemStack>();
 
-		if (itemStack.getTagCompound() == null)
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
+		NBTTagList tagList = nbt.getTagList("Items");
+
+		for (int i = 0; i < tagList.tagCount(); ++i)
 		{
-			itemStack.setTagCompound(new NBTTagCompound());
+			NBTTagCompound var4 = (NBTTagCompound) tagList.tagAt(i);
+			filterStacks.add(ItemStack.loadItemStackFromNBT(var4));
 		}
 
-		NBTTagCompound nbt = itemStack.getTagCompound();
+		return filterStacks;
+	}
+
+	public static List<ItemStack> getFilterList(ItemStack itemStack)
+	{
+		List<ItemStack> filterStacks = new ArrayList<ItemStack>();
+
+		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		NBTTagList tagList = nbt.getTagList("Items");
 
 		for (int i = 0; i < tagList.tagCount(); ++i)

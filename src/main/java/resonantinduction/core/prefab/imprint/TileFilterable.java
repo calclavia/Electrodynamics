@@ -2,14 +2,19 @@ package resonantinduction.core.prefab.imprint;
 
 import java.util.Set;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.api.IFilterable;
+import universalelectricity.api.vector.Vector3;
+import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileExternalInventory;
 
-public abstract class TileFilterable extends TileExternalInventory implements IRotatable, IFilterable
+public abstract class TileFilterable extends TileInventory implements IRotatable, IFilterable
 {
 	private ItemStack filterItem;
 	private boolean inverted;
@@ -18,11 +23,61 @@ public abstract class TileFilterable extends TileExternalInventory implements IR
 
 	public TileFilterable()
 	{
+		super(null);
+		this.maxSlots = 2;
+	}
+
+	public TileFilterable(Material material)
+	{
+		super(material);
 		this.maxSlots = 2;
 	}
 
 	protected boolean isFunctioning()
 	{
+		return true;
+	}
+
+	/** Allows filters to be placed inside of this block. */
+	@Override
+	public boolean use(EntityPlayer player, int side, Vector3 hit)
+	{
+		ItemStack containingStack = getFilter();
+
+		if (containingStack != null)
+		{
+			if (!world().isRemote)
+			{
+				EntityItem dropStack = new EntityItem(world(), player.posX, player.posY, player.posZ, containingStack);
+				dropStack.delayBeforeCanPickup = 0;
+				world().spawnEntityInWorld(dropStack);
+			}
+
+			setFilter(null);
+			return true;
+		}
+		else
+		{
+			if (player.getCurrentEquippedItem() != null)
+			{
+				if (player.getCurrentEquippedItem().getItem() instanceof ItemImprint)
+				{
+					setFilter(player.getCurrentEquippedItem());
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean configure(EntityPlayer player, int side, Vector3 hit)
+	{
+		toggleInversion();
+		markUpdate();
+		markRender();
 		return true;
 	}
 

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
+import resonantinduction.core.resource.ItemHandCrank;
 import calclavia.lib.prefab.turbine.BlockTurbine;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
@@ -61,6 +62,28 @@ public class BlockMechanicalTurbine extends BlockTurbine
 		{
 			((TileMechanicalTurbine) tileEntity).tier = itemStack.getItemDamage();
 		}
+	}
+
+	@Override
+	public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	{
+		if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHandCrank)
+		{
+			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+			if (tileEntity instanceof TileTurbine)
+			{
+				if (!world.isRemote)
+				{
+					TileMechanicalTurbine tile = (TileMechanicalTurbine) tileEntity;
+					tile.mechanicalNode.torque = -tile.mechanicalNode.torque;
+					tile.mechanicalNode.angularVelocity = -tile.mechanicalNode.angularVelocity;
+				}
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

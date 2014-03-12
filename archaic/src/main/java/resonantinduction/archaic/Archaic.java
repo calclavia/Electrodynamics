@@ -10,7 +10,6 @@ import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.ItemHammer;
 import resonantinduction.archaic.engineering.TileEngineeringTable;
-import resonantinduction.archaic.filter.BlockFilter;
 import resonantinduction.archaic.filter.BlockImprinter;
 import resonantinduction.archaic.filter.TileFilter;
 import resonantinduction.archaic.filter.TileImprinter;
@@ -107,7 +106,7 @@ public class Archaic
 		blockCast = contentRegistry.createTile(BlockCastingMold.class, TileCastingMold.class);
 		blockGutter = contentRegistry.newBlock(TileGutter.class);
 		blockGrate = contentRegistry.newBlock(TileGrate.class);
-		blockFilter = contentRegistry.createTile(BlockFilter.class, TileFilter.class);
+		blockFilter = contentRegistry.newBlock(TileFilter.class);
 		blockTank = contentRegistry.newBlock(TileTank.class);
 
 		itemHandCrank = contentRegistry.createItem(ItemHandCrank.class);
@@ -119,6 +118,7 @@ public class Archaic
 		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
 
 		PacketAnnotation.register(TileFirebox.class);
+		PacketAnnotation.register(TileFilter.class);
 		proxy.preInit();
 	}
 

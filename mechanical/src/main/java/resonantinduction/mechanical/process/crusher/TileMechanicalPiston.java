@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
 	@Config
-	private int mechanicalPistonBreakCount = 5;
+	private static int mechanicalPistonBreakCount = 5;
 
 	public TileMechanicalPiston()
 	{
