@@ -96,8 +96,8 @@ dependencies {
 	compile group: 'calclaviacore', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
 	compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 	compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
-	//compile name: 'NotEnoughItems', version: "1.6.1.8", ext: 'jar'
 	compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
+	compile name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'
 }
 
 publishing {
