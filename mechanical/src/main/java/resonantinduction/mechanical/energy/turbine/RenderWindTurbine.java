@@ -33,7 +33,7 @@ public class RenderWindTurbine extends TileEntitySpecialRenderer implements ISim
 			RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
 
 			GL11.glTranslatef(0, -0.35f, 0);
-			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
+			GL11.glRotatef((float) Math.toDegrees(tile.renderAngle), 0, 1, 0);
 
 			render(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());
 

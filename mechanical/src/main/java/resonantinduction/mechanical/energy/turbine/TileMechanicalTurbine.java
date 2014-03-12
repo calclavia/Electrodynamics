@@ -8,13 +8,18 @@ import resonantinduction.core.grid.INode;
 import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
+import calclavia.lib.network.Synced;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.turbine.TileTurbine;
 
+//TODO: MC 1.7, merge turbines in.
 public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 {
 	protected MechanicalNode mechanicalNode;
+	@Synced(1)
+	protected double renderAngularVelocity;
+	protected double renderAngle;
 
 	public TileMechanicalTurbine()
 	{
@@ -71,10 +76,36 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 	}
 
 	@Override
+	public void updateEntity()
+	{
+		if (!worldObj.isRemote)
+		{
+			renderAngularVelocity = (double) mechanicalNode.angularVelocity;
+		}
+		else
+		{
+			renderAngle = (renderAngle + renderAngularVelocity / 20) % (Math.PI * 2);
+
+			// TODO: Make this neater
+			onProduce();
+		}
+
+		super.updateEntity();
+	}
+
+	@Override
 	public void onProduce()
 	{
-		mechanicalNode.torque += (torque - mechanicalNode.torque) / 10;
-		mechanicalNode.angularVelocity += (angularVelocity - mechanicalNode.angularVelocity) / 10;
+		if (!worldObj.isRemote)
+		{
+			if (mechanicalNode.torque < 0)
+				torque = -torque;
+
+			if (mechanicalNode.angularVelocity < 0)
+				angularVelocity = -angularVelocity;
+
+			mechanicalNode.apply((torque - mechanicalNode.torque) / 10, (angularVelocity - mechanicalNode.angularVelocity) / 10);
+		}
 	}
 
 	@Override

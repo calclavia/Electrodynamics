@@ -1,4 +1,4 @@
-package resonantinduction.archaic.filter;
+package resonantinduction.core;
 
 import java.util.HashMap;
 

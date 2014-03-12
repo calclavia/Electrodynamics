@@ -1,6 +1,9 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -8,6 +11,7 @@ import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
@@ -49,7 +53,7 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		 */
 		if (getDirection().offsetY == 0)
 		{
-			maxPower = 120;
+			maxPower = 3000;
 
 			if (ticks % 20 == 0 && !worldObj.isRemote)
 				computePower();
@@ -58,15 +62,63 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		}
 		else
 		{
-			maxPower = 1000;
+			maxPower = 10000;
 		}
 
 		if (getMultiBlock().isConstructed())
-			torque = (long) (defaultTorque / (2.5f / multiBlockRadius));
+			torque = (long) (defaultTorque / (.52f / multiBlockRadius));
 		else
 			torque = defaultTorque / 12;
 
 		super.updateEntity();
+	}
+
+	@Override
+	public void onProduce()
+	{
+		super.onProduce();
+
+		/**
+		 * Blow entities if greater than max power.
+		 */
+		double velocity = !worldObj.isRemote ? mechanicalNode.getAngularVelocity() : renderAngularVelocity;
+
+		if (velocity != 0)
+		{
+			ForgeDirection dir = getDirection();
+
+			double affectRange = Math.abs(velocity * 2);
+
+			Cuboid effect = Cuboid.full().translate(new Vector3(this).translate(dir));
+
+			if (getMultiBlock().isConstructed())
+			{
+				double xMulti = dir.offsetX != 0 ? affectRange : 1;
+				double yMulti = dir.offsetY != 0 ? affectRange : 1;
+				double zMulti = dir.offsetZ != 0 ? affectRange : 1;
+
+				effect.expand(new Vector3(multiBlockRadius * xMulti, multiBlockRadius * yMulti, multiBlockRadius * zMulti));
+			}
+			else
+			{
+				double xMulti = dir.offsetX != 0 ? affectRange : 0;
+				double yMulti = dir.offsetY != 0 ? affectRange : 0;
+				double zMulti = dir.offsetZ != 0 ? affectRange : 0;
+
+				effect.expand(new Vector3(xMulti, yMulti, zMulti));
+			}
+
+			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, effect.toAABB());
+
+			velocity = Math.min(Math.max(velocity, -0.3), 0.3);
+
+			for (Entity entity : entities)
+			{
+				entity.motionX += dir.offsetX * velocity / 20;
+				entity.motionY += dir.offsetY * velocity / 20;
+				entity.motionZ += dir.offsetZ * velocity / 20;
+			}
+		}
 	}
 
 	private void computePower()
@@ -116,6 +168,6 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		boolean hasBonus = biome instanceof BiomeGenOcean || biome instanceof BiomeGenPlains || biome == BiomeGenBase.river;
 
 		float windSpeed = (worldObj.rand.nextFloat() / 8) + (yCoord / 256f) * (hasBonus ? 1.2f : 1) + worldObj.getRainStrength(1.5f);
-		windPower = (long) (materialMultiplier * multiblockMultiplier * windSpeed * efficiency * 0.01f) * maxPower;
+		windPower = (long) Math.min(materialMultiplier * multiblockMultiplier * windSpeed * efficiency, maxPower);
 	}
 }
