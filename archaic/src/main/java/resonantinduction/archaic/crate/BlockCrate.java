@@ -94,6 +94,39 @@ public class BlockCrate extends BlockTile
 
 				if (player.getCurrentEquippedItem() != null && WrenchUtility.isWrench(player.getCurrentEquippedItem()))
 				{
+					if (player.isSneaking())
+					{
+						ItemStack containingStack = tile.getSampleStack();
+						tile.buildSampleStack();
+
+						if (containingStack != null)
+						{
+							if (containingStack.stackSize > 0)
+							{
+								float area = 0.7F;
+								double dropX = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+								double dropY = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+								double dropZ = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+
+								ItemStack dropStack = new ItemStack(this, 1, tile.getBlockMetadata());
+								ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
+
+								EntityItem var13 = new EntityItem(world, x + dropX, y + dropY, z + dropZ, dropStack);
+								var13.delayBeforeCanPickup = 10;
+								world.spawnEntityInWorld(var13);
+
+								for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
+								{
+									tile.getInventory().setInventorySlotContents(i, null);
+								}
+								world.setBlock(x, y, z, 0, 0, 3);
+								return true;
+							}
+						}
+
+						return false;
+					}
+
 					/**
 					 * Swap oredict nodes if the player is wrenching the crate.
 					 */
@@ -388,44 +421,6 @@ public class BlockCrate extends BlockTile
 		}
 
 		return itemStack;
-	}
-
-	@Override
-	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote && world.getBlockTileEntity(x, y, z) != null)
-		{
-			TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
-			ItemStack containingStack = tileEntity.getSampleStack();
-			tileEntity.buildSampleStack();
-
-			if (containingStack != null)
-			{
-				if (containingStack.stackSize > 0)
-				{
-					float area = 0.7F;
-					double dropX = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
-					double dropY = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
-					double dropZ = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
-
-					ItemStack dropStack = new ItemStack(this, 1, tileEntity.getBlockMetadata());
-					ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
-
-					EntityItem var13 = new EntityItem(world, x + dropX, y + dropY, z + dropZ, dropStack);
-					var13.delayBeforeCanPickup = 10;
-					world.spawnEntityInWorld(var13);
-
-					for (int i = 0; i < tileEntity.getInventory().getSizeInventory(); i++)
-					{
-						tileEntity.getInventory().setInventorySlotContents(i, null);
-					}
-					world.setBlock(x, y, z, 0, 0, 3);
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 	@Override
