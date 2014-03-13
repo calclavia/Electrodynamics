@@ -35,7 +35,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 
 	public PartPipe()
 	{
-		super();
+		super(null);
 		material = EnumPipeMaterial.values()[0];
 		requiresInsulation = false;
 

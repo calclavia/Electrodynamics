@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.logistic.rail;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -18,6 +19,11 @@ import codechicken.multipart.TSlottedPart;
  */
 public class PartRailing extends PartFramedConnection<EnumPipeMaterial, IRailing, INodeNetwork> implements IRailing, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
+	public PartRailing()
+	{
+		super(null);
+	}
+
 	RedstoneControl control;
 
 	@Override

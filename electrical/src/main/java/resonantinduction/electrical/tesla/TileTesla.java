@@ -213,16 +213,18 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 								}
 
 								Vector3 targetVector = new Vector3((TileEntity) tesla);
+								int heightRange = 1;
 
 								if (tesla instanceof TileTesla)
 								{
 									getMultiBlock().get().outputBlacklist.add(this);
 									targetVector = new Vector3(((TileTesla) tesla).getTopTelsa());
+									heightRange = ((TileTesla) tesla).getHeight();
 								}
 
 								double distance = topTeslaVector.distance(targetVector);
 
-								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5)), EnumColor.DYES[this.dyeID].toColor());
+								Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).translate(new Vector3(0.5)), targetVector.translate(new Vector3(0.5, Math.random() * heightRange / 3 - heightRange / 3, 0.5)), EnumColor.DYES[this.dyeID].toColor());
 
 								this.transfer(tesla, Math.min(transferEnergy, TRANSFER_CAP));
 
@@ -280,7 +282,6 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		if (tileEntity instanceof TileTesla)
 		{
 			TileTesla otherTesla = (TileTesla) tileEntity;
-
 			// Make sure Tesla is the same color
 			if (!(otherTesla.dyeID == dyeID || (otherTesla.dyeID == DEFAULT_COLOR || dyeID == DEFAULT_COLOR)))
 			{

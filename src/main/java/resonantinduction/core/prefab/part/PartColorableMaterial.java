@@ -29,7 +29,12 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 	public M material;
 	public boolean isInsulated = false;
 	public boolean requiresInsulation = true;
-	protected Item insulationType = Electrical.itemInsulation;
+	protected final Item insulationType;
+
+	public PartColorableMaterial(Item insulationType)
+	{
+		this.insulationType = insulationType;
+	}
 
 	/**
 	 * Material Methods

@@ -48,7 +48,7 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
 {
 	public PartFramedWire()
 	{
-		super();
+		super(Electrical.itemInsulation);
 		if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 			breakIcon = RenderFramedWire.breakIcon;
 	}

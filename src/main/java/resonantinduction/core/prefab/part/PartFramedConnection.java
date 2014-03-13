@@ -6,6 +6,7 @@ import java.util.Set;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
@@ -34,7 +35,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class PartFramedConnection<M extends Enum, C extends IConnector<N>, N extends INodeNetwork> extends PartColorableMaterial<M> implements IConnector<N>, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
-
 	public static IndexedCuboid6[] sides = new IndexedCuboid6[7];
 	public static IndexedCuboid6[] insulatedSides = new IndexedCuboid6[7];
 
@@ -71,6 +71,11 @@ public abstract class PartFramedConnection<M extends Enum, C extends IConnector<
 
 	@SideOnly(Side.CLIENT)
 	protected Icon breakIcon;
+
+	public PartFramedConnection(Item insulationType)
+	{
+		super(insulationType);
+	}
 
 	public void preparePlacement(int meta)
 	{
