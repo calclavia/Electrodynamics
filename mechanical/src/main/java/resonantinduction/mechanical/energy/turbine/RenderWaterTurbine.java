@@ -23,7 +23,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		TileTurbine tile = (TileTurbine) t;
+		TileMechanicalTurbine tile = (TileMechanicalTurbine) t;
 
 		if (tile.getMultiBlock().isPrimary())
 		{
@@ -32,7 +32,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glPushMatrix();
 
 			RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
-			GL11.glRotatef((float) Math.toDegrees(tile.rotation), 0, 1, 0);
+			GL11.glRotatef((float) Math.toDegrees(tile.renderAngle), 0, 1, 0);
 
 			if (tile.getDirection().offsetY != 0)
 				renderWaterTurbine(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());

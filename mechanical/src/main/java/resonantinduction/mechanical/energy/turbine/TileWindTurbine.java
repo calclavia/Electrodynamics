@@ -66,7 +66,7 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		}
 
 		if (getMultiBlock().isConstructed())
-			torque = (long) (defaultTorque / (.52f / multiBlockRadius));
+			torque = (long) (defaultTorque / (9d / multiBlockRadius));
 		else
 			torque = defaultTorque / 12;
 
@@ -114,9 +114,9 @@ public class TileWindTurbine extends TileMechanicalTurbine
 
 			for (Entity entity : entities)
 			{
-				entity.motionX += dir.offsetX * velocity / 20;
-				entity.motionY += dir.offsetY * velocity / 20;
-				entity.motionZ += dir.offsetZ * velocity / 20;
+				entity.motionX += dir.offsetX * velocity / 20 * 0.3;
+				entity.motionY += dir.offsetY * velocity / 20 * 0.3;
+				entity.motionZ += dir.offsetZ * velocity / 20 * 0.3;
 			}
 		}
 	}

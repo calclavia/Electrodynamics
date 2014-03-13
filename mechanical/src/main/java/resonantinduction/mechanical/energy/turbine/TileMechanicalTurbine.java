@@ -21,44 +21,53 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 	protected double renderAngularVelocity;
 	protected double renderAngle;
 
+	protected double prevAngularVelocity;
+
+	protected class TurbineNode extends MechanicalNode
+	{
+		public TurbineNode(INodeProvider parent)
+		{
+			super(parent);
+		}
+
+		@Override
+		public boolean canConnect(ForgeDirection from, Object source)
+		{
+			if (source instanceof MechanicalNode && !(source instanceof TileMechanicalTurbine))
+			{
+				/**
+				 * Face to face stick connection.
+				 */
+				TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
+
+				if (sourceTile instanceof INodeProvider)
+				{
+					MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
+					return sourceInstance == source && from == getDirection().getOpposite();
+				}
+			}
+
+			return false;
+		}
+
+		@Override
+		public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+		{
+			return dir == getDirection().getOpposite();
+		}
+
+		@Override
+		public float getRatio(ForgeDirection dir, IMechanicalNode with)
+		{
+			return getMultiBlock().isConstructed() ? multiBlockRadius - 0.5f : 0.5f;
+		}
+	};
+
 	public TileMechanicalTurbine()
 	{
 		super();
 		energy = new EnergyStorageHandler(0);
-		mechanicalNode = new MechanicalNode(this)
-		{
-			@Override
-			public boolean canConnect(ForgeDirection from, Object source)
-			{
-				if (source instanceof MechanicalNode && !(source instanceof TileMechanicalTurbine))
-				{
-					/**
-					 * Face to face stick connection.
-					 */
-					TileEntity sourceTile = position().translate(from).getTileEntity(getWorld());
-
-					if (sourceTile instanceof INodeProvider)
-					{
-						MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
-						return sourceInstance == source && from == getDirection().getOpposite();
-					}
-				}
-
-				return false;
-			}
-
-			@Override
-			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-			{
-				return true;
-			}
-
-			@Override
-			public float getRatio(ForgeDirection dir, IMechanicalNode with)
-			{
-				return getMultiBlock().isConstructed() ? multiBlockRadius - 0.5f : 0.5f;
-			}
-		};
+		mechanicalNode = new TurbineNode(this);
 	}
 
 	@Override
@@ -81,6 +90,12 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 		if (!worldObj.isRemote)
 		{
 			renderAngularVelocity = (double) mechanicalNode.angularVelocity;
+
+			if (renderAngularVelocity != prevAngularVelocity)
+			{
+				prevAngularVelocity = renderAngularVelocity;
+				sendPowerUpdate();
+			}
 		}
 		else
 		{
@@ -99,12 +114,12 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 		if (!worldObj.isRemote)
 		{
 			if (mechanicalNode.torque < 0)
-				torque = -torque;
+				torque = -Math.abs(torque);
 
 			if (mechanicalNode.angularVelocity < 0)
-				angularVelocity = -angularVelocity;
+				angularVelocity = -Math.abs(angularVelocity);
 
-			mechanicalNode.apply((torque - mechanicalNode.torque) / 10, (angularVelocity - mechanicalNode.angularVelocity) / 10);
+			mechanicalNode.apply((torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularVelocity()) / 10);
 		}
 	}
 
