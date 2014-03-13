@@ -31,6 +31,13 @@ public class TileManipulator extends TileFilterable implements IRotatable, IMani
 	/** The class that interacts with inventories for this machine */
 	private InternalInventoryHandler invExtractionHelper;
 
+	public TileManipulator()
+	{
+		isOpaqueCube = false;
+		normalRender = false;
+		customItemRender = true;
+	}
+
 	@Override
 	public void updateEntity()
 	{

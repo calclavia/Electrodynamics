@@ -22,22 +22,22 @@ public class RenderManipulator extends RenderImprintable
 	{
 		TileManipulator tile = (TileManipulator) tileEntity;
 
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+		GL11.glRotatef(180f, 0f, 0f, 1f);
+
+		if (tile.isOutput())
+		{
+			bindTexture(TEXTURE_INPUT);
+		}
+		else
+		{
+			bindTexture(TEXTURE_OUTPUT);
+		}
+
 		if (tile.worldObj != null)
 		{
 			int face = tile.getDirection().ordinal();
-
-			GL11.glPushMatrix();
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-			GL11.glRotatef(180f, 0f, 0f, 1f);
-
-			if (tile.isOutput())
-			{
-				bindTexture(TEXTURE_INPUT);
-			}
-			else
-			{
-				bindTexture(TEXTURE_OUTPUT);
-			}
 
 			if (face == 2)
 			{
@@ -55,11 +55,12 @@ public class RenderManipulator extends RenderImprintable
 			{
 				GL11.glRotatef(90f, 0f, 1f, 0f);
 			}
-
-			MODEL.render(0.0625F, true, 0);
-
-			GL11.glPopMatrix();
 		}
+
+		MODEL.render(0.0625F, true, 0);
+
+		GL11.glPopMatrix();
+
 	}
 
 }
