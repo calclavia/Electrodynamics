@@ -3,9 +3,10 @@
  */
 package resonantinduction.electrical.tesla;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import mffs.api.fortron.IServerThread;
 import net.minecraft.server.ServerListenThread;
@@ -21,7 +22,7 @@ public class TeslaGrid
 	private static final TeslaGrid INSTANCE_CLIENT = new TeslaGrid();
 	private static final TeslaGrid INSTANCE_SERVER = new TeslaGrid();
 
-	private final Set<ITesla> tileEntities = new HashSet<ITesla>();
+	private final Set<ITesla> tileEntities = Collections.newSetFromMap(new WeakHashMap<ITesla, Boolean>());
 
 	public void register(ITesla iTesla)
 	{

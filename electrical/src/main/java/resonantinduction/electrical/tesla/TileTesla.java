@@ -32,6 +32,7 @@ import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
+import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
 
@@ -187,7 +188,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 							/**
 							 * Make sure Tesla is not part of this tower.
 							 */
-							if (!this.connectedTeslas.contains(otherTesla) && otherTesla.canTeslaTransfer(this))
+							if (!connectedTeslas.contains(otherTesla) && otherTesla != this && otherTesla.canTeslaTransfer(this) && canTeslaTransfer((TileEntity) otherTesla))
 							{
 								teslaToTransfer.add(otherTesla);
 							}
@@ -275,6 +276,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 	@Override
 	public boolean canTeslaTransfer(TileEntity tileEntity)
 	{
+
 		if (tileEntity instanceof TileTesla)
 		{
 			TileTesla otherTesla = (TileTesla) tileEntity;
@@ -287,6 +289,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 		}
 
 		return canReceive && tileEntity != getMultiBlock().get() && !this.outputBlacklist.contains(tileEntity);
+
 	}
 
 	@Override
@@ -325,6 +328,9 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 				data.add(this.canReceive);
 				data.add(this.attackEntities);
 				data.add(this.linked != null);
+				NBTTagCompound nbt = new NBTTagCompound();
+				getMultiBlock().save(nbt);
+				data.add(nbt);
 				break;
 			}
 			case 2:
@@ -349,6 +355,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 					this.canReceive = data.readBoolean();
 					this.attackEntities = data.readBoolean();
 					this.isLinkedClient = data.readBoolean();
+					getMultiBlock().load(PacketHandler.readNBTTagCompound(data));
 					break;
 				case 2:
 					this.isTransfering = data.readBoolean();
@@ -527,6 +534,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 			this.linked = new Vector3(nbt.getInteger("link_x"), nbt.getInteger("link_y"), nbt.getInteger("link_z"));
 			this.linkDim = nbt.getInteger("linkDim");
 		}
+		getMultiBlock().load(nbt);
 	}
 
 	/**
@@ -547,6 +555,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 			nbt.setInteger("link_z", (int) this.linked.z);
 			nbt.setInteger("linkDim", this.linkDim);
 		}
+		getMultiBlock().save(nbt);
 	}
 
 	public void setLink(Vector3 vector3, int dimID, boolean setOpponent)
