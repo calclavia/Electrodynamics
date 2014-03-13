@@ -24,7 +24,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.vector.Vector2;

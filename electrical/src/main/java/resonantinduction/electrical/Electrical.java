@@ -16,7 +16,6 @@ import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.ItemCharger;
-import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.generator.BlockMotor;
 import resonantinduction.electrical.generator.TileMotor;
 import resonantinduction.electrical.generator.solar.BlockSolarPanel;
@@ -115,7 +114,7 @@ public class Electrical
 		// blockArmbot = contentRegistry.createTile(BlockArmbot.lass, TileEncoder.clclass,
 		// TileArmbot.class);
 		// blockEncoder = contentRegistry.createTile(BlockEncoder.cass);
-		itemDisk = contentRegistry.createItem(ItemDisk.class);
+		// itemDisk = contentRegistry.createItem(ItemDisk.class);
 		itemInsulation = contentRegistry.createItem("insulation", ItemResourcePart.class);
 
 		// Generator
@@ -165,7 +164,8 @@ public class Electrical
 		/** Multimeter */
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemMultimeter, "WWW", "ICI", 'W', "wire", 'C', UniversalRecipe.BATTERY.get(), 'I', UniversalRecipe.PRIMARY_METAL.get()));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, "PPP", "RRR", "WWW", 'W', "wire", 'P', Item.paper, 'R', Item.redstone));
+		// GameRegistry.addRecipe(new ShapedOreRecipe(itemDisk, "PPP", "RRR", "WWW", 'W', "wire",
+		// 'P', Item.paper, 'R', Item.redstone));
 
 		/** Battery */
 		ItemStack tierOneBattery = ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0);

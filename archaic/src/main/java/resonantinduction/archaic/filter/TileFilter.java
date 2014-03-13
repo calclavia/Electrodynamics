@@ -1,6 +1,5 @@
 package resonantinduction.archaic.filter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import calclavia.lib.utility.nbt.NBTUtility;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +17,8 @@ import net.minecraft.nbt.NBTTagList;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 
 public class ItemImprint extends Item
 {
@@ -63,7 +64,7 @@ public class ItemImprint extends Item
 		}
 		else
 		{
-			list.add("No filters");
+			list.add(LanguageUtility.getLocal("tooltip.noImprint"));
 		}
 	}
 

@@ -33,7 +33,8 @@ public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltage
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
 	{
-		list.add("Tier: " + (getTier(itemStack) + 1));
+		list.add(LanguageUtility.getLocal("tooltip.tier") + ": " + (getTier(itemStack) + 1));
+
 		String color = "";
 		long joules = this.getEnergy(itemStack);
 

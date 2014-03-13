@@ -153,7 +153,7 @@ public class ResourceGenerator implements IVirtualObject
 			fluidMolten.setViscosity(5000);
 			fluidMolten.setTemperature(273 + 1538);
 			FluidRegistry.registerFluid(fluidMolten);
-			LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), "Molten " + localizedName);
+			LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), LanguageUtility.getLocal("tooltip.molten") + " " + localizedName);
 			BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
 			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
 			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
@@ -163,7 +163,7 @@ public class ResourceGenerator implements IVirtualObject
 			FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
 			FluidRegistry.registerFluid(fluidMixture);
 			BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
-			LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " Mixture");
+			LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"));
 			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
 			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
 			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
