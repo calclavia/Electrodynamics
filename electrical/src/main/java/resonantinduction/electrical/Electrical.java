@@ -11,6 +11,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
+import resonantinduction.core.resource.ItemResourcePart;
 import resonantinduction.electrical.battery.BlockBattery;
 import resonantinduction.electrical.battery.ItemBlockBattery;
 import resonantinduction.electrical.battery.TileBattery;
@@ -89,6 +90,7 @@ public class Electrical
 	public static Item itemLevitator;
 	public static Block blockArmbot;
 	public static Item itemDisk;
+	public static Item itemInsulation;
 
 	// Quantum
 	public static Block blockQuantumGate;
@@ -110,9 +112,11 @@ public class Electrical
 
 		// Transport
 		itemLevitator = contentRegistry.createItem(ItemLevitator.class);
-		// blockArmbot = contentRegistry.createTile(BlockArmbot.class, TileArmbot.class);
-		// blockEncoder = contentRegistry.createTile(BlockEncoder.class, TileEncoder.class);
+		// blockArmbot = contentRegistry.createTile(BlockArmbot.lass, TileEncoder.clclass,
+		// TileArmbot.class);
+		// blockEncoder = contentRegistry.createTile(BlockEncoder.cass);
 		itemDisk = contentRegistry.createItem(ItemDisk.class);
+		itemInsulation = contentRegistry.createItem("insulation", ItemResourcePart.class);
 
 		// Generator
 		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
@@ -122,7 +126,7 @@ public class Electrical
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
 		Settings.CONFIGURATION.save();
-		
+
 		OreDictionary.registerOre("wire", itemWire);
 		OreDictionary.registerOre("motor", blockMotor);
 		OreDictionary.registerOre("battery", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
@@ -173,6 +177,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Block.blockDiamond));
 
 		/** Wires **/
+		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.IRON.getWire(3), "MMM", 'M', Item.ingotIron));

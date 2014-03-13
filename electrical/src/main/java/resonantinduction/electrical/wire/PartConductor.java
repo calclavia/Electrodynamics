@@ -19,6 +19,7 @@ import universalelectricity.api.vector.VectorHelper;
 import codechicken.multipart.TMultiPart;
 
 @UniversalClass
+@Deprecated
 public abstract class PartConductor extends PartAdvanced implements IConductor
 {
 	private IEnergyNetwork network;

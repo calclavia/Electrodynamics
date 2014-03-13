@@ -115,7 +115,6 @@ public class Archaic
 
 		proxy.preInit();
 		Settings.CONFIGURATION.save();
-		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
 
 		PacketAnnotation.register(TileFirebox.class);
 		PacketAnnotation.register(TileFilter.class);
@@ -132,6 +131,8 @@ public class Archaic
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
+		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
+
 		// Add recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "P", "C", 'P', Block.pressurePlatePlanks, 'C', Block.workbench));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockFilter, "B", "P", "B", 'B', Block.fenceIron, 'P', Item.paper));

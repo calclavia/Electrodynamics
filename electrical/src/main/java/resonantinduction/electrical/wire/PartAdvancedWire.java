@@ -8,12 +8,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.MultipartUtility;
+import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.CustomDamageSource;
@@ -26,6 +28,7 @@ import codechicken.multipart.TMultiPart;
  * @author Calclavia
  * 
  */
+@Deprecated
 public abstract class PartAdvancedWire extends PartConductor
 {
 	public static final int DEFAULT_COLOR = 15;
@@ -33,6 +36,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
 	public EnumWireMaterial material = EnumWireMaterial.COPPER;
 	public boolean isInsulated = false;
+	protected Item insulationType = Electrical.itemInsulation;
 
 	/**
 	 * INTERNAL USE.
@@ -216,13 +220,13 @@ public abstract class PartAdvancedWire extends PartConductor
 				this.setColor(dyeColor);
 				return true;
 			}
-			else if (itemStack.itemID == Block.cloth.blockID)
+			else if (itemStack.getItem() == insulationType)
 			{
 				if (this.isInsulated())
 				{
 					if (!world().isRemote && player.capabilities.isCreativeMode)
 					{
-						tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
+						tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
 					}
 
 					this.setInsulated(false);
@@ -243,7 +247,7 @@ public abstract class PartAdvancedWire extends PartConductor
 			{
 				if (!world().isRemote && !player.capabilities.isCreativeMode)
 				{
-					tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
+					tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
 				}
 
 				this.setInsulated(false);
@@ -268,7 +272,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
 		if (this.isInsulated)
 		{
-			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color)));
+			drops.add(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color)));
 		}
 
 		return drops;

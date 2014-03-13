@@ -73,6 +73,7 @@ public class ResourceGenerator implements IVirtualObject
 	static
 	{
 		OreDetectionBlackList.addIngot("ingotRefinedIron");
+		OreDetectionBlackList.addIngot("uranium");
 		SaveManager.registerClass("resourceGenerator", ResourceGenerator.class);
 		SaveManager.register(INSTANCE);
 	}
@@ -136,7 +137,14 @@ public class ResourceGenerator implements IVirtualObject
 			if (list.size() > 0)
 			{
 				ItemStack type = list.get(0);
-				localizedName = type.getDisplayName().replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
+				localizedName = type.getDisplayName();
+
+				if (LanguageUtility.getLocal(localizedName) != null && LanguageUtility.getLocal(localizedName) != "")
+				{
+					localizedName = LanguageUtility.getLocal(localizedName);
+				}
+
+				localizedName.replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
 			}
 
 			/** Generate molten fluids */

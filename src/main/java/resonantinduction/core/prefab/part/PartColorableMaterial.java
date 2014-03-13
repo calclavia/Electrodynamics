@@ -7,11 +7,13 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import resonantinduction.core.MultipartUtility;
+import resonantinduction.electrical.Electrical;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 
@@ -27,6 +29,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 	public M material;
 	public boolean isInsulated = false;
 	public boolean requiresInsulation = true;
+	protected Item insulationType = Electrical.itemInsulation;
 
 	/**
 	 * Material Methods
@@ -136,13 +139,13 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 			}
 			else if (requiresInsulation)
 			{
-				if (itemStack.itemID == Block.cloth.blockID)
+				if (itemStack.getItem() == insulationType)
 				{
 					if (this.isInsulated())
 					{
 						if (!world().isRemote && player.capabilities.isCreativeMode)
 						{
-							tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
+							tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
 						}
 
 						this.setInsulated(false);
@@ -163,7 +166,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 				{
 					if (!world().isRemote && !player.capabilities.isCreativeMode)
 					{
-						tile().dropItems(Collections.singletonList(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color))));
+						tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
 					}
 
 					this.setInsulated(false);
@@ -183,7 +186,7 @@ public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
 
 		if (requiresInsulation && isInsulated)
 		{
-			drops.add(new ItemStack(Block.cloth, 1, BlockColored.getBlockFromDye(color)));
+			drops.add(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color)));
 		}
 
 		return drops;
