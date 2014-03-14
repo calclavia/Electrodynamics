@@ -1,7 +1,5 @@
 package mffs.tile;
 
-import icbm.api.IBlockFrequency;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,18 +8,19 @@ import java.util.Set;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
-import mffs.api.card.ICard;
-import mffs.api.card.ICardInfinite;
-import mffs.api.card.ICoordLink;
-import mffs.api.fortron.FrequencyGrid;
-import mffs.api.fortron.IFortronCapacitor;
-import mffs.api.fortron.IFortronFrequency;
-import mffs.api.fortron.IFortronStorage;
-import mffs.api.modules.IModule;
 import mffs.base.TileModuleAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.mffs.card.ICard;
+import calclavia.api.mffs.card.ICardInfinite;
+import calclavia.api.mffs.card.ICoordLink;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronCapacitor;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.fortron.IFortronStorage;
+import calclavia.api.mffs.modules.IModule;
 
 import com.google.common.io.ByteArrayDataInput;
 

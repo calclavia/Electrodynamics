@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.prefab.vector.Rectangle;
 import calclavia.lib.utility.LanguageUtility;

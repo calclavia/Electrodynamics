@@ -2,6 +2,8 @@ package mffs.api.fortron;
 
 import java.util.Set;
 
+import calclavia.api.mffs.fortron.IFortronFrequency;
+
 /**
  * Applied to the Fortron Capacitor TileEntity. Extends IFortronFrequency
  * 

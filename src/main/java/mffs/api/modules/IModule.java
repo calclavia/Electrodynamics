@@ -2,12 +2,13 @@ package mffs.api.modules;
 
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
-import mffs.api.IProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IFortronCost;
 
 public interface IModule extends IFortronCost
 {

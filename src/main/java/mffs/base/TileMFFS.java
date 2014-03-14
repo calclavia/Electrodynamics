@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.IActivatable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import calclavia.api.mffs.IActivatable;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.IPlayerUsing;

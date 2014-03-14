@@ -3,6 +3,7 @@ package mffs.api.modules;
 import java.util.Set;
 
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.modules.IModule;
 
 public interface IModuleAcceptor
 {

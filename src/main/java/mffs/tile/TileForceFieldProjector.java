@@ -1,7 +1,6 @@
 package mffs.tile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,10 +8,6 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.ICache;
-import mffs.api.IProjector;
-import mffs.api.modules.IModule;
-import mffs.api.modules.IProjectorMode;
 import mffs.card.ItemCard;
 import mffs.item.mode.ItemModeCustom;
 import mffs.tile.ProjectorCalculationThread.IThreadCallBack;
@@ -24,6 +19,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.chunk.Chunk;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IProjectorMode;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;

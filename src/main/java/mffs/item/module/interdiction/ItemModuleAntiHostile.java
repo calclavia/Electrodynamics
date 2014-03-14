@@ -1,10 +1,10 @@
 package mffs.item.module.interdiction;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.monster.IMob;
+import calclavia.api.mffs.security.IInterdictionMatrix;
 
 public class ItemModuleAntiHostile extends ItemModuleInterdictionMatrix
 {

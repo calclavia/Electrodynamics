@@ -8,11 +8,6 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.modules.IInterdictionMatrixModule;
-import mffs.api.modules.IModule;
-import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.IInterdictionMatrix;
-import mffs.api.security.Permission;
 import mffs.base.TileModuleAcceptor;
 import mffs.card.ItemCard;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,6 +15,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import calclavia.api.mffs.modules.IInterdictionMatrixModule;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
 import calclavia.lib.utility.LanguageUtility;
 
 import com.google.common.io.ByteArrayDataInput;

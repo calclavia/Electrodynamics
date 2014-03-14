@@ -9,14 +9,13 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.ICache;
-import mffs.api.modules.IModule;
-import mffs.api.modules.IModuleAcceptor;
-import mffs.base.TileMFFS.TilePacketType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IModuleAcceptor;
 
 import com.google.common.io.ByteArrayDataInput;
 

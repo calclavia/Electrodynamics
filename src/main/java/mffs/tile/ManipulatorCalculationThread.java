@@ -3,8 +3,8 @@ package mffs.tile;
 import java.util.HashSet;
 import java.util.Set;
 
-import mffs.api.fortron.IServerThread;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.fortron.IServerThread;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.

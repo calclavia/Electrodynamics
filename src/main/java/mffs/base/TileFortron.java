@@ -2,14 +2,10 @@ package mffs.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
-import mffs.api.card.ICard;
-import mffs.api.fortron.FrequencyGrid;
-import mffs.api.fortron.IFortronFrequency;
 import mffs.fortron.FortronHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +17,9 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.card.ICard;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
 import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;

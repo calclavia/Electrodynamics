@@ -1,7 +1,7 @@
 package mffs.item.card;
 
-import mffs.api.card.ICardInfinite;
 import mffs.card.ItemCard;
+import calclavia.api.mffs.card.ICardInfinite;
 
 /**
  * A card used by admins or players to cheat infinite energy.

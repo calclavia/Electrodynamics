@@ -2,12 +2,6 @@ package mffs;
 
 import java.util.HashMap;
 
-import mffs.api.EventForceManipulate.EventPreForceManipulate;
-import mffs.api.EventStabilize;
-import mffs.api.fortron.FrequencyGrid;
-import mffs.api.fortron.IFortronFrequency;
-import mffs.api.security.IInterdictionMatrix;
-import mffs.api.security.Permission;
 import mffs.base.TileFortron;
 import mffs.fortron.FortronHelper;
 import mffs.tile.TileForceFieldProjector;
@@ -24,6 +18,12 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
+import calclavia.api.mffs.EventStabilize;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
 import calclavia.lib.event.ChunkModifiedEvent.ChunkSetBlockEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

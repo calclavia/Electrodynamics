@@ -1,11 +1,8 @@
 package mffs.base;
 
-import icbm.api.ICamouflageMaterial;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.IBiometricIdentifierLink;
-import mffs.api.security.Permission;
 import mffs.item.card.ItemCardLink;
 import mffs.render.RenderBlockHandler;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -14,6 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.UniversalElectricity;
+import calclavia.api.icbm.ICamouflageMaterial;
+import calclavia.api.mffs.IBiometricIdentifierLink;
+import calclavia.api.mffs.security.Permission;
 import calclavia.lib.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

@@ -1,5 +1,6 @@
 package mffs.api.security;
 
+
 public class Permission
 {
 	// TODO: FIX NAMES

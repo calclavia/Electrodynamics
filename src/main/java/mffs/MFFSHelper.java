@@ -1,16 +1,8 @@
 package mffs;
 
-import icbm.api.IBlockFrequency;
-
 import java.util.HashMap;
 import java.util.Set;
 
-import mffs.api.IProjector;
-import mffs.api.fortron.FrequencyGrid;
-import mffs.api.fortron.IFortronFrequency;
-import mffs.api.modules.IModuleAcceptor;
-import mffs.api.security.IInterdictionMatrix;
-import mffs.api.security.Permission;
 import mffs.item.mode.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +14,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.modules.IModuleAcceptor;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
 
 /**
  * A class containing some general helpful functions.

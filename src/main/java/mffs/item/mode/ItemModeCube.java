@@ -3,14 +3,14 @@ package mffs.item.mode;
 import java.util.HashSet;
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
-import mffs.api.IProjector;
 import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
 import calclavia.lib.prefab.vector.Cuboid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

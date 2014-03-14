@@ -1,9 +1,7 @@
 package mffs.base;
 
-import icbm.api.IBlockFrequency;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.IBiometricIdentifierLink;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.gui.button.GuiIcon;
 import net.minecraft.block.Block;
@@ -16,6 +14,8 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 import universalelectricity.api.vector.Vector2;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.mffs.IBiometricIdentifierLink;
 import calclavia.lib.gui.GuiContainerBase;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;

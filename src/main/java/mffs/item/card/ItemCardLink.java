@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import java.util.List;
 
-import mffs.api.card.ICoordLink;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.api.mffs.card.ICoordLink;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

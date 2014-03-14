@@ -4,15 +4,11 @@ import java.util.HashMap;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.Blacklist;
-import mffs.api.EventStabilize;
-import mffs.api.IProjector;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.item.mode.ItemModeCustom;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -23,6 +19,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import calclavia.api.mffs.Blacklist;
+import calclavia.api.mffs.EventStabilize;
+import calclavia.api.mffs.IProjector;
 import calclavia.lib.network.PacketHandler;
 
 public class ItemModuleStablize extends ItemModule

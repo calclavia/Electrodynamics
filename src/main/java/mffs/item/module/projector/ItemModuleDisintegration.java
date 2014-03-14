@@ -5,8 +5,6 @@ import java.util.Set;
 import mffs.IDelayedEventHandler;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
-import mffs.api.Blacklist;
-import mffs.api.IProjector;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.base.TileMFFSInventory;
 import mffs.event.BlockDropDelayedEvent;
@@ -20,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.Blacklist;
+import calclavia.api.mffs.IProjector;
 import calclavia.lib.network.PacketHandler;
 
 public class ItemModuleDisintegration extends ItemModule

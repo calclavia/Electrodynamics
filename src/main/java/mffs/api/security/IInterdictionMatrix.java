@@ -2,12 +2,12 @@ package mffs.api.security;
 
 import java.util.Set;
 
-import mffs.api.IActivatable;
-import mffs.api.IBiometricIdentifierLink;
-import mffs.api.fortron.IFortronFrequency;
-import mffs.api.modules.IModuleAcceptor;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.IActivatable;
+import calclavia.api.mffs.IBiometricIdentifierLink;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.modules.IModuleAcceptor;
 
 public interface IInterdictionMatrix extends IInventory, IFortronFrequency, IModuleAcceptor, IBiometricIdentifierLink, IActivatable
 {

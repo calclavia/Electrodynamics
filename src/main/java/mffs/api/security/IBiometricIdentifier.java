@@ -1,6 +1,7 @@
 package mffs.api.security;
 
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.security.Permission;
 
 /**
  * Applied to Biometric Identifiers (extends TileEntity).

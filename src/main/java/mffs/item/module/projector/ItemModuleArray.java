@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
 import mffs.item.module.ItemModule;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
 
 public class ItemModuleArray extends ItemModule
 {

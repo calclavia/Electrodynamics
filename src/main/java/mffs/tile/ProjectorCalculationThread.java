@@ -3,11 +3,11 @@ package mffs.tile;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.IFieldInteraction;
-import mffs.api.fortron.IServerThread;
-import mffs.api.modules.IModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.fortron.IServerThread;
+import calclavia.api.mffs.modules.IModule;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.

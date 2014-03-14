@@ -12,10 +12,6 @@ import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.ICache;
-import mffs.api.IFieldInteraction;
-import mffs.api.modules.IModule;
-import mffs.api.modules.IProjectorMode;
 import mffs.base.TileModuleAcceptor;
 import mffs.tile.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
@@ -23,6 +19,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IProjectorMode;
 
 import com.google.common.io.ByteArrayDataInput;
 

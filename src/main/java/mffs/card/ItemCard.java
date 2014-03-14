@@ -1,7 +1,7 @@
 package mffs.card;
 
-import mffs.api.card.ICard;
 import mffs.base.ItemMFFS;
+import calclavia.api.mffs.card.ICard;
 
 public class ItemCard extends ItemMFFS implements ICard
 {

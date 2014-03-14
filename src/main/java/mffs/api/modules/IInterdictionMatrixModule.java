@@ -1,7 +1,8 @@
 package mffs.api.modules;
 
-import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.security.IInterdictionMatrix;
 
 public interface IInterdictionMatrixModule extends IModule
 {

@@ -1,10 +1,10 @@
 package mffs.item.mode;
 
-import mffs.api.IFieldInteraction;
-import mffs.api.IProjector;
-import mffs.api.modules.IProjectorMode;
 import mffs.base.ItemMFFS;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IProjectorMode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

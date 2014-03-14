@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
-import mffs.base.TileMFFS.TilePacketType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -2,13 +2,13 @@ package mffs.item.module.interdiction;
 
 import java.util.Set;
 
-import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.IInterdictionMatrix;
-import mffs.api.security.Permission;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
 import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix

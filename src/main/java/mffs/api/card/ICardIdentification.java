@@ -1,7 +1,8 @@
 package mffs.api.card;
 
-import mffs.api.security.Permission;
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.card.ICard;
+import calclavia.api.mffs.security.Permission;
 
 /**
  * Applied to Item ID cards.

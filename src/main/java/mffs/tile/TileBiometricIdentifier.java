@@ -6,12 +6,12 @@ import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.card.ICardIdentification;
-import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.Permission;
 import mffs.base.TileFrequency;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
+import calclavia.api.mffs.card.ICardIdentification;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
 
 import com.google.common.io.ByteArrayDataInput;
 

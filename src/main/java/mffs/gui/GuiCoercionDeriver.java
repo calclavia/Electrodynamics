@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;

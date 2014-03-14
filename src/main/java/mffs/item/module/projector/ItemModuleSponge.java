@@ -2,7 +2,6 @@ package mffs.item.module.projector;
 
 import java.util.Set;
 
-import mffs.api.IProjector;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
@@ -11,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IProjector;
 
 public class ItemModuleSponge extends ItemModule
 {

@@ -1,7 +1,5 @@
 package mffs.api.fortron;
 
-import icbm.api.IBlockFrequency;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,6 +11,9 @@ import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.fortron.IServerThread;
 
 /**
  * A grid MFFS uses to search for machines with frequencies that can be linked and spread Fortron

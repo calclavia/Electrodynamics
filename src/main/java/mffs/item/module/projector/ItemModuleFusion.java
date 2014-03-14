@@ -1,17 +1,16 @@
 package mffs.item.module.projector;
 
-import icbm.api.IBlockFrequency;
-
 import java.util.Iterator;
 import java.util.Set;
 
-import mffs.api.IProjector;
-import mffs.api.fortron.FrequencyGrid;
-import mffs.api.fortron.IFortronFrequency;
 import mffs.base.TileMFFS;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
 
 public class ItemModuleFusion extends ItemModule
 {

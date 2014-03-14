@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.IProjector;
-import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.Permission;
 import mffs.item.module.ItemModule;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.entity.Entity;
@@ -17,6 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
 
 public class ItemModuleRepulsion extends ItemModule
 {

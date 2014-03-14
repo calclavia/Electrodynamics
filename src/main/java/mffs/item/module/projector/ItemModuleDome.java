@@ -3,10 +3,10 @@ package mffs.item.module.projector;
 import java.util.Iterator;
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
 
 public class ItemModuleDome extends ItemModule
 {

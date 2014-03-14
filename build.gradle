@@ -55,17 +55,6 @@ jar {
     destinationDir = file 'output'
 }
 
-task apiZip(type: Zip) {
-    classifier = 'api'
-    from sourceSets*.allSource
-    include 'mffs/api/**'
-    destinationDir = file 'output'
-}
-
-artifacts {
-    archives apiZip
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {

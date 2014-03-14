@@ -2,9 +2,9 @@ package mffs.item.module.interdiction;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.security.IInterdictionMatrix;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import calclavia.api.mffs.security.IInterdictionMatrix;
 import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix

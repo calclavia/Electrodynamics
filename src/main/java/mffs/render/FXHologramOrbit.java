@@ -3,7 +3,6 @@ package mffs.render;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 

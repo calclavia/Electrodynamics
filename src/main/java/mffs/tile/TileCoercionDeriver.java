@@ -5,7 +5,6 @@ import java.util.EnumSet;
 
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.api.modules.IModule;
 import mffs.base.TileMFFSElectrical;
 import mffs.fortron.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
@@ -15,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyStorageHandler;
+import calclavia.api.mffs.modules.IModule;
 
 import com.google.common.io.ByteArrayDataInput;
 

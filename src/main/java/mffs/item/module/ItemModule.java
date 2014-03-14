@@ -3,9 +3,6 @@ package mffs.item.module;
 import java.util.List;
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
-import mffs.api.IProjector;
-import mffs.api.modules.IModule;
 import mffs.base.ItemMFFS;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +11,9 @@ import net.minecraft.world.World;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IModule;
 import calclavia.lib.utility.LanguageUtility;
 
 public class ItemModule extends ItemMFFS implements IModule

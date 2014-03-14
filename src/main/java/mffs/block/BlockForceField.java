@@ -4,16 +4,10 @@ import java.util.List;
 import java.util.Random;
 
 import mffs.ModularForceFieldSystem;
-import mffs.api.IForceFieldBlock;
-import mffs.api.IProjector;
-import mffs.api.fortron.IFortronStorage;
-import mffs.api.modules.IModule;
-import mffs.api.security.IBiometricIdentifier;
-import mffs.api.security.Permission;
 import mffs.base.BlockBase;
 import mffs.render.RenderForceField;
 import mffs.tile.TileForceField;
-import micdoodle8.mods.galacticraft.API.IPartialSealedBlock;
+import micdoodle8.mods.galacticraft.api.block.IPartialSealableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -29,12 +23,19 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.CustomDamageSource;
+import calclavia.api.mffs.IForceFieldBlock;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.fortron.IFortronStorage;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
+import calclavia.lib.prefab.CustomDamageSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockForceField extends BlockBase implements IForceFieldBlock, IPartialSealedBlock
+public class BlockForceField extends BlockBase implements IForceFieldBlock, IPartialSealableBlock
 {
 	public BlockForceField(int id)
 	{
@@ -371,7 +372,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	}
 
 	@Override
-	public boolean isSealed(World world, int x, int y, int z)
+	public boolean isSealed(World world, int x, int y, int z, ForgeDirection direction)
 	{
 		return true;
 	}

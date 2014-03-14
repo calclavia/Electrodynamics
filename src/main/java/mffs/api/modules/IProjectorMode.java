@@ -2,9 +2,10 @@ package mffs.api.modules;
 
 import java.util.Set;
 
-import mffs.api.IFieldInteraction;
-import mffs.api.IProjector;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IFortronCost;
 
 public interface IProjectorMode extends IFortronCost
 {

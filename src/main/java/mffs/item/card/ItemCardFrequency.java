@@ -1,8 +1,5 @@
 package mffs.item.card;
 
-import icbm.api.IBlockFrequency;
-import icbm.api.IItemFrequency;
-
 import java.util.List;
 
 import mffs.Settings;
@@ -12,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import calclavia.api.icbm.IBlockFrequency;
+import calclavia.api.icbm.IItemFrequency;
 import calclavia.lib.utility.LanguageUtility;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
