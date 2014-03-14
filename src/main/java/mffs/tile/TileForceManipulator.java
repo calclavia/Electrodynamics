@@ -201,7 +201,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
 						{
 							i++;
-							nbtList.appendTag(position.writeToNBT(new NBTTagCompound()));
+							nbtList.appendTag(new Vector3(position).writeToNBT(new NBTTagCompound()));
 						}
 					}
 
@@ -210,7 +210,13 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (this.isTeleport())
 					{
-						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, this.getAbsoluteAnchor().translate(0.5), this.getTargetPosition().translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
+						Vector3 targetPosition;
+						if (getTargetPosition().world == null)
+							targetPosition = new Vector3(getTargetPosition());
+						else
+							targetPosition = getTargetPosition();
+
+						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, getAbsoluteAnchor().translate(0.5), targetPosition.translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 					}
 					else
 					{
@@ -355,13 +361,14 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 							// Render hologram for destination position
 							Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
+
 							if (isPreview)
 							{
-								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 1, 1, 1, animationTime, 30f);
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 1, 1, 1, animationTime, 30f);
 							}
 							else
 							{
-								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+								ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
 							}
 						}
 
@@ -728,7 +735,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			case 3:
 			{
 				Object[] result = { false };
-				
+
 				if (this.isActive() || this.isCalculatingManipulation)
 				{
 					// Don't call canMove while it is working because it alters failedPositions
@@ -737,9 +744,10 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				}
 				else
 				{
-					
+
 					result[0] = this.canMove();
-					//Clean up the failed positions list so it doesn't trip up the call in update entity later
+					// Clean up the failed positions list so it doesn't trip up the call in update
+					// entity later
 					this.failedPositions.clear();
 					return result;
 				}
