@@ -29,8 +29,9 @@ public class RenderQuantumGlyph implements ISimpleItemRenderer
 	public void renderInventoryItem(ItemStack itemStack)
 	{
 		GL11.glPushMatrix();
+		GL11.glTranslated(-0.25, -0.25, -0.25);
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
-		RenderUtility.renderCube(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, Block.stone, RenderUtility.getIcon(Reference.PREFIX + "glyph_" + itemStack.getItemDamage()));
+		RenderUtility.renderCube(0, 0, 0, 0.5, 0.5, 0.5, Block.stone, RenderUtility.getIcon(Reference.PREFIX + "glyph_" + itemStack.getItemDamage()));
 		GL11.glPopMatrix();
 	}
 }
