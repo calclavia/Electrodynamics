@@ -58,7 +58,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 		if (getMultiBlock().isConstructed())
 			torque = (long) (defaultTorque / (1d / multiBlockRadius));
 		else
-			torque = defaultTorque / 22;
+			torque = defaultTorque / 12;
 
 		/**
 		 * If this is a horizontal turbine.
@@ -89,7 +89,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 		}
 		else
 		{
-			maxPower = 2000;
+			maxPower = 2500;
 
 			int checkX = xCoord;
 			int checkY = yCoord - 1;
