@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +36,8 @@ public class TileMixer extends TileMechanical implements IInventory
 
 	public TileMixer()
 	{
+		super(Material.iron);
+
 		mechanicalNode = new PacketMechanicalNode(this)
 		{
 			@Override
@@ -44,6 +47,11 @@ public class TileMixer extends TileMechanical implements IInventory
 			}
 
 		}.setConnection(Byte.parseByte("000011", 2));
+
+		isOpaqueCube = false;
+		normalRender = false;
+		customItemRender = true;
+		textureName = "material_metal_top";
 	}
 
 	@Override

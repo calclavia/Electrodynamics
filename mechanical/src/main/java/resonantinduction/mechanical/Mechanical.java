@@ -31,7 +31,6 @@ import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileSorter;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import resonantinduction.mechanical.process.grinder.TileGrindingWheel;
-import resonantinduction.mechanical.process.purifier.BlockMixer;
 import resonantinduction.mechanical.process.purifier.TileMixer;
 import calclavia.api.resonantinduction.IMechanicalNode;
 import calclavia.components.creative.BlockCreativeBuilder;
@@ -97,7 +96,7 @@ public class Mechanical
 
 	// Machines/Processes
 	public static Block blockGrinderWheel;
-	public static Block blockPurifier;
+	public static Block blockMixer;
 	public static Block blockMechanicalPiston;
 
 	@EventHandler
@@ -128,7 +127,7 @@ public class Mechanical
 
 		// Machines
 		blockGrinderWheel = contentRegistry.newBlock(TileGrindingWheel.class);
-		blockPurifier = contentRegistry.createTile(BlockMixer.class, TileMixer.class);
+		blockMixer = contentRegistry.newBlock(TileMixer.class);
 		blockMechanicalPiston = contentRegistry.newBlock(TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);
 
@@ -184,6 +183,6 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Item.diamond));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockPurifier, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMixer, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
 	}
 }
