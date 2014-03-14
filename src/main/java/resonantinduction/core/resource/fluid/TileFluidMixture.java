@@ -3,12 +3,12 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
+import calclavia.api.resonantinduction.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 

@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.IFilterable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.IFilterable;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.prefab.tile.IRotatable;
 

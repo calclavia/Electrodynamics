@@ -13,7 +13,7 @@ import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.IRedirectTask;
 import resonantinduction.electrical.encoder.coding.ITask;
-import calclavia.lib.terminal.IScroll;
+import calclavia.lib.prefab.terminal.IScroll;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

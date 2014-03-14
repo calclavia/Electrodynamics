@@ -3,12 +3,12 @@ package resonantinduction.mechanical.energy.grid;
 import java.util.ArrayList;
 import java.util.List;
 
+import calclavia.lib.grid.INode;
+import calclavia.lib.grid.INodeProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.grid.INode;
-import resonantinduction.core.grid.INodeProvider;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.JCuboidPart;

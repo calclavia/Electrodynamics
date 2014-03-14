@@ -1,5 +1,7 @@
 package resonantinduction.core.resource.fluid;
 
+import calclavia.api.resonantinduction.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
@@ -8,8 +10,6 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.resource.ResourceGenerator;

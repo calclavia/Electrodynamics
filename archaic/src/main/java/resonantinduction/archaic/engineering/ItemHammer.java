@@ -6,11 +6,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.recipe.RecipeResource;
+import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 public class ItemHammer extends Item

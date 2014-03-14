@@ -12,15 +12,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.IMechanicalNode;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Timer;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.IMechanicalNode;
+import calclavia.api.resonantinduction.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**

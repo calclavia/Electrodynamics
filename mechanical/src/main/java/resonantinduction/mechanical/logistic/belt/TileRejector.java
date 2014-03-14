@@ -10,10 +10,10 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IBelt;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.mechanical.IBelt;
 import calclavia.lib.network.IPacketReceiverWithID;
 
 import com.google.common.io.ByteArrayDataInput;

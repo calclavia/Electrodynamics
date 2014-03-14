@@ -1,6 +1,6 @@
 package resonantinduction.quantum.gate;
 
-import icbm.api.IBlockFrequency;
+import calclavia.api.icbm.IBlockFrequency;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraftforge.fluids.FluidTank;

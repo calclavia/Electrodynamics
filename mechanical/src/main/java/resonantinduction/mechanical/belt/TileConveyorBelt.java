@@ -11,14 +11,14 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.mechanical.IBelt;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.mechanical.IBelt;
+import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;

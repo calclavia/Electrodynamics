@@ -17,7 +17,7 @@ import resonantinduction.core.MultipartUtility;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.IConductor;
-import calclavia.lib.CustomDamageSource;
+import calclavia.lib.prefab.CustomDamageSource;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;

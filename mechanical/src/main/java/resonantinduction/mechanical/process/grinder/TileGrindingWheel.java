@@ -10,15 +10,15 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import resonantinduction.api.IMechanicalNode;
-import resonantinduction.api.recipe.MachineRecipes;
-import resonantinduction.api.recipe.MachineRecipes.RecipeType;
-import resonantinduction.api.recipe.RecipeResource;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Timer;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.IMechanicalNode;
+import calclavia.api.resonantinduction.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.recipe.RecipeResource;
+import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.vector.Cuboid;
 

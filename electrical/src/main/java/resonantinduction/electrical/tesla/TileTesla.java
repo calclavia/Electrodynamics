@@ -27,12 +27,12 @@ import resonantinduction.electrical.Electrical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.CustomDamageSource;
 import calclavia.lib.multiblock.reference.IMultiBlockStructure;
 import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.CustomDamageSource;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
 

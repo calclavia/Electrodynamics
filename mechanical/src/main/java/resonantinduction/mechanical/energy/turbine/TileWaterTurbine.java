@@ -2,7 +2,7 @@ package resonantinduction.mechanical.energy.turbine;
 
 import java.lang.reflect.Method;
 
-import resonantinduction.core.grid.INodeProvider;
+import calclavia.lib.grid.INodeProvider;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.turbine.TileMechanicalTurbine.TurbineNode;
 import net.minecraft.block.Block;

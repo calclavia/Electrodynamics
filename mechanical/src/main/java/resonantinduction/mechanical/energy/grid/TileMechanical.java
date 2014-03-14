@@ -5,11 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.INode;
-import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileBase;
+import calclavia.lib.grid.INode;
+import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 

@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import resonantinduction.api.IFilterable;
+import calclavia.api.resonantinduction.IFilterable;
 import calclavia.lib.prefab.block.BlockRotatable;
 
 /**

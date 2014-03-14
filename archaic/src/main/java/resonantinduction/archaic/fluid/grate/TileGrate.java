@@ -20,7 +20,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.configurable.Config;
+import calclavia.lib.config.Config;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;

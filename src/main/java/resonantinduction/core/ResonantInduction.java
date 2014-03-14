@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
-import resonantinduction.core.grid.UpdateTicker;
 import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
@@ -21,8 +20,9 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
-import calclavia.lib.configurable.ConfigHandler;
+import calclavia.lib.config.ConfigHandler;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.grid.UpdateTicker;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -147,8 +147,5 @@ public class ResonantInduction
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
-
-		if (!UpdateTicker.INSTANCE.isAlive())
-			UpdateTicker.INSTANCE.start();
 	}
 }

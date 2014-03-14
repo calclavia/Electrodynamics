@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import calclavia.api.resonantinduction.IMechanicalNode;
+import calclavia.lib.grid.INodeProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.api.IMechanicalNode;
-import resonantinduction.core.grid.INodeProvider;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.PartMechanical;

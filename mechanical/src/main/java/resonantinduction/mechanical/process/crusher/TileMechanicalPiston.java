@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.configurable.Config;
+import calclavia.lib.config.Config;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.MovementUtility;
 import cpw.mods.fml.common.Loader;
