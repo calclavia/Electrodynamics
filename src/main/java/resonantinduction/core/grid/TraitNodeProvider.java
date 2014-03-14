@@ -1,0 +1,33 @@
+package resonantinduction.core.grid;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraftforge.common.ForgeDirection;
+import calclavia.lib.grid.INode;
+import calclavia.lib.grid.INodeProvider;
+import codechicken.multipart.PartMap;
+import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
+
+//TODO: Move to UE 3.2
+public class TraitNodeProvider extends TileMultipart implements INodeProvider
+{
+	@Override
+	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	{
+		TMultiPart part = this.partMap(from.ordinal());
+
+		if (part == null)
+		{
+			part = partMap(PartMap.CENTER.ordinal());
+		}
+
+		if (part instanceof INodeProvider)
+		{
+			return ((INodeProvider) part).getNode(nodeType, from);
+		}
+
+		return null;
+	}
+}

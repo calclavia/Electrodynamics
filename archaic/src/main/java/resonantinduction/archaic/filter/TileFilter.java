@@ -9,6 +9,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
@@ -67,10 +68,13 @@ public class TileFilter extends TileFilterable implements IFilterable
 			/**
 			 * Toggle item filter render
 			 */
-			List<ItemStack> filteredStacks = ItemImprint.getFilterList(getFilter());
+			if (getFilter() != null)
+			{
+				List<ItemStack> filteredStacks = ItemImprint.getFilterList(getFilter());
 
-			if (filteredStacks.size() > 0)
-				renderIndex = (renderIndex + 1) % filteredStacks.size();
+				if (filteredStacks.size() > 0)
+					renderIndex = (renderIndex + 1) % filteredStacks.size();
+			}
 
 			/**
 			 * Fluid filters
@@ -154,10 +158,16 @@ public class TileFilter extends TileFilterable implements IFilterable
 						RenderItemOverlayTile.renderItemOnSides(TileFilter.this, renderStack, position.x, position.y, position.z);
 					}
 				}
-				
+
 				return false;
 			}
 		};
+	}
+
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
+	{
+		return access.getBlockId(x, y, z) == block.blockID ? false : super.shouldSideBeRendered(access, x, y, z, side);
 	}
 
 	@Override
