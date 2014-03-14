@@ -255,13 +255,17 @@ public class TileSorter extends TileInventory
 								GL11.glRotatef(90, 0, 0, 1);
 
 							RenderUtility.rotateBlockBasedOnDirection(dir);
-							MODEL.renderOnly("port");
+							if (TileSorter.this.isInverted)
+								MODEL.renderOnly("portRed", "connector");
+							else
+								MODEL.renderOnly("portBlue", "connector");
 							GL11.glPopMatrix();
 						}
 					}
 				}
 
-				MODEL.renderAllExcept("port");
+				MODEL.renderAllExcept("portBlue", "portRed", "connector");
+
 				RenderUtility.disableBlending();
 				GL11.glPopMatrix();
 				return true;
