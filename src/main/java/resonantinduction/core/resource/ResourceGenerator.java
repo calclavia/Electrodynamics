@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -65,7 +66,7 @@ public class ResourceGenerator implements IVirtualObject
 	 * Name, ID
 	 */
 	static int maxID = 0;
-	static final HashBiMap<String, Integer> materials = HashBiMap.create();
+	public static final HashBiMap<String, Integer> materials = HashBiMap.create();
 
 	static final HashMap<String, Integer> materialColorCache = new HashMap<String, Integer>();
 	static final HashMap<Icon, Integer> iconColorCache = new HashMap<Icon, Integer>();
@@ -73,11 +74,12 @@ public class ResourceGenerator implements IVirtualObject
 	static
 	{
 		OreDetectionBlackList.addIngot("ingotRefinedIron");
-		OreDetectionBlackList.addIngot("uranium");
+		OreDetectionBlackList.addIngot("ingotUranium");
 		SaveManager.registerClass("resourceGenerator", ResourceGenerator.class);
 		SaveManager.register(INSTANCE);
 	}
 
+	// TODO: Generate teh resource here instead of elsewhere...
 	@ForgeSubscribe
 	public void oreRegisterEvent(OreRegisterEvent evt)
 	{
@@ -100,6 +102,79 @@ public class ResourceGenerator implements IVirtualObject
 		}
 	}
 
+	public static void generate(String materialName)
+	{
+		// Caps version of the name
+		String nameCaps = LanguageUtility.capitalizeFirst(materialName);
+		String localizedName = materialName;
+
+		List<ItemStack> list = OreDictionary.getOres("ingot" + nameCaps);
+
+		if (list.size() > 0)
+		{
+			ItemStack type = list.get(0);
+			localizedName = type.getDisplayName().trim();
+
+			if (LanguageUtility.getLocal(localizedName) != null && LanguageUtility.getLocal(localizedName) != "")
+			{
+				localizedName = LanguageUtility.getLocal(localizedName);
+			}
+
+			localizedName.replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
+		}
+
+		/** Generate molten fluids */
+		FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
+		fluidMolten.setDensity(7);
+		fluidMolten.setViscosity(5000);
+		fluidMolten.setTemperature(273 + 1538);
+		FluidRegistry.registerFluid(fluidMolten);
+		LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), LanguageUtility.getLocal("tooltip.molten") + " " + localizedName);
+		BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
+		GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
+		ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
+		FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
+
+		/** Generate dust mixture fluids */
+		FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
+		FluidRegistry.registerFluid(fluidMixture);
+		BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
+		LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"));
+		GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
+		ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
+		FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
+
+		ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
+		ItemStack rubble = ResonantInduction.itemRubble.getStackFromMaterial(materialName);
+		ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
+
+		if (allowOreDictCompatibility)
+		{
+			OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
+
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, dust, dust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, refinedDust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+		}
+		else
+		{
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, rubble, dust, dust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, dust, refinedDust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+		}
+
+		FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
+		ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
+		FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
+
+		if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
+		{
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
+		}
+	}
+
 	public static void generateOreResources()
 	{
 		OreDictionary.registerOre("ingotGold", Item.ingotGold);
@@ -108,11 +183,7 @@ public class ResourceGenerator implements IVirtualObject
 		OreDictionary.registerOre("oreGold", Block.oreGold);
 		OreDictionary.registerOre("oreIron", Block.oreIron);
 		OreDictionary.registerOre("oreLapis", Block.oreLapis);
-		regenerateOreResources();
-	}
 
-	public static void regenerateOreResources()
-	{
 		// Vanilla fluid recipes
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone));
 
@@ -126,77 +197,16 @@ public class ResourceGenerator implements IVirtualObject
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, Block.gravel, Block.sand);
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, Block.glass, Block.sand);
 
-		for (String materialName : materials.keySet())
+		Iterator<String> it = materials.keySet().iterator();
+		while (it.hasNext())
 		{
-			// Caps version of the name
+			String materialName = it.next();
 			String nameCaps = LanguageUtility.capitalizeFirst(materialName);
-			String localizedName = materialName;
-
-			List<ItemStack> list = OreDictionary.getOres("ingot" + materialName.substring(0, 1).toUpperCase() + materialName.substring(1));
-
-			if (list.size() > 0)
-			{
-				ItemStack type = list.get(0);
-				localizedName = type.getDisplayName();
-
-				if (LanguageUtility.getLocal(localizedName) != null && LanguageUtility.getLocal(localizedName) != "")
-				{
-					localizedName = LanguageUtility.getLocal(localizedName);
-				}
-
-				localizedName.replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
-			}
-
-			/** Generate molten fluids */
-			FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
-			fluidMolten.setDensity(7);
-			fluidMolten.setViscosity(5000);
-			fluidMolten.setTemperature(273 + 1538);
-			FluidRegistry.registerFluid(fluidMolten);
-			LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), LanguageUtility.getLocal("tooltip.molten") + " " + localizedName);
-			BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
-			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
-			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
-			FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
-
-			/** Generate dust mixture fluids */
-			FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
-			FluidRegistry.registerFluid(fluidMixture);
-			BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
-			LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"));
-			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
-			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
-			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
-
-			ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
-			ItemStack rubble = ResonantInduction.itemRubble.getStackFromMaterial(materialName);
-			ItemStack refinedDust = ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName);
-
-			if (allowOreDictCompatibility)
-			{
-				OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
-				OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
-				OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
-
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, dust, dust);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, refinedDust);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
-			}
-			else
-			{
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, rubble, dust, dust);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, dust, refinedDust);
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
-			}
-
-			FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
-			ItemStack smeltResult = OreDictionary.getOres("ingot" + nameCaps).get(0).copy();
-			FurnaceRecipes.smelting().addSmelting(refinedDust.itemID, refinedDust.getItemDamage(), smeltResult, 0.7f);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
-			{
-				MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
-			}
+				generate(materialName);
+			else
+				it.remove();
 		}
 	}
 
@@ -380,6 +390,7 @@ public class ResourceGenerator implements IVirtualObject
 		return 0xFFFFFF;
 	}
 
+	@Deprecated
 	public static List<String> getMaterials()
 	{
 		List<String> returnMaterials = new ArrayList<String>();

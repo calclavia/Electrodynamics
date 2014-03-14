@@ -57,7 +57,7 @@ public class ItemOreResourceBucket extends Item
 				String fluidName = FluidRegistry.getFluid(fluidID).getLocalizedName();
 				return (LanguageUtility.getLocal(this.getUnlocalizedName() + ".name")).replace("%v", fluidName).replace("  ", " ");
 			}
-			
+
 			return material;
 		}
 
@@ -271,7 +271,7 @@ public class ItemOreResourceBucket extends Item
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (String materialName : ResourceGenerator.getMaterials())
+		for (String materialName : ResourceGenerator.materials.keySet())
 		{
 			par3List.add(getStackFromMaterial(materialName));
 		}

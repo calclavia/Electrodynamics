@@ -176,7 +176,7 @@ public class ItemOreResource extends Item
 	@Override
 	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (String materialName : ResourceGenerator.getMaterials())
+		for (String materialName : ResourceGenerator.materials.keySet())
 		{
 			par3List.add(getStackFromMaterial(materialName));
 		}
