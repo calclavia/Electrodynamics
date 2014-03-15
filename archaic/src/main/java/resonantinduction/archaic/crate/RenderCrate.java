@@ -1,16 +1,17 @@
 package resonantinduction.archaic.crate;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderCrate extends RenderItemOverlayTile
+public class RenderCrate extends TileEntitySpecialRenderer
 {
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float var8)
@@ -19,7 +20,7 @@ public class RenderCrate extends RenderItemOverlayTile
 		{
 			GL11.glPushMatrix();
 			TileCrate tile = (TileCrate) tileEntity;
-			renderItemOnSides(tileEntity, tile.getSampleStack(), x, y, z, LanguageUtility.getLocal("tooltip.empty"));
+			RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getSampleStack(), x, y, z, LanguageUtility.getLocal("tooltip.empty"));
 			GL11.glPopMatrix();
 		}
 	}

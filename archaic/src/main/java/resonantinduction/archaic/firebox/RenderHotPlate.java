@@ -1,14 +1,15 @@
 package resonantinduction.archaic.firebox;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderHotPlate extends RenderItemOverlayTile
+public class RenderHotPlate extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
@@ -18,7 +19,7 @@ public class RenderHotPlate extends RenderItemOverlayTile
 		if (tileEntity instanceof TileHotPlate)
 		{
 			TileHotPlate tile = (TileHotPlate) tileEntity;
-			renderTopOverlay(tileEntity, tile.getInventory().getContainedItems(), ForgeDirection.EAST, 2, 2, x, y - 0.8, z, 1f);
+			RenderItemOverlayUtility.renderTopOverlay(tileEntity, tile.getInventory().getContainedItems(), ForgeDirection.EAST, 2, 2, x, y - 0.8, z, 1f);
 		}
 	}
 }

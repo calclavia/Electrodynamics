@@ -15,7 +15,6 @@ import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
-import resonantinduction.core.render.RenderItemOverlayTile;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
@@ -27,6 +26,7 @@ import calclavia.lib.content.module.TileRender;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
 import calclavia.lib.prefab.vector.Cuboid;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -155,7 +155,7 @@ public class TileFilter extends TileFilterable implements IFilterable
 					if (filteredStacks.size() > 0)
 					{
 						ItemStack renderStack = filteredStacks.get(renderIndex);
-						RenderItemOverlayTile.renderItemOnSides(TileFilter.this, renderStack, position.x, position.y, position.z);
+						RenderItemOverlayUtility.renderItemOnSides(TileFilter.this, renderStack, position.x, position.y, position.z);
 					}
 				}
 

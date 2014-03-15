@@ -1,13 +1,14 @@
 package resonantinduction.archaic.process;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderMillstone extends RenderItemOverlayTile
+public class RenderMillstone extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
@@ -17,7 +18,7 @@ public class RenderMillstone extends RenderItemOverlayTile
 		if (tileEntity instanceof TileMillstone)
 		{
 			TileMillstone tile = (TileMillstone) tileEntity;
-			renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
+			RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
 		}
 	}
 }

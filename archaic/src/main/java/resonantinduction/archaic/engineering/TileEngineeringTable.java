@@ -25,7 +25,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.ItemImprint;
-import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
@@ -37,6 +36,7 @@ import calclavia.lib.prefab.item.ItemBlockSaved;
 import calclavia.lib.prefab.slot.ISlotPickResult;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.vector.Cuboid;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager;
 import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
@@ -736,8 +736,8 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 				if (!isItem)
 				{
 					GL11.glPushMatrix();
-					RenderItemOverlayTile.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x, position.y, position.z);
-					RenderItemOverlayTile.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection(), position.x, position.y - 0.1, position.z);
+					RenderItemOverlayUtility.renderItemOnSides(TileEngineeringTable.this, getStackInSlot(9), position.x, position.y, position.z);
+					RenderItemOverlayUtility.renderTopOverlay(TileEngineeringTable.this, craftingMatrix, getDirection(), position.x, position.y - 0.1, position.z);
 					GL11.glPopMatrix();
 				}
 

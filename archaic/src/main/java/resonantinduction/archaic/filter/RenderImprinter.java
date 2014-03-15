@@ -1,14 +1,15 @@
 package resonantinduction.archaic.filter;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderImprinter extends RenderItemOverlayTile
+public class RenderImprinter extends TileEntitySpecialRenderer
 {
 	private final RenderBlocks renderBlocks = new RenderBlocks();
 
@@ -18,8 +19,8 @@ public class RenderImprinter extends RenderItemOverlayTile
 		if (tileEntity instanceof TileImprinter)
 		{
 			TileImprinter tile = (TileImprinter) tileEntity;
-			renderTopOverlay(tileEntity, tile.inventory, ForgeDirection.EAST, x, y, z);
-			renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
+			RenderItemOverlayUtility.renderTopOverlay(tileEntity, tile.inventory, ForgeDirection.EAST, x, y, z);
+			RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(9), x, y, z);
 		}
 	}
 }

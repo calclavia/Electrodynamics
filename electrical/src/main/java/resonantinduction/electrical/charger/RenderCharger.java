@@ -12,11 +12,11 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RenderItemOverlayTile;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 
@@ -54,7 +54,7 @@ public class RenderCharger implements ISimpleItemRenderer
 			RenderUtility.rotateFaceToSideNoTranslate(part.placementSide);
 			RenderUtility.rotateBlockBasedOnDirection(part.getFacing());
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-			RenderItemOverlayTile.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.3, -0.00), 0, 4);
+			RenderItemOverlayUtility.renderItem(part.world(), part.placementSide, part.getStackInSlot(0), new Vector3(0.00, -0.3, -0.00), 0, 4);
 			GL11.glPopMatrix();
 
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;

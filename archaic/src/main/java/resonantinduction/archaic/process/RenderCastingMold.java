@@ -1,5 +1,6 @@
 package resonantinduction.archaic.process;
 
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
@@ -7,13 +8,13 @@ import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.core.render.RenderItemOverlayTile;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderCastingMold extends RenderItemOverlayTile
+public class RenderCastingMold extends TileEntitySpecialRenderer
 {
 	public static RenderCastingMold INSTANCE = new RenderCastingMold();
 	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "castingMold.tcn");
@@ -34,7 +35,7 @@ public class RenderCastingMold extends RenderItemOverlayTile
 			GL11.glPopMatrix();
 
 			if (tile.worldObj != null)
-				renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
+				RenderItemOverlayUtility.renderItemOnSides(tileEntity, tile.getStackInSlot(0), x, y, z, "");
 		}
 	}
 }
