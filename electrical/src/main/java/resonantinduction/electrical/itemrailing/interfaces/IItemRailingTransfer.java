@@ -6,7 +6,7 @@ import resonantinduction.electrical.itemrailing.PartRailing;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
- * the object that handles/
+ * the object that handles the items that flow through Railings
  *
  * @since 16/03/14
  * @author tgame14
@@ -23,9 +23,7 @@ public interface IItemRailingTransfer
 
     public IItemRailingTransfer setRailing(PartRailing railing);
 
-    // getEndTarget();
+    public IRailing getEndGoal();
 
-    // setEndTarget();
-
-    // getSpeed();
+    public IItemRailingTransfer setEndGoal();
 }
