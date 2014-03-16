@@ -252,23 +252,23 @@ public class BlockCrate extends BlockTile
 
 		if (currentStack != null)
 		{
-			if (currentStack.getItem().itemID == this.blockID)
+			if (currentStack.getItem().itemID == blockID)
 			{
 				ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
 				ItemStack crateStack = tileEntity.getSampleStack();
-				if (containedStack != null && (crateStack == null || (crateStack != null && containedStack.isItemEqual(crateStack))))
+
+				if (containedStack != null && (crateStack == null || ItemStack.areItemStacksEqual(containedStack, crateStack)))
 				{
 					ItemStack returned = BlockCrate.addStackToCrate(tileEntity, containedStack);
 					ItemBlockCrate.setContainingItemStack(currentStack, returned);
 					return true;
 				}
-
 			}
 			else
 			{
 				if (tileEntity.getSampleStack() != null)
 				{
-					if (!(tileEntity.getSampleStack().isItemEqual(currentStack) || OreDictionary.getOreID(tileEntity.getSampleStack()) == OreDictionary.getOreID(currentStack)))
+					if (!(tileEntity.getSampleStack().isItemEqual(currentStack) || (!OreDictionary.getOreName(OreDictionary.getOreID(tileEntity.getSampleStack())).equals("Unknown") && OreDictionary.getOreID(tileEntity.getSampleStack()) == OreDictionary.getOreID(currentStack))))
 					{
 						return false;
 					}
