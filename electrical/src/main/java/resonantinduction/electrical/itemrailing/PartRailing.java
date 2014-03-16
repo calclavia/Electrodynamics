@@ -1,6 +1,5 @@
 package resonantinduction.electrical.itemrailing;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,7 +7,6 @@ import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.net.IConnector;
 
 /**
  * @since 16/03/14
@@ -33,21 +31,15 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     }
 
     @Override
-    protected IConnector getConnector (TileEntity tile)
+    protected IConductor getConnector (TileEntity tile)
     {
         return null;
     }
 
     @Override
-    public Object getNetwork ()
+    public IEnergyNetwork getNetwork ()
     {
         return null;
-    }
-
-    @Override
-    public void setNetwork (Object network)
-    {
-
     }
 
     @Override
@@ -65,6 +57,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     public String getType ()
     {
-        return null;
+        return "resonant_induction_itemrailing";
     }
-}
+
+  }
