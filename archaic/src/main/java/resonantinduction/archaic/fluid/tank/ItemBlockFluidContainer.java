@@ -124,13 +124,15 @@ public class ItemBlockFluidContainer extends ItemBlock
 			if (tile instanceof TileFluidDistribution)
 			{
 				((TileFluidDistribution) tile).setSubID(stack.getItemDamage());
+
 				if (stack.getTagCompound() != null && stack.getTagCompound().hasKey("fluid"))
 				{
-					((TileFluidDistribution) tile).fill(ForgeDirection.UNKNOWN, FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
+					((TileFluidDistribution) tile).getInternalTank().fill(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid")), true);
 				}
 			}
 			return true;
 		}
+
 		return false;
 	}
 }
