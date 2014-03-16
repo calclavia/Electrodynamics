@@ -21,7 +21,6 @@ import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.net.IConnector;
-import calclavia.api.atomicscience.ITemperature;
 import calclavia.api.resonantinduction.IMechanicalNode;
 import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.network.IPacketReceiver;
@@ -309,11 +308,6 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 		if (tileEntity instanceof IPressureNodeProvider)
 		{
 			getNetwork().pressureGraph.queue(((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide).getPressure(receivingSide));
-		}
-
-		if (tileEntity instanceof ITemperature)
-		{
-			getNetwork().thermalGraph.queue(((ITemperature) tileEntity).getTemperature());
 		}
 
 		getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));
