@@ -11,10 +11,10 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
@@ -81,7 +81,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		Vector3 checkPos = new Vector3(this).translate(0, 1, 0);
 		FluidStack drainStack = FluidUtility.drainBlock(worldObj, checkPos, false);
 
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER, drainStack).length > 0)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), drainStack).length > 0)
 		{
 			if (drainStack.amount == tank.fill(drainStack, false))
 			{
@@ -94,7 +94,7 @@ public class TileCastingMold extends TileExternalInventory implements IFluidHand
 		 */
 		while (tank.getFluidAmount() >= amountPerIngot && (getStackInSlot(0) == null || getStackInSlot(0).stackSize < getStackInSlot(0).getMaxStackSize()))
 		{
-			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER, tank.getFluid());
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.SMELTER.name(), tank.getFluid());
 
 			for (RecipeResource output : outputs)
 			{

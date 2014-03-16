@@ -1,7 +1,5 @@
 package resonantinduction.core.resource.fluid;
 
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
@@ -11,8 +9,10 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Settings;
 import resonantinduction.core.resource.ResourceGenerator;
+import calclavia.api.recipe.MachineRecipes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -56,7 +56,7 @@ public class BlockFluidMixture extends BlockFluidFinite
 
 	public boolean mix(World world, int x, int y, int z, ItemStack stack)
 	{
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), stack).length > 0 && getQuantaValue(world, x, y, z) < quantaPerBlock)
 		{
 			if (getQuantaValue(world, x, y, z) < quantaPerBlock)
 			{

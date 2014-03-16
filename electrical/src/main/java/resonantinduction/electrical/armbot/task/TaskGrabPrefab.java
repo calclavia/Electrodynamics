@@ -1,12 +1,12 @@
 package resonantinduction.electrical.armbot.task;
 
-import calclavia.api.resonantinduction.mechanical.IBelt;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.mechanical.IBelt;
 
 /**
  * Prefab for grab based commands

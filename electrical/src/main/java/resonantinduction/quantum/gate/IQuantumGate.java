@@ -1,10 +1,10 @@
 package resonantinduction.quantum.gate;
 
-import calclavia.api.icbm.IBlockFrequency;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
+import calclavia.api.icbm.IBlockFrequency;
 
 /**
  * Only TileEntities should implement this.

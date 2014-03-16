@@ -26,13 +26,13 @@ import org.lwjgl.opengl.GL11;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.render.FluidRenderUtility;
@@ -194,7 +194,7 @@ public class TileGutter extends TilePressureNode
 				 */
 				ItemStack itemStack = player.getCurrentEquippedItem();
 
-				RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack);
+				RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack);
 
 				if (outputs.length > 0)
 				{

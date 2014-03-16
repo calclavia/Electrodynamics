@@ -2,7 +2,6 @@ package resonantinduction.electrical.armbot.task;
 
 import java.util.List;
 
-import calclavia.api.resonantinduction.electrical.ArmbotEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.util.AxisAlignedBB;
 import resonantinduction.core.ArgumentData;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
+import calclavia.api.resonantinduction.electrical.ArmbotEntity;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {

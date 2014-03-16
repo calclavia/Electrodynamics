@@ -1,6 +1,6 @@
 package resonantinduction.core.nei;
 
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import calclavia.lib.utility.LanguageUtility;
 
 public class RICrusherRecipeHandler extends RITemplateRecipeHandler

@@ -1,8 +1,5 @@
 package resonantinduction.core.grid;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.lib.grid.INode;
 import calclavia.lib.grid.INodeProvider;

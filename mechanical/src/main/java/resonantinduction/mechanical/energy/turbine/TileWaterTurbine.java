@@ -2,16 +2,15 @@ package resonantinduction.mechanical.energy.turbine;
 
 import java.lang.reflect.Method;
 
-import calclavia.lib.grid.INodeProvider;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.turbine.TileMechanicalTurbine.TurbineNode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.grid.INodeProvider;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**

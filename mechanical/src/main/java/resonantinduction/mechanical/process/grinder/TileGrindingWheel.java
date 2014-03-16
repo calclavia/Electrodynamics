@@ -12,13 +12,13 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.vector.Cuboid;
 
@@ -201,7 +201,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	public boolean canGrind(ItemStack itemStack)
 	{
 		// TODO: We don't have a crusher yet, so our grinder currently crushes ores.
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack).length > 0 || MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), itemStack).length > 0 || MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
@@ -209,7 +209,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 		ItemStack itemStack = entity.getEntityItem();
 
 		// TODO: Remove this later on when crusher if complete.
-		RecipeResource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack));
+		RecipeResource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack));
 
 		for (RecipeResource resource : results)
 		{
