@@ -2,12 +2,17 @@ package resonantinduction.mechanical.process.crusher;
 
 import java.lang.reflect.Method;
 
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.config.Config;
@@ -21,7 +26,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
 	@Config
-	private static int mechanicalPistonBreakCount = 5;
+	private static final int mechanicalPistonBreakCount = 5;
+
+    private int copyBreakCount = mechanicalPistonBreakCount;
 
 	public TileMechanicalPiston()
 	{
@@ -69,7 +76,13 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			mechanicalNode.angle = 0;
 	}
 
-	public boolean canMove(Vector3 from, Vector3 to)
+    @Override
+    public void onRemove (int par5, int par6)
+    {
+        super.onRemove(par5, par6);
+    }
+
+    public boolean canMove(Vector3 from, Vector3 to)
 	{
 		TileEntity tileEntity = from.getTileEntity(worldObj);
 
@@ -193,19 +206,28 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
 	public void hitOreBlock(Block oreBlock, Vector3 blockPos)
 	{
+        ItemStack blockStack = new ItemStack(oreBlock);
 		if (worldObj.isRemote)
 		{
-			// Spawn hit particles logic only, all other information is done Server Side
+			spawnParticles(blockPos);
 			return;
 		}
 		else
 		{
-			if (this.mechanicalPistonBreakCount <= 0)
+			if (this.copyBreakCount <= 0)
 			{
 				getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
+                RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER.name(), blockStack);
+
+                for (RecipeResource recipe : resources)
+                {
+                    InventoryUtility.dropItemStack(getWorldObj(), blockPos, recipe.getItemStack(), 10, recipe.getChance());
+                }
+
+                this.copyBreakCount = this.mechanicalPistonBreakCount;
 
 			}
-			this.mechanicalPistonBreakCount--;
+			this.copyBreakCount--;
 		}
 
 	}
