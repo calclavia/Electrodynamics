@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.api.icbm.ICamouflageMaterial;
 import calclavia.api.mffs.IBiometricIdentifierLink;
@@ -51,9 +52,9 @@ public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMat
 	}
 
 	@Override
-	public boolean onSneakMachineActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer par5EntityPlayer, int side, float hitX, float hitY, float hitZ)
 	{
-		return this.onUseWrench(world, x, y, z, entityPlayer, side, hitX, hitY, hitZ);
+		return doRotateBlock(world, x, y, z, ForgeDirection.getOrientation(side));
 	}
 
 	@Override
