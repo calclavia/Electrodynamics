@@ -2,6 +2,7 @@ package resonantinduction.electrical.itemrailing.interfaces;
 
 import calclavia.lib.render.EnumColor;
 import net.minecraft.item.ItemStack;
+import resonantinduction.electrical.itemrailing.PartRailing;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -12,14 +13,15 @@ import universalelectricity.api.vector.VectorWorld;
  */
 public interface IItemRailingTransfer
 {
-
-    public VectorWorld getWorldPos();
-
     public ItemStack getItemStack();
 
     public EnumColor getColor();
 
-    public IItemRailingTransfer setColor();
+    public IItemRailingTransfer setColor(EnumColor color);
+
+    public PartRailing getRailing();
+
+    public IItemRailingTransfer setRailing(PartRailing railing);
 
     // getEndTarget();
 
