@@ -14,14 +14,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.recipe.MachineRecipes;
 import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
@@ -100,7 +100,7 @@ public class TileMixer extends TileMechanical implements IInventory
 
 			if (entity instanceof EntityItem)
 			{
-				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, ((EntityItem) entity).getEntityItem()).length > 0)
+				if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), ((EntityItem) entity).getEntityItem()).length > 0)
 				{
 					processItems.add((EntityItem) entity);
 				}
@@ -256,6 +256,6 @@ public class TileMixer extends TileMechanical implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemstack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemstack).length > 0;
 	}
 }

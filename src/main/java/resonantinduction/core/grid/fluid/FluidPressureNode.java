@@ -3,8 +3,6 @@ package resonantinduction.core.grid.fluid;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import calclavia.lib.grid.Node;
-import calclavia.lib.grid.TickingGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -13,6 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.grid.Node;
+import calclavia.lib.grid.TickingGrid;
 import codechicken.multipart.TMultiPart;
 
 public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>

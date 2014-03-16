@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import calclavia.api.mffs.fortron.IServerThread;
 import net.minecraft.server.ServerListenThread;
 import net.minecraft.server.ThreadMinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import calclavia.api.mffs.fortron.IServerThread;
 
 /**
  * @author Calclavia

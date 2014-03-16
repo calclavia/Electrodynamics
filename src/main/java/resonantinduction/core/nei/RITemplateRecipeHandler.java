@@ -13,11 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.RecipeResource.FluidStackResource;
-import calclavia.api.resonantinduction.recipe.RecipeResource.ItemStackResource;
-import calclavia.api.resonantinduction.recipe.RecipeResource.OreDictResource;
+import resonantinduction.core.ResonantInduction.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
+import calclavia.api.recipe.RecipeResource.FluidStackResource;
+import calclavia.api.recipe.RecipeResource.ItemStackResource;
+import calclavia.api.recipe.RecipeResource.OreDictResource;
 import calclavia.lib.utility.LanguageUtility;
 import codechicken.core.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
@@ -32,7 +33,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	@Override
 	public abstract String getRecipeName();
 
-	public abstract MachineRecipes.RecipeType getMachine();
+	public abstract RecipeType getMachine();
 
 	@Override
 	public String getOverlayIdentifier()
@@ -69,7 +70,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	{
 		if (outputId.equals(this.getOverlayIdentifier()))
 		{
-			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine().name()).entrySet())
 			{
 				CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
 				this.arecipes.add(recipe);
@@ -164,7 +165,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	@Override
 	public void loadCraftingRecipes(ItemStack result)
 	{
-		for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+		for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine().name()).entrySet())
 		{
 			CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
 			if (recipe.canProduce(result))
@@ -179,7 +180,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	{
 		if (inputId.equals(this.getOverlayIdentifier()))
 		{
-			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+			for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine().name()).entrySet())
 			{
 				CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
 				this.arecipes.add(recipe);
@@ -194,7 +195,7 @@ public abstract class RITemplateRecipeHandler extends TemplateRecipeHandler
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient)
 	{
-		for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine()).entrySet())
+		for (Map.Entry<RecipeResource[], RecipeResource[]> irecipe : MachineRecipes.INSTANCE.getRecipes(getMachine().name()).entrySet())
 		{
 			CachedRIRecipe recipe = new CachedRIRecipe(irecipe);
 			if (recipe.doesUse(ingredient))

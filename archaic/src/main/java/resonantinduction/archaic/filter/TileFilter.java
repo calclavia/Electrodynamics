@@ -13,15 +13,15 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.api.resonantinduction.IFilterable;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
@@ -100,7 +100,7 @@ public class TileFilter extends TileFilterable implements IFilterable
 				/**
 				 * Drop item from fluid.
 				 */
-				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, "dust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
+				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), "dust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
 				{
 					InventoryUtility.dropItemStack(worldObj, checkAbove.clone().add(0.5), resoure.getItemStack().copy(), 0, 0);
 				}

@@ -3,14 +3,14 @@ package resonantinduction.core.resource.fluid;
 import java.util.HashSet;
 import java.util.Set;
 
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
+import calclavia.api.recipe.MachineRecipes;
 
 /**
  * NO-OP. Not yet properly implemented. We're not using TEs for now.
@@ -31,7 +31,7 @@ public class TileFluidMixture extends TileMaterial
 
 	public boolean mix(ItemStack itemStack)
 	{
-		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER, itemStack).length > 0 && getBlockMetadata() < 8)
+		if (MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack).length > 0 && getBlockMetadata() < 8)
 		{
 			// TODO: Maybe we need to merge the stacks?
 			items.add(itemStack);

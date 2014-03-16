@@ -31,13 +31,12 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Settings;
 import resonantinduction.core.fluid.FluidColored;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.OreDetectionBlackList;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
 import calclavia.lib.config.Config;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.nbt.IVirtualObject;
@@ -56,7 +55,7 @@ public class ResourceGenerator implements IVirtualObject
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
 
-	@Config(comment = " Allow the Resource Generator to make ore dictionary compatible recipes?")
+	@Config(comment = "Allow the Resource Generator to make ore dictionary compatible recipes?")
 	private static boolean allowOreDictCompatibility = true;
 
 	/**
@@ -154,15 +153,15 @@ public class ResourceGenerator implements IVirtualObject
 			OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
 			OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
 
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, "rubble" + nameCaps, dust, dust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, "dust" + nameCaps, refinedDust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), "rubble" + nameCaps, dust, dust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), "dust" + nameCaps, refinedDust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 		}
 		else
 		{
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, rubble, dust, dust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER, dust, refinedDust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), rubble, dust, dust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), dust, refinedDust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 		}
 
 		FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
@@ -171,7 +170,7 @@ public class ResourceGenerator implements IVirtualObject
 
 		if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
 		{
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, "ore" + nameCaps, "rubble" + nameCaps);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name(), "ore" + nameCaps, "rubble" + nameCaps);
 		}
 	}
 
@@ -185,17 +184,17 @@ public class ResourceGenerator implements IVirtualObject
 		OreDictionary.registerOre("oreLapis", Block.oreLapis);
 
 		// Vanilla fluid recipes
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER, new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone));
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(FluidRegistry.LAVA, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Block.stone));
 
 		// Vanilla crusher recipes
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, Block.cobblestone, Block.gravel);
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, Block.stone, Block.cobblestone);
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER, Block.chest, new ItemStack(Block.planks, 7, 0));
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name(), Block.cobblestone, Block.gravel);
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name(), Block.stone, Block.cobblestone);
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.CRUSHER.name(), Block.chest, new ItemStack(Block.planks, 7, 0));
 
 		// Vanilla grinder recipes
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, Block.cobblestone, Block.sand);
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, Block.gravel, Block.sand);
-		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER, Block.glass, Block.sand);
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.cobblestone, Block.sand);
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.gravel, Block.sand);
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.glass, Block.sand);
 
 		Iterator<String> it = materials.keySet().iterator();
 		while (it.hasNext())

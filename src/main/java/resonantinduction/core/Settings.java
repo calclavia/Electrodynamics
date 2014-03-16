@@ -57,6 +57,14 @@ public class Settings
 	public static boolean SHINY_SILVER = true;
 	@Config(key = "Max EM Contractor Path")
 	public static int MAX_LEVITATOR_DISTANCE = 200;
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
+	public static int LEVITATOR_MAX_REACH = 40;
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
+	public static int LEVITATOR_PUSH_DELAY = 5;
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
+	public static double LEVITATOR_MAX_SPEED = .2;
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
+	public static double LEVITATOR_ACCELERATION = .02;
 
 	public static void setModMetadata(ModMetadata metadata, String id, String name)
 	{
@@ -88,13 +96,4 @@ public class Settings
 
 		return false;
 	}
-
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
-	public static int LEVITATOR_MAX_REACH = 40;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
-	public static int LEVITATOR_PUSH_DELAY = 5;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
-	public static double LEVITATOR_MAX_SPEED = .2;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
-	public static double LEVITATOR_ACCELERATION = .02;
 }

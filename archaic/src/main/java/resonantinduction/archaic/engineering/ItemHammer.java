@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
 public class ItemHammer extends Item
@@ -42,7 +42,7 @@ public class ItemHammer extends Item
 
 					if (oreName != null && !oreName.equals("Unknown"))
 					{
-						RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER, oreName);
+						RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), oreName);
 
 						if (outputs.length > 0)
 						{

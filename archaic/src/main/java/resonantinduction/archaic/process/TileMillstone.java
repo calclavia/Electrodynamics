@@ -6,10 +6,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.recipe.RecipeResource;
-import calclavia.api.resonantinduction.recipe.MachineRecipes.RecipeType;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
@@ -30,7 +30,7 @@ public class TileMillstone extends TileExternalInventory implements IPacketRecei
 
 	public void doGrind(Vector3 spawnPos)
 	{
-		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, getStackInSlot(0));
+		RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), getStackInSlot(0));
 
 		if (outputs.length > 0)
 		{
@@ -56,7 +56,7 @@ public class TileMillstone extends TileExternalInventory implements IPacketRecei
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER, itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
 	}
 
 	@Override

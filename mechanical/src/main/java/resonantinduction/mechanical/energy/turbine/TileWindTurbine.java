@@ -11,6 +11,7 @@ import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.IBoilHandler;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
@@ -21,7 +22,7 @@ import calclavia.lib.utility.inventory.InventoryUtility;
  * @author Calclavia
  * 
  */
-public class TileWindTurbine extends TileMechanicalTurbine
+public class TileWindTurbine extends TileMechanicalTurbine implements IBoilHandler
 {
 	private final byte[] openBlockCache = new byte[224];
 	private int checkCount = 0;

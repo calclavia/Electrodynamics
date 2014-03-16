@@ -55,34 +55,39 @@ public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItem
 	{
 		if (tileEntity instanceof TileTank)
 		{
-			byte renderSides = ((TileTank) tileEntity).renderSides;
 
 			GL11.glPushMatrix();
 			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+			byte renderSides = ((TileTank) tileEntity).renderSides;
+
 			RenderUtility.renderBlockWithConnectedTextures(renderSides, Archaic.blockTank, null, ResonantInduction.blockMachinePart, null);
 
-			if (tileEntity.worldObj != null)
+			if (fluid != null)
 			{
-				GL11.glScaled(0.99, 0.99, 0.99);
-				FluidTank tank = ((TileTank) tileEntity).getInternalTank();
-				double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+				GL11.glPushMatrix();
 
-				double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
-				double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
-				double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
-				double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
-				FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
-			}
-			else
-			{
-				if (fluid != null)
+				if (tileEntity.worldObj != null && !fluid.getFluid().isGaseous())
 				{
+					GL11.glScaled(0.99, 0.99, 0.99);
+					FluidTank tank = ((TileTank) tileEntity).getInternalTank();
+					double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+
+					double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
+					double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
+					double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
+					double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+					FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+				}
+				else
+				{
+					GL11.glTranslated(-0.5, -0.5, -0.5);
+					GL11.glScaled(0.99, 0.99, 0.99);
 					int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getInternalTank().getCapacity() : fluid.amount;
 					double filledPercentage = (double) fluid.amount / (double) capacity;
 					double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
+
 					int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, tileEntity.worldObj, false);
 
-					GL11.glPushMatrix();
 					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 					GL11.glEnable(GL11.GL_CULL_FACE);
 					GL11.glDisable(GL11.GL_LIGHTING);
@@ -94,13 +99,12 @@ public class RenderTank extends TileEntitySpecialRenderer implements ISimpleItem
 					GL11.glColor4d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? filledPercentage : 1);
 
 					RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid));
-					// Prevent Z-fighting
-					GL11.glTranslatef((float) x, (float) y + 0.001f, (float) z);
 					GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 					RenderUtility.disableBlending();
 					GL11.glPopAttrib();
-					GL11.glPopMatrix();
 				}
+
+				GL11.glPopMatrix();
 			}
 
 			GL11.glPopMatrix();

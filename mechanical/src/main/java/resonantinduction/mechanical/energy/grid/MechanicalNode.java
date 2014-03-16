@@ -3,16 +3,16 @@ package resonantinduction.mechanical.energy.grid;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.grid.Node;
-import calclavia.lib.grid.TickingGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.resonantinduction.IMechanicalNode;
+import calclavia.lib.grid.INodeProvider;
+import calclavia.lib.grid.Node;
+import calclavia.lib.grid.TickingGrid;
 import codechicken.multipart.TMultiPart;
 
 /**

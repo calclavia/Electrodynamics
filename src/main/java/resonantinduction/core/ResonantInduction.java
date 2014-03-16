@@ -22,7 +22,6 @@ import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
 import resonantinduction.core.resource.fluid.TileFluidMixture;
 import calclavia.lib.config.ConfigHandler;
 import calclavia.lib.content.ContentRegistry;
-import calclavia.lib.grid.UpdateTicker;
 import calclavia.lib.network.PacketAnnotation;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
@@ -81,6 +80,14 @@ public class ResonantInduction
 	public static Block blockMachinePart;
 
 	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
+
+	/**
+	 * Recipe Types
+	 */
+	public static enum RecipeType
+	{
+		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
