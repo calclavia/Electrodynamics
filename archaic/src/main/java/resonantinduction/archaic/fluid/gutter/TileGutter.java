@@ -53,7 +53,7 @@ public class TileGutter extends TilePressureNode
 {
 	public TileGutter()
 	{
-		super(Material.wood);
+		super(Material.rock);
 		textureName = "material_wood_surface";
 		isOpaqueCube = false;
 		normalRender = false;

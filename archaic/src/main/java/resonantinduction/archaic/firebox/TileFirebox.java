@@ -16,6 +16,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonantinduction.archaic.Archaic;
+import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
@@ -69,7 +71,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 			 */
 			FluidStack drainFluid = tank.drain(FluidContainerRegistry.BUCKET_VOLUME, false);
 
-			if (drainFluid != null && drainFluid.amount == FluidContainerRegistry.BUCKET_VOLUME)
+			if (drainFluid != null && drainFluid.amount == FluidContainerRegistry.BUCKET_VOLUME && drainFluid.fluidID == FluidRegistry.LAVA.getID())
 			{
 				if (burnTime == 0)
 				{
@@ -89,7 +91,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 				burnTime += 2;
 			}
-			else if (canBurn(this.getStackInSlot(0)))
+			else if (canBurn(getStackInSlot(0)))
 			{
 				if (burnTime == 0)
 				{
@@ -163,6 +165,26 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						heatEnergy = 0;
 					}
 				}
+				else if (blockID == Archaic.blockGutter.blockID)
+				{
+					TileEntity tileEntity = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
+
+					if (tileEntity instanceof TileGutter)
+					{
+						usedHeat = true;
+						int volume = Math.min(((TileGutter) tileEntity).getInternalTank().getFluidAmount(), 10);
+						if (volume > 0 && heatEnergy >= getRequiredBoilWaterEnergy(volume))
+						{
+							if (FluidRegistry.getFluid("steam") != null)
+							{
+								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+								((TileGutter) tileEntity).drain(ForgeDirection.DOWN, volume, true);
+							}
+
+							heatEnergy = 0;
+						}
+					}
+				}
 
 				if (!usedHeat)
 				{
@@ -191,16 +213,14 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	 */
 	public long getRequiredBoilWaterEnergy(int volume)
 	{
-		int temperatureChange = 373 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
-		int mass = ThermalPhysics.getMass(volume, 1);
-		return ThermalPhysics.getEnergyForTemperatureChange(mass, 4200, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 2257000);
+		return (long) ThermalPhysics.getRequiredBoilWaterEnergy(worldObj, xCoord, zCoord, volume);
 	}
 
 	public long getMeltIronEnergy(float volume)
 	{
-		int temperatureChange = 1811 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
-		int mass = ThermalPhysics.getMass(volume, 7.9f);
-		return ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000);
+		float temperatureChange = 1811 - ThermalPhysics.getTemperatureForCoordinate(worldObj, xCoord, zCoord);
+		float mass = ThermalPhysics.getMass(volume, 7.9f);
+		return (long) (ThermalPhysics.getEnergyForTemperatureChange(mass, 450, temperatureChange) + ThermalPhysics.getEnergyForStateChange(mass, 272000));
 	}
 
 	@Override
