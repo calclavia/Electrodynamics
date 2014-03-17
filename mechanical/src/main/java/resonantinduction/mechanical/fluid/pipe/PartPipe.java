@@ -75,7 +75,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 
 									}
 								}
-								else
+								else if (canConnect(dir, tile))
 								{
 									currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
 									connections.put(tile, dir);
@@ -114,7 +114,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 						}
 					}
 
-					return super.canConnect(from, source);
+					return super.canConnect(from, source) || source instanceof IFluidHandler;
 				}
 
 				return false;

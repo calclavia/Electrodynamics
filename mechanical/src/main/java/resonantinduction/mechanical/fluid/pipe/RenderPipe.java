@@ -43,7 +43,7 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		if (fluid != null && fluid.amount > 0)
 		{
-			double filledPercentage = (double) fluid.amount / (double) capacity;
+			double filledPercentage = Math.min((double) fluid.amount / (double) capacity, 1);
 			double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
 
 			int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, part.world(), false);
