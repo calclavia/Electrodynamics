@@ -62,7 +62,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		this.colorID = nbt.getInteger("subID");
+		colorID = nbt.getInteger("colorID");
 		getInternalTank().readFromNBT(nbt.getCompoundTag("FluidTank"));
 	}
 
@@ -70,7 +70,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("subID", this.colorID);
+		nbt.setInteger("colorID", colorID);
 		nbt.setCompoundTag("FluidTank", getInternalTank().writeToNBT(new NBTTagCompound()));
 	}
 

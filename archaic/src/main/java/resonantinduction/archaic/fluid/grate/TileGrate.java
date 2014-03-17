@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
@@ -28,13 +29,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileGrate extends TilePressureNode implements IRotatable
 {
-	@Config(comment = "The multiplier for the influence of the grate. This is multiplied by the pressure applied.")
+	@Config(comment = "The multiplier for the influence of the grate. Dependent on pressure.")
 	private static double grateEffectMultiplier = 10;
+	@Config(comment = "The speed in which the grate drains blocks. Dependent on grate block influence.")
+	private static double grateDrainSpeedMultiplier = 0.5;
 
 	@SideOnly(Side.CLIENT)
 	private static Icon iconFront, iconSide;
 
 	private GratePathfinder gratePath;
+
+	private boolean fillOver = true;
 
 	public TileGrate()
 	{
@@ -44,17 +49,6 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		rotationMask = Byte.parseByte("111111", 2);
 		node = new FluidPressureNode(this);
 		node.maxFlowRate = getPressureTank().getCapacity();
-	}
-
-	@Override
-	public FluidTank getInternalTank()
-	{
-		if (this.tank == null)
-		{
-			this.tank = new FluidTank(2 * FluidContainerRegistry.BUCKET_VOLUME);
-		}
-
-		return this.tank;
 	}
 
 	@Override
@@ -75,6 +69,20 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	{
 		iconFront = iconRegister.registerIcon(Reference.PREFIX + "grate_front");
 		iconSide = iconRegister.registerIcon(Reference.PREFIX + "grate");
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		fillOver = nbt.getBoolean("fillOver");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("fillOver", fillOver);
 	}
 
 	@Override
@@ -106,6 +114,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			{
 				int pressure = node.getPressure(getDirection());
 				int blockEffect = (int) Math.abs(pressure * grateEffectMultiplier);
+				getPressureTank().setCapacity((int) (blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier));
 
 				if (pressure > 0)
 				{
@@ -354,18 +363,13 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		}
 
 		/**
-		 * Creates a map of all the fluids.
+		 * Creates a map of all the fluids to be drained.
 		 * 
 		 * @param tries
-		 * @return
+		 * @return True if there is drainable fluid.
 		 */
 		public boolean tryPopulateDrainMap(int tries)
 		{
-			if (drainNodes.size() >= Integer.MAX_VALUE)
-			{
-				return true;
-			}
-
 			for (int i = 0; i < tries; i++)
 			{
 				ComparableVector check = workingNodes.poll();
@@ -382,11 +386,11 @@ public class TileGrate extends TilePressureNode implements IRotatable
 					int checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, check.position);
 
 					if (checkAmount > 0)
-						this.drainNodes.add(check);
+						drainNodes.add(check);
 				}
 			}
 
-			return false;
+			return drainNodes.size() > 0;
 		}
 
 		public void addNextDrain(ComparableVector next)
