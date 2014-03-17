@@ -200,16 +200,14 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 	public boolean canGrind(ItemStack itemStack)
 	{
-		// TODO: We don't have a crusher yet, so our grinder currently crushes ores.
-		return MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), itemStack).length > 0 || MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
+		return MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack).length > 0;
 	}
 
 	private boolean doGrind(EntityItem entity)
 	{
 		ItemStack itemStack = entity.getEntityItem();
 
-		// TODO: Remove this later on when crusher if complete.
-		RecipeResource[] results = ArrayUtils.addAll(MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), itemStack), MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack));
+		RecipeResource[] results = MachineRecipes.INSTANCE.getOutput(RecipeType.GRINDER.name(), itemStack);
 
 		for (RecipeResource resource : results)
 		{

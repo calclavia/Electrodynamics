@@ -88,7 +88,6 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 
 	public void distribute()
 	{
-
 		Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
 
 		while (it.hasNext())

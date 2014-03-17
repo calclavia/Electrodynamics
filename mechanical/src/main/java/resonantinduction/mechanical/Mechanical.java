@@ -162,8 +162,6 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockConveyorBelt, 4), "III", "GGG", 'I', Item.ingotIron, 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockManipulator, "SSS", "SRS", "SCS", 'S', Item.ingotIron, 'C', blockConveyorBelt, 'R', Block.blockRedstone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockDetector, "SWS", "SRS", "SWS", 'S', Item.ingotIron, 'W', UniversalRecipe.WIRE.get()));
-		// GameRegistry.addRecipe(new ShapedOreRecipe(blockRejector, "S S", "SPS", "SRS", 'P',
-		// Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockSorter, "SSS", "SPS", "SRS", 'P', Block.pistonStickyBase, 'S', Item.ingotIron, 'R', Block.blockRedstone));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockWindTurbine, 1, 0), "CWC", "WGW", "CWC", 'G', itemGear, 'C', Block.cloth, 'W', Item.stick));
@@ -182,6 +180,7 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Item.diamond));
 
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockMechanicalPiston, "SGS", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone, 'G', new ItemStack(itemGear, 1, 2)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMixer, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
 	}
