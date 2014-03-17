@@ -21,24 +21,28 @@ import universalelectricity.api.energy.IEnergyNetwork;
  */
 public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
 {
-    private EnumColor color = EnumColor.YELLOW;
+    // default is NULL
+    private EnumColor color;
 
-    public PartRailing()
+    public PartRailing ()
     {
+        super(Electrical.itemInsulation);
 
+        this.color = null;
     }
 
 
     @Override
     public boolean canItemEnter (IItemRailingTransfer item)
     {
-        return true;
+        return this.color == item.getColor();
     }
 
     @Override
     public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
     {
-        return this.color.equals(railing.getRailingColor());
+
+        return this.color != null ? this.color == railing.getRailingColor() : true;
     }
 
     @Override
@@ -89,11 +93,6 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return 0;
     }
 
-    public PartRailing()
-    {
-        super(Electrical.itemInsulation);
-    }
-
     @Override
     public boolean doesTick ()
     {
@@ -103,6 +102,8 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
     {
+        if (tile instanceof IItemRailing)
+            return canConnectToRailing((IItemRailing) tile, to);
         return false;
     }
 
@@ -136,4 +137,4 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return "resonant_induction_itemrailing";
     }
 
-  }
+}
