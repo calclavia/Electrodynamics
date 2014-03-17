@@ -5,9 +5,8 @@ import java.util.HashMap;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.java.Pair;
 import calclavia.lib.schematic.Schematic;
-
-import com.builtbroken.common.Pair;
 
 public class SchematicWaterTurbine extends Schematic
 {

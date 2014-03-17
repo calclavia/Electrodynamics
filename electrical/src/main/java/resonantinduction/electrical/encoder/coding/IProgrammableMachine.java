@@ -2,8 +2,7 @@ package resonantinduction.electrical.encoder.coding;
 
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-
-import com.builtbroken.common.Pair;
+import calclavia.lib.java.Pair;
 
 /**
  * Simple interface too say an object is programmable

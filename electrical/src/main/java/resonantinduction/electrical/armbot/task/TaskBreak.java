@@ -12,9 +12,8 @@ import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.java.Pair;
 import calclavia.lib.utility.inventory.InventoryUtility;
-
-import com.builtbroken.common.Pair;
 
 /**
  * Used by arms to break a specific block in a position.

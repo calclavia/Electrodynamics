@@ -20,6 +20,7 @@ import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.java.Pair;
 import calclavia.lib.multiblock.fake.IMultiBlock;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;
@@ -27,7 +28,6 @@ import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.utility.MathUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 
-import com.builtbroken.common.Pair;
 import com.google.common.io.ByteArrayDataInput;
 
 public class TileArmbot extends TileElectrical implements IMultiBlock, IArmbot, IPacketReceiverWithID

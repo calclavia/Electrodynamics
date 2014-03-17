@@ -16,6 +16,7 @@ import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
+import calclavia.lib.java.EvictingList;
 import calclavia.lib.utility.WorldUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
@@ -31,6 +32,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
 	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	/**
+	 * Computes the average fluid for client to render.
+	 */
+	private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
 	private boolean markPacket = true;
 
 	public PartPipe()
@@ -90,24 +95,29 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
 			{
-				if (source instanceof FluidPressureNode)
+				if (!isBlockedOnSide(from))
 				{
-					FluidPressureNode otherNode = (FluidPressureNode) source;
-
-					if (otherNode.parent instanceof PartPipe)
+					if (source instanceof FluidPressureNode)
 					{
-						PartPipe otherPipe = (PartPipe) otherNode.parent;
+						FluidPressureNode otherNode = (FluidPressureNode) source;
 
-						if (getMaterial() == otherPipe.getMaterial())
+						if (otherNode.parent instanceof PartPipe)
 						{
-							return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
-						}
+							PartPipe otherPipe = (PartPipe) otherNode.parent;
 
-						return false;
+							if (!otherPipe.isBlockedOnSide(from.getOpposite()) && getMaterial() == otherPipe.getMaterial())
+							{
+								return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
+							}
+
+							return false;
+						}
 					}
+
+					return super.canConnect(from, source);
 				}
 
-				return super.canConnect(from, source);
+				return false;
 			}
 		};
 
@@ -126,6 +136,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 		this.material = material;
 		node.maxFlowRate = getMaterial().maxFlowRate;
 		node.maxPressure = getMaterial().maxPressure;
+		tank.setCapacity(node.maxFlowRate);
 	}
 
 	@Override
@@ -139,6 +150,8 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	{
 		super.update();
 
+		averageTankData.add(tank.getFluidAmount());
+
 		if (!world().isRemote && markPacket)
 		{
 			sendFluidUpdate();
@@ -149,8 +162,22 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	public void sendFluidUpdate()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		tank.writeToNBT(nbt);
-		tile().getWriteStream(this).writeByte(3).writeNBTTagCompound(nbt);
+
+		int averageAmount = 0;
+
+		if (averageTankData.size() > 0)
+		{
+			for (int i = 0; i < averageTankData.size(); i++)
+			{
+				averageAmount += averageTankData.get(i);
+			}
+
+			averageAmount /= averageTankData.size();
+		}
+
+		FluidTank tempTank = tank.getFluid() != null ? new FluidTank(tank.getFluid().getFluid(), averageAmount, tank.getCapacity()) : new FluidTank(tank.getCapacity());
+		tempTank.writeToNBT(nbt);
+		tile().getWriteStream(this).writeByte(3).writeInt(tank.getCapacity()).writeNBTTagCompound(nbt);
 	}
 
 	@Override
@@ -158,7 +185,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	{
 		if (packetID == 3)
 		{
-			tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+			tank = new FluidTank(packet.readInt());
 			tank.readFromNBT(packet.readNBTTagCompound());
 		}
 		else
@@ -237,11 +264,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	@Override
 	public FluidTank getPressureTank()
 	{
-		if (tank == null)
-		{
-			tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-		}
-
 		return tank;
 	}
 

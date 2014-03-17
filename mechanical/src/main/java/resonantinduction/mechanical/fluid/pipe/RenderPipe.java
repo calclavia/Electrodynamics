@@ -12,7 +12,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.core.Reference;
 import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;

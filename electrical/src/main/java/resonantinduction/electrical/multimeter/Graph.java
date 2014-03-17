@@ -1,9 +1,7 @@
 package resonantinduction.electrical.multimeter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.nbt.NBTTagCompound;
+import calclavia.lib.java.EvictingList;
 
 /**
  * Graph for the multimeter
@@ -20,7 +18,7 @@ public abstract class Graph<V extends Comparable<V>>
 	/**
 	 * Each point represents a tick.
 	 */
-	protected List<V> points = new ArrayList<V>();
+	protected final EvictingList<V> points;
 	private V peak = getDefault();
 
 	/**
@@ -32,26 +30,18 @@ public abstract class Graph<V extends Comparable<V>>
 	{
 		this.name = name;
 		this.maxPoints = maxPoints;
+		points = new EvictingList<V>(maxPoints);
 	}
 
 	public void add(V y)
 	{
-		if (y.compareTo(peak) > 0)
-		{
-			peak = y;
-		}
+		points.add(y);
 
-		points.add(0, y);
+		peak = getDefault();
 
-		if (points.size() > maxPoints)
-		{
-			if (points.get(maxPoints) == peak)
-			{
-				peak = getDefault();
-			}
-
-			points.remove(maxPoints);
-		}
+		for (V point : points)
+			if (point.compareTo(peak) > 0)
+				peak = y;
 	}
 
 	public V getPeak()
