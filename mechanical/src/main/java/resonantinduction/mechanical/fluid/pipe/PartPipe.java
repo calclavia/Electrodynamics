@@ -31,7 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
-	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+	protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/**
 	 * Computes the average fluid for client to render.
 	 */
@@ -183,7 +183,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 	{
 		if (packetID == 3)
 		{
-			tank = new FluidTank(packet.readInt());
+			tank.setCapacity(packet.readInt());
 			tank.readFromNBT(packet.readNBTTagCompound());
 		}
 		else

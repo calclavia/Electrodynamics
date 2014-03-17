@@ -115,7 +115,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		if (getInternalTank().getFluid() == null || getInternalTank().getFluid().getFluid().getName() != null)
+		if (getInternalTank().getFluid() == null || (getInternalTank().getFluid() != null && getInternalTank().getFluid().getFluid().getName() != null))
 			return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_DESCRIPTION, this, this.colorID, this.renderSides, getInternalTank().getCapacity(), getInternalTank().writeToNBT(new NBTTagCompound()));
 		return null;
 	}

@@ -149,7 +149,7 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	@Override
 	public FluidTank getPressureTank()
 	{
-		return null;
+		return new FluidTank(0);
 	}
 
 	@Override

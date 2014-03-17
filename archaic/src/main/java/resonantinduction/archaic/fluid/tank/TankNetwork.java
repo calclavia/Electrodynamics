@@ -3,6 +3,7 @@ package resonantinduction.archaic.fluid.tank;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
