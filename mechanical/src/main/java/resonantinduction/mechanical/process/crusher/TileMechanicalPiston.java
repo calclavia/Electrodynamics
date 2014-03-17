@@ -2,9 +2,6 @@ package resonantinduction.mechanical.process.crusher;
 
 import java.lang.reflect.Method;
 
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.recipe.RecipeResource;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
@@ -15,20 +12,21 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.config.Config;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.utility.MovementUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
 	@Config
-	private static final int mechanicalPistonBreakCount = 5;
+	private static int mechanicalPistonBreakCount = 5;
 
-    private int copyBreakCount = mechanicalPistonBreakCount;
+	private int breakCount = mechanicalPistonBreakCount;
 
 	public TileMechanicalPiston()
 	{
@@ -39,13 +37,17 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			@Override
 			protected void revolve()
 			{
-				if (!worldObj.isRemote)
-				{
-					Vector3 movePosition = new Vector3(TileMechanicalPiston.this).translate(getDirection());
-					Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
+				Vector3 movePosition = new Vector3(TileMechanicalPiston.this).translate(getDirection());
 
-					if (canMove(movePosition, moveNewPosition))
-						move(movePosition, moveNewPosition);
+				if (!hitOreBlock(movePosition))
+				{
+					if (!worldObj.isRemote)
+					{
+						Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
+
+						if (canMove(movePosition, moveNewPosition))
+							move(movePosition, moveNewPosition);
+					}
 				}
 			}
 
@@ -76,13 +78,54 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			mechanicalNode.angle = 0;
 	}
 
-    @Override
-    public void onRemove (int par5, int par6)
-    {
-        super.onRemove(par5, par6);
-    }
+	public boolean hitOreBlock(Vector3 blockPos)
+	{
+		Block block = Block.blocksList[blockPos.getBlockID(world())];
 
-    public boolean canMove(Vector3 from, Vector3 to)
+		if (block != null)
+		{
+			ItemStack blockStack = new ItemStack(block);
+			RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER.name(), blockStack);
+
+			if (resources.length > 0)
+			{
+				int breakStatus = (int) (((float) (mechanicalPistonBreakCount - breakCount) / (float) mechanicalPistonBreakCount) * 10f);
+				world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), breakStatus);
+
+				if (breakCount <= 0)
+				{
+					if (!world().isRemote)
+					{
+						for (RecipeResource recipe : resources)
+						{
+							if (Math.random() <= recipe.getChance())
+							{
+								InventoryUtility.dropItemStack(world(), blockPos.clone().translate(0.5), recipe.getItemStack(), 10);
+							}
+						}
+
+						world().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
+					}
+
+					breakCount = mechanicalPistonBreakCount;
+				}
+
+				ResonantInduction.proxy.renderBlockParticle(worldObj, blockPos.clone().translate(0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), block.blockID, 1);
+				breakCount--;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onRemove(int par5, int par6)
+	{
+		super.onRemove(par5, par6);
+	}
+
+	public boolean canMove(Vector3 from, Vector3 to)
 	{
 		TileEntity tileEntity = from.getTileEntity(worldObj);
 
@@ -204,37 +247,4 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 		}
 	}
 
-	public void hitOreBlock(Block oreBlock, Vector3 blockPos)
-	{
-        ItemStack blockStack = new ItemStack(oreBlock);
-		if (worldObj.isRemote)
-		{
-			spawnParticles(blockPos);
-			return;
-		}
-		else
-		{
-			if (this.copyBreakCount <= 0)
-			{
-				getWorldObj().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
-                RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER.name(), blockStack);
-
-                for (RecipeResource recipe : resources)
-                {
-                    InventoryUtility.dropItemStack(getWorldObj(), blockPos, recipe.getItemStack(), 10, recipe.getChance());
-                }
-
-                this.copyBreakCount = this.mechanicalPistonBreakCount;
-
-			}
-			this.copyBreakCount--;
-		}
-
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void spawnParticles(Vector3 blockPos)
-	{
-
-	}
 }

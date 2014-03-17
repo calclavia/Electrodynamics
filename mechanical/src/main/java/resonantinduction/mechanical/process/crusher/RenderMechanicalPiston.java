@@ -36,7 +36,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		float angle = (float) tile.mechanicalNode.angle;
 		float radius = 0.5f;
 		// Length of piston arm
-		float length = 1f;
+		float length = 0.8f;
 
 		double beta = Math.asin((radius * Math.sin(angle)) / (length / 2));
 
@@ -56,7 +56,8 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		 * Render Piston Rotor
 		 */
 		GL11.glPushMatrix();
-		GL11.glTranslated(0, 0, (0.5 * Math.sin(angle - Math.PI)) - 0.5);
+		// TODO: Temporary, unless new models come out.
+		GL11.glTranslated(0, 0, (0.06 * Math.sin(angle - Math.PI)) - 0.01);
 		MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
 		GL11.glPopMatrix();
 
