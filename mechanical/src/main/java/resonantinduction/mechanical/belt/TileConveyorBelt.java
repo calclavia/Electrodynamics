@@ -42,68 +42,65 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		mechanicalNode = new PacketMechanicalNode(this)
 		{
 			@Override
-			public void recache()
+			public void doRecache()
 			{
-				synchronized (connections)
+				connections.clear();
+
+				boolean didRefresh = false;
+
+				for (int i = 2; i < 6; i++)
 				{
-					connections.clear();
+					ForgeDirection dir = ForgeDirection.getOrientation(i);
+					Vector3 pos = new Vector3(TileConveyorBelt.this).translate(dir);
+					TileEntity tile = pos.getTileEntity(TileConveyorBelt.this.worldObj);
 
-					boolean didRefresh = false;
-
-					for (int i = 2; i < 6; i++)
+					if (dir == TileConveyorBelt.this.getDirection() || dir == TileConveyorBelt.this.getDirection().getOpposite())
 					{
-						ForgeDirection dir = ForgeDirection.getOrientation(i);
-						Vector3 pos = new Vector3(TileConveyorBelt.this).translate(dir);
-						TileEntity tile = pos.getTileEntity(TileConveyorBelt.this.worldObj);
-
-						if (dir == TileConveyorBelt.this.getDirection() || dir == TileConveyorBelt.this.getDirection().getOpposite())
+						if (dir == TileConveyorBelt.this.getDirection())
 						{
-							if (dir == TileConveyorBelt.this.getDirection())
+							if (TileConveyorBelt.this.slantType == SlantType.DOWN)
 							{
-								if (TileConveyorBelt.this.slantType == SlantType.DOWN)
-								{
-									pos.translate(new Vector3(0, -1, 0));
-								}
-								else if (TileConveyorBelt.this.slantType == SlantType.UP)
-								{
-									pos.translate(new Vector3(0, 1, 0));
-								}
+								pos.translate(new Vector3(0, -1, 0));
 							}
-							else if (dir == TileConveyorBelt.this.getDirection().getOpposite())
+							else if (TileConveyorBelt.this.slantType == SlantType.UP)
 							{
-								if (TileConveyorBelt.this.slantType == SlantType.DOWN)
-								{
-									pos.translate(new Vector3(0, 1, 0));
-								}
-								else if (TileConveyorBelt.this.slantType == SlantType.UP)
-								{
-									pos.translate(new Vector3(0, -1, 0));
-								}
-							}
-
-							tile = pos.getTileEntity(worldObj);
-
-							if (tile instanceof TileConveyorBelt)
-							{
-								connections.put(((TileConveyorBelt) tile).getNode(MechanicalNode.class, dir.getOpposite()), dir);
-								didRefresh = true;
+								pos.translate(new Vector3(0, 1, 0));
 							}
 						}
-						else if (tile instanceof INodeProvider)
+						else if (dir == TileConveyorBelt.this.getDirection().getOpposite())
 						{
-							MechanicalNode mechanical = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-
-							if (mechanical != null)
+							if (TileConveyorBelt.this.slantType == SlantType.DOWN)
 							{
-								connections.put(mechanical, dir);
+								pos.translate(new Vector3(0, 1, 0));
+							}
+							else if (TileConveyorBelt.this.slantType == SlantType.UP)
+							{
+								pos.translate(new Vector3(0, -1, 0));
 							}
 						}
-					}
 
-					if (!worldObj.isRemote)
-					{
-						markRefresh = true;
+						tile = pos.getTileEntity(worldObj);
+
+						if (tile instanceof TileConveyorBelt)
+						{
+							connections.put(((TileConveyorBelt) tile).getNode(MechanicalNode.class, dir.getOpposite()), dir);
+							didRefresh = true;
+						}
 					}
+					else if (tile instanceof INodeProvider)
+					{
+						MechanicalNode mechanical = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
+
+						if (mechanical != null)
+						{
+							connections.put(mechanical, dir);
+						}
+					}
+				}
+
+				if (!worldObj.isRemote)
+				{
+					markRefresh = true;
 				}
 			}
 

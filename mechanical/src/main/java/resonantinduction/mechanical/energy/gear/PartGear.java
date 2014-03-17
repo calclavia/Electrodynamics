@@ -104,88 +104,85 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 			}
 
 			@Override
-			public void recache()
+			public void doRecache()
 			{
-				synchronized (connections)
+				connections.clear();
+
+				/**
+				 * Only call refresh if this is the main block of a multiblock gear or a single
+				 * gear
+				 * block.
+				 */
+				if (!getMultiBlock().isPrimary() || world() == null)
 				{
-					connections.clear();
+					return;
+				}
 
-					/**
-					 * Only call refresh if this is the main block of a multiblock gear or a single
-					 * gear
-					 * block.
-					 */
-					if (!getMultiBlock().isPrimary() || world() == null)
+				/** Look for gears that are back-to-back with this gear. Equate torque. */
+				TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
+
+				if (tileBehind instanceof INodeProvider)
+				{
+					MechanicalNode instance = ((INodeProvider) tileBehind).getNode(MechanicalNode.class, placementSide.getOpposite());
+
+					if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
 					{
-						return;
+						connections.put(instance, placementSide);
+					}
+				}
+
+				/**
+				 * Look for gears that are internal and adjacent to this gear. (The 4 sides +
+				 * the internal center)
+				 */
+				for (int i = 0; i < 6; i++)
+				{
+					ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
+					TileEntity tile = tile();
+
+					if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
+					{
+						tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 					}
 
-					/** Look for gears that are back-to-back with this gear. Equate torque. */
-					TileEntity tileBehind = new universalelectricity.api.vector.Vector3(tile()).translate(placementSide).getTileEntity(world());
-
-					if (tileBehind instanceof INodeProvider)
+					if (tile instanceof INodeProvider)
 					{
-						MechanicalNode instance = ((INodeProvider) tileBehind).getNode(MechanicalNode.class, placementSide.getOpposite());
+						/**
+						 * If we're checking for the block that is opposite to the gear's
+						 * placement
+						 * side
+						 * (the center), then we try to look for a gear shaft in the center.
+						 */
+						MechanicalNode instance = ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
-						if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
+						if (!connections.containsValue(checkDir) && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
 						{
-							connections.put(instance, placementSide);
+							connections.put(instance, checkDir);
 						}
 					}
+				}
 
-					/**
-					 * Look for gears that are internal and adjacent to this gear. (The 4 sides +
-					 * the internal center)
-					 */
-					for (int i = 0; i < 6; i++)
+				int displaceCheck = 1;
+
+				if (getMultiBlock().isPrimary() && getMultiBlock().isConstructed())
+				{
+					displaceCheck = 2;
+				}
+
+				/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
+				for (int i = 0; i < 4; i++)
+				{
+					ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(PartGear.this.placementSide.ordinal(), i));
+					TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir, displaceCheck).getTileEntity(world());
+
+					if (!connections.containsValue(checkDir) && checkTile instanceof INodeProvider)
 					{
-						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+						MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, placementSide);
 
-						TileEntity tile = tile();
-
-						if (getMultiBlock().isConstructed() && checkDir != placementSide && checkDir != placementSide.getOpposite())
+						if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
 						{
-							tile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-						}
-
-						if (tile instanceof INodeProvider)
-						{
-							/**
-							 * If we're checking for the block that is opposite to the gear's
-							 * placement
-							 * side
-							 * (the center), then we try to look for a gear shaft in the center.
-							 */
-							MechanicalNode instance = ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
-
-							if (!connections.containsValue(checkDir) && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
-							{
-								connections.put(instance, checkDir);
-							}
-						}
-					}
-
-					int displaceCheck = 1;
-
-					if (getMultiBlock().isPrimary() && getMultiBlock().isConstructed())
-					{
-						displaceCheck = 2;
-					}
-
-					/** Look for gears outside this block space, the relative UP, DOWN, LEFT, RIGHT */
-					for (int i = 0; i < 4; i++)
-					{
-						ForgeDirection checkDir = ForgeDirection.getOrientation(Rotation.rotateSide(PartGear.this.placementSide.ordinal(), i));
-						TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir, displaceCheck).getTileEntity(world());
-
-						if (!connections.containsValue(checkDir) && checkTile instanceof INodeProvider)
-						{
-							MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, placementSide);
-
-							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
-							{
-								connections.put(instance, checkDir);
-							}
+							connections.put(instance, checkDir);
 						}
 					}
 				}

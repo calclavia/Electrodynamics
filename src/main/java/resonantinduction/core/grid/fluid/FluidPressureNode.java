@@ -201,24 +201,21 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 	 * Recache the connections. This is the default connection implementation.
 	 */
 	@Override
-	public void recache()
+	public void doRecache()
 	{
-		synchronized (connections)
+		connections.clear();
+
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			connections.clear();
+			TileEntity tile = position().translate(dir).getTileEntity(world());
 
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			if (tile instanceof IPressureNodeProvider)
 			{
-				TileEntity tile = position().translate(dir).getTileEntity(world());
+				FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
-				if (tile instanceof IPressureNodeProvider)
+				if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 				{
-					FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
-
-					if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-					{
-						connections.put(check, dir);
-					}
+					connections.put(check, dir);
 				}
 			}
 		}

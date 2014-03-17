@@ -47,47 +47,45 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 		node = new FluidPressureNode(this)
 		{
 			@Override
-			public void recache()
+			public void doRecache()
 			{
-				synchronized (connections)
+
+				connections.clear();
+
+				if (world() != null)
 				{
-					connections.clear();
+					byte previousConnections = getAllCurrentConnections();
+					currentConnections = 0;
 
-					if (world() != null)
+					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 					{
-						byte previousConnections = getAllCurrentConnections();
-						currentConnections = 0;
+						TileEntity tile = position().translate(dir).getTileEntity(world());
 
-						for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+						if (tile instanceof IFluidHandler)
 						{
-							TileEntity tile = position().translate(dir).getTileEntity(world());
-
-							if (tile instanceof IFluidHandler)
+							if (tile instanceof IPressureNodeProvider)
 							{
-								if (tile instanceof IPressureNodeProvider)
-								{
-									FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+								FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
-									if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-									{
-										currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-										connections.put(check, dir);
-
-									}
-								}
-								else if (canConnect(dir, tile))
+								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 								{
 									currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-									connections.put(tile, dir);
+									connections.put(check, dir);
+
 								}
 							}
+							else if (canConnect(dir, tile))
+							{
+								currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+								connections.put(tile, dir);
+							}
 						}
+					}
 
-						/** Only send packet updates if visuallyConnected changed. */
-						if (!world().isRemote && previousConnections != currentConnections)
-						{
-							sendConnectionUpdate();
-						}
+					/** Only send packet updates if visuallyConnected changed. */
+					if (!world().isRemote && previousConnections != currentConnections)
+					{
+						sendConnectionUpdate();
 					}
 				}
 			}

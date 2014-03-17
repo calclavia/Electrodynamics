@@ -199,24 +199,21 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 	 * Recache the connections. This is the default connection implementation.
 	 */
 	@Override
-	public void recache()
+	public void doRecache()
 	{
-		synchronized (connections)
+		connections.clear();
+
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			connections.clear();
+			TileEntity tile = position().translate(dir).getTileEntity(world());
 
-			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+			if (tile instanceof INodeProvider)
 			{
-				TileEntity tile = position().translate(dir).getTileEntity(world());
+				MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
 
-				if (tile instanceof INodeProvider)
+				if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 				{
-					MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-
-					if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-					{
-						connections.put(check, dir);
-					}
+					connections.put(check, dir);
 				}
 			}
 		}

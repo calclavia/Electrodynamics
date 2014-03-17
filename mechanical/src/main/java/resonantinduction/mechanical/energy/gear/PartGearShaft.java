@@ -86,46 +86,43 @@ public class PartGearShaft extends PartMechanical
 			}
 
 			@Override
-			public void recache()
+			public void doRecache()
 			{
-				synchronized (connections)
+				connections.clear();
+
+				/** Check for internal connections, the FRONT and BACK. */
+				for (int i = 0; i < 6; i++)
 				{
-					connections.clear();
+					ForgeDirection checkDir = ForgeDirection.getOrientation(i);
 
-					/** Check for internal connections, the FRONT and BACK. */
-					for (int i = 0; i < 6; i++)
+					if (checkDir == placementSide || checkDir == placementSide.getOpposite())
 					{
-						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+						MechanicalNode instance = ((INodeProvider) tile()).getNode(MechanicalNode.class, checkDir);
 
-						if (checkDir == placementSide || checkDir == placementSide.getOpposite())
+						if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
 						{
-							MechanicalNode instance = ((INodeProvider) tile()).getNode(MechanicalNode.class, checkDir);
-
-							if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
-							{
-								connections.put(instance, checkDir);
-							}
+							connections.put(instance, checkDir);
 						}
 					}
+				}
 
-					/** Look for connections outside this block space, the relative FRONT and BACK */
-					for (int i = 0; i < 6; i++)
+				/** Look for connections outside this block space, the relative FRONT and BACK */
+				for (int i = 0; i < 6; i++)
+				{
+					ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+
+					if (!connections.containsValue(checkDir) && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
 					{
-						ForgeDirection checkDir = ForgeDirection.getOrientation(i);
+						TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
 
-						if (!connections.containsValue(checkDir) && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
+						if (checkTile instanceof INodeProvider)
 						{
-							TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
+							MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
 
-							if (checkTile instanceof INodeProvider)
+							// Only connect to shafts outside of this block space.
+							if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
 							{
-								MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
-
-								// Only connect to shafts outside of this block space.
-								if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
-								{
-									connections.put(instance, checkDir);
-								}
+								connections.put(instance, checkDir);
 							}
 						}
 					}

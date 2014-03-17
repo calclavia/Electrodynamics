@@ -62,48 +62,45 @@ public class TileGutter extends TilePressureNode
 		node = new FluidGravityNode(this)
 		{
 			@Override
-			public void recache()
+			public void doRecache()
 			{
-				synchronized (connections)
+				connections.clear();
+				byte previousConnections = renderSides;
+				renderSides = 0;
+
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 				{
-					connections.clear();
-					byte previousConnections = renderSides;
-					renderSides = 0;
+					TileEntity tile = position().translate(dir).getTileEntity(world());
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					if (tile instanceof IFluidHandler)
 					{
-						TileEntity tile = position().translate(dir).getTileEntity(world());
-
-						if (tile instanceof IFluidHandler)
+						if (tile instanceof IPressureNodeProvider)
 						{
-							if (tile instanceof IPressureNodeProvider)
+							FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+
+							if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 							{
-								FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+								connections.put(check, dir);
 
-								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-								{
-									connections.put(check, dir);
-
-									if (tile instanceof TileGutter)
-										renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
-
-								}
-							}
-							else
-							{
-								connections.put(tile, dir);
-
-								if (tile instanceof TileGrate)
+								if (tile instanceof TileGutter)
 									renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+
 							}
 						}
-					}
+						else
+						{
+							connections.put(tile, dir);
 
-					/** Only send packet updates if visuallyConnected changed. */
-					if (previousConnections != renderSides)
-					{
-						sendRenderUpdate();
+							if (tile instanceof TileGrate)
+								renderSides = WorldUtility.setEnableSide(renderSides, dir, true);
+						}
 					}
+				}
+
+				/** Only send packet updates if visuallyConnected changed. */
+				if (previousConnections != renderSides)
+				{
+					sendRenderUpdate();
 				}
 			}
 		};

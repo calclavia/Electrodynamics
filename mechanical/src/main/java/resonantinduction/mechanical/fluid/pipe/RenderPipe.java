@@ -59,7 +59,7 @@ public class RenderPipe implements ISimpleItemRenderer
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			GL11.glTranslatef((float) x + 0.35f, (float) y + 0.35f, (float) z + 0.35f);
-			GL11.glScalef(0.3f, 0.3f, 0.3f);
+			GL11.glScalef(0.33f, 0.33f, 0.33f);
 
 			GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
@@ -99,7 +99,7 @@ public class RenderPipe implements ISimpleItemRenderer
 							break;
 					}
 
-					GL11.glScalef(0.3f, 0.3f, 0.3f);
+					GL11.glScalef(0.33f, 0.33f, 0.33f);
 					GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
 					GL11.glPopAttrib();

@@ -3,6 +3,7 @@ package resonantinduction.electrical.generator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockRotatable;
@@ -36,6 +37,12 @@ public class BlockMotor extends BlockRotatable
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		return doRotateBlock(world, x, y, z, ForgeDirection.getOrientation(side));
 	}
 
 	@Override
