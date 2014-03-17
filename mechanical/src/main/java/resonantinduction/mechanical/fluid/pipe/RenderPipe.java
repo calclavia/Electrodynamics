@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.core.Reference;
 import calclavia.lib.render.FluidRenderUtility;
 import calclavia.lib.render.RenderUtility;
@@ -43,11 +44,13 @@ public class RenderPipe implements ISimpleItemRenderer
 
 		if (fluid != null && fluid.amount > 0)
 		{
-			float percentage = (float) fluid.amount / (float) capacity;
+			double filledPercentage = (double) fluid.amount / (double) capacity;
+			double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
+
 			int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, part.world(), false);
 			RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid));
 			Color color = new Color(fluid.getFluid().getColor());
-			GL11.glColor4f(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? 0.5f : 1);
+			GL11.glColor4d(color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, fluid.getFluid().isGaseous() ? filledPercentage : 1);
 
 			GL11.glPushMatrix();
 			GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -59,7 +62,7 @@ public class RenderPipe implements ISimpleItemRenderer
 			GL11.glTranslatef((float) x + 0.35f, (float) y + 0.35f, (float) z + 0.35f);
 			GL11.glScalef(0.3f, 0.3f, 0.3f);
 
-			GL11.glCallList(displayList[(int) (percentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
+			GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
 			GL11.glPopAttrib();
 			GL11.glPopMatrix();
@@ -98,7 +101,7 @@ public class RenderPipe implements ISimpleItemRenderer
 					}
 
 					GL11.glScalef(0.3f, 0.3f, 0.3f);
-					GL11.glCallList(displayList[(int) (percentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
+					GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
 
 					GL11.glPopAttrib();
 					GL11.glPopMatrix();
