@@ -4,6 +4,7 @@ import calclavia.lib.render.EnumColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
+import resonantinduction.electrical.itemrailing.interfaces.IRailing;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -60,4 +61,18 @@ public class ItemRailingTransfer implements IItemRailingTransfer
         this.railing = railing;
         return this;
     }
+
+	@Override
+	public IRailing getEndGoal()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IItemRailingTransfer setEndGoal()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
