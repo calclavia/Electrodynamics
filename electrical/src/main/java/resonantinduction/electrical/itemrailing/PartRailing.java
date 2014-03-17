@@ -1,13 +1,17 @@
 package resonantinduction.electrical.itemrailing;
 
+import calclavia.lib.render.EnumColor;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 
@@ -15,8 +19,52 @@ import universalelectricity.api.energy.IEnergyNetwork;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
 {
+    private EnumColor color = EnumColor.YELLOW;
+
+    public PartRailing()
+    {
+
+    }
+
+
+    @Override
+    public boolean canItemEnter (IItemRailingTransfer item)
+    {
+        return true;
+    }
+
+    @Override
+    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
+    {
+        return this.color.equals(railing.getRailingColor());
+    }
+
+    @Override
+    public EnumColor getRailingColor ()
+    {
+        return this.color;
+    }
+
+    @Override
+    public IItemRailing setRailingColor (EnumColor color)
+    {
+        this.color = color;
+        return this;
+    }
+
+    @Override
+    public World getWorldObj ()
+    {
+        return super.getWorld();
+    }
+
+    public enum EnumRailing
+    {
+        DEFAULT;
+    }
+
     @Override
     public float getResistance ()
     {
@@ -39,11 +87,6 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     public long onExtractEnergy (ForgeDirection from, long extract, boolean doExtract)
     {
         return 0;
-    }
-
-    public enum EnumRailing
-    {
-        DEFAULT;
     }
 
     public PartRailing()

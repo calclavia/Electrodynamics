@@ -10,15 +10,15 @@ import net.minecraftforge.common.ForgeDirection;
  * @since 16/03/14
  * @author tgame14
  */
-public interface IRailing
+public interface IItemRailing
 {
     public boolean canItemEnter (IItemRailingTransfer item);
 
-    public boolean canConnectToRailing (IRailing railing, ForgeDirection from);
+    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from);
 
     public EnumColor getRailingColor ();
 
-    public IRailing setRailingColor ();
+    public IItemRailing setRailingColor (EnumColor color);
 
     /** an easy implementation for tiles / parts that already have this method in them */
     public World getWorldObj ();
