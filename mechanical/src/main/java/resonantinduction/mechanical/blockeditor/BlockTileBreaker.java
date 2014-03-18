@@ -38,7 +38,7 @@ public class BlockTileBreaker extends TileInventory
             {
                 getWorldObj().destroyBlock(x() + dir.offsetX, y() + dir.offsetY, z(), false);
             }
-            
+
 
         }
 
