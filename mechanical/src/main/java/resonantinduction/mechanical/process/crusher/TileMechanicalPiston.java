@@ -28,6 +28,8 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
 	private int breakCount = mechanicalPistonBreakCount;
 
+	private boolean markRevolve = false;
+
 	public TileMechanicalPiston()
 	{
 		super(Material.piston);
@@ -37,18 +39,8 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			@Override
 			protected void revolve()
 			{
-				Vector3 movePosition = new Vector3(TileMechanicalPiston.this).translate(getDirection());
+				markRevolve = true;
 
-				if (!hitOreBlock(movePosition))
-				{
-					if (!worldObj.isRemote)
-					{
-						Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
-
-						if (canMove(movePosition, moveNewPosition))
-							move(movePosition, moveNewPosition);
-					}
-				}
 			}
 
 			@Override
@@ -71,11 +63,23 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 	{
 		super.updateEntity();
 
-		Vector3 movePosition = new Vector3(this).translate(getDirection());
-		Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
+		if (markRevolve)
+		{
+			Vector3 movePosition = new Vector3(TileMechanicalPiston.this).translate(getDirection());
 
-		if (!canMove(movePosition, moveNewPosition))
-			mechanicalNode.angle = 0;
+			if (!hitOreBlock(movePosition))
+			{
+				if (!worldObj.isRemote)
+				{
+					Vector3 moveNewPosition = movePosition.clone().translate(getDirection());
+
+					if (canMove(movePosition, moveNewPosition))
+						move(movePosition, moveNewPosition);
+				}
+			}
+
+			markRevolve = false;
+		}
 	}
 
 	public boolean hitOreBlock(Vector3 blockPos)
@@ -116,6 +120,8 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			}
 		}
 
+		breakCount = 0;
+		world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), 10);
 		return false;
 	}
 
