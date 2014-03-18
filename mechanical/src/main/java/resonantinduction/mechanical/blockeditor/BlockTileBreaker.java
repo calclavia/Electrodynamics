@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.core.ResonantInduction;
 
 /**
  * @since 18/03/14
@@ -14,14 +15,15 @@ import net.minecraftforge.common.ForgeDirection;
 public class BlockTileBreaker extends TileInventory
 {
 
-    public BlockTileBreaker (String name, Material material)
+    public BlockTileBreaker ()
     {
-        super(name, material);
+        super("BlockTileBreaker", Material.iron);
     }
 
     @Override
     public int getWeakRedstonePower (IBlockAccess access, int side)
     {
+        ResonantInduction.LOGGER.info("Calling Weak Red on tile ");
         int facing = access.getBlockMetadata(x(), y(), z());
         if (facing != side)
         {

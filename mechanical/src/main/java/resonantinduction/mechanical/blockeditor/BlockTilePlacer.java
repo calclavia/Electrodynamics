@@ -11,9 +11,9 @@ import net.minecraftforge.common.ForgeDirection;
  */
 public class BlockTilePlacer extends TileInventory
 {
-    public BlockTilePlacer (String name, Material material)
+    public BlockTilePlacer ()
     {
-        super(name, material);
+        super("BlockTilePlacer", Material.iron);
     }
 
     @Override

@@ -12,6 +12,8 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
+import resonantinduction.mechanical.blockeditor.BlockTileBreaker;
+import resonantinduction.mechanical.blockeditor.BlockTilePlacer;
 import resonantinduction.mechanical.energy.gear.ItemGear;
 import resonantinduction.mechanical.energy.gear.ItemGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -99,6 +101,10 @@ public class Mechanical
 	public static Block blockMixer;
 	public static Block blockMechanicalPiston;
 
+    // Block Breaker and Placer
+    public static Block blockTileBreaker;
+    public static Block blockTilePlacer;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
@@ -130,6 +136,9 @@ public class Mechanical
 		blockMixer = contentRegistry.newBlock(TileMixer.class);
 		blockMechanicalPiston = contentRegistry.newBlock(TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);
+
+        blockTileBreaker = contentRegistry.newBlock(BlockTileBreaker.class);
+        blockTilePlacer = contentRegistry.newBlock(BlockTilePlacer.class);
 
 		proxy.preInit();
 		Settings.CONFIGURATION.save();
