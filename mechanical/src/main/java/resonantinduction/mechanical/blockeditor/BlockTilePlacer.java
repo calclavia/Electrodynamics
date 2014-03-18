@@ -1,6 +1,7 @@
 package resonantinduction.mechanical.blockeditor;
 
 import calclavia.lib.content.module.prefab.TileInventory;
+import calclavia.lib.prefab.tile.IRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
@@ -9,7 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
  * @since 18/03/14
  * @author tgame14
  */
-public class BlockTilePlacer extends TileInventory
+public class BlockTilePlacer extends TileInventory implements IRotatable
 {
     public BlockTilePlacer ()
     {
