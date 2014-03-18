@@ -1,6 +1,7 @@
 package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.INode;
+import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.render.EnumColor;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
@@ -16,20 +17,24 @@ import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing, INode
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing, INodeProvider
 {
 
     public enum EnumRailing
     {
-        DEFAULT;
+        DEFAULT, EXTENTION, ;
     }
 
     // default is NULL
     private EnumColor color;
+    private NodeRailing node;
 
     public PartRailing ()
     {
@@ -38,6 +43,30 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         this.color = null;
     }
 
+
+    @Override
+    public <N extends INode> N getNode (Class<? super N> nodeType, ForgeDirection from)
+    {
+        if (nodeType.isInstance(this.node))
+            return (N) node;
+        try
+        {
+            for (Constructor con : nodeType.getConstructors())
+            {
+                if ((con.getParameterTypes().length == 1) && con.getParameterTypes()[0].equals(getClass()))
+                {
+                    this.node = (NodeRailing) con.newInstance(this);
+                    return (N) this.node;
+                }
+            }
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public boolean canItemEnter (IItemRailingTransfer item)
@@ -68,30 +97,6 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     public World getWorldObj ()
     {
         return super.getWorld();
-    }
-
-    @Override
-    public void reconstruct ()
-    {
-
-    }
-
-    @Override
-    public void deconstruct ()
-    {
-
-    }
-
-    @Override
-    public void recache ()
-    {
-
-    }
-
-    @Override
-    public void update (float deltaTime)
-    {
-
     }
 
     @Override
