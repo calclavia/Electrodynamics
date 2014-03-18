@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.recipe.MachineRecipes;
@@ -55,11 +56,12 @@ public class ItemHammer extends Item
 									if (outputStack != null)
 									{
 										InventoryUtility.dropItemStack(world, new Vector3(player), outputStack, 0);
-										tile.setInventorySlotContents(TileEngineeringTable.CENTER_SLOT, --inputStack.stackSize <= 0 ? null : inputStack);
+										tile.setInventorySlotContents(i, --inputStack.stackSize <= 0 ? null : inputStack);
 									}
 								}
 							}
-
+							
+							ResonantInduction.proxy.renderBlockParticle(world, new Vector3(x + 0.5, y + 0.5, z + 0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), inputStack.itemID, 1);
 							world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world.rand.nextFloat()));
 							player.addExhaustion(0.3f);
 							stack.damageItem(1, player);
