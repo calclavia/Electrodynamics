@@ -93,25 +93,28 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
 			if (resources.length > 0)
 			{
-				int breakStatus = (int) (((float) (mechanicalPistonBreakCount - breakCount) / (float) mechanicalPistonBreakCount) * 10f);
-				world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), breakStatus);
-
-				if (breakCount <= 0)
+				if (!worldObj.isRemote)
 				{
-					if (!world().isRemote)
+					int breakStatus = (int) (((float) (mechanicalPistonBreakCount - breakCount) / (float) mechanicalPistonBreakCount) * 10f);
+					world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), breakStatus);
+
+					if (breakCount <= 0)
 					{
-						for (RecipeResource recipe : resources)
+						if (!world().isRemote)
 						{
-							if (Math.random() <= recipe.getChance())
+							for (RecipeResource recipe : resources)
 							{
-								InventoryUtility.dropItemStack(world(), blockPos.clone().translate(0.5), recipe.getItemStack(), 10);
+								if (Math.random() <= recipe.getChance())
+								{
+									InventoryUtility.dropItemStack(world(), blockPos.clone().translate(0.5), recipe.getItemStack(), 10);
+								}
 							}
+
+							world().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
 						}
 
-						world().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
+						breakCount = mechanicalPistonBreakCount;
 					}
-
-					breakCount = mechanicalPistonBreakCount;
 				}
 
 				ResonantInduction.proxy.renderBlockParticle(worldObj, blockPos.clone().translate(0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), block.blockID, 1);
@@ -120,8 +123,10 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			}
 		}
 
-		breakCount = 0;
-		world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), 10);
+		breakCount = mechanicalPistonBreakCount;
+
+		if (!worldObj.isRemote)
+			world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), -1);
 		return false;
 	}
 

@@ -89,32 +89,36 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 		else
 		{
 			maxPower = 2500;
+			ForgeDirection currentDir = getDirection();
 
-			int checkX = xCoord;
-			int checkY = yCoord - 1;
-			int checkZ = zCoord;
-			int blockID = worldObj.getBlockId(xCoord, checkY, checkZ);
-			int metadata = worldObj.getBlockMetadata(xCoord, checkY, checkZ);
-
-			if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 			{
-				try
+				if (dir != currentDir && dir != currentDir.getOpposite())
 				{
-					Method m = ReflectionHelper.findMethod(BlockFluid.class, null, new String[] { "getFlowVector", "func_72202_i" }, IBlockAccess.class, Integer.TYPE, Integer.TYPE, Integer.TYPE);
-					Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, xCoord, checkY, checkZ));
-					ForgeDirection dir = getDirection();
+					Vector3 check = new Vector3(this).translate(dir);
+					int blockID = worldObj.getBlockId(check.intX(), check.intY(), check.intZ());
+					int metadata = worldObj.getBlockMetadata(check.intX(), check.intY(), check.intZ());
 
-					if ((dir.offsetZ > 0 && vector.x < 0) || (dir.offsetZ < 0 && vector.x > 0) || (dir.offsetX > 0 && vector.z > 0) || (dir.offsetX < 0 && vector.z < 0))
-						torque = -torque;
+					if (blockID == Block.waterMoving.blockID || blockID == Block.waterStill.blockID)
+					{
+						try
+						{
+							Method m = ReflectionHelper.findMethod(BlockFluid.class, null, new String[] { "getFlowVector", "func_72202_i" }, IBlockAccess.class, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+							Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, check.intX(), check.intY(), check.intZ()));
 
-					if (getDirection().offsetX != 0)
-						getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z * (7 - metadata) / 7f);
-					if (getDirection().offsetZ != 0)
-						getMultiBlock().get().power += Math.abs(getWaterPower() * vector.x * (7 - metadata) / 7f);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
+							if ((currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0))
+								torque = -torque;
+
+							if (getDirection().offsetX != 0)
+								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z * (7 - metadata) / 7f);
+							if (getDirection().offsetZ != 0)
+								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.x * (7 - metadata) / 7f);
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 		}

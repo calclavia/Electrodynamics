@@ -57,7 +57,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		 */
 		GL11.glPushMatrix();
 		// TODO: Temporary, unless new models come out.
-		GL11.glTranslated(0, 0, (0.06 * Math.sin(angle - Math.PI)) - 0.01);
+		GL11.glTranslated(0, 0, (0.06 * Math.sin(angle)) - 0.01);
 		MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
 		GL11.glPopMatrix();
 
