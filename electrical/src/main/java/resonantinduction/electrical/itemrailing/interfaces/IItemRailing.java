@@ -14,7 +14,7 @@ public interface IItemRailing
 {
     public boolean canItemEnter (IItemRailingTransfer item);
 
-    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from);
+    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection to);
 
     public EnumColor getRailingColor ();
 

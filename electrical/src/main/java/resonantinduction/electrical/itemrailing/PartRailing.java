@@ -1,5 +1,6 @@
 package resonantinduction.electrical.itemrailing;
 
+import calclavia.lib.grid.INode;
 import calclavia.lib.render.EnumColor;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
@@ -19,8 +20,14 @@ import universalelectricity.api.energy.IEnergyNetwork;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing, INode
 {
+
+    public enum EnumRailing
+    {
+        DEFAULT;
+    }
+
     // default is NULL
     private EnumColor color;
 
@@ -35,13 +42,12 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     public boolean canItemEnter (IItemRailingTransfer item)
     {
-        return this.color == item.getColor();
+        return this.color != null ? this.color == item.getColor() : false;
     }
 
     @Override
     public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
     {
-
         return this.color != null ? this.color == railing.getRailingColor() : true;
     }
 
@@ -64,9 +70,28 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return super.getWorld();
     }
 
-    public enum EnumRailing
+    @Override
+    public void reconstruct ()
     {
-        DEFAULT;
+
+    }
+
+    @Override
+    public void deconstruct ()
+    {
+
+    }
+
+    @Override
+    public void recache ()
+    {
+
+    }
+
+    @Override
+    public void update (float deltaTime)
+    {
+
     }
 
     @Override
