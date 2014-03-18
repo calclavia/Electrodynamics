@@ -29,7 +29,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 
     public enum EnumRailing
     {
-        DEFAULT, EXTENTION, ;
+        DEFAULT, EXTENTION;
     }
 
     // default is NULL

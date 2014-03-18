@@ -20,4 +20,6 @@ public class NodeRailing extends Node<PartRailing, GridRailing, NodeRailing>
         return new GridRailing(getClass());
     }
 
+
+
 }
