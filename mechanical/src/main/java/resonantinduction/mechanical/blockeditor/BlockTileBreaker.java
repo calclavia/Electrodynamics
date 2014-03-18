@@ -1,8 +1,10 @@
 package resonantinduction.mechanical.blockeditor;
 
 import calclavia.lib.content.module.prefab.TileInventory;
+import calclavia.lib.prefab.tile.IRotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
@@ -12,7 +14,7 @@ import resonantinduction.core.ResonantInduction;
  * @since 18/03/14
  * @author tgame14
  */
-public class BlockTileBreaker extends TileInventory
+public class BlockTileBreaker extends TileInventory implements IRotatable
 {
 
     public BlockTileBreaker ()
@@ -45,5 +47,24 @@ public class BlockTileBreaker extends TileInventory
         }
 
         return super.getWeakRedstonePower(access, side);
+    }
+
+    @Override
+    public void onPlaced (EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+        System.out.println("entity placing " + getClass().getSimpleName());
+        super.onPlaced(entityLiving, itemStack);
+    }
+
+    @Override
+    public void setDirection (ForgeDirection direction)
+    {
+        super.setDirection(direction);
+    }
+
+    @Override
+    public ForgeDirection getDirection ()
+    {
+        return super.getDirection();
     }
 }
