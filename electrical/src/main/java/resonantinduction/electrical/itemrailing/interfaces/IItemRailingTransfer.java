@@ -1,8 +1,8 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
-import calclavia.lib.render.EnumColor;
 import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.itemrailing.PartRailing;
+import calclavia.lib.render.EnumColor;
 
 /**
  * the object that handles the items that flow through Railings
@@ -24,5 +24,5 @@ public interface IItemRailingTransfer
 
     public IItemRailing getEndGoal();
 
-    public IItemRailingTransfer setEndGoal(IItemRailing goal);
+	public IItemRailingTransfer setEndGoal(IItemRailing goal);
 }

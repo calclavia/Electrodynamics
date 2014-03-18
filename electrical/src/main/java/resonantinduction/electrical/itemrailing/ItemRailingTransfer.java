@@ -1,65 +1,65 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.render.EnumColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
+import calclavia.lib.render.EnumColor;
 
 /**
  * An object that Transfers all
- *
+ * 
  * @since 16/03/14
  * @author tgame14
  */
 public class ItemRailingTransfer implements IItemRailingTransfer
 {
-    private ItemStack stack;
-    private EnumColor color;
-    private PartRailing railing;
+	private ItemStack stack;
+	private EnumColor color;
+	private PartRailing railing;
 
-    public ItemRailingTransfer(ItemStack stack, PartRailing railing)
-    {
-        this.stack = stack.copy();
-        this.color = EnumColor.ORANGE;
-        this.railing = railing;
-    }
+	public ItemRailingTransfer(ItemStack stack, PartRailing railing)
+	{
+		this.stack = stack.copy();
+		this.color = EnumColor.ORANGE;
+		this.railing = railing;
+	}
 
-    public ItemRailingTransfer(Item item, PartRailing railing)
-    {
-        this(new ItemStack(item), railing);
-    }
+	public ItemRailingTransfer(Item item, PartRailing railing)
+	{
+		this(new ItemStack(item), railing);
+	}
 
-    @Override
-    public ItemStack getItemStack ()
-    {
-        return this.stack;
-    }
+	@Override
+	public ItemStack getItemStack()
+	{
+		return this.stack;
+	}
 
-    @Override
-    public EnumColor getColor ()
-    {
-        return this.color;
-    }
+	@Override
+	public EnumColor getColor()
+	{
+		return this.color;
+	}
 
-    public IItemRailingTransfer setColor(EnumColor color)
-    {
-        this.color = color;
-        return this;
-    }
+	public IItemRailingTransfer setColor(EnumColor color)
+	{
+		this.color = color;
+		return this;
+	}
 
-    @Override
-    public PartRailing getRailing ()
-    {
-        return this.railing;
-    }
+	@Override
+	public PartRailing getRailing()
+	{
+		return this.railing;
+	}
 
-    @Override
-    public IItemRailingTransfer setRailing (PartRailing railing)
-    {
-        this.railing = railing;
-        return this;
-    }
+	@Override
+	public IItemRailingTransfer setRailing(PartRailing railing)
+	{
+		this.railing = railing;
+		return this;
+	}
 
 	@Override
 	public IItemRailing getEndGoal()
@@ -69,7 +69,7 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	}
 
 	@Override
-	public IItemRailingTransfer setEndGoal()
+	public IItemRailingTransfer setEndGoal(IItemRailing goal)
 	{
 		// TODO Auto-generated method stub
 		return null;
