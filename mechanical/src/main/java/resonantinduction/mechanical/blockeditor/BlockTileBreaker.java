@@ -52,7 +52,6 @@ public class BlockTileBreaker extends TileInventory implements IRotatable
     @Override
     public void onPlaced (EntityLivingBase entityLiving, ItemStack itemStack)
     {
-        System.out.println("entity placing " + getClass().getSimpleName());
         super.onPlaced(entityLiving, itemStack);
     }
 
