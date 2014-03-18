@@ -25,7 +25,6 @@ import org.lwjgl.opengl.GL11;
 
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
-import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
@@ -182,18 +181,18 @@ public class TileGutter extends TilePressureNode
 	@Override
 	public boolean activate(EntityPlayer player, int side, Vector3 vector3)
 	{
-		if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ResonantInduction.itemDust)
+		if (player.getCurrentEquippedItem() != null)
 		{
-			if (!world().isRemote)
+			/**
+			 * Manually wash dust into refined dust.
+			 */
+			ItemStack itemStack = player.getCurrentEquippedItem();
+
+			RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack);
+
+			if (outputs.length > 0)
 			{
-				/**
-				 * Manually wash dust into refined dust.
-				 */
-				ItemStack itemStack = player.getCurrentEquippedItem();
-
-				RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), itemStack);
-
-				if (outputs.length > 0)
+				if (!world().isRemote)
 				{
 					int drainAmount = 50 + world().rand.nextInt(50);
 					FluidStack drain = drain(ForgeDirection.UP, drainAmount, false);
@@ -215,11 +214,10 @@ public class TileGutter extends TilePressureNode
 					drain(ForgeDirection.UP, drainAmount, true);
 
 					world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "liquid.water", 0.5f, 1);
-					return true;
 				}
-			}
 
-			return true;
+				return true;
+			}
 		}
 
 		if (!world().isRemote)
@@ -229,13 +227,11 @@ public class TileGutter extends TilePressureNode
 			synchronized (node.getGrid().getNodes())
 			{
 				for (Object check : node.getGrid().getNodes())
-				{
 					if (check instanceof FluidPressureNode)
-					{
-						tanks.add(((FluidPressureNode) check).parent.getPressureTank());
-					}
-				}
+						if (((FluidPressureNode) check).parent instanceof TileGutter)
+							tanks.add(((FluidPressureNode) check).parent.getPressureTank());
 			}
+
 			if (FluidUtility.playerActivatedFluidItem(tanks, player, side))
 			{
 				synchronized (node.getGrid().getNodes())
