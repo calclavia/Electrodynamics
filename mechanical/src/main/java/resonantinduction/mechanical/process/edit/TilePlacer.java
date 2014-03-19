@@ -1,11 +1,12 @@
 package resonantinduction.mechanical.process.edit;
 
-import org.lwjgl.opengl.GL11;
-
-import resonantinduction.core.ResonantInduction;
-
+import calclavia.lib.content.module.TileRender;
+import calclavia.lib.content.module.prefab.TileInventory;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.IRotatable;
+import calclavia.lib.render.RenderItemOverlayUtility;
 import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -14,19 +15,14 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import org.lwjgl.opengl.GL11;
+import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.content.module.prefab.TileInventory;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.render.RenderItemOverlayUtility;
 
 /**
- * @since 18/03/14
  * @author tgame14
+ * @since 18/03/14
  */
 public class TilePlacer extends TileInventory implements IRotatable, IPacketReceiver
 {
@@ -46,6 +42,13 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public void onNeighborChanged()
 	{
 		work();
+	}
+
+	@Override
+	protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		interactCurrentItem(this, 0, player);
+		return true;
 	}
 
 	public void work()
