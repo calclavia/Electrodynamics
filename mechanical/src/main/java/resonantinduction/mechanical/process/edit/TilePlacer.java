@@ -37,14 +37,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     @Override
     public void onAdded ()
     {
-        if (!getWorldObj().isRemote)
             work();
     }
 
     @Override
     public void onNeighborChanged ()
     {
-        if (!getWorldObj().isRemote)
             work();
     }
 
@@ -53,7 +51,6 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         if (isIndirectlyPowered())
         {
             ForgeDirection dir = getDirection();
-            Vector3 check = position().translate(dir);
             ItemStack placeStack = null;
             if (getStackInSlot(0) == null)
             {
