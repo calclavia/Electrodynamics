@@ -121,4 +121,4 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         };
     }
 }
-}
+
