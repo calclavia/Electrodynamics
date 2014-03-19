@@ -110,7 +110,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 								}
 							}
 
-							world().setBlockToAir(blockPos.intX(), blockPos.intY(), blockPos.intZ());
+							getWorldObj().destroyBlock(blockPos.intX(), blockPos.intY(), blockPos.intZ(), false);
 						}
 
 						breakCount = mechanicalPistonBreakCount;

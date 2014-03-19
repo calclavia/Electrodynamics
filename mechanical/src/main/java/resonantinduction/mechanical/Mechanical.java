@@ -12,8 +12,6 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
-import resonantinduction.mechanical.blockeditor.BlockTileBreaker;
-import resonantinduction.mechanical.blockeditor.BlockTilePlacer;
 import resonantinduction.mechanical.energy.gear.ItemGear;
 import resonantinduction.mechanical.energy.gear.ItemGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -32,6 +30,8 @@ import resonantinduction.mechanical.logistic.belt.TileDetector;
 import resonantinduction.mechanical.logistic.belt.TileManipulator;
 import resonantinduction.mechanical.logistic.belt.TileSorter;
 import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
+import resonantinduction.mechanical.process.edit.TileBreaker;
+import resonantinduction.mechanical.process.edit.TilePlacer;
 import resonantinduction.mechanical.process.grinder.TileGrindingWheel;
 import resonantinduction.mechanical.process.purifier.TileMixer;
 import calclavia.api.resonantinduction.IMechanicalNode;
@@ -137,8 +137,8 @@ public class Mechanical
 		blockMechanicalPiston = contentRegistry.newBlock(TileMechanicalPiston.class);
 		OreDictionary.registerOre("gear", itemGear);
 
-        blockTileBreaker = contentRegistry.newBlock(BlockTileBreaker.class);
-        blockTilePlacer = contentRegistry.newBlock(BlockTilePlacer.class);
+        blockTileBreaker = contentRegistry.newBlock(TileBreaker.class);
+        blockTilePlacer = contentRegistry.newBlock(TilePlacer.class);
 
 		proxy.preInit();
 		Settings.CONFIGURATION.save();
