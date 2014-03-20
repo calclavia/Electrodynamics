@@ -29,135 +29,135 @@ import universalelectricity.api.vector.Vector3;
  */
 public class TilePlacer extends TileInventory implements IRotatable, IPacketReceiver
 {
-	private boolean doWork = false;
+    private boolean doWork = false;
 
-	public TilePlacer()
-	{
-		super(Material.iron);
-		normalRender = false;
-	}
+    public TilePlacer ()
+    {
+        super(Material.iron);
+        normalRender = false;
+    }
 
-	@Override
-	public void onAdded()
-	{
-		work();
-	}
+    @Override
+    public void onAdded ()
+    {
+        work();
+    }
 
-	@Override
-	public void onNeighborChanged()
-	{
-		work();
-	}
+    @Override
+    public void onNeighborChanged ()
+    {
+        work();
+    }
 
-	@Override
-	public void updateEntity()
-	{
-		if (doWork)
-		{
-			doWork();
-			doWork = false;
-		}
-	}
+    @Override
+    public void updateEntity ()
+    {
+        if (doWork)
+        {
+            doWork();
+            doWork = false;
+        }
+    }
 
-	public void work()
-	{
-		if (isIndirectlyPowered())
-		{
-			doWork = true;
-		}
-	}
+    public void work ()
+    {
+        if (isIndirectlyPowered())
+        {
+            doWork = true;
+        }
+    }
 
-	public void doWork()
-	{
-		ForgeDirection dir = getDirection();
-		Vector3 placePos = position().translate(dir);
+    public void doWork ()
+    {
+        ForgeDirection dir = getDirection();
+        Vector3 placePos = position().translate(dir);
 
-		if (world().isAirBlock(placePos.intX(), placePos.intY(), placePos.intZ()))
-		{
+        if (world().isAirBlock(placePos.intX(), placePos.intY(), placePos.intZ()))
+        {
 
-			if (getStackInSlot(0) == null)
-			{
-				ForgeDirection op = dir.getOpposite();
-				TileEntity tile = getWorldObj().getBlockTileEntity(x() + op.offsetX, y() + op.offsetY, z() + op.offsetZ);
+            if (getStackInSlot(0) == null)
+            {
+                ForgeDirection op = dir.getOpposite();
+                TileEntity tile = getWorldObj().getBlockTileEntity(x() + op.offsetX, y() + op.offsetY, z() + op.offsetZ);
 
-				if (tile instanceof IInventory)
-				{
-					ItemStack candidate = InventoryUtility.takeTopItemFromInventory((IInventory) tile, dir.ordinal());
-					if (candidate != null)
-					{
-						incrStackSize(0, candidate);
-					}
-				}
-			}
+                if (tile instanceof IInventory)
+                {
+                    ItemStack candidate = new ItemStack(InventoryUtility.takeTopItemBlockFromInventory((IInventory) tile, dir.ordinal()));
+                    if (candidate != null)
+                    {
+                        incrStackSize(0, candidate);
+                    }
+                }
+            }
 
-			ItemStack placeStack = getStackInSlot(0);
+            ItemStack placeStack = getStackInSlot(0);
 
-			if (placeStack != null && placeStack.getItem() instanceof ItemBlock)
-			{
-				ItemBlock itemBlock = ((ItemBlock) placeStack.getItem());
+            if (placeStack != null && placeStack.getItem() instanceof ItemBlock)
+            {
+                ItemBlock itemBlock = ((ItemBlock) placeStack.getItem());
 
-				try
-				{
-					itemBlock.placeBlockAt(placeStack, null, world(), placePos.intX(), placePos.intY(), placePos.intZ(), 0, 0, 0, 0, 0);
-				}
-				catch (Exception e)
-				{
-					//	e.printStackTrace();
-				}
+                try
+                {
+                    itemBlock.placeBlockAt(placeStack, null, world(), placePos.intX(), placePos.intY(), placePos.intZ(), 0, 0, 0, 0, 0);
+                }
+                catch (Exception e)
+                {
+                    //	e.printStackTrace();
+                }
 
-				decrStackSize(0, 1);
-				markUpdate();
-			}
-		}
-	}
+                decrStackSize(0, 1);
+                markUpdate();
+            }
+        }
+    }
 
-	@Override
-	protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
-	{
-		interactCurrentItem(this, 0, player);
-		return true;
-	}
+    @Override
+    protected boolean use (EntityPlayer player, int hitSide, Vector3 hit)
+    {
+        interactCurrentItem(this, 0, player);
+        return true;
+    }
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
-	}
+    @Override
+    public Packet getDescriptionPacket ()
+    {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+    }
 
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		try
-		{
-			readFromNBT(PacketHandler.readNBTTagCompound(data));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void onReceivePacket (ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        try
+        {
+            readFromNBT(PacketHandler.readNBTTagCompound(data));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	protected TileRender newRenderer()
-	{
-		return new TileRender()
-		{
-			@Override
-			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
-			{
-				if (!isItem)
-				{
-					GL11.glPushMatrix();
-					RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z);
-					GL11.glPopMatrix();
-				}
+    @Override
+    @SideOnly(Side.CLIENT)
+    protected TileRender newRenderer ()
+    {
+        return new TileRender()
+        {
+            @Override
+            public boolean renderDynamic (Vector3 position, boolean isItem, float frame)
+            {
+                if (!isItem)
+                {
+                    GL11.glPushMatrix();
+                    RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z);
+                    GL11.glPopMatrix();
+                }
 
-				return false;
-			}
-		};
-	}
+                return false;
+            }
+        };
+    }
 }
 
