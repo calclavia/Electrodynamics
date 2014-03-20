@@ -1,15 +1,7 @@
 package resonantinduction.mechanical.process.edit;
 
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.content.module.prefab.TileInventory;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.render.RenderItemOverlayUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
-import com.google.common.io.ByteArrayDataInput;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,140 +9,118 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
-import org.lwjgl.opengl.GL11;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
+import calclavia.lib.content.module.TileBase;
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.tile.IRotatable;
+import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
-import java.util.ArrayList;
+import com.google.common.io.ByteArrayDataInput;
 
-/**
- * @author tgame14
- * @since 18/03/14
- */
-public class TileBreaker extends TileInventory implements IRotatable, IPacketReceiver
+/** @author tgame14
+ * @since 18/03/14 */
+public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 {
-	private boolean doWork = false;
+    private boolean doWork = false;
+    private InternalInventoryHandler invHandler;
 
-	public TileBreaker()
-	{
-		super(Material.iron);
-		normalRender = false;
-	}
+    public TileBreaker()
+    {
+        super(Material.iron);
+    }
 
-	@Override
-	public void onAdded()
-	{
-		work();
-	}
+    public InternalInventoryHandler getInvHandler()
+    {
+        if (invHandler == null)
+        {
+            invHandler = new InternalInventoryHandler(this);
+        }
+        return invHandler;
+    }
 
-	@Override
-	public void onNeighborChanged()
-	{
-		work();
-	}
+    @Override
+    public void onAdded()
+    {
+        work();
+    }
 
-	@Override
-	public void updateEntity()
-	{
-		if (doWork)
-		{
-			doWork();
-			doWork = false;
-		}
-	}
+    @Override
+    public void onNeighborChanged()
+    {
+        work();
+    }
 
-	public void work()
-	{
-		if (isIndirectlyPowered())
-		{
-			doWork = true;
-		}
-	}
+    @Override
+    public void updateEntity()
+    {
+        if (doWork)
+        {
+            doWork();
+            doWork = false;
+        }
+    }
 
+    public void work()
+    {
+        if (isIndirectlyPowered())
+        {
+            doWork = true;
+        }
+    }
 
-	public void doWork()
-	{
-		if (isIndirectlyPowered())
-		{
-			ForgeDirection dir = getDirection();
-			Vector3 check = position().translate(dir);
-			VectorWorld put = (VectorWorld) position().translate(dir.getOpposite());
+    public void doWork()
+    {
+        if (isIndirectlyPowered())
+        {
+            ForgeDirection dir = getDirection();
+            Vector3 check = position().translate(dir);
+            VectorWorld put = (VectorWorld) position().translate(dir.getOpposite());
 
-			Block block = Block.blocksList[check.getBlockID(world())];
+            Block block = Block.blocksList[check.getBlockID(world())];
 
-			if (block != null)
-			{
-				int candidateMeta = world().getBlockMetadata(check.intX(), check.intY(), check.intZ());
-				boolean flag = true;
+            if (block != null)
+            {
+                int candidateMeta = world().getBlockMetadata(check.intX(), check.intY(), check.intZ());
+                boolean flag = true;
 
-				ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.intX(), check.intY(), check.intZ(), candidateMeta, 0);
+                ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.intX(), check.intY(), check.intZ(), candidateMeta, 0);
 
-				for (ItemStack stack : drops)
-				{
-					if (!canInsertItem(0, stack, dir.ordinal() ^ 1))
-					{
-						flag = false;
-					}
-				}
-				if (flag)
-				{
-					getWorldObj().destroyBlock(check.intX(), check.intY(), check.intZ(), false);
+                for (ItemStack stack : drops)
+                {
+                    ItemStack insert = stack.copy();
+                    insert = getInvHandler().storeItem(insert, this.getDirection().getOpposite());
+                    if (insert != null)
+                    {
+                        getInvHandler().throwItem(this.getDirection().getOpposite(), insert);
+                    }
+                }
+                getWorldObj().destroyBlock(check.intX(), check.intY(), check.intZ(), false);
 
-					for (ItemStack stack : drops)
-					{
-						InventoryUtility.putStackInInventory((VectorWorld) put.translate(0.5), stack, dir.ordinal(), false);
-					}
-				}
-			}
-		}
-	}
+            }
+        }
+    }
 
-	@Override
-	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
-	{
-		return true;
-	}
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+    }
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeToNBT(nbt);
-		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
-	}
-
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		try
-		{
-			readFromNBT(PacketHandler.readNBTTagCompound(data));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	protected TileRender newRenderer()
-	{
-		return new TileRender()
-		{
-			@Override
-			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
-			{
-				if (!isItem)
-				{
-					GL11.glPushMatrix();
-					RenderItemOverlayUtility.renderItemOnSides(TileBreaker.this, getStackInSlot(0), position.x, position.y, position.z);
-					GL11.glPopMatrix();
-				}
-
-				return false;
-			}
-		};
-	}
+    @Override
+    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        try
+        {
+            readFromNBT(PacketHandler.readNBTTagCompound(data));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }
