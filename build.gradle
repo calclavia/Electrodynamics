@@ -65,8 +65,12 @@ allprojects {
     
     dependencies {
         compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
-        compile group: 'calclavia-core-development', name: 'calclavia-core', version: "${rootProject.config.version.calclaviacore}", classifier: "dev"
-    	compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
+    	if (ENV.JOB_NAME == "Resonant-Induction-Development")
+			compile group: 'calclavia-core-development', name: 'calclavia-core', version: "${rootProject.config.version.calclaviacore}", classifier: "dev"
+		else
+			compile group: 'calclaviacore', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
+
+		compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 		compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
 		compile name: 'NotEnoughItems', version: "${config.version.nei}", ext: 'jar'
 		compile name: 'CodeChickenCore', version: "${config.version.cccore}", ext: 'jar'

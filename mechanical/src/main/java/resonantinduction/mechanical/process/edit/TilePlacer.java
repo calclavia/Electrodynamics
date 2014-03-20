@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -28,94 +29,135 @@ import universalelectricity.api.vector.Vector3;
  */
 public class TilePlacer extends TileInventory implements IRotatable, IPacketReceiver
 {
-    public TilePlacer ()
-    {
-        super(Material.iron);
-        normalRender = false;
-    }
+	private boolean doWork = false;
 
-    @Override
-    public void onAdded ()
-    {
-            work();
-    }
+	public TilePlacer()
+	{
+		super(Material.iron);
+		normalRender = false;
+	}
 
-    @Override
-    public void onNeighborChanged ()
-    {
-            work();
-    }
+	@Override
+	public void onAdded()
+	{
+		work();
+	}
 
-    public void work ()
-    {
-        if (isIndirectlyPowered())
-        {
-            ForgeDirection dir = getDirection();
-            ItemStack placeStack = null;
-            if (getStackInSlot(0) == null)
-            {
-                ForgeDirection op = dir.getOpposite();
-                TileEntity tile = getWorldObj().getBlockTileEntity(x() + op.offsetX, y() + op.offsetY, z() + op.offsetZ);
+	@Override
+	public void onNeighborChanged()
+	{
+		work();
+	}
 
-                if (tile instanceof IInventory)
-                {
-                    ItemStack candidate = InventoryUtility.takeTopItemFromInventory((IInventory) tile, dir.ordinal());
-                    if (candidate != null)
-                        this.incrStackSize(0, candidate);
-                }
-            }
-            placeStack = getStackInSlot(0);
+	@Override
+	public void updateEntity()
+	{
+		if (doWork)
+		{
+			doWork();
+			doWork = false;
+		}
+	}
 
-        }
-    }
+	public void work()
+	{
+		if (isIndirectlyPowered())
+		{
+			doWork = true;
+		}
+	}
 
-    @Override
-    protected boolean use (EntityPlayer player, int hitSide, Vector3 hit)
-    {
-        interactCurrentItem(this, 0, player);
-        return true;
-    }
+	public void doWork()
+	{
+		ForgeDirection dir = getDirection();
+		Vector3 placePos = position().translate(dir);
 
-    @Override
-    public Packet getDescriptionPacket ()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
-        return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
-    }
+		if (world().isAirBlock(placePos.intX(), placePos.intY(), placePos.intZ()))
+		{
 
-    @Override
-    public void onReceivePacket (ByteArrayDataInput data, EntityPlayer player, Object... extra)
-    {
-        try
-        {
-            readFromNBT(PacketHandler.readNBTTagCompound(data));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+			if (getStackInSlot(0) == null)
+			{
+				ForgeDirection op = dir.getOpposite();
+				TileEntity tile = getWorldObj().getBlockTileEntity(x() + op.offsetX, y() + op.offsetY, z() + op.offsetZ);
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    protected TileRender newRenderer ()
-    {
-        return new TileRender()
-        {
-            @Override
-            public boolean renderDynamic (Vector3 position, boolean isItem, float frame)
-            {
-                if (!isItem)
-                {
-                    GL11.glPushMatrix();
-                    RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z);
-                    GL11.glPopMatrix();
-                }
+				if (tile instanceof IInventory)
+				{
+					ItemStack candidate = InventoryUtility.takeTopItemFromInventory((IInventory) tile, dir.ordinal());
+					if (candidate != null)
+					{
+						incrStackSize(0, candidate);
+					}
+				}
+			}
 
-                return false;
-            }
-        };
-    }
+			ItemStack placeStack = getStackInSlot(0);
+
+			if (placeStack != null && placeStack.getItem() instanceof ItemBlock)
+			{
+				ItemBlock itemBlock = ((ItemBlock) placeStack.getItem());
+
+				try
+				{
+					itemBlock.placeBlockAt(placeStack, null, world(), placePos.intX(), placePos.intY(), placePos.intZ(), 0, 0, 0, 0, 0);
+				}
+				catch (Exception e)
+				{
+					//	e.printStackTrace();
+				}
+
+				decrStackSize(0, 1);
+				markUpdate();
+			}
+		}
+	}
+
+	@Override
+	protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
+	{
+		interactCurrentItem(this, 0, player);
+		return true;
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeToNBT(nbt);
+		return ResonantInduction.PACKET_TILE.getPacket(this, nbt);
+	}
+
+	@Override
+	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+	{
+		try
+		{
+			readFromNBT(PacketHandler.readNBTTagCompound(data));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected TileRender newRenderer()
+	{
+		return new TileRender()
+		{
+			@Override
+			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
+			{
+				if (!isItem)
+				{
+					GL11.glPushMatrix();
+					RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z);
+					GL11.glPopMatrix();
+				}
+
+				return false;
+			}
+		};
+	}
 }
 

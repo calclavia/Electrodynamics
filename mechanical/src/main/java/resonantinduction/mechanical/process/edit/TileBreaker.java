@@ -30,6 +30,8 @@ import java.util.ArrayList;
  */
 public class TileBreaker extends TileInventory implements IRotatable, IPacketReceiver
 {
+	private boolean doWork = false;
+
 	public TileBreaker()
 	{
 		super(Material.iron);
@@ -48,7 +50,26 @@ public class TileBreaker extends TileInventory implements IRotatable, IPacketRec
 		work();
 	}
 
+	@Override
+	public void updateEntity()
+	{
+		if (doWork)
+		{
+			doWork();
+			doWork = false;
+		}
+	}
+
 	public void work()
+	{
+		if (isIndirectlyPowered())
+		{
+			doWork = true;
+		}
+	}
+
+
+	public void doWork()
 	{
 		if (isIndirectlyPowered())
 		{
