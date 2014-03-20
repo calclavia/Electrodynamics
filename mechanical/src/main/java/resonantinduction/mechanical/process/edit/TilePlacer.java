@@ -82,7 +82,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 
                 if (tile instanceof IInventory)
                 {
-                    ItemStack candidate = new ItemStack(InventoryUtility.takeTopItemBlockFromInventory((IInventory) tile, dir.ordinal()));
+                    ItemStack candidate = InventoryUtility.takeTopBlockFromInventory((IInventory) tile, dir.ordinal());
                     if (candidate != null)
                     {
                         incrStackSize(0, candidate);
