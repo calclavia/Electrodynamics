@@ -121,6 +121,32 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     }
 
     @Override
+    public void setDirection(ForgeDirection direction)
+    {
+        super.setDirection(direction);
+        this.updateDirection();
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    public void updateDirection()
+    {
+        switch (this.getDirection())
+        {
+            case EAST:
+            case WEST:
+                this.renderItemSide_a = ForgeDirection.NORTH;
+                this.renderItemSide_b = ForgeDirection.SOUTH;
+                break;
+            case NORTH:
+            case SOUTH:
+                this.renderItemSide_a = ForgeDirection.EAST;
+                this.renderItemSide_b = ForgeDirection.WEST;
+                break;
+
+        }
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     protected TileRender newRenderer()
     {
@@ -131,8 +157,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
             {
                 if (!isItem)
                 {
+                    if (TilePlacer.this.worldObj != null && (TilePlacer.this.renderItemSide_a == null || TilePlacer.this.renderItemSide_b == null))
+                    {
+                        TilePlacer.this.updateDirection();
+                    }
                     GL11.glPushMatrix();
-                    RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z);
+                    RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), TilePlacer.this.renderItemSide_a, TilePlacer.this.renderItemSide_b);
                     GL11.glPopMatrix();
                 }
 
