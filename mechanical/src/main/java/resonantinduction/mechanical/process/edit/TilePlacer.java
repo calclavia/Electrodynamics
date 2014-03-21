@@ -65,10 +65,24 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     }
 
     @Override
+    public void initiate()
+    {
+        super.initiate();
+        updateDirection();
+    }
+
+    @Override
     public void updateEntity()
     {
-        if (doWork)
+        if (autoPullItems && this.ticks % 5 == 0)
+        {
+            if (getStackInSlot(0) == null)
             {
+                this.setInventorySlotContents(0, this.getInvHandler().tryGrabFromPosition(this.getDirection().getOpposite(), 1));
+            }
+        }
+        if (doWork)
+        {//TODO implement block break speed, and a minor delay
             doWork();
             doWork = false;
         }
@@ -97,6 +111,16 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     {
         interactCurrentItem(this, 0, player);
         return true;
+    }
+
+    protected boolean configure(EntityPlayer player, int side, Vector3 hit)
+    {
+        if (player.isSneaking())
+        {
+            this.autoPullItems = !this.autoPullItems;
+            player.sendChatToPlayer(ChatMessageComponent.createFromText("AutoExtract: " + this.autoPullItems));
+        }
+        return super.configure(player, side, hit);
     }
 
     @Override
