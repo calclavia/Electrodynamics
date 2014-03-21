@@ -129,6 +129,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         {
             this.autoPullItems = !this.autoPullItems;
             player.sendChatToPlayer(ChatMessageComponent.createFromText("AutoExtract: " + this.autoPullItems));
+            return true;
         }
         return super.configure(player, side, hit);
     }
