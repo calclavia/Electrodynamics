@@ -31,265 +31,279 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
-	protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
+    protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	/**
 	 * Computes the average fluid for client to render.
 	 */
-	private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
-	private boolean markPacket = true;
+    private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
+    private boolean markPacket = true;
 
-	public PartPipe()
-	{
-		super(null);
-		material = EnumPipeMaterial.values()[0];
-		requiresInsulation = false;
+    public PartPipe()
+    {
+        super(null);
+        material = EnumPipeMaterial.values()[0];
+        requiresInsulation = false;
 
-		node = new FluidPressureNode(this)
-		{
-			@Override
-			public void doRecache()
-			{
+        node = new FluidPressureNode(this)
+        {
+            @Override
+            public void doRecache()
+            {
 
-				connections.clear();
+                connections.clear();
 
-				if (world() != null)
-				{
-					byte previousConnections = getAllCurrentConnections();
-					currentConnections = 0;
+                if (world() != null)
+                {
+                    byte previousConnections = getAllCurrentConnections();
+                    currentConnections = 0;
 
-					for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-					{
-						TileEntity tile = position().translate(dir).getTileEntity(world());
+                    for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                    {
+                        TileEntity tile = position().translate(dir).getTileEntity(world());
 
-						if (tile instanceof IFluidHandler)
-						{
-							if (tile instanceof IPressureNodeProvider)
-							{
-								FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+                        if (tile instanceof IFluidHandler)
+                        {
+                            if (tile instanceof IPressureNodeProvider)
+                            {
+                                FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
-								if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-								{
-									currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-									connections.put(check, dir);
+                                if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+                                {
+                                    currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+                                    connections.put(check, dir);
 
-								}
-							}
-							else if (canConnect(dir, tile))
-							{
-								currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-								connections.put(tile, dir);
-							}
-						}
-					}
+                                }
+                            }
+                            else if (canConnect(dir, tile))
+                            {
+                                currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
+                                connections.put(tile, dir);
+                            }
+                        }
+                    }
 
-					/** Only send packet updates if visuallyConnected changed. */
-					if (!world().isRemote && previousConnections != currentConnections)
-					{
-						sendConnectionUpdate();
-					}
-				}
-			}
+                    /** Only send packet updates if visuallyConnected changed. */
+                    if (!world().isRemote && previousConnections != currentConnections)
+                    {
+                        sendConnectionUpdate();
+                    }
+                }
+            }
 
-			@Override
-			public boolean canConnect(ForgeDirection from, Object source)
-			{
-				if (!isBlockedOnSide(from))
-				{
-					if (source instanceof FluidPressureNode)
-					{
-						FluidPressureNode otherNode = (FluidPressureNode) source;
+            @Override
+            public boolean canConnect(ForgeDirection from, Object source)
+            {
+                if (!isBlockedOnSide(from))
+                {
+                    if (source instanceof FluidPressureNode)
+                    {
+                        FluidPressureNode otherNode = (FluidPressureNode) source;
 
-						if (otherNode.parent instanceof PartPipe)
-						{
-							PartPipe otherPipe = (PartPipe) otherNode.parent;
+                        if (otherNode.parent instanceof PartPipe)
+                        {
+                            PartPipe otherPipe = (PartPipe) otherNode.parent;
 
-							if (!otherPipe.isBlockedOnSide(from.getOpposite()) && getMaterial() == otherPipe.getMaterial())
-							{
-								return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
-							}
+                            if (!otherPipe.isBlockedOnSide(from.getOpposite()) && getMaterial() == otherPipe.getMaterial())
+                            {
+                                return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
+                            }
 
-							return false;
-						}
-					}
+                            return false;
+                        }
+                    }
 
-					return super.canConnect(from, source) || source instanceof IFluidHandler;
-				}
+                    return super.canConnect(from, source) || source instanceof IFluidHandler;
+                }
 
-				return false;
-			}
-		};
+                return false;
+            }
 
-	}
+            @Override
+            public int getPressure(ForgeDirection dir)
+            {
+                if (super.getPressure(dir) <= 0)
+                {
+                    if (dir == ForgeDirection.UP)
+                        return -2;
 
-	@Override
-	public void setMaterial(int i)
-	{
-		setMaterial(EnumPipeMaterial.values()[i]);
+                    if (dir == ForgeDirection.DOWN)
+                        return +2;
+                }
+                return super.getPressure(dir);
+            }
+        };
 
-	}
+    }
 
-	@Override
-	public void setMaterial(EnumPipeMaterial material)
-	{
-		this.material = material;
-		node.maxFlowRate = getMaterial().maxFlowRate;
-		node.maxPressure = getMaterial().maxPressure;
-		tank.setCapacity(node.maxFlowRate);
-	}
+    @Override
+    public void setMaterial(int i)
+    {
+        setMaterial(EnumPipeMaterial.values()[i]);
 
-	@Override
-	public String getType()
-	{
-		return "resonant_induction_pipe";
-	}
+    }
 
-	@Override
-	public void update()
-	{
-		super.update();
+    @Override
+    public void setMaterial(EnumPipeMaterial material)
+    {
+        this.material = material;
+        node.maxFlowRate = getMaterial().maxFlowRate;
+        node.maxPressure = getMaterial().maxPressure;
+        tank.setCapacity(node.maxFlowRate);
+    }
 
-		averageTankData.add(tank.getFluidAmount());
+    @Override
+    public String getType()
+    {
+        return "resonant_induction_pipe";
+    }
 
-		if (!world().isRemote && markPacket)
-		{
-			sendFluidUpdate();
-			markPacket = false;
-		}
-	}
+    @Override
+    public void update()
+    {
+        super.update();
 
-	public void sendFluidUpdate()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
+        averageTankData.add(tank.getFluidAmount());
 
-		int averageAmount = 0;
+        if (!world().isRemote && markPacket)
+        {
+            sendFluidUpdate();
+            markPacket = false;
+        }
+    }
 
-		if (averageTankData.size() > 0)
-		{
-			for (int i = 0; i < averageTankData.size(); i++)
-			{
-				averageAmount += averageTankData.get(i);
-			}
+    public void sendFluidUpdate()
+    {
+        NBTTagCompound nbt = new NBTTagCompound();
 
-			averageAmount /= averageTankData.size();
-		}
+        int averageAmount = 0;
 
-		FluidTank tempTank = tank.getFluid() != null ? new FluidTank(tank.getFluid().getFluid(), averageAmount, tank.getCapacity()) : new FluidTank(tank.getCapacity());
-		tempTank.writeToNBT(nbt);
-		tile().getWriteStream(this).writeByte(3).writeInt(tank.getCapacity()).writeNBTTagCompound(nbt);
-	}
+        if (averageTankData.size() > 0)
+        {
+            for (int i = 0; i < averageTankData.size(); i++)
+            {
+                averageAmount += averageTankData.get(i);
+            }
 
-	@Override
-	public void read(MCDataInput packet, int packetID)
-	{
-		if (packetID == 3)
-		{
-			tank.setCapacity(packet.readInt());
-			tank.readFromNBT(packet.readNBTTagCompound());
-		}
-		else
-		{
-			super.read(packet, packetID);
-		}
-	}
+            averageAmount /= averageTankData.size();
+        }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
-	{
-		RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame);
-	}
+        FluidTank tempTank = tank.getFluid() != null ? new FluidTank(tank.getFluid().getFluid(), averageAmount, tank.getCapacity()) : new FluidTank(tank.getCapacity());
+        tempTank.writeToNBT(nbt);
+        tile().getWriteStream(this).writeByte(3).writeInt(tank.getCapacity()).writeNBTTagCompound(nbt);
+    }
 
-	@Override
-	protected ItemStack getItem()
-	{
-		return new ItemStack(Mechanical.itemPipe, 1, getMaterialID());
-	}
+    @Override
+    public void read(MCDataInput packet, int packetID)
+    {
+        if (packetID == 3)
+        {
+            tank.setCapacity(packet.readInt());
+            tank.readFromNBT(packet.readNBTTagCompound());
+        }
+        else
+        {
+            super.read(packet, packetID);
+        }
+    }
 
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (!world().isRemote)
-		{
-			if (doFill)
-			{
-				markPacket = true;
-			}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void renderDynamic(codechicken.lib.vec.Vector3 pos, float frame, int pass)
+    {
+        RenderPipe.INSTANCE.render(this, pos.x, pos.y, pos.z, frame);
+    }
 
-			return tank.fill(resource, doFill);
-		}
-		return 0;
-	}
+    @Override
+    protected ItemStack getItem()
+    {
+        return new ItemStack(Mechanical.itemPipe, 1, getMaterialID());
+    }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return drain(from, resource.amount, doDrain);
-	}
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+    {
+        if (!world().isRemote)
+        {
+            if (doFill)
+            {
+                markPacket = true;
+            }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		if (!world().isRemote)
-		{
-			if (doDrain)
-			{
-				markPacket = true;
-			}
+            return tank.fill(resource, doFill);
+        }
+        return 0;
+    }
 
-			return tank.drain(maxDrain, doDrain);
-		}
-		return null;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+    {
+        return drain(from, resource.amount, doDrain);
+    }
 
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+    {
+        if (!world().isRemote)
+        {
+            if (doDrain)
+            {
+                markPacket = true;
+            }
 
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
+            return tank.drain(maxDrain, doDrain);
+        }
+        return null;
+    }
 
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		return new FluidTankInfo[] { tank.getInfo() };
-	}
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
 
-	@Override
-	public FluidTank getPressureTank()
-	{
-		return tank;
-	}
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid)
+    {
+        return true;
+    }
 
-	@Override
-	public void drawBreaking(RenderBlocks renderBlocks)
-	{
-		CCRenderState.reset();
-		RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockMachinePart.getIcon(0, 0)), null);
-	}
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from)
+    {
+        return new FluidTankInfo[] { tank.getInfo() };
+    }
 
-	@Override
-	public void save(NBTTagCompound nbt)
-	{
-		super.save(nbt);
-		tank.writeToNBT(nbt);
-	}
+    @Override
+    public FluidTank getPressureTank()
+    {
+        return tank;
+    }
 
-	@Override
-	public void load(NBTTagCompound nbt)
-	{
-		super.load(nbt);
-		tank.readFromNBT(nbt);
-		node.maxFlowRate = getMaterial().maxFlowRate;
-		node.maxPressure = getMaterial().maxPressure;
-	}
+    @Override
+    public void drawBreaking(RenderBlocks renderBlocks)
+    {
+        CCRenderState.reset();
+        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockMachinePart.getIcon(0, 0)), null);
+    }
 
-	@Override
-	public void onFluidChanged()
-	{
-	}
+    @Override
+    public void save(NBTTagCompound nbt)
+    {
+        super.save(nbt);
+        tank.writeToNBT(nbt);
+    }
+
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        super.load(nbt);
+        tank.readFromNBT(nbt);
+        node.maxFlowRate = getMaterial().maxFlowRate;
+        node.maxPressure = getMaterial().maxPressure;
+    }
+
+    @Override
+    public void onFluidChanged()
+    {
+    }
 }
