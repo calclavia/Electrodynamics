@@ -3,7 +3,9 @@ package resonantinduction.mechanical.process.edit;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
@@ -41,17 +43,16 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     private ForgeDirection renderItemSide_b;
 
     @SideOnly(Side.CLIENT)
-    private Icon front;
+    private Icon iconFront;
 
     @SideOnly(Side.CLIENT)
-    private Icon back;
+    private Icon iconBack;
 
     public TilePlacer()
     {
         super(Material.rock);
         this.normalRender = false;
         this.maxSlots = 1;
-        this.textureName = "cobble_frame";
     }
 
     public InternalInventoryHandler getInvHandler()
@@ -166,6 +167,21 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     }
 
     @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        this.autoPullItems = nbt.getBoolean("autoPull");
+    }
+
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setBoolean("autoPull", this.autoPullItems);
+    }
+
+    @Override
     public void setDirection(ForgeDirection direction)
     {
         super.setDirection(direction);
@@ -197,11 +213,11 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     {
         if (side == meta)
         {
-            return front;
+            return iconFront;
         }
         else if (ForgeDirection.getOrientation(meta).getOpposite().ordinal() == side)
         {
-            return back;
+            return iconBack;
         }
         return super.getIcon(side, meta);
     }
@@ -211,8 +227,8 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     public void registerIcons(IconRegister iconRegister)
     {
         super.registerIcons(iconRegister);
-        this.front = iconRegister.registerIcon("placer");
-        this.back = iconRegister.registerIcon("cobble_output");
+        iconFront = iconRegister.registerIcon(getTextureName() + "_front");
+        iconBack = iconRegister.registerIcon(getTextureName() + "_back");
     }
 
     @Override
