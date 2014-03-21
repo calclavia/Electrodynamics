@@ -26,6 +26,7 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
 {
     private boolean doWork = false;
     private InternalInventoryHandler invHandler;
+    private byte place_delay = 0;
 
     public TileBreaker()
     {
@@ -59,8 +60,17 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
     {
         if (doWork)
         {
-            doWork();
-            doWork = false;
+            if (place_delay < Byte.MAX_VALUE)
+            {
+                place_delay++;
+            }
+
+            if (place_delay >= 10)
+            {
+                doWork();
+                doWork = false;
+                place_delay = 0;
+            }
         }
     }
 
@@ -69,6 +79,7 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
         if (isIndirectlyPowered())
         {
             doWork = true;
+            place_delay = 0;
         }
     }
 
