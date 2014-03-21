@@ -1,14 +1,17 @@
 package resonantinduction.mechanical.process.edit;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
@@ -37,11 +40,18 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     private ForgeDirection renderItemSide_a;
     private ForgeDirection renderItemSide_b;
 
+    @SideOnly(Side.CLIENT)
+    private Icon front;
+
+    @SideOnly(Side.CLIENT)
+    private Icon back;
+
     public TilePlacer()
     {
-        super(Material.iron);
+        super(Material.rock);
         this.normalRender = false;
         this.maxSlots = 1;
+        this.textureName = "cobble_frame";
     }
 
     public InternalInventoryHandler getInvHandler()
@@ -86,14 +96,14 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         {
             if (place_delay < Byte.MAX_VALUE)
                 place_delay++;
-            
+
             if (place_delay >= 5)
             {//TODO implement block break speed, and a minor delay
                 doWork();
                 doWork = false;
             }
         }
-       
+
     }
 
     public void work()
@@ -179,6 +189,30 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
                 break;
 
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        if (side == meta)
+        {
+            return front;
+        }
+        else if (ForgeDirection.getOrientation(meta).getOpposite().ordinal() == side)
+        {
+            return back;
+        }
+        return super.getIcon(side, meta);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        super.registerIcons(iconRegister);
+        this.front = iconRegister.registerIcon("placer");
+        this.back = iconRegister.registerIcon("cobble_output");
     }
 
     @Override
