@@ -5,16 +5,14 @@ MFFS v3.0 is a complete ground-up rewrite inspired by MFFS v2.0 by ThunderDark.
 Copyright (c) Calclavia
 
 ### Note on Transfer
-This repository contains version 3 of Modular Force Field System which is completely rewritten from the ground up by Calclavia.
-To find Thunderdark's original code for MFFS 2.0, check out the version 2 branch. This mod is NOT derived from Thunderdark's mod
-but instead is the official successor of MFFS 2.0 and basing some ideas off the original MFFS.
+Modular Force Field System v3 is an original complete ground up rewrite of Modular Force Field System v2 which was originally created by ThunderDark.
+This mod is therefore _not_ derived work of MFFS v2, but is simply a mod that used some ideas from the original MFFS.
 
 ### Website & Download
-The mod can be found and downloaded at: http://universalelectricity.com/mffs/
+The mod can be found and downloaded at: http://calclavia.com/mffs/
 
 ### Developement
 **Developer** - Calclavia
-**Co-Developer** - Kovu
 
 **Original Developer** - ThunderDark
 
@@ -22,7 +20,7 @@ The mod can be found and downloaded at: http://universalelectricity.com/mffs/
 Please submit a pull request if you would be willing to translate this mod into another language.
 
 ### Contact
-Join *#mffs* or *#universalelectricity* on EsperNet (irc.esper.net:5555). Remember to follow the rules and respect others as with any other channel.
+Join *#mffs* or *#calclavia* on EsperNet (irc.esper.net:5555). Remember to follow the rules and respect others as with any other channel.
 
 ### License
 Modular Force Field System is licensed under Calclavia's Educational Public License (http://calclavia.com/educational-public-license/).
