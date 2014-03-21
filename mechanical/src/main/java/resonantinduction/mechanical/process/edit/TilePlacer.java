@@ -1,65 +1,80 @@
 package resonantinduction.mechanical.process.edit;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraftforge.common.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
+import resonantinduction.core.ResonantInduction;
+import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.render.RenderItemOverlayUtility;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.inventory.InternalInventoryHandler;
 import calclavia.lib.utility.inventory.InventoryUtility;
+
 import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import org.lwjgl.opengl.GL11;
-import resonantinduction.core.ResonantInduction;
-import universalelectricity.api.vector.Vector3;
 
-/**
- * @author tgame14
- * @since 18/03/14
- */
+/** @author tgame14
+ * @since 18/03/14 */
 public class TilePlacer extends TileInventory implements IRotatable, IPacketReceiver
 {
     private boolean doWork = false;
+    private boolean autoPullItems = false;
+    private InternalInventoryHandler invHandler;
+    private ForgeDirection renderItemSide_a;
+    private ForgeDirection renderItemSide_b;
 
-    public TilePlacer ()
+    public TilePlacer()
     {
         super(Material.iron);
-        normalRender = false;
+        this.normalRender = false;
+        this.maxSlots = 1;
+    }
+
+    public InternalInventoryHandler getInvHandler()
+    {
+        if (invHandler == null)
+        {
+            invHandler = new InternalInventoryHandler(this);
+        }
+        return invHandler;
     }
 
     @Override
-    public void onAdded ()
+    public void onAdded()
     {
         work();
     }
 
     @Override
-    public void onNeighborChanged ()
+    public void onNeighborChanged()
     {
         work();
     }
 
     @Override
-    public void updateEntity ()
+    public void updateEntity()
     {
         if (doWork)
-        {
+            {
             doWork();
             doWork = false;
         }
     }
 
-    public void work ()
+    public void work()
     {
         if (isIndirectlyPowered())
         {
@@ -67,59 +82,25 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         }
     }
 
-    public void doWork ()
+    public void doWork()
     {
-        ForgeDirection dir = getDirection();
-        Vector3 placePos = position().translate(dir);
-
-        if (world().isAirBlock(placePos.intX(), placePos.intY(), placePos.intZ()))
+        //Tries to place the item stack into the world
+        if (InventoryUtility.placeItemBlock(world(), x() + this.getDirection().offsetX, y() + this.getDirection().offsetY, z() + this.getDirection().offsetZ, this.getStackInSlot(0)))
         {
-
-            if (getStackInSlot(0) == null)
-            {
-                ForgeDirection op = dir.getOpposite();
-                TileEntity tile = getWorldObj().getBlockTileEntity(x() + op.offsetX, y() + op.offsetY, z() + op.offsetZ);
-
-                if (tile instanceof IInventory)
-                {
-                    ItemStack candidate = InventoryUtility.takeTopBlockFromInventory((IInventory) tile, dir.ordinal());
-                    if (candidate != null)
-                    {
-                        incrStackSize(0, candidate);
-                    }
-                }
-            }
-
-            ItemStack placeStack = getStackInSlot(0);
-
-            if (placeStack != null && placeStack.getItem() instanceof ItemBlock)
-            {
-                ItemBlock itemBlock = ((ItemBlock) placeStack.getItem());
-
-                try
-                {
-                    itemBlock.placeBlockAt(placeStack, null, world(), placePos.intX(), placePos.intY(), placePos.intZ(), 0, 0, 0, 0, 0);
-                }
-                catch (Exception e)
-                {
-                    //	e.printStackTrace();
-                }
-
-                decrStackSize(0, 1);
-                markUpdate();
-            }
+            decrStackSize(0, 1);
+            markUpdate();
         }
     }
 
     @Override
-    protected boolean use (EntityPlayer player, int hitSide, Vector3 hit)
+    protected boolean use(EntityPlayer player, int hitSide, Vector3 hit)
     {
         interactCurrentItem(this, 0, player);
         return true;
     }
 
     @Override
-    public Packet getDescriptionPacket ()
+    public Packet getDescriptionPacket()
     {
         NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
@@ -127,7 +108,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
     }
 
     @Override
-    public void onReceivePacket (ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
         try
         {
@@ -141,12 +122,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 
     @Override
     @SideOnly(Side.CLIENT)
-    protected TileRender newRenderer ()
+    protected TileRender newRenderer()
     {
         return new TileRender()
         {
             @Override
-            public boolean renderDynamic (Vector3 position, boolean isItem, float frame)
+            public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
             {
                 if (!isItem)
                 {
@@ -160,4 +141,3 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         };
     }
 }
-
