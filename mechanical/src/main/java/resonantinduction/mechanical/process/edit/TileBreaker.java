@@ -30,6 +30,7 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
     public TileBreaker()
     {
         super(Material.iron);
+        this.rotationMask = Byte.parseByte("111111", 2);
     }
 
     public InternalInventoryHandler getInvHandler()
