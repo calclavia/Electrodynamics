@@ -9,22 +9,19 @@ import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InternalInventoryHandler;
 import calclavia.lib.utility.inventory.InventoryUtility;
-
 import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
-
 import org.lwjgl.opengl.GL11;
-
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 
@@ -46,9 +43,9 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public TilePlacer()
 	{
 		super(Material.rock);
-		this.normalRender = false;
-		this.maxSlots = 1;
-		this.rotationMask = Byte.parseByte("111111", 2);
+		normalRender = false;
+		maxSlots = 1;
+		rotationMask = Byte.parseByte("111111", 2);
 	}
 
 	public InternalInventoryHandler getInvHandler()
@@ -97,7 +94,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 			}
 
 			if (place_delay >= 5)
-			{//TODO implement block break speed, and a minor delay
+			{
 				doWork();
 				doWork = false;
 			}
@@ -117,9 +114,17 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public void doWork()
 	{
 		//Tries to place the item stack into the world
-		if (InventoryUtility.placeItemBlock(world(), x() + this.getDirection().offsetX, y() + this.getDirection().offsetY, z() + this.getDirection().offsetZ, this.getStackInSlot(0)))
+		int side = 0;
+		Vector3 placePos = position().translate(getDirection());
+		ItemStack placeStack = getStackInSlot(0);
+
+		if (InventoryUtility.placeItemBlock(world(), placePos.intX(), placePos.intY(), placePos.intZ(), placeStack, side))
 		{
-			decrStackSize(0, 1);
+			if (placeStack.stackSize <= 0)
+			{
+				setInventorySlotContents(0, null);
+			}
+
 			markUpdate();
 			doWork = false;
 		}
