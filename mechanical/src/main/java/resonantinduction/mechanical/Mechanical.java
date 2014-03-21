@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -55,7 +56,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
- * Resonant Induction Archaic Module
+ * Resonant Induction Mechanical Module
  * 
  * @author DarkCow, Calclavia
  */
@@ -192,5 +193,9 @@ public class Mechanical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMechanicalPiston, "SGS", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone, 'G', new ItemStack(itemGear, 1, 2)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMixer, "IGI", "IGI", "IGI", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'G', itemGear));
+
+        // block break and placer recipes
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockTileBreaker, "CGC", "CPC", "CDC", 'C', Block.cobblestone, 'G', itemGear, 'P', Block.pistonBase, 'D', Item.pickaxeDiamond));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockTilePlacer, "CGC", "CSC", "CRC", 'C', Block.cobblestone, 'G', itemGear, 'S', Item.ingotIron, 'R', Block.blockRedstone));
 	}
 }

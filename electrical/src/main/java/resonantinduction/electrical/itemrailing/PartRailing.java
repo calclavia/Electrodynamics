@@ -6,6 +6,7 @@ import calclavia.lib.render.EnumColor;
 import codechicken.microblock.IHollowConnect;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -132,9 +133,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
     {
-        if (tile instanceof IItemRailing)
-            return canConnectToRailing((IItemRailing) tile, to);
-        return false;
+        return tile instanceof IItemRailing ? canConnectToRailing((IItemRailing) tile, to) : tile instanceof IInventory ? true : false;
     }
 
     @Override
