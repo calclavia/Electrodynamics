@@ -32,6 +32,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 {
     private boolean doWork = false;
     private boolean autoPullItems = false;
+    private byte place_delay = 0;
     private InternalInventoryHandler invHandler;
     private ForgeDirection renderItemSide_a;
     private ForgeDirection renderItemSide_b;
@@ -82,10 +83,17 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
             }
         }
         if (doWork)
-        {//TODO implement block break speed, and a minor delay
-            doWork();
-            doWork = false;
+        {
+            if (place_delay < Byte.MAX_VALUE)
+                place_delay++;
+            
+            if (place_delay >= 5)
+            {//TODO implement block break speed, and a minor delay
+                doWork();
+                doWork = false;
+            }
         }
+       
     }
 
     public void work()
@@ -93,6 +101,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         if (isIndirectlyPowered())
         {
             doWork = true;
+            place_delay = 0;
         }
     }
 
@@ -103,6 +112,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
         {
             decrStackSize(0, 1);
             markUpdate();
+            doWork = false;
         }
     }
 
