@@ -9,7 +9,9 @@ import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InternalInventoryHandler;
 import calclavia.lib.utility.inventory.InventoryUtility;
+
 import com.google.common.io.ByteArrayDataInput;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -21,7 +23,9 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
+
 import org.lwjgl.opengl.GL11;
+
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 
@@ -226,6 +230,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		}
 		return super.getIcon(side, meta);
 	}
+	
+	@Override
+    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
+    {
+        return side == this.getDirection().getOpposite() && slot == 0;
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
