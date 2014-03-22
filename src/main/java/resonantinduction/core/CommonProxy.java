@@ -23,6 +23,11 @@ public class CommonProxy extends ProxyBase
 		return false;
 	}
 
+	public void renderBlockParticle(World world, double x, double y, double z, Vector3 velocity, int blockID, float scale)
+    {
+
+    }
+	
 	public void renderBlockParticle(World world, Vector3 position, Vector3 velocity, int blockID, float scale)
 	{
 

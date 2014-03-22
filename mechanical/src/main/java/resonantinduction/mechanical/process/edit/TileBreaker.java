@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
@@ -98,19 +99,28 @@ public class TileBreaker extends TileBase implements IRotatable, IPacketReceiver
                 int candidateMeta = world().getBlockMetadata(check.intX(), check.intY(), check.intZ());
                 boolean flag = true;
 
+                //Get items dropped
                 ArrayList<ItemStack> drops = block.getBlockDropped(getWorldObj(), check.intX(), check.intY(), check.intZ(), candidateMeta, 0);
 
                 for (ItemStack stack : drops)
                 {
+                    //Insert into tile if one exists
                     ItemStack insert = stack.copy();
                     insert = getInvHandler().storeItem(insert, this.getDirection().getOpposite());
+                    //If not spit items into world
                     if (insert != null)
                     {
                         getInvHandler().throwItem(this.getDirection().getOpposite(), insert);
                     }
                 }
-                getWorldObj().destroyBlock(check.intX(), check.intY(), check.intZ(), false);
 
+                //Destroy block
+                ResonantInduction.proxy.renderBlockParticle(worldObj, check.intX(), check.intY(), check.intZ(), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), world().getBlockId(check.intX(), check.intY(), check.intZ()), 1);
+
+                getWorldObj().destroyBlock(check.intX(), check.intY(), check.intZ(), false);
+                getWorldObj().playAuxSFX(1012, check.intX(), check.intY(), check.intZ(), 0);
+
+                
             }
         }
     }

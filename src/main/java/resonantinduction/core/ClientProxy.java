@@ -11,50 +11,54 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * @author Calclavia
- * 
- */
+/** @author Calclavia */
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
-	@Override
-	public void preInit()
-	{
-		MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
-	}
+    @Override
+    public void preInit()
+    {
+        MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE);
+    }
 
-	@Override
-	public boolean isPaused()
-	{
-		if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
-		{
-			GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
+    @Override
+    public boolean isPaused()
+    {
+        if (FMLClientHandler.instance().getClient().isSingleplayer() && !FMLClientHandler.instance().getClient().getIntegratedServer().getPublic())
+        {
+            GuiScreen screen = FMLClientHandler.instance().getClient().currentScreen;
 
-			if (screen != null)
-			{
-				if (screen.doesGuiPauseGame())
-				{
-					return true;
-				}
-			}
-		}
+            if (screen != null)
+            {
+                if (screen.doesGuiPauseGame())
+                {
+                    return true;
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public boolean isGraphicsFancy()
-	{
-		return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
-	}
+    @Override
+    public boolean isGraphicsFancy()
+    {
+        return FMLClientHandler.instance().getClient().gameSettings.fancyGraphics;
+    }
 
-	@Override
-	public void renderBlockParticle(World world, Vector3 position, Vector3 velocity, int blockID, float scale)
-	{
-		EntityFX fx = new EntityDiggingFX(world, position.x, position.y, position.z, velocity.x, velocity.y, velocity.z, Block.blocksList[blockID], 0, 0);
-		fx.multipleParticleScaleBy(scale);
-		fx.noClip = true;
-		FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
-	}
+    @Override
+    public void renderBlockParticle(World world, Vector3 position, Vector3 velocity, int blockID, float scale)
+    {
+       this.renderBlockParticle(world, position.x, position.y, position.z, velocity, blockID, scale);
+    }
+
+    @Override
+    public void renderBlockParticle(World world, double x, double y, double z, Vector3 velocity, int blockID, float scale)
+    {
+        EntityFX fx = new EntityDiggingFX(world, x, y, z, velocity.x, velocity.y, velocity.z, Block.blocksList[blockID], 0, 0);
+        fx.multipleParticleScaleBy(scale);
+        fx.noClip = true;
+        FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
+    }
+
 }
