@@ -20,7 +20,7 @@ import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.java.Pair;
+import calclavia.lib.type.Pair;
 import calclavia.lib.multiblock.fake.IMultiBlock;
 import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.network.PacketHandler;

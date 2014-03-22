@@ -3,7 +3,7 @@ package resonantinduction.archaic.fluid.tank;
 import calclavia.lib.content.module.TileBlock.IComparatorInputOverride;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.render.FluidRenderUtility;
-import calclavia.lib.render.RenderBlockUtility;
+import calclavia.lib.utility.render.RenderBlockUtility;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;

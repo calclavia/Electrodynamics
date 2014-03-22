@@ -14,7 +14,7 @@ import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.args.ArgumentFloatData;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.java.Pair;
+import calclavia.lib.type.Pair;
 import calclavia.lib.science.units.UnitHelper;
 
 public class TaskFire extends TaskBaseArmbot

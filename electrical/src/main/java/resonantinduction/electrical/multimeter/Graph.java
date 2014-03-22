@@ -1,7 +1,7 @@
 package resonantinduction.electrical.multimeter;
 
 import net.minecraft.nbt.NBTTagCompound;
-import calclavia.lib.java.EvictingList;
+import calclavia.lib.type.EvictingList;
 
 /**
  * Graph for the multimeter

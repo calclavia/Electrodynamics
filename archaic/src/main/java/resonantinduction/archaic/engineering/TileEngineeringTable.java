@@ -30,7 +30,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
-import calclavia.lib.java.Pair;
+import calclavia.lib.type.Pair;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.item.ItemBlockSaved;

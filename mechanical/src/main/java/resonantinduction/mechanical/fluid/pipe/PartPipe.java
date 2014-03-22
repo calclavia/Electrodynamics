@@ -16,7 +16,7 @@ import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
-import calclavia.lib.java.EvictingList;
+import calclavia.lib.type.EvictingList;
 import calclavia.lib.utility.WorldUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
