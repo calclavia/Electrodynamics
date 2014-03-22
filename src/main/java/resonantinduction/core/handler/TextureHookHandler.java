@@ -31,6 +31,7 @@ public class TextureHookHandler
 			RenderUtility.registerIcon(Reference.PREFIX + "mixture_flow", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "molten_flow", event.map);
 			RenderUtility.registerIcon(Reference.PREFIX + "multimeter_screen", event.map);
+			RenderUtility.registerIcon(Reference.PREFIX + "tankEdge", event.map);
 		}
 	}
 

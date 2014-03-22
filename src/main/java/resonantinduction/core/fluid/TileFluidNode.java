@@ -93,6 +93,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
 				{
 					colorID = data.readInt();
 					renderSides = data.readByte();
+					markRender();
 					return true;
 				}
 				else if (id == PACKET_TANK)

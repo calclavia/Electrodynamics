@@ -1,20 +1,32 @@
 package resonantinduction.archaic.fluid.tank;
 
+import calclavia.lib.content.module.TileBlock.IComparatorInputOverride;
+import calclavia.lib.content.module.TileRender;
+import calclavia.lib.render.FluidRenderUtility;
+import calclavia.lib.render.RenderBlockUtility;
+import calclavia.lib.render.RenderUtility;
+import calclavia.lib.utility.FluidUtility;
+import calclavia.lib.utility.WorldUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import org.lwjgl.opengl.GL11;
+import resonantinduction.archaic.Archaic;
+import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 import resonantinduction.core.fluid.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileBlock.IComparatorInputOverride;
-import calclavia.lib.utility.FluidUtility;
-import calclavia.lib.utility.WorldUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
+
+import java.awt.*;
 
 public class TileTank extends TileFluidDistribution implements IComparatorInputOverride
 {
@@ -27,6 +39,12 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		isOpaqueCube = false;
 		normalRender = false;
 		itemBlock = ItemBlockFluidContainer.class;
+	}
+
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
+	{
+		return access.getBlockId(x, y, z) == blockID() ? false : super.shouldSideBeRendered(access, x, y, z, side);
 	}
 
 	@Override
@@ -62,7 +80,9 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	public int getComparatorInputOverride(int side)
 	{
 		if (getNetwork().getTank().getFluid() != null)
+		{
 			return (int) (15 * ((double) getNetwork().getTank().getFluidAmount() / (double) getNetwork().getTank().getCapacity()));
+		}
 		return 0;
 	}
 
@@ -70,7 +90,9 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	public int getLightValue(IBlockAccess access)
 	{
 		if (getInternalTank().getFluid() != null)
+		{
 			return getInternalTank().getFluid().getFluid().getLuminosity();
+		}
 		return super.getLightValue(access);
 	}
 
@@ -106,5 +128,105 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}
 		}
+	}
+
+	@Override
+	protected TileRender newRenderer()
+	{
+		return new TileRender()
+		{
+			@Override
+			public boolean renderStatic(RenderBlocks renderer, Vector3 position)
+			{
+				RenderBlockUtility.tessellateBlockWithConnectedTextures(renderSides, world(), x(), y(), z(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
+				return true;
+			}
+
+			public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
+			{
+				if (tileEntity instanceof TileTank)
+				{
+					GL11.glPushMatrix();
+					GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+
+					if (fluid != null)
+					{
+						GL11.glPushMatrix();
+
+						if (tileEntity.worldObj != null && !fluid.getFluid().isGaseous())
+						{
+							GL11.glScaled(0.99, 0.99, 0.99);
+							FluidTank tank = ((TileTank) tileEntity).getInternalTank();
+							double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+
+							double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
+							double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
+							double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
+							double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+							FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
+						}
+						else
+						{
+							GL11.glTranslated(-0.5, -0.5, -0.5);
+							GL11.glScaled(0.99, 0.99, 0.99);
+							int capacity = tileEntity instanceof TileTank ? ((TileTank) tileEntity).getInternalTank().getCapacity() : fluid.amount;
+							double filledPercentage = (double) fluid.amount / (double) capacity;
+							double renderPercentage = fluid.getFluid().isGaseous() ? 1 : filledPercentage;
+
+							int[] displayList = FluidRenderUtility.getFluidDisplayLists(fluid, tileEntity.worldObj, false);
+
+							GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+							GL11.glEnable(GL11.GL_CULL_FACE);
+							GL11.glDisable(GL11.GL_LIGHTING);
+							GL11.glEnable(GL11.GL_BLEND);
+							GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+							Color color = new Color(fluid.getFluid().getColor());
+							RenderUtility.enableBlending();
+							GL11.glColor4d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? filledPercentage : 1);
+
+							RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid));
+							GL11.glCallList(displayList[(int) (renderPercentage * (FluidRenderUtility.DISPLAY_STAGES - 1))]);
+							RenderUtility.disableBlending();
+							GL11.glPopAttrib();
+						}
+
+						GL11.glPopMatrix();
+					}
+
+					GL11.glPopMatrix();
+				}
+			}
+
+			@Override
+			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
+			{
+				renderTank(TileTank.this, position.x, position.y, position.z, getInternalTank().getFluid());
+				return false;
+			}
+
+			@Override
+			public boolean renderItem(ItemStack itemStack)
+			{
+				GL11.glPushMatrix();
+				GL11.glTranslated(0.5, 0.5, 0.5);
+				RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
+				GL11.glPopMatrix();
+
+				GL11.glPushMatrix();
+				GL11.glTranslated(0, -0.1, 0);
+
+				FluidStack fluid = null;
+
+				if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("fluid"))
+				{
+					fluid = FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound().getCompoundTag("fluid"));
+				}
+
+				renderTank(TileTank.this, 0, 0, 0, fluid);
+				GL11.glPopMatrix();
+				return true;
+			}
+		};
 	}
 }
