@@ -117,20 +117,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
 
                 return false;
             }
-
-            @Override
-            public int getPressure(ForgeDirection dir)
-            {
-                if (super.getPressure(dir) <= 0)
-                {
-                    if (dir == ForgeDirection.UP)
-                        return -2;
-
-                    if (dir == ForgeDirection.DOWN)
-                        return +2;
-                }
-                return super.getPressure(dir);
-            }
         };
 
     }

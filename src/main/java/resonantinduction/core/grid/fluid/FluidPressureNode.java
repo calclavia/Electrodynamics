@@ -1,8 +1,8 @@
 package resonantinduction.core.grid.fluid;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-
+import calclavia.lib.grid.Node;
+import calclavia.lib.grid.TickingGrid;
+import codechicken.multipart.TMultiPart;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -11,16 +11,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.grid.Node;
-import calclavia.lib.grid.TickingGrid;
-import codechicken.multipart.TMultiPart;
+
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
 {
-	protected byte connectionMap = Byte.parseByte("111111", 2);
-	private int pressure = 0;
 	public int maxFlowRate = 20;
 	public int maxPressure = 100;
+	protected byte connectionMap = Byte.parseByte("111111", 2);
+	private int pressure = 0;
 
 	public FluidPressureNode(IPressureNodeProvider parent)
 	{
@@ -38,8 +38,11 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 	{
 		if (!world().isRemote)
 		{
-			updatePressure();
-			distribute();
+			synchronized (getConnections())
+			{
+				updatePressure();
+				distribute();
+			}
 		}
 	}
 
@@ -78,9 +81,13 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 			 * Create pressure loss.
 			 */
 			if (minPressure < 0)
+			{
 				minPressure += 1;
+			}
 			if (maxPressure > 0)
+			{
 				maxPressure -= 1;
+			}
 
 			setPressure(Math.max(minPressure, Math.min(maxPressure, totalPressure / findCount + Integer.signum(totalPressure))));
 		}
@@ -137,7 +144,9 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 										FluidStack drainStack = parent.drain(dir.getOpposite(), quantity, false);
 
 										if (drainStack != null && drainStack.amount > 0)
+										{
 											parent.drain(dir.getOpposite(), otherNode.parent.fill(dir, drainStack, true), true);
+										}
 									}
 								}
 							}
@@ -186,9 +195,13 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 	public void setPressure(int newPressure)
 	{
 		if (newPressure > 0)
+		{
 			pressure = Math.min(maxPressure, newPressure);
+		}
 		else
+		{
 			pressure = Math.max(-maxPressure, newPressure);
+		}
 	}
 
 	public int getPressure(ForgeDirection dir)

@@ -1,10 +1,10 @@
 package resonantinduction.archaic.fluid.grate;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
-
+import calclavia.lib.config.Config;
+import calclavia.lib.prefab.tile.IRotatable;
+import calclavia.lib.utility.FluidUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,21 +12,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.*;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.config.Config;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.utility.FluidUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class TileGrate extends TilePressureNode implements IRotatable
 {
@@ -132,7 +127,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			{
 				int pressure = node.getPressure(getDirection());
 				int blockEffect = (int) Math.abs(pressure * grateEffectMultiplier);
-				getPressureTank().setCapacity((int) (blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier));
+				getPressureTank().setCapacity((int) Math.max(blockEffect * FluidContainerRegistry.BUCKET_VOLUME * grateDrainSpeedMultiplier, FluidContainerRegistry.BUCKET_VOLUME));
 
 				if (pressure > 0)
 				{
@@ -186,7 +181,9 @@ public class TileGrate extends TilePressureNode implements IRotatable
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
 		if (resource != null)
+		{
 			return drain(from, resource.amount, doDrain);
+		}
 		return null;
 	}
 
@@ -198,7 +195,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 	/**
 	 * Pathfinding operations
-	 * 
+	 *
 	 * @author Calclavia
 	 */
 	public void resetPath()
@@ -206,33 +203,52 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		this.gratePath = null;
 	}
 
+	public static class ComparableVector implements Comparable
+	{
+		public Vector3 position;
+		public int iterations;
+
+		public ComparableVector(Vector3 position, int iterations)
+		{
+			this.position = position;
+			this.iterations = iterations;
+		}
+
+		@Override
+		public int compareTo(Object obj)
+		{
+			ComparableVector wr = (ComparableVector) obj;
+			if (this.position.y == wr.position.y)
+			{
+				return this.iterations - wr.iterations;
+			}
+			return this.position.intY() - wr.position.intY();
+		}
+	}
+
 	public class GratePathfinder
 	{
-		/**
-		 * The starting vector for our grate.
-		 */
-		Vector3 start;
-
-		/**
-		 * All the back trace blocks tracing back to the original.
-		 */
-		HashMap<Vector3, Vector3> navigationMap = new HashMap<Vector3, Vector3>();
-
-		/**
-		 * The nodes we're currently working on.
-		 */
-		PriorityQueue<ComparableVector> workingNodes;
-
-		/**
-		 * The list of blocks to drain.
-		 */
-		PriorityQueue<ComparableVector> drainNodes = new PriorityQueue<ComparableVector>(1024, Collections.reverseOrder());
-
 		/**
 		 * The type of fluid we're dealing with. When draining, this will be the type of fluid being
 		 * drained.
 		 */
 		public Fluid fluidType;
+		/**
+		 * The starting vector for our grate.
+		 */
+		Vector3 start;
+		/**
+		 * All the back trace blocks tracing back to the original.
+		 */
+		HashMap<Vector3, Vector3> navigationMap = new HashMap<Vector3, Vector3>();
+		/**
+		 * The nodes we're currently working on.
+		 */
+		PriorityQueue<ComparableVector> workingNodes;
+		/**
+		 * The list of blocks to drain.
+		 */
+		PriorityQueue<ComparableVector> drainNodes = new PriorityQueue<ComparableVector>(1024, Collections.reverseOrder());
 
 		public GratePathfinder(boolean checkVertical)
 		{
@@ -264,16 +280,22 @@ public class TileGrate extends TilePressureNode implements IRotatable
 		public boolean isConnected(Vector3 check)
 		{
 			if (check.equals(this.start))
+			{
 				return true;
+			}
 			do
 			{
 				check = this.navigationMap.get(check);
 
 				if (check == null)
+				{
 					return false;
+				}
 
 				if (check.equals(this.start))
+				{
 					return true;
+				}
 			}
 			while (FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check) != null && fluidType.getID() == FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check).getID());
 
@@ -300,7 +322,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 		/**
 		 * Tries to fill.
-		 * 
+		 *
 		 * @param amount
 		 * @param tries
 		 * @return Amount filled.
@@ -331,7 +353,9 @@ public class TileGrate extends TilePressureNode implements IRotatable
 					filled += didFill;
 
 					if (FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, next.position) > 0 || didFill > 0)
+					{
 						addNextFill(next);
+					}
 
 					if (filled >= amount)
 					{
@@ -345,7 +369,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 		/**
 		 * Adds new nodes into the map.
-		 * 
+		 *
 		 * @param next
 		 */
 		public void addNextFill(ComparableVector next)
@@ -353,7 +377,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			for (int i = 0; i < 6; i++)
 			{
 				Vector3 newPosition = next.position.clone().translate(ForgeDirection.getOrientation(i));
-				
+
 				if (!this.navigationMap.containsKey(newPosition) && !(!fillOver && newPosition.intY() > y()))
 				{
 					this.navigationMap.put(newPosition, next.position);
@@ -385,7 +409,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 		/**
 		 * Creates a map of all the fluids to be drained.
-		 * 
+		 *
 		 * @param tries
 		 * @return True if there is drainable fluid.
 		 */
@@ -396,7 +420,9 @@ public class TileGrate extends TilePressureNode implements IRotatable
 				ComparableVector check = workingNodes.poll();
 
 				if (check == null)
+				{
 					return true;
+				}
 
 				Fluid checkFluid = FluidUtility.getFluidFromBlock(TileGrate.this.worldObj, check.position);
 
@@ -407,7 +433,9 @@ public class TileGrate extends TilePressureNode implements IRotatable
 					int checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, check.position);
 
 					if (checkAmount > 0)
+					{
 						drainNodes.add(check);
+					}
 				}
 			}
 
@@ -434,7 +462,7 @@ public class TileGrate extends TilePressureNode implements IRotatable
 
 		/**
 		 * Tries to drain a specific amount of fluid.
-		 * 
+		 *
 		 * @return - The amount drained.
 		 */
 		public FluidStack tryDrain(int targetAmount, boolean doDrain)
@@ -460,7 +488,9 @@ public class TileGrate extends TilePressureNode implements IRotatable
 					int checkAmount = FluidUtility.getFluidAmountFromBlock(TileGrate.this.worldObj, fluidCoord.position);
 
 					if (drainedAmount + checkAmount > targetAmount)
+					{
 						break;
+					}
 
 					if (checkAmount == 0)
 					{
@@ -488,31 +518,12 @@ public class TileGrate extends TilePressureNode implements IRotatable
 			TileGrate.this.resetPath();
 
 			if (drainedAmount > 0)
+			{
 				return new FluidStack(fluidType, drainedAmount);
+			}
 
 			return null;
 		}
 
-	}
-
-	public static class ComparableVector implements Comparable
-	{
-		public Vector3 position;
-		public int iterations;
-
-		public ComparableVector(Vector3 position, int iterations)
-		{
-			this.position = position;
-			this.iterations = iterations;
-		}
-
-		@Override
-		public int compareTo(Object obj)
-		{
-			ComparableVector wr = (ComparableVector) obj;
-			if (this.position.y == wr.position.y)
-				return this.iterations - wr.iterations;
-			return this.position.intY() - wr.position.intY();
-		}
 	}
 }
