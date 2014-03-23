@@ -8,6 +8,8 @@ import calclavia.lib.utility.FluidUtility;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import calclavia.lib.utility.render.RenderBlockUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -130,6 +132,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	protected TileRender newRenderer()
 	{

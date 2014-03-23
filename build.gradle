@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'scala'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
@@ -37,6 +38,7 @@ minecraft {
 }
 
 subprojects*.apply plugin: 'java'
+subprojects*.apply plugin: 'scala'
 
 allprojects {
     version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
