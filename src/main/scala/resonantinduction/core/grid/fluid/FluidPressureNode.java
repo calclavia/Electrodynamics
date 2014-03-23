@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.vector.Vector3;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -38,11 +39,8 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 	{
 		if (!world().isRemote)
 		{
-			synchronized (getConnections())
-			{
-				updatePressure();
-				distribute();
-			}
+			updatePressure();
+			distribute();
 		}
 	}
 
@@ -53,7 +51,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 		int minPressure = 0;
 		int maxPressure = 0;
 
-		Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
+		Iterator<Entry<Object, ForgeDirection>> it = new HashMap(getConnections()).entrySet().iterator();
 
 		while (it.hasNext())
 		{
@@ -95,7 +93,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
 
 	public void distribute()
 	{
-		Iterator<Entry<Object, ForgeDirection>> it = getConnections().entrySet().iterator();
+		Iterator<Entry<Object, ForgeDirection>> it = new HashMap(getConnections()).entrySet().iterator();
 
 		while (it.hasNext())
 		{
