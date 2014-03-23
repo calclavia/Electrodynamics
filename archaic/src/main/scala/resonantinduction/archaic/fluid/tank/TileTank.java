@@ -46,7 +46,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
 	{
-		return access.getBlockId(x, y, z) == blockID() ? false : super.shouldSideBeRendered(access, x, y, z, side);
+		return access.getBlockId(x, y, z) != block.blockID;
 	}
 
 	@Override

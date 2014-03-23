@@ -1,9 +1,26 @@
 package resonantinduction.archaic;
 
+import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.network.PacketAnnotation;
+import calclavia.lib.network.PacketHandler;
+import calclavia.lib.prefab.item.ItemBlockMetadata;
+import calclavia.lib.recipe.UniversalRecipe;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import resonantinduction.archaic.blocks.TileTurntable;
 import resonantinduction.archaic.crate.BlockCrate;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
@@ -29,47 +46,28 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.resource.ItemHandCrank;
-import calclavia.lib.content.ContentRegistry;
-import calclavia.lib.network.PacketAnnotation;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.item.ItemBlockMetadata;
-import calclavia.lib.recipe.UniversalRecipe;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.ModMetadata;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Resonant Induction Archaic Module
- * 
+ *
  * @author DarkCow, Calclavia
  */
 @Mod(modid = Archaic.ID, name = Archaic.NAME, version = Reference.VERSION, dependencies = "required-after:" + ResonantInduction.ID)
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Archaic
 {
-	/** Mod Information */
+	/**
+	 * Mod Information
+	 */
 	public static final String ID = "ResonantInduction|Archaic";
 	public static final String NAME = Reference.NAME + " Archaic";
-
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
 	@Instance(ID)
 	public static Archaic INSTANCE;
-
 	@SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
 	public static CommonProxy proxy;
-
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
-
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
-
 	public static Block blockEngineeringTable;
 	public static Block blockCrate;
 	public static Block blockImprinter;
@@ -98,7 +96,7 @@ public class Archaic
 		blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class);
 		blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
 		blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
-		blockTurntable = contentRegistry.createBlock(TileTurntable.class);
+		blockTurntable = contentRegistry.newBlock(TileTurntable.class);
 		blockFirebox = contentRegistry.createBlock(BlockFirebox.class, ItemBlockMetadata.class, TileFirebox.class);
 		blockHotPlate = contentRegistry.createTile(BlockHotPlate.class, TileHotPlate.class);
 		blockMillstone = contentRegistry.createTile(BlockMillstone.class, TileMillstone.class);

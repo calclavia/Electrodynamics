@@ -1,6 +1,5 @@
 package resonantinduction.archaic.blocks
 
-import java.util.Random
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.texture.IconRegister
@@ -11,20 +10,24 @@ import net.minecraft.world.World
 import net.minecraftforge.common.ForgeDirection
 import resonantinduction.core.Reference
 import universalelectricity.api.vector.Vector3
-import calclavia.lib.prefab.block.BlockRotatable
 import calclavia.lib.prefab.block.IRotatableBlock
 import calclavia.lib.prefab.tile.IRotatable
 import codechicken.multipart.TileMultipart
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import calclavia.lib.content.prefab.TraitRotatable
-import calclavia.lib.content.module.TileBlock
+import calclavia.lib.content.module.{TileRender, TileBlock}
+import calclavia.lib.render.RotatedTextureRenderer
 
-class TileTurntable extends TileBlock(Material.piston) with TraitRotatable
+object TileTurntable
 {
-  textureName= "turntable_side"
+  var top: Icon = null
+}
+
+class TileTurntable extends TileBlock(Material.piston) with IRotatable
+{
+  textureName = "turntable_side"
   tickRandomly = true
-  rotationMask = Byte.parseByte("111111", 2)
+  rotationMask = Integer.parseInt("111111", 2).toByte
 
   override def tickRate(par1World: World): Int =
   {
@@ -34,36 +37,36 @@ class TileTurntable extends TileBlock(Material.piston) with TraitRotatable
   @SideOnly(Side.CLIENT) override def registerIcons(iconReg: IconRegister)
   {
     super.registerIcons(iconReg)
-    this.top = iconReg.registerIcon(Reference.PREFIX + "turntable")
+    TileTurntable.top = iconReg.registerIcon(Reference.PREFIX + "turntable")
   }
 
-  override def updateTick(world: World, x: Int, y: Int, z: Int, par5Random: Random)
+  override def updateEntity()
   {
-    this.updateTurntableState(world, x, y, z)
+    updateTurntableState(world, x, y, z)
   }
 
-  @SideOnly(Side.CLIENT) override def getBlockTexture(par1IBlockAccess: IBlockAccess, par2: Int, par3: Int, par4: Int, side: Int): Icon =
+  @SideOnly(Side.CLIENT) override def getIcon(access: IBlockAccess, side: Int): Icon =
   {
-    val meta: Int = par1IBlockAccess.getBlockMetadata(par2, par3, par4)
-    if (side == meta)
+    if (side == metadata())
     {
-      return this.top
+      return TileTurntable.top
     }
-    return this.blockIcon
+
+    return return getIcon;
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): Icon =
   {
     if (side == 1)
     {
-      return this.top
+      return TileTurntable.top
     }
-    return this.blockIcon
+    return super.getIcon
   }
 
-  override def onNeighborBlockChange(world: World, x: Int, y: Int, z: Int, side: Int)
+  override def onNeighborChanged()
   {
-    world.scheduleBlockUpdate(x, y, z, this.blockID, 10)
+    scheduelTick(10)
   }
 
   private def updateTurntableState(world: World, x: Int, y: Int, z: Int)
@@ -107,5 +110,8 @@ class TileTurntable extends TileBlock(Material.piston) with TraitRotatable
     }
   }
 
-  private var top: Icon = null
+  @SideOnly(Side.CLIENT) protected override def newRenderer: TileRender =
+  {
+    return new RotatedTextureRenderer(this)
+  }
 }
