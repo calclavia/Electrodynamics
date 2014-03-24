@@ -26,7 +26,7 @@ object TileTurntable
 class TileTurntable extends TileBlock(Material.piston) with IRotatable
 {
   textureName = "turntable_side"
-  super.tickRandomly = true
+  tickRandomly = true
   rotationMask = Integer.parseInt("111111", 2).toByte
 
   override def tickRate(par1World: World): Int =
