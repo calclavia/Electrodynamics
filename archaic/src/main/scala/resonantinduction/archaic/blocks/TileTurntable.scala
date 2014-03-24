@@ -18,11 +18,6 @@ import cpw.mods.fml.relauncher.SideOnly
 import calclavia.lib.content.module.{TileRender, TileBlock}
 import calclavia.lib.render.RotatedTextureRenderer
 
-object TileTurntable
-{
-  var top: Icon = null
-}
-
 class TileTurntable extends TileBlock(Material.piston) with IRotatable
 {
   textureName = "turntable_side"
@@ -114,4 +109,9 @@ class TileTurntable extends TileBlock(Material.piston) with IRotatable
   {
     return new RotatedTextureRenderer(this)
   }
+}
+
+object TileTurntable
+{
+  var top: Icon = null
 }
