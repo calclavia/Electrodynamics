@@ -16,7 +16,7 @@ import codechicken.multipart.TileMultipart
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
 import calclavia.lib.content.module.{TileRender, TileBlock}
-import calclavia.lib.render.RotatedTextureRenderer
+//import calclavia.lib.render.RotatedTextureRenderer
 
 class TileTurntable extends TileBlock(Material.piston) with IRotatable
 {
