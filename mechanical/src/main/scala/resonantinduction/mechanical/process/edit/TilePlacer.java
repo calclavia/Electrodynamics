@@ -6,12 +6,11 @@ import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.render.RenderItemOverlayUtility;
+import calclavia.lib.render.RotatedTextureRenderer;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.inventory.InternalInventoryHandler;
 import calclavia.lib.utility.inventory.InventoryUtility;
-
 import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
@@ -22,12 +21,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
-
 import org.lwjgl.opengl.GL11;
-
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
+
+import java.util.EnumSet;
 
 /**
  * @author tgame14
@@ -39,10 +39,8 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	private static Icon iconFront, iconBack;
 	private boolean doWork = false;
 	private boolean autoPullItems = false;
-	private byte place_delay = 0;
+	private byte placeDelay = 0;
 	private InternalInventoryHandler invHandler;
-	private ForgeDirection renderItemSideA;
-	private ForgeDirection renderItemSideB;
 
 	public TilePlacer()
 	{
@@ -77,7 +75,6 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	public void initiate()
 	{
 		super.initiate();
-		updateDirection();
 	}
 
 	@Override
@@ -92,12 +89,12 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		}
 		if (doWork)
 		{
-			if (place_delay < Byte.MAX_VALUE)
+			if (placeDelay < Byte.MAX_VALUE)
 			{
-				place_delay++;
+				placeDelay++;
 			}
 
-			if (place_delay >= 5)
+			if (placeDelay >= 5)
 			{
 				doWork();
 				doWork = false;
@@ -111,7 +108,7 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 		if (isIndirectlyPowered())
 		{
 			doWork = true;
-			place_delay = 0;
+			placeDelay = 0;
 		}
 	}
 
@@ -191,51 +188,44 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	}
 
 	@Override
-	public void setDirection(ForgeDirection direction)
+	public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
 	{
-		super.setDirection(direction);
-		this.updateDirection();
+		return side == this.getDirection().getOpposite() && slot == 0;
 	}
 
-	@SuppressWarnings("incomplete-switch")
-	public void updateDirection()
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(IBlockAccess access, int side)
 	{
-		switch (this.getDirection())
-		{
-			case EAST:
-			case WEST:
-				this.renderItemSideA = ForgeDirection.NORTH;
-				this.renderItemSideB = ForgeDirection.SOUTH;
-				break;
-			case NORTH:
-			case SOUTH:
-				this.renderItemSideA = ForgeDirection.EAST;
-				this.renderItemSideB = ForgeDirection.WEST;
-				break;
+		int meta = access.getBlockMetadata(x(), y(), z());
 
+		if (side == meta)
+		{
+			return iconFront;
 		}
+		else if (side == (meta ^ 1))
+		{
+			return iconBack;
+		}
+
+		return getIcon();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int meta)
 	{
-		if (side == meta)
+		if (side == (meta ^ 1))
 		{
 			return iconFront;
 		}
-		else if (ForgeDirection.getOrientation(meta).getOpposite().ordinal() == side)
+		else if (side == meta)
 		{
 			return iconBack;
 		}
-		return super.getIcon(side, meta);
+
+		return getIcon();
 	}
-	
-	@Override
-    public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
-    {
-        return side == this.getDirection().getOpposite() && slot == 0;
-    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -250,19 +240,18 @@ public class TilePlacer extends TileInventory implements IRotatable, IPacketRece
 	@SideOnly(Side.CLIENT)
 	protected TileRender newRenderer()
 	{
-		return new TileRender()
+		return new RotatedTextureRenderer(this)
 		{
 			@Override
 			public boolean renderDynamic(Vector3 position, boolean isItem, float frame)
 			{
-				if (!isItem)
+				if (world() != null && !isItem)
 				{
-					if (TilePlacer.this.worldObj != null && (TilePlacer.this.renderItemSideA == null || TilePlacer.this.renderItemSideB == null))
-					{
-						TilePlacer.this.updateDirection();
-					}
+					EnumSet set = EnumSet.allOf(ForgeDirection.class);
+					set.remove(getDirection());
+					set.remove(getDirection().getOpposite());
 					GL11.glPushMatrix();
-					RenderItemOverlayUtility.renderItemOnSides(TilePlacer.this, getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), TilePlacer.this.renderItemSideA, TilePlacer.this.renderItemSideB);
+					RenderItemOverlayUtility.renderItemOnSides(tile(), getStackInSlot(0), position.x, position.y, position.z, LanguageUtility.getLocal("tooltip.noOutput"), set);
 					GL11.glPopMatrix();
 				}
 
