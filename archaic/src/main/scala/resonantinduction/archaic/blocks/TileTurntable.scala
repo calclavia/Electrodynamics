@@ -20,7 +20,6 @@ import calclavia.lib.render.RotatedTextureRenderer
 
 class TileTurntable extends TileBlock(Material.piston) with IRotatable
 {
-  /* TODO: Fix this Class up
   textureName = "turntable_side"
   tickRandomly = true
   rotationMask = Integer.parseInt("111111", 2).toByte
@@ -110,7 +109,6 @@ class TileTurntable extends TileBlock(Material.piston) with IRotatable
   {
     return new RotatedTextureRenderer(this)
   }
-  */
 }
 
 object TileTurntable
