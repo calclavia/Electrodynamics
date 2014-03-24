@@ -134,7 +134,7 @@ public class TileGutter extends TilePressureNode
 				{
 					FluidUtility.fillAllTanks(tanks, drain, true);
 					FluidUtility.drainBlock(worldObj, drainPos, true);
-					
+
 					synchronized (node.getGrid().getNodes())
 					{
 						for (Object check : node.getGrid().getNodes())

@@ -18,7 +18,6 @@ import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.ItemCharger;
 import resonantinduction.electrical.generator.BlockMotor;
 import resonantinduction.electrical.generator.TileMotor;
-import resonantinduction.electrical.generator.solar.BlockSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
@@ -81,7 +80,7 @@ public class Electrical
 	public static Block blockEncoder;
 
 	// Generators
-	public static BlockSolarPanel blockSolarPanel;
+	public static Block blockSolarPanel;
 	public static Block blockMotor;
 	public static Block blockThermopile;
 
@@ -118,7 +117,7 @@ public class Electrical
 		itemInsulation = contentRegistry.createItem("insulation", ItemResourcePart.class);
 
 		// Generator
-		blockSolarPanel = (BlockSolarPanel) contentRegistry.createTile(BlockSolarPanel.class, TileSolarPanel.class);
+		blockSolarPanel = contentRegistry.newBlock(TileSolarPanel.class);
 		blockMotor = contentRegistry.createTile(BlockMotor.class, TileMotor.class);
 		blockThermopile = contentRegistry.createTile(BlockThermopile.class, TileThermopile.class);
 

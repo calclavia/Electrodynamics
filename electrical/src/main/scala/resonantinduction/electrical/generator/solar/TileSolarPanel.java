@@ -1,14 +1,56 @@
 package resonantinduction.electrical.generator.solar;
 
+import calclavia.lib.content.module.TileRender;
+import calclavia.lib.prefab.vector.Cuboid;
+import calclavia.lib.render.ConnectedTextureRenderer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.util.Icon;
+import resonantinduction.core.Reference;
 import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
 public class TileSolarPanel extends TileEnergyDistribution
 {
+	@SideOnly(Side.CLIENT)
+	public static Icon sideIcon, bottomIcon;
+
 	public TileSolarPanel()
 	{
-		this.energy = new EnergyStorageHandler(800);
-		this.ioMap = 728;
+		super(Material.iron);
+		energy = new EnergyStorageHandler(800);
+		ioMap = 728;
+		textureName = "solarPanel_top";
+		bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1);
+		isOpaqueCube = false;
+		normalRender = false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerIcons(IconRegister iconReg)
+	{
+		sideIcon = iconReg.registerIcon(Reference.PREFIX + "solarPanel_side");
+		bottomIcon = iconReg.registerIcon(Reference.PREFIX + "solarPanel_bottom");
+		super.registerIcons(iconReg);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(int side, int meta)
+	{
+		if (side == 0)
+		{
+			return bottomIcon;
+		}
+		else if (side == 1)
+		{
+			return getIcon();
+		}
+
+		return sideIcon;
 	}
 
 	@Override
@@ -32,4 +74,10 @@ public class TileSolarPanel extends TileEnergyDistribution
 		super.updateEntity();
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected TileRender newRenderer()
+	{
+		return new ConnectedTextureRenderer(this, Reference.PREFIX + "tankEdge");
+	}
 }

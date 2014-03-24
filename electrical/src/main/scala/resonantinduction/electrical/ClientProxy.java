@@ -8,7 +8,6 @@ import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.RenderCharger;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
-import resonantinduction.electrical.generator.solar.RenderSolarPanel;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.levitator.RenderLevitator;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
@@ -43,7 +42,6 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Electrical.itemQuantumGlyph.itemID, RenderQuantumGlyph.INSTANCE);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new RenderSolarPanel());
 	}
 
 	@Override

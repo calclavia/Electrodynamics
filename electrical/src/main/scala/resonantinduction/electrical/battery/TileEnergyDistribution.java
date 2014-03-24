@@ -1,25 +1,53 @@
 package resonantinduction.electrical.battery;
 
+import calclavia.lib.prefab.tile.TileElectrical;
+import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileElectrical;
 
-public class TileEnergyDistribution extends TileElectrical implements IConnector<EnergyDistributionNetwork>
+public class TileEnergyDistribution extends TileElectrical
+		implements IConnector<EnergyDistributionNetwork>
 {
-	private EnergyDistributionNetwork network;
-
 	public boolean markClientUpdate = false;
 	public boolean markDistributionUpdate = false;
-
 	public long renderEnergyAmount = 0;
+	private EnergyDistributionNetwork network;
+
+	public TileEnergyDistribution()
+	{
+		super(null);
+	}
+
+	public TileEnergyDistribution(Material material)
+	{
+		super(material);
+	}
 
 	@Override
 	public void initiate()
 	{
 		super.initiate();
 		this.updateStructure();
+	}
+
+	@Override
+	public void onAdded()
+	{
+		if (!world().isRemote)
+		{
+			updateStructure();
+		}
+	}
+
+	@Override
+	public void onNeighborChanged()
+	{
+		if (!world().isRemote)
+		{
+			updateStructure();
+		}
 	}
 
 	@Override
