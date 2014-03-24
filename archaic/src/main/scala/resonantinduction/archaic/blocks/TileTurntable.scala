@@ -26,7 +26,7 @@ object TileTurntable
 class TileTurntable extends TileBlock(Material.piston) with IRotatable
 {
   textureName = "turntable_side"
-  tickRandomly = true
+  super.tickRandomly = true
   rotationMask = Integer.parseInt("111111", 2).toByte
 
   override def tickRate(par1World: World): Int =
@@ -47,12 +47,12 @@ class TileTurntable extends TileBlock(Material.piston) with IRotatable
 
   @SideOnly(Side.CLIENT) override def getIcon(access: IBlockAccess, side: Int): Icon =
   {
-    if (side == metadata())
+    if (side == super.metadata())
     {
       return TileTurntable.top
     }
 
-    return getIcon;
+    return super.getIcon(access, side);
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): Icon =
