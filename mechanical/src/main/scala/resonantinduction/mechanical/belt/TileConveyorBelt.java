@@ -87,15 +87,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 							didRefresh = true;
 						}
 					}
-					else if (tile instanceof INodeProvider)
-					{
-						MechanicalNode mechanical = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-
-						if (mechanical != null)
-						{
-							connections.put(mechanical, dir);
-						}
-					}
 				}
 
 				if (!worldObj.isRemote)
@@ -109,7 +100,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			{
 				return from != getDirection() || from != getDirection().getOpposite();
 			}
-		}.setLoad(0.5f);
+		}.setLoad(0.15f);
 	}
 
 	/**
@@ -140,9 +131,10 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
 		Iterator<Entity> it = this.ignoreList.iterator();
 
+		List<Entity> effect_list = this.getAffectedEntities();
 		while (it.hasNext())
 		{
-			if (!this.getAffectedEntities().contains(it.next()))
+			if (!effect_list.contains(it.next()))
 			{
 				it.remove();
 			}
@@ -150,7 +142,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 
 		if (this.worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
+			if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
 				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
 			}
