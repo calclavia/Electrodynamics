@@ -149,12 +149,12 @@ public class ResourceGenerator implements IVirtualObject
 
 		if (allowOreDictCompatibility)
 		{
-			OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
 			OreDictionary.registerOre("rubble" + nameCaps, ResonantInduction.itemRubble.getStackFromMaterial(materialName));
-			OreDictionary.registerOre("dustRefined" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("dirtyDust" + nameCaps, ResonantInduction.itemDust.getStackFromMaterial(materialName));
+			OreDictionary.registerOre("dust" + nameCaps, ResonantInduction.itemRefinedDust.getStackFromMaterial(materialName));
 
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), "rubble" + nameCaps, dust, dust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), "dust" + nameCaps, refinedDust);
+			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), "dirtyDust" + nameCaps, refinedDust);
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 		}
 		else
