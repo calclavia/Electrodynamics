@@ -8,8 +8,12 @@ import net.minecraft.inventory.IInventory
 import net.minecraftforge.common.ForgeDirection
 import calclavia.lib.utility.inventory.InventoryUtility
 import net.minecraft.item.ItemStack
+
 import java.util.Collections
 import java.util
+
+import scala.util.control.Breaks._
+import net.minecraft.tileentity.TileEntity
 
 /**
  * A Block that interacts with connected inventories
@@ -31,18 +35,26 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
     Collections.shuffle(shuffledDirs)
 
     var hasInventoriesAround = false
-    for (dir: ForgeDirection <- shuffledDirs)
+
+    scala.util.control.Breaks.breakable
     {
-      targetNode = prevNode.clone().translate(ForgeDirection.getOrientation(world().rand.nextInt(6)))
-      if (!(targetNode.getTileEntity(world()) isInstanceOf IInventory))
+      var index: Int = 0
+      while (index < shuffledDirs.toArray().size)
       {
-        hasInventoriesAround = true
-        break
+        targetNode = prevNode.clone().translate(ForgeDirection.getOrientation(index))
+        val tile: TileEntity = targetNode.getTileEntity(world())
+        if (tile.isInstanceOf[IInventory])
+        {
+          hasInventoriesAround = true
+          scala.util.control.Breaks.break()
+        }
+        index += 1
       }
     }
     if (!targetNode.equals(prevNode) && hasInventoriesAround)
     {
-      callAction(targetNode.getTileEntity())
+      val inv: IInventory = targetNode.getTileEntity(world()).asInstanceOf[IInventory]
+      callAction(inv)
     }
 
     else
@@ -70,8 +82,8 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
           InventoryUtility.putStackInInventory(this, InventoryUtility.takeTopItemFromInventory(inv, ForgeDirection.UP.ordinal()), false)
           return
         }
-
-        for (index: Int <- inv.getSizeInventory)
+        var index = 0
+        while (index < inv.getSizeInventory)
         {
           if (inv.getStackInSlot(index) != null && inv.getStackInSlot(index).isItemEqual(filterStack))
           {
@@ -85,6 +97,7 @@ class TileDistributor extends TileBase(Material.rock) with TraitInventory with T
             inv.getStackInSlot(index).stackSize -= removeAmount
             InventoryUtility.putStackInInventory(this, inv.getStackInSlot(index), false)
           }
+          index += 1
         }
 
 
