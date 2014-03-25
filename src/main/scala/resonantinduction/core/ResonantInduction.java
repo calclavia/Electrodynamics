@@ -1,25 +1,5 @@
 package resonantinduction.core;
 
-import java.util.HashMap;
-import java.util.logging.Logger;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.BlockFluidFinite;
-
-import org.modstats.ModstatInfo;
-import org.modstats.Modstats;
-
-import resonantinduction.core.handler.TextureHookHandler;
-import resonantinduction.core.prefab.part.PacketMultiPart;
-import resonantinduction.core.resource.BlockDust;
-import resonantinduction.core.resource.BlockMachineMaterial;
-import resonantinduction.core.resource.ItemOreResource;
-import resonantinduction.core.resource.ResourceGenerator;
-import resonantinduction.core.resource.TileMaterial;
-import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
 import calclavia.lib.config.ConfigHandler;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
@@ -39,10 +19,24 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidFinite;
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+import resonantinduction.core.handler.TextureHookHandler;
+import resonantinduction.core.prefab.part.PacketMultiPart;
+import resonantinduction.core.resource.*;
+import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
+
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * The core module of Resonant Induction
- * 
+ *
  * @author Calclavia
  */
 @Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:CalclaviaCore;before:ThermalExpansion;before:Mekanism")
@@ -50,44 +44,35 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction
 {
-	/** Mod Information */
+	/**
+	 * Mod Information
+	 */
 	public static final String ID = "ResonantInduction|Core";
 	public static final String NAME = Reference.NAME;
-
-	@Instance(ID)
-	public static ResonantInduction INSTANCE;
-
-	@SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
-	public static CommonProxy proxy;
-
-	@Mod.Metadata(ID)
-	public static ModMetadata metadata;
-
 	public static final Logger LOGGER = Logger.getLogger(Reference.NAME);
-
-	/** Packets */
+	/**
+	 * Packets
+	 */
 	public static final PacketTile PACKET_TILE = new PacketTile(Reference.CHANNEL);
 	public static final PacketMultiPart PACKET_MULTIPART = new PacketMultiPart(Reference.CHANNEL);
 	public static final PacketAnnotation PACKET_ANNOTATION = new PacketAnnotation(Reference.CHANNEL);
-
-	/** Blocks and Items */
+	public static final HashMap<Integer, BlockFluidFinite> blockMixtureFluids = new HashMap<Integer, BlockFluidFinite>();
+	public static final HashMap<Integer, BlockFluidFinite> blockMoltenFluid = new HashMap<Integer, BlockFluidFinite>();
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
+	@Instance(ID)
+	public static ResonantInduction INSTANCE;
+	@SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
+	public static CommonProxy proxy;
+	@Mod.Metadata(ID)
+	public static ModMetadata metadata;
+	/**
+	 * Blocks and Items
+	 */
 	public static Block blockOre;
 	public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
 	public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
-	public static Block blockDust;
-	public static final HashMap<Integer, BlockFluidFinite> blockMixtureFluids = new HashMap<Integer, BlockFluidFinite>();
-	public static final HashMap<Integer, BlockFluidFinite> blockMoltenFluid = new HashMap<Integer, BlockFluidFinite>();
+	public static Block blockDust, blockRefinedDust;
 	public static Block blockMachinePart;
-
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
-
-	/**
-	 * Recipe Types
-	 */
-	public static enum RecipeType
-	{
-		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
-	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
@@ -105,7 +90,8 @@ public class ResonantInduction
 		/**
 		 * Melting dusts
 		 */
-		blockDust = contentRegistry.createTile(BlockDust.class, TileMaterial.class).setCreativeTab(null);
+		blockDust = contentRegistry.createBlock("dust", BlockDust.class, null, TileDust.class).setCreativeTab(null);
+		blockRefinedDust = contentRegistry.createBlock("refinedDust", BlockDust.class, null, TileDust.class).setCreativeTab(null);
 
 		// Items
 		itemRubble = new ItemOreResource(Settings.getNextItemID("oreRubble"), "oreRubble");
@@ -154,5 +140,13 @@ public class ResonantInduction
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
+	}
+
+	/**
+	 * Recipe Types
+	 */
+	public static enum RecipeType
+	{
+		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
 	}
 }

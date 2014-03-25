@@ -1,23 +1,32 @@
 package resonantinduction.core.resource;
 
+import calclavia.lib.content.module.TileBase;
+import calclavia.lib.network.IPacketReceiver;
+import com.google.common.io.ByteArrayDataInput;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import resonantinduction.core.ResonantInduction;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.prefab.tile.TileAdvanced;
-
-import com.google.common.io.ByteArrayDataInput;
 
 /**
  * A tile that stores the material name.
- * 
+ *
  * @author Calclavia
- * 
  */
-public class TileMaterial extends TileAdvanced implements IPacketReceiver
+public abstract class TileMaterial extends TileBase implements IPacketReceiver
 {
 	public String name;
+
+	public TileMaterial()
+	{
+		super(null);
+	}
+
+	public TileMaterial(Material material)
+	{
+		super(material);
+	}
 
 	public int getColor()
 	{
@@ -60,6 +69,8 @@ public class TileMaterial extends TileAdvanced implements IPacketReceiver
 	{
 		super.writeToNBT(nbt);
 		if (name != null)
+		{
 			nbt.setString("name", name);
+		}
 	}
 }

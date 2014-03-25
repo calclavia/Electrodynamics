@@ -1,7 +1,8 @@
 package resonantinduction.core.resource;
 
-import java.util.List;
-
+import calclavia.lib.utility.LanguageUtility;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,19 +14,18 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.TabRI;
-import calclavia.lib.utility.LanguageUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * An item used for auto-generated dusts based on registered ingots in the OreDict.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class ItemOreResource extends Item
 {
-	private int blockID = ResonantInduction.blockDust.blockID;;
+	private int blockID = ResonantInduction.blockRefinedDust.blockID;
+	;
 
 	public ItemOreResource(int id, String name)
 	{
@@ -35,6 +35,11 @@ public class ItemOreResource extends Item
 		setCreativeTab(TabRI.CORE);
 		setHasSubtypes(true);
 		setMaxDamage(0);
+	}
+
+	public static String getMaterialFromStack(ItemStack itemStack)
+	{
+		return ResourceGenerator.getName(itemStack.getItemDamage());
 	}
 
 	@Override
@@ -64,8 +69,10 @@ public class ItemOreResource extends Item
 		/**
 		 * Allow refined dust to be placed down.
 		 */
-		if (itemStack.getItem() == ResonantInduction.itemRefinedDust)
+		if (itemStack.getItem() == ResonantInduction.itemDust || itemStack.getItem() == ResonantInduction.itemRefinedDust)
 		{
+			blockID = itemStack.getItem() == ResonantInduction.itemRefinedDust ? ResonantInduction.blockRefinedDust.blockID : ResonantInduction.blockDust.blockID;
+
 			if (itemStack.stackSize == 0)
 			{
 				return false;
@@ -147,6 +154,8 @@ public class ItemOreResource extends Item
 
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
+		blockID = stack.getItem() == ResonantInduction.itemRefinedDust ? ResonantInduction.blockRefinedDust.blockID : ResonantInduction.blockDust.blockID;
+
 		if (!world.setBlock(x, y, z, this.blockID, metadata, 3))
 		{
 			return false;
@@ -166,11 +175,6 @@ public class ItemOreResource extends Item
 		ItemStack itemStack = new ItemStack(this);
 		itemStack.setItemDamage(ResourceGenerator.getID(name));
 		return itemStack;
-	}
-
-	public static String getMaterialFromStack(ItemStack itemStack)
-	{
-		return ResourceGenerator.getName(itemStack.getItemDamage());
 	}
 
 	@Override

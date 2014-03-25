@@ -18,6 +18,7 @@ import calclavia.api.recipe.MachineRecipes;
  * @author Calclavia
  * 
  */
+@Deprecated
 public class TileFluidMixture extends TileMaterial
 {
 	public final Set<ItemStack> items = new HashSet<ItemStack>();

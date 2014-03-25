@@ -1,5 +1,11 @@
 package resonantinduction.archaic.firebox;
 
+import calclavia.lib.network.IPacketReceiver;
+import calclavia.lib.network.Synced;
+import calclavia.lib.prefab.tile.TileElectricalInventory;
+import calclavia.lib.thermal.BoilEvent;
+import calclavia.lib.thermal.ThermalPhysics;
+import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -9,13 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.core.ResonantInduction;
@@ -23,19 +23,11 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.Synced;
-import calclavia.lib.prefab.tile.TileElectricalInventory;
-import calclavia.lib.thermal.BoilEvent;
-import calclavia.lib.thermal.ThermalPhysics;
-
-import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Meant to replace the furnace class.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class TileFirebox extends TileElectricalInventory implements IPacketReceiver, IFluidHandler
 {
@@ -47,12 +39,10 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 	 * into fluids to increase their internal energy.
 	 */
 	private final long POWER = 100000;
-
+	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	@Synced
 	private int burnTime;
-
 	private long heatEnergy = 0;
-
 	private int boiledVolume;
 
 	public TileFirebox()
@@ -116,7 +106,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 				heatEnergy += POWER / 20;
 				boolean usedHeat = false;
 
-				if (blockID == ResonantInduction.blockDust.blockID)
+				if (blockID == ResonantInduction.blockDust.blockID || blockID == ResonantInduction.blockRefinedDust.blockID)
 				{
 					usedHeat = true;
 
@@ -127,10 +117,11 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						String name = ((TileMaterial) dustTile).name;
 						int meta = worldObj.getBlockMetadata(xCoord, yCoord + 1, zCoord);
 
-						if (heatEnergy >= getMeltIronEnergy(((meta + 1) / 5f) * 1000))
+						if (heatEnergy >= getMeltIronEnergy(((meta + 1) / 7f) * 1000))
 						{
-							// TODO: Make refined dust yield more molten fluid than normal dust.
-							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name).blockID, meta, 3);
+							int volumeMeta = blockID == ResonantInduction.blockRefinedDust.blockID ? meta : meta / 2;
+
+							worldObj.setBlock(xCoord, yCoord + 1, zCoord, ResourceGenerator.getMolten(name).blockID, volumeMeta, 3);
 
 							TileEntity tile = worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord);
 
@@ -206,9 +197,8 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 
 	/**
 	 * Approximately 327600 + 2257000 = 2584600.
-	 * 
+	 *
 	 * @param volume
-	 * 
 	 * @return
 	 */
 	public long getRequiredBoilWaterEnergy(int volume)
@@ -277,8 +267,6 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 		nbt.setInteger("burnTime", burnTime);
 		tank.writeToNBT(nbt);
 	}
-
-	protected FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 
 	/* IFluidHandler */
 	@Override

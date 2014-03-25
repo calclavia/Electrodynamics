@@ -33,6 +33,7 @@ public class NEIResonantInductionConfig implements IConfigureNEI
 			API.hideItem(block.blockID);
 
 		API.hideItem(ResonantInduction.blockDust.blockID);
+		API.hideItem(ResonantInduction.blockRefinedDust.blockID);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class TileSorter extends TileInventory
 		maxSlots = 12;
 		normalRender = false;
 		isOpaqueCube = false;
-		bounds = Cuboid.full().expand(-0.1);
+		bounds = Cuboid.full().expand(-0.01);
 	}
 
 	@Override

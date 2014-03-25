@@ -1,7 +1,8 @@
 package resonantinduction.core.resource;
 
-import java.util.Random;
-
+import calclavia.lib.prefab.block.BlockTile;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,18 +13,18 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import calclavia.lib.prefab.block.BlockTile;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 /**
  * The block form of the item dust.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class BlockDust extends BlockTile
 {
+	int nextDropMaterialID = 0;
+
 	public BlockDust(int id)
 	{
 		super(id, Material.sand);
@@ -32,6 +33,25 @@ public class BlockDust extends BlockTile
 		setHardness(0.5f);
 		setTextureName(Reference.PREFIX + "material_sand");
 		setStepSound(soundGravelFootstep);
+	}
+
+	public static boolean canFallBelow(World par0World, int par1, int par2, int par3)
+	{
+		int l = par0World.getBlockId(par1, par2, par3);
+
+		if (par0World.isAirBlock(par1, par2, par3))
+		{
+			return true;
+		}
+		else if (l == Block.fire.blockID)
+		{
+			return true;
+		}
+		else
+		{
+			Material material = Block.blocksList[l].blockMaterial;
+			return material == Material.water ? true : material == Material.lava;
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -91,8 +111,6 @@ public class BlockDust extends BlockTile
 
 				if (canFallBelow(world, x, y - 1, z) && y >= 0)
 				{
-					byte b0 = 32;
-
 					world.setBlockToAir(x, y, z);
 
 					while (canFallBelow(world, x, y - 1, z) && y > 0)
@@ -117,29 +135,10 @@ public class BlockDust extends BlockTile
 
 	}
 
-	public static boolean canFallBelow(World par0World, int par1, int par2, int par3)
-	{
-		int l = par0World.getBlockId(par1, par2, par3);
-
-		if (par0World.isAirBlock(par1, par2, par3))
-		{
-			return true;
-		}
-		else if (l == Block.fire.blockID)
-		{
-			return true;
-		}
-		else
-		{
-			Material material = Block.blocksList[l].blockMaterial;
-			return material == Material.water ? true : material == Material.lava;
-		}
-	}
-
 	@Override
 	public TileEntity createNewTileEntity(World var1)
 	{
-		return new TileMaterial();
+		return new TileDust();
 	}
 
 	/**
@@ -212,16 +211,14 @@ public class BlockDust extends BlockTile
 	@Override
 	public int idDropped(int par1, Random par2Random, int par3)
 	{
-		return ResonantInduction.itemRefinedDust.itemID;
+		return this == ResonantInduction.blockRefinedDust ? ResonantInduction.itemRefinedDust.itemID : ResonantInduction.itemDust.itemID;
 	}
 
 	@Override
 	public int idPicked(World par1World, int par2, int par3, int par4)
 	{
-		return ResonantInduction.itemRefinedDust.itemID;
+		return this == ResonantInduction.blockRefinedDust ? ResonantInduction.itemRefinedDust.itemID : ResonantInduction.itemDust.itemID;
 	}
-
-	int nextDropMaterialID = 0;
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
