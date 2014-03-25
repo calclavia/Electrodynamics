@@ -142,7 +142,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 
 		if (this.worldObj.isRemote)
 		{
-			if (this.ticks % 10 == 0 && this.worldObj.isRemote && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
+			if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
 			{
 				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
 			}
