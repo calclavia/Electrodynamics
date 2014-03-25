@@ -47,7 +47,7 @@ class TileTurntable extends TileBlock(Material.piston) with IRotatable
       return TileTurntable.top
     }
 
-    return super.getIcon(access, side);
+    return getIcon
   }
 
   @SideOnly(Side.CLIENT) override def getIcon(side: Int, meta: Int): Icon =
@@ -56,7 +56,7 @@ class TileTurntable extends TileBlock(Material.piston) with IRotatable
     {
       return TileTurntable.top
     }
-    return super.getIcon(side, meta)
+    return getIcon
   }
 
   override def onNeighborChanged()
