@@ -148,10 +148,11 @@ public class ResonantInduction
             e.printStackTrace();
         }
 
-        Settings.CONFIGURATION.save();
+      
         // Generate Resources
         if (ResourceGenerator.ENABLED)
             ResourceGenerator.generateOreResources();
-        proxy.postInit();
+        proxy.postInit();  
+        Settings.CONFIGURATION.save();
     }
 }
