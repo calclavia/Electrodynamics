@@ -65,6 +65,8 @@ public class Settings
 	public static double LEVITATOR_MAX_SPEED = .2;
 	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
 	public static double LEVITATOR_ACCELERATION = .02;
+	@Config(category = Configuration.CATEGORY_GENERAL, key = "Enabled Resource Generator")
+    public static boolean RESOURCE_GENERATOR = true;
 
 	public static void setModMetadata(ModMetadata metadata, String id, String name)
 	{
