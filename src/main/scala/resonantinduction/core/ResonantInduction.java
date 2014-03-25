@@ -150,7 +150,7 @@ public class ResonantInduction
 
         Settings.CONFIGURATION.save();
         // Generate Resources
-        if (Settings.RESOURCE_GENERATOR)
+        if (ResourceGenerator.ENABLED)
             ResourceGenerator.generateOreResources();
         proxy.postInit();
     }

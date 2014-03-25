@@ -15,87 +15,85 @@ import cpw.mods.fml.common.ModMetadata;
 /** @author Calclavia */
 public class Settings
 {
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
 
-	/** IDs suggested by Jyzarc and Horfius */
-	public static final IDManager idManager;
+    /** IDs suggested by Jyzarc and Horfius */
+    public static final IDManager idManager;
 
-	static
-	{
-		CONFIGURATION.load();
-		idManager = new IDManager(CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "BlockIDPrefix", 1200).getInt(1200), CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "ItemIDPrefix", 20150).getInt(20150));
-		CONFIGURATION.save();
-	}
+    static
+    {
+        CONFIGURATION.load();
+        idManager = new IDManager(CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "BlockIDPrefix", 1200).getInt(1200), CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "ItemIDPrefix", 20150).getInt(20150));
+        CONFIGURATION.save();
+    }
 
-	public static int getNextBlockID()
-	{
-		return idManager.getNextBlockID();
-	}
+    public static int getNextBlockID()
+    {
+        return idManager.getNextBlockID();
+    }
 
-	public static int getNextBlockID(String key)
-	{
-		int id = idManager.getNextBlockID();
-		return Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, key, id).getInt(id);
-	}
+    public static int getNextBlockID(String key)
+    {
+        int id = idManager.getNextBlockID();
+        return Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, key, id).getInt(id);
+    }
 
-	public static int getNextItemID()
-	{
-		return idManager.getNextItemID();
-	}
+    public static int getNextItemID()
+    {
+        return idManager.getNextItemID();
+    }
 
-	public static int getNextItemID(String key)
-	{
-		int id = idManager.getNextItemID();
-		return Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, key, id).getInt(id);
-	}
+    public static int getNextItemID(String key)
+    {
+        int id = idManager.getNextItemID();
+        return Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, key, id).getInt(id);
+    }
 
-	@Config(key = "Engineering Table Autocraft")
-	public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
-	@Config(key = "Tesla Sound FXs")
-	public static boolean SOUND_FXS = true;
-	@Config(key = "Shiny silver Wires")
-	public static boolean SHINY_SILVER = true;
-	@Config(key = "Max EM Contractor Path")
-	public static int MAX_LEVITATOR_DISTANCE = 200;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
-	public static int LEVITATOR_MAX_REACH = 40;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
-	public static int LEVITATOR_PUSH_DELAY = 5;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
-	public static double LEVITATOR_MAX_SPEED = .2;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
-	public static double LEVITATOR_ACCELERATION = .02;
-	@Config(category = Configuration.CATEGORY_GENERAL, key = "Enabled Resource Generator")
-    public static boolean RESOURCE_GENERATOR = true;
+    @Config(key = "Engineering Table Autocraft")
+    public static boolean ALLOW_ENGINEERING_AUTOCRAFT = true;
+    @Config(key = "Tesla Sound FXs")
+    public static boolean SOUND_FXS = true;
+    @Config(key = "Shiny silver Wires")
+    public static boolean SHINY_SILVER = true;
+    @Config(key = "Max EM Contractor Path")
+    public static int MAX_LEVITATOR_DISTANCE = 200;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Reach")
+    public static int LEVITATOR_MAX_REACH = 40;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Push Delay")
+    public static int LEVITATOR_PUSH_DELAY = 5;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Max Speed")
+    public static double LEVITATOR_MAX_SPEED = .2;
+    @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
+    public static double LEVITATOR_ACCELERATION = .02;   
 
-	public static void setModMetadata(ModMetadata metadata, String id, String name)
-	{
-		setModMetadata(metadata, id, name, "");
-	}
+    public static void setModMetadata(ModMetadata metadata, String id, String name)
+    {
+        setModMetadata(metadata, id, name, "");
+    }
 
-	public static void setModMetadata(ModMetadata metadata, String id, String name, String parent)
-	{
-		metadata.modId = id;
-		metadata.name = name;
-		metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");
-		metadata.url = "http://calclavia.com/resonant-induction";
-		metadata.logoFile = "ri_logo.png";
-		metadata.version = Reference.VERSION + "." + Reference.BUILD_VERSION;
-		metadata.authorList = Arrays.asList(new String[] { "Calclavia", "DarkCow" });
-		metadata.credits = LanguageUtility.getLocal("meta.resonantinduction.credits");
-		metadata.parent = parent;
-		metadata.autogenerated = false;
-	}
+    public static void setModMetadata(ModMetadata metadata, String id, String name, String parent)
+    {
+        metadata.modId = id;
+        metadata.name = name;
+        metadata.description = LanguageUtility.getLocal("meta.resonantinduction.description");
+        metadata.url = "http://calclavia.com/resonant-induction";
+        metadata.logoFile = "ri_logo.png";
+        metadata.version = Reference.VERSION + "." + Reference.BUILD_VERSION;
+        metadata.authorList = Arrays.asList(new String[] { "Calclavia", "DarkCow" });
+        metadata.credits = LanguageUtility.getLocal("meta.resonantinduction.credits");
+        metadata.parent = parent;
+        metadata.autogenerated = false;
+    }
 
-	public static boolean isOp(String username)
-	{
-		MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+    public static boolean isOp(String username)
+    {
+        MinecraftServer theServer = FMLCommonHandler.instance().getMinecraftServerInstance();
 
-		if (theServer != null)
-		{
-			return theServer.getConfigurationManager().getOps().contains(username.trim().toLowerCase());
-		}
+        if (theServer != null)
+        {
+            return theServer.getConfigurationManager().getOps().contains(username.trim().toLowerCase());
+        }
 
-		return false;
-	}
+        return false;
+    }
 }
