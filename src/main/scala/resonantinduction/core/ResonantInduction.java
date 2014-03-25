@@ -136,10 +136,10 @@ public class ResonantInduction
 			e.printStackTrace();
 		}
 
-		Settings.CONFIGURATION.save();
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
+		Settings.CONFIGURATION.save();
 	}
 
 	/**
@@ -149,4 +149,5 @@ public class ResonantInduction
 	{
 		CRUSHER, GRINDER, MIXER, SMELTER, SAWMILL;
 	}
+
 }

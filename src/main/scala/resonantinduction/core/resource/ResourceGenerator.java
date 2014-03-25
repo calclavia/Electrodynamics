@@ -1,17 +1,16 @@
 package resonantinduction.core.resource;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.imageio.ImageIO;
-
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.lib.config.Config;
+import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.nbt.IVirtualObject;
+import calclavia.lib.utility.nbt.NBTUtility;
+import calclavia.lib.utility.nbt.SaveManager;
+import com.google.common.collect.HashBiMap;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -36,37 +35,25 @@ import resonantinduction.core.Settings;
 import resonantinduction.core.fluid.FluidColored;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.lib.config.Config;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.IVirtualObject;
-import calclavia.lib.utility.nbt.NBTUtility;
-import calclavia.lib.utility.nbt.SaveManager;
 
-import com.google.common.collect.HashBiMap;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-/** @author Calclavia */
+/**
+ * @author Calclavia
+ */
 public class ResourceGenerator implements IVirtualObject
 {
 	public static final ResourceGenerator INSTANCE = new ResourceGenerator();
-
-	@Config(comment = "Allow the Resource Generator to make ore dictionary compatible recipes?")
-	private static boolean allowOreDictCompatibility = true;
-
-	/**
-	 * A list of material names. They are all camelCase reference of ore dictionary names without
-	 * the "ore" or "ingot" prefix.
-	 * 
-	 * Name, ID
-	 */
-	static int maxID = 0;
 	public static final HashBiMap<String, Integer> materials = HashBiMap.create();
-
 	static final HashMap<String, Integer> materialColorCache = new HashMap<String, Integer>();
 	static final HashMap<Icon, Integer> iconColorCache = new HashMap<Icon, Integer>();
 
@@ -78,28 +65,19 @@ public class ResourceGenerator implements IVirtualObject
 		SaveManager.register(INSTANCE);
 	}
 
-	// TODO: Generate teh resource here instead of elsewhere...
-	@ForgeSubscribe
-	public void oreRegisterEvent(OreRegisterEvent evt)
-	{
-		if (evt.Name.startsWith("ingot"))
-		{
-			String oreDictName = evt.Name.replace("ingot", "");
-			String materialName = LanguageUtility.decapitalizeFirst(oreDictName);
-
-			if (!materials.containsKey(materialName))
-			{
-				Settings.CONFIGURATION.load();
-				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
-				Settings.CONFIGURATION.save();
-
-				if (!allowMaterial || OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
-					return;
-
-				materials.put(materialName, maxID++);
-			}
-		}
-	}
+	@Config(category = "Resource_Generator", key = "Enable_All")
+	public static boolean ENABLED = true;
+	@Config(category = "Resource_Generator", key = "Enabled_All_Fluids")
+	public static boolean ENABLE_FLUIDS = true;
+	/**
+	 * A list of material names. They are all camelCase reference of ore dictionary names without
+	 * the "ore" or "ingot" prefix.
+	 * <p/>
+	 * Name, ID
+	 */
+	static int maxID = 0;
+	@Config(comment = "Allow the Resource Generator to make ore dictionary compatible recipes?")
+	private static boolean allowOreDictCompatibility = true;
 
 	public static void generate(String materialName)
 	{
@@ -121,27 +99,38 @@ public class ResourceGenerator implements IVirtualObject
 
 			localizedName.replace(LanguageUtility.getLocal("misc.resonantinduction.ingot"), "").replaceAll("^ ", "").replaceAll(" $", "");
 		}
+		if (ENABLE_FLUIDS)
+		{
+			/** Generate molten fluids */
+			FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
+			fluidMolten.setDensity(7);
+			fluidMolten.setViscosity(5000);
+			fluidMolten.setTemperature(273 + 1538);
+			FluidRegistry.registerFluid(fluidMolten);
+			LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), LanguageUtility.getLocal("tooltip.molten") + " " + localizedName);
+			BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
+			GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
+			ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
+			FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
 
-		/** Generate molten fluids */
-		FluidColored fluidMolten = new FluidColored(materialNameToMolten(materialName));
-		fluidMolten.setDensity(7);
-		fluidMolten.setViscosity(5000);
-		fluidMolten.setTemperature(273 + 1538);
-		FluidRegistry.registerFluid(fluidMolten);
-		LanguageRegistry.instance().addStringLocalization(fluidMolten.getUnlocalizedName(), LanguageUtility.getLocal("tooltip.molten") + " " + localizedName);
-		BlockFluidMaterial blockFluidMaterial = new BlockFluidMaterial(fluidMolten);
-		GameRegistry.registerBlock(blockFluidMaterial, "molten" + nameCaps);
-		ResonantInduction.blockMoltenFluid.put(getID(materialName), blockFluidMaterial);
-		FluidContainerRegistry.registerFluidContainer(fluidMolten, ResonantInduction.itemBucketMolten.getStackFromMaterial(materialName));
+			/** Generate dust mixture fluids */
+			FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
+			FluidRegistry.registerFluid(fluidMixture);
+			BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
+			LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"));
+			GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
+			ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
+			FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
 
-		/** Generate dust mixture fluids */
-		FluidColored fluidMixture = new FluidColored(materialNameToMixture(materialName));
-		FluidRegistry.registerFluid(fluidMixture);
-		BlockFluidMixture blockFluidMixture = new BlockFluidMixture(fluidMixture);
-		LanguageRegistry.instance().addStringLocalization(fluidMixture.getUnlocalizedName(), localizedName + " " + LanguageUtility.getLocal("tooltip.mixture"));
-		GameRegistry.registerBlock(blockFluidMixture, "mixture" + nameCaps);
-		ResonantInduction.blockMixtureFluids.put(getID(materialName), blockFluidMixture);
-		FluidContainerRegistry.registerFluidContainer(fluidMixture, ResonantInduction.itemBucketMixture.getStackFromMaterial(materialName));
+			if (allowOreDictCompatibility)
+			{
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+			}
+			else
+			{
+				MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
+			}
+		}
 
 		ItemStack dust = ResonantInduction.itemDust.getStackFromMaterial(materialName);
 		ItemStack rubble = ResonantInduction.itemRubble.getStackFromMaterial(materialName);
@@ -155,13 +144,11 @@ public class ResourceGenerator implements IVirtualObject
 
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), "rubble" + nameCaps, dust, dust);
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), "dirtyDust" + nameCaps, refinedDust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 		}
 		else
 		{
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), rubble, dust, dust);
 			MachineRecipes.INSTANCE.addRecipe(RecipeType.MIXER.name(), dust, refinedDust);
-			MachineRecipes.INSTANCE.addRecipe(RecipeType.SMELTER.name(), new FluidStack(fluidMolten, FluidContainerRegistry.BUCKET_VOLUME), "ingot" + nameCaps);
 		}
 
 		FurnaceRecipes.smelting().addSmelting(dust.itemID, dust.getItemDamage(), OreDictionary.getOres("ingot" + nameCaps).get(0).copy(), 0.7f);
@@ -203,17 +190,14 @@ public class ResourceGenerator implements IVirtualObject
 			String nameCaps = LanguageUtility.capitalizeFirst(materialName);
 
 			if (OreDictionary.getOres("ore" + nameCaps).size() > 0)
+			{
 				generate(materialName);
+			}
 			else
+			{
 				it.remove();
+			}
 		}
-	}
-
-	@ForgeSubscribe
-	@SideOnly(Side.CLIENT)
-	public void reloadTextures(TextureStitchEvent.Post e)
-	{
-		computeColors();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -244,7 +228,7 @@ public class ResourceGenerator implements IVirtualObject
 
 	/**
 	 * Gets the average color of this item.
-	 * 
+	 *
 	 * @param itemStack
 	 * @return The RGB hexadecimal color code.
 	 */
@@ -400,6 +384,38 @@ public class ResourceGenerator implements IVirtualObject
 		}
 
 		return returnMaterials;
+	}
+
+	// TODO: Generate teh resource here instead of elsewhere...
+	@ForgeSubscribe
+	public void oreRegisterEvent(OreRegisterEvent evt)
+	{
+		if (evt.Name.startsWith("ingot"))
+		{
+			String oreDictName = evt.Name.replace("ingot", "");
+			String materialName = LanguageUtility.decapitalizeFirst(oreDictName);
+
+			if (!materials.containsKey(materialName))
+			{
+				Settings.CONFIGURATION.load();
+				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
+				Settings.CONFIGURATION.save();
+
+				if (!allowMaterial || OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
+				{
+					return;
+				}
+
+				materials.put(materialName, maxID++);
+			}
+		}
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void reloadTextures(TextureStitchEvent.Post e)
+	{
+		computeColors();
 	}
 
 	@Override
