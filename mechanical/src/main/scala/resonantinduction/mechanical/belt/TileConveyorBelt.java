@@ -87,15 +87,6 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 							didRefresh = true;
 						}
 					}
-					else if (tile instanceof INodeProvider)
-					{
-						MechanicalNode mechanical = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-
-						if (mechanical != null)
-						{
-							connections.put(mechanical, dir);
-						}
-					}
 				}
 
 				if (!worldObj.isRemote)
@@ -109,7 +100,7 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 			{
 				return from != getDirection() || from != getDirection().getOpposite();
 			}
-		}.setLoad(0.5f);
+		}.setLoad(0.15f);
 	}
 
 	/**
@@ -140,9 +131,10 @@ public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatabl
 		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
 		Iterator<Entity> it = this.ignoreList.iterator();
 
+		List<Entity> effect_list = this.getAffectedEntities();
 		while (it.hasNext())
 		{
-			if (!this.getAffectedEntities().contains(it.next()))
+			if (!effect_list.contains(it.next()))
 			{
 				it.remove();
 			}
