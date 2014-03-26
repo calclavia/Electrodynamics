@@ -103,15 +103,10 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 						MovementUtility.setBlockSneaky(this.newPosition.world, this.newPosition, this.blockID, this.blockMetadata, null);
 					}
 
-					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
-					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
+					this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
+					this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
 
 					MinecraftForge.EVENT_BUS.post(new EventPostForceManipulate(this.world, this.originalPosition.intX(), this.originalPosition.intY(), this.originalPosition.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ()));
-
-					if (handler instanceof TileForceManipulator)
-					{
-						((TileForceManipulator) handler).markMoveEntity = true;
-					}
 				}
 				catch (Exception e)
 				{

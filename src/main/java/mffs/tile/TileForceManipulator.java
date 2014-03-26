@@ -10,6 +10,7 @@ import calclavia.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
+import mffs.DelayedEvent;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -49,10 +50,6 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	public Set<Vector3> manipulationVectors = null;
 	public boolean doAnchor = true;
 	public int clientMoveTime;
-	/**
-	 * Server side ONLY
-	 */
-	public boolean markMoveEntity = false;
 	/**
 	 * Marking failures
 	 */
@@ -103,6 +100,15 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 					if (i > 0)
 					{
+						queueEvent(new DelayedEvent(this, getMoveTime())
+						{
+							@Override protected void onEvent()
+							{
+								moveEntities();
+								PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(TileForceManipulator.this, TilePacketType.FIELD.ordinal()));
+							}
+						});
+
 						nbt.setByte("type", (byte) 2);
 						nbt.setTag("list", nbtList);
 
@@ -194,7 +200,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				}
 
 				// Manipulation area preview
-				if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.getDelayedEvents().size() <= 0 && this.displayMode > 0)
+				if (this.ticks % 120 == 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.delayedEvents.size() <= 0 && this.displayMode > 0)
 				{
 					NBTTagCompound nbt = new NBTTagCompound();
 					NBTTagList nbtList = new NBTTagList();
@@ -233,17 +239,10 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				}
 			}
 
-			if (this.markMoveEntity)
-			{
-				this.moveEntities();
-				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FIELD.ordinal()));
-				this.markMoveEntity = false;
-			}
-
 			if (this.markFailMove)
 			{
 				this.moveTime = 0;
-				this.getDelayedEvents().clear();
+				delayedEvents.clear();
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal()), this.worldObj, new Vector3(this), PACKET_DISTANCE);
 				this.markFailMove = false;
@@ -548,7 +547,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && tileEntity != this)
 			{
-				this.getDelayedEvents().add(new BlockPreMoveDelayedEvent(this, getMoveTime(), this.worldObj, position, newPosition));
+				queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime(), this.worldObj, position, newPosition));
 				return true;
 			}
 		}

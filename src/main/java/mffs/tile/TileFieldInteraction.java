@@ -1,12 +1,7 @@
 package mffs.tile;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
@@ -37,38 +32,27 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	 */
 	public boolean isAbsolute = false;
 	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
-	private final List<DelayedEvent> delayedEvents = new LinkedList<DelayedEvent>();
-	private final List<DelayedEvent> quedDelayedEvents = new LinkedList<DelayedEvent>();
+	protected final Queue<DelayedEvent> delayedEvents = new LinkedList<DelayedEvent>();
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		if (this.delayedEvents.size() > 0)
+		Queue<DelayedEvent> continueEvents = new LinkedList<DelayedEvent>();
+		while(!delayedEvents.isEmpty())
 		{
-			do
+			DelayedEvent evt =	delayedEvents.poll();
+
+			evt.update();
+
+			if (evt.ticks > 0)
 			{
-				this.quedDelayedEvents.clear();
-
-				Iterator<DelayedEvent> it = this.delayedEvents.iterator();
-
-				while (it.hasNext())
-				{
-					DelayedEvent evt = it.next();
-
-					evt.update();
-
-					if (evt.ticks <= 0)
-					{
-						it.remove();
-					}
-				}
-
-				this.delayedEvents.addAll(this.quedDelayedEvents);
+				continueEvents.add(evt);
 			}
-			while (!this.quedDelayedEvents.isEmpty());
 		}
+
+		delayedEvents.addAll(continueEvents);
 	}
 
 	@Override
@@ -488,16 +472,11 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	}
 
 	@Override
-	public List<DelayedEvent> getDelayedEvents()
+	public void queueEvent(DelayedEvent evt)
 	{
-		return delayedEvents;
+		delayedEvents.add(evt);
 	}
 
-	@Override
-	public List<DelayedEvent> getQuedDelayedEvents()
-	{
-		return quedDelayedEvents;
-	}
 
 	/**
 	 * NBT Methods

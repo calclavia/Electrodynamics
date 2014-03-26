@@ -88,11 +88,11 @@ public class ItemModuleDisintegration extends ItemModule
 
 				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCollection) > 0)
 				{
-					((TileForceFieldProjector) projector).getDelayedEvents().add(new BlockInventoryDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position, (TileMFFSInventory) projector));
+					((TileForceFieldProjector) projector).queueEvent(new BlockInventoryDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position, (TileMFFSInventory) projector));
 				}
 				else
 				{
-					((TileForceFieldProjector) projector).getDelayedEvents().add(new BlockDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position));
+					((TileForceFieldProjector) projector).queueEvent(new BlockDropDelayedEvent((IDelayedEventHandler) projector, 39, block, tileEntity.worldObj, position));
 				}
 
 				if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
