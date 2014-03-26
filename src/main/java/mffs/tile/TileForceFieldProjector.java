@@ -182,19 +182,19 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 				}
 			}
 
-			if (this.isActive() && this.worldObj.isRemote)
+			if (isActive() && worldObj.isRemote)
 			{
-				this.animation += this.getFortronCost() / 10;
+				animation += getFortronCost() / 100f;
 			}
 
-			if (this.ticks % (2 * 20) == 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
+			if (ticks % (2 * 20) == 0 && this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
 			{
-				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "field", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
+				worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "field", 0.6f, (1 - this.worldObj.rand.nextFloat() * 0.1f));
 			}
 		}
-		else if (!this.worldObj.isRemote)
+		else if (!worldObj.isRemote)
 		{
-			this.destroyField();
+			destroyField();
 		}
 	}
 
@@ -240,13 +240,13 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 		{
 			if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
 			{
-				this.markFieldUpdate = false;
+				markFieldUpdate = false;
 
-				if (this.forceFields.size() <= 0)
+				if (forceFields.size() <= 0)
 				{
-					if (this.getModeStack().getItem() instanceof ICache)
+					if (getModeStack().getItem() instanceof ICache)
 					{
-						((ICache) this.getModeStack().getItem()).clearCache();
+						((ICache) getModeStack().getItem()).clearCache();
 					}
 				}
 

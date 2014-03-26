@@ -1,30 +1,21 @@
 package mffs.tile;
 
-import java.util.Set;
-
-import mffs.ModularForceFieldSystem;
-import net.minecraft.tileentity.TileEntity;
-import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.fortron.IServerThread;
 import calclavia.api.mffs.modules.IModule;
+import mffs.ModularForceFieldSystem;
+import net.minecraft.tileentity.TileEntity;
+import universalelectricity.api.vector.Vector3;
+
+import java.util.Set;
 
 /**
  * A thread that allows multi-threading calculation of projector fields.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class ProjectorCalculationThread extends Thread implements IServerThread
 {
-	public interface IThreadCallBack
-	{
-		/**
-		 * Called when the thread finishes the calculation.
-		 */
-		public void onThreadComplete();
-	}
-
 	private IFieldInteraction projector;
 	private IThreadCallBack callBack;
 
@@ -78,7 +69,7 @@ public class ProjectorCalculationThread extends Thread implements IServerThread
 					position.translate(new Vector3((TileEntity) this.projector));
 					position.translate(translation);
 
-					if (position.intY() <= ((TileEntity) this.projector).worldObj.getHeight())
+					if (position.intY() <= ((TileEntity) this.projector).worldObj.getHeight() && position.intY() >= 0)
 					{
 						this.projector.getCalculatedField().add(position.round());
 					}
@@ -102,5 +93,13 @@ public class ProjectorCalculationThread extends Thread implements IServerThread
 		{
 			this.callBack.onThreadComplete();
 		}
+	}
+
+	public interface IThreadCallBack
+	{
+		/**
+		 * Called when the thread finishes the calculation.
+		 */
+		public void onThreadComplete();
 	}
 }
