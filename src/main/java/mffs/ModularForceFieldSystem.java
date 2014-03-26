@@ -1,70 +1,5 @@
 package mffs;
 
-import java.util.Arrays;
-import java.util.logging.Logger;
-
-import mffs.base.BlockBase;
-import mffs.base.BlockMFFS;
-import mffs.base.ItemMFFS;
-import mffs.block.BlockBiometricIdentifier;
-import mffs.block.BlockCoercionDeriver;
-import mffs.block.BlockForceField;
-import mffs.block.BlockForceFieldProjector;
-import mffs.block.BlockForceManipulator;
-import mffs.block.BlockFortronCapacitor;
-import mffs.block.BlockInterdictionMatrix;
-import mffs.card.ItemCard;
-import mffs.fortron.FortronHelper;
-import mffs.item.ItemRemoteController;
-import mffs.item.card.ItemCardFrequency;
-import mffs.item.card.ItemCardID;
-import mffs.item.card.ItemCardInfinite;
-import mffs.item.card.ItemCardLink;
-import mffs.item.mode.ItemMode;
-import mffs.item.mode.ItemModeCube;
-import mffs.item.mode.ItemModeCustom;
-import mffs.item.mode.ItemModeCylinder;
-import mffs.item.mode.ItemModePyramid;
-import mffs.item.mode.ItemModeSphere;
-import mffs.item.mode.ItemModeTube;
-import mffs.item.module.ItemModule;
-import mffs.item.module.interdiction.ItemModuleAntiFriendly;
-import mffs.item.module.interdiction.ItemModuleAntiHostile;
-import mffs.item.module.interdiction.ItemModuleAntiPersonnel;
-import mffs.item.module.interdiction.ItemModuleConfiscate;
-import mffs.item.module.interdiction.ItemModuleInterdictionMatrix;
-import mffs.item.module.interdiction.ItemModuleWarn;
-import mffs.item.module.projector.ItemModuleArray;
-import mffs.item.module.projector.ItemModuleDisintegration;
-import mffs.item.module.projector.ItemModuleDome;
-import mffs.item.module.projector.ItemModuleFusion;
-import mffs.item.module.projector.ItemModuleRepulsion;
-import mffs.item.module.projector.ItemModuleShock;
-import mffs.item.module.projector.ItemModuleSponge;
-import mffs.item.module.projector.ItemModuleStablize;
-import mffs.tile.TileBiometricIdentifier;
-import mffs.tile.TileCoercionDeriver;
-import mffs.tile.TileForceField;
-import mffs.tile.TileForceFieldProjector;
-import mffs.tile.TileForceManipulator;
-import mffs.tile.TileFortronCapacitor;
-import mffs.tile.TileInterdictionMatrix;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-
-import org.modstats.ModstatInfo;
-import org.modstats.Modstats;
-
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.lib.network.PacketHandler;
@@ -86,6 +21,39 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import mffs.base.BlockBase;
+import mffs.base.BlockMFFS;
+import mffs.base.ItemMFFS;
+import mffs.block.*;
+import mffs.card.ItemCard;
+import mffs.fortron.FortronHelper;
+import mffs.item.ItemRemoteController;
+import mffs.item.card.ItemCardFrequency;
+import mffs.item.card.ItemCardID;
+import mffs.item.card.ItemCardInfinite;
+import mffs.item.card.ItemCardLink;
+import mffs.item.mode.*;
+import mffs.item.module.ItemModule;
+import mffs.item.module.interdiction.*;
+import mffs.item.module.projector.*;
+import mffs.tile.*;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
+import java.util.Arrays;
+import java.util.logging.Logger;
 
 @Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "required-after:CalclaviaCore")
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketHandler.class)
@@ -96,8 +64,10 @@ public class ModularForceFieldSystem
 	 * General Variable Definition
 	 */
 	public static final String CHANNEL = "MFFS";
+	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
 	public static final String ID = "MFFS";
 	public static final String NAME = "Modular Force Field System";
+	public static final Logger LOGGER = Logger.getLogger(NAME);
 	public static final String DOMAIN = "mffs";
 	public static final String PREFIX = DOMAIN + ":";
 	public static final String MAJOR_VERSION = "@MAJOR@";
@@ -105,50 +75,40 @@ public class ModularForceFieldSystem
 	public static final String REVISION_VERSION = "@REVIS@";
 	public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION;
 	public static final String BUILD_VERSION = "@BUILD@";
-
+	/**
+	 * Directories Definition
+	 */
+	public static final String RESOURCE_DIRECTORY = "/assets/mffs/";
+	public static final String LANGUAGE_DIRECTORY = RESOURCE_DIRECTORY + "languages/";
+	public static final String TEXTURE_DIRECTORY = "textures/";
+	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
+	public static final ResourceLocation HOLOGAM_TEXTURE = new ResourceLocation(DOMAIN, BLOCK_DIRECTORY + "forceField.png");
+	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
+	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
+	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
+	public static final ResourceLocation GUI_BUTTON = new ResourceLocation(DOMAIN, GUI_DIRECTORY + "gui_button.png");
 	@Instance(ID)
 	public static ModularForceFieldSystem instance;
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 	@SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
 	public static CommonProxy proxy;
-
-	public static final Logger LOGGER = Logger.getLogger(NAME);
-
-	/**
-	 * Directories Definition
-	 */
-	public static final String RESOURCE_DIRECTORY = "/assets/mffs/";
-	public static final String LANGUAGE_DIRECTORY = RESOURCE_DIRECTORY + "languages/";
-
-	public static final String TEXTURE_DIRECTORY = "textures/";
-	public static final String BLOCK_DIRECTORY = TEXTURE_DIRECTORY + "blocks/";
-	public static final String ITEM_DIRECTORY = TEXTURE_DIRECTORY + "items/";
-	public static final String MODEL_DIRECTORY = TEXTURE_DIRECTORY + "models/";
-	public static final String GUI_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
-	public static final ResourceLocation GUI_BUTTON = new ResourceLocation(DOMAIN, GUI_DIRECTORY + "gui_button.png");
-	public static final ResourceLocation HOLOGAM_TEXTURE = new ResourceLocation(DOMAIN, BLOCK_DIRECTORY + "forceField.png");
-
 	/**
 	 * Machines
 	 */
 	public static BlockMFFS blockCoercionDeriver, blockFortronCapacitor, blockForceFieldProjector,
 			blockBiometricIdentifier, blockInterdictionMatrix, blockForceManipulator;
-
 	public static BlockBase blockForceField;
-
 	/**
 	 * Items
 	 */
 	public static Item itemRemoteController;
 	public static Item itemFocusMatix;
-
 	/**
 	 * Cards
 	 */
 	public static ItemCard itemCardBlank, itemCardInfinite, itemCardFrequency, itemCardID,
 			itemCardLink;
-
 	/**
 	 * Modes
 	 */
@@ -161,19 +121,15 @@ public class ModularForceFieldSystem
 	public static ItemModule itemModule, itemModuleSpeed, itemModuleCapacity, itemModuleTranslate,
 			itemModuleScale, itemModuleRotate, itemModuleCollection, itemModuleInvert,
 			itemModuleSilence;
-
 	// Projector Modules
 	public static ItemModule itemModuleFusion, itemModuleDome, itemModuleCamouflage,
 			itemModuleApproximation, itemModuleArray, itemModuleDisintegration, itemModuleShock,
 			itemModuleGlow, itemModuleSponge, itemModuleStablize, itemModuleRepulsion;
-
 	// Interdiction Matrix Modules
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
 			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
 			itemModuleBlockAlter, itemModuleAntiSpawn;
-
 	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
-	public static final PacketTile PACKET_TILE = new PacketTile(CHANNEL);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -417,6 +373,8 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleApproximation), " N ", "NFN", " N ", 'F', itemFocusMatix, 'N', Item.axeGold));
 		// Array
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleArray), " F ", "DFD", " F ", 'F', itemFocusMatix, 'D', Item.diamond));
+		// Repulsion
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F', itemFocusMatix, 'D', Item.diamond, 'S', Item.slimeBall));
 
 		// -- -- Interdiction Matrix -- --
 		// Anti-Hostile

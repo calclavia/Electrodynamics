@@ -1,22 +1,23 @@
 package mffs.item.module.projector;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
+import calclavia.lib.prefab.vector.Cuboid;
 import mffs.ModularForceFieldSystem;
 import mffs.item.module.ItemModule;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.Permission;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ItemModuleRepulsion extends ItemModule
 {
@@ -32,14 +33,17 @@ public class ItemModuleRepulsion extends ItemModule
 	@Override
 	public boolean onProject(IProjector projector, Set<Vector3> fields)
 	{
-		double repulsionVelocity = Math.max(projector.getModuleCount(this) / 20, 1.2);
-		Set<Vector3> field = projector.getCalculatedField();
+		final double repulsionVelocity = Math.max(projector.getModuleCount(this) / 20, 1.2);
+		final Set<Vector3> field = projector.getCalculatedField();
 
-		for (Vector3 fieldPos : field)
+		Cuboid volume = new Cuboid(projector.getNegativeScale().clone().invert(), projector.getPositiveScale().clone().add(1)).add(new Vector3((TileEntity) projector).add(projector.getTranslation()));
+		List<Entity> entities = ((TileEntity) projector).getWorldObj().getEntitiesWithinAABB(Entity.class, volume.toAABB());
+
+		for (Entity entity : entities)
 		{
-			List<Entity> entities = ((TileEntity) projector).getWorldObj().getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(fieldPos.intX(), fieldPos.intY(), fieldPos.intZ(), fieldPos.intX() + 1, fieldPos.intY() + 1, fieldPos.intZ() + 1));
+			Vector3 fieldPos = new Vector3(entity).floor();
 
-			for (Entity entity : entities)
+			if (field.contains(fieldPos))
 			{
 				if (entity instanceof EntityPlayer)
 				{
@@ -63,34 +67,31 @@ public class ItemModuleRepulsion extends ItemModule
 					}
 				}
 
-				Vector3 differenceFromCenter = new Vector3(entity).difference(fieldPos.clone().translate(0.5));
-
-				entity.posX = entity.lastTickPosX;
-				entity.posY = entity.lastTickPosY;
-				entity.posZ = entity.lastTickPosZ;
-				/*
-				 * if (differenceFromCenter.getMagnitude() > 0.49) { entity.motionX *=
-				 * -repulsionVelocity; entity.motionY *= -repulsionVelocity; entity.motionZ *=
-				 * -repulsionVelocity; } else { System.out.println("TEST"); entity.motionX =
-				 * differenceFromCenter.x; entity.motionY = differenceFromCenter.y; entity.motionZ =
-				 * differenceFromCenter.z; } entity.moveEntity(entity.motionX, entity.motionY,
-				 * entity.motionZ);
-				 */
-
-				// entity.moveEntity( differenceFromCenter.x, differenceFromCenter.y,
-				// differenceFromCenter.z);
-				entity.motionX = 0;
-				entity.motionY = 0;
-				entity.motionZ = 0;
+				Vector3 repellDirection = new Vector3(entity).difference(fieldPos.clone().translate(0.5)).normalize();
+				entity.motionX = repellDirection.x * Math.max(repulsionVelocity, Math.abs(entity.motionX));
+				entity.motionY = repellDirection.y * Math.max(repulsionVelocity, Math.abs(entity.motionY));
+				entity.motionZ = repellDirection.z * Math.max(repulsionVelocity, Math.abs(entity.motionZ));
+				entity.moveEntity(entity.motionX, entity.motionY, entity.motionZ);
 				entity.onGround = true;
 
-			}
-
-			if (((TileEntity) projector).getWorldObj().isRemote && projector.getTicks() % 60 == 0 && fieldPos.getBlockID(((TileEntity) projector).getWorldObj()) == 0)
-			{
-				ModularForceFieldSystem.proxy.renderHologram(((TileEntity) projector).getWorldObj(), fieldPos.clone().translate(0.5), 0.5f, 1, 0.3f, 50, null);
+				if (entity instanceof EntityPlayerMP)
+				{
+					((EntityPlayerMP) entity).playerNetServerHandler.setPlayerLocation(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+				}
 			}
 		}
+
+		/*
+		if (((TileEntity) projector).getWorldObj().isRemote && projector.getTicks() % 60 == 0)
+		{
+			for (Vector3 fieldPos : field)
+			{
+				if (fieldPos.getBlockID(((TileEntity) projector).getWorldObj()) == 0)
+				{
+					ModularForceFieldSystem.proxy.renderHologram(((TileEntity) projector).getWorldObj(), fieldPos.clone().translate(0.5), 0.5f, 1, 0.3f, 50, null);
+				}
+			}
+		}*/
 
 		return true;
 	}
