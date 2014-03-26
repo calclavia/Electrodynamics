@@ -76,7 +76,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		if (this.getMode() != null && Settings.ENABLE_MANIPULATOR)
 		{
 			/**
-			 * Passed the instance manipulation starts and only once.
+			 * Manipulator activated and passed all checks. Actually moving the blocks now.
 			 */
 			if (!this.worldObj.isRemote)
 			{
@@ -558,11 +558,11 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 	public AxisAlignedBB getSearchAxisAlignedBB()
 	{
-		Vector3 positiveScale = new Vector3(this).translate(this.getTranslation()).translate(this.getPositiveScale());
+		Vector3 positiveScale = new Vector3(this).translate(this.getTranslation()).add(this.getPositiveScale()).add(1);
 		Vector3 negativeScale = new Vector3(this).translate(this.getTranslation()).subtract(this.getNegativeScale());
 
-		Vector3 minScale = new Vector3(Math.min(positiveScale.x, negativeScale.x), Math.min(positiveScale.y, negativeScale.y), Math.min(positiveScale.z, negativeScale.z));
-		Vector3 maxScale = new Vector3(Math.max(positiveScale.x, negativeScale.x), Math.max(positiveScale.y, negativeScale.y), Math.max(positiveScale.z, negativeScale.z));
+		Vector3 minScale = positiveScale.min(negativeScale);
+		Vector3 maxScale = positiveScale.max(negativeScale);
 
 		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
 	}
@@ -641,8 +641,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			{
 				Vector3 relativePosition = new VectorWorld(entity).clone().subtract(this.getAbsoluteAnchor().translate(0.5));
 				VectorWorld newLocation = (VectorWorld) targetLocation.clone().translate(0.5).add(relativePosition);
-				newLocation.y += 1;
-				this.moveEntity(entity, newLocation);
+				moveEntity(entity, newLocation);
 			}
 		}
 	}
@@ -662,11 +661,11 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 			if (entity instanceof EntityPlayerMP)
 			{
-				((EntityPlayerMP) entity).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, 0, 0);
+				((EntityPlayerMP) entity).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch);
 			}
 			else
 			{
-				entity.setPosition(location.x, location.y, location.z);
+				entity.setPositionAndRotation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch);
 			}
 		}
 	}

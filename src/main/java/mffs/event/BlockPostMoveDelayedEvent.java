@@ -1,23 +1,23 @@
 package mffs.event;
 
-import java.lang.reflect.Method;
-
+import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
+import calclavia.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
+import mffs.tile.TileForceManipulator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
-import calclavia.lib.utility.MovementUtility;
+
+import java.lang.reflect.Method;
 
 /**
  * Sets the new position into the original TileEntities' block.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class BlockPostMoveDelayedEvent extends DelayedEvent
 {
@@ -107,12 +107,18 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 					this.handler.getQuedDelayedEvents().add(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
 
 					MinecraftForge.EVENT_BUS.post(new EventPostForceManipulate(this.world, this.originalPosition.intX(), this.originalPosition.intY(), this.originalPosition.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ()));
+
+					if (handler instanceof TileForceManipulator)
+					{
+						((TileForceManipulator) handler).markMoveEntity = true;
+					}
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
 			}
+
 		}
 	}
 }

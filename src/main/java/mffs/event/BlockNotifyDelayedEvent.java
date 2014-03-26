@@ -58,11 +58,6 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 					}
 				}
 			}
-
-			if (handler instanceof TileForceManipulator)
-			{
-				((TileForceManipulator) handler).markMoveEntity = true;
-			}
 		}
 	}
 }
