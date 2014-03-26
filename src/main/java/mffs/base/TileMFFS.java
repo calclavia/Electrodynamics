@@ -1,55 +1,45 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import mffs.ModularForceFieldSystem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraftforge.common.ForgeDirection;
 import calclavia.api.mffs.IActivatable;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.prefab.tile.IPlayerUsing;
 import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.tile.TileAdvanced;
-
 import com.google.common.io.ByteArrayDataInput;
-
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import dan200.computer.api.IPeripheral;
+import mffs.ModularForceFieldSystem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
+import net.minecraftforge.common.ForgeDirection;
 
-public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, IPacketSender, IPlayerUsing, IRotatable, IActivatable, IPeripheral
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+
+public abstract class TileMFFS extends TileAdvanced
+		implements IPacketReceiver, IPacketSender, IPlayerUsing, IRotatable, IActivatable, IPeripheral
 {
-	public enum TilePacketType
-	{
-		NONE, DESCRIPTION, FREQUENCY, FORTRON, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING,
-		FXS, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER;
-	}
-
-	/**
-	 * Is the machine active and working?
-	 */
-	private boolean isActive = false;
-
-	/**
-	 * Is this machine switched on internally via GUI?
-	 */
-	private boolean isRedstoneActive = false;
-
 	/**
 	 * The players to send packets to for machine update info.
 	 */
 	public final HashSet<EntityPlayer> playersUsing = new HashSet<EntityPlayer>();
-
 	/**
 	 * Used for client side animations.
 	 */
 	public float animation = 0;
+	/**
+	 * Is the machine active and working?
+	 */
+	private boolean isActive = false;
+	/**
+	 * Is this machine switched on internally via GUI?
+	 */
+	public boolean isRedstoneActive = false;
 
 	/**
 	 * Override this for packet updating list.
@@ -62,7 +52,8 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			data.add(TilePacketType.DESCRIPTION.ordinal());
-			data.add(this.isActive);
+			data.add(isActive);
+			data.add(isRedstoneActive);
 		}
 
 		return data;
@@ -76,7 +67,7 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 		/**
 		 * Packet Update for Client only when GUI is open.
 		 */
-		if (this.ticks % 4 == 0 && this.playersUsing.size() > 0)
+		if (this.ticks % 3 == 0 && this.playersUsing.size() > 0)
 		{
 			for (EntityPlayer player : this.playersUsing)
 			{
@@ -107,7 +98,7 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 
 	/**
 	 * Inherit this function to receive packets. Make sure this function is supered.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void onReceivePacket(int packetID, ByteArrayDataInput dataStream) throws IOException
@@ -115,7 +106,8 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 		if (packetID == TilePacketType.DESCRIPTION.ordinal())
 		{
 			boolean prevActive = this.isActive;
-			this.isActive = dataStream.readBoolean();
+			isActive = dataStream.readBoolean();
+			isRedstoneActive = dataStream.readBoolean();
 
 			if (prevActive != this.isActive)
 			{
@@ -126,13 +118,13 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 		{
 			this.isRedstoneActive = !this.isRedstoneActive;
 
-			if (this.isRedstoneActive)
+			if (isRedstoneActive)
 			{
-				this.setActive(true);
+				setActive(true);
 			}
 			else
 			{
-				this.setActive(false);
+				setActive(false);
 			}
 		}
 	}
@@ -203,6 +195,12 @@ public abstract class TileMFFS extends TileAdvanced implements IPacketReceiver, 
 	public HashSet<EntityPlayer> getPlayersUsing()
 	{
 		return this.playersUsing;
+	}
+
+	public enum TilePacketType
+	{
+		NONE, DESCRIPTION, FREQUENCY, FORTRON, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING,
+		FXS, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER;
 	}
 
 }

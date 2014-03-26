@@ -1,11 +1,15 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.Blacklist;
+import calclavia.api.mffs.EventForceManipulate.EventCheckForceManipulate;
+import calclavia.api.mffs.card.ICoordLink;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IProjectorMode;
+import calclavia.api.mffs.security.Permission;
+import calclavia.lib.network.PacketHandler;
+import com.google.common.io.ByteArrayDataInput;
+import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -24,47 +28,40 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.api.mffs.Blacklist;
-import calclavia.api.mffs.EventForceManipulate.EventCheckForceManipulate;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IProjectorMode;
-import calclavia.api.mffs.security.Permission;
-import calclavia.lib.network.PacketHandler;
 
-import com.google.common.io.ByteArrayDataInput;
-
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TileForceManipulator extends TileFieldInteraction implements IEffectController
 {
 	public static final int PACKET_DISTANCE = 60;
 	public static final int ANIMATION_TIME = 20;
+	private final Set<Vector3> failedPositions = new LinkedHashSet<Vector3>();
 	public Vector3 anchor = null;
-
 	/**
 	 * The display mode. 0 = none, 1 = minimal, 2 = maximal.
 	 */
 	public int displayMode = 1;
-
 	public boolean isCalculatingManipulation = false;
 	public Set<Vector3> manipulationVectors = null;
 	public boolean doAnchor = true;
-
+	public int clientMoveTime;
+	/**
+	 * Server side ONLY
+	 */
+	public boolean markMoveEntity = false;
+	/**
+	 * Marking failures
+	 */
+	public boolean markFailMove = false;
 	/**
 	 * Used ONLY for teleporting.
 	 */
 	private int moveTime = 0;
 	private boolean canRenderMove = true;
-	public int clientMoveTime;
-
-	/** Server side ONLY */
-	public boolean markMoveEntity = false;
-
-	/** Marking failures */
-	public boolean markFailMove = false;
-	private final Set<Vector3> failedPositions = new LinkedHashSet<Vector3>();
 
 	@Override
 	public void updateEntity()
@@ -164,19 +161,26 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			}
 
 			/**
-			 * Force Manipulator activated, start moving...
+			 * Force Manipulator activated, try start moving...
 			 */
-			if (this.isActive() && this.moveTime <= 0 && this.ticks % 20 == 0 && this.requestFortron(this.getFortronCost(), false) > 0)
+			if (ticks % 20 == 0 && isActive())
 			{
-				if (!this.worldObj.isRemote)
+				if (moveTime <= 0 && requestFortron(this.getFortronCost(), false) > 0)
 				{
-					this.requestFortron(this.getFortronCost(), true);
-					// Start multi-threading calculations
-					(new ManipulatorCalculationThread(this)).start();
+					if (!worldObj.isRemote)
+					{
+						requestFortron(getFortronCost(), true);
+						// Start multi-threading calculations
+						(new ManipulatorCalculationThread(this)).start();
+					}
+
+					moveTime = 0;
 				}
 
-				this.moveTime = 0;
-				this.setActive(false);
+				if (!worldObj.isRemote)
+				{
+					setActive(false);
+				}
 			}
 
 			/**
@@ -212,9 +216,13 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 					{
 						Vector3 targetPosition;
 						if (getTargetPosition().world == null)
+						{
 							targetPosition = new Vector3(getTargetPosition());
+						}
 						else
+						{
 							targetPosition = getTargetPosition();
+						}
 
 						PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 2, 60, getAbsoluteAnchor().translate(0.5), targetPosition.translate(0.5).writeToNBT(new NBTTagCompound()), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE);
 					}
@@ -258,6 +266,10 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				this.failedPositions.clear();
 				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal(), (byte) 3, nbt), this.worldObj, new Vector3(this), PACKET_DISTANCE);
 			}
+		}
+		else if (!worldObj.isRemote && isActive())
+		{
+			setActive(false);
 		}
 	}
 
@@ -557,7 +569,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 	/**
 	 * Gets the position in which the manipulator will try to translate the field into.
-	 * 
+	 *
 	 * @return A vector of the target position.
 	 */
 	public VectorWorld getTargetPosition()
@@ -572,7 +584,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 	/**
 	 * Gets the movement time required in TICKS.
-	 * 
+	 *
 	 * @return The time it takes to teleport (using a link card) to another coordinate OR
 	 * ANIMATION_TIME for
 	 * default move
@@ -723,7 +735,8 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
+			throws Exception
 	{
 		switch (method)
 		{

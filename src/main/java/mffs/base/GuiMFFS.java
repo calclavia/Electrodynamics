@@ -112,7 +112,7 @@ public class GuiMFFS extends GuiContainerBase
 		{
 			if (this.buttonList.size() > 0 && this.buttonList.get(0) != null)
 			{
-				((GuiIcon) this.buttonList.get(0)).setIndex(((TileMFFS) this.frequencyTile).isActive() ? 1 : 0);
+				((GuiIcon) this.buttonList.get(0)).setIndex(((TileMFFS) this.frequencyTile).isRedstoneActive ? 1 : 0);
 			}
 		}
 	}
