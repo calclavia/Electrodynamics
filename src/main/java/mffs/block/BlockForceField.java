@@ -1,8 +1,14 @@
 package mffs.block;
 
-import java.util.List;
-import java.util.Random;
-
+import calclavia.api.mffs.IForceFieldBlock;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.fortron.IFortronStorage;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
+import calclavia.lib.prefab.CustomDamageSource;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import mffs.base.BlockBase;
 import mffs.render.RenderForceField;
@@ -25,15 +31,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.IForceFieldBlock;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.fortron.IFortronStorage;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.Permission;
-import calclavia.lib.prefab.CustomDamageSource;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.Random;
 
 public class BlockForceField extends BlockBase implements IForceFieldBlock, IPartialSealableBlock
 {
@@ -41,7 +41,7 @@ public class BlockForceField extends BlockBase implements IForceFieldBlock, IPar
 	{
 		super(id, "forceField", Material.glass);
 		this.setBlockUnbreakable();
-		this.setResistance(999.0F);
+		this.setResistance(Integer.MAX_VALUE);
 		this.setCreativeTab(null);
 	}
 
