@@ -68,7 +68,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 	 * Turns the inventory array into a single stack of matching items. This assumes that all items
 	 * in the crate are the same TODO eject minority items and only keep the majority that are the
 	 * same to prevent duplication issues
-	 * 
+	 * TODO: Add Force?
 	 * @param force - force a rebuild of the inventory from the single stack created
 	 */
 	public void buildSampleStack()
