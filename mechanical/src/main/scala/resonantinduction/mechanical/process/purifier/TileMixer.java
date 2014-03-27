@@ -1,10 +1,10 @@
 package resonantinduction.mechanical.process.purifier;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.resonantinduction.IMechanicalNode;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -13,6 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.IFluidBlock;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
@@ -20,13 +21,13 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.utility.inventory.InventoryUtility;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Calclavia
- * 
  */
 public class TileMixer extends TileMechanical implements IInventory
 {
@@ -57,6 +58,28 @@ public class TileMixer extends TileMechanical implements IInventory
 	@Override
 	public void updateEntity()
 	{
+		if (!world().isRemote && ticks % 20 == 0)
+		{
+			for (int x = -1; x <= 1; x++)
+			{
+				for (int z = -1; z <= 1; z++)
+				{
+					if (x != 0 && z != 0)
+					{
+						int id = position().translate(x, 0, z).getBlockID(world());
+						Block block = Block.blocksList[id];
+
+						if (block != null && !(block instanceof IFluidBlock) && !(block instanceof BlockFluid))
+						{
+							block.dropBlockAsItem(world(), x(), y(), z(), 0, 0);
+							position().setBlock(0);
+							return;
+						}
+					}
+				}
+			}
+		}
+
 		super.updateEntity();
 
 		if (canWork())
@@ -67,7 +90,7 @@ public class TileMixer extends TileMechanical implements IInventory
 
 	/**
 	 * Can this machine work this tick?
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean canWork()
@@ -163,21 +186,25 @@ public class TileMixer extends TileMechanical implements IInventory
 	private boolean doneWork(EntityItem entity)
 	{
 		Vector3 mixPosition = new Vector3(entity.posX, yCoord, entity.posZ);
-		Block block = Block.blocksList[mixPosition.getBlockID(worldObj)];
 
-		if (block instanceof BlockFluidMixture)
+		if (mixPosition.getBlockID(world()) != blockID())
 		{
-			ItemStack itemStack = entity.getEntityItem().copy();
+			Block block = Block.blocksList[mixPosition.getBlockID(worldObj)];
 
-			if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+			if (block instanceof BlockFluidMixture)
 			{
-				worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
-				return true;
+				ItemStack itemStack = entity.getEntityItem().copy();
+
+				if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+				{
+					worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
+					return true;
+				}
 			}
-		}
-		else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
-		{
-			mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem())).blockID);
+			else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
+			{
+				mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem())).blockID);
+			}
 		}
 
 		return false;
