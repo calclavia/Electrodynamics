@@ -1,15 +1,5 @@
 package resonantinduction.mechanical.energy.gear;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.grid.PartMechanical;
 import calclavia.api.resonantinduction.IMechanicalNode;
 import calclavia.lib.grid.INodeProvider;
 import codechicken.lib.raytracer.IndexedCuboid6;
@@ -18,12 +8,21 @@ import codechicken.lib.vec.Vector3;
 import codechicken.multipart.PartMap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.PartMechanical;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class PartGearShaft extends PartMechanical
 {
@@ -38,15 +37,6 @@ public class PartGearShaft extends PartMechanical
 		sides[4] = new IndexedCuboid6(4, new Cuboid6(0.000, 0.36, 0.36, 0.36, 0.64, 0.64));
 		sides[5] = new IndexedCuboid6(5, new Cuboid6(0.64, 0.36, 0.36, 1.000, 0.64, 0.64));
 		sides[6] = new IndexedCuboid6(6, new Cuboid6(0.36, 0.36, 0.36, 0.64, 0.64, 0.64));
-	}
-
-	@Override
-	public void preparePlacement(int side, int itemDamage)
-	{
-		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
-		// Unwind rotation. We can only have "3" axis.
-		this.placementSide = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
-		tier = itemDamage;
 	}
 
 	public PartGearShaft()
@@ -132,12 +122,17 @@ public class PartGearShaft extends PartMechanical
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
 			{
-				if (source instanceof PartGear)
+				if (source instanceof MechanicalNode)
 				{
-					PartGear gear = (PartGear) source;
+					if (((MechanicalNode) source).parent instanceof PartGear)
+					{
+						PartGear gear = (PartGear) ((MechanicalNode) source).parent;
 
-					if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
-						return false;
+						if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
+						{
+							return false;
+						}
+					}
 				}
 
 				return from == placementSide || from == placementSide.getOpposite();
@@ -154,6 +149,15 @@ public class PartGearShaft extends PartMechanical
 				return dir == placementSide;
 			}
 		};
+	}
+
+	@Override
+	public void preparePlacement(int side, int itemDamage)
+	{
+		ForgeDirection dir = ForgeDirection.getOrientation((byte) (side ^ 1));
+		// Unwind rotation. We can only have "3" axis.
+		this.placementSide = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal());
+		tier = itemDamage;
 	}
 
 	@Override
@@ -213,7 +217,9 @@ public class PartGearShaft extends PartMechanical
 			for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				if (side == placementSide || side == placementSide.getOpposite())
+				{
 					subParts.add(currentSides[side.ordinal()]);
+				}
 			}
 		}
 

@@ -192,7 +192,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 			 * Can this gear be connected BY the source?
 			 * 
 			 * @param from - Direction source is coming from.
-			 * @param source - The source of the connection.
+			 * @param with - The source of the connection.
 			 * @return True is so.
 			 */
 			@Override
