@@ -173,12 +173,12 @@ public class Mechanical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockPump, "PPP", "GGG", "PPP", 'P', itemPipe, 'G', new ItemStack(itemGear, 1, 2)));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Item.brick));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Item.ingotIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 1, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Item.diamond));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.CERAMIC.ordinal()), "BBB", "   ", "BBB", 'B', Item.brick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.BRONZE.ordinal()), "BBB", "   ", "BBB", 'B', "ingotBronze"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.PLASTIC.ordinal()), "BBB", "   ", "BBB", 'B', UniversalRecipe.RUBBER.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.IRON.ordinal()), "BBB", "   ", "BBB", 'B', Item.ingotIron));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.STEEL.ordinal()), "BBB", "   ", "BBB", 'B', "ingotSteel"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemPipe, 3, EnumPipeMaterial.FIBERGLASS.ordinal()), "BBB", "   ", "BBB", 'B', Item.diamond));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMechanicalPiston, "SGS", "SPS", "SRS", 'P', Block.pistonBase, 'S', Item.ingotIron, 'R', Item.redstone, 'G', new ItemStack(itemGear, 1, 2)));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrinderWheel, "III", "LGL", "III", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'L', "logWood", 'G', itemGear));
