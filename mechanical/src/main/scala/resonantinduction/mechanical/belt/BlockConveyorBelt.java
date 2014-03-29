@@ -14,7 +14,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
+import resonantinduction.mechanical.belt.TileConveyorBelt.BeltType;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.render.block.BlockRenderingHandler;
@@ -48,12 +48,12 @@ public class BlockConveyorBelt extends BlockTile
         {
             TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
 
-            if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+            if (tileEntity.getBeltType() == BeltType.SLANT_UP || tileEntity.getBeltType() == BeltType.SLANT_DOWN)
             {
                 this.setBlockBounds(0f, 0f, 0f, 1f, 0.96f, 1f);
                 return;
             }
-            if (tileEntity.getSlant() == SlantType.TOP)
+            if (tileEntity.getBeltType() == BeltType.RAISED)
             {
                 this.setBlockBounds(0f, 0.68f, 0f, 1f, 0.96f, 1f);
                 return;
@@ -72,11 +72,11 @@ public class BlockConveyorBelt extends BlockTile
         {
             TileConveyorBelt tileEntity = (TileConveyorBelt) t;
 
-            if (tileEntity.getSlant() == SlantType.UP || tileEntity.getSlant() == SlantType.DOWN)
+            if (tileEntity.getBeltType() == BeltType.SLANT_UP || tileEntity.getBeltType() == BeltType.SLANT_DOWN)
             {
                 return AxisAlignedBB.getAABBPool().getAABB(x + this.minX, y + this.minY, z + this.minZ, (double) x + 1, (double) y + 1, (double) z + 1);
             }
-            if (tileEntity.getSlant() == SlantType.TOP)
+            if (tileEntity.getBeltType() == BeltType.RAISED)
             {
                 return AxisAlignedBB.getAABBPool().getAABB(x + this.minX, (double) y + 0.68f, z + this.minZ, x + this.maxX, (double) y + 0.98f, z + this.maxZ);
             }
@@ -86,7 +86,7 @@ public class BlockConveyorBelt extends BlockTile
     }
 
     @Override
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity)
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB boundBox, List boxList, Entity entity)
     {
         TileEntity t = world.getBlockTileEntity(x, y, z);
 
@@ -94,26 +94,26 @@ public class BlockConveyorBelt extends BlockTile
         {
             TileConveyorBelt tile = (TileConveyorBelt) t;
 
-            if (tile.getSlant() == SlantType.UP || tile.getSlant() == SlantType.DOWN)
+            if (tile.getBeltType() == BeltType.SLANT_UP || tile.getBeltType() == BeltType.SLANT_DOWN)
             {
                 AxisAlignedBB boundBottom = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.3, z + 1);
                 AxisAlignedBB boundTop = null;
 
                 ForgeDirection direction = tile.getDirection();
 
-                if (tile.getSlant() != SlantType.NONE)
+                if (tile.getBeltType() != BeltType.NORMAL)
                 {
                     AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.1, z + 1);
 
-                    if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+                    if (newBounds != null && boundBox.intersectsWith(newBounds))
                     {
-                        par6List.add(newBounds);
+                        boxList.add(newBounds);
                     }
 
                     return;
                 }
 
-                if (tile.getSlant() == SlantType.UP)
+                if (tile.getBeltType() == BeltType.SLANT_UP)
                 {
                     if (direction.offsetX > 0)
                     {
@@ -132,7 +132,7 @@ public class BlockConveyorBelt extends BlockTile
                         boundTop = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.8, z + (float) direction.offsetZ / -2);
                     }
                 }
-                else if (tile.getSlant() == SlantType.DOWN)
+                else if (tile.getBeltType() == BeltType.SLANT_DOWN)
                 {
                     if (direction.offsetX > 0)
                     {
@@ -152,25 +152,25 @@ public class BlockConveyorBelt extends BlockTile
                     }
                 }
 
-                if (par5AxisAlignedBB.intersectsWith(boundBottom))
+                if (boundBox.intersectsWith(boundBottom))
                 {
-                    par6List.add(boundBottom);
+                    boxList.add(boundBottom);
                 }
-                if (boundTop != null && par5AxisAlignedBB.intersectsWith(boundTop))
+                if (boundTop != null && boundBox.intersectsWith(boundTop))
                 {
-                    par6List.add(boundTop);
+                    boxList.add(boundTop);
                 }
 
                 return;
             }
 
-            if (tile.getSlant() == SlantType.TOP)
+            if (tile.getBeltType() == BeltType.RAISED)
             {
                 AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y + 0.68, z, x + 1, y + 0.98, z + 1);
 
-                if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+                if (newBounds != null && boundBox.intersectsWith(newBounds))
                 {
-                    par6List.add(newBounds);
+                    boxList.add(newBounds);
                 }
 
                 return;
@@ -179,17 +179,17 @@ public class BlockConveyorBelt extends BlockTile
 
         AxisAlignedBB newBounds = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x + 1, y + 0.1, z + 1);
 
-        if (newBounds != null && par5AxisAlignedBB.intersectsWith(newBounds))
+        if (newBounds != null && boundBox.intersectsWith(newBounds))
         {
-            par6List.add(newBounds);
+            boxList.add(newBounds);
         }
     }
 
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase par5EntityLiving, ItemStack stack)
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack stack)
     {
-        super.onBlockPlacedBy(world, x, y, z, par5EntityLiving, stack);
-        int angle = MathHelper.floor_double((par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, stack);
+        int angle = MathHelper.floor_double((entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         int change = 2;
 
         switch (angle)
@@ -244,14 +244,14 @@ public class BlockConveyorBelt extends BlockTile
     {
         TileConveyorBelt tileEntity = (TileConveyorBelt) world.getBlockTileEntity(x, y, z);
 
-        int slantOrdinal = tileEntity.getSlant().ordinal() + 1;
+        int slantOrdinal = tileEntity.getBeltType().ordinal() + 1;
 
-        if (slantOrdinal >= SlantType.values().length)
+        if (slantOrdinal >= BeltType.values().length)
         {
             slantOrdinal = 0;
         }
 
-        tileEntity.setSlant(SlantType.values()[slantOrdinal]);
+        tileEntity.setSlant(BeltType.values()[slantOrdinal]);
 
         return true;
     }
@@ -277,20 +277,20 @@ public class BlockConveyorBelt extends BlockTile
 
                 if (maxSpeed > 0)
                 {
-                    SlantType slantType = tile.getSlant();
+                    BeltType slantType = tile.getBeltType();
                     ForgeDirection direction = tile.getDirection();
 
-                    if (slantType != SlantType.NONE)
+                    if (slantType != BeltType.NORMAL)
                     {
                         entity.onGround = false;
                     }
 
-                    if (slantType == SlantType.UP)
+                    if (slantType == BeltType.SLANT_UP)
                     {
                         // We need at least 0.25 to move items up.
                         entity.motionY = maxSpeed * 3;// Math.max(0.25, maxSpeed);
                     }
-                    else if (slantType == SlantType.DOWN)
+                    else if (slantType == BeltType.SLANT_DOWN)
                     {
                         entity.motionY = -maxSpeed;
                     }

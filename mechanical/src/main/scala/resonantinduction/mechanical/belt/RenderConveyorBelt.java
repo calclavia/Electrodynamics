@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.belt.TileConveyorBelt.SlantType;
+import resonantinduction.mechanical.belt.TileConveyorBelt.BeltType;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -24,7 +24,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
 		TileConveyorBelt tileEntity = (TileConveyorBelt) t;
-		SlantType slantType = tileEntity.getSlant();
+		BeltType slantType = tileEntity.getBeltType();
 		int face = tileEntity.getDirection().ordinal();
 
 		GL11.glPushMatrix();
@@ -33,7 +33,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 
 		int frame = tileEntity.getAnimationFrame();
 
-		if (slantType != null && slantType != SlantType.NONE)
+		if (slantType != null && slantType != BeltType.NORMAL)
 		{
 			switch (face)
 			{
@@ -51,7 +51,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 					break;
 			}
 
-			if (slantType == SlantType.UP)
+			if (slantType == BeltType.SLANT_UP)
 			{
 				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
@@ -64,7 +64,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 				{
 					if (test instanceof TileConveyorBelt)
 					{
-						if (((TileConveyorBelt) test).getSlant() == SlantType.TOP)
+						if (((TileConveyorBelt) test).getBeltType() == BeltType.RAISED)
 						{
 							GL11.glRotatef(10f, 1f, 0f, 0f);
 							slantAdjust = true;
@@ -73,7 +73,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 				}
 				MODEL2.render(0.0625F, true);
 			}
-			else if (slantType == SlantType.DOWN)
+			else if (slantType == BeltType.SLANT_DOWN)
 			{
 				ResourceLocation name = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "slantedbelt/frame" + frame + ".png");
 				bindTexture(name);
@@ -84,7 +84,7 @@ public class RenderConveyorBelt extends TileEntitySpecialRenderer implements ISi
 				{
 					if (test instanceof TileConveyorBelt)
 					{
-						if (((TileConveyorBelt) test).getSlant() == SlantType.TOP)
+						if (((TileConveyorBelt) test).getBeltType() == BeltType.RAISED)
 						{
 							GL11.glRotatef(-10f, 1f, 0f, 0f);
 							GL11.glTranslatef(0f, 0.25f, 0f);

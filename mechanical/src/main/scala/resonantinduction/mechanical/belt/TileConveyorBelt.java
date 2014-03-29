@@ -4,272 +4,234 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.grid.TileMechanical;
-import universalelectricity.api.vector.Vector3;
 import calclavia.api.resonantinduction.mechanical.IBelt;
+import calclavia.lib.content.module.TileBase;
+import calclavia.lib.grid.INode;
 import calclavia.lib.grid.INodeProvider;
+import calclavia.lib.network.IPacketReceiverWithID;
 import calclavia.lib.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-/**
- * Conveyer belt TileEntity that allows entities of all kinds to be moved
+/** Conveyer belt TileEntity that allows entities of all kinds to be moved
  * 
- * @author DarkGuardsman
- */
-public class TileConveyorBelt extends TileMechanical implements IBelt, IRotatable
+ * @author DarkGuardsman */
+public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INodeProvider, IPacketReceiverWithID
 {
-	public enum SlantType
-	{
-		NONE, UP, DOWN, TOP
-	}
+    public enum BeltType
+    {
+        NORMAL,
+        SLANT_UP,
+        SLANT_DOWN,
+        RAISED
+    }
 
-	public TileConveyorBelt()
-	{
-		mechanicalNode = new PacketMechanicalNode(this)
-		{
-			@Override
-			public void doRecache()
-			{
-				connections.clear();
+    /** Static constants. */
+    public static final int MAX_FRAME = 13;
+    public static final int MAX_SLANT_FRAME = 23;
+    public static final int PACKET_SLANT = 0;
+    public static final int PACKET_REFRESH = 1;
+    /** Acceleration of entities on the belt */
+    public static final float ACCELERATION = 0.01f;
 
-				boolean didRefresh = false;
+    /** Frame count for texture animation from 0 - maxFrame */
+    private int animationFrame = 0;
 
-				for (int i = 2; i < 6; i++)
-				{
-					ForgeDirection dir = ForgeDirection.getOrientation(i);
-					Vector3 pos = new Vector3(TileConveyorBelt.this).translate(dir);
-					TileEntity tile = pos.getTileEntity(TileConveyorBelt.this.worldObj);
+    private BeltType slantType = BeltType.NORMAL;
 
-					if (dir == TileConveyorBelt.this.getDirection() || dir == TileConveyorBelt.this.getDirection().getOpposite())
-					{
-						if (dir == TileConveyorBelt.this.getDirection())
-						{
-							if (TileConveyorBelt.this.slantType == SlantType.DOWN)
-							{
-								pos.translate(new Vector3(0, -1, 0));
-							}
-							else if (TileConveyorBelt.this.slantType == SlantType.UP)
-							{
-								pos.translate(new Vector3(0, 1, 0));
-							}
-						}
-						else if (dir == TileConveyorBelt.this.getDirection().getOpposite())
-						{
-							if (TileConveyorBelt.this.slantType == SlantType.DOWN)
-							{
-								pos.translate(new Vector3(0, 1, 0));
-							}
-							else if (TileConveyorBelt.this.slantType == SlantType.UP)
-							{
-								pos.translate(new Vector3(0, -1, 0));
-							}
-						}
+    /** Entities that are ignored allowing for other tiles to interact with them */
+    public List<Entity> ignoreList = new ArrayList<Entity>();
 
-						tile = pos.getTileEntity(worldObj);
+    private boolean markRefresh = true;
 
-						if (tile instanceof TileConveyorBelt)
-						{
-							connections.put(((TileConveyorBelt) tile).getNode(MechanicalNode.class, dir.getOpposite()), dir);
-							didRefresh = true;
-						}
-					}
-				}
+    public BeltNode mechanicalNode;
 
-				if (!worldObj.isRemote)
-				{
-					markRefresh = true;
-				}
-			}
+    public TileConveyorBelt()
+    {
+        super(Material.iron);
+        mechanicalNode = new BeltNode(this);
+    }
 
-			@Override
-			public boolean canConnect(ForgeDirection from, Object source)
-			{
-				return from != getDirection() || from != getDirection().getOpposite();
-			}
-		}.setLoad(0.15f);
-	}
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
 
-	/**
-	 * Static constants.
-	 */
-	public static final int MAX_FRAME = 13;
-	public static final int MAX_SLANT_FRAME = 23;
-	public static final int PACKET_SLANT = Mechanical.contentRegistry.getNextPacketID();
-	public static final int PACKET_REFRESH = Mechanical.contentRegistry.getNextPacketID();
-	/** Acceleration of entities on the belt */
-	public static final float ACCELERATION = 0.01f;
+        /* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
+        Iterator<Entity> it = this.ignoreList.iterator();
 
-	/** Frame count for texture animation from 0 - maxFrame */
-	private int animationFrame = 0;
+        List<Entity> effect_list = this.getAffectedEntities();
+        while (it.hasNext())
+        {
+            if (!effect_list.contains(it.next()))
+            {
+                it.remove();
+            }
+        }
 
-	private SlantType slantType = SlantType.NONE;
+        if (this.worldObj.isRemote)
+        {
+            if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
+            {
+                worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
+            }
 
-	/** Entities that are ignored allowing for other tiles to interact with them */
-	public List<Entity> ignoreList = new ArrayList<Entity>();
+            double beltPercentage = mechanicalNode.angle / (2 * Math.PI);
 
-	private boolean markRefresh = true;
+            // Sync the animation. Slant belts are slower.
+            if (this.getBeltType() == BeltType.NORMAL || this.getBeltType() == BeltType.RAISED)
+            {
+                this.animationFrame = (int) (beltPercentage * MAX_FRAME);
+                if (this.animationFrame < 0)
+                    this.animationFrame = 0;
+                if (this.animationFrame > MAX_FRAME)
+                    this.animationFrame = MAX_FRAME;
+            }
+            else
+            {
+                this.animationFrame = (int) (beltPercentage * MAX_SLANT_FRAME);
+                if (this.animationFrame < 0)
+                    this.animationFrame = 0;
+                if (this.animationFrame > MAX_SLANT_FRAME)
+                    this.animationFrame = MAX_SLANT_FRAME;
+            }
+        }
+        else
+        {
+            if (markRefresh)
+            {
+                sendRefreshPacket();
+                markRefresh = false;
+            }
+        }
+    }
 
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
+    @Override
+    public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+    {
+        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
+            return (N) mechanicalNode;
+        return null;
+    }
 
-		/* PROCESSES IGNORE LIST AND REMOVES UNNEED ENTRIES */
-		Iterator<Entity> it = this.ignoreList.iterator();
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        if (this.getBeltType() != BeltType.NORMAL)
+        {
+            return ResonantInduction.PACKET_TILE.getPacket(this, PACKET_SLANT, this.getBeltType().ordinal());
+        }
+        return super.getDescriptionPacket();
+    }
 
-		List<Entity> effect_list = this.getAffectedEntities();
-		while (it.hasNext())
-		{
-			if (!effect_list.contains(it.next()))
-			{
-				it.remove();
-			}
-		}
+    public void sendRefreshPacket()
+    {
+        PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_REFRESH));
+    }
 
-		if (this.worldObj.isRemote)
-		{
-			if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
-			{
-				worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
-			}
+    @Override
+    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        if (this.worldObj.isRemote)
+        {
+            if (id == PACKET_SLANT)
+            {
+                this.setBeltType(BeltType.values()[data.readInt()]);
+                return true;
+            }
+            else if (id == PACKET_REFRESH)
+            {
+                mechanicalNode.reconstruct();
+                return true;
+            }
+        }
+        return false;
+    }
 
-			double beltPercentage = mechanicalNode.angle / (2 * Math.PI);
+    public void setSlant(BeltType slantType)
+    {
+        if (slantType == null)
+        {
+            slantType = BeltType.NORMAL;
+        }
 
-			// Sync the animation. Slant belts are slower.
-			if (this.getSlant() == SlantType.NONE || this.getSlant() == SlantType.TOP)
-			{
-				this.animationFrame = (int) (beltPercentage * MAX_FRAME);
-				if (this.animationFrame < 0)
-					this.animationFrame = 0;
-				if (this.animationFrame > MAX_FRAME)
-					this.animationFrame = MAX_FRAME;
-			}
-			else
-			{
-				this.animationFrame = (int) (beltPercentage * MAX_SLANT_FRAME);
-				if (this.animationFrame < 0)
-					this.animationFrame = 0;
-				if (this.animationFrame > MAX_SLANT_FRAME)
-					this.animationFrame = MAX_SLANT_FRAME;
-			}
-		}
-		else
-		{
-			if (markRefresh)
-			{
-				sendRefreshPacket();
-				markRefresh = false;
-			}
-		}
-	}
+        this.setBeltType(slantType);
+        mechanicalNode.reconstruct();
+        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		if (this.slantType != SlantType.NONE)
-		{
-			return ResonantInduction.PACKET_TILE.getPacket(this, PACKET_SLANT, this.slantType.ordinal());
-		}
-		return super.getDescriptionPacket();
-	}
+    @Override
+    public void setDirection(ForgeDirection facingDirection)
+    {
+        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
+    }
 
-	public void sendRefreshPacket()
-	{
-		PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_REFRESH));
-	}
+    @Override
+    public ForgeDirection getDirection()
+    {
+        return ForgeDirection.getOrientation(this.getBlockMetadata());
+    }
 
-	@Override
-	public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		super.onReceivePacket(id, data, player, extra);
+    @Override
+    public List<Entity> getAffectedEntities()
+    {
+        return worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1));
+    }
 
-		if (id == PACKET_SLANT)
-			this.slantType = SlantType.values()[data.readInt()];
-		else if (id == PACKET_REFRESH)
-			mechanicalNode.reconstruct();
-	}
+    /** NBT Data */
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        this.setBeltType(BeltType.values()[nbt.getByte("slant")]);
+    }
 
-	public SlantType getSlant()
-	{
-		return slantType;
-	}
+    /** Writes a tile entity to NBT. */
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        nbt.setByte("slant", (byte) this.getBeltType().ordinal());
+    }
 
-	public void setSlant(SlantType slantType)
-	{
-		if (slantType == null)
-		{
-			slantType = SlantType.NONE;
-		}
+    @Override
+    public void ignoreEntity(Entity entity)
+    {
+        if (!this.ignoreList.contains(entity))
+        {
+            this.ignoreList.add(entity);
+        }
+    }
 
-		this.slantType = slantType;
-		mechanicalNode.reconstruct();
-		this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
+    public double getMoveVelocity()
+    {
+        return Math.abs(mechanicalNode.getAngularVelocity());
+    }
 
-	@Override
-	public void setDirection(ForgeDirection facingDirection)
-	{
-		this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 3);
-	}
+    public int getAnimationFrame()
+    {
+        return this.animationFrame;
+    }
 
-	@Override
-	public ForgeDirection getDirection()
-	{
-		return ForgeDirection.getOrientation(this.getBlockMetadata());
-	}
+    public BeltType getBeltType()
+    {
+        return slantType;
+    }
 
-	@Override
-	public List<Entity> getAffectedEntities()
-	{
-		return worldObj.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1));
-	}
-
-	public int getAnimationFrame()
-	{
-		return this.animationFrame;
-	}
-
-	/** NBT Data */
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		this.slantType = SlantType.values()[nbt.getByte("slant")];
-	}
-
-	/** Writes a tile entity to NBT. */
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setByte("slant", (byte) this.slantType.ordinal());
-	}
-
-	@Override
-	public void ignoreEntity(Entity entity)
-	{
-		if (!this.ignoreList.contains(entity))
-		{
-			this.ignoreList.add(entity);
-		}
-	}
-
-	public double getMoveVelocity()
-	{
-		return Math.abs(mechanicalNode.getAngularVelocity());
-	}
+    public void setBeltType(BeltType slantType)
+    {
+        this.slantType = slantType;
+    }
 }
