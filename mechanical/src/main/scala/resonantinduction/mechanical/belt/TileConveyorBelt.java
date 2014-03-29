@@ -80,8 +80,8 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
                 it.remove();
             }
         }
-        this.node.torque = 1;
-        this.node.angularVelocity = 1;
+        //this.node.torque = 1;
+        //this.node.angularVelocity = 1;
 
         /* DO ANIMATION AND EFFECTS */
         if (this.worldObj.isRemote && (node.angularVelocity != 0))

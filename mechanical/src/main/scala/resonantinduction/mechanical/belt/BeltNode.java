@@ -6,12 +6,11 @@ import resonantinduction.mechanical.belt.TileConveyorBelt.BeltType;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.grid.INodeProvider;
 
 /** @author Darkguardsman */
 public class BeltNode extends MechanicalNode
 {
-    public BeltNode(INodeProvider parent)
+    public BeltNode(TileConveyorBelt parent)
     {
         super(parent);
     }
@@ -66,6 +65,12 @@ public class BeltNode extends MechanicalNode
     @Override
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        return source instanceof TileConveyorBelt && (from == ((TileConveyorBelt) parent).getDirection() || from == ((TileConveyorBelt) parent).getDirection().getOpposite());
+        return from != ((TileConveyorBelt) parent).getDirection() && from != ((TileConveyorBelt) parent).getDirection().getOpposite();
+    }
+
+    @Override
+    public BeltNetwork newGrid()
+    {
+        return new BeltNetwork(this);
     }
 }
