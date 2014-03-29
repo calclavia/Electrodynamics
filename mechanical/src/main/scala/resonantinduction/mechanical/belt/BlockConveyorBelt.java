@@ -38,7 +38,7 @@ public class BlockConveyorBelt extends BlockTile
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if (tile instanceof TileConveyorBelt)
-            ((TileConveyorBelt) tile).mechanicalNode.reconstruct();
+            ((TileConveyorBelt) tile).node.reconstruct();
     }
 
     @Override
@@ -251,7 +251,7 @@ public class BlockConveyorBelt extends BlockTile
             slantOrdinal = 0;
         }
 
-        tileEntity.setSlant(BeltType.values()[slantOrdinal]);
+        tileEntity.setBeltType(BeltType.values()[slantOrdinal]);
 
         return true;
     }

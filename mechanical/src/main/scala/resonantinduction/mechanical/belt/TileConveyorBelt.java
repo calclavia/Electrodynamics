@@ -56,12 +56,12 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
 
     private boolean markRefresh = true;
 
-    public BeltNode mechanicalNode;
+    public BeltNode node;
 
     public TileConveyorBelt()
     {
         super(Material.iron);
-        mechanicalNode = new BeltNode(this);
+        node = new BeltNode(this);
     }
 
     @Override
@@ -80,15 +80,18 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
                 it.remove();
             }
         }
+        this.node.torque = 1;
+        this.node.angularVelocity = 1;
 
-        if (this.worldObj.isRemote)
+        /* DO ANIMATION AND EFFECTS */
+        if (this.worldObj.isRemote && (node.angularVelocity != 0))
         {
             if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
             {
                 worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
             }
 
-            double beltPercentage = mechanicalNode.angle / (2 * Math.PI);
+            double beltPercentage = node.angle / (2 * Math.PI);
 
             // Sync the animation. Slant belts are slower.
             if (this.getBeltType() == BeltType.NORMAL || this.getBeltType() == BeltType.RAISED)
@@ -121,8 +124,8 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
     @Override
     public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
     {
-        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
-            return (N) mechanicalNode;
+        if (nodeType.isAssignableFrom(node.getClass()))
+            return (N) node;
         return null;
     }
 
@@ -131,14 +134,14 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
     {
         if (this.getBeltType() != BeltType.NORMAL)
         {
-            return ResonantInduction.PACKET_TILE.getPacket(this, PACKET_SLANT, this.getBeltType().ordinal());
+            return ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_SLANT, this, this.getBeltType().ordinal());
         }
         return super.getDescriptionPacket();
     }
 
     public void sendRefreshPacket()
     {
-        PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_REFRESH));
+        PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_REFRESH, this, node.angle));
     }
 
     @Override
@@ -153,23 +156,11 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
             }
             else if (id == PACKET_REFRESH)
             {
-                mechanicalNode.reconstruct();
+                node.angle = data.readDouble();
                 return true;
             }
         }
         return false;
-    }
-
-    public void setSlant(BeltType slantType)
-    {
-        if (slantType == null)
-        {
-            slantType = BeltType.NORMAL;
-        }
-
-        this.setBeltType(slantType);
-        mechanicalNode.reconstruct();
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -217,7 +208,7 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
 
     public double getMoveVelocity()
     {
-        return Math.abs(mechanicalNode.getAngularVelocity());
+        return Math.abs(node.getAngularVelocity());
     }
 
     public int getAnimationFrame()
@@ -232,6 +223,12 @@ public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INo
 
     public void setBeltType(BeltType slantType)
     {
+        if (slantType == null)
+        {
+            slantType = BeltType.NORMAL;
+        }
         this.slantType = slantType;
+        node.reconstruct();
+        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
