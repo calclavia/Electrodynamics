@@ -346,7 +346,7 @@ public class ModularForceFieldSystem
 		// Sponge
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSponge), "BBB", "BFB", "BBB", 'F', itemFocusMatix, 'B', Item.bucketWater));
 		// Disintegration
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F', itemFocusMatix, 'W', UniversalRecipe.WIRE.get(), 'B', UniversalRecipe.BATTERY.get()));
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F', itemFocusMatix, 'W', UniversalRecipe.WIRE.get(), 'B', UniversalRecipe.BATTERY.get()), Settings.CONFIGURATION, true);
 		// Manipulator
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDome), "F", " ", "F", 'F', itemFocusMatix));
 		// Camouflage
@@ -374,7 +374,7 @@ public class ModularForceFieldSystem
 		// Array
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleArray), " F ", "DFD", " F ", 'F', itemFocusMatix, 'D', Item.diamond));
 		// Repulsion
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F', itemFocusMatix, 'D', Item.diamond, 'S', Item.slimeBall));
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F', itemFocusMatix, 'D', Item.diamond, 'S', Item.slimeBall), Settings.CONFIGURATION, true);
 
 		// -- -- Interdiction Matrix -- --
 		// Anti-Hostile
