@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,8 +24,6 @@ import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
 
 /**
  * All TileEntities that have an inventory should extend this.
@@ -448,12 +448,6 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 
 		throw new Exception("Invalid method.");
 
-	}
-
-	@Override
-	public boolean canAttachToSide(int side)
-	{
-		return true;
 	}
 
 	@Override

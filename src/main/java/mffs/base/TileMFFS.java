@@ -9,7 +9,7 @@ import calclavia.lib.prefab.tile.TileAdvanced;
 import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import dan200.computer.api.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,13 +33,13 @@ public abstract class TileMFFS extends TileAdvanced
 	 */
 	public float animation = 0;
 	/**
-	 * Is the machine active and working?
-	 */
-	private boolean isActive = false;
-	/**
 	 * Is this machine switched on internally via GUI?
 	 */
 	public boolean isRedstoneActive = false;
+	/**
+	 * Is the machine active and working?
+	 */
+	private boolean isActive = false;
 
 	/**
 	 * Override this for packet updating list.
@@ -195,6 +195,12 @@ public abstract class TileMFFS extends TileAdvanced
 	public HashSet<EntityPlayer> getPlayersUsing()
 	{
 		return this.playersUsing;
+	}
+
+	
+	@Override public boolean equals(IPeripheral other)
+	{
+		return equals(other);
 	}
 
 	public enum TilePacketType
