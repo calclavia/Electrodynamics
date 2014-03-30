@@ -1,7 +1,7 @@
 package resonantinduction.electrical.encoder.coding;
 
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 
 /**
  * Use to construct a basic task that can be used in any device that supports this interface.

@@ -1,10 +1,10 @@
 package resonantinduction.electrical.armbot;
 
+import calclavia.lib.science.units.UnitHelper;
+import dan200.computercraft.api.lua.ILuaContext;
+import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.encoder.coding.IProcessTask;
-import calclavia.lib.science.units.UnitHelper;
-import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
 
 /**
  * Basic command prefab used by machines like an armbot. You are not required to use this in order
