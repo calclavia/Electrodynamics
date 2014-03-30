@@ -2,6 +2,7 @@ package mffs;
 
 import java.io.File;
 
+import calclavia.lib.config.Config;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import calclavia.api.mffs.Blacklist;
@@ -51,6 +52,8 @@ public class Settings
 	public static int INTERDICTION_MAX_RANGE = Integer.MAX_VALUE;
 	public static final int MAX_FREQUENCY_DIGITS = 6;
 	public static boolean ENABLE_MANIPULATOR = true;
+	@Config
+	public static boolean allowForceManipulatorTeleport = true;
 
 	public static void load()
 	{

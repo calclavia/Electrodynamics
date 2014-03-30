@@ -608,7 +608,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 	private boolean isTeleport()
 	{
-		if (this.getCard() != null)
+		if (this.getCard() != null && Settings.allowForceManipulatorTeleport)
 		{
 			if (this.getCard().getItem() instanceof ICoordLink)
 			{

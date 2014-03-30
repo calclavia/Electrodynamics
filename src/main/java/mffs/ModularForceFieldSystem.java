@@ -2,6 +2,7 @@ package mffs;
 
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.lib.config.ConfigHandler;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.network.PacketTile;
 import calclavia.lib.prefab.CustomDamageSource;
@@ -295,6 +296,8 @@ public class ModularForceFieldSystem
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
+		Settings.CONFIGURATION.load();
+
 		// -- General Items --
 		// Focus Matrix
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 8), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get(), 'D', Item.diamond, 'R', Item.redstone));
@@ -395,6 +398,17 @@ public class ModularForceFieldSystem
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiSpawn), " H ", "G G", " H ", 'H', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 
 		proxy.init();
+
+		try
+		{
+			ConfigHandler.configure(Settings.CONFIGURATION, "mffs");
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		Settings.CONFIGURATION.save();
 	}
 
 	@EventHandler
