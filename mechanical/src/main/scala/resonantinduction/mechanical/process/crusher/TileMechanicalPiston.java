@@ -106,7 +106,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 							{
 								if (Math.random() <= recipe.getChance())
 								{
-									InventoryUtility.dropItemStack(world(), blockPos.clone().translate(0.5), recipe.getItemStack(), 10);
+									InventoryUtility.dropItemStack(world(), blockPos.clone().translate(0.5), recipe.getItemStack(), 10, 0);
 								}
 							}
 
