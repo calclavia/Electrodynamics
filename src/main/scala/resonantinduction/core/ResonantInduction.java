@@ -1,5 +1,6 @@
 package resonantinduction.core;
 
+import calclavia.lib.config.ConfigAnnotationEvent;
 import calclavia.lib.config.ConfigHandler;
 import calclavia.lib.content.ContentRegistry;
 import calclavia.lib.network.PacketAnnotation;
@@ -22,6 +23,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -84,6 +86,7 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
+		MinecraftForge.EVENT_BUS.register(INSTANCE);
 
 		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
@@ -127,19 +130,21 @@ public class ResonantInduction
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		try
-		{
-			ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
 
 		// Generate Resources
 		ResourceGenerator.generateOreResources();
 		proxy.postInit();
 		Settings.CONFIGURATION.save();
+	}
+
+	@ForgeSubscribe
+	public void configAnnotationAdded(ConfigAnnotationEvent event)
+	{
+		if (event.sourceClass.getName().startsWith("resonantinduction"))
+		{
+			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
+		}
 	}
 
 	/**
