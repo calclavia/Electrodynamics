@@ -137,15 +137,15 @@ public class ResonantInduction
 		proxy.postInit();
 		Settings.CONFIGURATION.save();
 	}
-
-	@ForgeSubscribe
-	public void configAnnotationAdded(ConfigAnnotationEvent event)
-	{
-		if (event.sourceClass.getName().startsWith("resonantinduction"))
-		{
-			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
-		}
-	}
+//
+//	@ForgeSubscribe
+//	public void configAnnotationAdded(ConfigAnnotationEvent event)
+//	{
+//		if (event.sourceClass.startsWith("resonantinduction"))
+//		{
+//			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
+//		}
+//	}
 
 	/**
 	 * Recipe Types
