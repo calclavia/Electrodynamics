@@ -86,7 +86,6 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
 
 		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
@@ -137,15 +136,15 @@ public class ResonantInduction
 		proxy.postInit();
 		Settings.CONFIGURATION.save();
 	}
-
-	@ForgeSubscribe
-	public void configAnnotationAdded(ConfigAnnotationEvent event)
-	{
-		if (event.sourceClass.getName().startsWith("resonantinduction"))
-		{
-			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
-		}
-	}
+//
+//	@ForgeSubscribe
+//	public void configAnnotationAdded(ConfigAnnotationEvent event)
+//	{
+//		if (event.sourceClass.startsWith("resonantinduction"))
+//		{
+//			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
+//		}
+//	}
 
 	/**
 	 * Recipe Types
