@@ -35,7 +35,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     /** The current rotation of the mechanical node. */
     public double angle = 0;
     public double prev_angle = 0;
-    protected double maxDeltaAngle = Math.toRadians(15);
+    protected double maxDeltaAngle = Math.toRadians(10);
 
     protected double load = 2;
     protected byte connectionMap = Byte.parseByte("111111", 2);
