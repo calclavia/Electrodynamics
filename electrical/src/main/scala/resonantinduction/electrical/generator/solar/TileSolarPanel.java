@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
+import resonantinduction.core.Settings;
 import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
@@ -18,13 +19,12 @@ public class TileSolarPanel extends TileEnergyDistribution
 {
 	@SideOnly(Side.CLIENT)
 	public static Icon sideIcon, bottomIcon;
-	@Config(category = "Power", key = "Solor_Panel")
-	public static long SOLAR_ENERGY = 50;
+	
 
 	public TileSolarPanel()
 	{
 		super(Material.iron);
-		energy = new EnergyStorageHandler(SOLAR_ENERGY * 20);
+		energy = new EnergyStorageHandler(Settings.SOLAR_ENERGY * 20);
 		ioMap = 728;
 		textureName = "solarPanel_top";
 		bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1);
@@ -68,7 +68,7 @@ public class TileSolarPanel extends TileEnergyDistribution
 				{
 					if (!(this.worldObj.isThundering() || this.worldObj.isRaining()))
 					{
-						this.energy.receiveEnergy(SOLAR_ENERGY, true);
+						this.energy.receiveEnergy(Settings.SOLAR_ENERGY, true);
 						markDistributionUpdate |= produce() > 0;
 					}
 				}
