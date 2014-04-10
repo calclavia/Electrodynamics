@@ -18,6 +18,7 @@ public class RenderGear implements ISimpleItemRenderer
 {
 	public static final RenderGear INSTANCE = new RenderGear();
 	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
+	
 
 	public void renderGear(int side, int tier, boolean isLarge, double angle)
 	{
