@@ -16,7 +16,7 @@ import cpw.mods.fml.common.ModMetadata;
 public class Settings
 {
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
-
+	public static final String DOMAIN = "resonantinduction";
     /** IDs suggested by Jyzarc and Horfius */
     public static final IDManager idManager;
 
@@ -27,7 +27,7 @@ public class Settings
         CONFIGURATION.save();
     }
 
-    public static int getNextBlockID()
+	public static int getNextBlockID()
     {
         return idManager.getNextBlockID();
     }
