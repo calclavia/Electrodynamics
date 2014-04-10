@@ -371,7 +371,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 			}
 
 			isClockwiseCrank = player.isSneaking();
-			getMultiBlock().get().manualCrankTime = 10;
+			getMultiBlock().get().manualCrankTime = 20;
 			world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "gearCrank", 0.5f, 0.9f + world().rand.nextFloat() * 0.2f);
 			player.addExhaustion(0.01f);
 			return true;
