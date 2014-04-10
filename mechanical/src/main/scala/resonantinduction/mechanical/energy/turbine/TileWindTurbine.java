@@ -22,7 +22,7 @@ import calclavia.lib.utility.inventory.InventoryUtility;
  * @author Calclavia
  * 
  */
-public class TileWindTurbine extends TileMechanicalTurbine implements IBoilHandler
+public class TileWindTurbine extends TileMechanicalTurbine
 {
 	private final byte[] openBlockCache = new byte[224];
 	private int checkCount = 0;
