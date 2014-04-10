@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.gearshaft.GearShaftNode;
+import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
 

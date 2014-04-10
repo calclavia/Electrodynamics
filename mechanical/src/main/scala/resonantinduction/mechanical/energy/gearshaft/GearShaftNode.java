@@ -1,14 +1,15 @@
-package resonantinduction.mechanical.energy.gear;
+package resonantinduction.mechanical.energy.gearshaft;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.api.resonantinduction.IMechanicalNode;
 import calclavia.lib.grid.INodeProvider;
+import resonantinduction.mechanical.energy.gear.PartGear;
+import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 
 public class GearShaftNode extends MechanicalNode
 {
-
     public GearShaftNode(PartGearShaft parent)
     {
         super(parent);
