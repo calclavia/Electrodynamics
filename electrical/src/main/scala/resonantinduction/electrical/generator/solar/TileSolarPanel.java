@@ -64,7 +64,7 @@ public class TileSolarPanel extends TileEnergyDistribution
 				{
 					if (!(this.worldObj.isThundering() || this.worldObj.isRaining()))
 					{
-						this.energy.receiveEnergy(25, true);
+						this.energy.receiveEnergy(50, true);
 						markDistributionUpdate |= produce() > 0;
 					}
 				}
