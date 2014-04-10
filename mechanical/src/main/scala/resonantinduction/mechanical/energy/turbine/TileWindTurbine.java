@@ -74,54 +74,6 @@ public class TileWindTurbine extends TileMechanicalTurbine
 		super.updateEntity();
 	}
 
-	@Override
-	public void onProduce()
-	{
-		super.onProduce();
-
-		/**
-		 * Blow entities if greater than max power.
-		 */
-		double velocity = !worldObj.isRemote ? mechanicalNode.getAngularVelocity() : renderAngularVelocity;
-
-		if (velocity != 0)
-		{
-			ForgeDirection dir = getDirection();
-
-			double affectRange = Math.abs(velocity * 2);
-
-			Cuboid effect = Cuboid.full().translate(new Vector3(this).translate(dir));
-
-			if (getMultiBlock().isConstructed())
-			{
-				double xMulti = dir.offsetX != 0 ? affectRange : 1;
-				double yMulti = dir.offsetY != 0 ? affectRange : 1;
-				double zMulti = dir.offsetZ != 0 ? affectRange : 1;
-
-				effect.expand(new Vector3(multiBlockRadius * xMulti, multiBlockRadius * yMulti, multiBlockRadius * zMulti));
-			}
-			else
-			{
-				double xMulti = dir.offsetX != 0 ? affectRange : 0;
-				double yMulti = dir.offsetY != 0 ? affectRange : 0;
-				double zMulti = dir.offsetZ != 0 ? affectRange : 0;
-
-				effect.expand(new Vector3(xMulti, yMulti, zMulti));
-			}
-
-			List<Entity> entities = worldObj.getEntitiesWithinAABB(Entity.class, effect.toAABB());
-
-			velocity = Math.min(Math.max(velocity, -0.3), 0.3);
-
-			for (Entity entity : entities)
-			{
-				entity.motionX += dir.offsetX * velocity / 20 * 0.3;
-				entity.motionY += dir.offsetY * velocity / 20 * 0.3;
-				entity.motionZ += dir.offsetZ * velocity / 20 * 0.3;
-			}
-		}
-	}
-
 	private void computePower()
 	{
 		int checkSize = 10;
