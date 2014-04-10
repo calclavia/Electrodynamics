@@ -35,7 +35,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     /** The current rotation of the mechanical node. */
     public double angle = 0;
     public double prev_angle = 0;
-    protected double maxDeltaAngle = Math.toRadians(10);
+    protected double maxDeltaAngle = Math.toRadians(180);
 
     protected double load = 2;
     protected byte connectionMap = Byte.parseByte("111111", 2);
@@ -67,7 +67,10 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 
         if (!ResonantInduction.proxy.isPaused())
         {
-            angle += angularVelocity * deltaTime;
+            if (angularVelocity >= 0)
+                angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
+            else
+                angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
 
         if (angle % (Math.PI * 2) != angle)
@@ -151,11 +154,6 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         }
 
         onUpdate();
-        //Locks the angle change to prevent visual errors
-        if (Math.abs(angle - prev_angle) > maxDeltaAngle)
-        {
-            angle = prev_angle + (angularVelocity >= 0 ? maxDeltaAngle : -maxDeltaAngle);
-        }
         prev_angle = angle;
     }
 

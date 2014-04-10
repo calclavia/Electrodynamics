@@ -322,7 +322,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                     return super.getRatio(dir, with);
                 }
 
-                return getMultiBlock().isConstructed() ? 3f : super.getRatio(dir, with);
+                return getMultiBlock().isConstructed() ? 1.5f : super.getRatio(dir, with);
             }
         };
     }
