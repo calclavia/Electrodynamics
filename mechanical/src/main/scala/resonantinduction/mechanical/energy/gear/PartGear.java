@@ -69,6 +69,14 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                     torque = 0;
                     angularVelocity = 0;
                 }
+                else
+                {
+                    if (tier == 10)
+                    {
+                        torque = 100;
+                        angularVelocity = 100;
+                    }
+                }
             }
 
             @Override
@@ -83,6 +91,8 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                         return 0.02;
                     case 2:
                         return 0.01;
+                    case 10:
+                        return 0;
                 }
             }
 
@@ -98,6 +108,8 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                         return 0.02;
                     case 2:
                         return 0.01;
+                    case 10:
+                        return 0;
                 }
             }
 
