@@ -117,7 +117,7 @@ public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvi
 			if (mechanicalNode.angularVelocity < 0)
 				angularVelocity = -Math.abs(angularVelocity);
 
-			mechanicalNode.apply((torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularVelocity()) / 10);
+			mechanicalNode.apply((torque - mechanicalNode.getTorque()) * 10, (angularVelocity - mechanicalNode.getAngularVelocity()) * 10);
 		}
 	}
 
