@@ -342,7 +342,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 		{
 			if (manualCrankTime > 0)
 			{
-				node.apply(isClockwiseCrank ? 5 : -5, isClockwiseCrank ? 0.025f : -0.025f);
+				node.apply(isClockwiseCrank ? 15 : -15, isClockwiseCrank ? 0.025f : -0.025f);
 				manualCrankTime--;
 			}
 
