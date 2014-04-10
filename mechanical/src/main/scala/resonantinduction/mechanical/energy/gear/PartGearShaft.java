@@ -63,16 +63,7 @@ public class PartGearShaft extends PartMechanical
 			@Override
 			public double getAngularVelocityLoad()
 			{
-				// Decelerate the gear based on tier.
-				switch (tier)
-				{
-					default:
-						return 0.03;
-					case 1:
-						return 0.02;
-					case 2:
-						return 0.01;
-				}
+				return 0;
 			}
 
 			@Override
