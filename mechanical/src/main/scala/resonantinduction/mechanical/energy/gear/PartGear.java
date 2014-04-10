@@ -86,11 +86,11 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                 switch (tier)
                 {
                     default:
-                        return 0.03;
+                        return 0.3;
                     case 1:
-                        return 0.02;
+                        return 0.2;
                     case 2:
-                        return 0.01;
+                        return 0.1;
                     case 10:
                         return 0;
                 }
