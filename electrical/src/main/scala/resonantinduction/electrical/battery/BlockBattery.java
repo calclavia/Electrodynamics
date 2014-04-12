@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.Reference;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalElectricity;
@@ -64,8 +65,8 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		{
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
-			battery.energy.setEnergy(itemBlock.getEnergy(itemStack));
+			battery.getEnergyHandler().setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
+			battery.getEnergyHandler().setEnergy(itemBlock.getEnergy(itemStack));
 			battery.updateStructure();
 			world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3);
 		}
@@ -98,7 +99,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			ItemBlockBattery.setTier(itemStack, (byte) world.getBlockMetadata(x, y, z));
-			itemBlock.setEnergy(itemStack, battery.energy.getEnergy());
+			itemBlock.setEnergy(itemStack, battery.getEnergy(ForgeDirection.UNKNOWN));
 		}
 		ret.add(itemStack);
 		return ret;
@@ -146,6 +147,6 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		}
 
 		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.energy.getEnergy());
+		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.getEnergy(ForgeDirection.UNKNOWN));
 	}
 }

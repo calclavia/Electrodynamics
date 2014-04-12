@@ -80,7 +80,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 
 		TileBattery tile = (TileBattery) t;
 
-		int energyLevel = (int) Math.round(((double) tile.energy.getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
+		int energyLevel = (int) Math.round(((double) tile.getEnergy(ForgeDirection.UNKNOWN) / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
 		RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/battery.png");
 
 		List<String> disabledParts = new ArrayList<String>();

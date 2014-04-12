@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.net.Network;
 
 public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork, TileEnergyDistribution>
@@ -25,8 +26,8 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 
 		for (TileEnergyDistribution connector : this.getConnectors())
 		{
-			totalEnergy += connector.energy.getEnergy();
-			totalCapacity += connector.energy.getEnergyCapacity();
+			totalEnergy += connector.getEnergy(ForgeDirection.UNKNOWN);
+			totalCapacity += connector.getEnergyCapacity(ForgeDirection.UNKNOWN);
 
 			lowestY = Math.min(connector.yCoord, lowestY);
 			highestY = Math.max(connector.yCoord, highestY);
@@ -56,7 +57,7 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 
 			for (TileEnergyDistribution connector : connectorsInlevel)
 			{
-				long tryInject = Math.min(remainingRenderEnergy / levelSize, connector.energy.getEnergyCapacity());
+				long tryInject = Math.min(remainingRenderEnergy / levelSize, connector.getEnergyCapacity(ForgeDirection.UNKNOWN));
 				connector.renderEnergyAmount = tryInject;
 				used += tryInject;
 			}
@@ -86,14 +87,14 @@ public class EnergyDistributionNetwork extends Network<EnergyDistributionNetwork
 			{
 				if (node != firstNode && !Arrays.asList(exclusion).contains(node))
 				{
-					double percentage = ((double) node.energy.getEnergyCapacity() / (double) totalCapacity);
+					double percentage = ((double) node.getEnergyCapacity(ForgeDirection.UNKNOWN) / (double) totalCapacity);
 					long energyForBattery = Math.max(Math.round(totalEnergy * percentage), 0);
-					node.energy.setEnergy(energyForBattery);
+					node.setEnergy(ForgeDirection.UNKNOWN, energyForBattery);
 					remainingEnergy -= energyForBattery;
 				}
 			}
 
-			firstNode.energy.setEnergy(Math.max(remainingEnergy, 0));
+			firstNode.setEnergy(ForgeDirection.UNKNOWN, Math.max(remainingEnergy, 0));
 		}
 	}
 
