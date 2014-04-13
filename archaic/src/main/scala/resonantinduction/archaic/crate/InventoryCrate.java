@@ -33,6 +33,7 @@ public class InventoryCrate extends ExternalInventory
 					break;
 				}
 			}
+			this.onInventoryChanged();
 		}
 	}
 

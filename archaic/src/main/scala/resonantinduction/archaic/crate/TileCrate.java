@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.ResonantInduction;
@@ -143,7 +144,6 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 			if (flag)
 			{
 				this.getInventory().buildInventory(this.sampleStack);
-				this.onInventoryChanged();
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 	{
 		return false;
 	}
-
+	int ddd = 0;
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
@@ -206,6 +206,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 				{
 					this.sampleStack = ItemStack.loadItemStackFromNBT(PacketHandler.readNBTTagCompound(data));
 					this.sampleStack.stackSize = data.readInt();
+					//player.sendChatToPlayer(ChatMessageComponent.createFromText("Crate Packet " + (ddd++)));
 				}
 				else
 				{

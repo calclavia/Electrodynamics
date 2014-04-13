@@ -372,15 +372,12 @@ public class BlockCrate extends BlockTile
 					}
 					if (ammountEjected >= requestSize)
 					{
-						tileEntity.onInventoryChanged();
 						return true;
 					}
 				}
-				tileEntity.onInventoryChanged();
 				return true;
 			}
 		}
-		tileEntity.onInventoryChanged();
 		return false;
 	}
 
