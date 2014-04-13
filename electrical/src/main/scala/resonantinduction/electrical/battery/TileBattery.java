@@ -32,9 +32,6 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	/** The transfer rate **/
 	public static final long DEFAULT_WATTAGE = getEnergyForTier(0);
 
-	/** Voltage increases as series connection increases */
-	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
-
 	public TileBattery()
 	{
 		this.energy = new EnergyStorageHandler(0);
@@ -97,13 +94,13 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	@Override
 	public long getVoltageOutput(ForgeDirection side)
 	{
-		return DEFAULT_VOLTAGE;
+		return UniversalElectricity.DEFAULT_VOLTAGE;
 	}
 
 	@Override
 	public long getVoltageInput(ForgeDirection direction)
 	{
-		return DEFAULT_VOLTAGE;
+		return UniversalElectricity.DEFAULT_VOLTAGE;
 	}
 
 	@Override
