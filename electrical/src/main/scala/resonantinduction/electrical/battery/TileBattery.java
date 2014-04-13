@@ -18,7 +18,7 @@ import calclavia.lib.network.IPacketSender;
 import com.google.common.io.ByteArrayDataInput;
 
 /**
- * A modular battery.
+ * A modular battery box that allows shared connections with boxes next to it.
  * 
  * @author Calclavia
  */
@@ -34,7 +34,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 
 	public TileBattery()
 	{
-		this.energy = new EnergyStorageHandler(0);
+		this.setEnergyHandler(new EnergyStorageHandler(0));
 		this.ioMap = 0;
 		this.saveIOMap = true;
 	}
@@ -52,7 +52,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	public void initiate()
 	{
 		super.initiate();
-		energy.setCapacity(getEnergyForTier(getBlockMetadata()));
+		getEnergyHandler().setCapacity(getEnergyForTier(getBlockMetadata()));
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 		{
 			// energy.setMaxTransfer((long) Math.min(Math.pow(10000,
 			// this.getNetwork().getConnectors().size()), energy.getEnergyCapacity()));
-			energy.setMaxTransfer(energy.getEnergyCapacity());
+			getEnergyHandler().setMaxTransfer(getEnergyHandler().getEnergyCapacity());
 			markDistributionUpdate |= produce() > 0;
 		}
 
@@ -78,7 +78,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	@Override
 	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
 	{
-		energy.setEnergy(data.readLong());
+		getEnergyHandler().setEnergy(data.readLong());
 		ioMap = data.readShort();
 	}
 
