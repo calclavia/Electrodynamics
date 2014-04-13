@@ -1,5 +1,9 @@
 package resonantinduction.mechanical.energy.gearshaft;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import calclavia.api.resonantinduction.IMechanicalNode;
@@ -14,7 +18,7 @@ public class GearShaftNode extends MechanicalNode
     {
         super(parent);
     }
-    
+
     @Override
     public double getTorqueLoad()
     {
@@ -40,12 +44,14 @@ public class GearShaftNode extends MechanicalNode
     public void doRecache()
     {
         connections.clear();
-
+        List<ForgeDirection> dirs = new ArrayList<ForgeDirection>();
+        dirs.add(shaft().placementSide);
+        dirs.add(shaft().placementSide.getOpposite());
         /** Check for internal connections, the FRONT and BACK. */
-        for (int i = 0; i < 6; i++)
+        Iterator<ForgeDirection> it = dirs.iterator();
+        while(it.hasNext())
         {
-            ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
+            ForgeDirection checkDir = it.next();
             if (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite())
             {
                 MechanicalNode instance = ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
@@ -53,31 +59,31 @@ public class GearShaftNode extends MechanicalNode
                 if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
                 {
                     connections.put(instance, checkDir);
+                    it.remove();
                 }
             }
         }
 
         /** Look for connections outside this block space, the relative FRONT and BACK */
-        for (int i = 0; i < 6; i++)
-        {
-            ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-            if (!connections.containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
+        if (!dirs.isEmpty())
+            for (ForgeDirection checkDir : dirs)
             {
-                TileEntity checkTile = new universalelectricity.api.vector.Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
-
-                if (checkTile instanceof INodeProvider)
+                if (!connections.containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
                 {
-                    MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
+                    TileEntity checkTile = new universalelectricity.api.vector.Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
 
-                    // Only connect to shafts outside of this block space.
-                    if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+                    if (checkTile instanceof INodeProvider)
                     {
-                        connections.put(instance, checkDir);
+                        MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
+
+                        // Only connect to shafts outside of this block space.
+                        if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+                        {
+                            connections.put(instance, checkDir);
+                        }
                     }
                 }
             }
-        }
     }
 
     @Override
