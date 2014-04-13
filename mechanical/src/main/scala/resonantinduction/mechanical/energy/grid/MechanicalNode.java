@@ -169,7 +169,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     }
 
     @Override
-    public void apply(double torque, double angularVelocity)
+    public void apply(Object source, double torque, double angularVelocity)
     {
         this.torque += torque;
         this.angularVelocity += angularVelocity;
