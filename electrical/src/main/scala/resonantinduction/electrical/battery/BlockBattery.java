@@ -99,7 +99,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			ItemBlockBattery.setTier(itemStack, (byte) world.getBlockMetadata(x, y, z));
-			itemBlock.setEnergy(itemStack, battery.getEnergy(ForgeDirection.UNKNOWN));
+			itemBlock.setEnergy(itemStack, battery.getEnergyHandler().getEnergy());
 		}
 		ret.add(itemStack);
 		return ret;
@@ -147,6 +147,6 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		}
 
 		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.getEnergy(ForgeDirection.UNKNOWN));
+		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.getEnergyHandler().getEnergy());
 	}
 }

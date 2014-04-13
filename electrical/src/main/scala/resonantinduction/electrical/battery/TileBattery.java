@@ -35,6 +35,7 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	public TileBattery()
 	{
 		this.setEnergyHandler(new EnergyStorageHandler(0));
+		this.getEnergyHandler().setCapacity(Long.MAX_VALUE);
 		this.ioMap = 0;
 		this.saveIOMap = true;
 	}
@@ -53,16 +54,14 @@ public class TileBattery extends TileEnergyDistribution implements IVoltageInput
 	{
 		super.initiate();
 		getEnergyHandler().setCapacity(getEnergyForTier(getBlockMetadata()));
+		getEnergyHandler().setMaxTransfer(getEnergyHandler().getEnergyCapacity());
 	}
 
 	@Override
 	public void updateEntity()
 	{
 		if (!this.worldObj.isRemote)
-		{
-			// energy.setMaxTransfer((long) Math.min(Math.pow(10000,
-			// this.getNetwork().getConnectors().size()), energy.getEnergyCapacity()));
-			getEnergyHandler().setMaxTransfer(getEnergyHandler().getEnergyCapacity());
+		{			
 			markDistributionUpdate |= produce() > 0;
 		}
 
