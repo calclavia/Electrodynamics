@@ -382,6 +382,7 @@ public abstract class TileModuleAcceptor extends TileFortron implements IModuleA
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
+		clearCache();
 		super.readFromNBT(nbt);
 		this.clientFortronCost = nbt.getInteger("fortronCost");
 	}
