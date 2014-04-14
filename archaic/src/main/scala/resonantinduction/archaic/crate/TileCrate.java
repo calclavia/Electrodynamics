@@ -242,6 +242,8 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             this.getInventory().buildInventory(this.sampleStack);
         }
         this.oreFilterEnabled = nbt.getBoolean("oreFilter");
+        if(nbt.hasKey("filter"))
+            filterStack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("filter"));
 
     }
 
@@ -259,6 +261,8 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             nbt.setCompoundTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
         nbt.setBoolean("oreFilter", this.oreFilterEnabled);
+        if (this.filterStack != null)
+            nbt.setCompoundTag("filter", filterStack.writeToNBT(new NBTTagCompound()));
     }
 
     @Override
