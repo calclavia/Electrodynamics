@@ -84,7 +84,6 @@ public class TileFilter extends TileFilterable implements IFilterable
 			Vector3 checkBelow = position.clone().translate(ForgeDirection.DOWN);
 
 			Block bAbove = Block.blocksList[checkAbove.getBlockID(worldObj)];
-			Block bBelow = Block.blocksList[checkAbove.getBlockID(worldObj)];
 
 			if (bAbove instanceof BlockFluidMixture && (worldObj.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) || checkBelow.getTileEntity(worldObj) instanceof IFluidHandler))
 			{
