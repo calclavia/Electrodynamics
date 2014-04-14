@@ -89,17 +89,18 @@ public abstract class PartAdvancedWire extends PartConductor
     @Override
     public void onEntityCollision(Entity entity)
     {
-        if (!this.isInsulated())
+        if (!this.isInsulated() && this.getNetwork() instanceof IElectricalNetwork)
         {
             float damage = 0;
 
-            if (this.getNetwork() instanceof IElectricalNetwork && this.getNetwork().getRequest() > 0)
-            {
+            if (this.getNetwork().getRequest() > 0)
                 damage = ((IElectricalNetwork) this.getNetwork()).getVoltage() / UniversalElectricity.DEFAULT_VOLTAGE;
-            }
 
             if (damage > 0)
+            {
                 entity.attackEntityFrom(CustomDamageSource.electrocution, Math.min(damage, 10));
+                this.getNetwork().setBuffer((long) Math.max(0, this.getNetwork().getBuffer() - damage * 100));
+            }
         }
     }
 
