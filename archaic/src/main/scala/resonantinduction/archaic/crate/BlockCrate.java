@@ -346,6 +346,7 @@ public class BlockCrate extends BlockTile
                         return true;
                     }
                 }
+                tileEntity.onInventoryChanged();
                 return true;
             }
         }
