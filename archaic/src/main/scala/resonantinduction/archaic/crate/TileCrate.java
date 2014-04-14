@@ -265,6 +265,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     public void setFilter(ItemStack filter)
     {
         this.filterStack = filter;
+        this.onInventoryChanged();
     }
 
     @Override

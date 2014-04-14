@@ -14,9 +14,9 @@ import calclavia.lib.utility.LanguageUtility;
 
 public class ItemBlockCrate extends ItemBlockTooltip
 {
-    public ItemBlockCrate(int par1)
+    public ItemBlockCrate(int id)
     {
-        super(par1);
+        super(id);
         this.setHasSubtypes(true);
     }
 
