@@ -43,7 +43,8 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 	public void initiate()
 	{
 		super.initiate();
-		node.reconstruct();
+		if (node != null)
+		    node.reconstruct();
 	}
 
 	@Override
