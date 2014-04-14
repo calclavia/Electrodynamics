@@ -23,13 +23,17 @@ import com.google.common.io.ByteArrayDataInput;
  * @author DarkGuardsman */
 public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage
 {
-    /** Collective total stack of all inv slots */
-    private ItemStack sampleStack;
+    /** max meta size of the crate */
+    public static final int maxSize = 2;
 
     /** delay from last click */
     public long prevClickTime = -1000;
-    /** max meta size of the crate */
-    public static final int maxSize = 2;
+    
+    /** Check to see if oreName items can be force stacked */
+    public boolean oreFilterEnabled = false;
+
+    /** Collective total stack of all inv slots */
+    private ItemStack sampleStack;
 
     @Override
     public InventoryCrate getInventory()
@@ -112,7 +116,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
                 this.sampleStack = stack;
                 getInventory().buildInventory(getSampleStack());
             }
-            else if (this.getSampleStack().isItemEqual(stack) || OreDictionary.getOreID(getSampleStack()) == OreDictionary.getOreID(stack))
+            else if (this.getSampleStack().isItemEqual(stack) || (this.oreFilterEnabled && OreDictionary.getOreID(getSampleStack()) == OreDictionary.getOreID(stack)))
             {
                 getSampleStack().stackSize += stack.stackSize;
                 getInventory().buildInventory(getSampleStack());
@@ -134,7 +138,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        return getSampleStack() == null || stack != null && (stack.isItemEqual(getSampleStack()) || OreDictionary.getOreID(getSampleStack()) == OreDictionary.getOreID(stack));
+        return getSampleStack() == null || stack != null && (stack.isItemEqual(getSampleStack()) || (this.oreFilterEnabled && OreDictionary.getOreID(getSampleStack()) == OreDictionary.getOreID(stack)));
     }
 
     /** Gets the current slot count for the crate */
@@ -233,6 +237,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             this.sampleStack = stack;
             this.getInventory().buildInventory(this.sampleStack);
         }
+        this.oreFilterEnabled = nbt.getBoolean("oreFilter");
 
     }
 
@@ -249,7 +254,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             nbt.setInteger("Count", stack.stackSize);
             nbt.setCompoundTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
-
+        nbt.setBoolean("oreFilter", this.oreFilterEnabled);
     }
 
 }

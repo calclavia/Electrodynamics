@@ -17,427 +17,400 @@ import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
 import calclavia.lib.utility.WrenchUtility;
+import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * A block that allows the placement of mass amount of a specific item within it. It will be allowed
+/** A block that allows the placement of mass amount of a specific item within it. It will be allowed
  * to go on Conveyor Belts.
  * 
  * NOTE: Crates should be upgraded with an item.
  * 
- * @author DarkGuardsman
- */
+ * @author DarkGuardsman */
 public class BlockCrate extends BlockTile
 {
-	Icon advanced, elite;
+    Icon advanced, elite;
 
-	public BlockCrate(int id)
-	{
-		super(id, UniversalElectricity.machine);
-	}
+    public BlockCrate(int id)
+    {
+        super(id, UniversalElectricity.machine);
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconReg)
-	{
-		this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate_wood");
-		this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_iron");
-		this.elite = iconReg.registerIcon(Reference.PREFIX + "crate_steel");
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconReg)
+    {
+        this.blockIcon = iconReg.registerIcon(Reference.PREFIX + "crate_wood");
+        this.advanced = iconReg.registerIcon(Reference.PREFIX + "crate_iron");
+        this.elite = iconReg.registerIcon(Reference.PREFIX + "crate_steel");
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta)
-	{
-		if (meta == 1)
-		{
-			return advanced;
-		}
-		else if (meta == 2)
-		{
-			return elite;
-		}
-		return this.blockIcon;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        if (meta == 1)
+        {
+            return advanced;
+        }
+        else if (meta == 2)
+        {
+            return elite;
+        }
+        return this.blockIcon;
+    }
 
-	@Override
-	public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
-	{
-		if (!world.isRemote)
-		{
-			if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
-			{
-				TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
+    @Override
+    public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
+    {
+        if (!world.isRemote)
+        {
+            if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+            {
+                TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
 
-				/** Make double clicking input all stacks. */
-				boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
+                /** Make double clicking input all stacks. */
+                boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
 
-				tileEntity.prevClickTime = world.getWorldTime();
+                tileEntity.prevClickTime = world.getWorldTime();
 
-				this.tryEject(tileEntity, player, allMode);
-			}
+                this.tryEject(tileEntity, player, allMode);
+            }
 
-		}
-	}
+        }
+    }
 
-	/** Placed the item the player is holding into the crate. */
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-	{
-		if (!world.isRemote)
-		{
-			if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
-			{
-				TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+    /** Placed the item the player is holding into the crate. */
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+            {
+                TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+                tile.buildSampleStack();
+                ItemStack sampleStack = tile.getSampleStack();
 
-				if (player.getCurrentEquippedItem() != null && WrenchUtility.isWrench(player.getCurrentEquippedItem()))
-				{
-					if (player.isSneaking())
-					{
-						ItemStack containingStack = tile.getSampleStack();
-						tile.buildSampleStack();
+                if (WrenchUtility.isWrench(player.getCurrentEquippedItem()))
+                {
+                    if (player.isSneaking())
+                    {
+                        if (sampleStack != null && sampleStack.stackSize > 0)
+                        {
+                            ItemStack dropStack = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
+                            ItemBlockCrate.setContainingItemStack(dropStack, sampleStack);
+                            InventoryUtility.dropItemStack(world, x, y, z, dropStack, 10, 0);
 
-						if (containingStack != null)
-						{
-							if (containingStack.stackSize > 0)
-							{
-								float area = 0.7F;
-								double dropX = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
-								double dropY = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
-								double dropZ = (world.rand.nextFloat() * area) + (1.0F - area) * 0.5D;
+                            for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
+                            {
+                                tile.getInventory().setInventorySlotContents(i, null);
+                            }
+                            world.setBlock(x, y, z, 0, 0, 3);
+                        }
+                        return true;
+                    }
 
-								ItemStack dropStack = new ItemStack(this, 1, tile.getBlockMetadata());
-								ItemBlockCrate.setContainingItemStack(dropStack, containingStack);
+                    int oreID = OreDictionary.getOreID(sampleStack);
 
-								EntityItem var13 = new EntityItem(world, x + dropX, y + dropY, z + dropZ, dropStack);
-								var13.delayBeforeCanPickup = 10;
-								world.spawnEntityInWorld(var13);
+                    if (oreID != -1)
+                    {
+                        ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
 
-								for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
-								{
-									tile.getInventory().setInventorySlotContents(i, null);
-								}
-								world.setBlock(x, y, z, 0, 0, 3);
-								return true;
-							}
-						}
+                        for (int i = 0; i < ores.size(); i++)
+                        {
+                            if (ores.get(i).isItemEqual(sampleStack))
+                            {
+                                int nextIndex = (i + 1) % ores.size();
+                                ItemStack desiredStack = ores.get(nextIndex).copy();
+                                desiredStack.stackSize = sampleStack.stackSize;
 
-						return false;
-					}
+                                for (int index = 0; index < tile.getSizeInventory(); index++)
+                                    tile.setInventorySlotContents(index, null);
 
-					/**
-					 * Swap oredict nodes if the player is wrenching the crate.
-					 */
-					ItemStack sampleStack = tile.getSampleStack();
+                                tile.addStackToStorage(desiredStack);
+                                break;
+                            }
+                        }
+                    }
+                    return true;
+                }
 
-					int oreID = OreDictionary.getOreID(sampleStack);
+                /** Make double clicking input all stacks. */
+                boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
 
-					if (oreID != -1)
-					{
-						ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+                tile.prevClickTime = world.getWorldTime();
 
-						for (int i = 0; i < ores.size(); i++)
-						{
-							if (ores.get(i).isItemEqual(sampleStack))
-							{
-								int nextIndex = (i + 1) % ores.size();
-								ItemStack desiredStack = ores.get(nextIndex).copy();
-								desiredStack.stackSize = sampleStack.stackSize;
+                if (ControlKeyModifer.isControlDown(player))
+                {
+                    tryEject(tile, player, allMode);
+                }
+                else
+                {
+                    ItemStack current = player.inventory.getCurrentItem();
+                    if (side == 1 && player.capabilities.isCreativeMode)
+                    {
+                        if (current != null && tile.getSampleStack() == null)
+                        {
+                            ItemStack cStack = current.copy();
+                            cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
+                            addStackToCrate(tile, cStack);
+                        }
+                    }
 
-								for (int index = 0; index < tile.getSizeInventory(); index++)
-									tile.setInventorySlotContents(index, null);
+                    tryInsert(tile, player, allMode);
+                }
+            }
+        }
 
-								tile.addStackToStorage(desiredStack);
-								break;
-							}
-						}
-					}
-				}
+        return true;
+    }
 
-				/** Make double clicking input all stacks. */
-				boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
+    /** Try to inject it into the crate. Otherwise, look around for nearby crates and try to put them
+     * in. */
+    public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode, boolean doSearch)
+    {
+        boolean success;
 
-				tile.prevClickTime = world.getWorldTime();
+        if (allMode)
+        {
+            success = this.insertAllItems(tileEntity, player);
+        }
+        else
+        {
+            success = this.insertCurrentItem(tileEntity, player);
+        }
 
-				if (ControlKeyModifer.isControlDown(player))
-				{
-					tryEject(tile, player, allMode);
-				}
-				else
-				{
-					ItemStack current = player.inventory.getCurrentItem();
-					if (side == 1 && player.capabilities.isCreativeMode)
-					{
-						if (current != null && tile.getSampleStack() == null)
-						{
-							ItemStack cStack = current.copy();
-							cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
-							addStackToCrate(tile, cStack);
-						}
-					}
+        if (!success && doSearch)
+        {
+            PathfinderCrate pathfinder = new PathfinderCrate().init(tileEntity);
 
-					tryInsert(tile, player, allMode);
-				}
-			}
-		}
+            for (TileEntity checkTile : pathfinder.iteratedNodes)
+            {
+                if (checkTile instanceof TileCrate)
+                {
+                    this.tryInsert(((TileCrate) checkTile), player, allMode, false);
+                }
+            }
+        }
+    }
 
-		return true;
-	}
+    public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode)
+    {
+        tryInsert(tileEntity, player, allMode, true);
+    }
 
-	/**
-	 * Try to inject it into the crate. Otherwise, look around for nearby crates and try to put them
-	 * in.
-	 */
-	public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode, boolean doSearch)
-	{
-		boolean success;
+    public void tryEject(TileCrate tileEntity, EntityPlayer player, boolean allMode)
+    {
+        if (tileEntity.getSampleStack() == null)
+        {
+            return;
+        }
+        if (allMode && !player.isSneaking())
+        {
+            this.ejectItems(tileEntity, player, tileEntity.getSlotCount() * 64);
+        }
+        else
+        {
+            if (player.isSneaking())
+            {
+                this.ejectItems(tileEntity, player, 1);
+            }
+            else
+            {
+                this.ejectItems(tileEntity, player, tileEntity.getSampleStack().getMaxStackSize());
+            }
+        }
+    }
 
-		if (allMode)
-		{
-			success = this.insertAllItems(tileEntity, player);
-		}
-		else
-		{
-			success = this.insertCurrentItem(tileEntity, player);
-		}
+    /** Inserts a the itemStack the player is holding into the crate. */
+    public boolean insertCurrentItem(TileCrate tileEntity, EntityPlayer player)
+    {
+        ItemStack currentStack = player.getCurrentEquippedItem();
 
-		if (!success && doSearch)
-		{
-			PathfinderCrate pathfinder = new PathfinderCrate().init(tileEntity);
+        if (currentStack != null)
+        {
+            if (currentStack.getItem().itemID == blockID)
+            {
+                ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
+                ItemStack crateStack = tileEntity.getSampleStack();
 
-			for (TileEntity checkTile : pathfinder.iteratedNodes)
-			{
-				if (checkTile instanceof TileCrate)
-				{
-					this.tryInsert(((TileCrate) checkTile), player, allMode, false);
-				}
-			}
-		}
-	}
+                if (containedStack != null && (crateStack == null || ItemStack.areItemStacksEqual(containedStack, crateStack)))
+                {
+                    ItemStack returned = BlockCrate.addStackToCrate(tileEntity, containedStack);
+                    ItemBlockCrate.setContainingItemStack(currentStack, returned);
+                    return true;
+                }
+            }
+            else
+            {
+                if (tileEntity.getSampleStack() != null)
+                {
+                    if (!(tileEntity.getSampleStack().isItemEqual(currentStack) || (tileEntity.oreFilterEnabled && !OreDictionary.getOreName(OreDictionary.getOreID(tileEntity.getSampleStack())).equals("Unknown") && OreDictionary.getOreID(tileEntity.getSampleStack()) == OreDictionary.getOreID(currentStack))))
+                    {
+                        return false;
+                    }
+                }
 
-	public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode)
-	{
-		tryInsert(tileEntity, player, allMode, true);
-	}
+                player.inventory.setInventorySlotContents(player.inventory.currentItem, BlockCrate.addStackToCrate(tileEntity, currentStack));
+                return true;
+            }
+        }
 
-	public void tryEject(TileCrate tileEntity, EntityPlayer player, boolean allMode)
-	{
-		if (tileEntity.getSampleStack() == null)
-		{
-			return;
-		}
-		if (allMode && !player.isSneaking())
-		{
-			this.ejectItems(tileEntity, player, tileEntity.getSlotCount() * 64);
-		}
-		else
-		{
-			if (player.isSneaking())
-			{
-				this.ejectItems(tileEntity, player, 1);
-			}
-			else
-			{
-				this.ejectItems(tileEntity, player, tileEntity.getSampleStack().getMaxStackSize());
-			}
-		}
-	}
+        return false;
+    }
 
-	/** Inserts a the itemStack the player is holding into the crate. */
-	public boolean insertCurrentItem(TileCrate tileEntity, EntityPlayer player)
-	{
-		ItemStack currentStack = player.getCurrentEquippedItem();
+    /** Inserts all items of the same type this player has into the crate.
+     * 
+     * @return True on success */
+    public boolean insertAllItems(TileCrate tileEntity, EntityPlayer player)
+    {
+        ItemStack requestStack = null;
 
-		if (currentStack != null)
-		{
-			if (currentStack.getItem().itemID == blockID)
-			{
-				ItemStack containedStack = ItemBlockCrate.getContainingItemStack(currentStack);
-				ItemStack crateStack = tileEntity.getSampleStack();
+        if (tileEntity.getSampleStack() != null)
+        {
+            requestStack = tileEntity.getSampleStack().copy();
+        }
 
-				if (containedStack != null && (crateStack == null || ItemStack.areItemStacksEqual(containedStack, crateStack)))
-				{
-					ItemStack returned = BlockCrate.addStackToCrate(tileEntity, containedStack);
-					ItemBlockCrate.setContainingItemStack(currentStack, returned);
-					return true;
-				}
-			}
-			else
-			{
-				if (tileEntity.getSampleStack() != null)
-				{
-					if (!(tileEntity.getSampleStack().isItemEqual(currentStack) || (!OreDictionary.getOreName(OreDictionary.getOreID(tileEntity.getSampleStack())).equals("Unknown") && OreDictionary.getOreID(tileEntity.getSampleStack()) == OreDictionary.getOreID(currentStack))))
-					{
-						return false;
-					}
-				}
+        if (requestStack == null)
+        {
+            requestStack = player.getCurrentEquippedItem();
+        }
 
-				player.inventory.setInventorySlotContents(player.inventory.currentItem, BlockCrate.addStackToCrate(tileEntity, currentStack));
-				return true;
-			}
-		}
+        if (requestStack != null && requestStack.itemID != this.blockID)
+        {
+            boolean success = false;
 
-		return false;
-	}
+            for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+            {
+                ItemStack currentStack = player.inventory.getStackInSlot(i);
 
-	/**
-	 * Inserts all items of the same type this player has into the crate.
-	 * 
-	 * @return True on success
-	 */
-	public boolean insertAllItems(TileCrate tileEntity, EntityPlayer player)
-	{
-		ItemStack requestStack = null;
+                if (currentStack != null)
+                {
+                    if (requestStack.isItemEqual(currentStack))
+                    {
+                        player.inventory.setInventorySlotContents(i, BlockCrate.addStackToCrate(tileEntity, currentStack));
 
-		if (tileEntity.getSampleStack() != null)
-		{
-			requestStack = tileEntity.getSampleStack().copy();
-		}
+                        if (player instanceof EntityPlayerMP)
+                        {
+                            ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
+                        }
 
-		if (requestStack == null)
-		{
-			requestStack = player.getCurrentEquippedItem();
-		}
+                        success = true;
+                    }
+                }
+            }
+            return success;
+        }
+        return false;
+    }
 
-		if (requestStack != null && requestStack.itemID != this.blockID)
-		{
-			boolean success = false;
+    /** Ejects and item out of the crate and spawn it under the player entity.
+     * 
+     * @param tileEntity
+     * @param player
+     * @param requestSize - The maximum stack size to take out. Default should be 64.
+     * @return True on success */
+    public boolean ejectItems(TileCrate tileEntity, EntityPlayer player, int requestSize)
+    {
+        World world = tileEntity.worldObj;
+        if (!world.isRemote)
+        {
+            ItemStack sampleStack = tileEntity.getSampleStack();
+            int ammountEjected = 0;
+            if (sampleStack != null && requestSize > 0)
+            {
+                for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)
+                {
+                    ItemStack slotStack = tileEntity.getInventory().getStackInSlot(slot);
 
-			for (int i = 0; i < player.inventory.getSizeInventory(); i++)
-			{
-				ItemStack currentStack = player.inventory.getStackInSlot(i);
+                    if (slotStack != null && slotStack.stackSize > 0)
+                    {
+                        int amountToTake = Math.min(slotStack.stackSize, requestSize);
 
-				if (currentStack != null)
-				{
-					if (requestStack.isItemEqual(currentStack))
-					{
-						player.inventory.setInventorySlotContents(i, BlockCrate.addStackToCrate(tileEntity, currentStack));
+                        ItemStack dropStack = slotStack.copy();
+                        dropStack.stackSize = amountToTake;
 
-						if (player instanceof EntityPlayerMP)
-						{
-							((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-						}
+                        EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
+                        entityItem.delayBeforeCanPickup = 0;
+                        world.spawnEntityInWorld(entityItem);
 
-						success = true;
-					}
-				}
-			}
-			return success;
-		}
-		return false;
-	}
+                        slotStack.stackSize -= amountToTake;
+                        ammountEjected += amountToTake;
+                        if (slotStack.stackSize <= 0)
+                        {
+                            slotStack = null;
+                        }
+                        tileEntity.getInventory().setInventorySlotContents(slot, slotStack);
 
-	/**
-	 * Ejects and item out of the crate and spawn it under the player entity.
-	 * 
-	 * @param tileEntity
-	 * @param player
-	 * @param requestSize - The maximum stack size to take out. Default should be 64.
-	 * @return True on success
-	 */
-	public boolean ejectItems(TileCrate tileEntity, EntityPlayer player, int requestSize)
-	{
-		World world = tileEntity.worldObj;
-		if (!world.isRemote)
-		{
-			ItemStack sampleStack = tileEntity.getSampleStack();
-			int ammountEjected = 0;
-			if (sampleStack != null && requestSize > 0)
-			{
-				for (int slot = 0; slot < tileEntity.getInventory().getSizeInventory(); slot++)
-				{
-					ItemStack slotStack = tileEntity.getInventory().getStackInSlot(slot);
+                    }
+                    if (ammountEjected >= requestSize)
+                    {
+                        return true;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
-					if (slotStack != null && slotStack.stackSize > 0)
-					{
-						int amountToTake = Math.min(slotStack.stackSize, requestSize);
+    /** Puts an itemStack into the crate.
+     * 
+     * @param tileEntity
+     * @param itemStack */
+    public static ItemStack addStackToCrate(TileCrate tileEntity, ItemStack itemStack)
+    {
+        if (itemStack == null || itemStack.getItem().isDamageable() && itemStack.getItem().getDamage(itemStack) > 0)
+        {
+            return itemStack;
+        }
 
-						ItemStack dropStack = slotStack.copy();
-						dropStack.stackSize = amountToTake;
+        ItemStack containingStack = tileEntity.getSampleStack();
 
-						EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
-						entityItem.delayBeforeCanPickup = 0;
-						world.spawnEntityInWorld(entityItem);
+        if (containingStack == null || (containingStack.isItemEqual(itemStack) || (tileEntity.oreFilterEnabled && OreDictionary.getOreID(containingStack) == OreDictionary.getOreID(itemStack))))
+        {
+            int room = Math.max((tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0), 0);
+            if (itemStack.stackSize <= room)
+            {
+                tileEntity.addToStack(itemStack);
+                itemStack = null;
+            }
+            else
+            {
+                tileEntity.addToStack(itemStack, room);
+                itemStack.stackSize -= room;
+            }
+            return itemStack;
 
-						slotStack.stackSize -= amountToTake;
-						ammountEjected += amountToTake;
-						if (slotStack.stackSize <= 0)
-						{
-							slotStack = null;
-						}
-						tileEntity.getInventory().setInventorySlotContents(slot, slotStack);
+        }
 
-					}
-					if (ammountEjected >= requestSize)
-					{
-						return true;
-					}
-				}
-				return true;
-			}
-		}
-		return false;
-	}
+        if (itemStack.stackSize <= 0)
+        {
+            return null;
+        }
 
-	/**
-	 * Puts an itemStack into the crate.
-	 * 
-	 * @param tileEntity
-	 * @param itemStack
-	 */
-	public static ItemStack addStackToCrate(TileCrate tileEntity, ItemStack itemStack)
-	{
-		if (itemStack == null || itemStack.getItem().isDamageable() && itemStack.getItem().getDamage(itemStack) > 0)
-		{
-			return itemStack;
-		}
+        return itemStack;
+    }
 
-		ItemStack containingStack = tileEntity.getSampleStack();
+    @Override
+    public int damageDropped(int metadata)
+    {
+        return metadata;
+    }
 
-		if (containingStack == null || (containingStack.isItemEqual(itemStack) || OreDictionary.getOreID(containingStack) == OreDictionary.getOreID(itemStack)))
-		{
-			int room = Math.max((tileEntity.getInventory().getSizeInventory() * 64) - (containingStack != null ? containingStack.stackSize : 0), 0);
-			if (itemStack.stackSize <= room)
-			{
-				tileEntity.addToStack(itemStack);
-				itemStack = null;
-			}
-			else
-			{
-				tileEntity.addToStack(itemStack, room);
-				itemStack.stackSize -= room;
-			}
-			return itemStack;
+    @Override
+    public TileEntity createNewTileEntity(World var1)
+    {
+        return new TileCrate();
+    }
 
-		}
-
-		if (itemStack.stackSize <= 0)
-		{
-			return null;
-		}
-
-		return itemStack;
-	}
-
-	@Override
-	public int damageDropped(int metadata)
-	{
-		return metadata;
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World var1)
-	{
-		return new TileCrate();
-	}
-
-	@Override
-	public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
-	{
-		par3List.add(new ItemStack(par1, 1, 0));
-		par3List.add(new ItemStack(par1, 1, 1));
-		par3List.add(new ItemStack(par1, 1, 2));
-	}
+    @Override
+    public void getSubBlocks(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        par3List.add(new ItemStack(par1, 1, 0));
+        par3List.add(new ItemStack(par1, 1, 1));
+        par3List.add(new ItemStack(par1, 1, 2));
+    }
 }
