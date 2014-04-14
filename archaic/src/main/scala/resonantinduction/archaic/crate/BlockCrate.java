@@ -10,12 +10,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
 import calclavia.lib.prefab.block.BlockTile;
+import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.WrenchUtility;
 import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.multipart.ControlKeyModifer;
@@ -64,20 +66,11 @@ public class BlockCrate extends BlockTile
     @Override
     public void onBlockClicked(World world, int x, int y, int z, EntityPlayer player)
     {
-        if (!world.isRemote)
+        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
         {
-            if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
-            {
-                TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
-
-                /** Make double clicking input all stacks. */
-                boolean allMode = (world.getWorldTime() - tileEntity.prevClickTime < 10);
-
-                tileEntity.prevClickTime = world.getWorldTime();
-
-                this.tryEject(tileEntity, player, allMode);
-            }
-
+            TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
+            this.tryEject(tileEntity, player, world.getWorldTime() - tileEntity.prevClickTime < 10);
+            tileEntity.prevClickTime = world.getWorldTime();
         }
     }
 
@@ -93,10 +86,12 @@ public class BlockCrate extends BlockTile
 
             if (ControlKeyModifer.isControlDown(player))
             {
-
+                tile.oreFilterEnabled = !tile.oreFilterEnabled;
+                player.sendChatToPlayer(ChatMessageComponent.createFromText(LanguageUtility.getLocal("crate.orefilter." + tile.oreFilterEnabled)));
             }
             else if (oreID != -1)
             {
+                /* Switches ore itemStack around */
                 ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
 
                 for (int oreIndex = 0; oreIndex < ores.size(); oreIndex++)
@@ -151,14 +146,9 @@ public class BlockCrate extends BlockTile
         {
             TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
 
-            /** Make double clicking input all stacks. */
-            boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
-
-            tile.prevClickTime = world.getWorldTime();
-
             if (ControlKeyModifer.isControlDown(player))
             {
-                tryEject(tile, player, allMode);
+                tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
             }
             else
             {
@@ -174,8 +164,10 @@ public class BlockCrate extends BlockTile
                     }
                 }
 
-                tryInsert(tile, player, allMode);
+                tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+
             }
+            tile.prevClickTime = world.getWorldTime();
         }
         return true;
     }
@@ -184,16 +176,7 @@ public class BlockCrate extends BlockTile
      * in. */
     public void tryInsert(TileCrate tileEntity, EntityPlayer player, boolean allMode, boolean doSearch)
     {
-        boolean success;
-
-        if (allMode)
-        {
-            success = this.insertAllItems(tileEntity, player);
-        }
-        else
-        {
-            success = this.insertCurrentItem(tileEntity, player);
-        }
+        boolean success = allMode ? this.insertAllItems(tileEntity, player) : this.insertCurrentItem(tileEntity, player);
 
         if (!success && doSearch)
         {
