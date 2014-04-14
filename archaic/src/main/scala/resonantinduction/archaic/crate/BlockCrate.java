@@ -81,89 +81,102 @@ public class BlockCrate extends BlockTile
         }
     }
 
-    /** Placed the item the player is holding into the crate. */
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    public boolean onUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
-        if (!world.isRemote)
+        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
         {
-            if (world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+            tile.buildSampleStack();
+            ItemStack sampleStack = tile.getSampleStack();
+            int oreID = OreDictionary.getOreID(sampleStack);
+
+            if (ControlKeyModifer.isControlDown(player))
             {
-                TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
-                tile.buildSampleStack();
-                ItemStack sampleStack = tile.getSampleStack();
 
-                if (WrenchUtility.isWrench(player.getCurrentEquippedItem()))
+            }
+            else if (oreID != -1)
+            {
+                ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
+
+                for (int oreIndex = 0; oreIndex < ores.size(); oreIndex++)
                 {
-                    if (player.isSneaking())
+                    if (ores.get(oreIndex).isItemEqual(sampleStack))
                     {
-                        if (sampleStack != null && sampleStack.stackSize > 0)
-                        {
-                            ItemStack dropStack = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
-                            ItemBlockCrate.setContainingItemStack(dropStack, sampleStack);
-                            InventoryUtility.dropItemStack(world, x, y, z, dropStack, 10, 0);
+                        int nextIndex = (oreIndex + 1) % ores.size();
+                        ItemStack desiredStack = ores.get(nextIndex).copy();
+                        desiredStack.stackSize = sampleStack.stackSize;
 
-                            for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
-                            {
-                                tile.getInventory().setInventorySlotContents(i, null);
-                            }
-                            world.setBlock(x, y, z, 0, 0, 3);
-                        }
-                        return true;
+                        for (int index = 0; index < tile.getSizeInventory(); index++)
+                            tile.setInventorySlotContents(index, null);
+
+                        tile.addStackToStorage(desiredStack);
+                        break;
                     }
-
-                    int oreID = OreDictionary.getOreID(sampleStack);
-
-                    if (oreID != -1)
-                    {
-                        ArrayList<ItemStack> ores = OreDictionary.getOres(oreID);
-
-                        for (int i = 0; i < ores.size(); i++)
-                        {
-                            if (ores.get(i).isItemEqual(sampleStack))
-                            {
-                                int nextIndex = (i + 1) % ores.size();
-                                ItemStack desiredStack = ores.get(nextIndex).copy();
-                                desiredStack.stackSize = sampleStack.stackSize;
-
-                                for (int index = 0; index < tile.getSizeInventory(); index++)
-                                    tile.setInventorySlotContents(index, null);
-
-                                tile.addStackToStorage(desiredStack);
-                                break;
-                            }
-                        }
-                    }
-                    return true;
-                }
-
-                /** Make double clicking input all stacks. */
-                boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
-
-                tile.prevClickTime = world.getWorldTime();
-
-                if (ControlKeyModifer.isControlDown(player))
-                {
-                    tryEject(tile, player, allMode);
-                }
-                else
-                {
-                    ItemStack current = player.inventory.getCurrentItem();
-                    if (side == 1 && player.capabilities.isCreativeMode)
-                    {
-                        if (current != null && tile.getSampleStack() == null)
-                        {
-                            ItemStack cStack = current.copy();
-                            cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
-                            addStackToCrate(tile, cStack);
-                        }
-                    }
-
-                    tryInsert(tile, player, allMode);
                 }
             }
         }
+        return true;
+    }
 
+    @Override
+    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+        {
+            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+            tile.buildSampleStack();
+            ItemStack sampleStack = tile.getSampleStack();
+
+            if (sampleStack != null && sampleStack.stackSize > 0)
+            {
+                ItemStack dropStack = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
+                ItemBlockCrate.setContainingItemStack(dropStack, sampleStack);
+                InventoryUtility.dropItemStack(world, x, y, z, dropStack, 10, 0);
+
+                for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
+                {
+                    tile.getInventory().setInventorySlotContents(i, null);
+                }
+                world.setBlock(x, y, z, 0, 0, 3);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
+        {
+            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
+
+            /** Make double clicking input all stacks. */
+            boolean allMode = (world.getWorldTime() - tile.prevClickTime < 10);
+
+            tile.prevClickTime = world.getWorldTime();
+
+            if (ControlKeyModifer.isControlDown(player))
+            {
+                tryEject(tile, player, allMode);
+            }
+            else
+            {
+                /* Creative mode way to fill crates to max in one click */
+                ItemStack current = player.inventory.getCurrentItem();
+                if (side == 1 && player.capabilities.isCreativeMode)
+                {
+                    if (current != null && tile.getSampleStack() == null)
+                    {
+                        ItemStack cStack = current.copy();
+                        cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
+                        addStackToCrate(tile, cStack);
+                    }
+                }
+
+                tryInsert(tile, player, allMode);
+            }
+        }
         return true;
     }
 
