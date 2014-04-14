@@ -2,6 +2,7 @@ package resonantinduction.archaic.crate;
 
 import java.util.List;
 
+import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -33,7 +34,7 @@ public class ItemBlockCrate extends ItemBlock
 		if (containingStack != null)
 		{
 			par3List.add(containingStack.getDisplayName());
-			par3List.add("Amount: " + containingStack.stackSize);
+			par3List.add(LanguageUtility.getLocal("crate.tooltip.amount") +" " + containingStack.stackSize);
 		}
 	}
 
