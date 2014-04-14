@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.prefab.CustomDamageSource;
@@ -94,11 +95,11 @@ public abstract class PartAdvancedWire extends PartConductor
 
             if (this.getNetwork() instanceof IElectricalNetwork && this.getNetwork().getRequest() > 0)
             {
-                damage = ((IElectricalNetwork) this.getNetwork()).getVoltage() / 60;
+                damage = ((IElectricalNetwork) this.getNetwork()).getVoltage() / UniversalElectricity.DEFAULT_VOLTAGE;
             }
 
             if (damage > 0)
-                entity.attackEntityFrom(CustomDamageSource.electrocution, Math.max(damage, 10));
+                entity.attackEntityFrom(CustomDamageSource.electrocution, Math.min(damage, 10));
         }
     }
 
