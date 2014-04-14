@@ -1,14 +1,17 @@
 package resonantinduction.archaic.crate;
 
+import java.util.HashSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.imprint.ItemImprint;
+import calclavia.api.resonantinduction.IFilterable;
 import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.tile.TileExternalInventory;
@@ -21,19 +24,20 @@ import com.google.common.io.ByteArrayDataInput;
  * TODO: Add filter-locking feature. Put filter in, locks the crate to only use that item.
  * 
  * @author DarkGuardsman */
-public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage
+public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage, IFilterable
 {
     /** max meta size of the crate */
     public static final int maxSize = 2;
 
     /** delay from last click */
     public long prevClickTime = -1000;
-    
+
     /** Check to see if oreName items can be force stacked */
     public boolean oreFilterEnabled = false;
 
     /** Collective total stack of all inv slots */
     private ItemStack sampleStack;
+    private ItemStack filterStack;
 
     @Override
     public InventoryCrate getInventory()
@@ -78,7 +82,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             }
         }
         if (newSampleStack == null || newSampleStack.itemID == 0 || newSampleStack.stackSize <= 0)
-            this.sampleStack = null;
+            this.sampleStack = this.getFilter() != null ? this.getFilter().copy() : null;
         else
             this.sampleStack = newSampleStack.copy();
 
@@ -255,6 +259,18 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
             nbt.setCompoundTag("stack", stack.writeToNBT(new NBTTagCompound()));
         }
         nbt.setBoolean("oreFilter", this.oreFilterEnabled);
+    }
+
+    @Override
+    public void setFilter(ItemStack filter)
+    {
+        this.filterStack = filter;
+    }
+
+    @Override
+    public ItemStack getFilter()
+    {
+        return this.filterStack;
     }
 
 }

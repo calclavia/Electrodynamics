@@ -148,19 +148,32 @@ public class BlockCrate extends BlockTile
 
             if (ControlKeyModifer.isControlDown(player))
             {
-                tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                if (player.getCurrentEquippedItem() != null && (!player.getCurrentEquippedItem().getItem().isDamageable() || player.getCurrentEquippedItem().getItem().getDamage(player.getCurrentEquippedItem()) > 0))
+                {
+                    ItemStack filter = player.getCurrentEquippedItem().copy();
+                    filter.stackSize = 0;
+                    tile.setFilter(filter);
+                }
+                else
+                {
+                    tile.setFilter(null);
+                }
             }
             else
             {
                 /* Creative mode way to fill crates to max in one click */
                 ItemStack current = player.inventory.getCurrentItem();
-                if (side == 1 && player.capabilities.isCreativeMode)
+                if (player.capabilities.isCreativeMode)
                 {
-                    if (current != null && tile.getSampleStack() == null)
+                    if (side == 1 && current != null && tile.getSampleStack() == null)
                     {
                         ItemStack cStack = current.copy();
                         cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
                         addStackToCrate(tile, cStack);
+                    }
+                    else if (hitY >= 0.5)
+                    {
+                        tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
                     }
                 }
 
