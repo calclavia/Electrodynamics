@@ -149,7 +149,6 @@ public class TileMixer extends TileMechanical implements IInventory
 						{
 							processingItem.setDead();
 							timer.remove(processingItem);
-							processingItem = null;
 						}
 						else
 						{
@@ -170,7 +169,6 @@ public class TileMixer extends TileMechanical implements IInventory
 			else
 			{
 				timer.remove(processingItem);
-				processingItem = null;
 			}
 		}
 

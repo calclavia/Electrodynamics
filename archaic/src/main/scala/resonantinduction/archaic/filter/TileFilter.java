@@ -99,8 +99,9 @@ public class TileFilter extends TileFilterable implements IFilterable
 				/**
 				 * Drop item from fluid.
 				 */
-				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), "dust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
+				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), "dirtyDust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
 				{
+
 					InventoryUtility.dropItemStack(worldObj, checkAbove.clone().add(0.5), resoure.getItemStack().copy(), 0, 0);
 				}
 
