@@ -215,11 +215,11 @@ public class PartLevitator extends PartFace
 
 					if (retrieved != null)
 					{
-						EntityItem item = getItemWithPosition(retrieved);
+						EntityItem entityItem = getItemWithPosition(retrieved);
 
 						if (!world().isRemote)
 						{
-							world().spawnEntityInWorld(item);
+							world().spawnEntityInWorld(entityItem);
 						}
 
 						pushDelay = Settings.LEVITATOR_PUSH_DELAY;
