@@ -34,6 +34,7 @@ import calclavia.lib.network.IPacketReceiver;
 import calclavia.lib.network.IPacketSender;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.prefab.CustomDamageSource;
+import calclavia.lib.prefab.damage.ElectricalDamage;
 import calclavia.lib.prefab.tile.TileElectrical;
 import calclavia.lib.render.EnumColor;
 
@@ -242,7 +243,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 									{
 										if (mop.entityHit instanceof EntityLivingBase)
 										{
-										    CustomDamageSource.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
+										    ElectricalDamage.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
 											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 										}
 									}

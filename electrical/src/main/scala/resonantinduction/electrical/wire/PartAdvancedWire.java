@@ -19,6 +19,7 @@ import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.IConductor;
 import calclavia.lib.prefab.CustomDamageSource;
+import calclavia.lib.prefab.damage.ElectricalDamage;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.IRedstonePart;
@@ -89,7 +90,7 @@ public abstract class PartAdvancedWire extends PartConductor
     public void onEntityCollision(Entity entity)
     {
         if (!this.isInsulated() && this.getNetwork() instanceof IElectricalNetwork)
-            CustomDamageSource.handleElectrocution(entity, this, (IElectricalNetwork) this.getNetwork(), 1);
+            ElectricalDamage.handleElectrocution(entity, this, (IElectricalNetwork) this.getNetwork(), 1);
     }
 
     @Override
