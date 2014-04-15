@@ -24,6 +24,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.Electrical;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
@@ -241,7 +242,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 									{
 										if (mop.entityHit instanceof EntityLivingBase)
 										{
-											mop.entityHit.attackEntityFrom(CustomDamageSource.electrocution, 4);
+										    CustomDamageSource.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
 											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 										}
 									}
