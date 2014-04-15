@@ -19,6 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import resonantinduction.archaic.blocks.TileTurntable;
 import resonantinduction.archaic.crate.BlockCrate;
@@ -129,12 +130,20 @@ public class Archaic
 	public void postInit(FMLPostInitializationEvent evt)
 	{
 		TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
+		if(OreDictionary.getOres("cobblestone") == null)
+		{
+		    OreDictionary.registerOre("cobblestone", Block.cobblestone);
+		}
+		if(OreDictionary.getOres("stickWood") == null)
+        {
+            OreDictionary.registerOre("stickWood", Item.stick);
+        }
 
 		// Add recipes
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockEngineeringTable, "P", "C", 'P', Block.pressurePlatePlanks, 'C', Block.workbench));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockFilter, "B", "P", "B", 'B', Block.fenceIron, 'P', Item.paper));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', Item.stick, 'W', "logWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 0), "WWW", "WSW", "WWW", 'S', "stickWood", 'W', "logWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 1), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 0), 'W', "ingotIron"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCrate, 1, 2), "WWW", "WSW", "WWW", 'S', new ItemStack(blockCrate, 1, 1), 'W', UniversalRecipe.PRIMARY_METAL.get()));
 
@@ -145,15 +154,15 @@ public class Archaic
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTurntable, "SSS", "PGP", "WWW", 'S', Block.stone, 'G', Item.redstone, 'P', Block.pistonBase, 'W', "logWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockCast, "I I", "IBI", "III", 'S', Item.ingotIron, 'B', Block.fenceIron));
-		GameRegistry.addRecipe(new ShapedOreRecipe(blockGutter, "S S", "I I", "III", 'S', Item.stick, 'I', Block.cobblestone));
+		GameRegistry.addRecipe(new ShapedOreRecipe(blockGutter, "S S", "I I", "III", 'S', Item.stick, 'I', "cobblestone"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockGrate, "WBW", "B B", "WBW", 'B', Block.fenceIron, 'W', "plankWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockHotPlate, "SSS", "III", 'I', Item.ingotIron, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMillstone, "SPS", "SAS", "SSS", 'P', Block.pistonBase, 'A', Item.pickaxeStone, 'S', Block.stone));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockTank, "GGG", "GSG", "GGG", 'G', Block.glass, 'S', Item.ingotIron));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, "PPP", "PIP", "PPP", 'P', Item.paper, 'I', new ItemStack(Item.dyePowder, 0)));
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', Block.cobblestone, 'S', Item.stick));
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', "cobblestone", 'S', "stickWood"));
 		proxy.postInit();
 	}
 }
