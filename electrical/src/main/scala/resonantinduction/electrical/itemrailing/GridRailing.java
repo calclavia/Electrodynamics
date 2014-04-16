@@ -27,11 +27,11 @@ public class GridRailing extends NodeGrid<NodeRailing>
 		return findNearestColoredTarget(itemwrapper);
 	}
 
+	//TODO: Finish
 	public IItemRailing findNearestInventory(IItemRailingTransfer itemwrapper)
 	{
 		IItemRailing endGoal = null;
 		IItemRailing[] arr = (IItemRailing[]) this.getNodes().toArray();
-		Arrays.sort();
 
 		for (NodeRailing node : this.getNodes())
 		{
