@@ -109,7 +109,7 @@ public class Electrical
 		blockBattery = contentRegistry.createBlock(BlockBattery.class, ItemBlockBattery.class, TileBattery.class);
 
 		// Transport
-		itemLevitator = contentRegistry.createItem(ItemLevitator.class);
+		//itemLevitator = contentRegistry.createItem(ItemLevitator.class);
 		// blockArmbot = contentRegistry.createTile(BlockArmbot.lass, TileEncoder.clclass,
 		// TileArmbot.class);
 		// blockEncoder = contentRegistry.createTile(BlockEncoder.cass);
