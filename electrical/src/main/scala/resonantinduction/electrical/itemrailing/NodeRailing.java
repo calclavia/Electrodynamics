@@ -85,6 +85,6 @@ public class NodeRailing extends Node<IItemRailing, GridRailing, NodeRailing> im
 	@Override
 	public double y()
 	{
-		return parent.getWorldPos().y()
+		return parent.getWorldPos().y();
 	}
 }
