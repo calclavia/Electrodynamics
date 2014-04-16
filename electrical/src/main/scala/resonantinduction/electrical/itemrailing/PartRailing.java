@@ -97,7 +97,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     }
 
 	@Override
-	public IVectorWorld getWorldPos()
+	public VectorWorld getWorldPos()
 	{
 		return new VectorWorld(getWorld(), x(), y(), z());
 	}

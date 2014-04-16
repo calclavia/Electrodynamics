@@ -1,10 +1,11 @@
 package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.NodeGrid;
+import com.google.common.collect.Sets;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * @since 18/03/14
@@ -17,18 +18,29 @@ public class GridRailing extends NodeGrid<NodeRailing>
         super(type);
     }
 
-	public IItemRailing findTargetForIItemTransfer(IItemRailingTransfer itemRailingTransfer)
+	public IItemRailing findTargetForIItemTransfer(IItemRailingTransfer itemwrapper)
 	{
-
+		if (itemwrapper.getColor() == null)
+		{
+			return findNearestInventory(itemwrapper);
+		}
+		return findNearestColoredTarget(itemwrapper);
 	}
 
-	public static class ComparatorRailing implements Comparator<IItemRailing>
+	public IItemRailing findNearestInventory(IItemRailingTransfer itemwrapper)
+	{
+		IItemRailing endGoal = null;
+		IItemRailing[] arr = (IItemRailing[]) this.getNodes().toArray();
+		Arrays.sort();
+
+		for (NodeRailing node : this.getNodes())
+		{
+
+		}
+	}
+
+	public IItemRailing findNearestColoredTarget(IItemRailingTransfer itemwrapper)
 	{
 
-		@Override
-		public int compare(IItemRailing o1, IItemRailing o2)
-		{
-			return 0;
-		}
 	}
 }
