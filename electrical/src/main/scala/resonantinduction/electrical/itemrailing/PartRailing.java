@@ -17,6 +17,8 @@ import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.vector.IVectorWorld;
+import universalelectricity.api.vector.VectorWorld;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
 {
 
-    public enum EnumRailing
+    public static enum EnumRailing
     {
         DEFAULT, EXTENTION;
     }
@@ -94,13 +96,13 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return this;
     }
 
-    @Override
-    public World getWorldObj ()
-    {
-        return super.getWorld();
-    }
+	@Override
+	public IVectorWorld getWorldPos()
+	{
+		return new VectorWorld(getWorld(), x(), y(), z());
+	}
 
-    @Override
+	@Override
     public float getResistance ()
     {
         return 0;

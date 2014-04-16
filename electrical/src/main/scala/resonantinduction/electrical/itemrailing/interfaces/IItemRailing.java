@@ -4,6 +4,7 @@ import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.render.EnumColor;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import universalelectricity.api.vector.IVectorWorld;
 
 /**
  * implement on Part Railings.
@@ -21,14 +22,7 @@ public interface IItemRailing extends INodeProvider
 
     public IItemRailing setRailingColor (EnumColor color);
 
-    /** an easy implementation for tiles / parts that already have this method in them */
-    public World getWorldObj ();
-
-    public int x ();
-
-    public int y ();
-
-    public int z ();
+	public IVectorWorld getWorldPos();
 
 
 

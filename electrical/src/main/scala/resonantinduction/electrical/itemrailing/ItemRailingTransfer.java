@@ -7,7 +7,7 @@ import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import calclavia.lib.render.EnumColor;
 
 /**
- * An object that Transfers all
+ * An object that is a wrapper for all items through railings
  * 
  * @since 16/03/14
  * @author tgame14
@@ -16,7 +16,7 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 {
 	private ItemStack stack;
 	private EnumColor color;
-	private PartRailing railing;
+	private IItemRailing railing;
 
 	public ItemRailingTransfer(ItemStack stack, PartRailing railing)
 	{
@@ -49,13 +49,13 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	}
 
 	@Override
-	public PartRailing getRailing()
+	public IItemRailing getRailing()
 	{
 		return this.railing;
 	}
 
 	@Override
-	public IItemRailingTransfer setRailing(PartRailing railing)
+	public IItemRailingTransfer setRailing(IItemRailing railing)
 	{
 		this.railing = railing;
 		return this;
