@@ -514,7 +514,8 @@ public class PartLevitator extends PartFace
 
 	public boolean canFunction()
 	{
-		return isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
+	    //TODO remove (false) when working on
+		return false && isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
 	}
 
 	public boolean isLatched()
