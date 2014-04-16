@@ -37,10 +37,11 @@ public class GridRailing extends NodeGrid<NodeRailing>
 		{
 
 		}
+		return null;
 	}
 
 	public IItemRailing findNearestColoredTarget(IItemRailingTransfer itemwrapper)
 	{
-
+		return null;
 	}
 }
