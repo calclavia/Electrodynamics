@@ -1,5 +1,6 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
+import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.render.EnumColor;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -10,7 +11,7 @@ import net.minecraftforge.common.ForgeDirection;
  * @since 16/03/14
  * @author tgame14
  */
-public interface IItemRailing
+public interface IItemRailing extends INodeProvider
 {
     public boolean canItemEnter (IItemRailingTransfer item);
 

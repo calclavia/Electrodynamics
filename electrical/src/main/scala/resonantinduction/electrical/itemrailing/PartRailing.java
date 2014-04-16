@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing, INodeProvider
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
 {
 
     public enum EnumRailing
