@@ -2,29 +2,19 @@ package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.INode;
 import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.render.EnumColor;
-import codechicken.microblock.IHollowConnect;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.TSlottedPart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
-import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.VectorWorld;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @since 16/03/14
