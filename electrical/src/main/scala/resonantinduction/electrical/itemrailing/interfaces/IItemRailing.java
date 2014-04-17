@@ -1,10 +1,8 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
-import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.render.EnumColor;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -14,7 +12,7 @@ import universalelectricity.api.vector.VectorWorld;
  * @author tgame14
  */
 // TODO: Fix up IVectorWorld implementation to somehow overturn error with ChickenBones Multiparts returning doubles
-public interface IItemRailing extends INodeProvider
+public interface IItemRailing
 {
     public boolean canItemEnter (IItemRailingTransfer item);
 

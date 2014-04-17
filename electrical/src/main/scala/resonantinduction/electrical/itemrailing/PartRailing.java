@@ -30,7 +30,7 @@ import java.util.List;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, IItemRailing
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, INodeProvider
 {
 
     public static enum EnumRailing
@@ -74,70 +74,9 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return null;
     }
 
-    @Override
-    public boolean canItemEnter (IItemRailingTransfer item)
-    {
-        return this.color != null ? this.color == item.getColor() : false;
-    }
-
-    @Override
-    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
-    {
-        return this.color != null ? this.color == railing.getRailingColor() : true;
-    }
-
-    @Override
-    public EnumColor getRailingColor ()
-    {
-        return this.color;
-    }
-
-    @Override
-    public IItemRailing setRailingColor (EnumColor color)
-    {
-        this.color = color;
-        return this;
-    }
-
-	@Override
 	public VectorWorld getWorldPos()
 	{
 		return new VectorWorld(getWorld(), x(), y(), z());
-	}
-
-	//TODO: Handle the part as more of simply a host of Nodes, instead of the node itself
-
-	@Override
-	public IInventory[] getInventoriesNearby()
-	{
-		List<IInventory> invList = new ArrayList<IInventory>();
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			TileEntity te = this.getWorldPos().translate(dir).getTileEntity(this.getWorldPos().world());
-			if (te != null && te instanceof IInventory)
-			{
-				invList.add((IInventory) te);
-			}
-		}
-		return (IInventory[]) invList.toArray();
-	}
-
-	@Override
-	public boolean isLeaf()
-	{
-		int connectionsCount = 0;
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-		{
-			if (this.getWorldPos().translate(dir).getTileEntity(this.getWorldPos().world()) instanceof IItemRailing)
-			{
-				connectionsCount++;
-				if (connectionsCount >= 2)
-				{
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 	@Override
@@ -193,7 +132,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 		return network;
 	}
 
-	//TODO: Fix up
+	//TODO: Fix up to proper data
     @Override
     public void setMaterial (int i)
     {
