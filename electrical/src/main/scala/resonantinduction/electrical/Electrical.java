@@ -21,6 +21,7 @@ import resonantinduction.electrical.generator.TileMotor;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
+import resonantinduction.electrical.itemrailing.ItemItemRailing;
 import resonantinduction.electrical.levitator.ItemLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
@@ -79,6 +80,9 @@ public class Electrical
 	public static Block blockBattery;
 	public static Block blockEncoder;
 
+	// Railings
+	public static Item itemRailing;
+
 	// Generators
 	public static Block blockSolarPanel;
 	public static Block blockMotor;
@@ -123,6 +127,10 @@ public class Electrical
 
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
+
+		//Railings
+		itemRailing = contentRegistry.createItem(ItemItemRailing.class);
+
 		Settings.CONFIGURATION.save();
 
 		OreDictionary.registerOre("wire", itemWire);

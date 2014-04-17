@@ -1,6 +1,7 @@
 package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.NodeGrid;
+import net.minecraft.item.ItemStack;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 
@@ -40,10 +41,15 @@ public class GridRailing extends NodeGrid<NodeRailing>
 		return arr[0];
 	}
 
-	public IItemRailing chooseNextGoal(IItemRailingTransfer itemwrapper)
+	public IItemRailing chooseNextInstantGoal(IItemRailingTransfer itemwrapper)
 	{
 		IItemRailing[] arr = (IItemRailing[]) itemwrapper.getRailing().getConnectionMap().entrySet().toArray();
 		Arrays.sort(arr, new RailingDistanceComparator(itemwrapper.getEndGoal()));
 		return arr[0];
+	}
+
+	public void onItemEnterGrid(IItemRailing railing, ItemStack item)
+	{
+
 	}
 }

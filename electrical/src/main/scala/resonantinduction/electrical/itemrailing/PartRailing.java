@@ -2,6 +2,7 @@ package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.INode;
 import calclavia.lib.grid.INodeProvider;
+import codechicken.multipart.TileMultipart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -39,6 +40,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     public PartRailing ()
     {
         super(Electrical.itemInsulation);
+		this.material = EnumRailing.DEFAULT;
     }
 
 
@@ -104,7 +106,8 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
     {
-        return tile instanceof IItemRailing ? node.canConnectToRailing((IItemRailing) tile, to) : tile instanceof IInventory ? true : false;
+		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
+		return obj instanceof IInventory ? true : obj instanceof PartRailing;
     }
 
     @Override
@@ -128,13 +131,13 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     public void setMaterial (int i)
     {
-
+		this.material = EnumRailing.values()[i];
     }
 
     @Override
     protected ItemStack getItem ()
     {
-        return null;
+        return new ItemStack(Electrical.itemRailing);
     }
 
     @Override
