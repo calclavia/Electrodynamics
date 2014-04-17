@@ -6,6 +6,8 @@ import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import calclavia.lib.render.EnumColor;
 
+import java.lang.ref.WeakReference;
+
 /**
  * An object that is a wrapper for all items through railings
  * 
@@ -17,6 +19,7 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	private ItemStack stack;
 	private EnumColor color;
 	private IItemRailing railing;
+	private WeakReference<IItemRailing> endTarget = null;
 
 	public ItemRailingTransfer(ItemStack stack, PartRailing railing)
 	{
@@ -64,14 +67,13 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	@Override
 	public IItemRailing getEndGoal()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return endTarget.get();
 	}
 
 	@Override
 	public IItemRailingTransfer setEndGoal(IItemRailing goal)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		this.endTarget = new WeakReference<IItemRailing>(goal);
+		return this;
 	}
 }
