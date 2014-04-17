@@ -1,9 +1,12 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
+import calclavia.lib.grid.INode;
 import calclavia.lib.render.EnumColor;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.VectorWorld;
+
+import java.util.Map;
 
 /**
  * implement on Part Railings.
@@ -11,7 +14,7 @@ import universalelectricity.api.vector.VectorWorld;
  * @since 16/03/14
  * @author tgame14
  */
-public interface IItemRailing
+public interface IItemRailing extends INode
 {
     public boolean canItemEnter (IItemRailingTransfer item);
 
@@ -22,6 +25,8 @@ public interface IItemRailing
     public IItemRailing setRailingColor (EnumColor color);
 
 	public VectorWorld getWorldPos();
+
+	public Map<IItemRailing, ForgeDirection> getConnectionMap();
 
 	public IInventory[] getInventoriesNearby();
 

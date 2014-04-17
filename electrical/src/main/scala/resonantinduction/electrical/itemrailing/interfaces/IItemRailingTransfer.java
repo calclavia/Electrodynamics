@@ -1,8 +1,11 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.electrical.itemrailing.PartRailing;
 import calclavia.lib.render.EnumColor;
+
+import java.util.Map;
 
 /**
  * the object that functions as a Wrapper for items and handles the items that flow through Railings

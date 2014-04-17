@@ -9,7 +9,7 @@ import java.util.Comparator;
  * @author tgame14
  * @since 16/04/14
  */
-public abstract class RailingDistanceComparator implements Comparator<IItemRailing>
+public class RailingDistanceComparator implements Comparator<IItemRailing>
 {
 	private IItemRailing source;
 

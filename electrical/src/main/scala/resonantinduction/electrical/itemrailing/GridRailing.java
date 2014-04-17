@@ -39,4 +39,11 @@ public class GridRailing extends NodeGrid<NodeRailing>
 		Arrays.sort(arr, new RailingDistanceComparator.RailingColoredDistanceComparator(itemwrapper.getRailing(), itemwrapper.getColor()));
 		return arr[0];
 	}
+
+	public IItemRailing chooseNextGoal(IItemRailingTransfer itemwrapper)
+	{
+		IItemRailing[] arr = (IItemRailing[]) itemwrapper.getRailing().getConnectionMap().entrySet().toArray();
+		Arrays.sort(arr, new RailingDistanceComparator(itemwrapper.getEndGoal()));
+		return arr[0];
+	}
 }

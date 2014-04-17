@@ -14,13 +14,14 @@ import universalelectricity.api.vector.VectorWorld;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author tgame14
  * @since 18/03/14
  */
-public class NodeRailing extends Node<PartRailing, GridRailing, NodeRailing> implements IVectorWorld, IItemRailing
+public class NodeRailing extends Node<PartRailing, GridRailing, IItemRailing> implements IVectorWorld, IItemRailing
 {
 	private EnumColor color;
 	private Set<IItemRailingTransfer> itemNodeSet;
@@ -94,6 +95,12 @@ public class NodeRailing extends Node<PartRailing, GridRailing, NodeRailing> imp
 	}
 
 	@Override
+	public Map<IItemRailing, ForgeDirection> getConnectionMap()
+	{
+		return this.getConnections();
+	}
+
+	@Override
 	public IInventory[] getInventoriesNearby()
 	{
 		ArrayList<IInventory> invList = Lists.<IInventory>newArrayList();
@@ -112,4 +119,6 @@ public class NodeRailing extends Node<PartRailing, GridRailing, NodeRailing> imp
 	{
 		return parent.getConnections().length < 2;
 	}
+
+
 }
