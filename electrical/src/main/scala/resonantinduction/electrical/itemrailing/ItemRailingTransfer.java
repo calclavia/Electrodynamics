@@ -18,14 +18,15 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 {
 	private ItemStack stack;
 	private EnumColor color;
-	private IItemRailing railing;
-	private WeakReference<IItemRailing> endTarget = null;
+	private WeakReference<IItemRailing> railing;
+	private WeakReference<IItemRailing> endTarget;
 
 	public ItemRailingTransfer(ItemStack stack, PartRailing railing)
 	{
 		this.stack = stack.copy();
-		this.color = EnumColor.ORANGE;
-		this.railing = railing.getNode();
+		this.color = null;
+		this.railing = new WeakReference<IItemRailing>(railing.getNode());
+		this.endTarget = new WeakReference<IItemRailing>(railing.getNode().getGrid().findTargetForIItemTransfer(this));
 	}
 
 	public ItemRailingTransfer(Item item, PartRailing railing)
@@ -54,13 +55,13 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	@Override
 	public IItemRailing getRailing()
 	{
-		return this.railing;
+		return this.railing.get();
 	}
 
 	@Override
 	public IItemRailingTransfer setRailing(IItemRailing railing)
 	{
-		this.railing = railing;
+		this.railing = new WeakReference<IItemRailing>(railing);
 		return this;
 	}
 
