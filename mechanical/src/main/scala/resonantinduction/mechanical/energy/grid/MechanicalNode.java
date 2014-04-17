@@ -15,7 +15,8 @@ import universalelectricity.api.vector.Vector3;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-/** A mechanical node for mechanical energy.
+/**
+ * A mechanical node for mechanical energy.
  * <p/>
  * Useful Formula:
  * <p/>
@@ -24,262 +25,283 @@ import java.util.Map.Entry;
  * <p/>
  * Torque = r (Radius) * F (Force) * sin0 (Direction/Angle of the force applied. 90 degrees if
  * optimal.)
- * 
- * @author Calclavia */
-public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalNode> implements IMechanicalNode
+ *
+ * @author Calclavia
+ */
+public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalNode>
+		implements IMechanicalNode
 {
-    public double torque = 0;
-    public double prevAngularVelocity, angularVelocity = 0;
-    public float acceleration = 2f;
+	public double torque = 0;
+	public double prevAngularVelocity, angularVelocity = 0;
+	public float acceleration = 2f;
 
-    /** The current rotation of the mechanical node. */
-    public double angle = 0;
-    public double prev_angle = 0;
-    protected double maxDeltaAngle = Math.toRadians(180);
+	/**
+	 * The current rotation of the mechanical node.
+	 */
+	public double angle = 0;
+	public double prev_angle = 0;
+	protected double maxDeltaAngle = Math.toRadians(180);
 
-    protected double load = 2;
-    protected byte connectionMap = Byte.parseByte("111111", 2);
+	protected double load = 2;
+	protected byte connectionMap = Byte.parseByte("111111", 2);
 
-    private double power = 0;
+	private double power = 0;
 
-    public MechanicalNode(INodeProvider parent)
-    {
-        super(parent);
-    }
+	public MechanicalNode(INodeProvider parent)
+	{
+		super(parent);
+	}
 
-    @Override
-    public MechanicalNode setLoad(double load)
-    {
-        this.load = load;
-        return this;
-    }
+	@Override
+	public MechanicalNode setLoad(double load)
+	{
+		this.load = load;
+		return this;
+	}
 
-    public MechanicalNode setConnection(byte connectionMap)
-    {
-        this.connectionMap = connectionMap;
-        return this;
-    }
+	public MechanicalNode setConnection(byte connectionMap)
+	{
+		this.connectionMap = connectionMap;
+		return this;
+	}
 
-    @Override
-    public void update(float deltaTime)
-    {
-        prevAngularVelocity = angularVelocity;
+	@Override
+	public void update(float deltaTime)
+	{
+		prevAngularVelocity = angularVelocity;
 
-        if (!ResonantInduction.proxy.isPaused())
-        {
-            if (angularVelocity >= 0)
-                angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
-            else
-                angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
-        }
+		if (!ResonantInduction.proxy.isPaused())
+		{
+			if (angularVelocity >= 0)
+			{
+				angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
+			}
+			else
+			{
+				angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
+			}
+		}
 
-        if (angle % (Math.PI * 2) != angle)
-        {
-            revolve();
-            angle = angle % (Math.PI * 2);
-        }
+		if (angle % (Math.PI * 2) != angle)
+		{
+			revolve();
+			angle = angle % (Math.PI * 2);
+		}
 
-        if (world() != null && !world().isRemote)
-        {
-            double acceleration = this.acceleration * deltaTime;
+		if (world() != null && !world().isRemote)
+		{
+			final double acceleration = this.acceleration * deltaTime;
 
-            /** Energy loss */
-            double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
+			/** Energy loss */
+			double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
 
-            if (torque > 0)
-            {
-                torque -= torqueLoss;
-            }
-            else
-            {
-                torque += torqueLoss;
-            }
+			if (torque > 0)
+			{
+				torque -= torqueLoss;
+			}
+			else
+			{
+				torque += torqueLoss;
+			}
 
-            double velocityLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getAngularVelocity() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
+			double velocityLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getAngularVelocity() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
 
-            if (angularVelocity > 0)
-            {
-                angularVelocity -= velocityLoss;
-            }
-            else
-            {
-                angularVelocity += velocityLoss;
-            }
+			if (angularVelocity > 0)
+			{
+				angularVelocity -= velocityLoss;
+			}
+			else
+			{
+				angularVelocity += velocityLoss;
+			}
 
-            power = getEnergy() / deltaTime;
+			if (getEnergy() <= 0)
+			{
+				angularVelocity = torque = 0;
+			}
 
-            synchronized (connections)
-            {
-                Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
+			power = getEnergy() / deltaTime;
 
-                while (it.hasNext())
-                {
-                    Entry<MechanicalNode, ForgeDirection> entry = it.next();
+			synchronized (connections)
+			{
+				Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
 
-                    ForgeDirection dir = entry.getValue();
-                    MechanicalNode adjacentMech = entry.getKey();
+				while (it.hasNext())
+				{
+					Entry<MechanicalNode, ForgeDirection> entry = it.next();
 
-                    /** Calculate angular velocity and torque. */
-                    float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
-                    boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
+					ForgeDirection dir = entry.getValue();
+					MechanicalNode adjacentMech = entry.getKey();
 
-                    int inversion = inverseRotation ? -1 : 1;
+					/** Calculate angular velocity and torque. */
+					float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
+					boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
 
-                    double applyTorque = inversion * adjacentMech.getTorque() / ratio * acceleration;
+					int inversion = inverseRotation ? -1 : 1;
 
-                    if (Math.abs(torque + applyTorque) < Math.abs(adjacentMech.getTorque() / ratio))
-                    {
-                        torque += applyTorque;
-                    }
-                    else
-                    {
-                        torque -= applyTorque;
-                    }
+					double targetTorque = inversion * adjacentMech.getTorque() / ratio;
+					double applyTorque = targetTorque * acceleration;
 
-                    double applyVelocity = inversion * adjacentMech.getAngularVelocity() * ratio * acceleration;
+					if (Math.abs(torque + applyTorque) < Math.abs(targetTorque))
+					{
+						torque += applyTorque;
+					}
+					else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque))
+					{
+						torque -= applyTorque;
+					}
 
-                    if (Math.abs(angularVelocity + applyVelocity) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
-                    {
-                        angularVelocity += applyVelocity;
-                    }
-                    else
-                    {
-                        angularVelocity -= applyVelocity;
-                    }
+					double targetVelocity = inversion * adjacentMech.getAngularVelocity() * ratio;
+					double applyVelocity = targetVelocity * acceleration;
 
-                    /** Set all current rotations */
-                    // adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
-                }
-            }
-        }
+					if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
+					{
+						angularVelocity += applyVelocity;
+					}
+					else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity))
+					{
+						angularVelocity -= applyVelocity;
+					}
 
-        onUpdate();
-        prev_angle = angle;
-    }
+					/** Set all current rotations */
+					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
+				}
+			}
+		}
 
-    protected void onUpdate()
-    {
+		onUpdate();
+		prev_angle = angle;
+	}
 
-    }
+	protected void onUpdate()
+	{
 
-    /** Called when one revolution is made. */
-    protected void revolve()
-    {
+	}
 
-    }
+	/**
+	 * Called when one revolution is made.
+	 */
+	protected void revolve()
+	{
 
-    @Override
-    public void apply(Object source, double torque, double angularVelocity)
-    {
-        this.torque += torque;
-        this.angularVelocity += angularVelocity;
-    }
+	}
 
-    @Override
-    public double getTorque()
-    {
-        return angularVelocity != 0 ? torque : 0;
-    }
+	@Override
+	public void apply(Object source, double torque, double angularVelocity)
+	{
+		this.torque += torque;
+		this.angularVelocity += angularVelocity;
+	}
 
-    @Override
-    public double getAngularVelocity()
-    {
-        return torque != 0 ? angularVelocity : 0;
-    }
+	@Override
+	public double getTorque()
+	{
+		return angularVelocity != 0 ? torque : 0;
+	}
 
-    @Override
-    public float getRatio(ForgeDirection dir, IMechanicalNode with)
-    {
-        return 0.5f;
-    }
+	@Override
+	public double getAngularVelocity()
+	{
+		return torque != 0 ? angularVelocity : 0;
+	}
 
-    @Override
-    public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-    {
-        return true;
-    }
+	@Override
+	public float getRatio(ForgeDirection dir, IMechanicalNode with)
+	{
+		return 0.5f;
+	}
 
-    /** The energy percentage loss due to resistance in seconds. */
-    public double getTorqueLoad()
-    {
-        return load;
-    }
+	@Override
+	public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
+	{
+		return true;
+	}
 
-    public double getAngularVelocityLoad()
-    {
-        return load;
-    }
+	/**
+	 * The energy percentage loss due to resistance in seconds.
+	 */
+	public double getTorqueLoad()
+	{
+		return load;
+	}
 
-    /** Recache the connections. This is the default connection implementation. */
-    @Override
-    public void doRecache()
-    {
-        connections.clear();
+	public double getAngularVelocityLoad()
+	{
+		return load;
+	}
 
-        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-        {
-            TileEntity tile = position().translate(dir).getTileEntity(world());
+	/**
+	 * Recache the connections. This is the default connection implementation.
+	 */
+	@Override
+	public void doRecache()
+	{
+		connections.clear();
 
-            if (tile instanceof INodeProvider)
-            {
-                MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity tile = position().translate(dir).getTileEntity(world());
 
-                if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-                {
-                    connections.put(check, dir);
-                }
-            }
-        }
-    }
+			if (tile instanceof INodeProvider)
+			{
+				MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
 
-    public World world()
-    {
-        return parent instanceof TMultiPart ? ((TMultiPart) parent).world() : parent instanceof TileEntity ? ((TileEntity) parent).getWorldObj() : null;
-    }
+				if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+				{
+					connections.put(check, dir);
+				}
+			}
+		}
+	}
 
-    public Vector3 position()
-    {
-        return parent instanceof TMultiPart ? new Vector3(((TMultiPart) parent).x(), ((TMultiPart) parent).y(), ((TMultiPart) parent).z()) : parent instanceof TileEntity ? new Vector3((TileEntity) parent) : null;
-    }
+	public World world()
+	{
+		return parent instanceof TMultiPart ? ((TMultiPart) parent).world() : parent instanceof TileEntity ? ((TileEntity) parent).getWorldObj() : null;
+	}
 
-    @Override
-    public boolean canConnect(ForgeDirection from, Object source)
-    {
-        return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
-    }
+	public Vector3 position()
+	{
+		return parent instanceof TMultiPart ? new Vector3(((TMultiPart) parent).x(), ((TMultiPart) parent).y(), ((TMultiPart) parent).z()) : parent instanceof TileEntity ? new Vector3((TileEntity) parent) : null;
+	}
 
-    @Override
-    public double getEnergy()
-    {
-        return getTorque() * getAngularVelocity();
-    }
+	@Override
+	public boolean canConnect(ForgeDirection from, Object source)
+	{
+		return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
+	}
 
-    @Override
-    public double getPower()
-    {
-        return power;
-    }
+	@Override
+	public double getEnergy()
+	{
+		return getTorque() * getAngularVelocity();
+	}
 
-    @Override
-    public TickingGrid newGrid()
-    {
-        return new TickingGrid<MechanicalNode>(this, MechanicalNode.class);
-    }
+	@Override
+	public double getPower()
+	{
+		return power;
+	}
 
-    @Override
-    public void load(NBTTagCompound nbt)
-    {
-        super.load(nbt);
-        torque = nbt.getDouble("torque");
-        angularVelocity = nbt.getDouble("angularVelocity");
-    }
+	@Override
+	public TickingGrid newGrid()
+	{
+		return new TickingGrid<MechanicalNode>(this, MechanicalNode.class);
+	}
 
-    @Override
-    public void save(NBTTagCompound nbt)
-    {
-        super.save(nbt);
-        nbt.setDouble("torque", torque);
-        nbt.setDouble("angularVelocity", angularVelocity);
-    }
+	@Override
+	public void load(NBTTagCompound nbt)
+	{
+		super.load(nbt);
+		torque = nbt.getDouble("torque");
+		angularVelocity = nbt.getDouble("angularVelocity");
+	}
+
+	@Override
+	public void save(NBTTagCompound nbt)
+	{
+		super.save(nbt);
+		nbt.setDouble("torque", torque);
+		nbt.setDouble("angularVelocity", angularVelocity);
+	}
 
 }
