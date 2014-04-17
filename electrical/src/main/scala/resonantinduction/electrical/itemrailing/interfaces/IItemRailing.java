@@ -11,7 +11,6 @@ import universalelectricity.api.vector.VectorWorld;
  * @since 16/03/14
  * @author tgame14
  */
-// TODO: Fix up IVectorWorld implementation to somehow overturn error with ChickenBones Multiparts returning doubles
 public interface IItemRailing
 {
     public boolean canItemEnter (IItemRailingTransfer item);

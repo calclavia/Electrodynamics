@@ -39,14 +39,11 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     }
 
     // default is NULL
-    private EnumColor color;
     private NodeRailing node;
 
     public PartRailing ()
     {
         super(Electrical.itemInsulation);
-
-        this.color = null;
     }
 
 
@@ -112,7 +109,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
     {
-        return tile instanceof IItemRailing ? canConnectToRailing((IItemRailing) tile, to) : tile instanceof IInventory ? true : false;
+        return tile instanceof IItemRailing ? node.canConnectToRailing((IItemRailing) tile, to) : tile instanceof IInventory ? true : false;
     }
 
     @Override
