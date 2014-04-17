@@ -9,17 +9,29 @@ import java.util.Comparator;
  * @author tgame14
  * @since 16/04/14
  */
-public class RailingDistanceComparator implements Comparator<IItemRailing>
+public abstract class RailingDistanceComparator implements Comparator<IItemRailing>
 {
+	private IItemRailing source;
+
+	public RailingDistanceComparator(IItemRailing source)
+	{
+		this.source = source;
+	}
 
 	@Override
 	public int compare(IItemRailing o1, IItemRailing o2)
 	{
-		return (int) o1.getWorldPos().floor().distance(o2.getWorldPos());
+		return (int) (source.getWorldPos().floor().distance(o1.getWorldPos()) - source.getWorldPos().floor().distance(o2.getWorldPos()));
 	}
+
 
 	public static class RailingInventoryDistanceComparator extends RailingDistanceComparator
 	{
+		public RailingInventoryDistanceComparator(IItemRailing source)
+		{
+			super(source);
+		}
+
 		@Override
 		public int compare(IItemRailing o1, IItemRailing o2)
 		{
@@ -41,12 +53,14 @@ public class RailingDistanceComparator implements Comparator<IItemRailing>
 		}
 	}
 
+
 	public static class RailingColoredDistanceComparator extends RailingDistanceComparator
 	{
 		private EnumColor color;
 
-		public RailingColoredDistanceComparator(EnumColor color)
+		public RailingColoredDistanceComparator(IItemRailing source, EnumColor color)
 		{
+			super(source);
 			this.color = color;
 		}
 

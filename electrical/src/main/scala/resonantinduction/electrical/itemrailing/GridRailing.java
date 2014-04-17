@@ -1,12 +1,10 @@
 package resonantinduction.electrical.itemrailing;
 
 import calclavia.lib.grid.NodeGrid;
-import com.google.common.collect.Sets;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
-import universalelectricity.api.vector.IVector3;
 
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * @since 18/03/14
@@ -31,14 +29,14 @@ public class GridRailing extends NodeGrid<NodeRailing>
 	public IItemRailing findNearestInventory(IItemRailingTransfer itemwrapper)
 	{
 		IItemRailing[] arr = (IItemRailing[]) this.getNodes().toArray();
-		Arrays.sort(arr, new RailingDistanceComparator.RailingInventoryDistanceComparator());
+		Arrays.sort(arr, new RailingDistanceComparator.RailingInventoryDistanceComparator(itemwrapper.getRailing()));
 		return arr[0];
 	}
 
 	public IItemRailing findNearestColoredTarget(IItemRailingTransfer itemwrapper)
 	{
 		IItemRailing[] arr = (IItemRailing[]) this.getNodes().toArray();
-		Arrays.sort(arr, new RailingDistanceComparator.RailingColoredDistanceComparator(itemwrapper.getColor()));
+		Arrays.sort(arr, new RailingDistanceComparator.RailingColoredDistanceComparator(itemwrapper.getRailing(), itemwrapper.getColor()));
 		return arr[0];
 	}
 }

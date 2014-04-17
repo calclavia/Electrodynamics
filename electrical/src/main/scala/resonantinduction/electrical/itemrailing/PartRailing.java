@@ -15,6 +15,7 @@ import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
+import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
 import universalelectricity.api.vector.IVectorWorld;
@@ -22,6 +23,8 @@ import universalelectricity.api.vector.VectorWorld;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @since 16/03/14
@@ -107,13 +110,34 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 	@Override
 	public IInventory[] getInventoriesNearby()
 	{
-		return node.getInventoriesNearby();
+		List<IInventory> invList = new ArrayList<IInventory>();
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			TileEntity te = this.getWorldPos().translate(dir).getTileEntity(this.getWorldPos().world());
+			if (te != null && te instanceof IInventory)
+			{
+				invList.add((IInventory) te);
+			}
+		}
+		return (IInventory[]) invList.toArray();
 	}
 
 	@Override
 	public boolean isLeaf()
 	{
-		return node.isLeaf();
+		int connectionsCount = 0;
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			if (this.getWorldPos().translate(dir).getTileEntity(this.getWorldPos().world()) instanceof IItemRailing)
+			{
+				connectionsCount++;
+				if (connectionsCount >= 2)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -158,12 +182,18 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return tile instanceof IConductor ? (IConductor) ((IConductor) tile).getInstance(ForgeDirection.UNKNOWN) : null;
     }
 
-    @Override
-    public IEnergyNetwork getNetwork ()
-    {
-        return null;
-    }
+	@Override
+	public IEnergyNetwork getNetwork()
+	{
+		if (network == null)
+		{
+			setNetwork(EnergyNetworkLoader.getNewNetwork(this));
+		}
 
+		return network;
+	}
+
+	//TODO: Fix up
     @Override
     public void setMaterial (int i)
     {
