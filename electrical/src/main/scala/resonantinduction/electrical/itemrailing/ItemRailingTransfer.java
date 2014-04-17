@@ -22,7 +22,7 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	{
 		this.stack = stack.copy();
 		this.color = EnumColor.ORANGE;
-		this.railing = railing;
+		this.railing = railing.getNode();
 	}
 
 	public ItemRailingTransfer(Item item, PartRailing railing)

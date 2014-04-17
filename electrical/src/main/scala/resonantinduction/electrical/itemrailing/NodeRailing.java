@@ -29,6 +29,7 @@ public class NodeRailing extends Node<PartRailing, GridRailing, NodeRailing> imp
 	{
 		super(parent);
 		this.itemNodeSet = new HashSet<IItemRailingTransfer>();
+		this.color = null;
 	}
 
 	@Override

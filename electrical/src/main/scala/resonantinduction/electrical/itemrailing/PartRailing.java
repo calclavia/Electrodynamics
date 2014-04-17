@@ -38,7 +38,12 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         DEFAULT, EXTENTION;
     }
 
-    // default is NULL
+	public NodeRailing getNode()
+	{
+		return node;
+	}
+
+	// default is NULL
     private NodeRailing node;
 
     public PartRailing ()
