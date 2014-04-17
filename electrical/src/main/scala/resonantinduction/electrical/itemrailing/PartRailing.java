@@ -27,7 +27,7 @@ import java.lang.reflect.InvocationTargetException;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, IItemRailing
 {
 
     public static enum EnumRailing
@@ -100,6 +100,20 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 	public VectorWorld getWorldPos()
 	{
 		return new VectorWorld(getWorld(), x(), y(), z());
+	}
+
+	//TODO: Handle the part as more of simply a host of Nodes, instead of the node itself
+
+	@Override
+	public IInventory[] getInventoriesNearby()
+	{
+		return node.getInventoriesNearby();
+	}
+
+	@Override
+	public boolean isLeaf()
+	{
+		return node.isLeaf();
 	}
 
 	@Override

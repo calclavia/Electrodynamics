@@ -32,7 +32,7 @@ public class NodeRailing extends Node<IItemRailing, GridRailing, NodeRailing> im
 	 *
 	 * @return possibly null, a IInventory to target
 	 */
-	public IInventory getInventoriesNearby()
+	public IInventory[] getInventoriesNearby()
 	{
 		List<IInventory> invList = new ArrayList<IInventory>();
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -43,7 +43,7 @@ public class NodeRailing extends Node<IItemRailing, GridRailing, NodeRailing> im
 				invList.add((IInventory) te);
 			}
 		}
-		return invList.get(parent.getWorldPos().world().rand.nextInt(invList.size()));
+		return (IInventory[]) invList.toArray();
 	}
 
 	public boolean isLeaf()
