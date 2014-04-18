@@ -38,6 +38,7 @@ import calclavia.lib.prefab.tile.IRotatable;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.render.RenderItemOverlayUtility;
 import calclavia.lib.type.Pair;
+import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.WorldUtility;
 import calclavia.lib.utility.inventory.AutoCraftingManager;
 import calclavia.lib.utility.inventory.AutoCraftingManager.IAutoCrafter;
@@ -62,7 +63,6 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
 
     // Relative slot IDs
     public static final int CRAFTING_OUTPUT_SLOT = 0;
-    private static final int IMPRINT_SLOT = 1;
 
     private AutoCraftingManager craftManager;
 
@@ -114,23 +114,14 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     {
         if (!world().isRemote && ControlKeyModifer.isControlDown(player))
         {
-            if (this instanceof IInventory)
+            // Don't drop the output, so subtract by one.
+            for (int i = 0; i < getSizeInventory() - 1; ++i)
             {
-                IInventory inventory = this;
-
-                // Don't drop the output, so subtract by one.
-                for (int i = 0; i < inventory.getSizeInventory() - 1; ++i)
+                if (getStackInSlot(i) != null)
                 {
-                    ItemStack dropStack = inventory.getStackInSlot(i);
-
-                    if (dropStack != null)
-                    {
-                        InventoryUtility.dropItemStack(world(), new Vector3(player), dropStack);
-                        inventory.setInventorySlotContents(i, null);
-                    }
+                    InventoryUtility.dropItemStack(world(), new Vector3(player), getStackInSlot(i));
+                    setInventorySlotContents(i, null);
                 }
-
-                inventory.onInventoryChanged();
             }
         }
     }
@@ -218,13 +209,12 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
         if (player.isSneaking())
         {
             searchInventories = !searchInventories;
-
             if (!world().isRemote)
             {
                 if (searchInventories)
-                    player.addChatMessage("Engineering table will now search for nearby inventories for resources.");
+                    player.addChatMessage(LanguageUtility.getLocal("engineerTable.config.inventory.true"));
                 else
-                    player.addChatMessage("Engineering table will not search for nearby inventories for resources.");
+                    player.addChatMessage(LanguageUtility.getLocal("engineerTable.config.inventory.false"));
             }
 
             markUpdate();
