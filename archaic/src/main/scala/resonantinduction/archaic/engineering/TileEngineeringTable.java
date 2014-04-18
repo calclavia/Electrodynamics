@@ -19,14 +19,19 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
+import calclavia.api.recipe.MachineRecipes;
+import calclavia.api.recipe.RecipeResource;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.content.module.prefab.TileInventory;
 import calclavia.lib.gui.ContainerDummy;
@@ -131,7 +136,44 @@ public class TileEngineeringTable extends TileInventory implements IPacketReceiv
     {
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemHammer)
         {
-            return false;
+            for (int slot = 0; slot < TileEngineeringTable.CRAFTING_OUTPUT_END; slot++)
+            {
+                ItemStack inputStack = getStackInSlot(slot);
+
+                if (inputStack != null)
+                {
+                    String oreName = OreDictionary.getOreName(OreDictionary.getOreID(inputStack));
+
+                    if (oreName != null && !oreName.equals("Unknown"))
+                    {
+                        RecipeResource[] outputs = MachineRecipes.INSTANCE.getOutput(RecipeType.CRUSHER.name(), oreName);
+
+                        if (outputs != null && outputs.length > 0)
+                        {
+                            if (!world().isRemote && world().rand.nextFloat() < 0.2)
+                            {
+                                for (RecipeResource resource : outputs)
+                                {
+                                    ItemStack outputStack = resource.getItemStack().copy();
+
+                                    if (outputStack != null)
+                                    {
+                                        InventoryUtility.dropItemStack(world(), new Vector3(player), outputStack, 0);
+                                        setInventorySlotContents(slot, --inputStack.stackSize <= 0 ? null : inputStack);
+                                    }
+                                }
+                            }
+                            
+                            ResonantInduction.proxy.renderBlockParticle(world(), new Vector3(x() + 0.5, y() + 0.5, z() + 0.5), new Vector3((Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3, (Math.random() - 0.5f) * 3), inputStack.itemID, 1);
+                            world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, Reference.PREFIX + "hammer", 0.5f, 0.8f + (0.2f * world().rand.nextFloat()));
+                            player.addExhaustion(0.1f);
+                            player.getCurrentEquippedItem().damageItem(1, player);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         if (hitSide == 1)
