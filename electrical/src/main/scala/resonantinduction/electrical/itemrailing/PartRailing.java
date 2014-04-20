@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
@@ -21,7 +22,7 @@ import java.lang.reflect.Constructor;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, INodeProvider
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, IItemRailingProvider
 {
 
     public static enum EnumRailing

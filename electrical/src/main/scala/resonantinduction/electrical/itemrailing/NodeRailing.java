@@ -1,42 +1,94 @@
 package resonantinduction.electrical.itemrailing;
 
+import calclavia.lib.config.Config;
 import calclavia.lib.grid.Node;
 import calclavia.lib.render.EnumColor;
+import calclavia.lib.type.Pair;
 import com.google.common.collect.Lists;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.VectorWorld;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author tgame14
  * @since 18/03/14
  */
-public class NodeRailing extends Node<PartRailing, GridRailing, IItemRailing> implements IVectorWorld, IItemRailing
+public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object> implements IVectorWorld, IItemRailing
 {
+	private int maxItemSpeed;
+	private byte connectionMap;
 	private EnumColor color;
-	private Set<IItemRailingTransfer> itemNodeSet;
+
+	@Config(category = GridRailing.CATEGORY_RAILING)
+	private static int MAX_TICKS_IN_RAILING = 5;
+
+	/** hold a timer here per item */
+	private Set<Pair<IItemRailingTransfer, Integer>> itemNodeSet;
+
 
 	public NodeRailing(PartRailing parent)
 	{
 		super(parent);
-		this.itemNodeSet = new HashSet<IItemRailingTransfer>();
+		this.itemNodeSet = new HashSet<Pair<IItemRailingTransfer, Integer>>();
 		this.color = null;
+		this.connectionMap = Byte.parseByte("111111", 2);
+		this.maxItemSpeed = 20;
+	}
+
+	public NodeRailing setConnection(byte connectionMap)
+	{
+		this.connectionMap = connectionMap;
+		return this;
+	}
+
+	@Override
+	public void update(float deltaTime)
+	{
+		if (!world().isRemote)
+		{
+			Iterator<Map.Entry<Object, ForgeDirection>> iterator = new HashMap(getConnections()).entrySet().iterator();
+
+			for (Pair<IItemRailingTransfer, Integer> pair : this.itemNodeSet)
+			{
+				if (pair.right() <= 0)
+				{
+					//TODO move to next item railing
+
+				}
+				else
+				{
+					pair.setRight(pair.right() - 1);
+				}
+
+
+			}
+
+			while (iterator.hasNext())
+			{
+				Map.Entry<Object, ForgeDirection> entry = iterator.next();
+				Object obj = entry.getKey();
+
+				if (obj instanceof NodeRailing)
+				{
+
+				}
+			}
+
+		}
 	}
 
 	@Override
 	protected GridRailing newGrid()
 	{
-		return new GridRailing(getClass());
+		return new GridRailing(this, getClass());
 	}
 
 	@Override
@@ -91,13 +143,7 @@ public class NodeRailing extends Node<PartRailing, GridRailing, IItemRailing> im
 	@Override
 	public VectorWorld getWorldPos()
 	{
-		return parent.getWorldPos();
-	}
-
-	@Override
-	public Map<IItemRailing, ForgeDirection> getConnectionMap()
-	{
-		return this.getConnections();
+		return (VectorWorld) parent.getWorldPos();
 	}
 
 	@Override
@@ -117,7 +163,7 @@ public class NodeRailing extends Node<PartRailing, GridRailing, IItemRailing> im
 	@Override
 	public boolean isLeaf()
 	{
-		return parent.getConnections().length < 2;
+		return connectionMap < 2;
 	}
 
 
