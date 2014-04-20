@@ -150,7 +150,7 @@ public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object>
 	public IInventory[] getInventoriesNearby()
 	{
 		ArrayList<IInventory> invList = Lists.<IInventory>newArrayList();
-		for (TileEntity tile : parent.getConnections())
+		for (Object tile : this.getConnections().entrySet())
 		{
 			if (tile instanceof IInventory)
 			{

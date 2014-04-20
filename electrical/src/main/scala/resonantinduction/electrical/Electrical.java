@@ -184,8 +184,8 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Block.blockDiamond));
 
 		/** Wires **/
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin"));
