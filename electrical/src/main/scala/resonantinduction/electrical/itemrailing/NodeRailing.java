@@ -147,6 +147,12 @@ public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object>
 	}
 
 	@Override
+	public Map<Object, ForgeDirection> getConnectionMap()
+	{
+		return new HashMap<Object, ForgeDirection>(this.getConnections());
+	}
+
+	@Override
 	public IInventory[] getInventoriesNearby()
 	{
 		ArrayList<IInventory> invList = Lists.<IInventory>newArrayList();

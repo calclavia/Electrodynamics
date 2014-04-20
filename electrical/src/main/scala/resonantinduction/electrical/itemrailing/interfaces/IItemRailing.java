@@ -26,6 +26,8 @@ public interface IItemRailing extends INode
 
 	public VectorWorld getWorldPos();
 
+	public Map<Object, ForgeDirection> getConnectionMap();
+
 	public IInventory[] getInventoriesNearby();
 
 	public boolean isLeaf();
