@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
     public EnumWireMaterial material = EnumWireMaterial.COPPER;
     public boolean isInsulated = false;
-    protected Item insulationType = Electrical.itemInsulation;
+    protected ItemStack insulationType = new ItemStack(Block.cloth);
 
     /** INTERNAL USE. Can this conductor connect with an external object? */
     @Override
@@ -205,13 +206,13 @@ public abstract class PartAdvancedWire extends PartConductor
                 this.setColor(dyeColor);
                 return true;
             }
-            else if (itemStack.getItem() == insulationType)
+            else if (itemStack.itemID == insulationType.itemID)
             {
                 if (this.isInsulated())
                 {
                     if (!world().isRemote && player.capabilities.isCreativeMode)
                     {
-                        tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
+                        tile().dropItems(Collections.singletonList(insulationType));
                     }
 
                     this.setInsulated(false);
@@ -232,7 +233,7 @@ public abstract class PartAdvancedWire extends PartConductor
             {
                 if (!world().isRemote && !player.capabilities.isCreativeMode)
                 {
-                    tile().dropItems(Collections.singletonList(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color))));
+                    tile().dropItems(Collections.singletonList(insulationType));
                 }
 
                 this.setInsulated(false);
@@ -257,7 +258,7 @@ public abstract class PartAdvancedWire extends PartConductor
 
         if (this.isInsulated)
         {
-            drops.add(new ItemStack(insulationType, 1, BlockColored.getBlockFromDye(color)));
+            drops.add(insulationType.copy());
         }
 
         return drops;
