@@ -141,7 +141,7 @@ public class ResonantInduction
 	@ForgeSubscribe
 	public void configAnnotationAdded(ConfigAnnotationEvent event)
 	{
-		if (event.sourceClass.startsWith(Settings.DOMAIN))
+		if (event.sourceClass.getName().startsWith(Settings.DOMAIN))
 		{
 			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
 		}
