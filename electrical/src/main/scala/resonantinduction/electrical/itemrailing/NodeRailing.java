@@ -34,7 +34,7 @@ public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object>
 	private Set<Pair<IItemRailingTransfer, Integer>> itemNodeSet;
 
 
-	public NodeRailing(PartRailing parent)
+	public NodeRailing(IItemRailingProvider parent)
 	{
 		super(parent);
 		this.itemNodeSet = new HashSet<Pair<IItemRailingTransfer, Integer>>();

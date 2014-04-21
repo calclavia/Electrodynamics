@@ -35,13 +35,13 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 		return node;
 	}
 
-	// default is NULL
     private NodeRailing node;
 
     public PartRailing ()
     {
         super(Electrical.itemInsulation);
 		this.material = EnumRailing.DEFAULT;
+		this.node = new NodeRailing(this);
     }
 
 
