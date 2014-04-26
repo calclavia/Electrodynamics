@@ -37,17 +37,27 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     private ItemStack filterStack;
 
     private long updateTick = 1;
+    private boolean doUpdate = false;
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        if (!worldObj.isRemote && ticks % updateTick == 0)
+        if (!worldObj.isRemote)
         {
-            //Send desc packet, done already in onInventoryChanged()
-            onInventoryChanged();
-            updateTick = 5 + worldObj.rand.nextInt(50);
+            this.writeToNBT(new NBTTagCompound());
+            if (ticks % updateTick == 0)
+            {
+                updateTick = 5 + worldObj.rand.nextInt(50);
+                doUpdate = true;
+            }
+            if (doUpdate)
+            {
+                doUpdate = false;
+                PacketHandler.sendPacketToClients(getDescriptionPacket(), this.worldObj);
+            }
         }
+
     }
 
     /** Gets the slot count for the crate meta */
@@ -88,6 +98,11 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
      * each other, and only takes into account stack sizes */
     public void buildSampleStack()
     {
+        buildSampleStack(true);
+    }
+
+    public void buildSampleStack(boolean buildInv)
+    {
         ItemStack newSampleStack = null;
         boolean rebuildBase = false;
 
@@ -122,7 +137,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
         }
 
         /* Rebuild inventory if the inventory is not valid */
-        if (this.sampleStack != null && (rebuildBase || this.getInventory().getContainedItems().length > this.getSizeInventory()))
+        if (buildInv && this.sampleStack != null && (rebuildBase || this.getInventory().getContainedItems().length > this.getSizeInventory()))
         {
             this.getInventory().buildInventory(this.sampleStack);
         }
@@ -202,11 +217,8 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     public void onInventoryChanged()
     {
         super.onInventoryChanged();
-
         if (worldObj != null && !worldObj.isRemote)
-        {
-            PacketHandler.sendPacketToClients(getDescriptionPacket(), this.worldObj);
-        }
+            doUpdate = true;
     }
 
     @Override
@@ -304,7 +316,7 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     {
         super.writeToNBT(nbt);
         /* Re-Build sample stack for saving */
-        this.buildSampleStack();
+        this.buildSampleStack(false);
         ItemStack stack = this.getSampleStack();
         /* Save sample stack */
         if (stack != null)
