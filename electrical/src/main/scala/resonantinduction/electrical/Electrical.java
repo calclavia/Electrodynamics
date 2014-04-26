@@ -31,6 +31,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.quantum.gate.ItemQuantumGlyph;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.modproxy.ProxyHandler;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
@@ -97,10 +98,13 @@ public class Electrical
 	// Quantum
 	public static Block blockQuantumGate;
 	public static Item itemQuantumGlyph;
+	
+	public ProxyHandler modproxies;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
+	    modproxies = new ProxyHandler();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
 		Settings.CONFIGURATION.load();
@@ -149,6 +153,7 @@ public class Electrical
 		}
 
 		proxy.preInit();
+		modproxies.preInit();
 	}
 
 	@EventHandler
@@ -157,6 +162,7 @@ public class Electrical
 		Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
 		MultipartElectrical.INSTANCE = new MultipartElectrical();
 		proxy.init();
+		modproxies.init();
 	}
 
 	@EventHandler
@@ -225,5 +231,6 @@ public class Electrical
 		}
 
 		proxy.postInit();
+		modproxies.postInit();
 	}
 }
