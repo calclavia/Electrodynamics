@@ -100,7 +100,7 @@ allprojects {
  
 subprojects {
     archivesBaseName = "${System.getenv().JOB_NAME}"    
-	sourceSets.main.compileClassPath += rootProject.sourceSets.api.output
+	sourceSets.main.compileClasspath += rootProject.sourceSets.api.output
     dependencies {
         compile rootProject
     }
