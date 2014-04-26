@@ -103,43 +103,46 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
 
     public void buildSampleStack(boolean buildInv)
     {
-        ItemStack newSampleStack = null;
-        boolean rebuildBase = false;
-
-        /* Creates the sample stack that is used as a collective itemstack */
-        for (int slot = 0; slot < this.getSizeInventory(); slot++)
+        if (worldObj == null || !worldObj.isRemote)
         {
-            ItemStack slotStack = this.getInventory().getContainedItems()[slot];
-            if (slotStack != null && Item.itemsList[slotStack.itemID] != null && slotStack.stackSize > 0)
-            {
-                if (newSampleStack == null)
-                {
-                    newSampleStack = slotStack.copy();
-                }
-                else
-                {
-                    newSampleStack.stackSize += slotStack.stackSize;
-                }
+            ItemStack newSampleStack = null;
+            boolean rebuildBase = false;
 
-                if (slotStack.stackSize > slotStack.getMaxStackSize())
+            /* Creates the sample stack that is used as a collective itemstack */
+            for (int slot = 0; slot < this.getSizeInventory(); slot++)
+            {
+                ItemStack slotStack = this.getInventory().getContainedItems()[slot];
+                if (slotStack != null && Item.itemsList[slotStack.itemID] != null && slotStack.stackSize > 0)
                 {
-                    rebuildBase = true;
+                    if (newSampleStack == null)
+                    {
+                        newSampleStack = slotStack.copy();
+                    }
+                    else
+                    {
+                        newSampleStack.stackSize += slotStack.stackSize;
+                    }
+
+                    if (slotStack.stackSize > slotStack.getMaxStackSize())
+                    {
+                        rebuildBase = true;
+                    }
                 }
             }
-        }
-        if (newSampleStack == null || newSampleStack.itemID == 0 || newSampleStack.stackSize <= 0)
-        {
-            this.sampleStack = this.getFilter() != null ? this.getFilter().copy() : null;
-        }
-        else
-        {
-            this.sampleStack = newSampleStack.copy();
-        }
+            if (newSampleStack == null || newSampleStack.itemID == 0 || newSampleStack.stackSize <= 0)
+            {
+                this.sampleStack = this.getFilter() != null ? this.getFilter().copy() : null;
+            }
+            else
+            {
+                this.sampleStack = newSampleStack.copy();
+            }
 
-        /* Rebuild inventory if the inventory is not valid */
-        if (buildInv && this.sampleStack != null && (rebuildBase || this.getInventory().getContainedItems().length > this.getSizeInventory()))
-        {
-            this.getInventory().buildInventory(this.sampleStack);
+            /* Rebuild inventory if the inventory is not valid */
+            if (buildInv && this.sampleStack != null && (rebuildBase || this.getInventory().getContainedItems().length > this.getSizeInventory()))
+            {
+                this.getInventory().buildInventory(this.sampleStack);
+            }
         }
     }
 
