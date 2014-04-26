@@ -7,30 +7,30 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import resonantinduction.archaic.crate.TileCrate;
+import net.minecraftforge.fluids.FluidTank;
+import resonantinduction.archaic.fluid.tank.TileTank;
 import calclavia.lib.utility.LanguageUtility;
 
-/** Waila support for crates
+/** Waila support for tanks
  * 
  * @author Darkguardsman */
-public class WailaCrate implements IWailaDataProvider
+public class WailaFluidTank implements IWailaDataProvider
 {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
     {
         TileEntity tile = accessor.getTileEntity();
-        if (tile instanceof TileCrate)
+        if (tile instanceof TileTank)
         {
-            ItemStack stored = ((TileCrate) tile).getSampleStack();
-            int cap = ((TileCrate) tile).getSlotCount() * 64;
-            if (stored != null)
+            FluidTank tank = ((TileTank) tile).getInternalTank();
+            if (tank != null && tank.getFluid() != null)
             {
-                currenttip.add(LanguageUtility.getLocal("info.waila.crate.stack") + " " + stored.getDisplayName());
-                currenttip.add(LanguageUtility.getLocal("info.waila.crate.stored") + " " + stored.stackSize + " / " + cap);
+                currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid().getFluid().getLocalizedName());
+                currenttip.add(LanguageUtility.getLocal("info.waila.tank.vol") + " " + tank.getFluidAmount() + " / " + tank.getCapacity());
             }
             else
             {
-                currenttip.add(LanguageUtility.getLocal("info.waila.crate.empty"));
+                currenttip.add(LanguageUtility.getLocal("info.waila.tank.empty"));
             }
         }
         return currenttip;
