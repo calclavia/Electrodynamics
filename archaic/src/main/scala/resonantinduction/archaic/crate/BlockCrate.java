@@ -176,8 +176,10 @@ public class BlockCrate extends BlockTile
                         tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
                     }
                 }
-
-                tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                else
+                {
+                    tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                }
 
             }
             tile.prevClickTime = world.getWorldTime();
