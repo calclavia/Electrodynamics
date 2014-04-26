@@ -127,9 +127,10 @@ task apiZip(type: Zip) {
     destinationDir = file 'output'
 }
  
- subprojects { 
+subprojects { 
 	sourceSets.main.compileClassPath += rootProject.sourceSets.api.output
-	}
+}
+	
 artifacts {
     archives apiZip
 }
