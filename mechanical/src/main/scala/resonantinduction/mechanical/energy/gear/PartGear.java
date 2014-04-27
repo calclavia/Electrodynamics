@@ -550,4 +550,10 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     {
         return Cuboid6.full.copy().expand(multiBlockRadius);
     }
+
+    @Override
+    public String toString()
+    {
+        return "[PartGear]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
+    }
 }

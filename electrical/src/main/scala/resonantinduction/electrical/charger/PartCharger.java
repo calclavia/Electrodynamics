@@ -140,4 +140,10 @@ public class PartCharger extends PartInventoryPanel implements IEnergyInterface
     {
         return slot < this.getSizeInventory() && stack != null && CompatibilityModule.isHandler(stack.getItem());
     }
+
+    @Override
+    public String toString()
+    {
+        return "[PartCharger]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
+    }
 }

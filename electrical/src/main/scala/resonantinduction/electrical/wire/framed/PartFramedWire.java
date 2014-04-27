@@ -8,12 +8,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import calclavia.lib.prefab.damage.ElectricalDamage;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
@@ -29,6 +27,7 @@ import universalelectricity.api.electricity.IElectricalNetwork;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import calclavia.lib.prefab.damage.ElectricalDamage;
 import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
@@ -349,12 +348,18 @@ public class PartFramedWire extends PartFramedConnection<EnumWireMaterial, ICond
     {
         return new ItemStack(Electrical.itemWire, 1, getMaterialID());
     }
-    
+
     @Override
     public void onEntityCollision(Entity entity)
     {
         if (!this.isInsulated() && this.getNetwork() instanceof IElectricalNetwork)
             ElectricalDamage.handleElectrocution(entity, this, (IElectricalNetwork) this.getNetwork());
+    }
+
+    @Override
+    public String toString()
+    {
+        return "[PartFramedWire]" + x() + "x " + y() + "y " + z() + "z " + getSlotMask() + "s ";
     }
 
 }
