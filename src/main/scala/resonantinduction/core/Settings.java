@@ -16,7 +16,7 @@ import cpw.mods.fml.common.ModMetadata;
 public class Settings
 {
     public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), Reference.NAME + ".cfg"));
-
+	public static final String DOMAIN = "resonantinduction";
     /** IDs suggested by Jyzarc and Horfius */
     public static final IDManager idManager;
 
@@ -27,7 +27,7 @@ public class Settings
         CONFIGURATION.save();
     }
 
-    public static int getNextBlockID()
+	public static int getNextBlockID()
     {
         return idManager.getNextBlockID();
     }
@@ -65,6 +65,13 @@ public class Settings
     public static double LEVITATOR_MAX_SPEED = .2;
     @Config(category = Configuration.CATEGORY_GENERAL, key = "Levitator Acceleration")
     public static double LEVITATOR_ACCELERATION = .02;   
+    
+    @Config(category = "Power", key = "Wind_tubine_Ratio")
+    public static int WIND_POWER_RATIO = 1;
+    @Config(category = "Power", key = "Water_tubine_Ratio")
+    public static int WATER_POWER_RATIO = 1;
+    @Config(category = "Power", key = "Solor_Panel")
+    public static int SOLAR_ENERGY = 50;
 
     public static void setModMetadata(ModMetadata metadata, String id, String name)
     {

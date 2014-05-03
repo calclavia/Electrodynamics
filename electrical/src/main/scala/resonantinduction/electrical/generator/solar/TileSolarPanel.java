@@ -1,5 +1,6 @@
 package resonantinduction.electrical.generator.solar;
 
+import calclavia.lib.config.Config;
 import calclavia.lib.content.module.TileRender;
 import calclavia.lib.prefab.vector.Cuboid;
 import calclavia.lib.render.ConnectedTextureRenderer;
@@ -8,7 +9,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
+import net.minecraftforge.common.Configuration;
 import resonantinduction.core.Reference;
+import resonantinduction.core.Settings;
 import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
@@ -16,11 +19,12 @@ public class TileSolarPanel extends TileEnergyDistribution
 {
 	@SideOnly(Side.CLIENT)
 	public static Icon sideIcon, bottomIcon;
+	
 
 	public TileSolarPanel()
 	{
 		super(Material.iron);
-		energy = new EnergyStorageHandler(800);
+		energy = new EnergyStorageHandler(Settings.SOLAR_ENERGY * 20);
 		ioMap = 728;
 		textureName = "solarPanel_top";
 		bounds = new Cuboid(0, 0, 0, 1, 0.3f, 1);
@@ -64,7 +68,7 @@ public class TileSolarPanel extends TileEnergyDistribution
 				{
 					if (!(this.worldObj.isThundering() || this.worldObj.isRaining()))
 					{
-						this.energy.receiveEnergy(25, true);
+						this.energy.receiveEnergy(Settings.SOLAR_ENERGY, true);
 						markDistributionUpdate |= produce() > 0;
 					}
 				}

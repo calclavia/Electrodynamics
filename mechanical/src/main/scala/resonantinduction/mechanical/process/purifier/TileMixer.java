@@ -143,13 +143,12 @@ public class TileMixer extends TileMechanical implements IInventory
 
 				if (timeLeft <= 0)
 				{
-					if (this.doneWork(processingItem))
+					if (doneWork(processingItem))
 					{
 						if (--processingItem.getEntityItem().stackSize <= 0)
 						{
 							processingItem.setDead();
 							timer.remove(processingItem);
-							processingItem = null;
 						}
 						else
 						{
@@ -170,7 +169,6 @@ public class TileMixer extends TileMechanical implements IInventory
 			else
 			{
 				timer.remove(processingItem);
-				processingItem = null;
 			}
 		}
 
@@ -190,20 +188,24 @@ public class TileMixer extends TileMechanical implements IInventory
 		if (mixPosition.getBlockID(world()) != blockID())
 		{
 			Block block = Block.blocksList[mixPosition.getBlockID(worldObj)];
+			Block blockFluidFinite = ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem()));
 
-			if (block instanceof BlockFluidMixture)
+			if (blockFluidFinite != null)
 			{
-				ItemStack itemStack = entity.getEntityItem().copy();
-
-				if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+				if (block instanceof BlockFluidMixture)
 				{
-					worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
-					return true;
+					ItemStack itemStack = entity.getEntityItem().copy();
+
+					if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+					{
+						worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
+						return true;
+					}
 				}
-			}
-			else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
-			{
-				mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem())).blockID);
+				else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
+				{
+					mixPosition.setBlock(worldObj, blockFluidFinite.blockID);
+				}
 			}
 		}
 

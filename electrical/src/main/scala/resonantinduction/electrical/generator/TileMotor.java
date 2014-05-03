@@ -43,7 +43,8 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 	public void initiate()
 	{
 		super.initiate();
-		node.reconstruct();
+		if (node != null)
+		    node.reconstruct();
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 		if (receive > 0)
 		{
 			double percentageUsed = receive / power;
-			node.apply(-node.getTorque() * percentageUsed, -node.getAngularVelocity() * percentageUsed);
+			node.apply(this, -node.getTorque() * percentageUsed, -node.getAngularVelocity() * percentageUsed);
 		}
 	}
 
@@ -111,7 +112,7 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 				if (currentVelo != 0)
 					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (node.getAngularVelocity() / currentVelo);
 
-				node.apply(setTorque - node.getTorque(), setAngularVelocity - node.getAngularVelocity());
+				node.apply(this, setTorque - node.getTorque(), setAngularVelocity - node.getAngularVelocity());
 				energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 			}
 		}

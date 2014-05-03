@@ -11,10 +11,9 @@ import calclavia.lib.grid.INodeProvider;
 import calclavia.lib.network.Synced;
 import calclavia.lib.network.Synced.SyncedInput;
 import calclavia.lib.network.Synced.SyncedOutput;
-import calclavia.lib.prefab.turbine.TileTurbine;
 
 //TODO: MC 1.7, merge turbines in.
-public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
+public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvider
 {
 	protected MechanicalNode mechanicalNode;
 	@Synced(1)
@@ -66,7 +65,6 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 	public TileMechanicalTurbine()
 	{
 		super();
-		energy = new EnergyStorageHandler(0);
 		mechanicalNode = new TurbineNode(this);
 	}
 
@@ -119,7 +117,7 @@ public class TileMechanicalTurbine extends TileTurbine implements INodeProvider
 			if (mechanicalNode.angularVelocity < 0)
 				angularVelocity = -Math.abs(angularVelocity);
 
-			mechanicalNode.apply((torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularVelocity()) / 10);
+			mechanicalNode.apply(this, (torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularVelocity()) / 10);
 		}
 	}
 

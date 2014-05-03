@@ -17,105 +17,101 @@ import calclavia.lib.network.IPacketSender;
 
 import com.google.common.io.ByteArrayDataInput;
 
-/**
- * A modular battery.
+/** A modular battery box that allows shared connections with boxes next to it.
  * 
- * @author Calclavia
- */
+ * @author Calclavia */
 public class TileBattery extends TileEnergyDistribution implements IVoltageInput, IVoltageOutput, IPacketSender, IPacketReceiver, IEnergyInterface, IEnergyContainer
 {
-	/**
-	 * Tiers: 0, 1, 2
-	 */
-	public static final int MAX_TIER = 2;
+    /** Tiers: 0, 1, 2 */
+    public static final int MAX_TIER = 2;
 
-	/** The transfer rate **/
-	public static final long DEFAULT_WATTAGE = getEnergyForTier(0);
+    /** The transfer rate **/
+    public static final long DEFAULT_WATTAGE = getEnergyForTier(0);
 
-	/** Voltage increases as series connection increases */
-	public static final long DEFAULT_VOLTAGE = UniversalElectricity.DEFAULT_VOLTAGE;
+    public TileBattery()
+    {
+        this.setEnergyHandler(new EnergyStorageHandler(0));
+        this.getEnergyHandler().setCapacity(Long.MAX_VALUE);
+        this.ioMap = 0;
+        this.saveIOMap = true;
+    }
 
-	public TileBattery()
-	{
-		this.energy = new EnergyStorageHandler(0);
-		this.ioMap = 0;
-		this.saveIOMap = true;
-	}
+    /** @param tier - 0, 1, 2
+     * @return */
+    public static long getEnergyForTier(int tier)
+    {
+        return Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000);
+    }
 
-	/**
-	 * @param tier - 0, 1, 2
-	 * @return
-	 */
-	public static long getEnergyForTier(int tier)
-	{
-		return Math.round(Math.pow(500000000, (tier / (MAX_TIER + 0.7f)) + 1) / (500000000)) * (500000000);
-	}
+    @Override
+    public void initiate()
+    {
+        super.initiate();
+        getEnergyHandler().setCapacity(getEnergyForTier(getBlockMetadata()));
+        getEnergyHandler().setMaxTransfer(getEnergyHandler().getEnergyCapacity());
+    }
 
-	@Override
-	public void initiate()
-	{
-		super.initiate();
-		energy.setCapacity(getEnergyForTier(getBlockMetadata()));
-	}
+    @Override
+    public void updateEntity()
+    {
+        if (!this.worldObj.isRemote)
+        {
+            markDistributionUpdate |= produce() > 0;
+        }
 
-	@Override
-	public void updateEntity()
-	{
-		if (!this.worldObj.isRemote)
-		{
-			// energy.setMaxTransfer((long) Math.min(Math.pow(10000,
-			// this.getNetwork().getConnectors().size()), energy.getEnergyCapacity()));
-			energy.setMaxTransfer(energy.getEnergyCapacity());
-			markDistributionUpdate |= produce() > 0;
-		}
+        super.updateEntity();
+    }
 
-		super.updateEntity();
-	}
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
+    }
 
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		return ResonantInduction.PACKET_TILE.getPacket(this, getPacketData(0).toArray());
-	}
+    @Override
+    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        getEnergyHandler().setEnergy(data.readLong());
+        ioMap = data.readShort();
+    }
 
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		energy.setEnergy(data.readLong());
-		ioMap = data.readShort();
-	}
+    @Override
+    public ArrayList getPacketData(int type)
+    {
+        ArrayList data = new ArrayList();
+        data.add(renderEnergyAmount);
+        data.add(ioMap);
+        return data;
+    }
 
-	@Override
-	public ArrayList getPacketData(int type)
-	{
-		ArrayList data = new ArrayList();
-		data.add(renderEnergyAmount);
-		data.add(ioMap);
-		return data;
-	}
+    @Override
+    public long getVoltageOutput(ForgeDirection side)
+    {
+        return UniversalElectricity.DEFAULT_VOLTAGE;
+    }
 
-	@Override
-	public long getVoltageOutput(ForgeDirection side)
-	{
-		return DEFAULT_VOLTAGE;
-	}
+    @Override
+    public long getVoltageInput(ForgeDirection direction)
+    {
+        return UniversalElectricity.DEFAULT_VOLTAGE;
+    }
 
-	@Override
-	public long getVoltageInput(ForgeDirection direction)
-	{
-		return DEFAULT_VOLTAGE;
-	}
+    @Override
+    public void onWrongVoltage(ForgeDirection direction, long voltage)
+    {
 
-	@Override
-	public void onWrongVoltage(ForgeDirection direction, long voltage)
-	{
+    }
 
-	}
+    @Override
+    public void setIO(ForgeDirection dir, int type)
+    {
+        super.setIO(dir, type);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 
-	@Override
-	public void setIO(ForgeDirection dir, int type)
-	{
-		super.setIO(dir, type);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
+    @Override
+    public String toString()
+    {
+        return "[TileBattery]" + x() + "x " + y() + "y " + z() + "z ";
+    }
 }

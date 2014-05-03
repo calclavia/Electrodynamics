@@ -32,7 +32,7 @@ import resonantinduction.core.TabRI;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.energy.gear.ItemGear;
-import resonantinduction.mechanical.energy.gear.ItemGearShaft;
+import resonantinduction.mechanical.energy.gearshaft.ItemGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.turbine.*;
 import resonantinduction.mechanical.fluid.pipe.EnumPipeMaterial;

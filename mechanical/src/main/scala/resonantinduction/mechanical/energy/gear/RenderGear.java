@@ -18,6 +18,7 @@ public class RenderGear implements ISimpleItemRenderer
 {
 	public static final RenderGear INSTANCE = new RenderGear();
 	public final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "gears.obj");
+	
 
 	public void renderGear(int side, int tier, boolean isLarge, double angle)
 	{
@@ -32,6 +33,9 @@ public class RenderGear implements ISimpleItemRenderer
 			case 2:
 				RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "iron_block.png");
 				break;
+			case 10:
+                RenderUtility.bind(Reference.BLOCK_TEXTURE_DIRECTORY + "pumpkin_top.png");
+                break;
 		}
 
 		RenderUtility.rotateFaceBlockToSide(ForgeDirection.getOrientation(side));

@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gear;
+package resonantinduction.mechanical.energy.gearshaft;
 
 import static org.lwjgl.opengl.GL11.glRotatef;
 import net.minecraft.item.ItemStack;
@@ -9,6 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import resonantinduction.core.Reference;
+import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import calclavia.lib.render.RenderUtility;
 import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;

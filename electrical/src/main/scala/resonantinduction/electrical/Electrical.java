@@ -21,6 +21,7 @@ import resonantinduction.electrical.generator.TileMotor;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
+import resonantinduction.electrical.itemrailing.ItemItemRailing;
 import resonantinduction.electrical.levitator.ItemLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
@@ -30,6 +31,7 @@ import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.quantum.gate.ItemQuantumGlyph;
 import calclavia.lib.content.ContentRegistry;
+import calclavia.lib.modproxy.ProxyHandler;
 import calclavia.lib.network.PacketHandler;
 import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
@@ -79,6 +81,9 @@ public class Electrical
 	public static Block blockBattery;
 	public static Block blockEncoder;
 
+	// Railings
+	public static Item itemRailing;
+
 	// Generators
 	public static Block blockSolarPanel;
 	public static Block blockMotor;
@@ -93,10 +98,13 @@ public class Electrical
 	// Quantum
 	public static Block blockQuantumGate;
 	public static Item itemQuantumGlyph;
+	
+	public ProxyHandler modproxies;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
+	    modproxies = new ProxyHandler();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
 		Settings.CONFIGURATION.load();
@@ -123,6 +131,10 @@ public class Electrical
 
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
+
+		//Railings
+		itemRailing = contentRegistry.createItem(ItemItemRailing.class);
+
 		Settings.CONFIGURATION.save();
 
 		OreDictionary.registerOre("wire", itemWire);
@@ -141,6 +153,7 @@ public class Electrical
 		}
 
 		proxy.preInit();
+		modproxies.preInit();
 	}
 
 	@EventHandler
@@ -149,6 +162,7 @@ public class Electrical
 		Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
 		MultipartElectrical.INSTANCE = new MultipartElectrical();
 		proxy.init();
+		modproxies.init();
 	}
 
 	@EventHandler
@@ -176,8 +190,8 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Block.blockDiamond));
 
 		/** Wires **/
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin"));
@@ -189,7 +203,7 @@ public class Electrical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Quantum Gates */
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
@@ -217,5 +231,6 @@ public class Electrical
 		}
 
 		proxy.postInit();
+		modproxies.postInit();
 	}
 }
