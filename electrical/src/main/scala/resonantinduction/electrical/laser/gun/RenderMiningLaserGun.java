@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderMiningLaserGun implements IItemRenderer
 {
     public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "MiningLaserGun.tcn");
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "LaserGun.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "LaserGun.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

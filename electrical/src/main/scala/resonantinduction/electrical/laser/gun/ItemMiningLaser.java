@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import resonantinduction.core.ResonantInduction;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -145,20 +146,22 @@ public class ItemMiningLaser extends ItemElectric
                             Pair<Vector3, Integer> lastHit = miningMap.get(player);
                             if (lastHit != null && lastHit.left() != null && lastHit.left().equals(new Vector3(hit)))
                             {
-                                time = lastHit.right() + 1;
-                                if (time >= breakTime)
+                                Block b = Block.blocksList[player.worldObj.getBlockId(hit.blockX, hit.blockY, hit.blockZ)];
+                                if (b != null && b.getBlockHardness(player.worldObj, hit.blockX, hit.blockY, hit.blockZ) > -1)
                                 {
-
-                                    LaserEvent.onBlockMinedByLaser(player.worldObj, player, new Vector3(hit));
-                                    mined = true;
-                                    player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, -1);
-                                    miningMap.remove(player);
-                                }
-                                else
-                                {
-                                    //TODO get the actual hit side from the angle of the ray trace
-                                    LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
-                                    player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, time);
+                                    time = lastHit.right() + 1;
+                                    if (time >= breakTime)
+                                    {
+                                        LaserEvent.onBlockMinedByLaser(player.worldObj, player, new Vector3(hit));
+                                        mined = true;
+                                        miningMap.remove(player);
+                                    }
+                                    else
+                                    {
+                                        //TODO get the actual hit side from the angle of the ray trace
+                                        LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
+                                        player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, time);
+                                    }
                                 }
                             }
                         }
@@ -175,8 +178,8 @@ public class ItemMiningLaser extends ItemElectric
             //TODO adjust the laser for the end of the gun            
             float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
             float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3)new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3)new Vector3(playerViewOffset), Color.ORANGE, 1);
-            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3)new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3)new Vector3(playerViewOffset), Color.ORANGE, 1);
+            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
+            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
         }
 
     }
