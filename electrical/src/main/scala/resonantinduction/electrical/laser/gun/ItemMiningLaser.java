@@ -87,7 +87,7 @@ public class ItemMiningLaser extends ItemElectric
 
             if (!flag)
             {
-                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, 0));
+                //((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, 0));
             }
             else
             {
@@ -151,12 +151,14 @@ public class ItemMiningLaser extends ItemElectric
 
                                     LaserEvent.onBlockMinedByLaser(player.worldObj, player, new Vector3(hit));
                                     mined = true;
+                                    player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, -1);
                                     miningMap.remove(player);
                                 }
                                 else
                                 {
                                     //TODO get the actual hit side from the angle of the ray trace
                                     LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
+                                    player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, time);
                                 }
                             }
                         }
