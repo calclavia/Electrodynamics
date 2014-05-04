@@ -1,12 +1,16 @@
 package resonantinduction.core;
 
+import java.awt.Color;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
+import calclavia.lib.render.fx.FxLaser;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,7 +53,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public void renderBlockParticle(World world, Vector3 position, Vector3 velocity, int blockID, float scale)
     {
-       this.renderBlockParticle(world, position.x, position.y, position.z, velocity, blockID, scale);
+        this.renderBlockParticle(world, position.x, position.y, position.z, velocity, blockID, scale);
     }
 
     @Override
@@ -59,6 +63,18 @@ public class ClientProxy extends CommonProxy
         fx.multipleParticleScaleBy(scale);
         fx.noClip = true;
         FMLClientHandler.instance().getClient().effectRenderer.addEffect(fx);
+    }
+
+    @Override
+    public void renderBeam(World world, IVector3 position, IVector3 hit, Color color, int age)
+    {
+        renderBeam(world, position, hit, color.getRed(), color.getGreen(), color.getBlue(), age);
+    }
+
+    @Override
+    public void renderBeam(World world, IVector3 position, IVector3 target, float red, float green, float blue, int age)
+    {
+        FMLClientHandler.instance().getClient().effectRenderer.addEffect(new FxLaser(world, position, target, red, green, blue, age));
     }
 
 }

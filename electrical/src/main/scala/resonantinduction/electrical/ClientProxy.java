@@ -3,12 +3,14 @@ package resonantinduction.electrical;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import resonantinduction.electrical.battery.RenderBattery;
 import resonantinduction.electrical.battery.TileBattery;
 import resonantinduction.electrical.charger.RenderCharger;
 import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.gui.GuiEncoderInventory;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
+import resonantinduction.electrical.laser.gun.RenderMiningLaserGun;
 import resonantinduction.electrical.levitator.RenderLevitator;
 import resonantinduction.electrical.multimeter.GuiMultimeter;
 import resonantinduction.electrical.multimeter.PartMultimeter;
@@ -40,6 +42,7 @@ public class ClientProxy extends CommonProxy
 		GlobalItemRenderer.register(Electrical.itemCharger.itemID, RenderCharger.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemLevitator.itemID, RenderLevitator.INSTANCE);
 		GlobalItemRenderer.register(Electrical.itemQuantumGlyph.itemID, RenderQuantumGlyph.INSTANCE);
+		MinecraftForgeClient.registerItemRenderer(Electrical.itemLaserGun.itemID, new RenderMiningLaserGun());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTesla.class, new RenderTesla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBattery.class, new RenderBattery());
 	}

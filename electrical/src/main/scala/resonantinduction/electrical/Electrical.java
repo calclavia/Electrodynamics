@@ -22,6 +22,7 @@ import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
 import resonantinduction.electrical.itemrailing.ItemItemRailing;
+import resonantinduction.electrical.laser.gun.ItemMiningLaser;
 import resonantinduction.electrical.levitator.ItemLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
@@ -79,7 +80,7 @@ public class Electrical
 	public static Item itemCharger;
 	public static Block blockTesla;
 	public static Block blockBattery;
-	public static Block blockEncoder;
+	public static Block blockEncoder;	
 
 	// Railings
 	public static Item itemRailing;
@@ -98,6 +99,9 @@ public class Electrical
 	// Quantum
 	public static Block blockQuantumGate;
 	public static Item itemQuantumGlyph;
+	
+	// Tools
+	public static Item itemLaserGun;
 	
 	public ProxyHandler modproxies;
 
@@ -123,6 +127,7 @@ public class Electrical
 		// blockEncoder = contentRegistry.createTile(BlockEncoder.cass);
 		// itemDisk = contentRegistry.createItem(ItemDisk.class);
 		itemInsulation = contentRegistry.createItem("insulation", ItemResourcePart.class);
+		itemLaserGun = contentRegistry.createItem("laserDrill", ItemMiningLaser.class);
 
 		// Generator
 		blockSolarPanel = contentRegistry.newBlock(TileSolarPanel.class);
