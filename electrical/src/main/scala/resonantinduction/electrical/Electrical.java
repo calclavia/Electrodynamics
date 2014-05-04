@@ -221,6 +221,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMotor, "SRS", "SMS", "SWS", 'W', "wire", 'R', Item.redstone, 'M', Block.blockIron, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockThermopile, "ORO", "OWO", "OOO", 'W', "wire", 'O', Block.obsidian, 'R', Item.redstone));
 
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLaserGun, "RDR", "RDR", "ICB", 'R', Item.redstone, 'D', Item.diamond, 'I', Item.ingotGold, 'C', UniversalRecipe.CIRCUIT_T2.get(), 'B', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0)));
+		        
 		/** Wire Compatiblity **/
 		if (Loader.isModLoaded("IC2"))
 		{
