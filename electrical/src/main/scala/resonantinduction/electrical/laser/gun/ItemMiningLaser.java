@@ -4,17 +4,13 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
-import resonantinduction.core.ResonantInduction;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MathHelper;
@@ -23,8 +19,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.prefab.items.ItemEnergyTool;
 import universalelectricity.api.UniversalClass;
-import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.resonantinduction.electrical.LaserEvent;
@@ -47,16 +44,18 @@ import cpw.mods.fml.relauncher.SideOnly;
  * 
  * @author DarkGuardsman */
 @UniversalClass
-public class ItemMiningLaser extends ItemElectric
+public class ItemMiningLaser extends ItemEnergyTool
 {
-    long batterySize = 500000;
+    /** Cost per tick of using the item */
     float wattPerShot = 1;
+    /** Damage to entities hit by the laser */
     float damageToEntities = 3.3f;
+    /** Range of the laser ray trace */
     int blockRange = 50;
-    int firingDelay = 5;
+    /** Time to break a single block */
     int breakTime = 15;
-    boolean createLava = true, setFire = true;
 
+    /** Map of players and how long they have focused the laser on a single block */
     HashMap<EntityPlayer, Pair<Vector3, Integer>> miningMap = new HashMap<EntityPlayer, Pair<Vector3, Integer>>();
 
     public ItemMiningLaser(int id)
@@ -81,41 +80,23 @@ public class ItemMiningLaser extends ItemElectric
     }
 
     @Override
-    public void onUpdate(ItemStack itemStack, World par2World, Entity entity, int par4, boolean par5)
+    public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean currentHeldItem)
     {
-        //Slow any entity that carries this down as a side effect of using heavy mining gear
-        if (entity instanceof EntityLivingBase)
+        //Remove player from mining map if he puts the laser gun away
+        if (!currentHeldItem && entity instanceof EntityPlayer && this.miningMap.containsKey(entity))
         {
-            boolean flag = entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode;
-
-            if (!flag)
-            {
-                //((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 5, 0));
-            }
-            else
-            {
-                //((EntityPlayer) entity).setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
-            }
-        }
-    }
-
-    @Override
-    public void onCreated(ItemStack stack, World par2World, EntityPlayer entityPlayer)
-    {
-        this.setEnergy(stack, 0);
-        if (stack.getTagCompound() == null)
-        {
-            stack.setTagCompound(new NBTTagCompound());
-        }
-        if (entityPlayer != null)
-        {
-            stack.getTagCompound().setString("Creator", entityPlayer.username);
+            this.miningMap.remove(entity);
         }
     }
 
     @Override
     public void onUsingItemTick(ItemStack stack, EntityPlayer player, int count)
     {
+        //Small delay to prevent unwanted usage of the item
+        //TODO increase this delay to simulate warm up time
+        //TODO increase break time longer the laser has been running
+        //TODO match hardness of block for break time
+        //TODO add audio 
         if (count > 5)
         {
             Vec3 playerPosition = Vec3.createVectorHelper(player.posX, player.posY + player.getEyeHeight(), player.posZ);
@@ -125,7 +106,6 @@ public class ItemMiningLaser extends ItemElectric
             Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * blockRange, playerPosition.yCoord + playerLook.yCoord * blockRange, playerPosition.zCoord + playerLook.zCoord * blockRange);
             MovingObjectPosition hit = RayTraceHelper.do_rayTraceFromEntity(player, new Vector3().toVec3(), blockRange, true);
 
-            //TODO fix sound
             if (hit != null)
             {
                 LaserEvent event = new LaserEvent.LaserFiredPlayerEvent(player, hit, stack);
@@ -189,9 +169,16 @@ public class ItemMiningLaser extends ItemElectric
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World par2World, EntityPlayer player)
     {
-        if (player.capabilities.isCreativeMode || this.getEnergy(itemStack) > this.wattPerShot)
+        if (!player.isSneaking())
         {
-            player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
+            if (player.capabilities.isCreativeMode || this.getEnergy(itemStack) > this.wattPerShot)
+            {
+                player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
+            }
+        }
+        else
+        {
+
         }
         return itemStack;
     }
@@ -202,45 +189,12 @@ public class ItemMiningLaser extends ItemElectric
         if (miningMap.containsKey(player))
         {
             Pair<Vector3, Integer> vec = miningMap.get(player);
-            if(vec != null && vec.left() != null)
+            if (vec != null && vec.left() != null)
             {
                 player.worldObj.destroyBlockInWorldPartially(player.entityId, vec.left().intX(), vec.left().intY(), vec.left().intZ(), -1);
             }
-            miningMap.remove(player);            
+            miningMap.remove(player);
         }
-    }
-
-    @Override
-    public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-    {
-        return par1ItemStack;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
-    {
-        super.addInformation(stack, player, list, par4);
-        if (stack.getTagCompound() == null)
-        {
-            stack.setTagCompound(new NBTTagCompound());
-        }
-        String creator = stack.getTagCompound().getString("Creator");
-        if (!creator.equalsIgnoreCase("creative") && creator != "")
-        {
-            list.add("Created by: " + creator);
-        }
-        else if (creator.equalsIgnoreCase("creative"))
-        {
-            list.add("Created by Magic Dwarfs");
-        }
-
-    }
-
-    @Override
-    public long getEnergyCapacity(ItemStack theItem)
-    {
-        return this.batterySize;
     }
 
 }
