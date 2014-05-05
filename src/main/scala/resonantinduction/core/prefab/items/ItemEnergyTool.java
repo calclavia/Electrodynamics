@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import resonantinduction.electrical.battery.TileBattery;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
@@ -144,7 +143,7 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
     @Override
     public long getEnergyCapacity(ItemStack theItem)
     {
-        return TileBattery.getEnergyForTier(getTier(theItem));
+        return this.batterySize;
     }
 
     public long getTransferRate(ItemStack itemStack)
