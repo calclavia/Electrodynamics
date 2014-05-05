@@ -118,7 +118,7 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
         itemStack.getTagCompound().setLong("electricity", electricityStored);
     }
 
-    public long getTransfer(ItemStack itemStack)
+    public long getEnergySpace(ItemStack itemStack)
     {
         return this.getEnergyCapacity(itemStack) - this.getEnergy(itemStack);
     }

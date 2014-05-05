@@ -2,15 +2,12 @@ package resonantinduction.electrical.laser.gun;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MathHelper;
@@ -21,13 +18,10 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.items.ItemEnergyTool;
-import universalelectricity.api.UniversalClass;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.resonantinduction.electrical.LaserEvent;
 import calclavia.lib.type.Pair;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /** Stream laser mining tool, When held down it will slowly mine away at the block in front of it.
  * 
@@ -93,7 +87,7 @@ public class ItemMiningLaser extends ItemEnergyTool
         //TODO increase break time longer the laser has been running
         //TODO match hardness of block for break time
         //TODO add audio 
-        if ((player.capabilities.isCreativeMode || discharge(stack, joulesPerTick, false) > joulesPerTick) && count > 5)
+        if ((player.capabilities.isCreativeMode || discharge(stack, joulesPerTick, false) > joulesPerTick) && count > 20)
         {
             if(!player.capabilities.isCreativeMode)
                 discharge(stack, joulesPerTick, true);

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import calclavia.components.tool.ToolMode;
 import calclavia.lib.utility.LanguageUtility;
 import calclavia.lib.utility.nbt.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
@@ -69,7 +68,7 @@ public class ItemTool extends Item
                 setMode(itemStack, (getMode(itemStack) + 1) % toolModes.length);
                 String modeKey = toolModes[getMode(itemStack)];
                 if (!world.isRemote && modeKey != null && !modeKey.isEmpty())
-                {                    
+                {
                     player.addChatMessage(LanguageUtility.getLocal("tool.mode.set") + LanguageUtility.getLocal(modeKey));
                 }
 
