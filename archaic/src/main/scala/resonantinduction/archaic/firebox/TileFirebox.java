@@ -143,7 +143,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 						{
-							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 							boiledVolume += volume;
 						}
 
@@ -168,7 +168,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						{
 							if (FluidRegistry.getFluid("steam") != null)
 							{
-								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 								((TileGutter) tileEntity).drain(ForgeDirection.DOWN, volume, true);
 							}
 
