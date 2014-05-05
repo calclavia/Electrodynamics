@@ -2,6 +2,7 @@ package resonantinduction.core.prefab.items;
 
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +24,8 @@ public class ItemTool extends Item
     public ItemTool(int par1)
     {
         super(par1);
+        this.setMaxStackSize(1);
+        this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     @Override

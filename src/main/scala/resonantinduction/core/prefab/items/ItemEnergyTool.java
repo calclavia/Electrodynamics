@@ -2,8 +2,6 @@ package resonantinduction.core.prefab.items;
 
 import java.util.List;
 
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,15 +14,22 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.IVoltageItem;
+import calclavia.lib.render.EnumColor;
+import calclavia.lib.utility.LanguageUtility;
 
 /** Prefab for all eletric based tools
  * 
  * @author DarkGurdsman */
 public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageItem
 {
+    /** Default battery size */
     protected long batterySize = 500000;
+    /** Does this item support energy tiers */
     protected boolean hasTier = false;
+    /** Display energy in tool tips */
     protected boolean showEnergy = true;
+    /** Number of energy tiers */
+    protected int energyTiers = 0;
 
     public ItemEnergyTool(int id)
     {
@@ -147,14 +152,14 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
         return this.getEnergyCapacity(itemStack) / 100;
     }
 
-    public static ItemStack setTier(ItemStack itemStack, byte tier)
+    public static ItemStack setTier(ItemStack itemStack, int tier)
     {
         if (itemStack.getTagCompound() == null)
         {
             itemStack.setTagCompound(new NBTTagCompound());
         }
 
-        itemStack.getTagCompound().setByte("tier", tier);
+        itemStack.getTagCompound().setByte("tier", (byte) tier);
         return itemStack;
     }
 
@@ -171,11 +176,10 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        for (byte tier = 0; tier <= TileBattery.MAX_TIER; tier++)
+        for (int i = 0; i >= 0 && i < this.energyTiers; i++)
         {
-            par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), 0));
-            par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), tier), TileBattery.getEnergyForTier(tier)));
+            par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), i), 0));
+            par3List.add(CompatibilityModule.getItemWithCharge(setTier(new ItemStack(this), i), this.getEnergyCapacity(setTier(new ItemStack(this), i))));
         }
     }
-
 }

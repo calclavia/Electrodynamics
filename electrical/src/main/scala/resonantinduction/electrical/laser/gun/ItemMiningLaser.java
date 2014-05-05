@@ -61,9 +61,6 @@ public class ItemMiningLaser extends ItemEnergyTool
     public ItemMiningLaser(int id)
     {
         super(id);
-        this.setUnlocalizedName("MiningLaser");
-        this.setMaxStackSize(1);
-        this.setCreativeTab(CreativeTabs.tabTools);
     }
 
     @Override
