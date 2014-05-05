@@ -162,7 +162,7 @@ public class ItemMiningLaser extends ItemElectric
                                     {
                                         //TODO get the actual hit side from the angle of the ray trace
                                         LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
-                                        player.worldObj.destroyBlockInWorldPartially(0, hit.blockX, hit.blockY, hit.blockZ, time);
+                                        player.worldObj.destroyBlockInWorldPartially(player.entityId, hit.blockX, hit.blockY, hit.blockZ, time);
                                     }
                                 }
                             }
@@ -201,7 +201,12 @@ public class ItemMiningLaser extends ItemElectric
     {
         if (miningMap.containsKey(player))
         {
-            miningMap.remove(player);
+            Pair<Vector3, Integer> vec = miningMap.get(player);
+            if(vec != null && vec.left() != null)
+            {
+                player.worldObj.destroyBlockInWorldPartially(player.entityId, vec.left().intX(), vec.left().intY(), vec.left().intZ(), -1);
+            }
+            miningMap.remove(player);            
         }
     }
 
