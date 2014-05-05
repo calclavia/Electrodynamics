@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import universalelectricity.api.CompatibilityModule;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
@@ -19,6 +20,7 @@ import calclavia.lib.utility.LanguageUtility;
 /** Prefab for all eletric based tools
  * 
  * @author DarkGurdsman */
+@UniversalClass
 public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageItem
 {
     /** Default battery size */

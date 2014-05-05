@@ -43,11 +43,10 @@ import cpw.mods.fml.relauncher.SideOnly;
  * mining gear and the player will be simi-stationary when using it
  * 
  * @author DarkGuardsman */
-@UniversalClass
 public class ItemMiningLaser extends ItemEnergyTool
 {
     /** Cost per tick of using the item */
-    float wattPerShot = 1;
+    long joulesPerTick = 100;
     /** Damage to entities hit by the laser */
     float damageToEntities = 3.3f;
     /** Range of the laser ray trace */
@@ -94,8 +93,11 @@ public class ItemMiningLaser extends ItemEnergyTool
         //TODO increase break time longer the laser has been running
         //TODO match hardness of block for break time
         //TODO add audio 
-        if (count > 5)
+        if ((player.capabilities.isCreativeMode || discharge(stack, joulesPerTick, false) > joulesPerTick) && count > 5)
         {
+            if(!player.capabilities.isCreativeMode)
+                discharge(stack, joulesPerTick, true);
+            
             Vec3 playerPosition = Vec3.createVectorHelper(player.posX, player.posY + player.getEyeHeight(), player.posZ);
             Vec3 playerLook = RayTraceHelper.getLook(player, 1.0f);
             Vec3 p = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord, playerPosition.yCoord + playerLook.yCoord, playerPosition.zCoord + playerLook.zCoord);
@@ -168,7 +170,7 @@ public class ItemMiningLaser extends ItemEnergyTool
     {
         if (!player.isSneaking())
         {
-            if (player.capabilities.isCreativeMode || this.getEnergy(itemStack) > this.wattPerShot)
+            if (player.capabilities.isCreativeMode || this.getEnergy(itemStack) > this.joulesPerTick)
             {
                 player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
             }
