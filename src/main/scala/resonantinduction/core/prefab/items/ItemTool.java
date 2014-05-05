@@ -64,9 +64,11 @@ public class ItemTool extends Item
             if (player.isSneaking())
             {
                 setMode(itemStack, (getMode(itemStack) + 1) % toolModes.length);
-
-                if (!world.isRemote)
-                    player.addChatMessage("Set tool mode to: " + toolModes[getMode(itemStack)]);
+                String modeKey = toolModes[getMode(itemStack)];
+                if (!world.isRemote && modeKey != null && !modeKey.isEmpty())
+                {                    
+                    player.addChatMessage(LanguageUtility.getLocal("tool.mode.set") + LanguageUtility.getLocal(modeKey));
+                }
 
             }
         }
