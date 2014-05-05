@@ -49,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @UniversalClass
 public class ItemMiningLaser extends ItemElectric
 {
-    long batterySize = 100000;
+    long batterySize = 500000;
     float wattPerShot = 1;
     float damageToEntities = 3.3f;
     int blockRange = 50;
