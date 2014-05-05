@@ -23,6 +23,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import universalelectricity.api.UniversalClass;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
@@ -45,6 +46,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * mining gear and the player will be simi-stationary when using it
  * 
  * @author DarkGuardsman */
+@UniversalClass
 public class ItemMiningLaser extends ItemElectric
 {
     long batterySize = 100000;
