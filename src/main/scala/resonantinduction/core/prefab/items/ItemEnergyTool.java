@@ -16,6 +16,7 @@ import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.IVoltageItem;
 import calclavia.lib.render.EnumColor;
 import calclavia.lib.utility.LanguageUtility;
+import calclavia.lib.utility.nbt.NBTUtility;
 
 /** Prefab for all eletric based tools
  * 
@@ -61,7 +62,6 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
             {
                 color = "\u00a76";
             }
-            itemStack.getItemDamageForDisplay();
             list.add(LanguageUtility.getLocal("tooltip.battery.energy").replace("%0", color).replace("%1", EnumColor.GREY.toString()).replace("%v0", UnitDisplay.getDisplayShort(joules, Unit.JOULES)).replace("%v1", UnitDisplay.getDisplayShort(this.getEnergyCapacity(itemStack), Unit.JOULES)));
         }
     }
@@ -109,13 +109,8 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
     @Override
     public void setEnergy(ItemStack itemStack, long joules)
     {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-
         long electricityStored = Math.max(Math.min(joules, this.getEnergyCapacity(itemStack)), 0);
-        itemStack.getTagCompound().setLong("electricity", electricityStored);
+        NBTUtility.getNBTTagCompound(itemStack).setLong("electricity", electricityStored);
     }
 
     public long getEnergySpace(ItemStack itemStack)
@@ -127,13 +122,7 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
     @Override
     public long getEnergy(ItemStack itemStack)
     {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-
-        long energyStored = itemStack.getTagCompound().getLong("electricity");
-        return energyStored;
+        return NBTUtility.getNBTTagCompound(itemStack).getLong("electricity");
     }
 
     @Override
@@ -155,22 +144,13 @@ public class ItemEnergyTool extends ItemTool implements IEnergyItem, IVoltageIte
 
     public static ItemStack setTier(ItemStack itemStack, int tier)
     {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-
-        itemStack.getTagCompound().setByte("tier", (byte) tier);
+        NBTUtility.getNBTTagCompound(itemStack).setByte("tier", (byte) tier);
         return itemStack;
     }
 
     public static byte getTier(ItemStack itemStack)
     {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-        return itemStack.getTagCompound().getByte("tier");
+        return NBTUtility.getNBTTagCompound(itemStack).getByte("tier");
     }
 
     @SuppressWarnings("unchecked")

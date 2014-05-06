@@ -50,6 +50,8 @@ public class ItemMiningLaser extends ItemEnergyTool
 
     /** Map of players and how long they have focused the laser on a single block */
     HashMap<EntityPlayer, Pair<Vector3, Integer>> miningMap = new HashMap<EntityPlayer, Pair<Vector3, Integer>>();
+    /** Used to track energy used while the player uses the laser rather then direct editing the nbt */
+    HashMap<EntityPlayer, Long> energyUsedMap = new HashMap<EntityPlayer, Long>();
 
     public ItemMiningLaser(int id)
     {
@@ -57,25 +59,19 @@ public class ItemMiningLaser extends ItemEnergyTool
     }
 
     @Override
-    public EnumAction getItemUseAction(ItemStack par1ItemStack)
-    {
-        return EnumAction.bow;
-    }
-
-    @Override
-    public int getMaxItemUseDuration(ItemStack par1ItemStack)
-    {
-        //TODO change render of the laser too show it slowly over heat, when it over heats eg gets to max use damage the player, and tool
-        return 1000;
-    }
-
-    @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int slot, boolean currentHeldItem)
     {
         //Remove player from mining map if he puts the laser gun away
-        if (!currentHeldItem && entity instanceof EntityPlayer && this.miningMap.containsKey(entity))
+        if (entity instanceof EntityPlayer)
         {
-            this.miningMap.remove(entity);
+            EntityPlayer player = (EntityPlayer) entity;
+            if (!currentHeldItem)
+            {
+                if (this.miningMap.containsKey(player))
+                {
+                    this.miningMap.remove(player);
+                }
+            }
         }
     }
 
@@ -87,17 +83,21 @@ public class ItemMiningLaser extends ItemEnergyTool
         //TODO increase break time longer the laser has been running
         //TODO match hardness of block for break time
         //TODO add audio 
-        if ((player.capabilities.isCreativeMode || discharge(stack, joulesPerTick, false) > joulesPerTick) && count > 20)
+        if (count > 5 && (player.capabilities.isCreativeMode || discharge(stack, joulesPerTick, false) >= joulesPerTick && (!this.energyUsedMap.containsKey(player) || this.energyUsedMap.get(player) <= this.getEnergy(stack))))
         {
-            if(!player.capabilities.isCreativeMode)
-                discharge(stack, joulesPerTick, true);
-            
             Vec3 playerPosition = Vec3.createVectorHelper(player.posX, player.posY + player.getEyeHeight(), player.posZ);
             Vec3 playerLook = RayTraceHelper.getLook(player, 1.0f);
             Vec3 p = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord, playerPosition.yCoord + playerLook.yCoord, playerPosition.zCoord + playerLook.zCoord);
 
             Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * blockRange, playerPosition.yCoord + playerLook.yCoord * blockRange, playerPosition.zCoord + playerLook.zCoord * blockRange);
             MovingObjectPosition hit = RayTraceHelper.do_rayTraceFromEntity(player, new Vector3().toVec3(), blockRange, true);
+
+            if (!player.capabilities.isCreativeMode)
+            {
+                long energyUsed = this.energyUsedMap.containsKey(player) ? this.energyUsedMap.get(player) : 0;
+                energyUsed += joulesPerTick;
+                this.energyUsedMap.put(player, energyUsed);
+            }
 
             if (hit != null)
             {
@@ -148,37 +148,33 @@ public class ItemMiningLaser extends ItemEnergyTool
 
                 }
                 playerViewOffset = hit.hitVec;
+
+                //TODO make beam brighter the longer it has been used
+                //TODO adjust the laser for the end of the gun            
+                float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
+                float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
             }
-            //TODO make beam brighter the longer it has been used
-            //TODO adjust the laser for the end of the gun            
-            float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-            float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
-            ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
         }
 
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World par2World, EntityPlayer player)
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player)
     {
         if (!player.isSneaking())
         {
-            if (player.capabilities.isCreativeMode || this.getEnergy(itemStack) > this.joulesPerTick)
-            {
-                player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
-            }
+            player.addChatMessage("Laser turns on   Client:" + world.isRemote);
+            player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));          
         }
-        else
-        {
-
-        }
-        return itemStack;
+        return super.onItemRightClick(itemStack, world, player);
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer player, int par4)
+    public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int par4)
     {
+        player.addChatMessage("Laser turns off   Client:" + world.isRemote);
         if (miningMap.containsKey(player))
         {
             Pair<Vector3, Integer> vec = miningMap.get(player);
@@ -188,6 +184,26 @@ public class ItemMiningLaser extends ItemEnergyTool
             }
             miningMap.remove(player);
         }
+        if (this.energyUsedMap.containsKey(player))
+            discharge(stack, this.energyUsedMap.get(player), true);
+    }
+
+    @Override
+    public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
+    {
+        return par1ItemStack;
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
+    {
+        return 72000;
+    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.bow;
     }
 
 }
