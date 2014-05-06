@@ -144,7 +144,7 @@ public class ItemMiningLaser extends ItemEnergyTool
                                         mined = true;
                                         miningMap.remove(player);
                                     }
-                                    else if (this.getMode(stack) == MODE_REMOVE || this.getMode(stack) == MODE_SMELT)
+                                    else if (this.getMode(stack) == MODE_SMELT)
                                     {
                                         //TODO get the actual hit side from the angle of the ray trace
                                         LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
