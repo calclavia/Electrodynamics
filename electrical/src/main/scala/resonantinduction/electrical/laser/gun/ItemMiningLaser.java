@@ -54,7 +54,7 @@ public class ItemMiningLaser extends ItemEnergyTool
     HashMap<EntityPlayer, Long> energyUsedMap = new HashMap<EntityPlayer, Long>();
 
     public static final int MODE_REMOVE = 0, MODE_SMELT = 1, MODE_DAMAGE = 2;
-    
+
     public ItemMiningLaser(int id)
     {
         super(id);
@@ -99,7 +99,16 @@ public class ItemMiningLaser extends ItemEnergyTool
             if (!player.capabilities.isCreativeMode)
             {
                 long energyUsed = this.energyUsedMap.containsKey(player) ? this.energyUsedMap.get(player) : 0;
-                energyUsed += joulesPerTick;
+
+                switch (getMode(stack))
+                {
+                    case 0:
+                        energyUsed += joulesPerTick;
+                    case 1:
+                        energyUsed += joulesPerTick / 2;
+                    case 2:
+                        energyUsed += joulesPerTick / 3;
+                }
                 this.energyUsedMap.put(player, energyUsed);
             }
 
@@ -135,7 +144,7 @@ public class ItemMiningLaser extends ItemEnergyTool
                                         mined = true;
                                         miningMap.remove(player);
                                     }
-                                    else if(this.getMode(stack) == MODE_REMOVE || this.getMode(stack) == MODE_SMELT)
+                                    else if (this.getMode(stack) == MODE_REMOVE || this.getMode(stack) == MODE_SMELT)
                                     {
                                         //TODO get the actual hit side from the angle of the ray trace
                                         LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
