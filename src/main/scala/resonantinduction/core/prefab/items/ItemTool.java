@@ -69,7 +69,7 @@ public class ItemTool extends Item
                 String modeKey = toolModes[getMode(itemStack)];
                 if (!world.isRemote && modeKey != null && !modeKey.isEmpty())
                 {
-                    player.addChatMessage(LanguageUtility.getLocal("tool.mode.set") + LanguageUtility.getLocal(modeKey));
+                    player.addChatMessage(LanguageUtility.getLocal("tool.mode.set") + " " + LanguageUtility.getLocal(modeKey));
                 }
 
             }

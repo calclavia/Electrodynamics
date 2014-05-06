@@ -53,9 +53,13 @@ public class ItemMiningLaser extends ItemEnergyTool
     /** Used to track energy used while the player uses the laser rather then direct editing the nbt */
     HashMap<EntityPlayer, Long> energyUsedMap = new HashMap<EntityPlayer, Long>();
 
+    public static final int MODE_REMOVE = 0, MODE_SMELT = 1, MODE_DAMAGE = 2;
+    
     public ItemMiningLaser(int id)
     {
         super(id);
+        hasModes = true;
+        toolModes = new String[] { "laser.toolmode.remove", "laser.toolmode.smelt", "laser.toolmode.damage" };
     }
 
     @Override
@@ -125,13 +129,13 @@ public class ItemMiningLaser extends ItemEnergyTool
                                 if (b != null && b.getBlockHardness(player.worldObj, hit.blockX, hit.blockY, hit.blockZ) > -1)
                                 {
                                     time = lastHit.right() + 1;
-                                    if (time >= breakTime)
+                                    if (time >= breakTime && this.getMode(stack) == MODE_REMOVE)
                                     {
                                         LaserEvent.onBlockMinedByLaser(player.worldObj, player, new Vector3(hit));
                                         mined = true;
                                         miningMap.remove(player);
                                     }
-                                    else
+                                    else if(this.getMode(stack) == MODE_REMOVE || this.getMode(stack) == MODE_SMELT)
                                     {
                                         //TODO get the actual hit side from the angle of the ray trace
                                         LaserEvent.onLaserHitBlock(player.worldObj, player, new Vector3(hit), ForgeDirection.UP);
@@ -165,7 +169,7 @@ public class ItemMiningLaser extends ItemEnergyTool
     {
         if (!player.isSneaking())
         {
-            player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));          
+            player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
         }
         return super.onItemRightClick(itemStack, world, player);
     }
