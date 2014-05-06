@@ -53,7 +53,6 @@ public class ItemTool extends Item
         {
             list.add("Created by Magic Dwarfs");
         }
-
     }
 
     @Override
