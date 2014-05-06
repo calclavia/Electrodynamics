@@ -165,7 +165,6 @@ public class ItemMiningLaser extends ItemEnergyTool
     {
         if (!player.isSneaking())
         {
-            player.addChatMessage("Laser turns on   Client:" + world.isRemote);
             player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));          
         }
         return super.onItemRightClick(itemStack, world, player);
@@ -174,7 +173,6 @@ public class ItemMiningLaser extends ItemEnergyTool
     @Override
     public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int par4)
     {
-        player.addChatMessage("Laser turns off   Client:" + world.isRemote);
         if (miningMap.containsKey(player))
         {
             Pair<Vector3, Integer> vec = miningMap.get(player);
