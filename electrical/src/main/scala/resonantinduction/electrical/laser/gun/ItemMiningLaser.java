@@ -21,6 +21,7 @@ import resonantinduction.core.prefab.items.ItemEnergyTool;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.resonantinduction.electrical.LaserEvent;
+import calclavia.lib.prefab.vector.RayTraceHelper;
 import calclavia.lib.type.Pair;
 
 /** Stream laser mining tool, When held down it will slowly mine away at the block in front of it.

@@ -28,6 +28,7 @@ import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.api.resonantinduction.electrical.LaserEvent;
+import calclavia.lib.prefab.vector.RayTraceHelper;
 import calclavia.lib.thermal.ThermalGrid;
 import calclavia.lib.type.Pair;
 import cpw.mods.fml.relauncher.Side;
