@@ -76,6 +76,10 @@ public class ItemMiningLaser extends ItemEnergyTool
                 {
                     this.miningMap.remove(player);
                 }
+                if (this.energyUsedMap.containsKey(player))
+                {
+                    this.energyUsedMap.remove(player);
+                }
             }
         }
     }
