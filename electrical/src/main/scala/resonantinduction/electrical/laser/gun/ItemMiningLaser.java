@@ -197,7 +197,10 @@ public class ItemMiningLaser extends ItemEnergyTool
             miningMap.remove(player);
         }
         if (this.energyUsedMap.containsKey(player))
+        {
             discharge(stack, this.energyUsedMap.get(player), true);
+            this.energyUsedMap.remove(player);
+        }
     }
 
     @Override
