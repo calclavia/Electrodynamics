@@ -166,14 +166,17 @@ public class ItemMiningLaser extends ItemEnergyTool
 
                 }
                 playerViewOffset = hit.hitVec;
+            }
 
-                //TODO make beam brighter the longer it has been used
-                //TODO adjust the laser for the end of the gun            
+            //Only call client as the server can render stuff threw packets
+            if (player.worldObj.isRemote)
+            {
                 float x = (float) (MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.4) - MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
                 float z = (float) (MathHelper.sin((float) (player.rotationYawHead * 0.0174532925)) * (-.4) + MathHelper.cos((float) (player.rotationYawHead * 0.0174532925)) * (-.1));
-                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
-                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.ORANGE, 1);
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.25, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
+                ResonantInduction.proxy.renderBeam(player.worldObj, (IVector3) new Vector3(p).translate(new Vector3(x, -.45, z)), (IVector3) new Vector3(playerViewOffset), Color.red, 5);
             }
+
         }
 
     }
