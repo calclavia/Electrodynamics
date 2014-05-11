@@ -138,15 +138,6 @@ public class ResonantInduction
 		Settings.CONFIGURATION.save();
 	}
 
-	@ForgeSubscribe
-	public void configAnnotationAdded(ConfigAnnotationEvent event)
-	{
-		if (event.sourceClass.getName().startsWith(Settings.DOMAIN))
-		{
-			ConfigHandler.handleClass(event.sourceClass, Settings.CONFIGURATION);
-		}
-	}
-
 	/**
 	 * Recipe Types
 	 */
