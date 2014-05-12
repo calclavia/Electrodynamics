@@ -40,7 +40,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
         this.getInternalTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
         isOpaqueCube = false;
         normalRender = false;
-        itemBlock = ItemBlockFluidContainer.class;
+        itemBlock = ItemBlockTank.class;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
         {
             if (player.isSneaking())
             {
-                ItemStack dropStack = ItemBlockFluidContainer.getWrenchedItem(world(), position());
+                ItemStack dropStack = ItemBlockTank.getWrenchedItem(world(), position());
                 if (dropStack != null)
                 {
                     if (player.getHeldItem() == null)
