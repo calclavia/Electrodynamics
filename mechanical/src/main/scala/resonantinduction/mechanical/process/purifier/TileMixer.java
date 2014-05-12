@@ -34,6 +34,8 @@ public class TileMixer extends TileMechanical implements IInventory
 	public static final long POWER = 500000;
 	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
+	
+	private boolean areaBlockedFromMoving = false;
 
 	public TileMixer()
 	{
@@ -60,6 +62,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		if (!world().isRemote && ticks % 20 == 0)
 		{
+		    this.areaBlockedFromMoving = false;
 			for (int x = -1; x <= 1; x++)
 			{
 				for (int z = -1; z <= 1; z++)
@@ -71,8 +74,7 @@ public class TileMixer extends TileMechanical implements IInventory
 
 						if (block != null && !(block instanceof IFluidBlock) && !(block instanceof BlockFluid))
 						{
-							block.dropBlockAsItem(world(), x(), y(), z(), 0, 0);
-							position().setBlock(0);
+							this.areaBlockedFromMoving = true;
 							return;
 						}
 					}
@@ -95,7 +97,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularVelocity() != 0;
+		return mechanicalNode.getAngularVelocity() != 0 && areaBlockedFromMoving;
 	}
 
 	public void doWork()
