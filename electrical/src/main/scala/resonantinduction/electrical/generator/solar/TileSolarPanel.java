@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.prefab.vector.Cuboid;
-import resonant.lib.utility.calclavia.lib.utility.render.ConnectedTextureRenderer;
+import resonant.lib.utility.ConnectedTextureRenderer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.battery.TileEnergyDistribution;
