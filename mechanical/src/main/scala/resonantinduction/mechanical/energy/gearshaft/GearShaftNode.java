@@ -6,8 +6,8 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
+import resonant.api.IMechanicalNode;
+import resonant.api.grid.INodeProvider;
 import resonantinduction.mechanical.energy.gear.PartGear;
 import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;

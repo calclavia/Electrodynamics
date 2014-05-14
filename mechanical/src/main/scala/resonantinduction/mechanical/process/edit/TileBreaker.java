@@ -1,15 +1,7 @@
 package resonantinduction.mechanical.process.edit;
 
-import calclavia.lib.content.module.TileBase;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.render.RotatedTextureRenderer;
-import calclavia.lib.utility.inventory.InternalInventoryHandler;
-import com.google.common.io.ByteArrayDataInput;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -20,11 +12,21 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IRotatable;
+import resonant.lib.content.module.TileBase;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.render.RotatedTextureRenderer;
+import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
-import java.util.ArrayList;
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author tgame14

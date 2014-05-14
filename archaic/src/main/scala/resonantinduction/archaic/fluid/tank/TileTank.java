@@ -1,15 +1,7 @@
 package resonantinduction.archaic.fluid.tank;
 
-import calclavia.lib.content.module.TileBlock.IComparatorInputOverride;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.render.FluidRenderUtility;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.FluidUtility;
-import calclavia.lib.utility.WorldUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
-import calclavia.lib.utility.render.RenderBlockUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.awt.Color;
+
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,7 +11,17 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+
 import org.lwjgl.opengl.GL11;
+
+import resonant.lib.content.module.TileBlock.IComparatorInputOverride;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.render.FluidRenderUtility;
+import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.FluidUtility;
+import resonant.lib.utility.WorldUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
+import resonant.lib.utility.render.RenderBlockUtility;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.FluidDistributionetwork;
@@ -27,8 +29,8 @@ import resonantinduction.core.fluid.IFluidDistribution;
 import resonantinduction.core.fluid.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
-
-import java.awt.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileTank extends TileFluidDistribution implements IComparatorInputOverride
 {

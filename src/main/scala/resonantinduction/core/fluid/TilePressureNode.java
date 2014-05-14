@@ -6,10 +6,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
+import resonant.api.grid.INode;
+import resonant.lib.network.IPacketReceiverWithID;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
-import calclavia.lib.grid.INode;
-import calclavia.lib.network.IPacketReceiverWithID;
 
 /**
  * A prefab class for tiles that use the fluid network.

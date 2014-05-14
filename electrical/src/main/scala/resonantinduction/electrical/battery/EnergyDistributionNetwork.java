@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.core.net.Network;
 
 /** Energy network designed to allow several tiles to act as if they share the same energy

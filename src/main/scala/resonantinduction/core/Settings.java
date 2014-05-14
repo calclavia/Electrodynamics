@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
-import calclavia.lib.config.Config;
-import calclavia.lib.content.IDManager;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.config.Config;
+import resonant.lib.content.IDManager;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModMetadata;

@@ -16,13 +16,13 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import resonant.api.event.LaserEvent;
+import resonant.lib.prefab.vector.RayTraceHelper;
+import resonant.lib.type.Pair;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.items.ItemEnergyTool;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.electrical.LaserEvent;
-import calclavia.lib.prefab.vector.RayTraceHelper;
-import calclavia.lib.type.Pair;
 
 /** Stream laser mining tool, When held down it will slowly mine away at the block in front of it.
  * 

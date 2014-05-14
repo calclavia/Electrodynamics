@@ -5,10 +5,10 @@ import java.util.Set;
 
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.path.IPathCallBack;
+import resonant.lib.path.Pathfinder;
+import resonant.lib.path.PathfinderAStar;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.path.IPathCallBack;
-import calclavia.lib.path.Pathfinder;
-import calclavia.lib.path.PathfinderAStar;
 
 /**
  * Uses the well known A* Pathfinding algorithm.

@@ -9,10 +9,10 @@ import net.minecraft.world.World;
 
 import org.lwjgl.input.Keyboard;
 
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;

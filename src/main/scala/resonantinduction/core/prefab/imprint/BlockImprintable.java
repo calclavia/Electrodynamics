@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import calclavia.api.resonantinduction.IFilterable;
-import calclavia.lib.prefab.block.BlockRotatable;
+import resonant.api.IFilterable;
+import resonant.lib.prefab.block.BlockRotatable;
 
 /**
  * Extend this block class if a filter is allowed to be placed inside of this block.

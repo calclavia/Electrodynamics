@@ -1,7 +1,7 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.render.item.ISimpleItemRenderer;
 import net.minecraft.item.ItemStack;
+import resonant.api.items.ISimpleItemRenderer;
 
 /**
  * @author tgame14

@@ -1,19 +1,17 @@
 package resonantinduction.electrical.generator.solar;
 
-import calclavia.lib.config.Config;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.prefab.vector.Cuboid;
-import calclavia.lib.render.ConnectedTextureRenderer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
-import net.minecraftforge.common.Configuration;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.prefab.vector.Cuboid;
+import resonant.lib.utility.calclavia.lib.utility.render.ConnectedTextureRenderer;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.battery.TileEnergyDistribution;
 import universalelectricity.api.energy.EnergyStorageHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileSolarPanel extends TileEnergyDistribution
 {

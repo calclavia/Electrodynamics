@@ -1,8 +1,9 @@
 package resonantinduction.mechanical.process.purifier;
 
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.utility.inventory.InventoryUtility;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;
@@ -14,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonant.api.IMechanicalNode;
+import resonant.api.recipe.MachineRecipes;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
@@ -21,10 +25,6 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Calclavia

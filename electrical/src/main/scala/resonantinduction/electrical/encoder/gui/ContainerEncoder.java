@@ -2,10 +2,10 @@ package resonantinduction.electrical.encoder.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import resonant.lib.gui.ContainerBase;
+import resonant.lib.prefab.slot.SlotSpecific;
 import resonantinduction.electrical.encoder.ItemDisk;
 import resonantinduction.electrical.encoder.TileEncoder;
-import calclavia.lib.gui.ContainerBase;
-import calclavia.lib.prefab.slot.SlotSpecific;
 
 public class ContainerEncoder extends ContainerBase
 {

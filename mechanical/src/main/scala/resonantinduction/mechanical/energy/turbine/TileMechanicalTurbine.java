@@ -3,14 +3,13 @@ package resonantinduction.mechanical.energy.turbine;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IMechanicalNode;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
+import resonant.lib.network.Synced;
+import resonant.lib.network.Synced.SyncedInput;
+import resonant.lib.network.Synced.SyncedOutput;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import universalelectricity.api.energy.EnergyStorageHandler;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.network.Synced;
-import calclavia.lib.network.Synced.SyncedInput;
-import calclavia.lib.network.Synced.SyncedOutput;
 
 //TODO: MC 1.7, merge turbines in.
 public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvider

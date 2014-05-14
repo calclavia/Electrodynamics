@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

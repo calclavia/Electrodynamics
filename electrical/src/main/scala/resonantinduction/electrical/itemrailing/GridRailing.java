@@ -1,12 +1,11 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.grid.NodeGrid;
-import calclavia.lib.grid.TickingGrid;
+import java.util.Arrays;
+
 import net.minecraft.item.ItemStack;
+import resonant.lib.grid.TickingGrid;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
-
-import java.util.Arrays;
 
 /**
  * @since 18/03/14

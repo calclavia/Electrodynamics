@@ -7,8 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.NBTUtility;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.nbt.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

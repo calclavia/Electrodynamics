@@ -1,17 +1,19 @@
 package resonantinduction.mechanical.process.crusher;
 
-import calclavia.lib.render.RenderUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
+
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderMechanicalPiston extends TileEntitySpecialRenderer

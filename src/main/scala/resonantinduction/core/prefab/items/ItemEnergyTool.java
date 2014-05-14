@@ -5,8 +5,10 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.nbt.NBTUtility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.UniversalElectricity;
@@ -14,9 +16,6 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.IVoltageItem;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.NBTUtility;
 
 /** Prefab for all eletric based tools
  * 

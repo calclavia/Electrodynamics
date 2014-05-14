@@ -11,14 +11,14 @@ import net.minecraftforge.client.model.IModelCustom;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
+import resonant.lib.render.RenderItemOverlayUtility;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.RenderItemOverlayUtility;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.item.ISimpleItemRenderer;
 
 /**
  * Renderer for electric item charger

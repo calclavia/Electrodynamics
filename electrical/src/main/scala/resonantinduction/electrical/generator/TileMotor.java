@@ -4,13 +4,13 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IMechanicalNode;
+import resonant.api.IRotatable;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
+import resonant.lib.grid.NodeRegistry;
+import resonant.lib.prefab.tile.TileElectrical;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.grid.NodeRegistry;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileElectrical;
 
 /**
  * A kinetic energy to electrical energy converter.

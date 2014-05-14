@@ -1,7 +1,7 @@
 package resonantinduction.core.nei;
 
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.ResonantInduction.RecipeType;
-import calclavia.lib.utility.LanguageUtility;
 
 public class RISmelterRecipeHandler extends RITemplateRecipeHandler
 {

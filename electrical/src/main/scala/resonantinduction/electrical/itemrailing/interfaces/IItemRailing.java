@@ -1,12 +1,12 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
-import calclavia.lib.grid.INode;
-import calclavia.lib.render.EnumColor;
+import java.util.Map;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.grid.INode;
+import resonant.lib.render.EnumColor;
 import universalelectricity.api.vector.VectorWorld;
-
-import java.util.Map;
 
 /**
  * implement on Part Railings.

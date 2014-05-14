@@ -8,10 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.grid.INodeProvider;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.grid.INodeProvider;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**

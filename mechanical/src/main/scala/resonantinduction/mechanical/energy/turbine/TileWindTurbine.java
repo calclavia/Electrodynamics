@@ -1,21 +1,15 @@
 package resonantinduction.mechanical.energy.turbine;
 
-import java.util.List;
-
-import resonantinduction.core.Settings;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenOcean;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.utility.inventory.InventoryUtility;
+import resonantinduction.core.Settings;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.IBoilHandler;
-import calclavia.lib.config.Config;
-import calclavia.lib.prefab.vector.Cuboid;
-import calclavia.lib.utility.inventory.InventoryUtility;
 
 /** The vertical wind turbine collects airflow. The horizontal wind turbine collects steam from steam
  * power plants.

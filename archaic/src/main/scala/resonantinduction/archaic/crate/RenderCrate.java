@@ -5,8 +5,8 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import calclavia.lib.render.RenderItemOverlayUtility;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.render.RenderItemOverlayUtility;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

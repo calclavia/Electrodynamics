@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.belt;
 
-import calclavia.lib.grid.TickingGrid;
+import resonant.lib.grid.TickingGrid;
 
 /** @author Darkguardsman */
 public class BeltNetwork extends TickingGrid<BeltNode>

@@ -6,9 +6,9 @@ import net.minecraft.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.item.ISimpleItemRenderer;
 import codechicken.lib.vec.Cuboid6;
 
 public class RenderQuantumGlyph implements ISimpleItemRenderer

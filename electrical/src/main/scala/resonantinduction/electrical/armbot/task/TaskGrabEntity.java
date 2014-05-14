@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import resonant.api.ai.EntitySettings;
 import resonantinduction.core.ArgumentData;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
-import calclavia.api.resonantinduction.electrical.ArmbotEntity;
 
 public class TaskGrabEntity extends TaskGrabPrefab
 {
@@ -98,7 +98,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
 	{
 		super.loadProgress(taskCompound);
 		this.child = taskCompound.getBoolean("child");
-		this.entityToInclude = ArmbotEntity.get(taskCompound.getString("name"));
+		this.entityToInclude = EntitySettings.get(taskCompound.getString("name"));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
 	{
 		super.saveProgress(taskCompound);
 		taskCompound.setBoolean("child", child);
-		taskCompound.setString("name", ((this.entityToInclude != null) ? ArmbotEntity.get(this.entityToInclude) : ""));
+		taskCompound.setString("name", ((this.entityToInclude != null) ? EntitySettings.get(this.entityToInclude) : ""));
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class TaskGrabEntity extends TaskGrabPrefab
 		String entity = "";
 		if (this.entityToInclude != null)
 		{
-			entity = ArmbotEntity.get(this.entityToInclude);
+			entity = EntitySettings.get(this.entityToInclude);
 			if (this.child)
 			{
 				// TODO do check for EntityAgable

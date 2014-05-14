@@ -3,13 +3,12 @@ package resonantinduction.archaic.fluid.tank;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
+import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
-import calclavia.lib.utility.FluidUtility;
 
 /**
  * Network that handles connected tanks

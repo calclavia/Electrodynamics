@@ -12,13 +12,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.fluid.TileFluidDistribution;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.LanguageUtility;
 
 /** @author Darkguardsman */
 public class ItemBlockTank extends ItemBlock implements IFluidContainerItem

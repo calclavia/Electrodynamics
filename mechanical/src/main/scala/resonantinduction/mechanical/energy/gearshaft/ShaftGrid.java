@@ -1,6 +1,6 @@
 package resonantinduction.mechanical.energy.gearshaft;
 
-import calclavia.lib.grid.NodeGrid;
+import resonant.lib.grid.NodeGrid;
 
 public class ShaftGrid extends NodeGrid<ShaftSubNode>
 {    

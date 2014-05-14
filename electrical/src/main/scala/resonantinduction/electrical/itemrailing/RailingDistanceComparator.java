@@ -1,9 +1,9 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.render.EnumColor;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
-
 import java.util.Comparator;
+
+import resonant.lib.render.EnumColor;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 
 /**
  * @author tgame14

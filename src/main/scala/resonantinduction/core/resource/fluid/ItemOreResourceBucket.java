@@ -15,11 +15,11 @@ import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.FluidRegistry;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.TabRI;
 import resonantinduction.core.resource.ItemOreResource;
 import resonantinduction.core.resource.ResourceGenerator;
-import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

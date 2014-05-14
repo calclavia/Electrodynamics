@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketSender;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IVoltageInput;
@@ -12,8 +14,6 @@ import universalelectricity.api.electricity.IVoltageOutput;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
 
 import com.google.common.io.ByteArrayDataInput;
 

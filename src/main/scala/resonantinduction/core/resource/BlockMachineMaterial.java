@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
-import calclavia.lib.prefab.block.BlockTile;
 
 /**
  * A block used to build machines or decoration.

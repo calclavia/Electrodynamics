@@ -1,8 +1,7 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
-import calclavia.lib.grid.INodeProvider;
+import resonant.api.grid.INodeProvider;
 import universalelectricity.api.vector.IVectorWorld;
-import universalelectricity.api.vector.VectorWorld;
 
 /**
  * @author tgame14

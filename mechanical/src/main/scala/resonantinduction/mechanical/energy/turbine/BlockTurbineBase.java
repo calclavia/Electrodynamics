@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import calclavia.lib.prefab.block.BlockRotatable;
+import resonant.lib.prefab.block.BlockRotatable;
 
 /*
  * Turbine block, extend this.

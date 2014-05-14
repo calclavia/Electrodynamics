@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
-import calclavia.lib.prefab.item.ItemBlockTooltip;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.prefab.item.ItemBlockTooltip;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemBlockCrate extends ItemBlockTooltip
 {

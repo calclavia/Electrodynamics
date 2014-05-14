@@ -1,25 +1,21 @@
 package resonantinduction.mechanical.energy.gear;
 
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.gearshaft.GearShaftNode;
+import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
+import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.PartMap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.gearshaft.GearShaftNode;
-import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.grid.PartMechanical;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.

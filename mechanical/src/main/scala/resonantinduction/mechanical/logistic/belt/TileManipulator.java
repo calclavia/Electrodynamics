@@ -9,14 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IManipulator;
+import resonant.api.IRotatable;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.mechanical.IManipulator;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.utility.inventory.InternalInventoryHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 

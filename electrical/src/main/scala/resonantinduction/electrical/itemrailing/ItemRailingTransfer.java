@@ -1,12 +1,12 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.render.EnumColor;
+import java.lang.ref.WeakReference;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import resonant.lib.render.EnumColor;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
-
-import java.lang.ref.WeakReference;
 
 /**
  * An object that is a wrapper for all items through railings

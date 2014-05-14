@@ -9,6 +9,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.multiblock.IMultiBlock;
+import resonant.lib.network.IPacketReceiverWithID;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.tile.TileElectrical;
+import resonant.lib.type.Pair;
+import resonant.lib.utility.MathUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.armbot.task.TaskDrop;
 import resonantinduction.electrical.armbot.task.TaskGOTO;
@@ -20,13 +27,6 @@ import resonantinduction.electrical.encoder.coding.ProgramHelper;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.type.Pair;
-import calclavia.lib.multiblock.fake.IMultiBlock;
-import calclavia.lib.network.IPacketReceiverWithID;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileElectrical;
-import calclavia.lib.utility.MathUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 

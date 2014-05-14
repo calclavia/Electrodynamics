@@ -1,16 +1,17 @@
 package resonantinduction.core.resource;
 
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.lib.config.Config;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.IVirtualObject;
-import calclavia.lib.utility.nbt.NBTUtility;
-import calclavia.lib.utility.nbt.SaveManager;
-import com.google.common.collect.HashBiMap;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import javax.imageio.ImageIO;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -28,6 +29,12 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
+import resonant.api.recipe.MachineRecipes;
+import resonant.lib.config.Config;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.nbt.IVirtualObject;
+import resonant.lib.utility.nbt.NBTUtility;
+import resonant.lib.utility.nbt.SaveManager;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
@@ -36,16 +43,12 @@ import resonantinduction.core.fluid.FluidColored;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+import com.google.common.collect.HashBiMap;
+
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Calclavia

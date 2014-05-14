@@ -8,11 +8,11 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import resonant.api.recipe.MachineRecipes;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Settings;
 import resonantinduction.core.resource.ResourceGenerator;
-import calclavia.api.recipe.MachineRecipes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

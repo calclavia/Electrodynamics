@@ -10,12 +10,12 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
+import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.item.ISimpleItemRenderer;
-import calclavia.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

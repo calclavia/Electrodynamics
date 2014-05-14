@@ -1,9 +1,9 @@
 package resonantinduction.electrical.battery;
 
-import calclavia.lib.prefab.tile.TileElectrical;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.prefab.tile.TileElectrical;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.vector.Vector3;
 

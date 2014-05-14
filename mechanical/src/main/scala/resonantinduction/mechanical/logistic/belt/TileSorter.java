@@ -19,17 +19,17 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.lib.content.module.TileRender;
+import resonant.lib.content.module.prefab.TileInventory;
+import resonant.lib.network.Synced.SyncedInput;
+import resonant.lib.network.Synced.SyncedOutput;
+import resonant.lib.prefab.vector.Cuboid;
+import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.content.module.prefab.TileInventory;
-import calclavia.lib.network.Synced.SyncedInput;
-import calclavia.lib.network.Synced.SyncedOutput;
-import calclavia.lib.prefab.vector.Cuboid;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

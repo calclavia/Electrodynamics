@@ -5,9 +5,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import calclavia.lib.utility.inventory.ExternalInventory;
-import calclavia.lib.utility.inventory.IExternalInventory;
-import calclavia.lib.utility.inventory.IExternalInventoryBox;
+import resonant.api.IExternalInventory;
+import resonant.api.IExternalInventoryBox;
+import resonant.lib.utility.inventory.ExternalInventory;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 

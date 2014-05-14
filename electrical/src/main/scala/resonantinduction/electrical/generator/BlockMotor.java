@@ -4,10 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.prefab.block.BlockRotatable;
+import resonant.lib.render.block.BlockRenderingHandler;
 import resonantinduction.core.Reference;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockRotatable;
-import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

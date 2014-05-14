@@ -13,13 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.prefab.block.BlockSidedIO;
+import resonant.lib.render.block.BlockRenderingHandler;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockSidedIO;
-import calclavia.lib.render.block.BlockRenderingHandler;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

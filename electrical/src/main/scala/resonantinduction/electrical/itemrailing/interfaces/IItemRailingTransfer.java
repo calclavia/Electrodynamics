@@ -1,7 +1,7 @@
 package resonantinduction.electrical.itemrailing.interfaces;
 
-import calclavia.lib.render.EnumColor;
 import net.minecraft.item.ItemStack;
+import resonant.lib.render.EnumColor;
 
 /**
  * the object that functions as a Wrapper for items and handles the items that flow through Railings

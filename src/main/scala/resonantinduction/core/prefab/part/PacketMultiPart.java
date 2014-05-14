@@ -6,9 +6,9 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketType;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketType;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

@@ -1,7 +1,7 @@
 package resonantinduction.archaic.waila;
 
-import calclavia.lib.modproxy.ICompatProxy;
-import calclavia.lib.utility.Mods;
+import resonant.lib.modproxy.ICompatProxy;
+import resonant.lib.utility.Mods;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 /**

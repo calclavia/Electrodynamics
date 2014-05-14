@@ -9,13 +9,14 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.core.ResonantEngine;
+import resonant.lib.References;
+import resonant.lib.content.module.TileBase;
+import resonant.lib.multiblock.IMultiBlockStructure;
+import resonant.lib.network.Synced;
+import resonant.lib.network.Synced.SyncedInput;
+import resonant.lib.network.Synced.SyncedOutput;
 import universalelectricity.api.vector.Vector3;
-import calclavia.components.CalclaviaLoader;
-import calclavia.lib.content.module.TileBase;
-import calclavia.lib.multiblock.reference.IMultiBlockStructure;
-import calclavia.lib.network.Synced;
-import calclavia.lib.network.Synced.SyncedInput;
-import calclavia.lib.network.Synced.SyncedOutput;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -123,12 +124,12 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     @Override
     public Packet getDescriptionPacket()
     {
-        return CalclaviaLoader.PACKET_ANNOTATION.getPacket(this);
+        return References.PACKET_ANNOTATION.getPacket(this);
     }
 
     public void sendPowerUpdate()
     {
-        CalclaviaLoader.PACKET_ANNOTATION.sync(this, 1);
+        References.PACKET_ANNOTATION.sync(this, 1);
     }
 
     /** Reads a tile entity from NBT. */

@@ -9,11 +9,11 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketSender;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.tile.TileExternalInventory;
 import resonantinduction.core.ResonantInduction;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileExternalInventory;
 
 import com.google.common.io.ByteArrayDataInput;
 

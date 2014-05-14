@@ -1,19 +1,19 @@
 package resonantinduction.mechanical.energy.grid;
 
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.grid.Node;
-import calclavia.lib.grid.TickingGrid;
-import codechicken.multipart.TMultiPart;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IMechanicalNode;
+import resonant.api.grid.INodeProvider;
+import resonant.lib.grid.Node;
+import resonant.lib.grid.TickingGrid;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.Iterator;
-import java.util.Map.Entry;
+import codechicken.multipart.TMultiPart;
 
 /**
  * A mechanical node for mechanical energy.

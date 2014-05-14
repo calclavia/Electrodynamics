@@ -1,13 +1,32 @@
 package resonantinduction.core;
 
-import calclavia.lib.config.ConfigAnnotationEvent;
-import calclavia.lib.config.ConfigHandler;
-import calclavia.lib.content.ContentRegistry;
-import calclavia.lib.network.PacketAnnotation;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.network.PacketTile;
-import calclavia.lib.prefab.item.ItemBlockMetadata;
-import calclavia.lib.utility.LanguageUtility;
+import java.util.HashMap;
+import java.util.logging.Logger;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.BlockFluidFinite;
+
+import org.modstats.ModstatInfo;
+import org.modstats.Modstats;
+
+import resonant.lib.config.ConfigHandler;
+import resonant.lib.content.ContentRegistry;
+import resonant.lib.network.PacketAnnotation;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.network.PacketTile;
+import resonant.lib.prefab.item.ItemBlockMetadata;
+import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.handler.TextureHookHandler;
+import resonantinduction.core.prefab.part.PacketMultiPart;
+import resonantinduction.core.resource.BlockDust;
+import resonantinduction.core.resource.BlockMachineMaterial;
+import resonantinduction.core.resource.ItemOreResource;
+import resonantinduction.core.resource.ResourceGenerator;
+import resonantinduction.core.resource.TileDust;
+import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
+import resonantinduction.core.resource.fluid.TileFluidMixture;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -20,28 +39,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.BlockFluidFinite;
-import org.modstats.ModstatInfo;
-import org.modstats.Modstats;
-import resonantinduction.core.handler.TextureHookHandler;
-import resonantinduction.core.prefab.part.PacketMultiPart;
-import resonantinduction.core.resource.*;
-import resonantinduction.core.resource.fluid.ItemOreResourceBucket;
-import resonantinduction.core.resource.fluid.TileFluidMixture;
-
-import java.util.HashMap;
-import java.util.logging.Logger;
 
 /**
  * The core module of Resonant Induction
  *
  * @author Calclavia
  */
-@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:CalclaviaCore;before:ThermalExpansion;before:Mekanism")
+@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
 @NetworkMod(channels = Reference.CHANNEL, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "resonantin")
 public class ResonantInduction

@@ -7,10 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidStack;
+import resonant.api.recipe.MachineRecipes;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
-import calclavia.api.recipe.MachineRecipes;
 
 /**
  * NO-OP. Not yet properly implemented. We're not using TEs for now.

@@ -1,38 +1,26 @@
 package resonantinduction.electrical.laser.gun;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.List;
 
-import resonantinduction.core.ResonantInduction;
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import resonant.api.event.LaserEvent;
+import resonant.lib.prefab.vector.RayTraceHelper;
+import resonant.lib.thermal.ThermalGrid;
+import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.item.ItemElectric;
 import universalelectricity.api.vector.IVector3;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.api.resonantinduction.electrical.LaserEvent;
-import calclavia.lib.prefab.vector.RayTraceHelper;
-import calclavia.lib.thermal.ThermalGrid;
-import calclavia.lib.type.Pair;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /** Version of the mining laser that uses the thermal grid to melt blocks down
  * 

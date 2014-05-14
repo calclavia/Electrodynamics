@@ -1,21 +1,26 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.config.Config;
-import calclavia.lib.grid.Node;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.type.Pair;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.config.Config;
+import resonant.lib.grid.Node;
+import resonant.lib.render.EnumColor;
+import resonant.lib.type.Pair;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
 import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.VectorWorld;
 
-import java.util.*;
+import com.google.common.collect.Lists;
 
 /**
  * @author tgame14

@@ -6,9 +6,9 @@ package resonantinduction.electrical.multimeter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.InventoryPlayer;
-import calclavia.lib.gui.GuiContainerBase;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.gui.GuiContainerBase;
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -8,6 +8,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.UniversalElectricity;
@@ -15,8 +17,6 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.IVoltageItem;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 
 @UniversalClass
 public class ItemBlockBattery extends ItemBlock implements IEnergyItem, IVoltageItem

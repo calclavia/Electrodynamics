@@ -1,10 +1,10 @@
 package resonantinduction.archaic.fluid.grate;
 
-import calclavia.lib.config.Config;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.utility.FluidUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,16 +12,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import resonant.api.IRotatable;
+import resonant.lib.config.Config;
+import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileGrate extends TilePressureNode implements IRotatable
 {

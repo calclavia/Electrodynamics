@@ -11,15 +11,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IEntityConveyor;
+import resonant.api.IRotatable;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
+import resonant.lib.content.module.TileBase;
+import resonant.lib.network.IPacketReceiverWithID;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import calclavia.api.resonantinduction.mechanical.IBelt;
-import calclavia.lib.content.module.TileBase;
-import calclavia.lib.grid.INode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.network.IPacketReceiverWithID;
-import calclavia.lib.prefab.tile.IRotatable;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -28,7 +28,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
  * 
  * @author DarkGuardsman */
-public class TileConveyorBelt extends TileBase implements IBelt, IRotatable, INodeProvider, IPacketReceiverWithID
+public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRotatable, INodeProvider, IPacketReceiverWithID
 {
     public enum BeltType
     {

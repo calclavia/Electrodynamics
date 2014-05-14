@@ -1,15 +1,13 @@
 package resonantinduction.electrical.levitator;
 
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LinkUtility;
-import calclavia.lib.utility.WrenchUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
-import codechicken.lib.data.MCDataInput;
-import codechicken.lib.data.MCDataOutput;
-import codechicken.multipart.TMultiPart;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.*;
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
+import net.minecraft.block.BlockLadder;
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.BlockVine;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +21,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LinkUtility;
+import resonant.lib.utility.WrenchUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
@@ -30,9 +32,11 @@ import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
+import codechicken.lib.data.MCDataInput;
+import codechicken.lib.data.MCDataOutput;
+import codechicken.multipart.TMultiPart;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartLevitator extends PartFace
 {

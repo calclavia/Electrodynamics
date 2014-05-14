@@ -12,6 +12,8 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.input.Keyboard;
 
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.TabRI;
@@ -21,8 +23,6 @@ import resonantinduction.electrical.wire.framed.PartFramedWire;
 import resonantinduction.electrical.wire.framed.RenderFramedWire;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LanguageUtility;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.ControlKeyModifer;

@@ -7,12 +7,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import resonant.api.IExtendedStorage;
+import resonant.api.IFilterable;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.tile.TileExternalInventory;
 import resonantinduction.core.ResonantInduction;
-import calclavia.api.resonantinduction.IFilterable;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileExternalInventory;
-import calclavia.lib.utility.inventory.IExtendedStorage;
 
 import com.google.common.io.ByteArrayDataInput;
 

@@ -7,8 +7,8 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.archaic.crate.TileCrate;
-import calclavia.lib.utility.LanguageUtility;
 
 /** Waila support for crates
  * 

@@ -10,11 +10,11 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IEntityConveyor;
+import resonant.lib.network.IPacketReceiverWithID;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.resonantinduction.mechanical.IBelt;
-import calclavia.lib.network.IPacketReceiverWithID;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -73,9 +73,9 @@ public class TileRejector extends TileFilterable implements IPacketReceiverWithI
 		// entity.motionY += 0.10000000298023224D;
 		entity.posZ += side.offsetZ;
 
-		if (!this.worldObj.isRemote && tileEntity instanceof IBelt)
+		if (!this.worldObj.isRemote && tileEntity instanceof IEntityConveyor)
 		{
-			((IBelt) tileEntity).ignoreEntity(entity);
+			((IEntityConveyor) tileEntity).ignoreEntity(entity);
 		}
 	}
 

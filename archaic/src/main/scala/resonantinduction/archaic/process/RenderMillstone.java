@@ -3,7 +3,7 @@ package resonantinduction.archaic.process;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import calclavia.lib.render.RenderItemOverlayUtility;
+import resonant.lib.render.RenderItemOverlayUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

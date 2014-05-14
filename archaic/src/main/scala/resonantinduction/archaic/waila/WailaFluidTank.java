@@ -8,8 +8,8 @@ import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidTank;
+import resonant.lib.utility.LanguageUtility;
 import resonantinduction.archaic.fluid.tank.TileTank;
-import calclavia.lib.utility.LanguageUtility;
 
 /** Waila support for tanks
  * 

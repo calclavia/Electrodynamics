@@ -1,8 +1,8 @@
 package resonantinduction.mechanical.energy.turbine;
 
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.multiblock.MultiBlockHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.multiblock.reference.MultiBlockHandler;
 
 public class TurbineMBlockHandler extends MultiBlockHandler<TileTurbineBase>
 {

@@ -1,8 +1,8 @@
 package resonantinduction.core.grid;
 
 import net.minecraftforge.common.ForgeDirection;
-import calclavia.lib.grid.INode;
-import calclavia.lib.grid.INodeProvider;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;

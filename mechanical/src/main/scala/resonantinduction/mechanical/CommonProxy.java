@@ -1,6 +1,6 @@
 package resonantinduction.mechanical;
 
-import calclavia.lib.prefab.ProxyBase;
+import resonant.lib.prefab.ProxyBase;
 
 public class CommonProxy extends ProxyBase
 {
