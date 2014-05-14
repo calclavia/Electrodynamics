@@ -37,3 +37,10 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+/bin
+.classpath
+.gradle/
+.settings/
+build/
+eclipse/
+.project

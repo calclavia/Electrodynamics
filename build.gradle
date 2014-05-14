@@ -67,10 +67,7 @@ allprojects {
     
     dependencies {
         compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${rootProject.config.version.universalelectricity}", classifier: "dev"
-    	if (System.getenv().JOB_NAME == "Resonant-Induction-Development")
-			compile group: 'calclavia-core-development', name: 'calclavia-core', version: "${rootProject.config.version.calclaviacore}", classifier: "dev"
-		else
-			compile group: 'calclavia-core', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
+		compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 
 		compile name: 'CodeChickenLib', version: "${config.version.minecraft}-${config.version.cclib}", ext: 'jar'
 		compile name: 'ForgeMultipart', version: "${config.version.minecraft}-${config.version.fmp}", ext: 'jar'
@@ -99,8 +96,8 @@ allprojects {
 }
  
 subprojects {
-    archivesBaseName = "${System.getenv().JOB_NAME}"
-    
+    archivesBaseName = "${System.getenv().JOB_NAME}"    
+	sourceSets.main.compileClasspath += rootProject.sourceSets.api.output
     dependencies {
         compile rootProject
     }
@@ -127,7 +124,7 @@ task apiZip(type: Zip) {
     include 'resonantinduction/api/**'
     destinationDir = file 'output'
 }
- 
+	
 artifacts {
     archives apiZip
 }

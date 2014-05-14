@@ -3,10 +3,10 @@ package resonantinduction.mechanical.energy.turbine;
 import java.util.HashMap;
 
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.schematic.Schematic;
+import resonant.lib.type.Pair;
 import resonantinduction.mechanical.Mechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.type.Pair;
-import calclavia.lib.schematic.Schematic;
 
 public class SchematicWindTurbine extends Schematic
 {

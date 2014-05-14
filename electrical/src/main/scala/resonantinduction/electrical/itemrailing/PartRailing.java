@@ -1,47 +1,45 @@
 package resonantinduction.electrical.itemrailing;
 
-import calclavia.lib.grid.INode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.render.EnumColor;
-import codechicken.microblock.IHollowConnect;
-import codechicken.multipart.JNormalOcclusion;
-import codechicken.multipart.TSlottedPart;
+import java.lang.reflect.Constructor;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.grid.INode;
 import resonantinduction.core.prefab.part.PartFramedConnection;
 import resonantinduction.electrical.Electrical;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
+import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
+import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import universalelectricity.api.vector.VectorWorld;
+import codechicken.multipart.TileMultipart;
 
 /**
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, TSlottedPart, JNormalOcclusion, IHollowConnect, IItemRailing, INodeProvider
+public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, IItemRailingProvider
 {
 
-    public enum EnumRailing
+    public static enum EnumRailing
     {
         DEFAULT, EXTENTION;
     }
 
-    // default is NULL
-    private EnumColor color;
+	public NodeRailing getNode()
+	{
+		return node;
+	}
+
     private NodeRailing node;
 
     public PartRailing ()
     {
         super(Electrical.itemInsulation);
-
-        this.color = null;
+		this.material = EnumRailing.DEFAULT;
+		this.node = new NodeRailing(this);
     }
 
 
@@ -69,38 +67,12 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return null;
     }
 
-    @Override
-    public boolean canItemEnter (IItemRailingTransfer item)
-    {
-        return this.color != null ? this.color == item.getColor() : false;
-    }
+	public VectorWorld getWorldPos()
+	{
+		return new VectorWorld(getWorld(), x(), y(), z());
+	}
 
-    @Override
-    public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
-    {
-        return this.color != null ? this.color == railing.getRailingColor() : true;
-    }
-
-    @Override
-    public EnumColor getRailingColor ()
-    {
-        return this.color;
-    }
-
-    @Override
-    public IItemRailing setRailingColor (EnumColor color)
-    {
-        this.color = color;
-        return this;
-    }
-
-    @Override
-    public World getWorldObj ()
-    {
-        return super.getWorld();
-    }
-
-    @Override
+	@Override
     public float getResistance ()
     {
         return 0;
@@ -133,7 +105,8 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
     @Override
     protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
     {
-        return tile instanceof IItemRailing ? canConnectToRailing((IItemRailing) tile, to) : tile instanceof IInventory ? true : false;
+		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
+		return obj instanceof IInventory ? true : obj instanceof PartRailing;
     }
 
     @Override
@@ -142,22 +115,28 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return tile instanceof IConductor ? (IConductor) ((IConductor) tile).getInstance(ForgeDirection.UNKNOWN) : null;
     }
 
-    @Override
-    public IEnergyNetwork getNetwork ()
-    {
-        return null;
-    }
+	@Override
+	public IEnergyNetwork getNetwork()
+	{
+		if (network == null)
+		{
+			setNetwork(EnergyNetworkLoader.getNewNetwork(this));
+		}
 
+		return network;
+	}
+
+	//TODO: Fix up to proper data
     @Override
     public void setMaterial (int i)
     {
-
+		this.material = EnumRailing.values()[i];
     }
 
     @Override
     protected ItemStack getItem ()
     {
-        return null;
+        return new ItemStack(Electrical.itemRailing);
     }
 
     @Override

@@ -1,8 +1,7 @@
 package resonantinduction.core.resource;
 
-import calclavia.lib.prefab.block.BlockTile;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-
-import java.util.Random;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The block form of the item dust.

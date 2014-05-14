@@ -5,12 +5,12 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import resonant.lib.utility.nbt.NBTUtility;
 import resonantinduction.core.ArgumentData;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.nbt.NBTUtility;
 
 /** @author DarkGuardsman */
 public abstract class TaskBase implements ITask

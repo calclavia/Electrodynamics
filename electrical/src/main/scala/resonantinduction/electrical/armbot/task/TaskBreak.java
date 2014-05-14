@@ -7,13 +7,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonant.lib.type.Pair;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.electrical.armbot.IArmbot;
 import resonantinduction.electrical.armbot.TaskBaseArmbot;
 import resonantinduction.electrical.armbot.TaskBaseProcess;
 import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.type.Pair;
-import calclavia.lib.utility.inventory.InventoryUtility;
 
 /**
  * Used by arms to break a specific block in a position.

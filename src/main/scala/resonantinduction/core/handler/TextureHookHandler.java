@@ -3,11 +3,11 @@ package resonantinduction.core.handler;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.BlockFluidFinite;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.fluid.FluidColored;
 import resonantinduction.core.resource.ResourceGenerator;
-import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

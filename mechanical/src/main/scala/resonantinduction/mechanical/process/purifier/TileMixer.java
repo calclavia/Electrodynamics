@@ -1,8 +1,9 @@
 package resonantinduction.mechanical.process.purifier;
 
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.utility.inventory.InventoryUtility;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.block.material.Material;
@@ -14,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonant.api.IMechanicalNode;
+import resonant.api.recipe.MachineRecipes;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
@@ -21,10 +25,6 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Calclavia
@@ -34,6 +34,8 @@ public class TileMixer extends TileMechanical implements IInventory
 	public static final long POWER = 500000;
 	public static final int PROCESS_TIME = 12 * 20;
 	public static final Timer<EntityItem> timer = new Timer<EntityItem>();
+	
+	private boolean areaBlockedFromMoving = false;
 
 	public TileMixer()
 	{
@@ -60,6 +62,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		if (!world().isRemote && ticks % 20 == 0)
 		{
+		    this.areaBlockedFromMoving = false;
 			for (int x = -1; x <= 1; x++)
 			{
 				for (int z = -1; z <= 1; z++)
@@ -71,8 +74,7 @@ public class TileMixer extends TileMechanical implements IInventory
 
 						if (block != null && !(block instanceof IFluidBlock) && !(block instanceof BlockFluid))
 						{
-							block.dropBlockAsItem(world(), x(), y(), z(), 0, 0);
-							position().setBlock(0);
+							this.areaBlockedFromMoving = true;
 							return;
 						}
 					}
@@ -95,7 +97,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularVelocity() != 0;
+		return mechanicalNode.getAngularVelocity() != 0 && areaBlockedFromMoving;
 	}
 
 	public void doWork()
@@ -143,13 +145,12 @@ public class TileMixer extends TileMechanical implements IInventory
 
 				if (timeLeft <= 0)
 				{
-					if (this.doneWork(processingItem))
+					if (doneWork(processingItem))
 					{
 						if (--processingItem.getEntityItem().stackSize <= 0)
 						{
 							processingItem.setDead();
 							timer.remove(processingItem);
-							processingItem = null;
 						}
 						else
 						{
@@ -170,7 +171,6 @@ public class TileMixer extends TileMechanical implements IInventory
 			else
 			{
 				timer.remove(processingItem);
-				processingItem = null;
 			}
 		}
 
@@ -190,20 +190,24 @@ public class TileMixer extends TileMechanical implements IInventory
 		if (mixPosition.getBlockID(world()) != blockID())
 		{
 			Block block = Block.blocksList[mixPosition.getBlockID(worldObj)];
+			Block blockFluidFinite = ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem()));
 
-			if (block instanceof BlockFluidMixture)
+			if (blockFluidFinite != null)
 			{
-				ItemStack itemStack = entity.getEntityItem().copy();
-
-				if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+				if (block instanceof BlockFluidMixture)
 				{
-					worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
-					return true;
+					ItemStack itemStack = entity.getEntityItem().copy();
+
+					if (((BlockFluidMixture) block).mix(worldObj, mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), itemStack))
+					{
+						worldObj.notifyBlocksOfNeighborChange(mixPosition.intX(), mixPosition.intY(), mixPosition.intZ(), mixPosition.getBlockID(worldObj));
+						return true;
+					}
 				}
-			}
-			else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
-			{
-				mixPosition.setBlock(worldObj, ResourceGenerator.getMixture(ResourceGenerator.getName(entity.getEntityItem())).blockID);
+				else if (block != null && (block.blockID == Block.waterStill.blockID || block.blockID == Block.waterMoving.blockID))
+				{
+					mixPosition.setBlock(worldObj, blockFluidFinite.blockID);
+				}
 			}
 		}
 

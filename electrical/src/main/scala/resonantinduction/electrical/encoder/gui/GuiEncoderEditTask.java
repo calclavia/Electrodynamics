@@ -8,12 +8,12 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import resonant.lib.gui.ContainerDummy;
+import resonant.lib.gui.GuiContainerBase;
 import resonantinduction.core.ArgumentData;
 import resonantinduction.core.Reference;
 import resonantinduction.electrical.encoder.coding.ITask;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.gui.ContainerDummy;
-import calclavia.lib.gui.GuiContainerBase;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

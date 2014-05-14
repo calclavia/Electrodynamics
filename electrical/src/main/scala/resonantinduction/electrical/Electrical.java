@@ -7,6 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import resonant.lib.content.ContentRegistry;
+import resonant.lib.modproxy.ProxyHandler;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.recipe.UniversalRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
@@ -21,6 +25,8 @@ import resonantinduction.electrical.generator.TileMotor;
 import resonantinduction.electrical.generator.solar.TileSolarPanel;
 import resonantinduction.electrical.generator.thermopile.BlockThermopile;
 import resonantinduction.electrical.generator.thermopile.TileThermopile;
+import resonantinduction.electrical.itemrailing.ItemItemRailing;
+import resonantinduction.electrical.laser.gun.ItemMiningLaser;
 import resonantinduction.electrical.levitator.ItemLevitator;
 import resonantinduction.electrical.multimeter.ItemMultimeter;
 import resonantinduction.electrical.tesla.BlockTesla;
@@ -29,9 +35,6 @@ import resonantinduction.electrical.transformer.ItemTransformer;
 import resonantinduction.electrical.wire.EnumWireMaterial;
 import resonantinduction.electrical.wire.ItemWire;
 import resonantinduction.quantum.gate.ItemQuantumGlyph;
-import calclavia.lib.content.ContentRegistry;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.recipe.UniversalRecipe;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -77,7 +80,10 @@ public class Electrical
 	public static Item itemCharger;
 	public static Block blockTesla;
 	public static Block blockBattery;
-	public static Block blockEncoder;
+	public static Block blockEncoder;	
+
+	// Railings
+	public static Item itemRailing;
 
 	// Generators
 	public static Block blockSolarPanel;
@@ -93,10 +99,16 @@ public class Electrical
 	// Quantum
 	public static Block blockQuantumGate;
 	public static Item itemQuantumGlyph;
+	
+	// Tools
+	public static Item itemLaserGun;
+	
+	public ProxyHandler modproxies;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
+	    modproxies = new ProxyHandler();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
 		Settings.CONFIGURATION.load();
@@ -115,6 +127,7 @@ public class Electrical
 		// blockEncoder = contentRegistry.createTile(BlockEncoder.cass);
 		// itemDisk = contentRegistry.createItem(ItemDisk.class);
 		itemInsulation = contentRegistry.createItem("insulation", ItemResourcePart.class);
+		itemLaserGun = contentRegistry.createItem("laserDrill", ItemMiningLaser.class);
 
 		// Generator
 		blockSolarPanel = contentRegistry.newBlock(TileSolarPanel.class);
@@ -123,6 +136,10 @@ public class Electrical
 
 		// Quantum
 		itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
+
+		//Railings
+		itemRailing = contentRegistry.createItem(ItemItemRailing.class);
+
 		Settings.CONFIGURATION.save();
 
 		OreDictionary.registerOre("wire", itemWire);
@@ -141,6 +158,7 @@ public class Electrical
 		}
 
 		proxy.preInit();
+		modproxies.preInit();
 	}
 
 	@EventHandler
@@ -149,6 +167,7 @@ public class Electrical
 		Settings.setModMetadata(metadata, ID, NAME, ResonantInduction.ID);
 		MultipartElectrical.INSTANCE = new MultipartElectrical();
 		proxy.init();
+		modproxies.init();
 	}
 
 	@EventHandler
@@ -176,8 +195,8 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(tierThreeBattery, "RRR", "RIR", "RRR", 'R', tierTwoBattery, 'I', Block.blockDiamond));
 
 		/** Wires **/
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, Item.slimeBall, new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
+		//GameRegistry.addRecipe(new ShapelessOreRecipe(itemInsulation, "slimeball", new ItemStack(Block.cloth, 2, OreDictionary.WILDCARD_VALUE)));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.COPPER.getWire(3), "MMM", 'M', "ingotCopper"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(EnumWireMaterial.TIN.getWire(3), "MMM", 'M', "ingotTin"));
@@ -189,7 +208,7 @@ public class Electrical
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemCharger, "WWW", "ICI", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get(), 'C', UniversalRecipe.CIRCUIT_T1.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(itemTransformer, "WWW", "WWW", "III", 'W', "wire", 'I', UniversalRecipe.PRIMARY_METAL.get()));
-		GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
+		//GameRegistry.addRecipe(new ShapedOreRecipe(itemLevitator, " G ", "SDS", "SWS", 'W', "wire", 'G', Block.glass, 'D', Block.blockDiamond, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 
 		/** Quantum Gates */
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemQuantumGlyph, 1, 0), " CT", "LBL", "TCT", 'B', Block.blockDiamond, 'L', itemLevitator, 'C', itemCharger, 'T', blockTesla));
@@ -202,6 +221,9 @@ public class Electrical
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockMotor, "SRS", "SMS", "SWS", 'W', "wire", 'R', Item.redstone, 'M', Block.blockIron, 'S', UniversalRecipe.PRIMARY_METAL.get()));
 		GameRegistry.addRecipe(new ShapedOreRecipe(blockThermopile, "ORO", "OWO", "OOO", 'W', "wire", 'O', Block.obsidian, 'R', Item.redstone));
 
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(itemLaserGun, "RDR", "RDR", "ICB", 'R', Item.redstone, 'D', Item.diamond, 'I', Item.ingotGold, 'C', UniversalRecipe.CIRCUIT_T2.get(), 'B', ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0)));
+		        
 		/** Wire Compatiblity **/
 		if (Loader.isModLoaded("IC2"))
 		{
@@ -217,5 +239,6 @@ public class Electrical
 		}
 
 		proxy.postInit();
+		modproxies.postInit();
 	}
 }

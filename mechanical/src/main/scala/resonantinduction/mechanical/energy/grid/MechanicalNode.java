@@ -1,30 +1,27 @@
 package resonantinduction.mechanical.energy.grid;
 
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
-import calclavia.lib.grid.Node;
-import calclavia.lib.grid.TickingGrid;
-import codechicken.multipart.TMultiPart;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IMechanicalNode;
+import resonant.api.grid.INodeProvider;
+import resonant.lib.grid.Node;
+import resonant.lib.grid.TickingGrid;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.Iterator;
-import java.util.Map.Entry;
+import codechicken.multipart.TMultiPart;
 
 /**
  * A mechanical node for mechanical energy.
  * <p/>
  * Useful Formula:
  * <p/>
- * Power is the work per unit time.
- * Power (W) = Torque (Strength of the rotation, Newton Meters) x Speed (Angular Velocity, RADIAN
- * PER SECOND).
- * *OR*
- * Power = Torque / Time
+ * Power is the work per unit time. Power (W) = Torque (Strength of the rotation, Newton Meters) x
+ * Speed (Angular Velocity, RADIAN PER SECOND). *OR* Power = Torque / Time
  * <p/>
  * Torque = r (Radius) * F (Force) * sin0 (Direction/Angle of the force applied. 90 degrees if
  * optimal.)
@@ -42,6 +39,8 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 	 * The current rotation of the mechanical node.
 	 */
 	public double angle = 0;
+	public double prev_angle = 0;
+	protected double maxDeltaAngle = Math.toRadians(180);
 
 	protected double load = 2;
 	protected byte connectionMap = Byte.parseByte("111111", 2);
@@ -73,7 +72,14 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 
 		if (!ResonantInduction.proxy.isPaused())
 		{
-			angle += angularVelocity * deltaTime;
+			if (angularVelocity >= 0)
+			{
+				angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
+			}
+			else
+			{
+				angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
+			}
 		}
 
 		if (angle % (Math.PI * 2) != angle)
@@ -84,11 +90,9 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 
 		if (world() != null && !world().isRemote)
 		{
-			double acceleration = this.acceleration * deltaTime;
+			final double acceleration = this.acceleration * deltaTime;
 
-			/**
-			 * Energy loss
-			 */
+			/** Energy loss */
 			double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
 
 			if (torque > 0)
@@ -111,6 +115,11 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 				angularVelocity += velocityLoss;
 			}
 
+			if (getEnergy() <= 0)
+			{
+				angularVelocity = torque = 0;
+			}
+
 			power = getEnergy() / deltaTime;
 
 			synchronized (connections)
@@ -124,45 +133,44 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 					ForgeDirection dir = entry.getValue();
 					MechanicalNode adjacentMech = entry.getKey();
 
-					/**
-					 * Calculate angular velocity and torque.
-					 */
+					/** Calculate angular velocity and torque. */
 					float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
 					boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
 
 					int inversion = inverseRotation ? -1 : 1;
 
-					double applyTorque = inversion * adjacentMech.getTorque() / ratio * acceleration;
+					double targetTorque = inversion * adjacentMech.getTorque() / ratio;
+					double applyTorque = targetTorque * acceleration;
 
-					if (Math.abs(torque + applyTorque) < Math.abs(adjacentMech.getTorque() / ratio))
+					if (Math.abs(torque + applyTorque) < Math.abs(targetTorque))
 					{
 						torque += applyTorque;
 					}
-					else
+					else if (Math.abs(torque - applyTorque) > Math.abs(targetTorque))
 					{
 						torque -= applyTorque;
 					}
 
-					double applyVelocity = inversion * adjacentMech.getAngularVelocity() * ratio * acceleration;
+					double targetVelocity = inversion * adjacentMech.getAngularVelocity() * ratio;
+					double applyVelocity = targetVelocity * acceleration;
 
-					if (Math.abs(angularVelocity + applyVelocity) < Math.abs(adjacentMech.getAngularVelocity() * ratio))
+					if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
 					{
 						angularVelocity += applyVelocity;
 					}
-					else
+					else if (Math.abs(angularVelocity - applyVelocity) > Math.abs(targetVelocity))
 					{
 						angularVelocity -= applyVelocity;
 					}
 
-					/**
-					 * Set all current rotations
-					 */
+					/** Set all current rotations */
 					// adjacentMech.angle = Math.abs(angle) * (adjacentMech.angle >= 0 ? 1 : -1);
 				}
 			}
 		}
 
 		onUpdate();
+		prev_angle = angle;
 	}
 
 	protected void onUpdate()
@@ -179,7 +187,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 	}
 
 	@Override
-	public void apply(double torque, double angularVelocity)
+	public void apply(Object source, double torque, double angularVelocity)
 	{
 		this.torque += torque;
 		this.angularVelocity += angularVelocity;

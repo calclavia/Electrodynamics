@@ -7,9 +7,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.belt.TileConveyorBelt.BeltType;
-import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

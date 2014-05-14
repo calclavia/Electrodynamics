@@ -2,9 +2,9 @@ package resonantinduction.electrical.generator.thermopile;
 
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.prefab.tile.TileElectrical;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.tile.TileElectrical;
 
 public class TileThermopile extends TileElectrical
 {

@@ -10,11 +10,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.mechanical.Mechanical;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 

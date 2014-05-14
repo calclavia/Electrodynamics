@@ -1,16 +1,8 @@
 package resonantinduction.archaic.fluid.gutter;
 
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.recipe.RecipeResource;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.prefab.vector.Cuboid;
-import calclavia.lib.render.FluidRenderUtility;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.utility.FluidUtility;
-import calclavia.lib.utility.WorldUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
@@ -22,8 +14,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
+
 import org.lwjgl.opengl.GL11;
+
+import resonant.api.recipe.MachineRecipes;
+import resonant.api.recipe.RecipeResource;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.prefab.vector.Cuboid;
+import resonant.lib.render.FluidRenderUtility;
+import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.FluidUtility;
+import resonant.lib.utility.WorldUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.archaic.fluid.grate.TileGrate;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
@@ -31,9 +39,8 @@ import resonantinduction.core.fluid.TilePressureNode;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import universalelectricity.api.vector.Vector3;
-
-import java.util.ArrayList;
-import java.util.List;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The gutter, used for fluid transfer.

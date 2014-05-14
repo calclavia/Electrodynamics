@@ -7,20 +7,17 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
-
-import org.apache.commons.lang3.ArrayUtils;
-
+import resonant.api.IMechanicalNode;
+import resonant.api.IRotatable;
+import resonant.api.recipe.MachineRecipes;
+import resonant.api.recipe.RecipeResource;
+import resonant.lib.prefab.vector.Cuboid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.recipe.RecipeResource;
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.vector.Cuboid;
 
 /**
  * @author Calclavia

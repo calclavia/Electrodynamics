@@ -1,19 +1,18 @@
 package resonantinduction.electrical.distributor
 
-import calclavia.lib.content.prefab.{TraitElectrical, TraitInventory}
-import net.minecraft.block.material.Material
-import calclavia.lib.content.module.TileBase
-import universalelectricity.api.vector.Vector3
-import net.minecraft.inventory.IInventory
-import net.minecraftforge.common.ForgeDirection
-import calclavia.lib.utility.inventory.InventoryUtility
-import net.minecraft.item.ItemStack
-
-import java.util.Collections
 import java.util
+import java.util.Collections
 
-import scala.util.control.Breaks._
+import net.minecraft.block.material.Material
+import net.minecraft.inventory.IInventory
+import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
+import net.minecraftforge.common.ForgeDirection
+import resonant.lib.content.module.TileBase
+import resonant.lib.content.prefab.TraitElectrical
+import resonant.lib.content.prefab.TraitInventory
+import resonant.lib.utility.inventory.InventoryUtility
+import universalelectricity.api.vector.Vector3
 
 /**
  * A Block that interacts with connected inventories

@@ -20,21 +20,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.multiblock.IMultiBlockStructure;
+import resonant.lib.multiblock.MultiBlockHandler;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketSender;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.damage.ElectricalDamage;
+import resonant.lib.prefab.tile.TileElectrical;
+import resonant.lib.render.EnumColor;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.electrical.Electrical;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.multiblock.reference.IMultiBlockStructure;
-import calclavia.lib.multiblock.reference.MultiBlockHandler;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.prefab.tile.TileElectrical;
-import calclavia.lib.render.EnumColor;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -241,7 +242,7 @@ public class TileTesla extends TileElectrical implements IMultiBlockStructure<Ti
 									{
 										if (mop.entityHit instanceof EntityLivingBase)
 										{
-											mop.entityHit.attackEntityFrom(CustomDamageSource.electrocution, 4);
+										    ElectricalDamage.electrocuteEntity(mop.entityHit, this, UniversalElectricity.DEFAULT_VOLTAGE * 4, 1);
 											Electrical.proxy.renderElectricShock(this.worldObj, new Vector3(topTesla).clone().translate(0.5), new Vector3(mop.entityHit));
 										}
 									}

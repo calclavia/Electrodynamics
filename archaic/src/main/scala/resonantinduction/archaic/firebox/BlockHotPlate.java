@@ -10,10 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import resonant.lib.prefab.block.BlockTile;
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.prefab.block.BlockTile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -12,6 +12,16 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonant.api.IFilterable;
+import resonant.api.recipe.MachineRecipes;
+import resonant.api.recipe.RecipeResource;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.network.Synced.SyncedInput;
+import resonant.lib.network.Synced.SyncedOutput;
+import resonant.lib.prefab.vector.Cuboid;
+import resonant.lib.render.RenderItemOverlayUtility;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.prefab.imprint.ItemImprint;
@@ -19,16 +29,6 @@ import resonantinduction.core.prefab.imprint.TileFilterable;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.recipe.RecipeResource;
-import calclavia.api.resonantinduction.IFilterable;
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.network.Synced.SyncedInput;
-import calclavia.lib.network.Synced.SyncedOutput;
-import calclavia.lib.prefab.vector.Cuboid;
-import calclavia.lib.render.RenderItemOverlayUtility;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -84,7 +84,6 @@ public class TileFilter extends TileFilterable implements IFilterable
 			Vector3 checkBelow = position.clone().translate(ForgeDirection.DOWN);
 
 			Block bAbove = Block.blocksList[checkAbove.getBlockID(worldObj)];
-			Block bBelow = Block.blocksList[checkAbove.getBlockID(worldObj)];
 
 			if (bAbove instanceof BlockFluidMixture && (worldObj.isAirBlock(checkBelow.intX(), checkBelow.intY(), checkBelow.intZ()) || checkBelow.getTileEntity(worldObj) instanceof IFluidHandler))
 			{
@@ -100,8 +99,9 @@ public class TileFilter extends TileFilterable implements IFilterable
 				/**
 				 * Drop item from fluid.
 				 */
-				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), "dust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
+				for (RecipeResource resoure : MachineRecipes.INSTANCE.getOutput(RecipeType.MIXER.name(), "dirtyDust" + LanguageUtility.capitalizeFirst(ResourceGenerator.mixtureToMaterial(fluidBlock.getFluid().getName()))))
 				{
+
 					InventoryUtility.dropItemStack(worldObj, checkAbove.clone().add(0.5), resoure.getItemStack().copy(), 0, 0);
 				}
 

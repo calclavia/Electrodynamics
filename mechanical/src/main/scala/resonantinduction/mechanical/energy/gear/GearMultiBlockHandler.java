@@ -2,8 +2,8 @@ package resonantinduction.mechanical.energy.gear;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.multiblock.MultiBlockHandler;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.multiblock.reference.MultiBlockHandler;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

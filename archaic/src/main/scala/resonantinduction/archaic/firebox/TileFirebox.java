@@ -1,11 +1,5 @@
 package resonantinduction.archaic.firebox;
 
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.Synced;
-import calclavia.lib.prefab.tile.TileElectricalInventory;
-import calclavia.lib.thermal.BoilEvent;
-import calclavia.lib.thermal.ThermalPhysics;
-import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -15,7 +9,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.Synced;
+import resonant.lib.prefab.tile.TileElectricalInventory;
+import resonant.lib.thermal.BoilEvent;
+import resonant.lib.thermal.ThermalPhysics;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.core.ResonantInduction;
@@ -23,6 +28,8 @@ import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileMaterial;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.vector.Vector3;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * Meant to replace the furnace class.
@@ -143,7 +150,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 					{
 						if (FluidRegistry.getFluid("steam") != null)
 						{
-							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+							MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 							boiledVolume += volume;
 						}
 
@@ -168,7 +175,7 @@ public class TileFirebox extends TileElectricalInventory implements IPacketRecei
 						{
 							if (FluidRegistry.getFluid("steam") != null)
 							{
-								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2));
+								MinecraftForge.EVENT_BUS.post(new BoilEvent(worldObj, new Vector3(this).translate(0, 1, 0), new FluidStack(FluidRegistry.WATER, volume), new FluidStack(FluidRegistry.getFluid("steam"), volume), 2, false));
 								((TileGutter) tileEntity).drain(ForgeDirection.DOWN, volume, true);
 							}
 

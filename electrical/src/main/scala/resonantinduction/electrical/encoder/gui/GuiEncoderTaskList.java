@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.IScroll;
 import resonantinduction.electrical.armbot.task.TaskEnd;
 import resonantinduction.electrical.armbot.task.TaskIdle;
 import resonantinduction.electrical.armbot.task.TaskStart;
@@ -13,7 +14,6 @@ import resonantinduction.electrical.encoder.TileEncoder;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.IRedirectTask;
 import resonantinduction.electrical.encoder.coding.ITask;
-import calclavia.lib.prefab.terminal.IScroll;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 

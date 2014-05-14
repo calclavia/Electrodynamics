@@ -1,13 +1,15 @@
 package resonantinduction.electrical.itemrailing;
 
+import java.lang.ref.WeakReference;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import resonant.lib.render.EnumColor;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
-import calclavia.lib.render.EnumColor;
 
 /**
- * An object that Transfers all
+ * An object that is a wrapper for all items through railings
  * 
  * @since 16/03/14
  * @author tgame14
@@ -16,13 +18,15 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 {
 	private ItemStack stack;
 	private EnumColor color;
-	private PartRailing railing;
+	private WeakReference<IItemRailing> railing;
+	private WeakReference<IItemRailing> endTarget;
 
 	public ItemRailingTransfer(ItemStack stack, PartRailing railing)
 	{
 		this.stack = stack.copy();
-		this.color = EnumColor.ORANGE;
-		this.railing = railing;
+		this.color = null;
+		this.railing = new WeakReference<IItemRailing>(railing.getNode());
+		this.endTarget = new WeakReference<IItemRailing>(railing.getNode().getGrid().findTargetForIItemTransfer(this));
 	}
 
 	public ItemRailingTransfer(Item item, PartRailing railing)
@@ -49,29 +53,28 @@ public class ItemRailingTransfer implements IItemRailingTransfer
 	}
 
 	@Override
-	public PartRailing getRailing()
+	public IItemRailing getRailing()
 	{
-		return this.railing;
+		return this.railing.get();
 	}
 
 	@Override
-	public IItemRailingTransfer setRailing(PartRailing railing)
+	public IItemRailingTransfer setRailing(IItemRailing railing)
 	{
-		this.railing = railing;
+		this.railing = new WeakReference<IItemRailing>(railing);
 		return this;
 	}
 
 	@Override
 	public IItemRailing getEndGoal()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return endTarget.get();
 	}
 
 	@Override
 	public IItemRailingTransfer setEndGoal(IItemRailing goal)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		this.endTarget = new WeakReference<IItemRailing>(goal);
+		return this;
 	}
 }

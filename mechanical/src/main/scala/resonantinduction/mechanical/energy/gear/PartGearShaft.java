@@ -1,23 +1,21 @@
 package resonantinduction.mechanical.energy.gear;
 
-import calclavia.api.resonantinduction.IMechanicalNode;
-import calclavia.lib.grid.INodeProvider;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeDirection;
+import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.gearshaft.GearShaftNode;
+import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
+import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.PartMap;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.grid.PartMechanical;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * We assume all the force acting on the gear is 90 degrees.
@@ -43,112 +41,7 @@ public class PartGearShaft extends PartMechanical
 	{
 		super();
 
-		node = new MechanicalNode(this)
-		{
-			@Override
-			public double getTorqueLoad()
-			{
-				// Decelerate the gear based on tier.
-				switch (tier)
-				{
-					default:
-						return 0.08;
-					case 1:
-						return 0.06;
-					case 2:
-						return 0.04;
-				}
-			}
-
-			@Override
-			public double getAngularVelocityLoad()
-			{
-				// Decelerate the gear based on tier.
-				switch (tier)
-				{
-					default:
-						return 0.06;
-					case 1:
-						return 0.08;
-					case 2:
-						return 0.04;
-				}
-			}
-
-			@Override
-			public void doRecache()
-			{
-				connections.clear();
-
-				/** Check for internal connections, the FRONT and BACK. */
-				for (int i = 0; i < 6; i++)
-				{
-					ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-					if (checkDir == placementSide || checkDir == placementSide.getOpposite())
-					{
-						MechanicalNode instance = ((INodeProvider) tile()).getNode(MechanicalNode.class, checkDir);
-
-						if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
-						{
-							connections.put(instance, checkDir);
-						}
-					}
-				}
-
-				/** Look for connections outside this block space, the relative FRONT and BACK */
-				for (int i = 0; i < 6; i++)
-				{
-					ForgeDirection checkDir = ForgeDirection.getOrientation(i);
-
-					if (!connections.containsValue(checkDir) && (checkDir == placementSide || checkDir == placementSide.getOpposite()))
-					{
-						TileEntity checkTile = new universalelectricity.api.vector.Vector3(tile()).translate(checkDir).getTileEntity(world());
-
-						if (checkTile instanceof INodeProvider)
-						{
-							MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
-
-							// Only connect to shafts outside of this block space.
-							if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
-							{
-								connections.put(instance, checkDir);
-							}
-						}
-					}
-				}
-			}
-
-			@Override
-			public boolean canConnect(ForgeDirection from, Object source)
-			{
-				if (source instanceof MechanicalNode)
-				{
-					if (((MechanicalNode) source).parent instanceof PartGear)
-					{
-						PartGear gear = (PartGear) ((MechanicalNode) source).parent;
-
-						if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(placementSide.offsetZ)))
-						{
-							return false;
-						}
-					}
-				}
-
-				return from == placementSide || from == placementSide.getOpposite();
-			}
-
-			@Override
-			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-			{
-				if (placementSide.offsetY != 0 || placementSide.offsetZ != 0)
-				{
-					return dir == placementSide.getOpposite();
-				}
-
-				return dir == placementSide;
-			}
-		};
+		node = new GearShaftNode(this);
 	}
 
 	@Override

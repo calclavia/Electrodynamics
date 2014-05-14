@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 

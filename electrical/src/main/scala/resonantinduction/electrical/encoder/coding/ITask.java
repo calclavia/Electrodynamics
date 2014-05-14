@@ -4,9 +4,9 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.ArgumentData;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.nbt.ISaveObj;
 
 /** @author DarkGuardsman */
 public interface ITask extends Cloneable, ISaveObj

@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketType;
 import universalelectricity.api.net.IConnector;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketType;
 
 import com.google.common.io.ByteArrayDataInput;
 

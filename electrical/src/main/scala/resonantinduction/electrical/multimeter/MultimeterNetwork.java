@@ -6,13 +6,13 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.Network;
 import universalelectricity.core.net.NetworkTickHandler;
-import calclavia.lib.utility.LanguageUtility;
 
 public class MultimeterNetwork extends Network<MultimeterNetwork, PartMultimeter> implements IUpdate
 {

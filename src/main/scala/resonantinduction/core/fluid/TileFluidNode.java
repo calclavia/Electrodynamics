@@ -7,12 +7,12 @@ import net.minecraft.network.packet.Packet;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import resonant.lib.content.module.TileBase;
+import resonant.lib.network.IPacketReceiverWithID;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.content.module.TileBase;
-import calclavia.lib.network.IPacketReceiverWithID;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.utility.FluidUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 

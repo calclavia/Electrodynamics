@@ -14,11 +14,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.nbt.NBTUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.NBTUtility;
 
 public class ItemImprint extends Item
 {

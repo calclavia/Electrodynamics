@@ -13,11 +13,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.prefab.block.BlockTile;
+import resonant.lib.render.block.BlockRenderingHandler;
 import resonantinduction.core.Reference;
 import resonantinduction.mechanical.belt.TileConveyorBelt.BeltType;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockTile;
-import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

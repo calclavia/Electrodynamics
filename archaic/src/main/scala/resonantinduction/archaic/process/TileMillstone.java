@@ -5,15 +5,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.recipe.MachineRecipes;
+import resonant.api.recipe.RecipeResource;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.tile.TileExternalInventory;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.recipe.MachineRecipes;
-import calclavia.api.recipe.RecipeResource;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileExternalInventory;
-import calclavia.lib.utility.inventory.InventoryUtility;
 
 import com.google.common.io.ByteArrayDataInput;
 

@@ -21,6 +21,10 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonant.lib.render.EnumColor;
+import resonant.lib.utility.LinkUtility;
+import resonant.lib.utility.WrenchUtility;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Settings;
 import resonantinduction.core.prefab.part.PartFace;
@@ -28,10 +32,6 @@ import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.tesla.TileTesla;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.lib.render.EnumColor;
-import calclavia.lib.utility.LinkUtility;
-import calclavia.lib.utility.WrenchUtility;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.TMultiPart;
@@ -40,16 +40,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class PartLevitator extends PartFace
 {
-	private int pushDelay;
-
-	private AxisAlignedBB operationBounds;
-	private AxisAlignedBB suckBounds;
-
 	/**
 	 * true = suck, false = push
 	 */
 	public boolean input = true;
-
+	/**
+	 * Client Side Only
+	 */
+	public float renderRotation = 0;
+	private int pushDelay;
+	private AxisAlignedBB operationBounds;
+	private AxisAlignedBB suckBounds;
 	/**
 	 * Pathfinding
 	 */
@@ -57,20 +58,21 @@ public class PartLevitator extends PartFace
 	private PathfinderLevitator pathfinder;
 	private WeakReference<PartLevitator> linked;
 	private int lastCalcTime = 0;
-
-	/** Color of beam */
+	/**
+	 * Color of beam
+	 */
 	private int dyeID = TileTesla.DEFAULT_COLOR;
-
 	/**
 	 * Linking
 	 */
 	private byte saveLinkSide;
 	private VectorWorld saveLinkVector;
 
-	/**
-	 * Client Side Only
-	 */
-	public float renderRotation = 0;
+	public static boolean canBePath(World world, Vector3 position)
+	{
+		Block block = Block.blocksList[position.getBlockID(world)];
+		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
+	}
 
 	@Override
 	public boolean activate(EntityPlayer player, MovingObjectPosition part, ItemStack itemStack)
@@ -80,13 +82,17 @@ public class PartLevitator extends PartFace
 			if (tryLink(LinkUtility.getLink(itemStack), LinkUtility.getSide(itemStack)))
 			{
 				if (world().isRemote)
+				{
 					player.addChatMessage("Successfully linked devices.");
+				}
 				LinkUtility.clearLink(itemStack);
 			}
 			else
 			{
 				if (world().isRemote)
+				{
 					player.addChatMessage("Marked link for device.");
+				}
 
 				LinkUtility.setLink(itemStack, new VectorWorld(world(), x(), y(), z()));
 				LinkUtility.setSide(itemStack, (byte) placementSide.ordinal());
@@ -111,7 +117,9 @@ public class PartLevitator extends PartFace
 		}
 
 		if (player.isSneaking())
+		{
 			input = !input;
+		}
 
 		updateBounds();
 		updatePath();
@@ -152,18 +160,18 @@ public class PartLevitator extends PartFace
 		 */
 		if (!world().isRemote && input && canFunction() && entity instanceof EntityItem)
 		{
-			EntityItem item = (EntityItem) entity;
+			EntityItem entityItem = (EntityItem) entity;
 			IInventory inventory = (IInventory) getLatched();
 
-			ItemStack remains = InventoryUtility.putStackInInventory(inventory, item.getEntityItem(), placementSide.getOpposite().getOpposite().ordinal(), false);
+			ItemStack remains = InventoryUtility.putStackInInventory(inventory, entityItem.getEntityItem(), placementSide.getOpposite().getOpposite().ordinal(), false);
 
 			if (remains == null)
 			{
-				item.setDead();
+				entityItem.setDead();
 			}
 			else
 			{
-				item.setEntityItemStack(remains);
+				entityItem.getEntityItem().stackSize = remains.stackSize;
 			}
 
 			// TODO: Add redstone pulse and reaction?
@@ -174,7 +182,9 @@ public class PartLevitator extends PartFace
 	public void update()
 	{
 		if (ticks % 60 == 0)
+		{
 			updateBounds();
+		}
 
 		super.update();
 
@@ -209,11 +219,11 @@ public class PartLevitator extends PartFace
 
 					if (retrieved != null)
 					{
-						EntityItem item = getItemWithPosition(retrieved);
+						EntityItem entityItem = getItemWithPosition(retrieved);
 
 						if (!world().isRemote)
 						{
-							world().spawnEntityInWorld(item);
+							world().spawnEntityInWorld(entityItem);
 						}
 
 						pushDelay = Settings.LEVITATOR_PUSH_DELAY;
@@ -277,7 +287,9 @@ public class PartLevitator extends PartFace
 										final ForgeDirection direction = difference.toForgeDirection();
 
 										if (renderBeam)
+										{
 											Electrical.proxy.renderElectricShock(world(), prevResult.clone().translate(0.5), result.clone().translate(0.5), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+										}
 
 										AxisAlignedBB bounds = AxisAlignedBB.getAABBPool().getAABB(result.x, result.y, result.z, result.x + 1, result.y + 1, result.z + 1);
 										List<EntityItem> entities = world().getEntitiesWithinAABB(EntityItem.class, bounds);
@@ -313,7 +325,9 @@ public class PartLevitator extends PartFace
 					}
 
 					if (ticks % renderPeriod == 0)
+					{
 						Electrical.proxy.renderElectricShock(world(), getBeamSpawnPosition(), new Vector3(operationBounds.maxX - 0.5 - placementSide.offsetX / 3f, operationBounds.maxY - 0.5 - placementSide.offsetY / 3f, operationBounds.maxZ - 0.5 - placementSide.offsetZ / 3f), EnumColor.DYES[dyeID].toColor(), world().rand.nextFloat() > 0.9);
+					}
 				}
 			}
 
@@ -325,19 +339,17 @@ public class PartLevitator extends PartFace
 	{
 		TMultiPart partSelf = MultipartUtility.getMultipart(new VectorWorld(world, position), placementSide.ordinal());
 		if (partSelf == this)
+		{
 			return true;
+		}
 
 		TMultiPart partLink = MultipartUtility.getMultipart(new VectorWorld(world, position), getLink().placementSide.ordinal());
 		if (partLink == getLink())
+		{
 			return true;
+		}
 
 		return canBePath(world, position);
-	}
-
-	public static boolean canBePath(World world, Vector3 position)
-	{
-		Block block = Block.blocksList[position.getBlockID(world)];
-		return block == null || (block instanceof BlockSnow || block instanceof BlockVine || block instanceof BlockLadder || ((block instanceof BlockFluid || block instanceof IFluidBlock) && block.blockID != Block.lavaMoving.blockID && block.blockID != Block.lavaStill.blockID));
 	}
 
 	private boolean hasLink()
@@ -506,7 +518,8 @@ public class PartLevitator extends PartFace
 
 	public boolean canFunction()
 	{
-		return isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
+	    //TODO remove (false) when working on
+		return false && isLatched() && !world().isBlockIndirectlyGettingPowered(x(), y(), z());
 	}
 
 	public boolean isLatched()

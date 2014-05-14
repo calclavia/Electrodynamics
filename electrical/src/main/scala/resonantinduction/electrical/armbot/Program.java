@@ -7,13 +7,13 @@ import java.util.Map.Entry;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import resonant.lib.utility.nbt.NBTUtility;
 import resonantinduction.electrical.encoder.coding.ILogicTask;
 import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.IProgrammableMachine;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.TaskRegistry;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.nbt.NBTUtility;
 
 public class Program implements IProgram
 {

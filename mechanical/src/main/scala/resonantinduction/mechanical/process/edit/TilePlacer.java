@@ -1,18 +1,7 @@
 package resonantinduction.mechanical.process.edit;
 
-import calclavia.lib.content.module.TileRender;
-import calclavia.lib.content.module.prefab.TileInventory;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.render.RenderItemOverlayUtility;
-import calclavia.lib.render.RotatedTextureRenderer;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.inventory.InternalInventoryHandler;
-import calclavia.lib.utility.inventory.InventoryUtility;
-import com.google.common.io.ByteArrayDataInput;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.EnumSet;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +12,26 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+
 import org.lwjgl.opengl.GL11;
+
+import resonant.api.IRotatable;
+import resonant.lib.content.module.TileRender;
+import resonant.lib.content.module.prefab.TileInventory;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.render.RenderItemOverlayUtility;
+import resonant.lib.render.RotatedTextureRenderer;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.inventory.InternalInventoryHandler;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.vector.Vector3;
 
-import java.util.EnumSet;
+import com.google.common.io.ByteArrayDataInput;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author tgame14

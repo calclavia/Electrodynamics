@@ -1,13 +1,14 @@
 package resonantinduction.core.resource;
 
-import calclavia.lib.content.module.TileBase;
-import calclavia.lib.network.IPacketReceiver;
-import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import resonant.lib.content.module.TileBase;
+import resonant.lib.network.IPacketReceiver;
 import resonantinduction.core.ResonantInduction;
+
+import com.google.common.io.ByteArrayDataInput;
 
 /**
  * A tile that stores the material name.

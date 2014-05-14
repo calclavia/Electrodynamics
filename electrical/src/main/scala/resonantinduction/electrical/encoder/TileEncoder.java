@@ -7,6 +7,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.prefab.tile.TileExternalInventory;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.electrical.armbot.Program;
 import resonantinduction.electrical.armbot.task.TaskRotateTo;
@@ -14,9 +17,6 @@ import resonantinduction.electrical.encoder.coding.IProgram;
 import resonantinduction.electrical.encoder.coding.ITask;
 import resonantinduction.electrical.encoder.coding.TaskRegistry;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.prefab.tile.TileExternalInventory;
 
 import com.google.common.io.ByteArrayDataInput;
 

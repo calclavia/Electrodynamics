@@ -5,9 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
+import resonant.lib.render.block.BlockRenderingHandler;
 import resonantinduction.core.prefab.imprint.BlockImprintable;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

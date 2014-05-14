@@ -3,8 +3,8 @@ package resonantinduction.mechanical.energy.gear;
 import java.util.HashMap;
 
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.utility.WorldUtility;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.utility.WorldUtility;
 
 /**
  * Used for testing. NO-OP

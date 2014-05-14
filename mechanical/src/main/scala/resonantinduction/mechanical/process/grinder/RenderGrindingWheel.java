@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

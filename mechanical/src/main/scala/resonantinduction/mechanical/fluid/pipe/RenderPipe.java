@@ -12,11 +12,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
+import resonant.lib.render.FluidRenderUtility;
+import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.Reference;
-import calclavia.lib.render.FluidRenderUtility;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.item.ISimpleItemRenderer;
-import calclavia.lib.utility.WorldUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

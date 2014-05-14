@@ -13,12 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import resonant.lib.prefab.block.BlockSidedIO;
+import resonant.lib.render.block.BlockRenderingHandler;
+import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.lib.prefab.block.BlockSidedIO;
-import calclavia.lib.render.block.BlockRenderingHandler;
-import calclavia.lib.utility.inventory.InventoryUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -64,8 +64,8 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		{
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-			battery.energy.setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
-			battery.energy.setEnergy(itemBlock.getEnergy(itemStack));
+			battery.getEnergyHandler().setCapacity(TileBattery.getEnergyForTier(ItemBlockBattery.getTier(itemStack)));
+			battery.getEnergyHandler().setEnergy(itemBlock.getEnergy(itemStack));
 			battery.updateStructure();
 			world.setBlockMetadataWithNotify(x, y, z, ItemBlockBattery.getTier(itemStack), 3);
 		}
@@ -98,7 +98,7 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 			TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
 			ItemBlockBattery itemBlock = (ItemBlockBattery) itemStack.getItem();
 			ItemBlockBattery.setTier(itemStack, (byte) world.getBlockMetadata(x, y, z));
-			itemBlock.setEnergy(itemStack, battery.energy.getEnergy());
+			itemBlock.setEnergy(itemStack, battery.getEnergyHandler().getEnergy());
 		}
 		ret.add(itemStack);
 		return ret;
@@ -146,6 +146,6 @@ public class BlockBattery extends BlockSidedIO implements ITileEntityProvider
 		}
 
 		TileBattery battery = (TileBattery) world.getBlockTileEntity(x, y, z);
-		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.energy.getEnergy());
+		return CompatibilityModule.getItemWithCharge(ItemBlockBattery.setTier(new ItemStack(id, 1, 0), (byte) world.getBlockMetadata(x, y, z)), battery.getEnergyHandler().getEnergy());
 	}
 }

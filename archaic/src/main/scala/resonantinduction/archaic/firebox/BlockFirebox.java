@@ -13,9 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import resonant.lib.prefab.block.BlockTile;
+import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.Reference;
-import calclavia.lib.prefab.block.BlockTile;
-import calclavia.lib.utility.FluidUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

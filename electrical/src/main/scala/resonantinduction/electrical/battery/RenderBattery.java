@@ -19,10 +19,10 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.items.ISimpleItemRenderer;
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.RenderUtility;
-import calclavia.lib.render.item.ISimpleItemRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -80,7 +80,7 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 
 		TileBattery tile = (TileBattery) t;
 
-		int energyLevel = (int) Math.round(((double) tile.energy.getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
+		int energyLevel = (int) Math.round(((double) tile.getEnergyHandler().getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
 		RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/battery.png");
 
 		List<String> disabledParts = new ArrayList<String>();

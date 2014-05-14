@@ -1,9 +1,9 @@
 package resonantinduction.mechanical;
 
+import resonant.lib.render.item.GlobalItemRenderer;
 import resonantinduction.mechanical.energy.gear.RenderGear;
-import resonantinduction.mechanical.energy.gear.RenderGearShaft;
+import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
-import calclavia.lib.render.item.GlobalItemRenderer;
 
 public class ClientProxy extends CommonProxy
 {

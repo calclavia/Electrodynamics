@@ -5,19 +5,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.common.ForgeDirection;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
+import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import calclavia.lib.render.RenderUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 {
-	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "rejector.tcn");
-	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "rejector.png");
+	public static final IModelCustom MODEL = AdvancedModelLoader.loadModel(Reference.MODEL_DIRECTORY + "piston/mechanicalPiston.tcn");
+	public static ResourceLocation TEXTURE = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_PATH + "piston/mechanicalPiston_iron.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float f)
@@ -25,43 +27,53 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 		TileMechanicalPiston tile = (TileMechanicalPiston) tileEntity;
+
 		GL11.glRotated(-90, 0, 1, 0);
+		GL11.glRotated(180, 0, 0, 1);
 
 		if (tile.worldObj != null)
+		{
 			RenderUtility.rotateBlockBasedOnDirection(tile.getDirection());
+		}
 
 		RenderUtility.bind(TEXTURE);
 
 		// Angle in radians of the rotor.
-		float angle = (float) tile.mechanicalNode.angle;
-		float radius = 0.5f;
-		// Length of piston arm
-		float length = 0.8f;
-
-		double beta = Math.asin((radius * Math.sin(angle)) / (length / 2));
-
-		/**
-		 * Render Piston Rod
-		 */
-		GL11.glPushMatrix();
-		double pistonTranslateX = 2 * length * Math.cos(beta);
-		double pistonTranslateY = 2 * length * Math.sin(beta);
-
-		GL11.glTranslated(0, pistonTranslateY, pistonTranslateX);
-		GL11.glRotated(-Math.toDegrees(beta), 1, 0, 0);
-		// MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
-		GL11.glPopMatrix();
+		double angle = tile.mechanicalNode.angle;
+		final String[] staticParts = { "baseRing", "leg1", "leg2", "leg3", "leg4", "connector", "basePlate", "basePlateTop", "connectorBar", "centerPiston" };
+		final String[] shaftParts = { "topPlate", "outerPiston" };
 
 		/**
 		 * Render Piston Rotor
 		 */
 		GL11.glPushMatrix();
-		// TODO: Temporary, unless new models come out.
-		GL11.glTranslated(0, 0, (0.06 * Math.sin(angle)) - 0.01);
-		MODEL.renderOnly("PistonShaft", "PistonFace", "PistonFace2");
+		GL11.glRotated(-Math.toDegrees(angle), 0, 0, 1);
+		MODEL.renderAllExcept(ArrayUtils.addAll(shaftParts, staticParts));
 		GL11.glPopMatrix();
 
-		MODEL.renderAllExcept("PistonShaft", "PistonFace", "PistonFace2");
+		/**
+		 * Render Piston Shaft
+		 */
+		GL11.glPushMatrix();
+
+		if (tile.worldObj != null)
+		{
+			ForgeDirection dir = tile.getDirection();
+
+			if (tile.world().isAirBlock(tile.x() + dir.offsetX, tile.y() + dir.offsetY, tile.z() + dir.offsetZ))
+			{
+				GL11.glTranslated(0, 0, (0.4 * Math.sin(angle)) - 0.5);
+			}
+			else
+			{
+				GL11.glTranslated(0, 0, (0.06 * Math.sin(angle)) - 0.03);
+			}
+		}
+
+		MODEL.renderOnly(shaftParts);
+		GL11.glPopMatrix();
+
+		MODEL.renderOnly(staticParts);
 		GL11.glPopMatrix();
 	}
 }
