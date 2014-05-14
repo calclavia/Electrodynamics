@@ -108,7 +108,7 @@ public class Electrical
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt)
 	{
-	    modproxies = new ProxyHandler();
+	        modproxies = new ProxyHandler();
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
 		Settings.CONFIGURATION.load();

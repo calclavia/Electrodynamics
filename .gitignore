@@ -44,3 +44,5 @@ Thumbs.db
 build/
 eclipse/
 .project
+output/
+.cache
