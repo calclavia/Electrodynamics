@@ -2,12 +2,12 @@ package mffs;
 
 import java.io.File;
 
-import calclavia.lib.config.Config;
+import resonant.lib.config.Config;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import calclavia.api.mffs.Blacklist;
-import calclavia.lib.content.IDManager;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.content.IDManager;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.Loader;
 
 /**

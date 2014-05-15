@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.prefab.tile.TileAdvanced;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.prefab.tile.TileAdvanced;
 
 import com.google.common.io.ByteArrayDataInput;
 

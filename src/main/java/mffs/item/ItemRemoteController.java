@@ -27,7 +27,7 @@ import calclavia.api.mffs.card.ICoordLink;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.api.mffs.fortron.IFortronFrequency;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

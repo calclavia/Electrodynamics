@@ -6,7 +6,7 @@ import calclavia.api.mffs.card.ICoordLink;
 import calclavia.api.mffs.modules.IModule;
 import calclavia.api.mffs.modules.IProjectorMode;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;

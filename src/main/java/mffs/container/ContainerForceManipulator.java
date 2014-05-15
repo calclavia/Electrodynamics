@@ -4,7 +4,7 @@ import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
 import mffs.tile.TileForceManipulator;
 import net.minecraft.entity.player.EntityPlayer;
-import calclavia.lib.gui.ContainerBase;
+import resonant.lib.gui.ContainerBase;
 
 public class ContainerForceManipulator extends ContainerBase
 {

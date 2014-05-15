@@ -18,8 +18,8 @@ import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.prefab.vector.Rectangle;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.prefab.vector.Rectangle;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceFieldProjector extends GuiMFFS

@@ -7,7 +7,7 @@ import mffs.base.TileMFFS;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.api.mffs.fortron.IFortronFrequency;

@@ -22,8 +22,8 @@ import calclavia.api.mffs.ICache;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.modules.IProjectorMode;
-import calclavia.lib.utility.LanguageUtility;
-import calclavia.lib.utility.nbt.NBTUtility;
+import resonant.lib.utility.LanguageUtility;
+import resonant.lib.utility.nbt.NBTUtility;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

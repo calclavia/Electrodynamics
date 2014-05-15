@@ -4,7 +4,7 @@ import mffs.ModularForceFieldSystem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.render.fx.FxBeam;
+import resonant.lib.render.fx.FxBeam;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -5,7 +5,7 @@ import mffs.Settings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemModuleAntiPersonnel extends ItemModuleInterdictionMatrix
 {

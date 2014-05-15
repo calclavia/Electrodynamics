@@ -12,6 +12,8 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'scala'
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 ext.buildProps = file "build.properties"
@@ -33,12 +35,16 @@ minecraft {
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
-	replace "@BUILD@", System.getenv("BUILD_NUMBER")
+	if (System.getenv("BUILD_NUMBER") != null) {
+		replace "@BUILD@", System.getenv("BUILD_NUMBER")
+	}
+	else {
+		replace "@BUILD@", 1
+	}
 }
 
 if (System.getenv("BUILD_NUMBER") != null)
     version += ".${System.getenv("BUILD_NUMBER")}"
-
 
 processResources {
 	from 'build.properties'
@@ -80,14 +86,27 @@ publishing {
 }
 
 repositories {
-    maven {
+	maven {
 		name 'Calclavia Maven'
 		url 'http://calclavia.com/maven'
 	}
+	maven {
+		name = "forge"
+		url = "http://files.minecraftforge.net/maven"
+	}
+	ivy {
+		name 'FMP'
+		artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+	}
+	ivy {
+		artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
+	}
+	mavenCentral()
 }
+
 dependencies {
 	compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${config.version.universalelectricity}", classifier: "dev"
-	compile group: 'calclavia-core', name: 'calclavia-core', version: "${config.version.calclaviacore}", classifier: "dev"
+	compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 }
 
 import net.minecraftforge.gradle.tasks.dev.ChangelogTask

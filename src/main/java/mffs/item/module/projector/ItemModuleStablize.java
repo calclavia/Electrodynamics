@@ -22,7 +22,7 @@ import universalelectricity.api.vector.VectorHelper;
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.EventStabilize;
 import calclavia.api.mffs.IProjector;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.network.PacketHandler;
 
 public class ItemModuleStablize extends ItemModule
 {

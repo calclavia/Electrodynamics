@@ -2,13 +2,13 @@ package mffs;
 
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.lib.config.ConfigHandler;
-import calclavia.lib.network.PacketHandler;
-import calclavia.lib.network.PacketTile;
-import calclavia.lib.prefab.CustomDamageSource;
-import calclavia.lib.recipe.RecipeUtility;
-import calclavia.lib.recipe.UniversalRecipe;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.config.ConfigHandler;
+import resonant.lib.network.PacketHandler;
+import resonant.lib.network.PacketTile;
+import resonant.lib.prefab.CustomDamageSource;
+import resonant.lib.recipe.RecipeUtility;
+import resonant.lib.recipe.UniversalRecipe;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -56,7 +56,7 @@ import org.modstats.Modstats;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-@Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "required-after:CalclaviaCore")
+@Mod(modid = ModularForceFieldSystem.ID, name = ModularForceFieldSystem.NAME, version = ModularForceFieldSystem.VERSION, dependencies = "required-after:ResonantEngine")
 @NetworkMod(clientSideRequired = true, channels = { ModularForceFieldSystem.CHANNEL }, packetHandler = PacketHandler.class)
 @ModstatInfo(prefix = "mffs")
 public class ModularForceFieldSystem

@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiInterdictionMatrix extends GuiMFFS

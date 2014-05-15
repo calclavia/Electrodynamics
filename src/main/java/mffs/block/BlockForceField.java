@@ -6,7 +6,7 @@ import calclavia.api.mffs.fortron.IFortronStorage;
 import calclavia.api.mffs.modules.IModule;
 import calclavia.api.mffs.security.IBiometricIdentifier;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.prefab.CustomDamageSource;
+import resonant.lib.prefab.CustomDamageSource;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;

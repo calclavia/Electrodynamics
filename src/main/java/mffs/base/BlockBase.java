@@ -4,7 +4,7 @@ import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import net.minecraft.block.material.Material;
-import calclavia.lib.prefab.block.BlockTile;
+import resonant.lib.prefab.block.BlockTile;
 
 public class BlockBase extends BlockTile
 {

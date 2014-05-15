@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
-import calclavia.lib.utility.MovementUtility;
+import resonant.lib.utility.MovementUtility;
 
 /**
  * Removes the TileEntity

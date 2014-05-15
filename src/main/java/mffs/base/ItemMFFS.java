@@ -8,7 +8,7 @@ import mffs.Settings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemMFFS extends Item

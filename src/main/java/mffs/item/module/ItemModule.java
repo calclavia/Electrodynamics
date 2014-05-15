@@ -14,7 +14,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.modules.IModule;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemModule extends ItemMFFS implements IModule
 {

@@ -23,7 +23,7 @@ import calclavia.api.mffs.ICache;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.modules.IModule;
 import calclavia.api.mffs.modules.IProjectorMode;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 

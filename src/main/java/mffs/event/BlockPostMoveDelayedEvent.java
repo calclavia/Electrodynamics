@@ -1,7 +1,7 @@
 package mffs.event;
 
 import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
-import calclavia.lib.utility.MovementUtility;
+import resonant.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.tile.TileForceManipulator;

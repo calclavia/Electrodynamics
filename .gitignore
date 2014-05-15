@@ -1,3 +1,10 @@
 *.iml
 *.classpath
 *.project
+/bin
+eclipse/
+build/
+.gradle/
+.cache
+.settings/org.eclipse.jdt.core.prefs
+output/

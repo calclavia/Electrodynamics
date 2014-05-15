@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import calclavia.api.mffs.modules.IInterdictionMatrixModule;
 import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdictionMatrixModule
 {

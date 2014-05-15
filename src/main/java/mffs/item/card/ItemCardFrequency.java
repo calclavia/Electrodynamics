@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import calclavia.api.icbm.IBlockFrequency;
-import calclavia.api.icbm.IItemFrequency;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.api.blocks.IBlockFrequency;
+import resonant.api.items.IItemFrequency;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {

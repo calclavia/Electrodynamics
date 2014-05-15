@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.api.mffs.fortron.IFortronFrequency;

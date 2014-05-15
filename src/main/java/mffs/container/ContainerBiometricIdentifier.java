@@ -4,7 +4,7 @@ import mffs.slot.SlotActive;
 import mffs.slot.SlotBase;
 import mffs.tile.TileBiometricIdentifier;
 import net.minecraft.entity.player.EntityPlayer;
-import calclavia.lib.gui.ContainerBase;
+import resonant.lib.gui.ContainerBase;
 
 public class ContainerBiometricIdentifier extends ContainerBase
 {

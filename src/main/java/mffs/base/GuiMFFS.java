@@ -14,10 +14,10 @@ import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 import universalelectricity.api.vector.Vector2;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.IBiometricIdentifierLink;
-import calclavia.lib.gui.GuiContainerBase;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.gui.GuiContainerBase;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiMFFS extends GuiContainerBase

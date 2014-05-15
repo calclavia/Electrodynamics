@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.api.vector.Vector2;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class GuiButtonPress extends GuiButton

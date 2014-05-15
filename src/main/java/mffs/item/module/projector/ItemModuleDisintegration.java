@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.IProjector;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.network.PacketHandler;
 
 public class ItemModuleDisintegration extends ItemModule
 {

@@ -4,7 +4,7 @@ import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
 import mffs.tile.TileFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
-import calclavia.lib.gui.ContainerBase;
+import resonant.lib.gui.ContainerBase;
 
 public class ContainerFortronCapacitor extends ContainerBase
 {

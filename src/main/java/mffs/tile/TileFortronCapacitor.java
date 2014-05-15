@@ -12,7 +12,7 @@ import mffs.base.TileModuleAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.card.ICard;
 import calclavia.api.mffs.card.ICardInfinite;
 import calclavia.api.mffs.card.ICoordLink;

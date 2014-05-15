@@ -12,10 +12,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.UniversalElectricity;
-import calclavia.api.icbm.ICamouflageMaterial;
+import resonant.api.blocks.ICamouflageMaterial;
 import calclavia.api.mffs.IBiometricIdentifierLink;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.prefab.block.BlockRotatable;
+import resonant.lib.prefab.block.BlockRotatable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

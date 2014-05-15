@@ -3,7 +3,7 @@ package mffs.item.module.projector;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.security.IBiometricIdentifier;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.prefab.vector.Cuboid;
+import resonant.lib.prefab.vector.Cuboid;
 import mffs.ModularForceFieldSystem;
 import mffs.item.module.ItemModule;
 import mffs.tile.TileForceFieldProjector;

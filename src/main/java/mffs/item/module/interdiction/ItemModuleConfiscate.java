@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import calclavia.api.mffs.security.IBiometricIdentifier;
 import calclavia.api.mffs.security.IInterdictionMatrix;
 import calclavia.api.mffs.security.Permission;
-import calclavia.lib.utility.LanguageUtility;
+import resonant.lib.utility.LanguageUtility;
 
 public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 {

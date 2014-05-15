@@ -20,7 +20,7 @@ import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.card.ICard;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 

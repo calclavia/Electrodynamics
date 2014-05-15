@@ -19,8 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.lib.multiblock.fake.TileMultiBlockPart;
-import calclavia.lib.network.PacketHandler;
+import resonant.lib.multiblock.TileMultiBlockPart;
+import resonant.lib.network.PacketHandler;
 
 import com.google.common.io.ByteArrayDataInput;
 

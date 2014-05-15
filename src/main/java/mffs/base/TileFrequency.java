@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.icbm.IBlockFrequency;
+import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.IBiometricIdentifierLink;
 import calclavia.api.mffs.card.ICoordLink;
 import calclavia.api.mffs.fortron.FrequencyGrid;

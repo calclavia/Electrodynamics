@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.IProjector;
-import calclavia.lib.prefab.vector.Cuboid;
+import resonant.lib.prefab.vector.Cuboid;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

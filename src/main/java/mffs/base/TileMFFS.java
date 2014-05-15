@@ -1,11 +1,11 @@
 package mffs.base;
 
 import calclavia.api.mffs.IActivatable;
-import calclavia.lib.network.IPacketReceiver;
-import calclavia.lib.network.IPacketSender;
-import calclavia.lib.prefab.tile.IPlayerUsing;
-import calclavia.lib.prefab.tile.IRotatable;
-import calclavia.lib.prefab.tile.TileAdvanced;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketSender;
+import resonant.api.IPlayerUsing;
+import resonant.api.IRotatable;
+import resonant.lib.prefab.tile.TileAdvanced;
 import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
