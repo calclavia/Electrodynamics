@@ -1,5 +1,8 @@
 package resonantinduction.archaic.crate;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,9 +12,11 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import resonant.api.IExtendedStorage;
 import resonant.api.IFilterable;
+import resonant.api.IRemovable.ISneakPickup;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.PacketHandler;
 import resonant.lib.prefab.tile.TileExternalInventory;
+import resonantinduction.archaic.Archaic;
 import resonantinduction.core.ResonantInduction;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -21,7 +26,7 @@ import com.google.common.io.ByteArrayDataInput;
  * TODO: Add filter-locking feature. Put filter in, locks the crate to only use that item.
  * 
  * @author DarkGuardsman */
-public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage, IFilterable
+public class TileCrate extends TileExternalInventory implements IPacketReceiver, IExtendedStorage, IFilterable, ISneakPickup
 {
     /** max meta size of the crate */
     public static final int maxSize = 2;
@@ -345,6 +350,19 @@ public class TileCrate extends TileExternalInventory implements IPacketReceiver,
     {
         this.filterStack = filter;
         this.onInventoryChanged();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ItemStack> getRemovedItems(EntityPlayer entity)
+    {
+        ItemStack sampleStack = getSampleStack();
+        ItemStack drop = new ItemStack(Archaic.blockCrate, 1, this.getBlockMetadata());
+        if (sampleStack != null && sampleStack.stackSize > 0)
+        {
+            ItemBlockCrate.setContainingItemStack(drop, sampleStack);
+        }
+        return Arrays.asList(new ItemStack[] { drop });
     }
 
 }

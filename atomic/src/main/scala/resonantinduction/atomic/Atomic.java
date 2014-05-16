@@ -114,8 +114,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = Atomic.ID, name = Atomic.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine;after:IC2;after:ResonantInduction|Electrical;required-after:" + ResonantInduction.ID)
-@NetworkMod(channels =
-{ Reference.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+@NetworkMod(channels = { Reference.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Atomic
 {
     public static final String ID = "ResonantInduction|Atomic";
@@ -123,13 +122,11 @@ public class Atomic
     public static final String GUI_TEXTURE_DIRECTORY = TEXTURE_DIRECTORY + "gui/";
     public static final int ENTITY_ID_PREFIX = 49;
     public static final int SECOND_IN_TICKS = 20;
-    public static final EnumArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[]
-    { 0, 0, 0, 0 }, 0);
+    public static final EnumArmorMaterial hazmatArmorMaterial = EnumHelper.addArmorMaterial("HAZMAT", 0, new int[] { 0, 0, 0, 0 }, 0);
     public static final String BAN_ANTIMATTER_POWER = FlagRegistry.registerFlag("ban_antimatter_power");
     public static final String NAME = Reference.NAME + " Atomic";
     public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
-    private static final String[] SUPPORTED_LANGUAGES = new String[]
-    { "en_US", "pl_PL", "de_DE" };
+    private static final String[] SUPPORTED_LANGUAGES = new String[] { "en_US", "pl_PL", "de_DE" };
 
     @Instance(ID)
     public static Atomic INSTANCE;
@@ -332,8 +329,7 @@ public class Atomic
         FLUID_PLASMA.setBlockID(blockPlasma);
 
         int bucketID = Settings.getNextItemID();
-        itemBucketToxic = (new ItemBucket(Settings.CONFIGURATION.getItem("Toxic Waste Bucket", bucketID).getInt(bucketID), blockToxicWaste.blockID)).setCreativeTab(TabRI.DEFAULT).setUnlocalizedName(Reference.PREFIX + "bucketToxicWaste")
-                .setContainerItem(Item.bucketEmpty).setTextureName(Reference.PREFIX + "bucketToxicWaste");
+        itemBucketToxic = (new ItemBucket(Settings.CONFIGURATION.getItem("Toxic Waste Bucket", bucketID).getInt(bucketID), blockToxicWaste.blockID)).setCreativeTab(TabRI.DEFAULT).setUnlocalizedName(Reference.PREFIX + "bucketToxicWaste").setContainerItem(Item.bucketEmpty).setTextureName(Reference.PREFIX + "bucketToxicWaste");
 
         FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("toxicwaste"), new ItemStack(itemBucketToxic), new ItemStack(Item.bucketEmpty));
         FluidContainerRegistry.registerFluidContainer(FluidRegistry.WATER, new ItemStack(itemWaterCell), new ItemStack(itemCell));
@@ -433,102 +429,72 @@ public class Atomic
         }
 
         // Antimatter
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemAntimatter, 1, 1), new Object[]
-        { itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter }));
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemAntimatter, 8, 0), new Object[]
-        { new ItemStack(itemAntimatter, 1, 1) }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemAntimatter, 1, 1), new Object[] { itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter, itemAntimatter }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemAntimatter, 8, 0), new Object[] { new ItemStack(itemAntimatter, 1, 1) }));
 
         // Steam Funnel
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[]
-        { " B ", "B B", "B B", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes) }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[]
-        { " B ", "B B", "B B", 'B', "ingotIron" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[] { " B ", "B B", "B B", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSteamFunnel, 2), new Object[] { " B ", "B B", "B B", 'B', "ingotIron" }));
 
         // Atomic Assembler
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockQuantumAssembler, new Object[]
-        { "CCC", "SXS", "SSS", 'X', blockCentrifuge, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockQuantumAssembler, new Object[] { "CCC", "SXS", "SSS", 'X', blockCentrifuge, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
 
         // Fulmination Generator
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockFulmination, new Object[]
-        { "OSO", "SCS", "OSO", 'O', Block.obsidian, 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockFulmination, new Object[] { "OSO", "SCS", "OSO", 'O', Block.obsidian, 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
 
         // Particle Accelerator
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockAccelerator, new Object[]
-        { "SCS", "CMC", "SCS", 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes), 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockAccelerator, new Object[] { "SCS", "CMC", "SCS", 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes), 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes) }));
 
         // Centrifuge
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockCentrifuge, new Object[]
-        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M',
-                UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockCentrifuge, new Object[] { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Nuclear Boiler
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockNuclearBoiler, new Object[]
-        { "S S", "FBF", "SMS", 'F', Block.furnaceIdle, 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', Item.bucketEmpty, 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockNuclearBoiler, new Object[] { "S S", "FBF", "SMS", 'F', Block.furnaceIdle, 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', Item.bucketEmpty, 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Chemical Extractor
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockChemicalExtractor, new Object[]
-        { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M',
-                UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockChemicalExtractor, new Object[] { "BSB", "MCM", "BSB", 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Siren
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSiren, 2), new Object[]
-        { "NPN", 'N', Block.music, 'P', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockSiren, 2), new Object[] { "NPN", 'N', Block.music, 'P', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes) }));
 
         // Fission Reactor
-        GameRegistry
-                .addRecipe(new ShapedOreRecipe(blockReactorCell, new Object[]
-                { "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'M',
-                        UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockReactorCell, new Object[] { "SCS", "MEM", "SCS", 'E', "cellEmpty", 'C', UniversalRecipe.CIRCUIT_T2.get(Settings.allowAlternateRecipes), 'S', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Fusion Reactor
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockFusionCore, new Object[]
-        { "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'F', blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockFusionCore, new Object[] { "CPC", "PFP", "CPC", 'P', UniversalRecipe.PRIMARY_PLATE.get(Settings.allowAlternateRecipes), 'F', blockReactorCell, 'C', UniversalRecipe.CIRCUIT_T3.get(Settings.allowAlternateRecipes) }));
 
         // Turbine
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockElectricTurbine, new Object[]
-        { " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockElectricTurbine, new Object[] { " B ", "BMB", " B ", 'B', UniversalRecipe.SECONDARY_PLATE.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Empty Cell
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCell, 16), new Object[]
-        { " T ", "TGT", " T ", 'T', "ingotTin", 'G', Block.glass }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCell, 16), new Object[] { " T ", "TGT", " T ", 'T', "ingotTin", 'G', Block.glass }));
 
         // Water Cell
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemWaterCell), new Object[]
-        { "cellEmpty", Item.bucketWater }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemWaterCell), new Object[] { "cellEmpty", Item.bucketWater }));
 
         // Thermometer
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockThermometer, new Object[]
-        { "SSS", "GCG", "GSG", 'S', UniversalRecipe.PRIMARY_METAL.get(Settings.allowAlternateRecipes), 'G', Block.glass, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockThermometer, new Object[] { "SSS", "GCG", "GSG", 'S', UniversalRecipe.PRIMARY_METAL.get(Settings.allowAlternateRecipes), 'G', Block.glass, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes) }));
 
         // Control Rod
-        GameRegistry.addRecipe(new ShapedOreRecipe(blockControlRod, new Object[]
-        { "I", "I", "I", 'I', Item.ingotIron }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(blockControlRod, new Object[] { "I", "I", "I", 'I', Item.ingotIron }));
 
         // Fuel Rod
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemFissileFuel, new Object[]
-        { "CUC", "CUC", "CUC", 'U', "ingotUranium", 'C', "cellEmpty" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemFissileFuel, new Object[] { "CUC", "CUC", "CUC", 'U', "ingotUranium", 'C', "cellEmpty" }));
 
         // Breeder Rod
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemBreedingRod, new Object[]
-        { "CUC", "CUC", "CUC", 'U', "breederUranium", 'C', "cellEmpty" }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemBreedingRod, new Object[] { "CUC", "CUC", "CUC", 'U', "breederUranium", 'C', "cellEmpty" }));
 
         // Electromagnet
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockElectromagnet, 2, 0), new Object[]
-        { "BBB", "BMB", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockElectromagnet, 2, 0), new Object[] { "BBB", "BMB", "BBB", 'B', UniversalRecipe.SECONDARY_METAL.get(Settings.allowAlternateRecipes), 'M', UniversalRecipe.MOTOR.get(Settings.allowAlternateRecipes) }));
 
         // Electromagnet Glass
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockElectromagnet, 1, 1), new Object[]
-        { blockElectromagnet, Block.glass }));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockElectromagnet, 1, 1), new Object[] { blockElectromagnet, Block.glass }));
 
         // Hazmat Suit
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.helmetLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBody, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.plateLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatLeggings, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.legsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBoots, new Object[]
-        { "SSS", "BAB", "SCS", 'A', Item.bootsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[] { "SSS", "BAB", "SCS", 'A', Item.helmetLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBody, new Object[] { "SSS", "BAB", "SCS", 'A', Item.plateLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatLeggings, new Object[] { "SSS", "BAB", "SCS", 'A', Item.legsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBoots, new Object[] { "SSS", "BAB", "SCS", 'A', Item.bootsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
 
         EntityRegistry.registerGlobalEntityID(EntityParticle.class, "ASParticle", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityParticle.class, "ASParticle", ENTITY_ID_PREFIX, this, 80, 3, true);
