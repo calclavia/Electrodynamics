@@ -42,6 +42,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileTank extends TileFluidDistribution implements IComparatorInputOverride, ISneakPickup
 {
     public static final int VOLUME = 16;
+    private int networkVolumeClient = 0;
+    private int networkCapClient = 0;
 
     public TileTank()
     {
@@ -228,7 +230,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
     {
         List<ItemStack> drops = new ArrayList<ItemStack>();
 
-        ItemStack itemStack = new ItemStack(Archaic.blockTank);
+        ItemStack itemStack = new ItemStack(Archaic.blockTank, 1, 0);
         if (itemStack != null)
         {
             if (getInternalTank() != null && getInternalTank().getFluid() != null)
@@ -241,7 +243,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
                     {
                         itemStack.setTagCompound(new NBTTagCompound());
                     }
-                    drain(ForgeDirection.UNKNOWN, stack.amount, true);
+                    drain(ForgeDirection.UNKNOWN, stack.amount, false);
                     itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
                 }
             }
