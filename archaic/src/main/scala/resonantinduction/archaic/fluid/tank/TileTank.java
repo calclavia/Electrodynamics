@@ -1,10 +1,13 @@
 package resonantinduction.archaic.fluid.tank;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,6 +17,7 @@ import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.IRemovable.ISneakPickup;
 import resonant.lib.content.module.TileBlock.IComparatorInputOverride;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.render.FluidRenderUtility;
@@ -32,7 +36,10 @@ import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileTank extends TileFluidDistribution implements IComparatorInputOverride
+/** Tile/Block class for basic Dynamic tanks
+ * 
+ * @author Darkguardsman */
+public class TileTank extends TileFluidDistribution implements IComparatorInputOverride, ISneakPickup
 {
     public static final int VOLUME = 16;
 
@@ -55,7 +62,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
     protected boolean use(EntityPlayer player, int side, Vector3 vector3)
     {
         if (!world().isRemote)
-        {
+        { /*
             if (player.isSneaking())
             {
                 ItemStack dropStack = ItemBlockTank.getWrenchedItem(world(), position());
@@ -72,7 +79,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
                     position().setBlock(world(), 0);
                 }
-            }
+            } */
 
             return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
         }
@@ -233,5 +240,32 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
                 return true;
             }
         };
+    }
+
+    @Override
+    public List<ItemStack> getRemovedItems(EntityPlayer entity)
+    {
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+
+        ItemStack itemStack = new ItemStack(Archaic.blockTank);
+        if (itemStack != null)
+        {
+            if (getInternalTank() != null && getInternalTank().getFluid() != null)
+            {
+                FluidStack stack = getInternalTank().getFluid();
+
+                if (stack != null)
+                {
+                    if (itemStack.getTagCompound() == null)
+                    {
+                        itemStack.setTagCompound(new NBTTagCompound());
+                    }
+                    drain(ForgeDirection.UNKNOWN, stack.amount, true);
+                    itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
+                }
+            }
+            drops.add(itemStack);
+        }
+        return drops;
     }
 }
