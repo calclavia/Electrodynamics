@@ -87,8 +87,11 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
         System.out.println("FluidDistributionNetwork: Tank Contains Fluid: " + getTank().getFluid() + "  Tank: " + this.getTank().getFluidAmount());
         int fill = this.getTank().fill(resource.copy(), doFill);
         System.out.println("FluidDistributionNetwork: Filled " + fill + "  Tank: " + this.getTank().getFluidAmount());
-        needsUpdate = true;
-        NetworkTickHandler.addNetwork(this);
+        if (fill > 0)
+        {
+            needsUpdate = true;
+            NetworkTickHandler.addNetwork(this);
+        }
         return fill;
     }
 

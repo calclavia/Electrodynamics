@@ -30,6 +30,7 @@ public abstract class TileFluidDistribution extends TileFluidNode implements IFl
     {
         super.initiate();
         refresh();
+        getNetwork().reconstruct();
     }
 
     @Override
