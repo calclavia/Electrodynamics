@@ -62,25 +62,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
     protected boolean use(EntityPlayer player, int side, Vector3 vector3)
     {
         if (!world().isRemote)
-        { /*
-            if (player.isSneaking())
-            {
-                ItemStack dropStack = ItemBlockTank.getWrenchedItem(world(), position());
-                if (dropStack != null)
-                {
-                    if (player.getHeldItem() == null)
-                    {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, dropStack);
-                    }
-                    else
-                    {
-                        InventoryUtility.dropItemStack(world(), position(), dropStack);
-                    }
-
-                    position().setBlock(world(), 0);
-                }
-            } */
-
+        {
             return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
         }
 

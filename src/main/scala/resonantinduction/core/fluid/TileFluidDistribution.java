@@ -81,7 +81,7 @@ public abstract class TileFluidDistribution extends TileFluidNode implements IFl
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from)
 	{
-		return new FluidTankInfo[] { getInternalTank().getInfo() };
+		return new FluidTankInfo[] { getNetwork().getTank().getInfo() };
 	}
 
 	@Override
