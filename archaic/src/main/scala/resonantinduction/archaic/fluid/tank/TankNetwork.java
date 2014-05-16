@@ -37,8 +37,6 @@ public class TankNetwork extends FluidDistributionetwork
         {
 
             IFluidDistribution tank = ((IFluidDistribution) getConnectors().toArray()[0]);
-            if (!((TileEntity) tank).getWorldObj().isRemote)
-                System.out.println(this.toString());
             if (getConnectors().size() == 1)
             {
                 tank.getInternalTank().setFluid(networkTankFluid);
@@ -104,8 +102,6 @@ public class TankNetwork extends FluidDistributionetwork
 
                             if (connectorCount <= 0)
                                 continue;
-                            if (!((TileEntity) tank).getWorldObj().isRemote)
-                                System.out.println("Filling Y: " + yLevel + "  Tanks: " + connectorCount);
                             //Loop threw tanks in each level
                             for (IFluidDistribution connector : heightMap.get(yLevel))
                             {

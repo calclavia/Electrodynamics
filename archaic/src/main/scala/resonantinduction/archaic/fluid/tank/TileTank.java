@@ -42,8 +42,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileTank extends TileFluidDistribution implements IComparatorInputOverride, ISneakPickup
 {
     public static final int VOLUME = 16;
-    private int networkVolumeClient = 0;
-    private int networkCapClient = 0;
 
     public TileTank()
     {
@@ -139,7 +137,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
             public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
             {
-                if (tileEntity instanceof TileTank)
+                if (tileEntity.worldObj != null && tileEntity instanceof TileTank)
                 {
                     GL11.glPushMatrix();
                     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -148,7 +146,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
                     {
                         GL11.glPushMatrix();
 
-                        if (tileEntity.worldObj != null && !fluid.getFluid().isGaseous())
+                        if (!fluid.getFluid().isGaseous())
                         {
                             GL11.glScaled(0.99, 0.99, 0.99);
                             FluidTank tank = ((TileTank) tileEntity).getInternalTank();
