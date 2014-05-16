@@ -22,7 +22,7 @@ public abstract class TilePressureNode extends TileFluidNode implements IPressur
 
 	public TilePressureNode(Material material)
 	{
-		super(material);
+		super(material, 1000);
 	}
 
 	@Override

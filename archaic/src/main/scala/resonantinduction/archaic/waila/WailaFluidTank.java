@@ -23,14 +23,16 @@ public class WailaFluidTank implements IWailaDataProvider
         if (tile instanceof TileTank)
         {
             FluidTank tank = ((TileTank) tile).getInternalTank();
+            FluidTank tankNetwork = ((TileTank) tile).getNetwork().getTank();
+            if (tankNetwork != null && tankNetwork.getFluid() != null)
+            {
+                currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tankNetwork.getFluid().getFluid().getLocalizedName());
+                currenttip.add(LanguageUtility.getLocal("info.waila.tank.vol") + " " + tankNetwork.getFluidAmount() + " / " + tank.getCapacity());
+            }
             if (tank != null && tank.getFluid() != null)
             {
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid().getFluid().getLocalizedName());
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.vol") + " " + tank.getFluidAmount() + " / " + tank.getCapacity());
-            }
-            else
-            {
-                currenttip.add(LanguageUtility.getLocal("info.waila.tank.empty"));
             }
         }
         return currenttip;

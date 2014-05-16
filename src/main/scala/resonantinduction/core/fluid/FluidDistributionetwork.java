@@ -85,7 +85,6 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
 
 	public int fill(IFluidDistribution source, ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		int prev = this.getTank().getFluidAmount();
 		int fill = this.getTank().fill(resource.copy(), doFill);
 		needsUpdate = true;
 		NetworkTickHandler.addNetwork(this);

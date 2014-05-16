@@ -45,8 +45,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
     public TileTank()
     {
-        super(UniversalElectricity.machine);
-        this.getInternalTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+        super(UniversalElectricity.machine, VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
         isOpaqueCube = false;
         normalRender = false;
         itemBlock = ItemBlockTank.class;
