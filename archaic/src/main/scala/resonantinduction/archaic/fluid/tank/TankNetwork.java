@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import resonant.lib.utility.FluidUtility;
 import resonantinduction.core.fluid.FluidDistributionetwork;
 import resonantinduction.core.fluid.IFluidDistribution;
 
@@ -23,22 +22,30 @@ public class TankNetwork extends FluidDistributionetwork
     @Override
     public void update()
     {
+        System.out.println("\nTankNetwork>Tank: " + getTank());
+        System.out.println("TankNetwork>Fluid: " + getTank().getFluid());
+        System.out.println("TankNetwork>Tank: " + getTank().getFluidAmount());
         final FluidStack networkTankFluid = getTank().getFluid();
         int lowestY = 255;
         int highestY = 0;
         int connectorCount = 0;
         int totalFluid = networkTankFluid != null ? networkTankFluid.amount : 0;
-        boolean didChange = false;
 
         //If we only have one tank only fill one tank
-        if (getConnectors().size() == 1)
+
+        if (getConnectors().size() > 0)
         {
+
             IFluidDistribution tank = ((IFluidDistribution) getConnectors().toArray()[0]);
-            tank.getInternalTank().setFluid(networkTankFluid);
-            tank.onFluidChanged();
-        }
-        else if (getConnectors().size() > 0)
-        {
+            if (!((TileEntity) tank).getWorldObj().isRemote)
+                System.out.println(this.toString());
+            if (getConnectors().size() == 1)
+            {
+                tank.getInternalTank().setFluid(networkTankFluid);
+                tank.onFluidChanged();
+                needsUpdate = false;
+                return;
+            }
             if (networkTankFluid != null)
             {
                 //If fluid is gaseous fill all tanks equally
@@ -97,7 +104,8 @@ public class TankNetwork extends FluidDistributionetwork
 
                             if (connectorCount <= 0)
                                 continue;
-
+                            if (!((TileEntity) tank).getWorldObj().isRemote)
+                                System.out.println("Filling Y: " + yLevel + "  Tanks: " + connectorCount);
                             //Loop threw tanks in each level
                             for (IFluidDistribution connector : heightMap.get(yLevel))
                             {
@@ -114,7 +122,7 @@ public class TankNetwork extends FluidDistributionetwork
                                 connector.getInternalTank().setFluid(null);
                                 totalFluid -= connector.getInternalTank().fill(input, true);
                                 connector.onFluidChanged();
-                                
+
                                 if (connectorCount > 1)
                                     connectorCount--;
 
@@ -133,8 +141,8 @@ public class TankNetwork extends FluidDistributionetwork
                     connector.onFluidChanged();
                 }
             }
-            needsUpdate = false;
         }
+        needsUpdate = false;
     }
 
     @Override

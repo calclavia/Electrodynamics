@@ -14,29 +14,28 @@ import universalelectricity.api.vector.Vector3;
  * @author DarkGuardsman */
 public abstract class TileFluidDistribution extends TileFluidNode implements IFluidDistribution
 {
-    public TileFluidDistribution(Material material, int tankSize)
-    {
-        super(material, tankSize);
-    }
 
     protected Object[] connectedBlocks = new Object[6];
 
     /** Network used to link all parts together */
     protected FluidDistributionetwork network;
 
+    public TileFluidDistribution(Material material, int tankSize)
+    {
+        super(material, tankSize);
+    }
+
     @Override
     public void initiate()
     {
         super.initiate();
         refresh();
-        getNetwork().reconstruct();
     }
 
     @Override
     protected void onNeighborChanged()
     {
         refresh();
-        getNetwork().reconstruct();
     }
 
     @Override
@@ -104,8 +103,9 @@ public abstract class TileFluidDistribution extends TileFluidNode implements IFl
             /** Only send packet updates if visuallyConnected changed. */
             if (previousConnections != renderSides)
             {
-                sendRenderUpdate();
+                getNetwork().update();
                 getNetwork().reconstruct();
+                sendRenderUpdate();
             }
         }
 
