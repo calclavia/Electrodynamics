@@ -8,9 +8,9 @@ import universalelectricity.api.item.IEnergyItem;
 import universalelectricity.api.item.ItemElectric;
 
 @UniversalClass
-public abstract class ItElectricAS extends ItemElectric implements IEnergyItem
+public abstract class ItemElectricAS extends ItemElectric implements IEnergyItem
 {
-    public ItElectricAS(int itemID, String name)
+    public ItemElectricAS(int itemID, String name)
     {
         super(Settings.CONFIGURATION.getItem(name, itemID).getInt());
         this.setUnlocalizedName(Reference.PREFIX + name);
