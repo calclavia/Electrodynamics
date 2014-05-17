@@ -22,9 +22,6 @@ public class TankNetwork extends FluidDistributionetwork
     @Override
     public void update()
     {
-        System.out.println("\nTankNetwork>Tank: " + getTank());
-        System.out.println("TankNetwork>Fluid: " + getTank().getFluid());
-        System.out.println("TankNetwork>Tank: " + getTank().getFluidAmount());
         final FluidStack networkTankFluid = getTank().getFluid();
         int lowestY = 255;
         int highestY = 0;
