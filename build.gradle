@@ -11,6 +11,7 @@ buildscript {
     }
 }
 
+apply plugin: 'idea'
 apply plugin: 'forge'
 apply plugin: 'scala'
 apply plugin: 'maven'

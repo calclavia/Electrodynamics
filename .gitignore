@@ -1,4 +1,7 @@
 *.iml
+*.iws
+*.ipr
+*.idea/
 *.classpath
 *.project
 /bin
