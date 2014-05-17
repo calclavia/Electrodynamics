@@ -491,10 +491,10 @@ public class Atomic
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(blockElectromagnet, 1, 1), new Object[] { blockElectromagnet, Block.glass }));
 
         // Hazmat Suit
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[] { "SSS", "BAB", "SCS", 'A', Item.helmetLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBody, new Object[] { "SSS", "BAB", "SCS", 'A', Item.plateLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatLeggings, new Object[] { "SSS", "BAB", "SCS", 'A', Item.legsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBoots, new Object[] { "SSS", "BAB", "SCS", 'A', Item.bootsLeather, 'C', UniversalRecipe.CIRCUIT_T1.get(Settings.allowAlternateRecipes), 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatTop, new Object[] { "SSS", "BAB", "SCS", 'A', Item.helmetLeather, 'C', Item.silk, 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBody, new Object[] { "SSS", "BAB", "SCS", 'A', Item.plateLeather, 'C', Item.silk, 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatLeggings, new Object[] { "SSS", "BAB", "SCS", 'A', Item.legsLeather, 'C', Item.silk, 'S', Block.cloth }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(itemHazmatBoots, new Object[] { "SSS", "BAB", "SCS", 'A', Item.bootsLeather, 'C', Item.silk, 'S', Block.cloth }));
 
         EntityRegistry.registerGlobalEntityID(EntityParticle.class, "ASParticle", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityParticle.class, "ASParticle", ENTITY_ID_PREFIX, this, 80, 3, true);

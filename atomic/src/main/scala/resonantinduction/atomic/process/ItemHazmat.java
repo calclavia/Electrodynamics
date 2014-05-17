@@ -6,6 +6,7 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import resonant.api.armor.IAntiPoisonArmor;
 import resonantinduction.core.Reference;
 import resonantinduction.core.TabRI;
@@ -13,9 +14,9 @@ import resonantinduction.core.TabRI;
 /** Hazmat */
 public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
 {
-    public ItemHazmat(int par1, EnumArmorMaterial par2EnumArmorMaterial, int par3, int par4)
+    public ItemHazmat(int id, EnumArmorMaterial material, int index, int slot)
     {
-        super(par1, par2EnumArmorMaterial, par3, par4);
+        super(id, material, index, slot);
         this.setCreativeTab(TabRI.DEFAULT);
         this.setMaxDamage(200000);
     }
@@ -50,5 +51,21 @@ public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
     public int getArmorType()
     {
         return this.armorType;
+    }
+
+    @Override
+    public boolean isPartOfSet(ItemStack armorStack, ItemStack compareStack)
+    {
+        if(armorStack != null && compareStack != null)
+        {
+            return armorStack.getItem().equals(compareStack.getItem());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean areAllPartsNeeded(ItemStack armorStack, EntityLivingBase entity, DamageSource source, Object... data)
+    {
+        return true;
     }
 }
