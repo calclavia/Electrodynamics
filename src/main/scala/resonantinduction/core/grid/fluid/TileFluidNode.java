@@ -1,4 +1,4 @@
-package resonantinduction.core.fluid;
+package resonantinduction.core.grid.fluid;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

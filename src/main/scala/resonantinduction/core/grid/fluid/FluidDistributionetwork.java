@@ -1,4 +1,4 @@
-package resonantinduction.core.fluid;
+package resonantinduction.core.grid.fluid;
 
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -83,10 +83,7 @@ public abstract class FluidDistributionetwork extends NodeNetwork<FluidDistribut
 
     public int fill(IFluidDistribution source, ForgeDirection from, FluidStack resource, boolean doFill)
     {
-        System.out.println("FluidDistributionNetwork: Filling " + resource + "  Tank: " + this.getTank().getFluidAmount());
-        System.out.println("FluidDistributionNetwork: Tank Contains Fluid: " + getTank().getFluid() + "  Tank: " + this.getTank().getFluidAmount());
         int fill = this.getTank().fill(resource.copy(), doFill);
-        System.out.println("FluidDistributionNetwork: Filled " + fill + "  Tank: " + this.getTank().getFluidAmount());
         if (fill > 0)
         {
             needsUpdate = true;

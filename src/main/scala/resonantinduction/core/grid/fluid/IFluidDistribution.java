@@ -1,4 +1,4 @@
-package resonantinduction.core.fluid;
+package resonantinduction.core.grid.fluid;
 
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidHandler;

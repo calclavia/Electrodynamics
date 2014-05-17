@@ -1,4 +1,4 @@
-package resonantinduction.core.fluid;
+package resonantinduction.core.grid.fluid;
 
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.ForgeDirection;
@@ -8,8 +8,6 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import resonant.api.grid.INode;
 import resonant.lib.network.IPacketReceiverWithID;
-import resonantinduction.core.grid.fluid.FluidPressureNode;
-import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 
 /**
  * A prefab class for tiles that use the fluid network.

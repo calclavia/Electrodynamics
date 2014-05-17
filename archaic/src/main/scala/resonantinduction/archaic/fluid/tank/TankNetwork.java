@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-import resonantinduction.core.fluid.FluidDistributionetwork;
-import resonantinduction.core.fluid.IFluidDistribution;
+import resonantinduction.core.grid.fluid.FluidDistributionetwork;
+import resonantinduction.core.grid.fluid.IFluidDistribution;
 
 /** Network that handles connected tanks
  * 

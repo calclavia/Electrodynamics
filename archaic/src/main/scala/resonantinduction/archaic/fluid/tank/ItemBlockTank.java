@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.archaic.Archaic;
-import resonantinduction.core.fluid.TileFluidDistribution;
+import resonantinduction.core.grid.fluid.TileFluidDistribution;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
