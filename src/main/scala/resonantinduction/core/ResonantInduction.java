@@ -93,7 +93,6 @@ public class ResonantInduction
 		// Register Forge Events
 		MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
 
 		blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
 
