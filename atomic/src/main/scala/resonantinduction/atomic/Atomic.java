@@ -129,7 +129,7 @@ public class Atomic
     public static final String NAME = Reference.NAME + " Atomic";
     public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
     private static final String[] SUPPORTED_LANGUAGES = new String[]
-    { "en_US", "pl_PL", "de_DE" };
+    { "en_US", "pl_PL", "de_DE", "ru_RU" };
 
     @Instance(ID)
     public static Atomic INSTANCE;

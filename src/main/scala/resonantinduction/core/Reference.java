@@ -29,5 +29,5 @@ public class Reference
 	public static final String MODEL_PATH = "models/";
 	public static final String MODEL_DIRECTORY = DIRECTORY + MODEL_PATH;
 	public static final String LANGUAGE_DIRECTORY = DIRECTORY + "languages/";
-	public static final String[] LANGUAGES = new String[] { "en_US", "de_DE" };
+	public static final String[] LANGUAGES = new String[] { "en_US", "de_DE", "ru_RU" };
 }
