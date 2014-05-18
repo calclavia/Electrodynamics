@@ -13,6 +13,7 @@ import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.recipe.UniversalRecipe;
 import resonantinduction.archaic.blocks.TileTurntable;
 import resonantinduction.archaic.crate.BlockCrate;
+import resonantinduction.archaic.crate.CrateCraftingHandler;
 import resonantinduction.archaic.crate.ItemBlockCrate;
 import resonantinduction.archaic.crate.TileCrate;
 import resonantinduction.archaic.engineering.ItemHammer;
@@ -166,6 +167,8 @@ public class Archaic
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHandCrank, "S  ", "SSS", "  S", 'S', "stickWood"));
         GameRegistry.addRecipe(new ShapedOreRecipe(itemImprint, "PPP", "PIP", "PPP", 'P', Item.paper, 'I', new ItemStack(Item.dyePowder, 0)));
         GameRegistry.addRecipe(new ShapedOreRecipe(itemHammer, "CC ", "CS ", "  S", 'C', "cobblestone", 'S', "stickWood"));
+        
+        GameRegistry.registerCraftingHandler(new CrateCraftingHandler());
         proxy.postInit();
         modproxies.postInit();
     }
