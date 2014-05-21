@@ -39,6 +39,7 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.atomic.Atomic;
 import resonantinduction.atomic.ReactorExplosion;
 import resonantinduction.atomic.fusion.TilePlasma;
+import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
@@ -266,35 +267,35 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                     if (worldObj.getWorldTime() % (Atomic.SECOND_IN_TICKS * 5.0F) == 0 && this.getTemperature() >= 373)
                     {
                         float percentage = Math.min(this.getTemperature() / TileReactorCell.MELTING_POINT, 1.0F);
-                        worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, "atomicscience:reactorcell", percentage, 1.0F);
-                        // AtomicScience.LOGGER.info("REACTOR SOUND");
+                        worldObj.playSoundEffect(this.xCoord + 0.5F, this.yCoord + 0.5F, this.zCoord + 0.5F, Reference.PREFIX + "reactorcell", percentage, 1.0F);
                     }
 
                     if (previousTemperature != temperature && !shouldUpdate)
                     {
                         shouldUpdate = true;
                         previousTemperature = temperature;
-                        // System.out.println("[Atomic Science] [Thermal Grid] Temperature: " + String.valueOf(previousTemperature));
+                        //System.out.println("[Atomic Science] [Thermal Grid] Temperature: " + String.valueOf(previousTemperature));
                     }
-
+                    
                     if (previousTemperature >= MELTING_POINT && meltdownCounter < meltdownCounterMaximum)
                     {
                         shouldUpdate = true;
                         meltdownCounter++;
-                        // System.out.println("[Atomic Science] [Reactor Cell] Meltdown Ticker: " + String.valueOf(temperature) + " @ " + String.valueOf(meltdownCounter) + "/" + String.valueOf(meltdownCounterMaximum));
+                        //System.out.println("[Atomic Science] [Reactor Cell] Meltdown Ticker: " + String.valueOf(temperature) + " @ " + String.valueOf(meltdownCounter) + "/" + String.valueOf(meltdownCounterMaximum));
                     }
-
-                    if (previousTemperature >= MELTING_POINT && meltdownCounter >= meltdownCounterMaximum)
+                    else if (previousTemperature >= MELTING_POINT && meltdownCounter >= meltdownCounterMaximum)
                     {
-                        // System.out.println("[Atomic Science] [Reactor Cell] Meltdown Ticker: REACTOR MELTDOWN!");
+                        //System.out.println("[Atomic Science] [Reactor Cell] Meltdown Ticker: REACTOR MELTDOWN!");
                         meltdownCounter = 0;
                         meltDown();
                         return;
                     }
-                    else
+                    
+                    // Reset meltdown ticker to give the reactor more of a 'goldilocks zone'.
+                    if (previousTemperature < MELTING_POINT && meltdownCounter < meltdownCounterMaximum && meltdownCounter > 0)
                     {
-                        // Reset meltdown ticker to give the reactor more of a 'goldilocks zone'.
-                        meltdownCounter = 0;
+                        meltdownCounter--;
+                        //System.out.println("[Atomic Science] [Reactor Cell] Meltdown Ticker: " + String.valueOf(temperature) + " @ " + String.valueOf(meltdownCounter) + "/" + String.valueOf(meltdownCounterMaximum));
                     }
                 }
 
@@ -321,7 +322,6 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         }
                     }
                 }
-
             }
 
             if (ticks % 60 == 0 || shouldUpdate)
@@ -333,7 +333,6 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
         }
         else
         {
-
             // Particles of white smoke will rise from above the reactor chamber when above water boiling temperature.
             if (worldObj.rand.nextInt(5) == 0 && this.getTemperature() >= 373)
             {
@@ -478,7 +477,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
     {
         if (!worldObj.isRemote)
         {
-            // No need to destroy reactor cell since explosion will do that for us.
+            // Turn the reactor cell into a block of lava to imply it melted.
+            this.worldObj.setBlock(Block.lavaStill.blockID, 0, this.xCoord, this.yCoord, this.zCoord, 3);
+            
             ReactorExplosion reactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f);
             reactorExplosion.doExplosionA();
             reactorExplosion.doExplosionB(true);
