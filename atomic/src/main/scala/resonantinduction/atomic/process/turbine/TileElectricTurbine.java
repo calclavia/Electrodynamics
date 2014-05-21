@@ -5,6 +5,7 @@ import net.minecraftforge.fluids.Fluid;
 import resonant.api.IBoilHandler;
 import resonant.lib.prefab.turbine.TileTurbine;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 
 public class TileElectricTurbine extends TileTurbine implements IBoilHandler
@@ -44,7 +45,7 @@ public class TileElectricTurbine extends TileTurbine implements IBoilHandler
         {
             double maxVelocity = (getMaxPower() / torque) * 4;
             float percentage = angularVelocity * 4 / (float) maxVelocity;
-            this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, "atomicscience:turbine", percentage, 1.0F);
+            this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "turbine", percentage, 1.0F);
         }
     }
 

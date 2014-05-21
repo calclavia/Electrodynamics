@@ -28,10 +28,6 @@ public class WailaFluidTank implements IWailaDataProvider
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.fluid") + " " + tank.getFluid().getFluid().getLocalizedName());
                 currenttip.add(LanguageUtility.getLocal("info.waila.tank.vol") + " " + tank.getFluidAmount() + " / " + tank.getCapacity());
             }
-            else
-            {
-                currenttip.add(LanguageUtility.getLocal("info.waila.tank.empty"));
-            }
         }
         return currenttip;
     }

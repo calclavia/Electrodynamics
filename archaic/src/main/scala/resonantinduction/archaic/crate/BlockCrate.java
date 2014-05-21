@@ -114,31 +114,6 @@ public class BlockCrate extends BlockTile
     }
 
     @Override
-    public boolean onSneakUseWrench(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
-    {
-        if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
-        {
-            TileCrate tile = (TileCrate) world.getBlockTileEntity(x, y, z);
-            tile.buildSampleStack();
-            ItemStack sampleStack = tile.getSampleStack();
-
-            if (sampleStack != null && sampleStack.stackSize > 0)
-            {
-                ItemStack dropStack = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
-                ItemBlockCrate.setContainingItemStack(dropStack, sampleStack);
-                InventoryUtility.dropItemStack(world, x, y, z, dropStack, 10, 0);
-
-                for (int i = 0; i < tile.getInventory().getSizeInventory(); i++)
-                {
-                    tile.getInventory().setInventorySlotContents(i, null);
-                }
-                world.setBlock(x, y, z, 0, 0, 3);
-            }
-        }
-        return true;
-    }
-
-    @Override
     public boolean onMachineActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
     {
         if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
@@ -173,6 +148,10 @@ public class BlockCrate extends BlockTile
                     else if (hitY >= 0.5)
                     {
                         tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                    }
+                    else
+                    {
+                        tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
                     }
                 }
                 else

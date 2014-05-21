@@ -1,10 +1,13 @@
 package resonantinduction.archaic.fluid.tank;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
@@ -14,6 +17,7 @@ import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
+import resonant.api.IRemovable.ISneakPickup;
 import resonant.lib.content.module.TileBlock.IComparatorInputOverride;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.render.FluidRenderUtility;
@@ -24,22 +28,24 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonant.lib.utility.render.RenderBlockUtility;
 import resonantinduction.archaic.Archaic;
 import resonantinduction.core.Reference;
-import resonantinduction.core.fluid.FluidDistributionetwork;
-import resonantinduction.core.fluid.IFluidDistribution;
-import resonantinduction.core.fluid.TileFluidDistribution;
+import resonantinduction.core.grid.fluid.FluidDistributionetwork;
+import resonantinduction.core.grid.fluid.IFluidDistribution;
+import resonantinduction.core.grid.fluid.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileTank extends TileFluidDistribution implements IComparatorInputOverride
+/** Tile/Block class for basic Dynamic tanks
+ * 
+ * @author Darkguardsman */
+public class TileTank extends TileFluidDistribution implements IComparatorInputOverride, ISneakPickup
 {
     public static final int VOLUME = 16;
 
     public TileTank()
     {
-        super(UniversalElectricity.machine);
-        this.getInternalTank().setCapacity(VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+        super(UniversalElectricity.machine, VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
         isOpaqueCube = false;
         normalRender = false;
         itemBlock = ItemBlockTank.class;
@@ -56,24 +62,6 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
     {
         if (!world().isRemote)
         {
-            if (player.isSneaking())
-            {
-                ItemStack dropStack = ItemBlockTank.getWrenchedItem(world(), position());
-                if (dropStack != null)
-                {
-                    if (player.getHeldItem() == null)
-                    {
-                        player.inventory.setInventorySlotContents(player.inventory.currentItem, dropStack);
-                    }
-                    else
-                    {
-                        InventoryUtility.dropItemStack(world(), position(), dropStack);
-                    }
-
-                    position().setBlock(world(), 0);
-                }
-            }
-
             return FluidUtility.playerActivatedFluidItem(world(), x(), y(), z(), player, side);
         }
 
@@ -149,7 +137,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 
             public void renderTank(TileEntity tileEntity, double x, double y, double z, FluidStack fluid)
             {
-                if (tileEntity instanceof TileTank)
+                if (tileEntity.worldObj != null && tileEntity instanceof TileTank)
                 {
                     GL11.glPushMatrix();
                     GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
@@ -158,7 +146,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
                     {
                         GL11.glPushMatrix();
 
-                        if (tileEntity.worldObj != null && !fluid.getFluid().isGaseous())
+                        if (!fluid.getFluid().isGaseous())
                         {
                             GL11.glScaled(0.99, 0.99, 0.99);
                             FluidTank tank = ((TileTank) tileEntity).getInternalTank();
@@ -233,5 +221,32 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
                 return true;
             }
         };
+    }
+
+    @Override
+    public List<ItemStack> getRemovedItems(EntityPlayer entity)
+    {
+        List<ItemStack> drops = new ArrayList<ItemStack>();
+
+        ItemStack itemStack = new ItemStack(Archaic.blockTank, 1, 0);
+        if (itemStack != null)
+        {
+            if (getInternalTank() != null && getInternalTank().getFluid() != null)
+            {
+                FluidStack stack = getInternalTank().getFluid();
+
+                if (stack != null)
+                {
+                    if (itemStack.getTagCompound() == null)
+                    {
+                        itemStack.setTagCompound(new NBTTagCompound());
+                    }
+                    drain(ForgeDirection.UNKNOWN, stack.amount, false);
+                    itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
+                }
+            }
+            drops.add(itemStack);
+        }
+        return drops;
     }
 }

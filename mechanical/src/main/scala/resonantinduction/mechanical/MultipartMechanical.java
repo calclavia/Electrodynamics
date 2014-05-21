@@ -19,7 +19,7 @@ public class MultipartMechanical implements IPartFactory
 		MultiPartRegistry.registerParts(this, PART_TYPES);
 		MultipartGenerator.registerPassThroughInterface("resonantinduction.core.grid.fluid.IPressureNodeProvider");
 		// TODO: Move to UE
-		MultipartGenerator.registerTrait("calclavia.lib.grid.INodeProvider", "resonantinduction.core.grid.TraitNodeProvider");
+		MultipartGenerator.registerTrait("resonant.lib.grid.INodeProvider", "resonantinduction.core.grid.TraitNodeProvider");
 	}
 
 	@Override

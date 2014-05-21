@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidFinite;
@@ -22,6 +23,7 @@ import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.BlockMachineMaterial;
+import resonantinduction.core.resource.ItemBiomass;
 import resonantinduction.core.resource.ItemOreResource;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.TileDust;
@@ -77,6 +79,7 @@ public class ResonantInduction
 	public static Block blockOre;
 	public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
 	public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
+	public static Item itemBiomass;
 	public static Block blockDust, blockRefinedDust;
 	public static Block blockMachinePart;
 
@@ -105,6 +108,7 @@ public class ResonantInduction
 		itemRefinedDust = new ItemOreResource(Settings.getNextItemID("oreRefinedDust"), "oreRefinedDust");
 		itemBucketMixture = new ItemOreResourceBucket(Settings.getNextItemID("bucketMixture"), "bucketMixture", false);
 		itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten", true);
+		itemBiomass = contentRegistry.createItem(ItemBiomass.class);
 
 		GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
 		GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());

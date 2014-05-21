@@ -46,3 +46,7 @@ eclipse/
 .project
 output/
 .cache
+*.ipr
+*.iws
+*.idea/
+*.iml

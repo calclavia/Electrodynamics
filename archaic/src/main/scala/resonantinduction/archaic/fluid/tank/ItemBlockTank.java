@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.archaic.Archaic;
-import resonantinduction.core.fluid.TileFluidDistribution;
+import resonantinduction.core.grid.fluid.TileFluidDistribution;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
@@ -50,31 +50,6 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
                 list.add("Volume: " + UnitDisplay.getDisplay(fluid.amount, Unit.LITER, UnitPrefix.MILLI));
             }
         }
-    }
-
-    public static ItemStack getWrenchedItem(World world, Vector3 vec)
-    {
-        TileEntity entity = vec.getTileEntity(world);
-
-        if (entity instanceof TileTank && ((TileTank) entity).getInternalTank() != null && ((TileTank) entity).getInternalTank().getFluid() != null)
-        {
-            ItemStack itemStack = new ItemStack(Archaic.blockTank);
-
-            FluidStack stack = ((TileTank) entity).getInternalTank().getFluid();
-
-            if (stack != null)
-            {
-                if (itemStack.getTagCompound() == null)
-                {
-                    itemStack.setTagCompound(new NBTTagCompound());
-                }
-                ((TileTank) entity).drain(ForgeDirection.UNKNOWN, stack.amount, true);
-                itemStack.getTagCompound().setCompoundTag("fluid", stack.writeToNBT(new NBTTagCompound()));
-            }
-            return itemStack;
-        }
-
-        return null;
     }
 
     @Override

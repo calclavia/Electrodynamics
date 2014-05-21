@@ -5,10 +5,10 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.Settings;
 import resonantinduction.core.TabRI;
 
-public class ItASBase extends ItemBase
+public class ItemASBase extends ItemBase
 {
     /** Must be called while in mod init phase. */
-    public ItASBase(int itemID, String name)
+    public ItemASBase(int itemID, String name)
     {
         super(itemID);
     }

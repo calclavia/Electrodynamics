@@ -49,17 +49,20 @@ public class GearShaftNode extends MechanicalNode
         dirs.add(shaft().placementSide.getOpposite());
         /** Check for internal connections, the FRONT and BACK. */
         Iterator<ForgeDirection> it = dirs.iterator();
-        while(it.hasNext())
+        while (it.hasNext())
         {
             ForgeDirection checkDir = it.next();
             if (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite())
             {
-                MechanicalNode instance = ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
-
-                if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+                if (shaft().tile() instanceof INodeProvider)
                 {
-                    connections.put(instance, checkDir);
-                    it.remove();
+                    MechanicalNode instance = ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
+
+                    if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
+                    {
+                        connections.put(instance, checkDir);
+                        it.remove();
+                    }
                 }
             }
         }
