@@ -36,9 +36,9 @@ public class BlockConveyorBelt extends BlockTile
     @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
-        TileEntity tile = world.getBlockTileEntity(x, y, z);
-        if (tile instanceof TileConveyorBelt)
-            ((TileConveyorBelt) tile).node.reconstruct();
+        //TileEntity tile = world.getBlockTileEntity(x, y, z);
+        //if (tile instanceof TileConveyorBelt)
+           // ((TileConveyorBelt) tile).node.reconstruct();
     }
 
     @Override
@@ -273,7 +273,7 @@ public class BlockConveyorBelt extends BlockTile
 
             if (!world.isBlockIndirectlyGettingPowered(x, y, z))
             {
-                double maxSpeed = tile.getMoveVelocity() / 20;
+                double maxSpeed = 1;
 
                 if (maxSpeed > 0)
                 {
