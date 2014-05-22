@@ -273,7 +273,7 @@ public class BlockConveyorBelt extends BlockTile
 
             if (!world.isBlockIndirectlyGettingPowered(x, y, z))
             {
-                double maxSpeed = 1;
+                double maxSpeed = TileConveyorBelt.ACCELERATION;
 
                 if (maxSpeed > 0)
                 {

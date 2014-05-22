@@ -44,7 +44,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
     public static final int PACKET_SLANT = 0;
     public static final int PACKET_REFRESH = 1;
     /** Acceleration of entities on the belt */
-    public static final float ACCELERATION = 0.01f;
+    public static final float ACCELERATION = 0.1f;
 
     /** Frame count for texture animation from 0 - maxFrame */
     private int animationFrame = 0;
@@ -95,14 +95,14 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
                 if (this.animationFrame < 0)
                     this.animationFrame = 0;
                 if (this.animationFrame > MAX_FRAME)
-                    this.animationFrame = MAX_FRAME;
+                    this.animationFrame = 0;
             }
             else
             {
                 if (this.animationFrame < 0)
                     this.animationFrame = 0;
                 if (this.animationFrame > MAX_SLANT_FRAME)
-                    this.animationFrame = MAX_SLANT_FRAME;
+                    this.animationFrame = 0;
             }
         }
         else
