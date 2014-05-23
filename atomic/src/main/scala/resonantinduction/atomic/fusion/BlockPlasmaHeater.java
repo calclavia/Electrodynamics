@@ -1,11 +1,13 @@
 package resonantinduction.atomic.fusion;
 
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.render.block.BlockRenderingHandler;
 import resonant.lib.utility.FluidUtility;
+import resonantinduction.atomic.Atomic;
 import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,7 +18,6 @@ public class BlockPlasmaHeater extends BlockTile
     public BlockPlasmaHeater(int ID)
     {
         super(ID, UniversalElectricity.machine);
-
     }
 
     @Override
@@ -49,5 +50,4 @@ public class BlockPlasmaHeater extends BlockTile
     {
         return false;
     }
-
 }
