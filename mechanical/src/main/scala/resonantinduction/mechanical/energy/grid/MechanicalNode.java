@@ -244,7 +244,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
 
 			if (tile instanceof INodeProvider)
 			{
-				MechanicalNode check = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
+				MechanicalNode check = (MechanicalNode) ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
 
 				if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
 				{

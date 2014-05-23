@@ -40,7 +40,7 @@ public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvi
 
 				if (sourceTile instanceof INodeProvider)
 				{
-					MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
+					MechanicalNode sourceInstance = (MechanicalNode) ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
 					return sourceInstance == source && from == getDirection().getOpposite();
 				}
 			}
@@ -121,10 +121,10 @@ public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvi
 	}
 
 	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
-			return (N) ((TileMechanicalTurbine) getMultiBlock().get()).mechanicalNode;
+			return ((TileMechanicalTurbine) getMultiBlock().get()).mechanicalNode;
 		return null;
 	}
 

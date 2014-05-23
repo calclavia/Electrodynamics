@@ -130,7 +130,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
                 if (tileBehind instanceof INodeProvider)
                 {
-                    MechanicalNode instance = ((INodeProvider) tileBehind).getNode(MechanicalNode.class, placementSide.getOpposite());
+                    MechanicalNode instance = (MechanicalNode) ((INodeProvider) tileBehind).getNode(MechanicalNode.class, placementSide.getOpposite());
 
                     if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(placementSide.getOpposite(), this))
                     {
@@ -155,7 +155,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
                     {
                         /** If we're checking for the block that is opposite to the gear's placement
                          * side (the center), then we try to look for a gear shaft in the center. */
-                        MechanicalNode instance = ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
+                        MechanicalNode instance = (MechanicalNode) ((INodeProvider) tile).getNode(MechanicalNode.class, checkDir == placementSide.getOpposite() ? ForgeDirection.UNKNOWN : checkDir);
 
                         if (!connections.containsValue(checkDir) && instance != this && checkDir != placementSide && instance != null && instance.canConnect(checkDir.getOpposite(), this))
                         {
@@ -179,7 +179,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
                     if (!connections.containsValue(checkDir) && checkTile instanceof INodeProvider)
                     {
-                        MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, placementSide);
+                        MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, placementSide);
 
                         if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
                         {
@@ -263,7 +263,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
                         if (sourceTile instanceof INodeProvider)
                         {
-                            MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from);
+                            MechanicalNode sourceInstance = (MechanicalNode) ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from);
                             return sourceInstance == with;
                         }
                     }
@@ -274,7 +274,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
                         if (sourceTile instanceof INodeProvider)
                         {
-                            MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
+                            MechanicalNode sourceInstance = (MechanicalNode) ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
                             return sourceInstance == with;
                         }
                     }
@@ -518,10 +518,10 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     }
 
     @Override
-    public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
     {
         if (nodeType.isAssignableFrom(node.getClass()))
-            return (N) getMultiBlock().get().node;
+            return getMultiBlock().get().node;
         return null;
     }
 

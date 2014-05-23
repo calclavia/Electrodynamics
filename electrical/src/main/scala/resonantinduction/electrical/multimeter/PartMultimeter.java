@@ -265,7 +265,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
         if (tileEntity instanceof INodeProvider)
         {
-            IMechanicalNode instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, receivingSide);
+            IMechanicalNode instance = (IMechanicalNode) ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, receivingSide);
 
             for (ForgeDirection dir : ForgeDirection.values())
             {
@@ -274,7 +274,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
                     break;
                 }
 
-                instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, dir);
+                instance = (IMechanicalNode) ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, dir);
             }
 
             if (instance != null)
@@ -302,7 +302,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
         if (tileEntity instanceof IPressureNodeProvider)
         {
-            getNetwork().pressureGraph.queue(((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide).getPressure(receivingSide));
+            getNetwork().pressureGraph.queue(((FluidPressureNode) ((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide)).getPressure(receivingSide));
         }
 
         getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));

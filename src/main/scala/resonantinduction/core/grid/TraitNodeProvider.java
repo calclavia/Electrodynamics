@@ -11,7 +11,7 @@ import codechicken.multipart.TileMultipart;
 public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
 	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 

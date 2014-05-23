@@ -42,7 +42,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 
 					if (sourceTile instanceof INodeProvider)
 					{
-						MechanicalNode sourceInstance = ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
+						MechanicalNode sourceInstance = (MechanicalNode) ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
 						return sourceInstance == source && (from == getDirection().getOpposite() || from == getDirection());
 					}
 				}

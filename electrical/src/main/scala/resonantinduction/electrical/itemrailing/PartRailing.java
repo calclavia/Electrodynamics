@@ -44,10 +44,10 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 
 
     @Override
-    public <N extends INode> N getNode (Class<? super N> nodeType, ForgeDirection from)
+    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
     {
         if (nodeType.isInstance(this.node))
-            return (N) node;
+            return node;
         try
         {
             for (Constructor con : nodeType.getConstructors())
@@ -55,7 +55,7 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
                 if ((con.getParameterTypes().length == 1) && con.getParameterTypes()[0].equals(getClass()))
                 {
                     this.node = (NodeRailing) con.newInstance(this);
-                    return (N) this.node;
+                    return this.node;
                 }
             }
 

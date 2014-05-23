@@ -70,10 +70,10 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 	}
 
 	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(node.getClass()))
-			return (N) node;
+			return node;
 		return null;
 	}
 

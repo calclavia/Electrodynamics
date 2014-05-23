@@ -153,10 +153,10 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 	}
 
 	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		if (nodeType.isAssignableFrom(pressureNode.getClass()))
-			return (N) pressureNode;
+			return pressureNode;
 
 		return super.getNode(nodeType, from);
 	}

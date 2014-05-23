@@ -49,7 +49,6 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
             @Override
             public void doRecache()
             {
-
                 connections.clear();
 
                 if (world() != null)
@@ -65,7 +64,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
                         {
                             if (tile instanceof IPressureNodeProvider)
                             {
-                                FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+                                FluidPressureNode check = (FluidPressureNode) ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
                                 if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
                                 {

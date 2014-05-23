@@ -56,7 +56,7 @@ public class GearShaftNode extends MechanicalNode
             {
                 if (shaft().tile() instanceof INodeProvider)
                 {
-                    MechanicalNode instance = ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
+                    MechanicalNode instance = (MechanicalNode) ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
 
                     if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
                     {
@@ -77,7 +77,7 @@ public class GearShaftNode extends MechanicalNode
 
                     if (checkTile instanceof INodeProvider)
                     {
-                        MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
+                        MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
 
                         // Only connect to shafts outside of this block space.
                         if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
