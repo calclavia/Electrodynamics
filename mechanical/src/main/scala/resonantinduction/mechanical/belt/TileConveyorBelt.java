@@ -91,7 +91,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
 
             // Sync the animation. Slant belts are slower.
             if (this.getBeltType() == BeltType.NORMAL || this.getBeltType() == BeltType.RAISED)
-            {               
+            {
                 if (this.animationFrame < 0)
                     this.animationFrame = 0;
                 if (this.animationFrame > MAX_FRAME)
@@ -209,6 +209,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
             slantType = BeltType.NORMAL;
         }
         this.slantType = slantType;
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (worldObj != null)
+            this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }
