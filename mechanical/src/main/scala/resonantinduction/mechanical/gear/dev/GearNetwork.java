@@ -1,9 +1,11 @@
 package resonantinduction.mechanical.gear.dev;
 
 import java.util.Collections;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IUpdate;
 import universalelectricity.core.net.ConnectionPathfinder;
 
@@ -20,14 +22,33 @@ public class GearNetwork implements IUpdate
     private boolean doRemap = false;
     private boolean isDead = false;
 
+    public GearNetwork()
+    {
+        doRemap = true;
+    }
+
+    public GearNetwork(NodeGear nodeGear)
+    {
+        this();
+        onAdded(nodeGear);
+    }
+
     /** Called by a gear when its added to the world */
     public void onAdded(NodeGear gear)
+    {
+        onAdded(gear, true);
+    }
+
+    public void onAdded(NodeGear gear, boolean checkMerge)
     {
         if (gear instanceof NodeGenerator)
         {
             if (!generators.contains(gear))
             {
+                //TODO set gear's network
                 generators.add((NodeGenerator) gear);
+                if (checkMerge)
+                    checkForMerge(gear);
                 doRemap = true;
             }
         }
@@ -36,16 +57,25 @@ public class GearNetwork implements IUpdate
             if (!nodes.contains(gear))
             {
                 nodes.add(gear);
+                if (checkMerge)
+                    checkForMerge(gear);
                 doRemap = true;
             }
         }
     }
 
+    public void checkForMerge(NodeGear gear)
+    {
+
+    }
+
     /** Called by a gear when its removed from the world */
-    public void onRemoved(NodeGear gear)
+    public void onRemoved(NodeGear gear, boolean doSplit)
     {
         if (generators.remove(gear) || nodes.remove(gear))
         {
+            if (doSplit)
+                this.split(gear);
             doRemap = true;
         }
     }
@@ -101,27 +131,29 @@ public class GearNetwork implements IUpdate
         return null;
     }
 
-    public void split(NodeGear splitPoint)
+    /** Called to do a path finding check too see if the network needs to be split into two or more
+     * networks. Does up to 6 path finding checks, and stops when it finds a connection back to one
+     * of the sub networks. */
+    protected void split(NodeGear splitPoint)
     {
         /** Loop through the connected blocks and attempt to see if there are connections between the
          * two points elsewhere. */
-        Object[] connectedBlocks = getConnectionsFor(splitPoint);
-        removeConnector(splitPoint);
+        WeakHashMap<NodeGear, ForgeDirection> connectedBlocks = splitPoint.connections;
 
-        for (int i = 0; i < connectedBlocks.length; i++)
+        for (Entry<NodeGear, ForgeDirection> entry : connectedBlocks.entrySet())
         {
-            Object connectedA = connectedBlocks[i];
+            final NodeGear connectedA = entry.getKey();
 
-            if (connectedA != null && isValidConnector(connectedA))
+            if (connectedA != null)
             {
-                for (int ii = 0; ii < connectedBlocks.length; ii++)
+                for (Entry<NodeGear, ForgeDirection> entry2 : connectedBlocks.entrySet())
                 {
-                    final Object connectedB = connectedBlocks[ii];
+                    final NodeGear connectedB = entry2.getKey();
 
-                    if (connectedB != null && connectedA != connectedB && isValidConnector(connectedB))
+                    if (connectedB != null && connectedA != connectedB)
                     {
-                        ConnectionPathfinder<C> finder = new ConnectionPathfinder<C>(getConnectorClass(), (C) connectedB, splitPoint);
-                        finder.findNodes((C) connectedA);
+                        ConnectionPathfinder<NodeGear> finder = new ConnectionPathfinder<NodeGear>(NodeGear.class, connectedB, splitPoint);
+                        finder.findNodes(connectedA);
 
                         if (finder.results.size() <= 0)
                         {
@@ -129,15 +161,14 @@ public class GearNetwork implements IUpdate
                             {
                                 /** The connections A and B are not connected anymore. Give them both
                                  * a new common network. */
-                                N newNetwork = newInstance();
+                                GearNetwork newNetwork = new GearNetwork();
 
-                                for (C node : finder.closedSet)
+                                for (NodeGear node : finder.closedSet)
                                 {
                                     if (node != splitPoint)
                                     {
-                                        newNetwork.addConnector(node);
-                                        removeConnector(node);
-                                        onSplit(newNetwork);
+                                        newNetwork.onAdded(node, false);
+                                        onRemoved(node, false);
                                     }
                                 }
                                 newNetwork.reconstruct();
@@ -159,7 +190,7 @@ public class GearNetwork implements IUpdate
     /** Called to rebuild the network */
     protected void reconstruct()
     {
-
+        //TODO path find from each generator to each gear
     }
 
     /** Called to destroy or rather clean up the network. Make sure to do your cleanup in this
