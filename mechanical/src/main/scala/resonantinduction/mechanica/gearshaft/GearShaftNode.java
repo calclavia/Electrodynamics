@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanica.gearshaft;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
-import resonantinduction.mechanical.energy.gear.PartGear;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.gear.PartGear;
+import resonantinduction.mechanical.gear.PartGearShaft;
 
 public class GearShaftNode extends MechanicalNode
 {

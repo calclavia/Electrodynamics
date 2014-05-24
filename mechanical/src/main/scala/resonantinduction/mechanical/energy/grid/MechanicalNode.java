@@ -28,6 +28,7 @@ import codechicken.multipart.TMultiPart;
  *
  * @author Calclavia
  */
+@SuppressWarnings("rawtypes")
 public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalNode>
 		implements IMechanicalNode
 {

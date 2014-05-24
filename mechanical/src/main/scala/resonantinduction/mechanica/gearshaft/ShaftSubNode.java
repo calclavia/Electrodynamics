@@ -1,8 +1,8 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanica.gearshaft;
 
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.Node;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
+import resonantinduction.mechanical.gear.PartGearShaft;
 
 public class ShaftSubNode extends Node<INodeProvider, ShaftGrid, ShaftSubNode>
 {

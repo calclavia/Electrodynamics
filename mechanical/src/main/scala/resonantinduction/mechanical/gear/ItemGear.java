@@ -1,22 +1,25 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanical.gear;
 
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.part.IHighlight;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import codechicken.microblock.FacePlacementGrid$;
 import codechicken.multipart.JItemMultiPart;
 import codechicken.multipart.MultiPartRegistry;
+import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
+import codechicken.multipart.TileMultipart;
 
-public class ItemGearShaft extends JItemMultiPart implements IHighlight
+public class ItemGear extends JItemMultiPart implements IHighlight
 {
-	public ItemGearShaft(int id)
+	public ItemGear(int id)
 	{
 		super(id);
 		setHasSubtypes(true);
@@ -31,13 +34,24 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 	@Override
 	public TMultiPart newPart(ItemStack itemStack, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 hit)
 	{
-		PartGearShaft part = (PartGearShaft) MultiPartRegistry.createPart("resonant_induction_gear_shaft", false);
+		PartGear part = (PartGear) MultiPartRegistry.createPart("resonant_induction_gear", false);
+		side = FacePlacementGrid$.MODULE$.getHitSlot(hit, side);
 
-		if (part != null)
+		TileEntity tile = world.getBlockTileEntity(pos.x, pos.y, pos.z);
+
+		if (tile instanceof TileMultipart)
 		{
-			part.preparePlacement(side, itemStack.getItemDamage());
+			TMultiPart occupyingPart = ((TileMultipart) tile).partMap(side);
+			TMultiPart centerPart = ((TileMultipart) tile).partMap(PartMap.CENTER.ordinal());
+			boolean clickedCenter = hit.mag() < 0.4;
+
+			if ((clickedCenter && centerPart instanceof PartGearShaft))
+			{
+				side ^= 1;
+			}
 		}
 
+		part.preparePlacement(side, itemStack.getItemDamage());
 		return part;
 	}
 
@@ -48,6 +62,8 @@ public class ItemGearShaft extends JItemMultiPart implements IHighlight
 		{
 			listToAddTo.add(new ItemStack(itemID, 1, i));
 		}
+		
+		listToAddTo.add(new ItemStack(itemID, 1, 10));
 	}
 
 	@Override
