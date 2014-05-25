@@ -2,17 +2,28 @@ package resonantinduction.electrical.itemrailing;
 
 import java.lang.reflect.Constructor;
 
+import codechicken.lib.vec.Vector3;
+import codechicken.microblock.IHollowConnect;
+import codechicken.multipart.JNormalOcclusion;
+import codechicken.multipart.TSlottedPart;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IExternalInventory;
+import resonant.api.IExternalInventoryBox;
 import resonant.api.grid.INode;
+import resonant.lib.utility.inventory.ExternalInventory;
 import resonantinduction.core.prefab.part.PartFramedConnection;
+import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.electrical.Electrical;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
 import universalelectricity.api.energy.EnergyNetworkLoader;
 import universalelectricity.api.energy.IConductor;
 import universalelectricity.api.energy.IEnergyNetwork;
+import universalelectricity.api.net.IConnector;
+import universalelectricity.api.net.INetwork;
+import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.VectorWorld;
 import codechicken.multipart.TileMultipart;
 
@@ -20,26 +31,19 @@ import codechicken.multipart.TileMultipart;
  * @since 16/03/14
  * @author tgame14
  */
-public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, IConductor, IEnergyNetwork> implements IConductor, IItemRailingProvider
+public class PartRailing extends PartFramedNode<EnumRailingMaterial, NodeRailing, IItemRailingProvider> implements IItemRailingProvider, TSlottedPart, JNormalOcclusion, IHollowConnect, IExternalInventory
 {
-
-    public static enum EnumRailing
-    {
-        DEFAULT, EXTENTION;
-    }
-
-	public NodeRailing getNode()
-	{
-		return node;
-	}
-
-    private NodeRailing node;
+    protected ExternalInventory inventory;
+    protected boolean markPacketUpdate;
 
     public PartRailing ()
     {
         super(Electrical.itemInsulation);
-		this.material = EnumRailing.DEFAULT;
+		this.material = EnumRailingMaterial.DEFAULT;
 		this.node = new NodeRailing(this);
+        this.markPacketUpdate = true;
+        this.requiresInsulation = false;
+        this.inventory = new ExternalInventory(tile(), 5);
     }
 
 
@@ -72,71 +76,23 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
 		return new VectorWorld(getWorld(), x(), y(), z());
 	}
 
-	@Override
-    public float getResistance ()
-    {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentCapacity ()
-    {
-        return 0;
-    }
-
-    @Override
-    public long onReceiveEnergy (ForgeDirection from, long receive, boolean doReceive)
-    {
-        return 0;
-    }
-
-    @Override
-    public long onExtractEnergy (ForgeDirection from, long extract, boolean doExtract)
-    {
-        return 0;
-    }
-
     @Override
     public boolean doesTick ()
     {
         return false;
     }
 
-    @Override
-    protected boolean canConnectTo (TileEntity tile, ForgeDirection to)
-    {
-		Object obj = tile instanceof TileMultipart ? ((TileMultipart) tile).partMap(ForgeDirection.UNKNOWN.ordinal()) : tile;
-		return obj instanceof IInventory ? true : obj instanceof PartRailing;
-    }
-
-    @Override
-    protected IConductor getConnector (TileEntity tile)
-    {
-        return tile instanceof IConductor ? (IConductor) ((IConductor) tile).getInstance(ForgeDirection.UNKNOWN) : null;
-    }
-
-	@Override
-	public IEnergyNetwork getNetwork()
-	{
-		if (network == null)
-		{
-			setNetwork(EnergyNetworkLoader.getNewNetwork(this));
-		}
-
-		return network;
-	}
-
 	//TODO: Fix up to proper data
     @Override
     public void setMaterial (int i)
     {
-		this.material = EnumRailing.values()[i];
+		this.material = EnumRailingMaterial.values()[i];
     }
 
     @Override
     protected ItemStack getItem ()
     {
-        return new ItemStack(Electrical.itemRailing);
+        return new ItemStack(Electrical.itemRailing, 1, getMaterialID());
     }
 
     @Override
@@ -145,4 +101,42 @@ public class PartRailing extends PartFramedConnection<PartRailing.EnumRailing, I
         return "resonant_induction_itemrailing";
     }
 
+    @Override
+    public void renderDynamic (Vector3 pos, float frame, int pass)
+    {
+        super.renderDynamic(pos, frame, pass);
+        //TODO: Implement
+    }
+
+
+
+    @Override
+    public IVectorWorld getVectorWorld ()
+    {
+        return new VectorWorld(getWorld(), x(), y(), z());
+    }
+
+    @Override
+    public void onInventoryChanged ()
+    {
+        //TODO: Implement
+    }
+
+    @Override
+    public IExternalInventoryBox getInventory ()
+    {
+        return this.inventory;
+    }
+
+    @Override
+    public boolean canStore (ItemStack stack, int slot, ForgeDirection side)
+    {
+        return false;
+    }
+
+    @Override
+    public boolean canRemove (ItemStack stack, int slot, ForgeDirection side)
+    {
+        return false;
+    }
 }
