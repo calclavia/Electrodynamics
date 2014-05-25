@@ -45,6 +45,7 @@ public class NodeGear implements INode, IConnector<GearNetwork>
     public void deconstruct()
     {
         this.rotationEffectMap.clear();
+        this.connections.clear();
 
     }
 
@@ -68,8 +69,7 @@ public class NodeGear implements INode, IConnector<GearNetwork>
     @Override
     public void setNetwork(GearNetwork network)
     {
-        // TODO Auto-generated method stub
-
+        this.network = network;
     }
 
     @Override
