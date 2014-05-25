@@ -1,4 +1,4 @@
-package resonantinduction.mechanica.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.Node;

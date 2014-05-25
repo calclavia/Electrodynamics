@@ -6,10 +6,10 @@ import java.util.Set;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanica.gearshaft.GearShaftNode;
-import resonantinduction.mechanica.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
+import resonantinduction.mechanical.gearshaft.GearShaftNode;
+import resonantinduction.mechanical.gearshaft.RenderGearShaft;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;

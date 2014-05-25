@@ -1,4 +1,4 @@
-package resonantinduction.mechanica.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import resonant.lib.grid.NodeGrid;
 

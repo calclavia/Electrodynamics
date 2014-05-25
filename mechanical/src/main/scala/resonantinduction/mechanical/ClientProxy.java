@@ -1,9 +1,9 @@
 package resonantinduction.mechanical;
 
 import resonant.lib.render.item.GlobalItemRenderer;
-import resonantinduction.mechanica.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.fluid.pipe.RenderPipe;
 import resonantinduction.mechanical.gear.RenderGear;
+import resonantinduction.mechanical.gearshaft.RenderGearShaft;
 
 public class ClientProxy extends CommonProxy
 {

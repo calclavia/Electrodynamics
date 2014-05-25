@@ -1,4 +1,4 @@
-package resonantinduction.mechanica.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import static org.lwjgl.opengl.GL11.glRotatef;
 import net.minecraft.item.ItemStack;
