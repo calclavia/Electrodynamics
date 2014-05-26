@@ -134,7 +134,7 @@ public class Electrical
         itemQuantumGlyph = contentRegistry.createItem(ItemQuantumGlyph.class);
 
         //Railings
-        itemRailing = contentRegistry.createItem(ItemItemRailing.class);
+        //itemRailing = contentRegistry.createItem(ItemItemRailing.class);
 
         Settings.CONFIGURATION.save();
 
