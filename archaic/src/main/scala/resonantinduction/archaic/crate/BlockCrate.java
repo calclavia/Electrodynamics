@@ -150,16 +150,16 @@ public class BlockCrate extends BlockTile
                     }
                     else if (hitY <= 0.5)
                     {
-                        tryEject(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
+                        tryEject(tile, player, System.currentTimeMillis() - tile.prevClickTime < 250);
                     }
                     else
                     {
-                        tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
+                        tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 250);
                     }
                 }
                 else
                 {
-                    tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
+                    tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 250);
                 }
 
             }
@@ -320,21 +320,20 @@ public class BlockCrate extends BlockTile
                     if (slotStack != null && slotStack.stackSize > 0)
                     {
                         int amountToTake = Math.min(slotStack.stackSize, requestSize);
-
                         ItemStack dropStack = slotStack.copy();
-                        dropStack.stackSize = amountToTake;
+                        dropStack.stackSize = amountToTake;                        
 
-                        EntityItem entityItem = new EntityItem(world, player.posX, player.posY, player.posZ, dropStack);
-                        entityItem.delayBeforeCanPickup = 0;
-                        world.spawnEntityInWorld(entityItem);
-
-                        slotStack.stackSize -= amountToTake;
-                        ammountEjected += amountToTake;
-                        if (slotStack.stackSize <= 0)
+                        if (!player.inventory.addItemStackToInventory(dropStack))
                         {
-                            slotStack = null;
+                            tileEntity.getInventory().setInventorySlotContents(slot, slotStack);
+                            ammountEjected += amountToTake - slotStack.stackSize;
+                            break;
                         }
-                        tileEntity.getInventory().setInventorySlotContents(slot, slotStack);
+                        else
+                        {
+                            tileEntity.getInventory().setInventorySlotContents(slot, null);
+                            ammountEjected += amountToTake;
+                        }
 
                     }
                     if (ammountEjected >= requestSize)
@@ -342,6 +341,7 @@ public class BlockCrate extends BlockTile
                         return true;
                     }
                 }
+                player.inventory.onInventoryChanged();
                 tileEntity.onInventoryChanged();
                 return true;
             }
