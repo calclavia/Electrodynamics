@@ -68,7 +68,7 @@ public class BlockCrate extends BlockTile
         if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
         {
             TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
-            this.tryEject(tileEntity, player, (System.currentTimeMillis() - tileEntity.prevClickTime) < 10);
+            this.tryEject(tileEntity, player, (System.currentTimeMillis() - tileEntity.prevClickTime) < 200);
             tileEntity.prevClickTime = System.currentTimeMillis();
         }
     }
