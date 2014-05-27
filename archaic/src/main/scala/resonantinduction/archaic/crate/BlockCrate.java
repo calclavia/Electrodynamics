@@ -68,8 +68,8 @@ public class BlockCrate extends BlockTile
         if (!world.isRemote && world.getBlockTileEntity(x, y, z) instanceof TileCrate)
         {
             TileCrate tileEntity = (TileCrate) world.getBlockTileEntity(x, y, z);
-            this.tryEject(tileEntity, player, world.getWorldTime() - tileEntity.prevClickTime < 10);
-            tileEntity.prevClickTime = world.getWorldTime();
+            this.tryEject(tileEntity, player, (System.currentTimeMillis() - tileEntity.prevClickTime) < 10);
+            tileEntity.prevClickTime = System.currentTimeMillis();
         }
     }
 
@@ -139,28 +139,31 @@ public class BlockCrate extends BlockTile
                 ItemStack current = player.inventory.getCurrentItem();
                 if (player.capabilities.isCreativeMode)
                 {
-                    if (side == 1 && current != null && tile.getSampleStack() == null)
+                    if (side == 1)
                     {
-                        ItemStack cStack = current.copy();
-                        cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
-                        addStackToCrate(tile, cStack);
+                        if (current != null && tile.getSampleStack() == null)
+                        {
+                            ItemStack cStack = current.copy();
+                            cStack.stackSize = TileCrate.getSlotCount(world.getBlockMetadata(x, y, z)) * 64;
+                            addStackToCrate(tile, cStack);
+                        }
                     }
-                    else if (hitY >= 0.5)
+                    else if (hitY <= 0.5)
                     {
-                        tryEject(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                        tryEject(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
                     }
                     else
                     {
-                        tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                        tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
                     }
                 }
                 else
                 {
-                    tryInsert(tile, player, world.getWorldTime() - tile.prevClickTime < 10);
+                    tryInsert(tile, player, System.currentTimeMillis() - tile.prevClickTime < 10);
                 }
 
             }
-            tile.prevClickTime = world.getWorldTime();
+            tile.prevClickTime = System.currentTimeMillis();
         }
         return true;
     }
