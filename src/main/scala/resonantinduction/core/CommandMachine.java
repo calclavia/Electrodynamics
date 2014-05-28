@@ -106,6 +106,10 @@ public class CommandMachine extends CommandBase
                                                             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Failed to set energy! Maybe try a different side?"));
                                                         }
                                                     }
+                                                    else
+                                                    {
+                                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Invalid input value"));
+                                                    }
                                                 }
                                                 else
                                                 {
