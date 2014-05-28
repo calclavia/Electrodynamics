@@ -46,12 +46,12 @@ public class CommandMachine extends CommandBase
                 if (args.length > 1 && args[1] != null)
                 {
                     final String command = args[1];
-                    final boolean c = args.length > 2 && args[2] != null;
-                    final boolean c2 = args.length > 3 && args[3] != null;
-                    final boolean c3 = args.length > 3 && args[3] != null;
-                    final String subCommand = c ? args[2] : null;
-                    final String subCommand2 = c2 ? args[3] : null;
-                    final String subCommand3 = c3 ? args[4] : null;
+                    final boolean hasSubCommand = args.length > 2 && args[2] != null;
+                    final boolean hasSecondSub = args.length > 3 && args[3] != null;
+                    final boolean hasThirdSub = args.length > 3 && args[3] != null;
+                    final String subCommand = hasSubCommand ? args[2] : null;
+                    final String subCommand2 = hasSecondSub ? args[3] : null;
+                    final String subCommand3 = hasThirdSub ? args[4] : null;
 
                     if (selection.containsKey(((EntityPlayer) sender).username) && selection.get(((EntityPlayer) sender).username) != null)
                     {
@@ -72,21 +72,59 @@ public class CommandMachine extends CommandBase
                         {
                             if (command.equalsIgnoreCase("energy"))
                             {
-                                if (!c)
+                                if (!hasSubCommand)
                                 {
                                     sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy set <side> <amount>"));
                                     sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy get <side>"));
                                 }
-                                else if (c2)
+                                else if (subCommand.equalsIgnoreCase("get") || subCommand.equalsIgnoreCase("set"))
                                 {
-                                    ForgeDirection direction = getDirection(subCommand3);
-                                    if (subCommand2.equalsIgnoreCase("get"))
+                                    if (hasSecondSub)
                                     {
-                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy: " + CompatibilityModule.getEnergy(tile, direction) + "/" + CompatibilityModule.getMaxEnergy(tile, direction)));
+                                        ForgeDirection direction = getDirection(subCommand2);
+                                        if (direction != null)
+                                        {
+                                            if (subCommand.equalsIgnoreCase("get"))
+                                            {
+                                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy: " + CompatibilityModule.getEnergy(tile, direction) + "/" + CompatibilityModule.getMaxEnergy(tile, direction)));
+                                            }
+                                            else if (subCommand.equalsIgnoreCase("set"))
+                                            {
+                                                if (hasThirdSub)
+                                                {
+                                                    long joules = Long.getLong(subCommand3, -33);
+                                                    if (joules >= 0)
+                                                    {
+                                                        long ex = CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, false);
+                                                        if (ex == CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, true))
+                                                        {
+                                                            CompatibilityModule.receiveEnergy(tile, direction, joules, true);
+                                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy set"));
+                                                        }
+                                                        else
+                                                        {
+                                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Failed to set energy! Maybe try a different side?"));
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("Supply an energy value"));
+                                                }
+                                            }
+                                            else
+                                            {
+                                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown energy command"));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Need to supply a side"));
+                                        }
                                     }
-                                    else if (subCommand2.equalsIgnoreCase("set"))
+                                    else
                                     {
-
+                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Need to supply a side"));
                                     }
                                 }
                             }
