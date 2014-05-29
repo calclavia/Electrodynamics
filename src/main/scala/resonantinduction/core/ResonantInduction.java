@@ -8,8 +8,11 @@ import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidFinite;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
@@ -22,6 +25,7 @@ import resonant.lib.network.PacketTile;
 import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.handler.TextureHookHandler;
+import resonantinduction.core.items.ItemBakingTrayWithBread;
 import resonantinduction.core.items.ItemDevStaff;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
@@ -46,6 +50,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import resonantinduction.core.items.ItemFlour;
 
 /** The core module of Resonant Induction
  * 
@@ -77,8 +82,10 @@ public class ResonantInduction
     public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
     public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
     public static Item itemBiomass, itemDevStaff;
+    public static Item itemFlour, itemBakingTrayWithBread;
     public static Block blockDust, blockRefinedDust;
     public static Block blockMachinePart;
+    
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt)
@@ -105,6 +112,8 @@ public class ResonantInduction
         itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten", true);
         itemBiomass = contentRegistry.createItem(ItemBiomass.class);
         itemDevStaff = contentRegistry.createItem(ItemDevStaff.class);
+        itemFlour = contentRegistry.createItem(ItemFlour.class);
+        itemBakingTrayWithBread = contentRegistry.createItem(ItemBakingTrayWithBread.class);
 
         GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
         GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
@@ -137,6 +146,14 @@ public class ResonantInduction
 
         // Generate Resources
         ResourceGenerator.generateOreResources();
+        // These are from zeros flour stuffs :3
+		GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, new Object []{Item.wheat}));
+		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 1, new ItemStack (Item.bread), 50f);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,1),new Object []{itemFlour, Item.bucketWater}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,3),new Object []{new ItemStack (itemFlour,1,1),new ItemStack (itemFlour,1,2)}));
+		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 3, new ItemStack (itemBakingTrayWithBread), 50f);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (Item.bread,2), new Object []{new ItemStack (itemBakingTrayWithBread)}));
+		
         proxy.postInit();
         Settings.CONFIGURATION.save();
     }
