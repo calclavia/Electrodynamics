@@ -41,112 +41,102 @@ public class CommandMachine extends CommandBase
     {
         if (args != null && args.length > 0 && args[0] != null)
         {
-            if (args[0].equalsIgnoreCase("?"))
+            final String command = args[0];
+
+            if (command.equalsIgnoreCase("?"))
             {
                 sender.sendChatToPlayer(ChatMessageComponent.createFromText("/machine <arguments....>"));
                 sender.sendChatToPlayer(ChatMessageComponent.createFromText("Each machine has unique commands"));
-            }
+            }//Commands are only support by players at the moment
             else if (sender instanceof EntityPlayer)
             {
-                if (args.length > 1 && args[1] != null)
-                {
-                    final String command = args[1];
-                    final boolean hasSubCommand = args.length > 2 && args[2] != null;
-                    final boolean hasSecondSub = args.length > 3 && args[3] != null;
-                    final boolean hasThirdSub = args.length > 3 && args[3] != null;
-                    final String subCommand = hasSubCommand ? args[2] : null;
-                    final String subCommand2 = hasSecondSub ? args[3] : null;
-                    final String subCommand3 = hasThirdSub ? args[4] : null;
+                final boolean hasSubCommand = args.length > 1 && args[1] != null;
+                final boolean hasSecondSub = args.length > 2 && args[2] != null;
+                final boolean hasThirdSub = args.length > 3 && args[3] != null;
+                final String subCommand = hasSubCommand ? args[1] : null;
+                final String subCommand2 = hasSecondSub ? args[2] : null;
+                final String subCommand3 = hasThirdSub ? args[3] : null;
 
-                    if (selection.containsKey(((EntityPlayer) sender).username) && selection.get(((EntityPlayer) sender).username) != null)
+                if (selection.containsKey(((EntityPlayer) sender).username) && selection.get(((EntityPlayer) sender).username) != null)
+                {
+                    VectorWorld pos = selection.get(((EntityPlayer) sender).username);
+                    TileEntity tile = pos.getTileEntity();
+                    if (tile instanceof ICmdMachine && ((ICmdMachine) tile).canTakeCommand(sender, args))
                     {
-                        VectorWorld pos = selection.get(((EntityPlayer) sender).username);
-                        TileEntity tile = pos.getTileEntity();
-                        if (tile instanceof ICmdMachine)
+                        ((ICmdMachine) tile).processCommand(sender, args);
+                    }
+                    else if (command.equalsIgnoreCase("energy"))
+                    {
+                        if (CompatibilityModule.isHandler(tile))
                         {
-                            if (((ICmdMachine) tile).canTakeCommand(sender, args))
+                            if (!hasSubCommand)
                             {
-                                ((ICmdMachine) tile).processCommand(sender, args);
+                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy set <side> <amount>"));
+                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy get <side>"));
                             }
-                            else
+                            else if (subCommand.equalsIgnoreCase("get") || subCommand.equalsIgnoreCase("set"))
                             {
-                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Machine refuses the command"));
-                            }
-                        }
-                        else if (CompatibilityModule.isHandler(tile))
-                        {
-                            if (command.equalsIgnoreCase("energy"))
-                            {
-                                if (!hasSubCommand)
+                                if (hasSecondSub)
                                 {
-                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy set <side> <amount>"));
-                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("/Machine energy get <side>"));
-                                }
-                                else if (subCommand.equalsIgnoreCase("get") || subCommand.equalsIgnoreCase("set"))
-                                {
-                                    if (hasSecondSub)
+                                    ForgeDirection direction = getDirection(subCommand2);
+                                    if (direction != null)
                                     {
-                                        ForgeDirection direction = getDirection(subCommand2);
-                                        if (direction != null)
+                                        if (subCommand.equalsIgnoreCase("get"))
                                         {
-                                            if (subCommand.equalsIgnoreCase("get"))
+                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy: " + CompatibilityModule.getEnergy(tile, direction) + "/" + CompatibilityModule.getMaxEnergy(tile, direction)));
+                                        }
+                                        else if (subCommand.equalsIgnoreCase("set"))
+                                        {
+                                            if (hasThirdSub)
                                             {
-                                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy: " + CompatibilityModule.getEnergy(tile, direction) + "/" + CompatibilityModule.getMaxEnergy(tile, direction)));
-                                            }
-                                            else if (subCommand.equalsIgnoreCase("set"))
-                                            {
-                                                if (hasThirdSub)
+                                                long joules = Long.parseLong(subCommand3, -33);
+                                                if (joules >= 0)
                                                 {
-                                                    long joules = Long.getLong(subCommand3, -33);
-                                                    if (joules >= 0)
+                                                    long ex = CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, false);
+                                                    if (ex == CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, true))
                                                     {
-                                                        long ex = CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, false);
-                                                        if (ex == CompatibilityModule.extractEnergy(tile, direction, Long.MAX_VALUE, true))
-                                                        {
-                                                            CompatibilityModule.receiveEnergy(tile, direction, joules, true);
-                                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy set"));
-                                                        }
-                                                        else
-                                                        {
-                                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Failed to set energy! Maybe try a different side?"));
-                                                        }
+                                                        CompatibilityModule.receiveEnergy(tile, direction, joules, true);
+                                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Energy set"));
                                                     }
                                                     else
                                                     {
-                                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Invalid input value"));
+                                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Failed to set energy! Maybe try a different side?"));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("Supply an energy value"));
+                                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("Invalid input value"));
                                                 }
                                             }
                                             else
                                             {
-                                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown energy command"));
+                                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Supply an energy value"));
                                             }
-                                        }
-                                        else
-                                        {
-                                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Need to supply a side"));
                                         }
                                     }
                                     else
                                     {
-                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Need to supply a side"));
+                                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Couldn't read input for side argument"));
                                     }
                                 }
+                                else
+                                {
+                                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("Need to supply a side"));
+                                }
+                            }
+                            else
+                            {
+                                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown energy command"));
                             }
                         }
                         else
                         {
-                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Invalid machine selected!"));
-                            selection.remove(((EntityPlayer) sender).username);
+                            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Machine is not an energy handler"));
                         }
                     }
                     else
                     {
-                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Please supply some arguments"));
+                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown command, or unsupport for this machine!"));
                     }
                 }
                 else
@@ -206,7 +196,7 @@ public class CommandMachine extends CommandBase
     {
         if (event.action == Action.RIGHT_CLICK_BLOCK)
         {
-            if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().itemID == Item.blazeRod.itemID)
+            if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().itemID == ResonantInduction.itemDevStaff.itemID)
             {
                 if (event.entityPlayer.isSneaking())
                 {
@@ -214,8 +204,7 @@ public class CommandMachine extends CommandBase
                     TileEntity tile = hit.getTileEntity();
                     if (tile != null)
                     {
-                        event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Selecting sentry at " + hit.toString()));
-                        event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Sentry is awaiting orders"));
+                        event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Tile selected at " + hit.x + "x " + hit.y + "y " + hit.z + "z]"));
                         selection.put(event.entityPlayer.username, hit);
 
                         if (event.isCancelable())
