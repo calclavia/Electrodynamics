@@ -3,11 +3,16 @@ package resonantinduction.core;
 import java.util.HashMap;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import resonantinduction.core.interfaces.ICmdMachine;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.vector.VectorWorld;
@@ -194,5 +199,36 @@ public class CommandMachine extends CommandBase
             }
         }
         return null;
+    }
+
+    @ForgeSubscribe
+    public void onPlayInteract(PlayerInteractEvent event)
+    {
+        if (event.action == Action.RIGHT_CLICK_BLOCK)
+        {
+            if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().itemID == Item.blazeRod.itemID)
+            {
+                if (event.entityPlayer.isSneaking())
+                {
+                    VectorWorld hit = new VectorWorld(event.entity.worldObj, event.x, event.y, event.z);
+                    TileEntity tile = hit.getTileEntity();
+                    if (tile != null)
+                    {
+                        event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Selecting sentry at " + hit.toString()));
+                        event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText("Sentry is awaiting orders"));
+                        selection.put(event.entityPlayer.username, hit);
+
+                        if (event.isCancelable())
+                            event.setCanceled(true);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public int compareTo(Object par1Obj)
+    {
+        return this.compareTo((ICommand) par1Obj);
     }
 }

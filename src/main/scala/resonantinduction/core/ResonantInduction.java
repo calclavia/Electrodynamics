@@ -22,6 +22,7 @@ import resonant.lib.network.PacketTile;
 import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.handler.TextureHookHandler;
+import resonantinduction.core.items.ItemDevStaff;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
 import resonantinduction.core.resource.BlockMachineMaterial;
@@ -75,7 +76,7 @@ public class ResonantInduction
     public static Block blockOre;
     public static ItemOreResource itemRubble, itemDust, itemRefinedDust;
     public static ItemOreResourceBucket itemBucketMixture, itemBucketMolten;
-    public static Item itemBiomass;
+    public static Item itemBiomass, itemDevStaff;
     public static Block blockDust, blockRefinedDust;
     public static Block blockMachinePart;
 
@@ -103,6 +104,7 @@ public class ResonantInduction
         itemBucketMixture = new ItemOreResourceBucket(Settings.getNextItemID("bucketMixture"), "bucketMixture", false);
         itemBucketMolten = new ItemOreResourceBucket(Settings.getNextItemID("bucketMolten"), "bucketMolten", true);
         itemBiomass = contentRegistry.createItem(ItemBiomass.class);
+        itemDevStaff = contentRegistry.createItem(ItemDevStaff.class);
 
         GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
         GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
