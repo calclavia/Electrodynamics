@@ -17,6 +17,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.modstats.ModstatInfo;
 import org.modstats.Modstats;
 
+import resonant.api.recipe.MachineRecipes;
 import resonant.lib.config.ConfigHandler;
 import resonant.lib.content.ContentRegistry;
 import resonant.lib.network.PacketAnnotation;
@@ -147,12 +148,13 @@ public class ResonantInduction
         // Generate Resources
         ResourceGenerator.generateOreResources();
         // These are from zeros flour stuffs :3
-		GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, new Object []{Item.wheat}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, new Object []{Item.wheat,Item.wheat}));
 		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 1, new ItemStack (Item.bread), 50f);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,1),new Object []{itemFlour, Item.bucketWater}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,3),new Object []{new ItemStack (itemFlour,1,1),new ItemStack (itemFlour,1,2)}));
 		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 3, new ItemStack (itemBakingTrayWithBread), 50f);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (Item.bread,2), new Object []{new ItemStack (itemBakingTrayWithBread)}));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (Item.bread,1), new Object []{new ItemStack (itemBakingTrayWithBread)}));
+		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Item.wheat, itemFlour);
 		
         proxy.postInit();
         Settings.CONFIGURATION.save();

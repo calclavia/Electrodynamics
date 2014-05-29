@@ -185,6 +185,8 @@ public class ResourceGenerator implements IVirtualObject
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.cobblestone, Block.sand);
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.gravel, Block.sand);
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Block.glass, Block.sand);
+		
+		
 
 		Iterator<String> it = materials.keySet().iterator();
 		while (it.hasNext())
