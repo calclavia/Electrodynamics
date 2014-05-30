@@ -268,7 +268,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
     public void drawBreaking(RenderBlocks renderBlocks)
     {
         CCRenderState.reset();
-        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockMachinePart.getIcon(0, 0)), null);
+        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockIndustrialStone.getIcon(0, 0)), null);
     }
 
     @Override

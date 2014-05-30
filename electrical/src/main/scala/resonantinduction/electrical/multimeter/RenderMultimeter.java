@@ -45,14 +45,14 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		GL11.glRotatef(90, 1, 0, 0);
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockIndustrialStone, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		ForgeDirection dir = ForgeDirection.NORTH;
 		final int metadata = 8;
 		// Render edges
 		// UP
-		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
 		// DOWN
-		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+		RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 
 		for (int i = 0; i < 6; i++)
 		{
@@ -62,22 +62,22 @@ public class RenderMultimeter implements ISimpleItemRenderer
 			{
 				if (dir.offsetX != check.offsetZ)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 				}
 				else if (dir.offsetX == check.offsetZ)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 				}
 			}
 			if (dir.offsetZ != 0 && check.offsetX != 0)
 			{
 				if (dir.offsetZ == check.offsetX)
 				{
-					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 				}
 				else if (dir.offsetZ != check.offsetX)
 				{
-					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+					RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 				}
 			}
 		}
@@ -97,7 +97,7 @@ public class RenderMultimeter implements ISimpleItemRenderer
 		RenderUtility.rotateFaceBlockToSideOutwards(part.getDirection().getOpposite());
 		RenderUtility.bind(TextureMap.locationBlocksTexture);
 		// Render the main panel
-		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockMachinePart, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
+		RenderUtility.renderCube(-0.5, -0.05, -0.5, 0.5, 0.05, 0.5, ResonantInduction.blockIndustrialStone, RenderUtility.loadedIconMap.get(Reference.PREFIX + "multimeter_screen"));
 		final int metadata = 8;
 
 		// Render edges
@@ -112,16 +112,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetZ != 0)
 					{
 						if (dir.offsetX != check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 						else if (dir.offsetX == check.offsetZ)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 					else if (check.offsetY != 0)
 					{
 						if (check.offsetY > 0)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
 						else
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 				}
 
@@ -130,16 +130,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetX != 0)
 					{
 						if (dir.offsetZ == check.offsetX)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 						else if (dir.offsetZ != check.offsetX)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 					else if (check.offsetY != 0)
 					{
 						if (check.offsetY > 0)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
 						else
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 				}
 
@@ -148,16 +148,16 @@ public class RenderMultimeter implements ISimpleItemRenderer
 					if (check.offsetX != 0)
 					{
 						if (dir.offsetY != check.offsetX)
-							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(0.44, -0.0501, -0.501, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 						else if (dir.offsetY == check.offsetX)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, -0.44, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 					else if (check.offsetZ != 0)
 					{
 						if (dir.offsetY != check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, 0.44, 0.501, 0.0501, 0.501, ResonantInduction.blockIndustrialStone, null, metadata);
 						else if (dir.offsetY == check.offsetZ)
-							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockMachinePart, null, metadata);
+							RenderUtility.renderCube(-0.501, -0.0501, -0.501, 0.501, 0.0501, -0.44, ResonantInduction.blockIndustrialStone, null, metadata);
 					}
 				}
 

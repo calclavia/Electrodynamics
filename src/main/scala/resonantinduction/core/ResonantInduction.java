@@ -25,12 +25,12 @@ import resonant.lib.network.PacketHandler;
 import resonant.lib.network.PacketTile;
 import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.utility.LanguageUtility;
+import resonantinduction.core.blocks.BlockIndustrialStone;
+import resonantinduction.core.blocks.IndustrialStoneBlocksRecipes;
 import resonantinduction.core.handler.TextureHookHandler;
-
 import resonantinduction.core.items.ItemDevStaff;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
-import resonantinduction.core.resource.BlockMachineMaterial;
 import resonantinduction.core.resource.ItemBiomass;
 import resonantinduction.core.resource.ItemOreResource;
 import resonantinduction.core.resource.ResourceGenerator;
@@ -85,7 +85,8 @@ public class ResonantInduction
     public static Item itemBiomass, itemDevStaff;
     public static Item itemFlour, itemBakingTrayWithBread;
     public static Block blockDust, blockRefinedDust;
-    public static Block blockMachinePart;
+    
+	public static Block blockIndustrialStone;
     
 
     @EventHandler
@@ -99,7 +100,7 @@ public class ResonantInduction
         MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
 
-        blockMachinePart = contentRegistry.createBlock(BlockMachineMaterial.class, ItemBlockMetadata.class);
+        blockIndustrialStone = contentRegistry.createBlock(BlockIndustrialStone.class, ItemBlockMetadata.class);
 
         /** Melting dusts */
         blockDust = contentRegistry.createBlock("dust", BlockDust.class, null, TileDust.class).setCreativeTab(null);
@@ -127,7 +128,7 @@ public class ResonantInduction
         GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 
         proxy.preInit();
-        TabRI.ITEMSTACK = new ItemStack(blockMachinePart);
+        TabRI.ITEMSTACK = new ItemStack(blockIndustrialStone);
     }
 
     @EventHandler
@@ -138,6 +139,7 @@ public class ResonantInduction
         // Set Mod Metadata
         Settings.setModMetadata(metadata, ID, NAME);
         proxy.init();
+        
     }
 
     @EventHandler
@@ -147,13 +149,15 @@ public class ResonantInduction
 
         // Generate Resources
         ResourceGenerator.generateOreResources();
-        // These are from zeros flour stuffs :3
+        // These are from zeros flour addition
 		GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, new Object []{Item.wheat,Item.wheat}));
 		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 1, new ItemStack (Item.bread), 50f);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,1),new Object []{itemFlour, Item.bucketWater}));
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Item.wheat, itemFlour);
         proxy.postInit();
         Settings.CONFIGURATION.save();
+        IndustrialStoneBlocksRecipes.init();
+        
     }
 
     @EventHandler
