@@ -24,11 +24,11 @@ public class ItemFlour extends Item {
 	@SideOnly(Side.CLIENT)
 	Icon doughIcon;
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	Icon bakingtrayIcon;
 
 	@SideOnly(Side.CLIENT)
-	Icon bakingtraywithdoughIcon;
+	Icon bakingtraywithdoughIcon;*/
 
 
 	public ItemFlour(int par1) {
@@ -42,11 +42,11 @@ public class ItemFlour extends Item {
 		case 1:
 			return doughIcon;
 
-		case 2:
+		/*case 2:
 			return bakingtrayIcon;
 
 		case 3:
-			return bakingtraywithdoughIcon;
+			return bakingtraywithdoughIcon;*/
 
 		default:
 			return super.getIconFromDamage(meta);
@@ -59,8 +59,8 @@ public class ItemFlour extends Item {
 	public void registerIcons(IconRegister iconRegister) {
 		super.registerIcons(iconRegister);
 		this.doughIcon = iconRegister.registerIcon(Reference.PREFIX + "dough");
-		this.bakingtrayIcon = iconRegister.registerIcon(Reference.PREFIX + "bakingtray");
-		this.bakingtraywithdoughIcon = iconRegister.registerIcon(Reference.PREFIX + "bakingtraywithdough");
+		/*this.bakingtrayIcon = iconRegister.registerIcon(Reference.PREFIX + "bakingtray");
+		this.bakingtraywithdoughIcon = iconRegister.registerIcon(Reference.PREFIX + "bakingtraywithdough");*/
 
 		
 
@@ -71,10 +71,10 @@ public class ItemFlour extends Item {
 
 		case 1:
 			return "item.dough";
-		case 2:
+		/*case 2:
 			return "item.bakingtray";
 		case 3:
-			return "item.bakingtraywithdough";
+			return "item.bakingtraywithdough";*/
 
 
 		default:
@@ -87,8 +87,8 @@ public class ItemFlour extends Item {
 	public void getSubItems(int par1, CreativeTabs tab, List items) {
 		super.getSubItems(par1, tab, items);
 		items.add(new ItemStack(par1, 1, 1));
-		items.add(new ItemStack(par1, 1, 2));
-		items.add(new ItemStack(par1, 1, 3));
+		/*items.add(new ItemStack(par1, 1, 2));
+		items.add(new ItemStack(par1, 1, 3));*/
 	
 	}
 	

@@ -26,7 +26,7 @@ import resonant.lib.network.PacketTile;
 import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.handler.TextureHookHandler;
-import resonantinduction.core.items.ItemBakingTrayWithBread;
+
 import resonantinduction.core.items.ItemDevStaff;
 import resonantinduction.core.prefab.part.PacketMultiPart;
 import resonantinduction.core.resource.BlockDust;
@@ -114,7 +114,7 @@ public class ResonantInduction
         itemBiomass = contentRegistry.createItem(ItemBiomass.class);
         itemDevStaff = contentRegistry.createItem(ItemDevStaff.class);
         itemFlour = contentRegistry.createItem(ItemFlour.class);
-        itemBakingTrayWithBread = contentRegistry.createItem(ItemBakingTrayWithBread.class);
+
 
         GameRegistry.registerItem(itemRubble, itemRubble.getUnlocalizedName());
         GameRegistry.registerItem(itemDust, itemDust.getUnlocalizedName());
@@ -151,11 +151,7 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapelessOreRecipe(itemFlour, new Object []{Item.wheat,Item.wheat}));
 		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 1, new ItemStack (Item.bread), 50f);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,1),new Object []{itemFlour, Item.bucketWater}));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,3),new Object []{new ItemStack (itemFlour,1,1),new ItemStack (itemFlour,1,2)}));
-		FurnaceRecipes.smelting().addSmelting(itemFlour.itemID, 3, new ItemStack (itemBakingTrayWithBread), 50f);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (Item.bread,1), new Object []{new ItemStack (itemBakingTrayWithBread)}));
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Item.wheat, itemFlour);
-		
         proxy.postInit();
         Settings.CONFIGURATION.save();
     }
