@@ -222,6 +222,11 @@ public class Electrical
             GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.TIN.getWire(), Items.getItem("tinCableItem")));
             GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.IRON.getWire(), Items.getItem("ironCableItem")));
             GameRegistry.addRecipe(new ShapelessOreRecipe(EnumWireMaterial.SUPERCONDUCTOR.getWire(), Items.getItem("glassFiberCableItem")));
+            
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.getItem("copperCableItem"), EnumWireMaterial.COPPER.getWire()));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.getItem("tinCableItem"), EnumWireMaterial.TIN.getWire()));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.getItem("ironCableItem"), EnumWireMaterial.IRON.getWire()));
+            GameRegistry.addRecipe(new ShapelessOreRecipe(Items.getItem("glassFiberCableItem"), EnumWireMaterial.SUPERCONDUCTOR.getWire()));
         }
 
         if (Loader.isModLoaded("Mekanism"))
