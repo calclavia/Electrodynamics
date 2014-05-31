@@ -704,19 +704,7 @@ public class Atomic
         FLUID_TRITIUM.setIcons(RenderUtility.loadedIconMap.get(Reference.PREFIX + "tritium"));
         FLUID_TOXIC_WASTE.setIcons(blockToxicWaste.getIcon(0, 0));
         FLUID_PLASMA.setIcons(blockPlasma.getIcon(0, 0));
-    }
-
-    @ForgeSubscribe
-    public void worldSave(Save evt)
-    {
-        if (!evt.world.isRemote)
-        {
-            if (FlagRegistry.getModFlag(FlagRegistry.DEFAULT_NAME) != null)
-            {
-                NBTUtility.saveData(FlagRegistry.DEFAULT_NAME, FlagRegistry.getModFlag(FlagRegistry.DEFAULT_NAME).getNBT());
-            }
-        }
-    }
+    }    
 
     @ForgeSubscribe
     public void fillBucketEvent(FillBucketEvent evt)
