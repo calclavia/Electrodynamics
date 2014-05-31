@@ -19,8 +19,8 @@ public static void init () {
 
 	public static void registerRecipes() {
 		// Industrial Cobblestone
-		GameRegistry.addRecipe(new ItemStack(ResonantInduction.blockIndustrialStone, 1, 3),
-			new Object[] { "XXX", "XXX", "XXX", 'X', Block.cobblestone});
+		GameRegistry.addRecipe(new ItemStack(ResonantInduction.blockIndustrialStone, 8, 3),
+			new Object[] { "XXX", "XCX", "XXX", 'X', Block.cobblestone, 'C', new ItemStack (Item.coal, 1, 1)});
 		// Industrial Stone
 		FurnaceRecipes.smelting().addSmelting(ResonantInduction.blockIndustrialStone.blockID,3, new ItemStack(ResonantInduction.blockIndustrialStone, 1, 5), 5);
 		// Industrial Cracked Stone 
