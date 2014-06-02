@@ -5,8 +5,8 @@ Resonant Induction is a Minecraft mod that brings in realistic, world-based tech
 ### Developer
 * <a href="http://www.patreon.com/calclavia"> Calclavia </a>
 * <a href="http://www.patreon.com/darkcow"> Darkguardsman </a>
+* <a href="http://www.patreon.com/tgame14"> Tgame14 </a>
 * <a href="http://www.patreon.com/maxwolf"> Maxwolf Goodliffe </a>
-* tgame14
 
 ### Artist
 * Archadia
