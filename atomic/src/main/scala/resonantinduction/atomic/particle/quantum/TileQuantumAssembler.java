@@ -32,10 +32,8 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
     int MAX_TIME = 20 * 120;
     int time = 0;
 
-    /** Used for rendering. */
-    float rotationYaw1 = 0;
-    float rotationYaw2 = 0;
-    float rotationYaw3 = 0;
+    /** Used for rendering arm motion, X Y Z are not used as location data */
+    Vector3 rotation = new Vector3();
 
     /** Used for rendering. */
     EntityItem entityItem = null;
@@ -134,9 +132,7 @@ public class TileQuantumAssembler extends TileElectricalInventory implements IPa
             }
             
             //Animation frame update
-            this.rotationYaw1 += 3;
-            this.rotationYaw2 += 2;
-            this.rotationYaw3 += 1;
+            this.rotation.translate(3, 2, 1);
         }
     }
 
