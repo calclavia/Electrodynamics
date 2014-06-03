@@ -14,7 +14,7 @@ public class TraitNodeProvider extends TileMultipart implements INodeProvider
 	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
-
+		
 		if (part == null)
 		{
 			part = partMap(PartMap.CENTER.ordinal());

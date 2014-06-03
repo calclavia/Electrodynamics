@@ -4,6 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
@@ -39,9 +40,9 @@ public class PipePressureNode extends FluidPressureNode
 
                 if (tile instanceof IFluidHandler)
                 {
-                    if (tile instanceof IPressureNodeProvider)
+                    if (tile instanceof INodeProvider)
                     {
-                        INode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
+                        INode check = ((INodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
 
                         if (check instanceof FluidPressureNode && canConnect(dir, check) && ((FluidPressureNode) check).canConnect(dir.getOpposite(), this))
                         {
