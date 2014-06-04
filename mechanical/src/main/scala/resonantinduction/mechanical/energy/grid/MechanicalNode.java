@@ -74,7 +74,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         {
             angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
-        System.out.println("Angle: " + angle);
+        //System.out.println("Angle: " + angle);
 
         if (angle % (Math.PI * 2) != angle)
         {

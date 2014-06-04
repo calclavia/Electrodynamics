@@ -12,6 +12,14 @@ public interface IMechanicalNode extends INode
     /** Gets the radius of the gear in meters. Used to calculate torque and gear ratio */
     public double getRadius();
 
+    /** The Rotational speed of the object */
+    public double getAngularSpeed();
+    
+    /** Applies rotational force and velocity to the mechanical object */
+    public void apply(Object source, double torque, double angularVelocity);
+    
+    
+    
     /** The Rotational force */
     @Deprecated
     public double getTorque();
@@ -23,12 +31,6 @@ public interface IMechanicalNode extends INode
     /** TODO remove */
     @Deprecated
     public double getPower();
-
-    /** The Rotational speed of the object */
-    public double getAngularSpeed();
-
-    /** Applies rotational force and velocity to the mechanical object */
-    public void apply(Object source, double torque, double angularVelocity);
 
     @Deprecated
     public float getRatio(ForgeDirection dir, IMechanicalNode with);
