@@ -97,7 +97,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularVelocity() != 0 && areaBlockedFromMoving;
+		return mechanicalNode.getAngularVelocity() != 0 && !areaBlockedFromMoving;
 	}
 
 	public void doWork()
