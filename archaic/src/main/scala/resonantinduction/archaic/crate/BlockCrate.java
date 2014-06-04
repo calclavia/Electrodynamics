@@ -207,7 +207,7 @@ public class BlockCrate extends BlockTile
         {
             if (player.isSneaking())
             {
-                this.ejectItems(tileEntity, player, 1);
+                this.ejectItems(tileEntity, player, 64);
             }
             else
             {
