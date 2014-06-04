@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
-import resonant.api.IMechanicalNode;
 import resonant.api.recipe.MachineRecipes;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
@@ -24,6 +23,7 @@ import resonantinduction.core.Timer;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 
 /**

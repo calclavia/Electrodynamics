@@ -2,9 +2,9 @@ package resonantinduction.mechanical.gear;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import codechicken.lib.vec.Rotation;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;

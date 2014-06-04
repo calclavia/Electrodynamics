@@ -4,12 +4,12 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.IRotatable;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.NodeRegistry;
 import resonant.lib.prefab.tile.TileElectrical;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
 /**

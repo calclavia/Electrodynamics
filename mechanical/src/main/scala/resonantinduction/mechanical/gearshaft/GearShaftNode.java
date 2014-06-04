@@ -6,11 +6,11 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.gear.PartGear;
 import resonantinduction.mechanical.gear.PartGearShaft;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 
 public class GearShaftNode extends MechanicalNode
 {

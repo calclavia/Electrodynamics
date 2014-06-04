@@ -1,12 +1,14 @@
 package resonantinduction.mechanical.gear.dev;
 
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.net.IUpdate;
+import universalelectricity.api.vector.Vector3;
 import universalelectricity.core.net.ConnectionPathfinder;
 
 /** Network type only used by gear related mechanical machines. Any node that uses this network needs
@@ -87,6 +89,9 @@ public class GearNetwork implements IUpdate
         if (doRemap)
         {
             doRemap = false;
+            //Rebuilds the network using a set of path finders
+            LinkedHashSet<Vector3> nodes = new LinkedHashSet<Vector3>();
+            
         }
 
     }
@@ -171,7 +176,7 @@ public class GearNetwork implements IUpdate
                                         onRemoved(node, false);
                                     }
                                 }
-                                newNetwork.reconstruct();
+                                newNetwork.doRemap = true;
                             }
                             catch (Exception e)
                             {
@@ -183,14 +188,19 @@ public class GearNetwork implements IUpdate
                 }
             }
         }
-
-        reconstruct();
     }
 
     /** Called to rebuild the network */
     protected void reconstruct()
     {
-        //TODO path find from each generator to each gear
+        for(NodeGear gear : nodes)
+        {
+            gear.reconstruct();
+        }
+        for(NodeGenerator gen : generators)
+        {
+            gen.reconstruct();
+        }
     }
 
     /** Called to destroy or rather clean up the network. Make sure to do your cleanup in this
@@ -200,6 +210,14 @@ public class GearNetwork implements IUpdate
         this.nodes.clear();
         this.generators.clear();
         this.isDead = true;
+        for(NodeGear gear : nodes)
+        {
+            gear.deconstruct();
+        }
+        for(NodeGenerator gen : generators)
+        {
+            gen.deconstruct();
+        }
     }
 
 }
