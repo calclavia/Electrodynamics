@@ -27,6 +27,7 @@ public class GearNode extends MechanicalNode
     @Override
     public void onUpdate()
     {
+        super.onUpdate();
         if (!gear().getMultiBlock().isPrimary())
         {
             torque = 0;

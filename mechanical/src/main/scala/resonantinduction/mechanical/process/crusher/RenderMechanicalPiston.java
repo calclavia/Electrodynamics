@@ -39,7 +39,7 @@ public class RenderMechanicalPiston extends TileEntitySpecialRenderer
 		RenderUtility.bind(TEXTURE);
 
 		// Angle in radians of the rotor.
-		double angle = tile.mechanicalNode.angle;
+		double angle = tile.mechanicalNode.renderAngle;
 		final String[] staticParts = { "baseRing", "leg1", "leg2", "leg3", "leg4", "connector", "basePlate", "basePlateTop", "connectorBar", "centerPiston" };
 		final String[] shaftParts = { "topPlate", "outerPiston" };
 

@@ -63,7 +63,7 @@ public class RenderGearShaft implements ISimpleItemRenderer
 				break;
 		}
 
-		GL11.glRotatef((float) Math.toDegrees(part.node.angle), 0, 1, 0);
+		GL11.glRotatef((float) Math.toDegrees(part.node.renderAngle), 0, 1, 0);
 
 		switch (part.tier)
 		{

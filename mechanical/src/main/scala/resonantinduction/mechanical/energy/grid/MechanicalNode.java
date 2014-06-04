@@ -26,7 +26,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     public float acceleration = 2f;
 
     /** The current rotation of the mechanical node. */
-    public double angle = 0;
+    public double renderAngle = 0;
     public double prev_angle = 0;
     /** Limits the max distance an object can rotate in a single update */
     protected double maxDeltaAngle = Math.toRadians(180);
@@ -53,7 +53,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         this.connectionMap = connectionMap;
         return this;
     }
-    
+
     @Override
     public double getRadius()
     {
@@ -64,22 +64,26 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     public void update(float deltaTime)
     {
         prevAngularVelocity = angularVelocity;
-        
+        if (world() != null && !world().isRemote)
+            System.out.println("\nNode :" + toString());
         //Update 
+        if (world() != null && !world().isRemote)
+            System.out.println("AngleBefore: " + renderAngle + "  Vel: " + angularVelocity);
         if (angularVelocity >= 0)
         {
-            angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
+            renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
         }
         else
         {
-            angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
+            renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
-        //System.out.println("Angle: " + angle);
+        if (world() != null && !world().isRemote)
+            System.out.println("AngleAfter: " + renderAngle + "  Vel: " + angularVelocity);
 
-        if (angle % (Math.PI * 2) != angle)
+        if (renderAngle % (Math.PI * 2) != renderAngle)
         {
             revolve();
-            angle = angle % (Math.PI * 2);
+            renderAngle = renderAngle % (Math.PI * 2);
         }
 
         if (world() != null && !world().isRemote)
@@ -164,7 +168,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         }
 
         onUpdate();
-        prev_angle = angle;
+        prev_angle = renderAngle;
     }
 
     protected void onUpdate()
@@ -290,6 +294,6 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         super.save(nbt);
         nbt.setDouble("torque", torque);
         nbt.setDouble("angularVelocity", angularVelocity);
-    }   
+    }
 
 }

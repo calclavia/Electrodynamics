@@ -70,6 +70,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
         if (!this.world().isRemote)
         {
+            System.out.println(this + ">>>" + this.node);
             if (manualCrankTime > 0)
             {
                 node.apply(this, isClockwiseCrank ? 15 : -15, isClockwiseCrank ? 0.025f : -0.025f);
