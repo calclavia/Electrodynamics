@@ -7,11 +7,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.Node;
 import resonant.lib.grid.TickingGrid;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -36,6 +36,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     /** The current rotation of the mechanical node. */
     public double angle = 0;
     public double prev_angle = 0;
+    /** Limits the max distance an object can rotate in a single update */
     protected double maxDeltaAngle = Math.toRadians(180);
 
     protected double load = 2;
@@ -65,18 +66,17 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     public void update(float deltaTime)
     {
         prevAngularVelocity = angularVelocity;
-
-        if (!ResonantInduction.proxy.isPaused())
+        
+        //Update 
+        if (angularVelocity >= 0)
         {
-            if (angularVelocity >= 0)
-            {
-                angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
-            }
-            else
-            {
-                angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
-            }
+            angle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
         }
+        else
+        {
+            angle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
+        }
+        System.out.println("Angle: " + angle);
 
         if (angle % (Math.PI * 2) != angle)
         {

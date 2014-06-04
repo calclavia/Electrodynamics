@@ -7,7 +7,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.IRotatable;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
@@ -17,6 +16,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
+import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 
 /**
