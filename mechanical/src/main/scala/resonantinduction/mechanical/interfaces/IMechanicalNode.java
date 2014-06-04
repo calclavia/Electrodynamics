@@ -9,7 +9,11 @@ import universalelectricity.api.vector.Vector3;
  * @author Darkguardsman */
 public interface IMechanicalNode extends INode
 {
+    /** Gets the radius of the gear in meters. Used to calculate torque and gear ratio */
+    public double getRadius();
+
     /** The Rotational force */
+    @Deprecated
     public double getTorque();
 
     /** TODO remove */
@@ -20,12 +24,13 @@ public interface IMechanicalNode extends INode
     @Deprecated
     public double getPower();
 
-    /** The Rotational velocity */
-    public double getAngularVelocity();
+    /** The Rotational speed of the object */
+    public double getAngularSpeed();
 
     /** Applies rotational force and velocity to the mechanical object */
     public void apply(Object source, double torque, double angularVelocity);
 
+    @Deprecated
     public float getRatio(ForgeDirection dir, IMechanicalNode with);
 
     @Deprecated

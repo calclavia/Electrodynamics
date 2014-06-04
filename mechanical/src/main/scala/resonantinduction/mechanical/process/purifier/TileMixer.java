@@ -97,7 +97,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularVelocity() != 0 && !areaBlockedFromMoving;
+		return mechanicalNode.getAngularSpeed() != 0 && !areaBlockedFromMoving;
 	}
 
 	public void doWork()
@@ -116,7 +116,7 @@ public class TileMixer extends TileMechanical implements IInventory
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(-mechanicalNode.getAngularVelocity(), 0, 0);
+			relativePosition.rotate(-mechanicalNode.getAngularSpeed(), 0, 0);
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 

@@ -46,7 +46,7 @@ public class TilePump extends TileMechanical implements IPressureNodeProvider, I
 			@Override
 			public int getMaxFlowRate()
 			{
-				return (int) Math.abs(mechanicalNode.getAngularVelocity() * 1000);
+				return (int) Math.abs(mechanicalNode.getAngularSpeed() * 1000);
 			}
 
 			@Override

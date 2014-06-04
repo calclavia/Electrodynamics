@@ -16,14 +16,6 @@ import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
 /** A mechanical node for mechanical energy.
- * <p/>
- * Useful Formula:
- * <p/>
- * Power is the work per unit time. Power (W) = Torque (Strength of the rotation, Newton Meters) x
- * Speed (Angular Velocity, RADIAN PER SECOND). *OR* Power = Torque / Time
- * <p/>
- * Torque = r (Radius) * F (Force) * sin0 (Direction/Angle of the force applied. 90 degrees if
- * optimal.)
  * 
  * @author Calclavia */
 @SuppressWarnings("rawtypes")
@@ -60,6 +52,12 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     {
         this.connectionMap = connectionMap;
         return this;
+    }
+    
+    @Override
+    public double getRadius()
+    {
+        return 0.5;
     }
 
     @Override
@@ -100,7 +98,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
                 torque += torqueLoss;
             }
 
-            double velocityLoss = Math.min(Math.abs(getAngularVelocity()), (Math.abs(getAngularVelocity() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
+            double velocityLoss = Math.min(Math.abs(getAngularSpeed()), (Math.abs(getAngularSpeed() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
 
             if (angularVelocity > 0)
             {
@@ -147,7 +145,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
                         torque -= applyTorque;
                     }
 
-                    double targetVelocity = inversion * adjacentMech.getAngularVelocity() * ratio;
+                    double targetVelocity = inversion * adjacentMech.getAngularSpeed() * ratio;
                     double applyVelocity = targetVelocity * acceleration;
 
                     if (Math.abs(angularVelocity + applyVelocity) < Math.abs(targetVelocity))
@@ -194,7 +192,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     }
 
     @Override
-    public double getAngularVelocity()
+    public double getAngularSpeed()
     {
         return torque != 0 ? angularVelocity : 0;
     }
@@ -263,7 +261,7 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     @Override
     public double getEnergy()
     {
-        return getTorque() * getAngularVelocity();
+        return getTorque() * getAngularSpeed();
     }
 
     @Override
@@ -292,6 +290,6 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         super.save(nbt);
         nbt.setDouble("torque", torque);
         nbt.setDouble("angularVelocity", angularVelocity);
-    }
+    }   
 
 }

@@ -280,7 +280,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
             if (instance != null)
             {
                 getNetwork().torqueGraph.queue(instance.getTorque());
-                getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
+                getNetwork().angularVelocityGraph.queue(instance.getAngularSpeed());
                 getNetwork().powerGraph.queue((long) instance.getPower());
             }
         }
