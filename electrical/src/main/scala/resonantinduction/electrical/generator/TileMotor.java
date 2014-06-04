@@ -9,7 +9,7 @@ import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.NodeRegistry;
 import resonant.lib.prefab.tile.TileElectrical;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
 /**

@@ -1,17 +1,17 @@
 package resonantinduction.mechanical.energy.grid;
 
+import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INodeProvider;
-import resonant.lib.grid.Node;
-import resonant.lib.grid.TickingGrid;
-import resonantinduction.core.ResonantInduction;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
+import resonant.lib.utility.nbt.ISaveObj;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -19,7 +19,7 @@ import codechicken.multipart.TMultiPart;
  * 
  * @author Calclavia */
 @SuppressWarnings("rawtypes")
-public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalNode> implements IMechanicalNode
+public class MechanicalNode implements IMechanicalNode, ISaveObj
 {
     public double torque = 0;
     public double prevAngularVelocity, angularVelocity = 0;
@@ -35,10 +35,13 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     protected byte connectionMap = Byte.parseByte("111111", 2);
 
     private double power = 0;
+    private INodeProvider parent;
+
+    protected final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
 
     public MechanicalNode(INodeProvider parent)
     {
-        super(parent);
+        this.setParent(parent);
     }
 
     @Override
@@ -64,11 +67,11 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
     public void update(float deltaTime)
     {
         prevAngularVelocity = angularVelocity;
-        if (world() != null && !world().isRemote)
-            System.out.println("\nNode :" + toString());
+        //if (world() != null && !world().isRemote)
+        //    System.out.println("\nNode :" + toString());
         //Update 
-        if (world() != null && !world().isRemote)
-            System.out.println("AngleBefore: " + renderAngle + "  Vel: " + angularVelocity);
+        //if (world() != null && !world().isRemote)
+        //   System.out.println("AngleBefore: " + renderAngle + "  Vel: " + angularVelocity);
         if (angularVelocity >= 0)
         {
             renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
@@ -77,8 +80,8 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         {
             renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
-        if (world() != null && !world().isRemote)
-            System.out.println("AngleAfter: " + renderAngle + "  Vel: " + angularVelocity);
+        // if (world() != null && !world().isRemote)
+        //   System.out.println("AngleAfter: " + renderAngle + "  Vel: " + angularVelocity);
 
         if (renderAngle % (Math.PI * 2) != renderAngle)
         {
@@ -224,9 +227,65 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         return load;
     }
 
-    /** Recache the connections. This is the default connection implementation. */
+    public World world()
+    {
+        return getParent() instanceof TMultiPart ? ((TMultiPart) getParent()).world() : getParent() instanceof TileEntity ? ((TileEntity) getParent()).getWorldObj() : null;
+    }
+
+    public Vector3 position()
+    {
+        return getParent() instanceof TMultiPart ? new Vector3(((TMultiPart) getParent()).x(), ((TMultiPart) getParent()).y(), ((TMultiPart) getParent()).z()) : getParent() instanceof TileEntity ? new Vector3((TileEntity) getParent()) : null;
+    }
+
+    public boolean canConnect(ForgeDirection from, Object source)
+    {
+        return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
+    }
+
     @Override
-    public void doRecache()
+    public double getEnergy()
+    {
+        return getTorque() * getAngularSpeed();
+    }
+
+    @Override
+    public double getPower()
+    {
+        return power;
+    }
+
+    @Override
+    public void load(NBTTagCompound nbt)
+    {
+        torque = nbt.getDouble("torque");
+        angularVelocity = nbt.getDouble("angularVelocity");
+    }
+
+    @Override
+    public void save(NBTTagCompound nbt)
+    {
+        nbt.setDouble("torque", torque);
+        nbt.setDouble("angularVelocity", angularVelocity);
+    }
+
+    @Override
+    public void reconstruct()
+    {
+        recache();
+    }
+
+    @Override
+    public void deconstruct()
+    {
+        for (Entry<MechanicalNode, ForgeDirection> entry : connections.entrySet())
+        {
+            entry.getKey().recache();
+        }
+        connections.clear();
+    }
+
+    @Override
+    public void recache()
     {
         connections.clear();
 
@@ -246,54 +305,14 @@ public class MechanicalNode extends Node<INodeProvider, TickingGrid, MechanicalN
         }
     }
 
-    public World world()
+    public INodeProvider getParent()
     {
-        return parent instanceof TMultiPart ? ((TMultiPart) parent).world() : parent instanceof TileEntity ? ((TileEntity) parent).getWorldObj() : null;
+        return parent;
     }
 
-    public Vector3 position()
+    public void setParent(INodeProvider parent)
     {
-        return parent instanceof TMultiPart ? new Vector3(((TMultiPart) parent).x(), ((TMultiPart) parent).y(), ((TMultiPart) parent).z()) : parent instanceof TileEntity ? new Vector3((TileEntity) parent) : null;
-    }
-
-    @Override
-    public boolean canConnect(ForgeDirection from, Object source)
-    {
-        return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
-    }
-
-    @Override
-    public double getEnergy()
-    {
-        return getTorque() * getAngularSpeed();
-    }
-
-    @Override
-    public double getPower()
-    {
-        return power;
-    }
-
-    @Override
-    public TickingGrid newGrid()
-    {
-        return new TickingGrid<MechanicalNode>(this, MechanicalNode.class);
-    }
-
-    @Override
-    public void load(NBTTagCompound nbt)
-    {
-        super.load(nbt);
-        torque = nbt.getDouble("torque");
-        angularVelocity = nbt.getDouble("angularVelocity");
-    }
-
-    @Override
-    public void save(NBTTagCompound nbt)
-    {
-        super.save(nbt);
-        nbt.setDouble("torque", torque);
-        nbt.setDouble("angularVelocity", angularVelocity);
+        this.parent = parent;
     }
 
 }

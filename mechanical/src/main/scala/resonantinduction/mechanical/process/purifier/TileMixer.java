@@ -20,10 +20,10 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 
 /**

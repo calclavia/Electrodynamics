@@ -3,8 +3,8 @@ package resonantinduction.mechanical.gear;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INodeProvider;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import codechicken.lib.vec.Rotation;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
@@ -21,7 +21,7 @@ public class GearNode extends MechanicalNode
 
     protected PartGear gear()
     {
-        return (PartGear) this.parent;
+        return (PartGear) this.getParent();
     }
 
     @Override
@@ -78,8 +78,9 @@ public class GearNode extends MechanicalNode
     }
 
     @Override
-    public void doRecache()
+    public void recache()
     {
+        System.out.println("doRecache: " + this);
         connections.clear();
 
         /** Only call refresh if this is the main block of a multiblock gear or a single gear block. */
@@ -95,7 +96,7 @@ public class GearNode extends MechanicalNode
         {
             MechanicalNode instance = (MechanicalNode) ((INodeProvider) tileBehind).getNode(MechanicalNode.class, gear().placementSide.getOpposite());
 
-            if (instance != null && instance != this && !(instance.parent instanceof PartGearShaft) && instance.canConnect(gear().placementSide.getOpposite(), this))
+            if (instance != null && instance != this && !(instance.getParent() instanceof PartGearShaft) && instance.canConnect(gear().placementSide.getOpposite(), this))
             {
                 connections.put(instance, gear().placementSide);
             }
@@ -144,7 +145,7 @@ public class GearNode extends MechanicalNode
             {
                 MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, gear().placementSide);
 
-                if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.parent instanceof PartGearShaft))
+                if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this) && !(instance.getParent() instanceof PartGearShaft))
                 {
                     connections.put(instance, checkDir);
                 }
@@ -167,7 +168,7 @@ public class GearNode extends MechanicalNode
 
         if (with instanceof MechanicalNode)
         {
-            INodeProvider parent = ((MechanicalNode) with).parent;
+            INodeProvider parent = ((MechanicalNode) with).getParent();
 
             /** Check for flat connections (gear face on gear face) to make sure it's actually on
              * this gear block. */

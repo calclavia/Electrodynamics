@@ -7,10 +7,10 @@ import java.util.List;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INodeProvider;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.gear.PartGear;
 import resonantinduction.mechanical.gear.PartGearShaft;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 
 public class GearShaftNode extends MechanicalNode
 {
@@ -41,7 +41,7 @@ public class GearShaftNode extends MechanicalNode
     }
 
     @Override
-    public void doRecache()
+    public void recache()
     {
         connections.clear();
         List<ForgeDirection> dirs = new ArrayList<ForgeDirection>();
@@ -80,7 +80,7 @@ public class GearShaftNode extends MechanicalNode
                         MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
 
                         // Only connect to shafts outside of this block space.
-                        if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+                        if (instance != null && instance != this && instance.getParent() instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
                         {
                             connections.put(instance, checkDir);
                         }
@@ -94,9 +94,9 @@ public class GearShaftNode extends MechanicalNode
     {
         if (source instanceof MechanicalNode)
         {
-            if (((MechanicalNode) source).parent instanceof PartGear)
+            if (((MechanicalNode) source).getParent() instanceof PartGear)
             {
-                PartGear gear = (PartGear) ((MechanicalNode) source).parent;
+                PartGear gear = (PartGear) ((MechanicalNode) source).getParent();
 
                 if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(shaft().placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(shaft().placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(shaft().placementSide.offsetZ)))
                 {
@@ -121,6 +121,6 @@ public class GearShaftNode extends MechanicalNode
 
     public PartGearShaft shaft()
     {
-        return (PartGearShaft) this.parent;
+        return (PartGearShaft) this.getParent();
     }
 }

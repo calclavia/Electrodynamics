@@ -14,9 +14,9 @@ import resonant.lib.prefab.vector.Cuboid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.Timer;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import universalelectricity.api.vector.Vector3;
 
 /**

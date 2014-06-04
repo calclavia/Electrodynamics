@@ -17,11 +17,11 @@ import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.multiblock.MultiBlockHandler;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.Reference;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.resource.ItemHandCrank;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
@@ -70,15 +70,14 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
 
         if (!this.world().isRemote)
         {
-            System.out.println(this + ">>>" + this.node);
+            //System.out.println(this + ">>>" + this.node);
+            this.node.update(0.05f);
             if (manualCrankTime > 0)
             {
                 node.apply(this, isClockwiseCrank ? 15 : -15, isClockwiseCrank ? 0.025f : -0.025f);
                 manualCrankTime--;
             }
-
         }
-
         getMultiBlock().update();
     }
 

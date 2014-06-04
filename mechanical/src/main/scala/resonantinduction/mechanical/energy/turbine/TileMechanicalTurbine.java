@@ -8,8 +8,8 @@ import resonant.api.grid.INodeProvider;
 import resonant.lib.network.Synced;
 import resonant.lib.network.Synced.SyncedInput;
 import resonant.lib.network.Synced.SyncedOutput;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.interfaces.IMechanicalNode;
 
 //TODO: MC 1.7, merge turbines in.
 public class TileMechanicalTurbine extends TileTurbineBase implements INodeProvider
