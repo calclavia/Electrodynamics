@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.interfaces;
+package resonantinduction.core.interfaces;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
