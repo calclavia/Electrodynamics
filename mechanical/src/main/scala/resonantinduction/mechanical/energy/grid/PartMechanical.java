@@ -12,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.core.ResonantEngine;
+import resonantinduction.mechanical.gear.GearDebugFrame;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.ControlKeyModifer;
@@ -53,9 +54,14 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
             node.debug("Part: " + this + "  Node: " + this.node);
             this.node.update(0.05f);
         }
-
+        if (frame != null)
+        {
+            frame.update();
+        }
         super.update();
     }
+
+    GearDebugFrame frame = null;
 
     @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
@@ -64,10 +70,26 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             if (itemStack != null && itemStack.getItem().itemID == Item.stick.itemID)
             {
-                if (!world().isRemote && ControlKeyModifer.isControlDown(player))
+                if (!world().isRemote)
                 {
-                    this.node.doDebug = !this.node.doDebug;
-                    player.addChatMessage("[Debug] PartMechanical debug mode is now " + (this.node.doDebug ? "on" : "off"));
+                    if (!ControlKeyModifer.isControlDown(player))
+                    {
+                        this.node.doDebug = !this.node.doDebug;
+                        player.addChatMessage("[Debug] PartMechanical debug mode is now " + (this.node.doDebug ? "on" : "off"));
+                    }
+                    else
+                    {
+                        if (frame == null)
+                        {
+                            frame = new GearDebugFrame(this);
+                            frame.showDebugFrame();
+                        }
+                        else
+                        {
+                            frame.closeDebugFrame();
+                            frame = null;
+                        }
+                    }
                 }
             }
         }
@@ -107,6 +129,10 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     public void onWorldSeparate()
     {
         node.deconstruct();
+        if (frame != null)
+        {
+            frame.closeDebugFrame();
+        }
     }
 
     /** Packet Code. */

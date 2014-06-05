@@ -37,7 +37,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     private double power = 0;
     private INodeProvider parent;
 
-    protected final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
+    private final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
 
     public MechanicalNode(INodeProvider parent)
     {
@@ -132,9 +132,9 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
             power = getEnergy() / deltaTime;
 
             debug("Node->Connections");
-            synchronized (connections)
+            synchronized (getConnections())
             {
-                Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
+                Iterator<Entry<MechanicalNode, ForgeDirection>> it = getConnections().entrySet().iterator();
 
                 while (it.hasNext())
                 {
@@ -280,26 +280,30 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void reconstruct()
     {
+        debug("reconstruct");
         recache();
     }
 
     @Override
     public void deconstruct()
     {
-        for (Entry<MechanicalNode, ForgeDirection> entry : connections.entrySet())
+        debug("deconstruct");
+        for (Entry<MechanicalNode, ForgeDirection> entry : getConnections().entrySet())
         {
             entry.getKey().recache();
         }
-        connections.clear();
+        getConnections().clear();
     }
 
     @Override
     public void recache()
     {
-        connections.clear();
+        debug("Node->Recahce");
+        getConnections().clear();
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
+            debug("\tDir: " + dir);
             TileEntity tile = position().translate(dir).getTileEntity(world());
 
             if (tile instanceof INodeProvider)
@@ -308,17 +312,19 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
                 if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
                 {
-                    connections.put(check, dir);
+                    getConnections().put(check, dir);
                 }
             }
         }
     }
 
+    /** Gets the node provider for this node */
     public INodeProvider getParent()
     {
         return parent;
     }
 
+    /** Sets the node provider for the node */
     public void setParent(INodeProvider parent)
     {
         this.parent = parent;
@@ -328,5 +334,10 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     public String toString()
     {
         return this.getClass().getName() + this.hashCode();
+    }
+
+    public AbstractMap<MechanicalNode, ForgeDirection> getConnections()
+    {
+        return connections;
     }
 }

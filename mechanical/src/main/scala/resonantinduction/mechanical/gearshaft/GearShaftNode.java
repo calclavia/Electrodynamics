@@ -42,7 +42,7 @@ public class GearShaftNode extends MechanicalNode
     @Override
     public void recache()
     {
-        connections.clear();
+        getConnections().clear();
         List<ForgeDirection> dirs = new ArrayList<ForgeDirection>();
         dirs.add(shaft().placementSide);
         dirs.add(shaft().placementSide.getOpposite());
@@ -59,7 +59,7 @@ public class GearShaftNode extends MechanicalNode
 
                     if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
                     {
-                        connections.put(instance, checkDir);
+                        getConnections().put(instance, checkDir);
                         it.remove();
                     }
                 }
@@ -70,7 +70,7 @@ public class GearShaftNode extends MechanicalNode
         if (!dirs.isEmpty())
             for (ForgeDirection checkDir : dirs)
             {
-                if (!connections.containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
+                if (!getConnections().containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
                 {
                     TileEntity checkTile = new universalelectricity.api.vector.Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
 
@@ -81,7 +81,7 @@ public class GearShaftNode extends MechanicalNode
                         // Only connect to shafts outside of this block space.
                         if (instance != null && instance != this && instance.getParent() instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
                         {
-                            connections.put(instance, checkDir);
+                            getConnections().put(instance, checkDir);
                         }
                     }
                 }
