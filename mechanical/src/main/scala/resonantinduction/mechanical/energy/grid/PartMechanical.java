@@ -50,7 +50,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         if (!world().isRemote)
         {
             checkClientUpdate();
-            System.out.println("\nPart: " + this + "  Node: " + this.node);
+            node.debug("Part: " + this + "  Node: " + this.node);
             this.node.update(0.05f);
         }
 

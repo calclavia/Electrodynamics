@@ -65,19 +65,22 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
     public void debug(String txt)
     {
-        if (doDebug)
-            System.out.println("[MechMode]" + txt);
+        debug(txt, false);
+    }
+
+    public void debug(String txt, boolean nextLine)
+    {
+        if (doDebug && world() != null && !world().isRemote)
+            System.out.println((nextLine ? "\n" : "") + "[MechMode]" + txt);
     }
 
     @Override
     public void update(float deltaTime)
     {
+        debug("Node->Update");
         prevAngularVelocity = angularVelocity;
-        if (world() != null && !world().isRemote)
-            debug("Node :" + toString());
+        debug("\tNode :" + toString());
         //Update 
-        if (world() != null && !world().isRemote)
-            debug("AngleBefore: " + renderAngle + "  Vel: " + angularVelocity);
         if (angularVelocity >= 0)
         {
             renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
@@ -86,8 +89,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         {
             renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
-        if (world() != null && !world().isRemote)
-            debug("AngleAfter: " + renderAngle + "  Vel: " + angularVelocity);
+        debug("\tAngle: " + renderAngle + "  Vel: " + angularVelocity);
 
         if (renderAngle % (Math.PI * 2) != renderAngle)
         {
@@ -129,6 +131,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
             power = getEnergy() / deltaTime;
 
+            debug("Node->Connections");
             synchronized (connections)
             {
                 Iterator<Entry<MechanicalNode, ForgeDirection>> it = connections.entrySet().iterator();
@@ -139,7 +142,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
                     ForgeDirection dir = entry.getValue();
                     MechanicalNode adjacentMech = entry.getKey();
-                    debug("Connection: " + adjacentMech + "  Side: " + dir);
+                    debug("\tConnection: " + adjacentMech + "  Side: " + dir);
                     /** Calculate angular velocity and torque. */
                     float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
                     boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
@@ -321,4 +324,9 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         this.parent = parent;
     }
 
+    @Override
+    public String toString()
+    {
+        return this.getClass().getName() + this.hashCode();
+    }
 }

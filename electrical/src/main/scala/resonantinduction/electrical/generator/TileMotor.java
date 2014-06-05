@@ -61,7 +61,7 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 
 		if (node != null)
 		{
-		    node.update(0.05f);
+		    node.update(0.05f);		    
 			if (!isInversed)
 			{
 				receiveMechanical();
@@ -174,4 +174,10 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 
 		return null;
 	}
+	
+	 @Override
+	    public String toString()
+	    {
+	        return "[TileMotor]" + x() + "x " + y() + "y " + z() + "z ";
+	    }
 }

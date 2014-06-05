@@ -81,7 +81,7 @@ public class GearNode extends MechanicalNode
     @Override
     public void recache()
     {
-        System.out.println("doRecache: " + this);
+        debug("doRecache: " + this);
         connections.clear();
 
         /** Only call refresh if this is the main block of a multiblock gear or a single gear block. */
