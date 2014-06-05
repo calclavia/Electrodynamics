@@ -10,7 +10,6 @@ import resonant.api.grid.INodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.gear.PartGear;
-import resonantinduction.mechanical.gear.PartGearShaft;
 
 public class GearShaftNode extends MechanicalNode
 {

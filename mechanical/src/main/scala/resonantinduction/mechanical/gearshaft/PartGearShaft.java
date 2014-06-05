@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.gearshaft;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,8 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
-import resonantinduction.mechanical.gearshaft.GearShaftNode;
-import resonantinduction.mechanical.gearshaft.RenderGearShaft;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;

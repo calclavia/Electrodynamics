@@ -2,7 +2,7 @@ package resonantinduction.mechanical;
 
 import resonantinduction.mechanical.fluid.pipe.PartPipe;
 import resonantinduction.mechanical.gear.PartGear;
-import resonantinduction.mechanical.gear.PartGearShaft;
+import resonantinduction.mechanical.gearshaft.PartGearShaft;
 import codechicken.multipart.MultiPartRegistry;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.MultipartGenerator;
