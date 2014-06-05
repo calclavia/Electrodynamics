@@ -24,7 +24,7 @@ import resonantinduction.mechanical.energy.grid.PartMechanical;
 @SuppressWarnings("serial")
 public class GearDebugFrame extends Frame implements ActionListener
 {
-    List<DataLabel> dataLabels = new ArrayList<DataLabel>();
+    List<UpdatedLabel> dataLabels = new ArrayList<UpdatedLabel>();
     Label[] connections = new Label[20];
 
     long tick = 0;
@@ -34,92 +34,102 @@ public class GearDebugFrame extends Frame implements ActionListener
     {
         this.part = part;
         setLayout(new BorderLayout());
-        setBackground(Color.DARK_GRAY);
+        setBackground(Color.LIGHT_GRAY);
 
         //Top bar
         Panel topPanel = new Panel(new GridLayout(1, 4, 0, 0));
 
-        DataLabel tickLabel = new DataLabel()
+        UpdatedLabel tickLabel = new UpdatedLabel("Tick: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Tick: " + tick);
+                return super.buildLabel() + tick;
             }
         };
+        dataLabels.add(tickLabel);
         topPanel.add(tickLabel);
 
-        DataLabel xLabel = new DataLabel()
+        UpdatedLabel xLabel = new UpdatedLabel("X: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("X: " + GearDebugFrame.this.part.x());
+                return super.buildLabel() + GearDebugFrame.this.part.x();
             }
         };
+        dataLabels.add(xLabel);
         topPanel.add(xLabel);
-        DataLabel yLabel = new DataLabel()
+        
+        UpdatedLabel yLabel = new UpdatedLabel("Y: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Y: " + GearDebugFrame.this.part.y());
+                return super.buildLabel() + GearDebugFrame.this.part.y();
             }
         };
         topPanel.add(yLabel);
-        DataLabel zLabel = new DataLabel()
+        dataLabels.add(yLabel);
+        
+        UpdatedLabel zLabel = new UpdatedLabel("Z: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Z: " + GearDebugFrame.this.part.z());
+                return super.buildLabel() + GearDebugFrame.this.part.z();
             }
         };
         topPanel.add(zLabel);
+        dataLabels.add(zLabel);
+        
         add(topPanel, BorderLayout.NORTH);
 
         //Middle bar
-        Panel middlePanel = new Panel(new GridLayout(8, 1, 0, 0));
+        Panel middlePanel = new Panel(new GridLayout(3, 1, 0, 0));
 
-        DataLabel velLabel = new DataLabel()
+        UpdatedLabel velLabel = new UpdatedLabel("Vel: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Vel: " + GearDebugFrame.this.part.node.angularVelocity);
+                return super.buildLabel() + GearDebugFrame.this.part.node.angularVelocity;
             }
         };
+        dataLabels.add(velLabel);
         middlePanel.add(velLabel);
 
-        DataLabel angleLabel = new DataLabel()
+        UpdatedLabel angleLabel = new UpdatedLabel("Angle: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Angle: " + GearDebugFrame.this.part.node.renderAngle);
+                return super.buildLabel() + GearDebugFrame.this.part.node.renderAngle;
             }
         };
+        dataLabels.add(angleLabel);
         middlePanel.add(angleLabel);
 
-        DataLabel torqueLabel = new DataLabel()
+        UpdatedLabel torqueLabel = new UpdatedLabel("Torque: ")
         {
             @Override
-            public void update()
+            public String buildLabel()
             {
-                setText("Torque: " + GearDebugFrame.this.part.node.torque);
+                return super.buildLabel() + GearDebugFrame.this.part.node.torque;
             }
         };
+        dataLabels.add(torqueLabel);
         middlePanel.add(torqueLabel);
 
-        add(middlePanel, BorderLayout.EAST);
+        add(middlePanel, BorderLayout.CENTER);
 
         Panel connectionPanel = new Panel(new GridLayout(this.connections.length / 4, 4, 0, 0));
         for (int i = 0; i < connections.length; i++)
         {
-            this.connections[i] = new Label("Connection" + i + ":  null");
+            this.connections[i] = new Label("Connection" + i + ":  ----");
             connectionPanel.add(connections[i]);
         }
-        add(connectionPanel, BorderLayout.WEST);
+        add(connectionPanel, BorderLayout.SOUTH);
 
         //exit icon handler
         addWindowListener(new WindowAdapter()
@@ -139,19 +149,22 @@ public class GearDebugFrame extends Frame implements ActionListener
         tick++;
         if (this.part != null)
         {
-            for (DataLabel label : dataLabels)
+            for (UpdatedLabel label : dataLabels)
             {
                 label.update();
             }
             int c = 0;
             for (Entry<MechanicalNode, ForgeDirection> entry : part.node.getConnections().entrySet())
             {
-                this.connections[c].setText("Connection" + c + ": " + entry.getKey());
-                c++;
+                if (entry.getKey() != null)
+                {
+                    this.connections[c].setText("Connection" + c + ": " + entry.getKey());
+                    c++;
+                }
             }
             for (int i = c; i < connections.length; i++)
             {
-                this.connections[c].setText("Connection" + c + ": NONE");
+                this.connections[i].setText("Connection" + i + ": NONE");
             }
         }
     }

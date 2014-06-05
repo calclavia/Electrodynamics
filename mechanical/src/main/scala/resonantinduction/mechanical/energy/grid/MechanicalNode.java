@@ -333,7 +333,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public String toString()
     {
-        return this.getClass().getName() + this.hashCode();
+        return this.getClass().getSimpleName() + this.hashCode();
     }
 
     public AbstractMap<MechanicalNode, ForgeDirection> getConnections()
