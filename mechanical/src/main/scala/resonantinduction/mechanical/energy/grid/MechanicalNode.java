@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
@@ -36,6 +37,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
     private double power = 0;
     private INodeProvider parent;
+    private long ticks = 0;
 
     private final AbstractMap<MechanicalNode, ForgeDirection> connections = new WeakHashMap<MechanicalNode, ForgeDirection>();
 
@@ -77,10 +79,23 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void update(float deltaTime)
     {
+        ticks++;
+        if (ticks >= Long.MAX_VALUE)
+        {
+            ticks = 1;
+        }
+        //temp, TODO find a better way to trigger this
+        if (ticks % 100 == 0)
+        {
+            this.recache();
+        }
+        //----------------------------------- 
+        // Render Update
+        //-----------------------------------
         debug("Node->Update");
         prevAngularVelocity = angularVelocity;
         debug("\tNode :" + toString());
-        //Update 
+        
         if (angularVelocity >= 0)
         {
             renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
@@ -97,11 +112,16 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
             renderAngle = renderAngle % (Math.PI * 2);
         }
 
+        //----------------------------------- 
+        // Server side Update
+        //-----------------------------------
         if (world() != null && !world().isRemote)
         {
             final double acceleration = this.acceleration * deltaTime;
 
-            /** Energy loss */
+            //----------------------------------- 
+            // Loss calculations
+            //-----------------------------------
             double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
 
             if (torque > 0)
@@ -131,6 +151,9 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
             power = getEnergy() / deltaTime;
 
+            //----------------------------------- 
+            // Connection application of force and speed
+            //-----------------------------------
             debug("Node->Connections");
             synchronized (getConnections())
             {
@@ -308,11 +331,15 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
             if (tile instanceof INodeProvider)
             {
-                MechanicalNode check = (MechanicalNode) ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
-
-                if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+                INode node = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
+                if (node instanceof MechanicalNode)
                 {
-                    getConnections().put(check, dir);
+                    MechanicalNode check = (MechanicalNode) node;
+
+                    if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+                    {
+                        getConnections().put(check, dir);
+                    }
                 }
             }
         }
