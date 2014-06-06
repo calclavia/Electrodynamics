@@ -70,10 +70,12 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             if (itemStack != null)
             {
-                if (itemStack.getItem().itemID == Item.stick.itemID)
+                if (!world().isRemote)
                 {
-                    if (!world().isRemote)
+                    if (itemStack.getItem().itemID == Item.stick.itemID)
                     {
+
+                        //Set the nodes debug mode
                         if (!ControlKeyModifer.isControlDown(player))
                         {
                             this.node.doDebug = !this.node.doDebug;
@@ -81,44 +83,47 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
                         }
                         else
                         {
+                            //Opens a debug GUI
                             if (frame == null)
                             {
                                 frame = new GearDebugFrame(this);
                                 frame.showDebugFrame();
-                            }
+                            } //Closes the debug GUI
                             else
                             {
                                 frame.closeDebugFrame();
                                 frame = null;
                             }
                         }
-                    }
-                }
-                else if (itemStack.getItem().itemID == Item.blazeRod.itemID)
-                {
-                    if (this.node.doDebug)
+
+                    }//Changes the debug cue of the node
+                    else if (itemStack.getItem().itemID == Item.blazeRod.itemID)
                     {
-                        if (!ControlKeyModifer.isControlDown(player))
+                        if (this.node.doDebug)
                         {
-                            if (this.node.debugCue + 1 <= this.node.maxDebugCue)
-                                this.node.debugCue++;
+                            //Increases the cue count
+                            if (!ControlKeyModifer.isControlDown(player))
+                            {
+                                if (this.node.debugCue + 1 <= this.node.maxDebugCue)
+                                    this.node.debugCue++;
+                                else
+                                {
+                                    player.addChatMessage("[Debug] PartMechanical is at max debug cue");
+                                }
+
+                            }//Decreases the cue count
                             else
                             {
-                                player.addChatMessage("[Debug] PartMechanical is at max debug cue");
+                                if (this.node.debugCue - 1 >= this.node.minDebugCue)
+                                    this.node.debugCue--;
+                                else
+                                {
+                                    player.addChatMessage("[Debug] PartMechanical is at min debug cue");
+                                }
                             }
+                            player.addChatMessage("[Debug] PartMechanical debug due is now " + this.node.debugCue);
 
                         }
-                        else
-                        {
-                            if (this.node.debugCue - 1 >= this.node.minDebugCue)
-                                this.node.debugCue--;
-                            else
-                            {
-                                player.addChatMessage("[Debug] PartMechanical is at min debug cue");
-                            }
-                        }
-                        player.addChatMessage("[Debug] PartMechanical debug due is now " + this.node.debugCue);
-
                     }
                 }
             }
