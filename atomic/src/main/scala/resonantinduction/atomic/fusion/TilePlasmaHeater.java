@@ -29,10 +29,10 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver, ITagRender, IFluidHandler
 {
-    public static final long DIAN = 10000000000L;
+    public static long DIAN = 10000000000L;
 
     @Config
-    public static final int plasmaHeatAmount = 100;
+    public static int plasmaHeatAmount = 100;
 
     public final FluidTank tankInputDeuterium = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
     public final FluidTank tankInputTritium = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME * 10);
