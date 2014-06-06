@@ -18,17 +18,35 @@ import codechicken.multipart.TMultiPart;
 
 /** A mechanical node for mechanical energy.
  * 
- * @author Calclavia */
+ * From Darkguardsman,
+ * 
+ * Comes built in with extra debug but must be manually triggered by the part using this node. The
+ * suggest approach is threw right click of the part with a tool or simple item. In which you will
+ * have to switch debug to true. As well provide a way to increase or decrease the cue value. The
+ * cue as well is used to divide up the debug based on area inside the node. This allows you to
+ * debug one part at a time rather than be spammed with console chat.
+ * 
+ * An external gui is also support for this node but must also be manually created by the part. This
+ * gui will show basic info about velocity, angle, torque, and connections. Additional information
+ * can be added by extending the gui.
+ * 
+ * @author Calclavia, Darkguardsman */
 public class MechanicalNode implements IMechanicalNode, ISaveObj
 {
+    /** Is debug enabled for the node */
     public boolean doDebug = false;
+    /** Which section of debug is enabled */
+    public int debugCue = 0, maxDebugCue = 1, minDebugCue = 0;
+    public static final int UPDATE_DEBUG = 0, CONNECTION_DEBUG = 1;
+    /** Rotational Force */
     public double torque = 0;
+    /** Rotational speed */
     public double prevAngularVelocity, angularVelocity = 0;
+    /** Rotational acceleration */
     public float acceleration = 2f;
 
     /** The current rotation of the mechanical node. */
-    public double renderAngle = 0;
-    public double prev_angle = 0;
+    public double renderAngle = 0, prev_angle = 0;
     /** Limits the max distance an object can rotate in a single update */
     protected double maxDeltaAngle = Math.toRadians(180);
 
@@ -67,12 +85,17 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
     public void debug(String txt)
     {
-        debug(txt, false);
+        debug(txt, UPDATE_DEBUG);
     }
 
-    public void debug(String txt, boolean nextLine)
+    public void debug(String txt, int cue)
     {
-        if (doDebug && world() != null && !world().isRemote)
+        debug(txt, cue, false);
+    }
+
+    public void debug(String txt, int cue, boolean nextLine)
+    {
+        if (doDebug && world() != null && !world().isRemote && cue == debugCue)
             System.out.println((nextLine ? "\n" : "") + "[MechMode]" + txt);
     }
 
@@ -95,7 +118,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         debug("Node->Update");
         prevAngularVelocity = angularVelocity;
         debug("\tNode :" + toString());
-        
+
         if (angularVelocity >= 0)
         {
             renderAngle += Math.min(angularVelocity, this.maxDeltaAngle) * deltaTime;
@@ -269,9 +292,18 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         return getParent() instanceof TMultiPart ? new Vector3(((TMultiPart) getParent()).x(), ((TMultiPart) getParent()).y(), ((TMultiPart) getParent()).z()) : getParent() instanceof TileEntity ? new Vector3((TileEntity) getParent()) : null;
     }
 
+    /** Checks to see if a connection is allowed from side and from a source */
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        return (source instanceof MechanicalNode) && (connectionMap & (1 << from.ordinal())) != 0;
+        debug("Node -> Canconnect", CONNECTION_DEBUG);
+        if (source instanceof MechanicalNode)
+        {
+            boolean flag = (connectionMap & (1 << from.ordinal())) != 0;
+            debug("\t" + flag, CONNECTION_DEBUG);
+            return flag;
+        }
+        debug("\tFalse", CONNECTION_DEBUG);
+        return false;
     }
 
     @Override
@@ -303,6 +335,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void reconstruct()
     {
+        debug("reconstruct", CONNECTION_DEBUG);
         debug("reconstruct");
         recache();
     }
@@ -321,23 +354,26 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void recache()
     {
-        debug("Node->Recahce");
+        debug("Node->Recahce", CONNECTION_DEBUG);
         getConnections().clear();
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
-            debug("\tDir: " + dir);
+            debug("\tDir: " + dir, CONNECTION_DEBUG);
             TileEntity tile = position().translate(dir).getTileEntity(world());
-
+            debug("\tTile: " + tile, CONNECTION_DEBUG);
             if (tile instanceof INodeProvider)
             {
+                debug("\tTile instanceof INodeProvider", CONNECTION_DEBUG);
                 INode node = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
                 if (node instanceof MechanicalNode)
                 {
+                    debug("\tNode instanceof MechanicalNode", CONNECTION_DEBUG);
                     MechanicalNode check = (MechanicalNode) node;
 
                     if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
                     {
+                        debug("\tCanConnect and added to connections", CONNECTION_DEBUG);
                         getConnections().put(check, dir);
                     }
                 }

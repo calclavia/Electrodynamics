@@ -68,27 +68,46 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     {
         if (ResonantEngine.runningAsDev)
         {
-            if (itemStack != null && itemStack.getItem().itemID == Item.stick.itemID)
+            if (itemStack != null)
             {
-                if (!world().isRemote)
+                if (itemStack.getItem().itemID == Item.stick.itemID)
                 {
-                    if (!ControlKeyModifer.isControlDown(player))
+                    if (!world().isRemote)
                     {
-                        this.node.doDebug = !this.node.doDebug;
-                        player.addChatMessage("[Debug] PartMechanical debug mode is now " + (this.node.doDebug ? "on" : "off"));
-                    }
-                    else
-                    {
-                        if (frame == null)
+                        if (!ControlKeyModifer.isControlDown(player))
                         {
-                            frame = new GearDebugFrame(this);
-                            frame.showDebugFrame();
+                            this.node.doDebug = !this.node.doDebug;
+                            player.addChatMessage("[Debug] PartMechanical debug mode is now " + (this.node.doDebug ? "on" : "off"));
                         }
                         else
                         {
-                            frame.closeDebugFrame();
-                            frame = null;
+                            if (frame == null)
+                            {
+                                frame = new GearDebugFrame(this);
+                                frame.showDebugFrame();
+                            }
+                            else
+                            {
+                                frame.closeDebugFrame();
+                                frame = null;
+                            }
                         }
+                    }
+                }
+                else if (itemStack.getItem().itemID == Item.blazeRod.itemID)
+                {
+                    if (this.node.doDebug)
+                    {
+                        if (!ControlKeyModifer.isControlDown(player))
+                        {
+                            this.node.debugCue++;
+                        }
+                        else
+                        {
+                            this.node.debugCue--;
+                        }
+                        player.addChatMessage("[Debug] PartMechanical debug due is now " + this.node.debugCue);
+
                     }
                 }
             }
