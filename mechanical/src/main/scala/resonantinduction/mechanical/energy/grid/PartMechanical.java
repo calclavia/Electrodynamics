@@ -100,11 +100,22 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
                     {
                         if (!ControlKeyModifer.isControlDown(player))
                         {
-                            this.node.debugCue++;
+                            if (this.node.debugCue + 1 <= this.node.maxDebugCue)
+                                this.node.debugCue++;
+                            else
+                            {
+                                player.addChatMessage("[Debug] PartMechanical is at max debug cue");
+                            }
+
                         }
                         else
                         {
-                            this.node.debugCue--;
+                            if (this.node.debugCue - 1 >= this.node.minDebugCue)
+                                this.node.debugCue--;
+                            else
+                            {
+                                player.addChatMessage("[Debug] PartMechanical is at min debug cue");
+                            }
                         }
                         player.addChatMessage("[Debug] PartMechanical debug due is now " + this.node.debugCue);
 
