@@ -13,6 +13,7 @@ import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.utility.nbt.ISaveObj;
 import resonantinduction.core.interfaces.IMechanicalNode;
+import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
@@ -31,7 +32,7 @@ import codechicken.multipart.TMultiPart;
  * can be added by extending the gui.
  * 
  * @author Calclavia, Darkguardsman */
-public class MechanicalNode implements IMechanicalNode, ISaveObj
+public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 {
     /** Is debug enabled for the node */
     public boolean doDebug = false;
@@ -261,15 +262,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         return load;
     }
 
-    public World world()
-    {
-        return getParent() instanceof TMultiPart ? ((TMultiPart) getParent()).world() : getParent() instanceof TileEntity ? ((TileEntity) getParent()).getWorldObj() : null;
-    }
-
-    public Vector3 position()
-    {
-        return getParent() instanceof TMultiPart ? new Vector3(((TMultiPart) getParent()).x(), ((TMultiPart) getParent()).y(), ((TMultiPart) getParent()).z()) : getParent() instanceof TileEntity ? new Vector3((TileEntity) getParent()) : null;
-    }
+   
 
     /** Checks to see if a connection is allowed from side and from a source */
     public boolean canConnect(ForgeDirection from, Object source)
@@ -319,6 +312,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     {
         for (Entry<MechanicalNode, ForgeDirection> entry : getConnections().entrySet())
         {
+            entry.getKey().getConnections().remove(this);
             entry.getKey().recache();
         }
         getConnections().clear();
@@ -370,5 +364,34 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     public AbstractMap<MechanicalNode, ForgeDirection> getConnections()
     {
         return connections;
+    }
+
+    @Override
+    public World world()
+    {
+        return getParent() instanceof TMultiPart ? ((TMultiPart) getParent()).world() : getParent() instanceof TileEntity ? ((TileEntity) getParent()).getWorldObj() : null;
+    }
+
+    public Vector3 position()
+    {
+        return new Vector3(x(), y(), z());
+    }
+    
+    @Override
+    public double z()
+    {
+        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).z() : 0;
+    }
+
+    @Override
+    public double x()
+    {
+        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).x() : 0;
+    }
+
+    @Override
+    public double y()
+    {
+        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).y() : 0;
     }
 }

@@ -25,11 +25,11 @@ import codechicken.multipart.TFacePart;
  * @author Calclavia */
 public abstract class PartMechanical extends JCuboidPart implements JNormalOcclusion, TFacePart, INodeProvider
 {
+    /** Node that handles mechanical action of the machine */
     public MechanicalNode node;
-    protected double prevAngularVelocity;
-
-    /** Packets */
+    protected double prevAngularVelocity;    
     int ticks = 0;
+    /** Packets */
     boolean markPacketUpdate = false;
     /** Simple debug external GUI */
     GearDebugFrame frame = null;
@@ -53,15 +53,17 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             ticks = 0;
         }
-
+        
+        //Make sure to update on both sides
+        this.node.update(0.05f);
+        
         if (!world().isRemote)
         {
-            checkClientUpdate();
-            this.node.update(0.05f);
+            checkClientUpdate();          
         }
         else
         {
-            //System.out.println("Client->[" + this + "]Angle: " + node.renderAngle);
+            System.out.println("Client->[" + this + "]Angle: " + node.renderAngle);
         }
         if (frame != null)
         {
