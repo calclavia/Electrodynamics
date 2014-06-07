@@ -19,12 +19,10 @@ public class ItemModuleArray extends ItemModule
 	@Override
 	public Set<Vector3> onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
-		Set<Vector3> newField = new HashSet<Vector3>(fieldBlocks);
-		Set<Vector3> originalField = new HashSet<Vector3>(fieldBlocks);
+		Set<Vector3> newField = new HashSet(fieldBlocks);
+		Set<Vector3> originalField = new HashSet(fieldBlocks);
 
 		HashMap<ForgeDirection, Integer> longestDirectional = this.getDirectionWidthMap(originalField);
-
-		HashMap<Vector3, int[]> fieldMap = null;
 
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{

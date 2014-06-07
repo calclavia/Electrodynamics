@@ -79,7 +79,7 @@ public class ItemModeCube extends ItemMode
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());
 		Cuboid region = new Cuboid(projector.getNegativeScale().clone().scale(-1), projector.getPositiveScale());
-		return region.isIn(relativePosition);
+		return region.intersects(relativePosition);
 	}
 
 	@SideOnly(Side.CLIENT)

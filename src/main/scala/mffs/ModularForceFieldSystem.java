@@ -130,6 +130,7 @@ public class ModularForceFieldSystem
 	public static ItemModule itemModuleAntiHostile, itemModuleAntiFriendly,
 			itemModuleAntiPersonnel, itemModuleConfiscate, itemModuleWarn, itemModuleBlockAccess,
 			itemModuleBlockAlter, itemModuleAntiSpawn;
+
 	public static DamageSource damagefieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor();
 
 	@EventHandler

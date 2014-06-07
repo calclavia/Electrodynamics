@@ -65,7 +65,6 @@ public class ItemModuleDisintegration extends ItemModule
 
 					if (MFFSHelper.getFilterBlock(filterStack) != null)
 					{
-						// TODO: Add approximation module support.
 						if (filterStack.isItemEqual(new ItemStack(blockID, 1, blockMetadata)) || (((ItemBlock) filterStack.getItem()).getBlockID() == blockID && projector.getModuleCount(ModularForceFieldSystem.itemModuleApproximation) > 0))
 						{
 							filterMatch = true;
