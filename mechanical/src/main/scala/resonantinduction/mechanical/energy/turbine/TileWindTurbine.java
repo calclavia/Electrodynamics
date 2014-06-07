@@ -56,9 +56,9 @@ public class TileWindTurbine extends TileTurbine
         }
 
         if (getMultiBlock().isConstructed())
-            torque = (long) (defaultTorque / (9d / multiBlockRadius));
+            mechanicalNode.torque = (long) (defaultTorque / (9d / multiBlockRadius));
         else
-            torque = defaultTorque / 12;
+            mechanicalNode.torque = defaultTorque / 12;
 
         super.updateEntity();
     }

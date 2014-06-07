@@ -27,7 +27,7 @@ public class TileWaterTurbine extends TileTurbine
 
 	public TileWaterTurbine()
 	{
-		torque = defaultTorque;
+	    mechanicalNode.torque = defaultTorque;
 		mechanicalNode = new TurbineNode(this)
 		{
 			@Override
@@ -56,9 +56,9 @@ public class TileWaterTurbine extends TileTurbine
 	public void updateEntity()
 	{
 		if (getMultiBlock().isConstructed())
-			torque = (long) (defaultTorque / (1d / multiBlockRadius));
+		    mechanicalNode.torque = (long) (defaultTorque / (1d / multiBlockRadius));
 		else
-			torque = defaultTorque / 12;
+		    mechanicalNode.torque = defaultTorque / 12;
 
 		/**
 		 * If this is a horizontal turbine.
@@ -108,7 +108,7 @@ public class TileWaterTurbine extends TileTurbine
 							Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, check.intX(), check.intY(), check.intZ()));
 
 							if ((currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0))
-								torque = -torque;
+							    mechanicalNode.torque = -mechanicalNode.torque;
 
 							if (getDirection().offsetX != 0)
 								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z * (7 - metadata) / 7f);

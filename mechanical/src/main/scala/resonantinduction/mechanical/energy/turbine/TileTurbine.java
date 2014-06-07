@@ -3,7 +3,10 @@ package resonantinduction.mechanical.energy.turbine;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.common.io.ByteArrayDataInput;
+
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
@@ -11,10 +14,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
-import resonant.core.ResonantEngine;
 import resonant.lib.References;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.multiblock.IMultiBlockStructure;
+import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.Synced;
 import resonant.lib.network.Synced.SyncedInput;
 import resonant.lib.network.Synced.SyncedOutput;
@@ -24,8 +27,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Reduced version of the main turbine class */
-public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTurbine>, INodeProvider
+public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTurbine>, INodeProvider, IPacketReceiverWithID
 {
+    /** Tier of the tile */
+    public int tier = 0;
+
     /** Radius of large turbine? */
     public int multiBlockRadius = 1;
 
@@ -35,18 +41,9 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     /** The power of the turbine this tick. In joules/tick */
     public long power = 0;
 
-    /** Current rotation of the turbine in radians. */
-    public float rotation = 0;
-
     protected final long defaultTorque = 5000;
-    protected long torque = defaultTorque;
-    protected float prevAngularVelocity = 0;
-
-    @Synced(1)
-    protected float angularVelocity = 0;
-    @Synced
-    public int tier = 0;
-
+    protected double prevAngularVelocity = 0;
+    /** Node that handles most of the mechanical connections */
     protected MechanicalNode mechanicalNode;
 
     public TileTurbine()
@@ -64,7 +61,7 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     public void initiate()
     {
         mechanicalNode.reconstruct();
-        super.initiate();        
+        super.initiate();
     }
 
     @Override
@@ -79,24 +76,18 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
             if (!worldObj.isRemote)
             {
                 /** Set angular velocity based on power and torque. */
-                angularVelocity = (float) ((double) power / torque);
+                mechanicalNode.angularVelocity = (float) ((double) power / mechanicalNode.torque);
 
-                if (!worldObj.isRemote && ticks % 3 == 0 && prevAngularVelocity != angularVelocity)
+                if (ticks % 3 == 0 && prevAngularVelocity != mechanicalNode.angularVelocity)
                 {
                     sendPowerUpdate();
-                    prevAngularVelocity = angularVelocity;
+                    prevAngularVelocity = mechanicalNode.angularVelocity;
                 }
-
-                if (power > 0)
-                    onProduce();
             }
 
-            if (angularVelocity != 0)
+            if (mechanicalNode.angularVelocity != 0)
             {
                 playSound();
-
-                /** Update rotation. */
-                rotation = (float) ((rotation + angularVelocity / 20) % (Math.PI * 2));
             }
         }
 
@@ -119,21 +110,7 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
         return (int) (((multiBlockRadius + 0.5) * 2) * ((multiBlockRadius + 0.5) * 2));
     }
 
-    
-    public void onProduce()
-    {
-        if (!worldObj.isRemote)
-        {
-            if (mechanicalNode.torque < 0)
-                torque = -Math.abs(torque);
-
-            if (mechanicalNode.angularVelocity < 0)
-                angularVelocity = -Math.abs(angularVelocity);
-
-            mechanicalNode.apply(this, (torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularSpeed()) / 10);
-        }
-    }
-
+    /** Called to play sound effects */
     public void playSound()
     {
 
@@ -142,12 +119,12 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     @Override
     public Packet getDescriptionPacket()
     {
-        return References.PACKET_ANNOTATION.getPacket(this);
+        return References.PACKET_TILE.getPacketWithID(0, this, tier);
     }
 
     public void sendPowerUpdate()
     {
-        References.PACKET_ANNOTATION.sync(this, 1);
+        References.PACKET_TILE.getPacketWithID(1, this, this.mechanicalNode.angularVelocity);
     }
 
     /** Reads a tile entity from NBT. */
@@ -249,6 +226,23 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     {
         mechanicalNode.deconstruct();
         super.invalidate();
+    }
+
+    @Override
+    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        if (world().isRemote)
+        {
+            if (id == 0)
+            {
+                this.tier = data.readInt();
+            }
+            else if (id == 1)
+            {
+                this.mechanicalNode.angularVelocity = data.readDouble();
+            }
+        }
+        return false;
     }
 
 }
