@@ -59,7 +59,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
     public PartGear()
     {
         super();
-        node = new MechanicalNode(this);
+        node = new GearNode(this);
        
     }
 
@@ -73,7 +73,7 @@ public class PartGear extends PartMechanical implements IMultiBlockStructure<Par
             if (manualCrankTime > 0)
             {
                 node.apply(this, isClockwiseCrank ? 15 : -15, isClockwiseCrank ? 0.025f : -0.025f);
-                //manualCrankTime--;
+                manualCrankTime--;
             }
         }
         getMultiBlock().update();

@@ -83,22 +83,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         return 0.5;
     }
 
-    public void debug(String txt)
-    {
-        debug(txt, UPDATE_DEBUG);
-    }
-
-    public void debug(String txt, int cue)
-    {
-        debug(txt, cue, false);
-    }
-
-    public void debug(String txt, int cue, boolean nextLine)
-    {
-        if (doDebug && world() != null && !world().isRemote && cue == debugCue)
-            System.out.println((nextLine ? "\n" : "") + "[MechMode]" + txt);
-    }
-
     @Override
     public void update(float deltaTime)
     {
@@ -115,9 +99,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         //----------------------------------- 
         // Render Update
         //-----------------------------------
-        debug("Node->Update");
         prevAngularVelocity = angularVelocity;
-        debug("\tNode :" + toString());
 
         if (angularVelocity >= 0)
         {
@@ -127,7 +109,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
         {
             renderAngle += Math.max(angularVelocity, -this.maxDeltaAngle) * deltaTime;
         }
-        debug("\tAngle: " + renderAngle + "  Vel: " + angularVelocity);
 
         if (renderAngle % (Math.PI * 2) != renderAngle)
         {
@@ -177,7 +158,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
             //----------------------------------- 
             // Connection application of force and speed
             //-----------------------------------
-            debug("Node->Connections");
             synchronized (getConnections())
             {
                 Iterator<Entry<MechanicalNode, ForgeDirection>> it = getConnections().entrySet().iterator();
@@ -188,7 +168,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
 
                     ForgeDirection dir = entry.getValue();
                     MechanicalNode adjacentMech = entry.getKey();
-                    debug("\tConnection: " + adjacentMech + "  Side: " + dir);
                     /** Calculate angular velocity and torque. */
                     float ratio = adjacentMech.getRatio(dir.getOpposite(), this) / getRatio(dir, adjacentMech);
                     boolean inverseRotation = inverseRotation(dir, adjacentMech) && adjacentMech.inverseRotation(dir.getOpposite(), this);
@@ -295,14 +274,11 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     /** Checks to see if a connection is allowed from side and from a source */
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        debug("Node -> Canconnect", CONNECTION_DEBUG);
         if (source instanceof MechanicalNode)
         {
             boolean flag = (connectionMap & (1 << from.ordinal())) != 0;
-            debug("\t" + flag, CONNECTION_DEBUG);
             return flag;
         }
-        debug("\tFalse", CONNECTION_DEBUG);
         return false;
     }
 
@@ -335,15 +311,12 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void reconstruct()
     {
-        debug("reconstruct", CONNECTION_DEBUG);
-        debug("reconstruct");
         recache();
     }
 
     @Override
     public void deconstruct()
     {
-        debug("deconstruct");
         for (Entry<MechanicalNode, ForgeDirection> entry : getConnections().entrySet())
         {
             entry.getKey().recache();
@@ -354,26 +327,21 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj
     @Override
     public void recache()
     {
-        debug("Node->Recahce", CONNECTION_DEBUG);
         getConnections().clear();
 
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
-            debug("\tDir: " + dir, CONNECTION_DEBUG);
             TileEntity tile = position().translate(dir).getTileEntity(world());
-            debug("\tTile: " + tile, CONNECTION_DEBUG);
             if (tile instanceof INodeProvider)
             {
-                debug("\tTile instanceof INodeProvider", CONNECTION_DEBUG);
                 INode node = ((INodeProvider) tile).getNode(MechanicalNode.class, dir.getOpposite());
                 if (node instanceof MechanicalNode)
                 {
-                    debug("\tNode instanceof MechanicalNode", CONNECTION_DEBUG);
                     MechanicalNode check = (MechanicalNode) node;
-
-                    if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+                    boolean canConnect = canConnect(dir, check);
+                    boolean canOtherConnect = check.canConnect(dir.getOpposite(), this);
+                    if (canConnect && canOtherConnect)
                     {
-                        debug("\tCanConnect and added to connections", CONNECTION_DEBUG);
                         getConnections().put(check, dir);
                     }
                 }

@@ -81,7 +81,6 @@ public class GearNode extends MechanicalNode
     @Override
     public void recache()
     {
-        debug("doRecache: " + this);
         getConnections().clear();
 
         /** Only call refresh if this is the main block of a multiblock gear or a single gear block. */
@@ -162,25 +161,20 @@ public class GearNode extends MechanicalNode
     @Override
     public boolean canConnect(ForgeDirection from, Object with)
     {
-        debug("Node -> CanConnect");
         if (!gear().getMultiBlock().isPrimary())
         {
-            debug("\tFailed: Gear is multiblock and not primary");
             return false;
         }
 
         if (with instanceof MechanicalNode)
         {
-            debug("\tWith is a mechnical node");
             INodeProvider parent = ((MechanicalNode) with).getParent();
 
             /** Check for flat connections (gear face on gear face) */
             if (from == gear().placementSide.getOpposite())
             {
-                debug("\tChecking back connection");
                 if (parent instanceof PartGear)
                 {
-                    debug("\tconnection is a gear");
                     if (((PartGear) parent).tile() == gear().tile() && !gear().getMultiBlock().isConstructed())
                     {
                         return true;
