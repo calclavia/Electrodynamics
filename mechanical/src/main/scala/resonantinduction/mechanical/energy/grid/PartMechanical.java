@@ -31,6 +31,8 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     /** Packets */
     int ticks = 0;
     boolean markPacketUpdate = false;
+    /** Simple debug external GUI */
+    GearDebugFrame frame = null;
 
     /** Side of the block this is placed on */
     public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
@@ -47,12 +49,19 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     public void update()
     {
         ticks++;
+        if (ticks >= Long.MAX_VALUE)
+        {
+            ticks = 0;
+        }
 
         if (!world().isRemote)
         {
             checkClientUpdate();
-            node.debug("Part: " + this + "  Node: " + this.node);
             this.node.update(0.05f);
+        }
+        else
+        {
+            //System.out.println("Client->[" + this + "]Angle: " + node.renderAngle);
         }
         if (frame != null)
         {
@@ -61,68 +70,28 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         super.update();
     }
 
-    GearDebugFrame frame = null;
-
     @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
     {
         if (ResonantEngine.runningAsDev)
         {
-            if (itemStack != null)
+            if (itemStack != null && !world().isRemote)
             {
-                if (!world().isRemote)
+                if (itemStack.getItem().itemID == Item.stick.itemID)
                 {
-                    if (itemStack.getItem().itemID == Item.stick.itemID)
+                    //Set the nodes debug mode
+                    if (ControlKeyModifer.isControlDown(player))
                     {
-
-                        //Set the nodes debug mode
-                        if (!ControlKeyModifer.isControlDown(player))
+                        //Opens a debug GUI
+                        if (frame == null)
                         {
-                            this.node.doDebug = !this.node.doDebug;
-                            player.addChatMessage("[Debug] PartMechanical debug mode is now " + (this.node.doDebug ? "on" : "off"));
-                        }
+                            frame = new GearDebugFrame(this);
+                            frame.showDebugFrame();
+                        } //Closes the debug GUI
                         else
                         {
-                            //Opens a debug GUI
-                            if (frame == null)
-                            {
-                                frame = new GearDebugFrame(this);
-                                frame.showDebugFrame();
-                            } //Closes the debug GUI
-                            else
-                            {
-                                frame.closeDebugFrame();
-                                frame = null;
-                            }
-                        }
-
-                    }//Changes the debug cue of the node
-                    else if (itemStack.getItem().itemID == Item.blazeRod.itemID)
-                    {
-                        if (this.node.doDebug)
-                        {
-                            //Increases the cue count
-                            if (!ControlKeyModifer.isControlDown(player))
-                            {
-                                if (this.node.debugCue + 1 <= this.node.maxDebugCue)
-                                    this.node.debugCue++;
-                                else
-                                {
-                                    player.addChatMessage("[Debug] PartMechanical is at max debug cue");
-                                }
-
-                            }//Decreases the cue count
-                            else
-                            {
-                                if (this.node.debugCue - 1 >= this.node.minDebugCue)
-                                    this.node.debugCue--;
-                                else
-                                {
-                                    player.addChatMessage("[Debug] PartMechanical is at min debug cue");
-                                }
-                            }
-                            player.addChatMessage("[Debug] PartMechanical debug due is now " + this.node.debugCue);
-
+                            frame.closeDebugFrame();
+                            frame = null;
                         }
                     }
                 }
@@ -133,16 +102,10 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
 
     public void checkClientUpdate()
     {
-        if (Math.abs(prevAngularVelocity - node.angularVelocity) > 0.001f || (prevAngularVelocity != node.angularVelocity && (prevAngularVelocity == 0 || node.angularVelocity == 0)))
+        if (Math.abs(prevAngularVelocity - node.angularVelocity) >= 0.1)
         {
             prevAngularVelocity = node.angularVelocity;
-            markPacketUpdate = true;
-        }
-
-        if (markPacketUpdate && ticks % 10 == 0)
-        {
             sendRotationPacket();
-            markPacketUpdate = false;
         }
     }
 
