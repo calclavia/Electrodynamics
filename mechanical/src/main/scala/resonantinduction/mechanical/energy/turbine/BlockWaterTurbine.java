@@ -10,7 +10,7 @@ import resonant.lib.render.block.BlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockWaterTurbine extends BlockMechanicalTurbine
+public class BlockWaterTurbine extends BlockTurbine
 {
 	public BlockWaterTurbine(int id)
 	{

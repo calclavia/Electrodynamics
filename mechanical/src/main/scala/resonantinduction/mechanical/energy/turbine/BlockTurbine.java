@@ -9,16 +9,42 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import resonant.lib.prefab.block.BlockRotatable;
 import resonantinduction.core.Reference;
 import resonantinduction.core.resource.ItemHandCrank;
 
-public class BlockMechanicalTurbine extends BlockTurbineBase
+public class BlockTurbine extends BlockRotatable
 {
-    public BlockMechanicalTurbine(int id)
+    public BlockTurbine(int id)
     {
         super(id, Material.iron);
         setTextureName(Reference.PREFIX + "material_wood_surface");
-        rotationMask = Byte.parseByte("111111", 2);
+        rotationMask = Byte.parseByte("111111", 2);        
+    }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+
+        if (tileEntity instanceof TileTurbine)
+        {
+            ((TileTurbine) tileEntity).getMultiBlock().deconstruct();
+        }
+        dropDamage = getDamageValue(world, x, y, z);
+        super.breakBlock(world, x, y, z, par5, par6);
+    }
+
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube()
+    {
+        return false;
     }
 
     @Override
@@ -39,13 +65,6 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
     public int damageDropped(int par1)
     {
         return dropDamage;
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-    {
-        dropDamage = getDamageValue(world, x, y, z);
-        super.breakBlock(world, x, y, z, par5, par6);
     }
 
     @Override
