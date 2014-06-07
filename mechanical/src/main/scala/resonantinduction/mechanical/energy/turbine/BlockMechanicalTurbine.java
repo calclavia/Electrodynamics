@@ -26,8 +26,8 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
     {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
 
-        if (tile instanceof TileTurbineBase)
-            return ((TileTurbineBase) tile).tier;
+        if (tile instanceof TileTurbine)
+            return ((TileTurbine) tile).tier;
 
         return 0;
     }
@@ -54,9 +54,9 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity instanceof TileMechanicalTurbine)
+        if (tileEntity instanceof TileTurbine)
         {
-            ((TileMechanicalTurbine) tileEntity).tier = itemStack.getItemDamage();
+            ((TileTurbine) tileEntity).tier = itemStack.getItemDamage();
         }
     }
 
@@ -67,11 +67,11 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
         {
             TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-            if (tileEntity instanceof TileTurbineBase)
+            if (tileEntity instanceof TileTurbine)
             {
                 if (!world.isRemote)
                 {
-                    TileMechanicalTurbine tile = (TileMechanicalTurbine) tileEntity;
+                    TileTurbine tile = (TileTurbine) tileEntity;
                     tile.mechanicalNode.torque = -tile.mechanicalNode.torque;
                     tile.mechanicalNode.angularVelocity = -tile.mechanicalNode.angularVelocity;
                 }
@@ -87,11 +87,11 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity instanceof TileTurbineBase)
+        if (tileEntity instanceof TileTurbine)
         {
             if (!world.isRemote)
             {
-                TileTurbineBase tile = (TileTurbineBase) tileEntity;
+                TileTurbine tile = (TileTurbine) tileEntity;
 
                 if (tile.getMultiBlock().isConstructed())
                 {
@@ -126,23 +126,23 @@ public class BlockMechanicalTurbine extends BlockTurbineBase
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (!world.isRemote && tileEntity instanceof TileTurbineBase)
+        if (!world.isRemote && tileEntity instanceof TileTurbine)
         {
-            Set<TileTurbineBase> toFlip = new HashSet<TileTurbineBase>();
+            Set<TileTurbine> toFlip = new HashSet<TileTurbine>();
 
-            if (!((TileTurbineBase) tileEntity).getMultiBlock().isConstructed())
+            if (!((TileTurbine) tileEntity).getMultiBlock().isConstructed())
             {
-                toFlip.add((TileTurbineBase) tileEntity);
+                toFlip.add((TileTurbine) tileEntity);
             }
             else
             {
-                Set<TileTurbineBase> str = ((TileTurbineBase) tileEntity).getMultiBlock().getPrimary().getMultiBlock().getStructure();
+                Set<TileTurbine> str = ((TileTurbine) tileEntity).getMultiBlock().getPrimary().getMultiBlock().getStructure();
 
                 if (str != null)
                     toFlip.addAll(str);
             }
 
-            for (TileTurbineBase turbine : toFlip)
+            for (TileTurbine turbine : toFlip)
             {
                 if (side == turbine.getDirection().ordinal())
                     world.setBlockMetadataWithNotify(turbine.xCoord, turbine.yCoord, turbine.zCoord, side ^ 1, 3);

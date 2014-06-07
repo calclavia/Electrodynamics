@@ -15,7 +15,7 @@ import universalelectricity.api.vector.Vector3;
  * power plants.
  * 
  * @author Calclavia */
-public class TileWindTurbine extends TileMechanicalTurbine
+public class TileWindTurbine extends TileTurbine
 {
     private final byte[] openBlockCache = new byte[224];
     private int checkCount = 0;

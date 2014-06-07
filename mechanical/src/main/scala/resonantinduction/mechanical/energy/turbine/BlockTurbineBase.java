@@ -22,11 +22,11 @@ public class BlockTurbineBase extends BlockRotatable
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity instanceof TileTurbineBase)
+        if (tileEntity instanceof TileTurbine)
         {
             if (!world.isRemote)
             {
-                return ((TileTurbineBase) tileEntity).getMultiBlock().toggleConstruct();
+                return ((TileTurbine) tileEntity).getMultiBlock().toggleConstruct();
             }
 
             return true;
@@ -40,9 +40,9 @@ public class BlockTurbineBase extends BlockRotatable
     {
         TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 
-        if (tileEntity instanceof TileTurbineBase)
+        if (tileEntity instanceof TileTurbine)
         {
-            ((TileTurbineBase) tileEntity).getMultiBlock().deconstruct();
+            ((TileTurbine) tileEntity).getMultiBlock().deconstruct();
         }
 
         super.breakBlock(world, x, y, z, par5, par6);

@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
  * @author Calclavia
  * 
  */
-public class TileWaterTurbine extends TileMechanicalTurbine
+public class TileWaterTurbine extends TileTurbine
 {
 	public int powerTicks = 0;
 
@@ -33,7 +33,7 @@ public class TileWaterTurbine extends TileMechanicalTurbine
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
 			{
-				if (source instanceof MechanicalNode && !(source instanceof TileMechanicalTurbine))
+				if (source instanceof MechanicalNode && !(source instanceof TileTurbine))
 				{
 					/**
 					 * Face to face stick connection.

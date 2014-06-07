@@ -84,6 +84,11 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
         return 0.5;
     }
 
+    public void update()
+    {
+        update(0.05f);
+    }
+    
     @Override
     public void update(float deltaTime)
     {

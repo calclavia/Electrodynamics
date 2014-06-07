@@ -9,6 +9,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.grid.INode;
+import resonant.api.grid.INodeProvider;
 import resonant.core.ResonantEngine;
 import resonant.lib.References;
 import resonant.lib.content.module.TileBase;
@@ -16,12 +18,13 @@ import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.network.Synced;
 import resonant.lib.network.Synced.SyncedInput;
 import resonant.lib.network.Synced.SyncedOutput;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Reduced version of the main turbine class */
-public abstract class TileTurbineBase extends TileBase implements IMultiBlockStructure<TileTurbineBase>
+public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTurbine>, INodeProvider
 {
     /** Radius of large turbine? */
     public int multiBlockRadius = 1;
@@ -44,9 +47,12 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     @Synced
     public int tier = 0;
 
-    public TileTurbineBase()
+    protected MechanicalNode mechanicalNode;
+
+    public TileTurbine()
     {
         super(Material.wood);
+        mechanicalNode = new TurbineNode(this);
     }
 
     public ForgeDirection getDirection()
@@ -57,14 +63,15 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     @Override
     public void initiate()
     {
-        super.initiate();
+        mechanicalNode.reconstruct();
+        super.initiate();        
     }
 
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-
+        mechanicalNode.update();
         getMultiBlock().update();
 
         if (getMultiBlock().isPrimary())
@@ -112,8 +119,19 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
         return (int) (((multiBlockRadius + 0.5) * 2) * ((multiBlockRadius + 0.5) * 2));
     }
 
+    
     public void onProduce()
     {
+        if (!worldObj.isRemote)
+        {
+            if (mechanicalNode.torque < 0)
+                torque = -Math.abs(torque);
+
+            if (mechanicalNode.angularVelocity < 0)
+                angularVelocity = -Math.abs(angularVelocity);
+
+            mechanicalNode.apply(this, (torque - mechanicalNode.getTorque()) / 10, (angularVelocity - mechanicalNode.getAngularSpeed()) / 10);
+        }
     }
 
     public void playSound()
@@ -139,6 +157,8 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     {
         super.readFromNBT(nbt);
         multiBlockRadius = nbt.getInteger("multiBlockRadius");
+        tier = nbt.getInteger("tier");
+        mechanicalNode.load(nbt);
         getMultiBlock().load(nbt);
     }
 
@@ -149,6 +169,8 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     {
         super.writeToNBT(nbt);
         nbt.setInteger("multiBlockRadius", multiBlockRadius);
+        nbt.setInteger("tier", tier);
+        mechanicalNode.save(nbt);
         getMultiBlock().save(nbt);
     }
 
@@ -212,6 +234,21 @@ public abstract class TileTurbineBase extends TileBase implements IMultiBlockStr
     public World getWorld()
     {
         return worldObj;
+    }
+
+    @Override
+    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
+    {
+        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
+            return ((TileTurbine) getMultiBlock().get()).mechanicalNode;
+        return null;
+    }
+
+    @Override
+    public void invalidate()
+    {
+        mechanicalNode.deconstruct();
+        super.invalidate();
     }
 
 }

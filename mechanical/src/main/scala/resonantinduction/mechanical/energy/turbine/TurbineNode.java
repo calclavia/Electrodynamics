@@ -11,20 +11,20 @@ import resonantinduction.mechanical.energy.grid.MechanicalNode;
  * @author Calclavia, Darkguardsman */
 public class TurbineNode extends MechanicalNode
 {
-    public TurbineNode(TileMechanicalTurbine parent)
+    public TurbineNode(TileTurbine tileTurbineBase)
     {
-        super(parent);
+        super(tileTurbineBase);
     }
 
-    public TileMechanicalTurbine turbine()
+    public TileTurbine turbine()
     {
-        return (TileMechanicalTurbine) getParent();
+        return (TileTurbine) getParent();
     }
 
     @Override
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        if (source instanceof MechanicalNode && !(source instanceof TileMechanicalTurbine))
+        if (source instanceof MechanicalNode && !(source instanceof TileTurbine))
         {
             /** Face to face stick connection. */
             TileEntity sourceTile = position().translate(from).getTileEntity(turbine().getWorld());
