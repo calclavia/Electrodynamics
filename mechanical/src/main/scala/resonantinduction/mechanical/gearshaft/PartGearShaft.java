@@ -38,7 +38,6 @@ public class PartGearShaft extends PartMechanical
 	public PartGearShaft()
 	{
 		super();
-
 		node = new GearShaftNode(this);
 	}
 
