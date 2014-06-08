@@ -16,6 +16,7 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.Timer;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -38,7 +39,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	{
 		super(Material.rock);
 
-		mechanicalNode = new PacketMechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)

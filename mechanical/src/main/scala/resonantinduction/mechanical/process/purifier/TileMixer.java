@@ -23,6 +23,7 @@ import resonantinduction.core.Timer;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -41,7 +42,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		super(Material.iron);
 
-		mechanicalNode = new PacketMechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)

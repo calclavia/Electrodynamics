@@ -16,6 +16,7 @@ import resonant.lib.config.Config;
 import resonant.lib.utility.MovementUtility;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.common.Loader;
@@ -34,13 +35,12 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 	{
 		super(Material.piston);
 
-		mechanicalNode = new PacketMechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			protected void revolve()
 			{
 				markRevolve = true;
-
 			}
 
 			@Override

@@ -17,13 +17,15 @@ import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
-/** A mechanical node for mechanical energy. 
+/** A mechanical node for mechanical energy.
  * 
  * @author Calclavia, Darkguardsman */
 public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
 {
     /** Is debug enabled for the node */
     public boolean doDebug = false;
+    /** Used to note that you should trigger a packet update for rotation */
+    public boolean markRotationUpdate = false;
     /** Which section of debug is enabled */
     public int debugCue = 0, maxDebugCue = 1, minDebugCue = 0;
     public static final int UPDATE_DEBUG = 0, CONNECTION_DEBUG = 1;
@@ -76,7 +78,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
     {
         update(0.05f);
     }
-    
+
     @Override
     public void update(float deltaTime)
     {
@@ -92,8 +94,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
         }
         //----------------------------------- 
         // Render Update
-        //-----------------------------------
-        prevAngularVelocity = angularVelocity;
+        //-----------------------------------       
 
         if (angularVelocity >= 0)
         {
@@ -116,6 +117,12 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
         if (world() != null && !world().isRemote)
         {
             final double acceleration = this.acceleration * deltaTime;
+
+            if (Math.abs(prevAngularVelocity - angularVelocity) > 0.01f)
+            {
+                prevAngularVelocity = angularVelocity;
+                markRotationUpdate = true;
+            }
 
             //----------------------------------- 
             // Loss calculations
@@ -255,8 +262,6 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
         return load;
     }
 
-   
-
     /** Checks to see if a connection is allowed from side and from a source */
     public boolean canConnect(ForgeDirection from, Object source)
     {
@@ -369,22 +374,22 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
     {
         return new Vector3(x(), y(), z());
     }
-    
+
     @Override
     public double z()
     {
-        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).z() : 0;
+        return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).z() : 0;
     }
 
     @Override
     public double x()
     {
-        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).x() : 0;
+        return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).x() : 0;
     }
 
     @Override
     public double y()
     {
-        return this.getParent() instanceof TMultiPart && ((TMultiPart)this.getParent()).tile() != null ? ((TMultiPart)this.getParent()).y() : 0;
+        return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).y() : 0;
     }
 }
