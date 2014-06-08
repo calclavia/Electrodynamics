@@ -32,7 +32,7 @@ public class MFFSHelper
 {
 	public static void transferFortron(IFortronFrequency transferer, Set<IFortronFrequency> frequencyTiles, TransferMode transferMode, int limit)
 	{
-		if (transferer != null && frequencyTiles.size() > 1)
+		if (transferer != null && frequencyTiles.size() > 1 && Settings.allowFortronTeleport)
 		{
 			/**
 			 * Check spread mode. Equal, Give All, Take All

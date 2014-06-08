@@ -54,6 +54,8 @@ public class Settings
 	public static boolean ENABLE_MANIPULATOR = true;
 	@Config
 	public static boolean allowForceManipulatorTeleport = true;
+	@Config
+	public static boolean allowFortronTeleport = true;
 
 	public static void load()
 	{
