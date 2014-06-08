@@ -1,8 +1,6 @@
 package resonantinduction.mechanical.energy.turbine;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.grid.INodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 
@@ -24,19 +22,7 @@ public class TurbineNode extends MechanicalNode
     @Override
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        if (source instanceof MechanicalNode && !(source instanceof TileTurbine))
-        {
-            /** Face to face stick connection. */
-            TileEntity sourceTile = position().translate(from).getTileEntity(turbine().getWorld());
-
-            if (sourceTile instanceof INodeProvider)
-            {
-                MechanicalNode sourceInstance = (MechanicalNode) ((INodeProvider) sourceTile).getNode(MechanicalNode.class, from.getOpposite());
-                return sourceInstance == source && from == turbine().getDirection().getOpposite();
-            }
-        }
-
-        return false;
+        return source instanceof MechanicalNode && !(source instanceof TurbineNode) && from == turbine().getDirection().getOpposite();
     }
 
     @Override
