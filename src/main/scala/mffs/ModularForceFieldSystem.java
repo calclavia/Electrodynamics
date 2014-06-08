@@ -2,6 +2,7 @@ package mffs;
 
 import calclavia.api.mffs.Blacklist;
 import calclavia.api.mffs.fortron.FrequencyGrid;
+import ic2.api.tile.ExplosionWhitelist;
 import resonant.lib.config.ConfigHandler;
 import resonant.lib.network.PacketHandler;
 import resonant.lib.network.PacketTile;
@@ -279,6 +280,8 @@ public class ModularForceFieldSystem
 
 		Blacklist.forceManipulationBlacklist.add(Block.bedrock.blockID);
 		Blacklist.forceManipulationBlacklist.add(ModularForceFieldSystem.blockForceField.blockID);
+
+		ExplosionWhitelist.addWhitelistedBlock(blockForceField);
 
 		/**
 		 * Write metadata information
