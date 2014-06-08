@@ -6,11 +6,9 @@ import calclavia.api.mffs.card.ICoordLink;
 import calclavia.api.mffs.modules.IModule;
 import calclavia.api.mffs.modules.IProjectorMode;
 import calclavia.api.mffs.security.Permission;
-import resonant.lib.network.PacketHandler;
 import com.google.common.io.ByteArrayDataInput;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import dan200.computercraft.api.peripheral.IPeripheral;
 import mffs.DelayedEvent;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
@@ -28,6 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import resonant.lib.network.PacketHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
@@ -55,6 +54,8 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 	 * Marking failures
 	 */
 	public boolean markFailMove = false;
+	private boolean markActive = false;
+
 	/**
 	 * Used ONLY for teleporting.
 	 */
@@ -170,7 +171,12 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			/**
 			 * Force Manipulator activated, try start moving...
 			 */
-			if (ticks % 20 == 0 && isActive())
+			if (isActive())
+			{
+				markActive = true;
+			}
+
+			if (ticks % 20 == 0 && markActive)
 			{
 				if (moveTime <= 0 && requestFortron(this.getFortronCost(), false) > 0)
 				{
@@ -188,6 +194,8 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				{
 					setActive(false);
 				}
+				
+				markActive = false;
 			}
 
 			/**
