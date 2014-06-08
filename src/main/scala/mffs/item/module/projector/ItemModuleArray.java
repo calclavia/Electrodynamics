@@ -1,13 +1,13 @@
 package mffs.item.module.projector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
+import calclavia.api.mffs.IFieldInteraction;
 import mffs.item.module.ItemModule;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.IFieldInteraction;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemModuleArray extends ItemModule
 {
@@ -17,9 +17,8 @@ public class ItemModuleArray extends ItemModule
 	}
 
 	@Override
-	public Set<Vector3> onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
+	public void onPreCalculate(IFieldInteraction projector, Set<Vector3> fieldBlocks)
 	{
-		Set<Vector3> newField = new HashSet(fieldBlocks);
 		Set<Vector3> originalField = new HashSet(fieldBlocks);
 
 		HashMap<ForgeDirection, Integer> longestDirectional = this.getDirectionWidthMap(originalField);
@@ -36,12 +35,10 @@ public class ItemModuleArray extends ItemModule
 				for (Vector3 originalFieldBlock : originalField)
 				{
 					Vector3 newFieldBlock = originalFieldBlock.clone().translate(new Vector3(direction).scale(directionalDisplacementScale));
-					newField.add(newFieldBlock);
+					fieldBlocks.add(newFieldBlock);
 				}
 			}
 		}
-
-		return newField;
 	}
 
 	public HashMap<ForgeDirection, Integer> getDirectionWidthMap(Set<Vector3> field)

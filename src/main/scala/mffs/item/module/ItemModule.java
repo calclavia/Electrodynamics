@@ -33,9 +33,9 @@ public class ItemModule extends ItemMFFS implements IModule
 	}
 
 	@Override
-	public Set<Vector3> onPreCalculate(IFieldInteraction projector, Set<Vector3> position)
+	public void onPreCalculate(IFieldInteraction projector, Set<Vector3> position)
 	{
-		return position;
+
 	}
 
 	@Override

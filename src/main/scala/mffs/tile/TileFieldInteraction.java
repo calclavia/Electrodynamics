@@ -1,25 +1,26 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.*;
-
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IProjectorMode;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileModuleAcceptor;
-import mffs.tile.ProjectorCalculationThread.IThreadCallBack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import calclavia.api.mffs.ICache;
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IProjectorMode;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 public abstract class TileFieldInteraction extends TileModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
 {
@@ -31,18 +32,18 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	 * Are the directions on the GUI absolute values?
 	 */
 	public boolean isAbsolute = false;
-	protected final Set<Vector3> calculatedField = Collections.synchronizedSet(new HashSet<Vector3>());
-	protected final Queue<DelayedEvent> delayedEvents = new LinkedList<DelayedEvent>();
+	protected final Set<Vector3> calculatedField = new HashSet();
+	protected final Queue<DelayedEvent> delayedEvents = new LinkedList();
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
 
-		Queue<DelayedEvent> continueEvents = new LinkedList<DelayedEvent>();
-		while(!delayedEvents.isEmpty())
+		Queue<DelayedEvent> continueEvents = new LinkedList();
+		while (!delayedEvents.isEmpty())
 		{
-			DelayedEvent evt =	delayedEvents.poll();
+			DelayedEvent evt = delayedEvents.poll();
 
 			evt.update();
 
@@ -70,20 +71,18 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	{
 		if (!this.worldObj.isRemote && !this.isCalculating)
 		{
-			synchronized (calculatedField)
+			if (this.getMode() != null)
 			{
-				if (this.getMode() != null)
+				if (this.getModeStack().getItem() instanceof ICache)
 				{
-					if (this.getModeStack().getItem() instanceof ICache)
-					{
-						((ICache) this.getModeStack().getItem()).clearCache();
-					}
-
-					calculatedField.clear();
-
-					// Start multi-threading calculations
-					(new ProjectorCalculationThread(this, callBack)).start();
+					((ICache) this.getModeStack().getItem()).clearCache();
 				}
+
+				calculatedField.clear();
+
+				// Start multi-threading calculations
+				(new ProjectorCalculationThread(this, callBack)).start();
+				isCalculating = true;
 			}
 		}
 	}
@@ -437,7 +436,7 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 		switch (direction)
 		{
 			default:
-				return new int[] {};
+				return new int[] { };
 			case UP:
 				return new int[] { 3, 11 };
 			case DOWN:
@@ -476,7 +475,6 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 	{
 		delayedEvents.add(evt);
 	}
-
 
 	/**
 	 * NBT Methods

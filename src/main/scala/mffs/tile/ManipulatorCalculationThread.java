@@ -14,14 +14,6 @@ import calclavia.api.mffs.fortron.IServerThread;
  */
 public class ManipulatorCalculationThread extends Thread implements IServerThread
 {
-	public interface IThreadCallBack
-	{
-		/**
-		 * Called when the thread finishes the calculation.
-		 */
-		public void onThreadComplete();
-	}
-
 	private TileForceManipulator manipulator;
 	private IThreadCallBack callBack;
 
