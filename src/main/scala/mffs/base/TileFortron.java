@@ -43,7 +43,7 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 		/**
 		 * Packet Update for Client only when GUI is open.
 		 */
-		if (this.ticks % 60 == 0)
+		if (!worldObj.isRemote && ticks % 60 == 0)
 		{
 			sendFortronToClients(25);
 		}
