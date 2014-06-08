@@ -194,7 +194,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 				{
 					setActive(false);
 				}
-				
+
 				markActive = false;
 			}
 
@@ -379,16 +379,19 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
 							}
 
-							// Render hologram for destination position
-							Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
+							if (targetPosition.world != null && targetPosition.world.getChunkProvider().chunkExists(targetPosition.intX(), targetPosition.intZ()))
+							{
+								// Render hologram for destination position
+								Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
 
-							if (isPreview)
-							{
-								ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 1, 1, 1, animationTime, 30f);
-							}
-							else
-							{
-								ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+								if (isPreview)
+								{
+									ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 1, 1, 1, animationTime, 30f);
+								}
+								else
+								{
+									ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f);
+								}
 							}
 						}
 
