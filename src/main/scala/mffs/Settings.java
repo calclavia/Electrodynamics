@@ -63,7 +63,7 @@ public class Settings
 
 		ENABLE_MANIPULATOR = configuration.get(Configuration.CATEGORY_GENERAL, "Enable Force Manipulator", ENABLE_MANIPULATOR).getBoolean(ENABLE_MANIPULATOR);
 
-		FORTRON_PRODUCTION_MULTIPLIER = (double) configuration.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
+		FORTRON_PRODUCTION_MULTIPLIER = configuration.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
 
 		Property propFieldScale = configuration.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
 		MAX_FORCE_FIELD_SCALE = propFieldScale.getInt(MAX_FORCE_FIELD_SCALE);

@@ -46,7 +46,7 @@ class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread wi
 
 				projector.getModules().foreach(_.onPreCalculate(projector, newField))
 
-				val maxHeight = (projector.asInstanceOf[TileEntity]).worldObj.getHeight
+				val maxHeight = projector.asInstanceOf[TileEntity].worldObj.getHeight()
 				val center = new Vector3(this.projector.asInstanceOf[TileEntity])
 
 				newField.par.map(
@@ -64,7 +64,7 @@ class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread wi
 				projector.getModules().foreach(_.onCalculate(projector, newField))
 
 				projector.getCalculatedField().addAll(newField)
-				println("T: " + (System.currentTimeMillis() - t))
+				println("T: " + (System.currentTimeMillis() - t) + " : " + newField.size())
 			}
 		}
 		catch

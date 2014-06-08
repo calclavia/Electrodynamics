@@ -314,7 +314,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 
 								this.requestFortron(1, true);
 
-								if (constructionCount > constructionSpeed)
+								if (constructionCount >= constructionSpeed)
 								{
 									break;
 								}
@@ -327,6 +327,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 				 * Change the field to tick every second when construction completes.
 				 */
 				this.isCompleteConstructing = constructionCount == 0;
+
 			}
 		}
 	}
