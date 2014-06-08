@@ -17,19 +17,7 @@ import universalelectricity.api.vector.IVectorWorld;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
-/** A mechanical node for mechanical energy.
- * 
- * From Darkguardsman,
- * 
- * Comes built in with extra debug but must be manually triggered by the part using this node. The
- * suggest approach is threw right click of the part with a tool or simple item. In which you will
- * have to switch debug to true. As well provide a way to increase or decrease the cue value. The
- * cue as well is used to divide up the debug based on area inside the node. This allows you to
- * debug one part at a time rather than be spammed with console chat.
- * 
- * An external gui is also support for this node but must also be manually created by the part. This
- * gui will show basic info about velocity, angle, torque, and connections. Additional information
- * can be added by extending the gui.
+/** A mechanical node for mechanical energy. 
  * 
  * @author Calclavia, Darkguardsman */
 public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld

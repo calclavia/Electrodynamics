@@ -61,10 +61,6 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         {
             checkClientUpdate();          
         }
-        else
-        {
-            System.out.println("Client->[" + this + "]Angle: " + node.renderAngle);
-        }
         if (frame != null)
         {
             frame.update();
