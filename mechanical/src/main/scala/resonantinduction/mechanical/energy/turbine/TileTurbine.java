@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.energy.turbine;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import resonant.lib.References;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.network.IPacketReceiverWithID;
+import resonant.lib.network.PacketHandler;
 import resonant.lib.network.Synced;
 import resonant.lib.network.Synced.SyncedInput;
 import resonant.lib.network.Synced.SyncedOutput;
@@ -119,7 +121,9 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     @Override
     public Packet getDescriptionPacket()
     {
-        return References.PACKET_TILE.getPacketWithID(0, this, tier);
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return References.PACKET_TILE.getPacketWithID(0, this, tag);
     }
 
     public void sendPowerUpdate()
@@ -235,7 +239,14 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
         {
             if (id == 0)
             {
-                this.tier = data.readInt();
+                try
+                {
+                    readFromNBT(PacketHandler.readNBTTagCompound(data));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
             else if (id == 1)
             {

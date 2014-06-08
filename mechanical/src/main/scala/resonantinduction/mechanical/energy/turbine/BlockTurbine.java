@@ -19,7 +19,7 @@ public class BlockTurbine extends BlockRotatable
     {
         super(id, Material.iron);
         setTextureName(Reference.PREFIX + "material_wood_surface");
-        rotationMask = Byte.parseByte("111111", 2);        
+        rotationMask = Byte.parseByte("111111", 2);
     }
 
     @Override
@@ -108,29 +108,26 @@ public class BlockTurbine extends BlockRotatable
 
         if (tileEntity instanceof TileTurbine)
         {
-            if (!world.isRemote)
+            TileTurbine tile = (TileTurbine) tileEntity;
+
+            if (tile.getMultiBlock().isConstructed())
             {
-                TileTurbine tile = (TileTurbine) tileEntity;
+                tile.getMultiBlock().deconstruct();
+                tile.multiBlockRadius++;
 
-                if (tile.getMultiBlock().isConstructed())
+                if (!tile.getMultiBlock().construct())
                 {
-                    tile.getMultiBlock().deconstruct();
-                    tile.multiBlockRadius++;
-
-                    if (!tile.getMultiBlock().construct())
-                    {
-                        tile.multiBlockRadius = 1;
-                    }
-
-                    return true;
+                    tile.multiBlockRadius = 1;
                 }
-                else
+
+                return true;
+            }
+            else
+            {
+                if (!tile.getMultiBlock().construct())
                 {
-                    if (!tile.getMultiBlock().construct())
-                    {
-                        tile.multiBlockRadius = 1;
-                        tile.getMultiBlock().construct();
-                    }
+                    tile.multiBlockRadius = 1;
+                    tile.getMultiBlock().construct();
                 }
             }
 
