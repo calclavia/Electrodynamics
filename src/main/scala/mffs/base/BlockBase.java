@@ -10,7 +10,7 @@ public class BlockBase extends BlockTile
 {
 	public BlockBase(int id, String name, Material material)
 	{
-		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), material);
+		super(Settings.configuration.getBlock(name, id).getInt(id), material);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setCreativeTab(MFFSCreativeTab.INSTANCE);
 		this.setTextureName(ModularForceFieldSystem.PREFIX + name);

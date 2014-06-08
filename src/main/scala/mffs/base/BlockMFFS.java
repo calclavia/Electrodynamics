@@ -23,7 +23,7 @@ public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMat
 {
 	public BlockMFFS(int id, String name)
 	{
-		super(Settings.CONFIGURATION.getBlock(name, id).getInt(id), UniversalElectricity.machine);
+		super(Settings.configuration.getBlock(name, id).getInt(id), UniversalElectricity.machine);
 		this.setUnlocalizedName(ModularForceFieldSystem.PREFIX + name);
 		this.setHardness(Float.MAX_VALUE);
 		this.setResistance(100.0F);

@@ -150,7 +150,7 @@ public class ModularForceFieldSystem
 		/**
 		 * Start instantiating blocks and items.
 		 */
-		Settings.CONFIGURATION.load();
+		Settings.configuration.load();
 
 		/**
 		 * Blocks
@@ -236,7 +236,7 @@ public class ModularForceFieldSystem
 		itemModuleApproximation = new ItemModule(Settings.getNextItemID(), "moduleApproximation").setMaxStackSize(1).setCost(1f);
 		itemModuleArray = new ItemModuleArray(Settings.getNextItemID()).setCost(3f);
 
-		Settings.CONFIGURATION.save();
+		Settings.configuration.save();
 
 		GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName());
 		GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName());
@@ -300,7 +300,7 @@ public class ModularForceFieldSystem
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
 	{
-		Settings.CONFIGURATION.load();
+		Settings.configuration.load();
 
 		// -- General Items --
 		// Focus Matrix
@@ -353,7 +353,7 @@ public class ModularForceFieldSystem
 		// Sponge
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSponge), "BBB", "BFB", "BBB", 'F', itemFocusMatix, 'B', Item.bucketWater));
 		// Disintegration
-		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F', itemFocusMatix, 'W', UniversalRecipe.WIRE.get(), 'B', UniversalRecipe.BATTERY.get()), Settings.CONFIGURATION, true);
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F', itemFocusMatix, 'W', UniversalRecipe.WIRE.get(), 'B', UniversalRecipe.BATTERY.get()), Settings.configuration, true);
 		// Manipulator
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDome), "F", " ", "F", 'F', itemFocusMatix));
 		// Camouflage
@@ -363,7 +363,7 @@ public class ModularForceFieldSystem
 		// Scale
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleScale, 2), "FRF", 'F', itemFocusMatix));
 		// Translate
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleTranslate, 2), "FSF", 'F', itemFocusMatix, 'S', itemModuleScale));
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleTranslate, 2), "FSF", 'F', itemFocusMatix, 'S', itemModuleScale), Settings.configuration, true);
 		// Rotate
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRotate, 4), "F  ", " F ", "  F", 'F', itemFocusMatix));
 		// Glow
@@ -381,7 +381,7 @@ public class ModularForceFieldSystem
 		// Array
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleArray), " F ", "DFD", " F ", 'F', itemFocusMatix, 'D', Item.diamond));
 		// Repulsion
-		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F', itemFocusMatix, 'D', Item.diamond, 'S', Item.slimeBall), Settings.CONFIGURATION, true);
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F', itemFocusMatix, 'D', Item.diamond, 'S', Item.slimeBall), Settings.configuration, true);
 
 		// -- -- Interdiction Matrix -- --
 		// Anti-Hostile
@@ -391,7 +391,7 @@ public class ModularForceFieldSystem
 		// Anti-Personnel
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiPersonnel), "BFG", 'F', itemFocusMatix, 'B', itemModuleAntiHostile, 'G', itemModuleAntiFriendly));
 		// Confiscate
-		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl), Settings.CONFIGURATION, true);
+		RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F', itemFocusMatix, 'E', Item.eyeOfEnder, 'P', Item.enderPearl), Settings.configuration, true);
 		// Warn
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleWarn), "NFN", 'F', itemFocusMatix, 'N', Block.music));
 		// Block Access
@@ -405,14 +405,14 @@ public class ModularForceFieldSystem
 
 		try
 		{
-			ConfigHandler.configure(Settings.CONFIGURATION, "mffs");
+			ConfigHandler.configure(Settings.configuration, "mffs");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		Settings.CONFIGURATION.save();
+		Settings.configuration.save();
 	}
 
 	@EventHandler

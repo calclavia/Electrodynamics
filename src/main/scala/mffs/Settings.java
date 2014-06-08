@@ -18,7 +18,7 @@ import cpw.mods.fml.common.Loader;
  */
 public class Settings
 {
-	public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), ModularForceFieldSystem.NAME + ".cfg"));
+	public static final Configuration configuration = new Configuration(new File(Loader.instance().getConfigDir(), ModularForceFieldSystem.NAME + ".cfg"));
 
 	/**
 	 * Auto-incrementing configuration IDs. Use this to make sure no config ID is the same.
@@ -57,67 +57,67 @@ public class Settings
 
 	public static void load()
 	{
-		CONFIGURATION.load();
+		configuration.load();
 
-		ENABLE_MANIPULATOR = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Enable Force Manipulator", ENABLE_MANIPULATOR).getBoolean(ENABLE_MANIPULATOR);
+		ENABLE_MANIPULATOR = configuration.get(Configuration.CATEGORY_GENERAL, "Enable Force Manipulator", ENABLE_MANIPULATOR).getBoolean(ENABLE_MANIPULATOR);
 
-		FORTRON_PRODUCTION_MULTIPLIER = (double) CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
+		FORTRON_PRODUCTION_MULTIPLIER = (double) configuration.get(Configuration.CATEGORY_GENERAL, "Fortron Production Multiplier", FORTRON_PRODUCTION_MULTIPLIER).getDouble(FORTRON_PRODUCTION_MULTIPLIER);
 
-		Property propFieldScale = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
+		Property propFieldScale = configuration.get(Configuration.CATEGORY_GENERAL, "Max Force Field Scale", MAX_FORCE_FIELD_SCALE);
 		MAX_FORCE_FIELD_SCALE = propFieldScale.getInt(MAX_FORCE_FIELD_SCALE);
 
-		Property propInterdiction = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Interdiction Murder Fortron Consumption", INTERDICTION_MURDER_ENERGY);
+		Property propInterdiction = configuration.get(Configuration.CATEGORY_GENERAL, "Interdiction Murder Fortron Consumption", INTERDICTION_MURDER_ENERGY);
 		INTERDICTION_MURDER_ENERGY = propInterdiction.getInt(INTERDICTION_MURDER_ENERGY);
 
-		Property propCreative = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Effect Creative Players", INTERACT_CREATIVE);
+		Property propCreative = configuration.get(Configuration.CATEGORY_GENERAL, "Effect Creative Players", INTERACT_CREATIVE);
 		propCreative.comment = "Should the interdiction matrix interact with creative players?.";
 		INTERACT_CREATIVE = propCreative.getBoolean(INTERACT_CREATIVE);
 
-		Property propChunkLoading = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Load Chunks", LOAD_CHUNKS);
+		Property propChunkLoading = configuration.get(Configuration.CATEGORY_GENERAL, "Load Chunks", LOAD_CHUNKS);
 		propChunkLoading.comment = "Set this to false to turn off the MFFS Chunkloading capabilities.";
 		LOAD_CHUNKS = propChunkLoading.getBoolean(LOAD_CHUNKS);
 
-		Property propOpOverride = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Op Override", OP_OVERRIDE);
+		Property propOpOverride = configuration.get(Configuration.CATEGORY_GENERAL, "Op Override", OP_OVERRIDE);
 		propOpOverride.comment = "Allow the operator(s) to override security measures created by MFFS?";
 		OP_OVERRIDE = propOpOverride.getBoolean(OP_OVERRIDE);
 
-		Property propUseCache = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Use Cache", USE_CACHE);
+		Property propUseCache = configuration.get(Configuration.CATEGORY_GENERAL, "Use Cache", USE_CACHE);
 		propUseCache.comment = "Cache allows temporary data saving to decrease calculations required.";
 		USE_CACHE = propUseCache.getBoolean(USE_CACHE);
 
-		Property maxFFGenPerTick = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", MAX_FORCE_FIELDS_PER_TICK);
+		Property maxFFGenPerTick = configuration.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", MAX_FORCE_FIELDS_PER_TICK);
 		maxFFGenPerTick.comment = "How many force field blocks can be generated per tick? Less reduces lag.";
 		MAX_FORCE_FIELDS_PER_TICK = maxFFGenPerTick.getInt(MAX_FORCE_FIELDS_PER_TICK);
 
-		Property interdictionRange = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", INTERDICTION_MAX_RANGE);
+		Property interdictionRange = configuration.get(Configuration.CATEGORY_GENERAL, "Field Calculation Per Tick", INTERDICTION_MAX_RANGE);
 		interdictionRange.comment = "The maximum range for the interdiction matrix.";
 		INTERDICTION_MAX_RANGE = interdictionRange.getInt(INTERDICTION_MAX_RANGE);
 
-		Property useElectricity = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Require Electricity?", ENABLE_ELECTRICITY);
+		Property useElectricity = configuration.get(Configuration.CATEGORY_GENERAL, "Require Electricity?", ENABLE_ELECTRICITY);
 		useElectricity.comment = "Turning this to false will make MFFS run without electricity or energy systems required. Great for vanilla!";
 		ENABLE_ELECTRICITY = useElectricity.getBoolean(ENABLE_ELECTRICITY);
 
-		Property conservePackets = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Conserve Packets?", CONSERVE_PACKETS);
+		Property conservePackets = configuration.get(Configuration.CATEGORY_GENERAL, "Conserve Packets?", CONSERVE_PACKETS);
 		conservePackets.comment = "Turning this to false will enable better client side packet and updates but in the cost of more packets sent.";
 		CONSERVE_PACKETS = conservePackets.getBoolean(CONSERVE_PACKETS);
 
-		Property highGraphics = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "High Graphics", HIGH_GRAPHICS);
+		Property highGraphics = configuration.get(Configuration.CATEGORY_GENERAL, "High Graphics", HIGH_GRAPHICS);
 		highGraphics.comment = "Turning this to false will reduce rendering and client side packet graphical packets.";
 		CONSERVE_PACKETS = highGraphics.getBoolean(HIGH_GRAPHICS);
 
-		Property forceManipulatorBlacklist = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "");
+		Property forceManipulatorBlacklist = configuration.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "");
 		forceManipulatorBlacklist.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space.";
 		String blackListManipulate = forceManipulatorBlacklist.getString();
 		Blacklist.forceManipulationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListManipulate));
 
-		Property blacklist1 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "");
+		Property blacklist1 = configuration.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "");
 		String blackListStabilize = blacklist1.getString();
 		Blacklist.stabilizationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListStabilize));
 
-		Property blacklist2 = CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "");
+		Property blacklist2 = configuration.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "");
 		String blackListDisintegrate = blacklist1.getString();
 		Blacklist.disintegrationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListDisintegrate));
 
-		CONFIGURATION.save();
+		configuration.save();
 	}
 }
