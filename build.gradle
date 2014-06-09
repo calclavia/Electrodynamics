@@ -105,7 +105,7 @@ repositories {
 
 dependencies {
 	compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${config.version.universalelectricity}", classifier: "dev"
-	compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
+	compile group: 'resonant-engine', name: 'resonant-engine', version: "${config.version.resonantengine}"
 }
 
 import net.minecraftforge.gradle.tasks.dev.ChangelogTask
