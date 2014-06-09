@@ -13,6 +13,7 @@ import mffs.fortron.FortronHelper;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
@@ -176,7 +177,7 @@ public class SubscribeEventHandler
 	{
 		IInterdictionMatrix interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.world, new Vector3(evt.entityLiving));
 
-		if (interdictionMatrix != null)
+		if (interdictionMatrix != null && !(evt.entity instanceof EntityPlayer))
 		{
 			if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleAntiSpawn) > 0)
 			{

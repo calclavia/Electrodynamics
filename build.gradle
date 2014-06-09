@@ -11,10 +11,8 @@ buildscript {
     }
 }
 
-apply plugin: 'idea'
 apply plugin: 'forge'
 apply plugin: 'scala'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 ext.buildProps = file "build.properties"
