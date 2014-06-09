@@ -1,5 +1,7 @@
 package mffs.tile;
 
+import calclavia.api.mffs.IProjector;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.block.Block;
@@ -7,11 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import universalelectricity.api.vector.Vector3;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.prefab.tile.TileAdvanced;
-
-import com.google.common.io.ByteArrayDataInput;
+import universalelectricity.api.vector.Vector3;
 
 public class TileForceField extends TileAdvanced implements IPacketReceiver
 {
@@ -102,7 +102,7 @@ public class TileForceField extends TileAdvanced implements IPacketReceiver
 		{
 			if (this.projector.getTileEntity(this.worldObj) instanceof TileForceFieldProjector)
 			{
-				if (this.worldObj.isRemote || ((TileForceFieldProjector) this.projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
+				if (worldObj.isRemote || ((IProjector) projector.getTileEntity(this.worldObj)).getCalculatedField().contains(new Vector3(this)))
 				{
 					return (TileForceFieldProjector) this.projector.getTileEntity(this.worldObj);
 				}

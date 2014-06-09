@@ -269,7 +269,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 
 					Block block = Block.blocksList[vector.getBlockID(this.worldObj)];
 
-					if (this.canReplaceBlock(vector, block))
+					if (canReplaceBlock(vector, block))
 					{
 						/**
 						 * Prevents the force field projector from disintegrating itself.
@@ -280,7 +280,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 							{
 								constructionCount++;
 
-								for (IModule module : this.getModules(this.getModuleSlots()))
+								for (IModule module : getModules(getModuleSlots()))
 								{
 									int flag = module.onProject(this, vector.clone());
 
@@ -326,7 +326,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 				/**
 				 * Change the field to tick every second when construction completes.
 				 */
-				this.isCompleteConstructing = constructionCount == 0;
+				isCompleteConstructing = constructionCount == 0;
 
 			}
 		}

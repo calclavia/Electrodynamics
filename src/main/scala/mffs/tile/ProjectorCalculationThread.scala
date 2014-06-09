@@ -42,8 +42,6 @@ class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread wi
 				val rotationYaw = projector.getRotationYaw()
 				val rotationPitch = projector.getRotationPitch()
 
-				val t = System.currentTimeMillis()
-
 				projector.getModules().foreach(_.onPreCalculate(projector, newField))
 
 				val maxHeight = projector.asInstanceOf[TileEntity].worldObj.getHeight()
@@ -57,14 +55,14 @@ class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread wi
 
 						position.translate(center)
 						position.translate(translation)
-						position.round()
+						position.toRound()
 					}
 				).filter(position => position.intY <= maxHeight && position.intY >= 0)
 
 				projector.getModules().foreach(_.onCalculate(projector, newField))
 
+				projector.getCalculatedField().clear()
 				projector.getCalculatedField().addAll(newField)
-				println("T: " + (System.currentTimeMillis() - t) + " : " + newField.size())
 			}
 		}
 		catch
