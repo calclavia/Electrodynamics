@@ -10,6 +10,7 @@ import mffs.IDelayedEventHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileModuleAcceptor;
+import mffs.item.module.projector.ItemModuleArray;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
@@ -401,7 +402,16 @@ public abstract class TileFieldInteraction extends TileModuleAcceptor implements
 		}
 
 		Set<Vector3> newField = this.getMode().getInteriorPoints(this);
-		Set<Vector3> returnField = new HashSet<Vector3>();
+
+		/**
+		 * Array module interior patch
+		 */
+		if (getModuleCount(ModularForceFieldSystem.itemModuleArray) > 0)
+		{
+			((ItemModuleArray) ModularForceFieldSystem.itemModuleArray).onPreCalculateInterior(this, getMode().getExteriorPoints(this), newField);
+		}
+
+		Set<Vector3> returnField = new HashSet();
 
 		Vector3 translation = this.getTranslation();
 		int rotationYaw = this.getRotationYaw();

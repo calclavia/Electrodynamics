@@ -24,7 +24,7 @@ public class ItemModuleFusion extends ItemModule
 	@Override
 	public boolean onProject(IProjector projector, Set<Vector3> fieldBlocks)
 	{
-		Set<IBlockFrequency> machines = FrequencyGrid.instance().get(((IFortronFrequency) projector).getFrequency());
+		Set<IBlockFrequency> machines = FrequencyGrid.instance().get(projector.getFrequency());
 
 		for (IBlockFrequency compareProjector : machines)
 		{
@@ -40,7 +40,7 @@ public class ItemModuleFusion extends ItemModule
 						{
 							Vector3 position = it.next();
 
-							if (((IProjector) compareProjector).getMode().isInField((IProjector) compareProjector, position.clone()))
+							if (((IProjector) compareProjector).getInteriorPoints().contains(position) || ((IProjector) compareProjector).getMode().isInField((IProjector) compareProjector, position.clone()))
 							{
 								it.remove();
 							}

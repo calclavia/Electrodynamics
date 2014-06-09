@@ -25,7 +25,7 @@ public class ItemModeSphere extends ItemMode
 	@Override
 	public Set<Vector3> getExteriorPoints(IFieldInteraction projector)
 	{
-		Set<Vector3> fieldBlocks = new HashSet<Vector3>();
+		Set<Vector3> fieldBlocks = new HashSet();
 		int radius = projector.getModuleCount(ModularForceFieldSystem.itemModuleScale);
 
 		int steps = (int) Math.ceil(Math.PI / Math.atan(1.0D / radius / 2));
