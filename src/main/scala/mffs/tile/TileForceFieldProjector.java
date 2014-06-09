@@ -134,7 +134,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 		{
 			for (ItemStack module : this.getModuleStacks())
 			{
-				if (((IModule) module.getItem()).requireTicks(module))
+				if (module != null && ((IModule) module.getItem()).requireTicks(module))
 				{
 					fieldRequireTicks = true;
 					break;
