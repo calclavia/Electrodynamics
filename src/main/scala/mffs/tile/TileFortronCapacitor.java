@@ -1,18 +1,5 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import mffs.MFFSHelper;
-import mffs.ModularForceFieldSystem;
-import mffs.TransferMode;
-import mffs.base.TileModuleAcceptor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import universalelectricity.api.vector.Vector3;
-import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.card.ICard;
 import calclavia.api.mffs.card.ICardInfinite;
 import calclavia.api.mffs.card.ICoordLink;
@@ -21,8 +8,20 @@ import calclavia.api.mffs.fortron.IFortronCapacitor;
 import calclavia.api.mffs.fortron.IFortronFrequency;
 import calclavia.api.mffs.fortron.IFortronStorage;
 import calclavia.api.mffs.modules.IModule;
-
 import com.google.common.io.ByteArrayDataInput;
+import mffs.MFFSHelper;
+import mffs.ModularForceFieldSystem;
+import mffs.TransferMode;
+import mffs.base.TileModuleAcceptor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import resonant.api.blocks.IBlockFrequency;
+import universalelectricity.api.vector.Vector3;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TileFortronCapacitor extends TileModuleAcceptor implements IFortronStorage, IFortronCapacitor
 {
@@ -78,7 +77,7 @@ public class TileFortronCapacitor extends TileModuleAcceptor implements IFortron
 				machines = this.getLinkedDevices();
 			}
 
-			MFFSHelper.transferFortron(this, machines, this.transferMode, this.getTransmissionRate());
+			MFFSHelper.transferFortron(this, machines, this.transferMode, getTransmissionRate() * 10);
 		}
 	}
 
@@ -192,6 +191,6 @@ public class TileFortronCapacitor extends TileModuleAcceptor implements IFortron
 	@Override
 	public int getTransmissionRate()
 	{
-		return 250 + 100 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed);
+		return 250 + 50 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed);
 	}
 }
