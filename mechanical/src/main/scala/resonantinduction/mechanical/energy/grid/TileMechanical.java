@@ -56,10 +56,13 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     {
         super.updateEntity();
         mechanicalNode.update();
-        if (mechanicalNode.markRotationUpdate && ticks % 10 == 0)
+        if (!this.getWorldObj().isRemote)
         {
-            sendRotationPacket();
-            mechanicalNode.markRotationUpdate = false;
+            if (mechanicalNode.markRotationUpdate && ticks % 10 == 0)
+            {
+                sendRotationPacket();
+                mechanicalNode.markRotationUpdate = false;
+            }
         }
     }
 
