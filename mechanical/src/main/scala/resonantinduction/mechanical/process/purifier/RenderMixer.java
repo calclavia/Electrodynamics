@@ -40,7 +40,7 @@ public class RenderMixer extends TileEntitySpecialRenderer implements ISimpleIte
 			RenderUtility.bind(TEXTURE);
 			MODEL.renderOnly("centerTop", "centerBase");
 			glPushMatrix();
-			glRotatef((float) Math.toDegrees((float) tile.mechanicalNode.angle), 0, 1, 0);
+			glRotatef((float) Math.toDegrees((float) tile.mechanicalNode.renderAngle), 0, 1, 0);
 			MODEL.renderAllExcept("centerTop", "centerBase");
 			glPopMatrix();
 			glPopMatrix();

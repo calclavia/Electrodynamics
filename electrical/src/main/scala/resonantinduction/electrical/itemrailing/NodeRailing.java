@@ -1,181 +1,94 @@
 package resonantinduction.electrical.itemrailing;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import net.minecraft.inventory.IInventory;
+import codechicken.multipart.TMultiPart;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.lib.config.Config;
 import resonant.lib.grid.Node;
-import resonant.lib.render.EnumColor;
-import resonant.lib.type.Pair;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailing;
+import resonant.lib.grid.TickingGrid;
 import resonantinduction.electrical.itemrailing.interfaces.IItemRailingProvider;
-import resonantinduction.electrical.itemrailing.interfaces.IItemRailingTransfer;
-import universalelectricity.api.vector.IVectorWorld;
-import universalelectricity.api.vector.VectorWorld;
-
-import com.google.common.collect.Lists;
+import universalelectricity.api.vector.IVector3;
+import universalelectricity.api.vector.Vector3;
 
 /**
+ * @since 25/05/14
  * @author tgame14
- * @since 18/03/14
  */
-public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object> implements IVectorWorld, IItemRailing
+public class NodeRailing extends Node<IItemRailingProvider, GridRailing, Object>
 {
-	private int maxItemSpeed;
-	private byte connectionMap;
-	private EnumColor color;
 
-	@Config(category = GridRailing.CATEGORY_RAILING)
-	private static int MAX_TICKS_IN_RAILING = 5;
+    protected byte connectionMap = Byte.parseByte("111111", 2);
 
-	/** hold a timer here per item */
-	private Set<Pair<IItemRailingTransfer, Integer>> itemNodeSet;
+    public NodeRailing (IItemRailingProvider parent)
+    {
+        super(parent);
+    }
 
+    public NodeRailing setConnection(byte connectionMap)
+    {
+        this.connectionMap = connectionMap;
+        return this;
+    }
 
-	public NodeRailing(IItemRailingProvider parent)
-	{
-		super(parent);
-		this.itemNodeSet = new HashSet<Pair<IItemRailingTransfer, Integer>>();
-		this.color = null;
-		this.connectionMap = Byte.parseByte("111111", 2);
-		this.maxItemSpeed = 20;
-	}
+    @Override
+    protected GridRailing newGrid ()
+    {
+        return new GridRailing(this, NodeRailing.class);
+    }
 
-	public NodeRailing setConnection(byte connectionMap)
-	{
-		this.connectionMap = connectionMap;
-		return this;
-	}
+    @Override
+    public void update (float deltaTime)
+    {
+        super.update(deltaTime);
+    }
 
-	@Override
-	public void update(float deltaTime)
-	{
-		if (!world().isRemote)
-		{
-			Iterator<Map.Entry<Object, ForgeDirection>> iterator = new HashMap(getConnections()).entrySet().iterator();
+    @Override
+    protected void doRecache ()
+    {
+        connections.clear();
 
-			for (Pair<IItemRailingTransfer, Integer> pair : this.itemNodeSet)
-			{
-				if (pair.right() <= 0)
-				{
-					//TODO move to next item railing
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+        {
+            TileEntity tile = new Vector3(position()).translate(dir).getTileEntity(world());
 
-				}
-				else
-				{
-					pair.setRight(pair.right() - 1);
-				}
+            if (tile instanceof IItemRailingProvider)
+            {
+                NodeRailing check = (NodeRailing) ((IItemRailingProvider) tile).getNode(NodeRailing.class, dir.getOpposite());
 
+                if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
+                {
+                    connections.put(check, dir);
+                }
+            }
+        }
+    }
 
-			}
+    public IVector3 position()
+    {
+        return parent.getVectorWorld();
+    }
 
-			while (iterator.hasNext())
-			{
-				Map.Entry<Object, ForgeDirection> entry = iterator.next();
-				Object obj = entry.getKey();
+    public World world()
+    {
+        return parent.getVectorWorld().world();
+    }
 
-				if (obj instanceof NodeRailing)
-				{
+    @Override
+    public boolean canConnect (ForgeDirection from, Object source)
+    {
+        return (source instanceof NodeRailing) && (connectionMap & (1 << from.ordinal())) != 0;
+    }
 
-				}
-			}
+    @Override
+    public void load (NBTTagCompound nbt)
+    {
+        super.load(nbt);
+    }
 
-		}
-	}
-
-	@Override
-	protected GridRailing newGrid()
-	{
-		return new GridRailing(this, getClass());
-	}
-
-	@Override
-	public double z()
-	{
-		return this.getWorldPos().z();
-	}
-
-	@Override
-	public World world()
-	{
-		return parent.getWorldPos().world();
-	}
-
-	@Override
-	public double x()
-	{
-		return parent.getWorldPos().x();
-	}
-
-	@Override
-	public double y()
-	{
-		return parent.getWorldPos().y();
-	}
-
-	@Override
-	public boolean canItemEnter (IItemRailingTransfer item)
-	{
-		return this.color != null ? this.color == item.getColor() : false;
-	}
-
-	@Override
-	public boolean canConnectToRailing (IItemRailing railing, ForgeDirection from)
-	{
-		return this.color != null ? this.color == railing.getRailingColor() : true;
-	}
-
-	@Override
-	public EnumColor getRailingColor ()
-	{
-		return this.color;
-	}
-
-	@Override
-	public IItemRailing setRailingColor (EnumColor color)
-	{
-		this.color = color;
-		return this;
-	}
-
-	@Override
-	public VectorWorld getWorldPos()
-	{
-		return (VectorWorld) parent.getWorldPos();
-	}
-
-	@Override
-	public Map<Object, ForgeDirection> getConnectionMap()
-	{
-		return new HashMap<Object, ForgeDirection>(this.getConnections());
-	}
-
-	@Override
-	public IInventory[] getInventoriesNearby()
-	{
-		ArrayList<IInventory> invList = Lists.<IInventory>newArrayList();
-		for (Object tile : this.getConnections().entrySet())
-		{
-			if (tile instanceof IInventory)
-			{
-				invList.add((IInventory) tile);
-			}
-		}
-		return (IInventory[]) invList.toArray();
-	}
-
-	@Override
-	public boolean isLeaf()
-	{
-		return connectionMap < 2;
-	}
-
-
+    @Override
+    public void save (NBTTagCompound nbt)
+    {
+        super.save(nbt);
+    }
 }

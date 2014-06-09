@@ -60,6 +60,7 @@ public class ItemMiningLaser extends ItemEnergyTool
     {
         super(id);
         hasModes = true;
+        this.energyTiers = 1;
         toolModes = new String[] { "laser.toolmode.remove", "laser.toolmode.smelt", "laser.toolmode.damage" };
     }
 

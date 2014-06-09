@@ -11,13 +11,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.part.PartFace;
 import resonantinduction.electrical.Electrical;
 import universalelectricity.api.CompatibilityModule;
@@ -265,7 +265,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
         if (tileEntity instanceof INodeProvider)
         {
-            IMechanicalNode instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, receivingSide);
+            IMechanicalNode instance = (IMechanicalNode) ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, receivingSide);
 
             for (ForgeDirection dir : ForgeDirection.values())
             {
@@ -274,13 +274,13 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
                     break;
                 }
 
-                instance = ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, dir);
+                instance = (IMechanicalNode) ((INodeProvider) tileEntity).getNode(IMechanicalNode.class, dir);
             }
 
             if (instance != null)
             {
                 getNetwork().torqueGraph.queue(instance.getTorque());
-                getNetwork().angularVelocityGraph.queue(instance.getAngularVelocity());
+                getNetwork().angularVelocityGraph.queue(instance.getAngularSpeed());
                 getNetwork().powerGraph.queue((long) instance.getPower());
             }
         }
@@ -302,7 +302,7 @@ public class PartMultimeter extends PartFace implements IConnector<MultimeterNet
 
         if (tileEntity instanceof IPressureNodeProvider)
         {
-            getNetwork().pressureGraph.queue(((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide).getPressure(receivingSide));
+            getNetwork().pressureGraph.queue(((FluidPressureNode) ((IPressureNodeProvider) tileEntity).getNode(FluidPressureNode.class, receivingSide)).getPressure(receivingSide));
         }
 
         getNetwork().energyGraph.queue(CompatibilityModule.getEnergy(tileEntity, receivingSide));

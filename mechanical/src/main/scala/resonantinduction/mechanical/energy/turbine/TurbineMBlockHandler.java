@@ -4,22 +4,22 @@ import net.minecraft.tileentity.TileEntity;
 import resonant.lib.multiblock.MultiBlockHandler;
 import universalelectricity.api.vector.Vector3;
 
-public class TurbineMBlockHandler extends MultiBlockHandler<TileTurbineBase>
+public class TurbineMBlockHandler extends MultiBlockHandler<TileTurbine>
 {
-    public TurbineMBlockHandler(TileTurbineBase wrapper)
+    public TurbineMBlockHandler(TileTurbine wrapper)
     {
         super(wrapper);
     }
 
-    public TileTurbineBase getWrapperAt(Vector3 position)
+    public TileTurbine getWrapperAt(Vector3 position)
     {
         TileEntity tile = position.getTileEntity(self.getWorld());
 
         if (tile != null && wrapperClass.isAssignableFrom(tile.getClass()))
         {
-            if (((TileTurbineBase) tile).getDirection() == self.getDirection() && ((TileTurbineBase) tile).tier == self.tier)
+            if (((TileTurbine) tile).getDirection() == self.getDirection() && ((TileTurbine) tile).tier == self.tier)
             {
-                return (TileTurbineBase) tile;
+                return (TileTurbine) tile;
             }
         }
 

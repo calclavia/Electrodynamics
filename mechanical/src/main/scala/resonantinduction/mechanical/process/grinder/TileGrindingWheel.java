@@ -7,7 +7,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.IRotatable;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
@@ -15,7 +14,9 @@ import resonant.lib.prefab.vector.Cuboid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.Timer;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -38,7 +39,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	{
 		super(Material.rock);
 
-		mechanicalNode = new PacketMechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			public boolean canConnect(ForgeDirection from, Object source)
@@ -102,12 +103,12 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
 		}
 
-		if (mechanicalNode.getAngularVelocity() != 0)
+		if (mechanicalNode.getAngularSpeed() != 0)
 		{
 			// Move entity based on the direction of the block.
 			ForgeDirection dir = getDirection();
 			dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal()).getOpposite();
-			double speed = mechanicalNode.getAngularVelocity() / 20;
+			double speed = mechanicalNode.getAngularSpeed() / 20;
 			entity.addVelocity(dir.offsetX * speed, Math.random() * speed, dir.offsetZ * speed);
 		}
 	}

@@ -4,12 +4,12 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.IRotatable;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.NodeRegistry;
 import resonant.lib.prefab.tile.TileElectrical;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import universalelectricity.api.energy.EnergyStorageHandler;
 
 /**
@@ -61,6 +61,7 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 
 		if (node != null)
 		{
+		    node.update(0.05f);		    
 			if (!isInversed)
 			{
 				receiveMechanical();
@@ -82,7 +83,7 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 		if (receive > 0)
 		{
 			double percentageUsed = receive / power;
-			node.apply(this, -node.getTorque() * percentageUsed, -node.getAngularVelocity() * percentageUsed);
+			node.apply(this, -node.getTorque() * percentageUsed, -node.getAngularSpeed() * percentageUsed);
 		}
 	}
 
@@ -108,11 +109,11 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 				if (currentTorque != 0)
 					setTorque = Math.min(setTorque, maxTorque) * (node.getTorque() / currentTorque);
 
-				double currentVelo = Math.abs(node.getAngularVelocity());
+				double currentVelo = Math.abs(node.getAngularSpeed());
 				if (currentVelo != 0)
-					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (node.getAngularVelocity() / currentVelo);
+					setAngularVelocity = Math.min(+setAngularVelocity, maxAngularVelocity) * (node.getAngularSpeed() / currentVelo);
 
-				node.apply(this, setTorque - node.getTorque(), setAngularVelocity - node.getAngularVelocity());
+				node.apply(this, setTorque - node.getTorque(), setAngularVelocity - node.getAngularSpeed());
 				energy.extractEnergy((long) Math.abs(setTorque * setAngularVelocity), true);
 			}
 		}
@@ -163,14 +164,20 @@ public class TileMotor extends TileElectrical implements IRotatable, INodeProvid
 	}
 
 	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
+	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
 	{
 		if (from == getDirection() || from == getDirection().getOpposite())
 		{
 			if (nodeType.isAssignableFrom(node.getClass()))
-				return (N) node;
+				return node;
 		}
 
 		return null;
 	}
+	
+	 @Override
+	    public String toString()
+	    {
+	        return "[TileMotor]" + x() + "x " + y() + "y " + z() + "z ";
+	    }
 }

@@ -57,8 +57,8 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
             }
         }
 
-        // Only three reactor cells are required to begin the uranium breeding process instead of four.
-        if (reactors >= 3)
+        // Only two reactor cells are required to begin the uranium breeding process.
+        if (reactors >= 2)
         {
             // Begin the process of re-enriching the uranium rod but not consistently.
             if (worldObj.rand.nextInt(1000) <= 100 && reactor.getTemperature() > BREEDING_TEMP)

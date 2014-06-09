@@ -33,9 +33,9 @@ public class GuiQuantumAssembler extends GuiContainerBase
         this.fontRenderer.drawString(this.tileEntity.getInvName(), 65 - this.tileEntity.getInvName().length(), 6, 4210752);
         String displayText = "";
 
-        if (this.tileEntity.time() > 0)
+        if (this.tileEntity.time > 0)
         {
-            displayText = "Process: " + (int) (100 - ((float) this.tileEntity.time() / (float) this.tileEntity.MAX_TIME()) * 100) + "%";
+            displayText = "Process: " + (int) (100 - ((float) this.tileEntity.time / (float) this.tileEntity.MAX_TIME) * 100) + "%";
         }
         else if (this.tileEntity.canProcess())
         {
@@ -48,7 +48,7 @@ public class GuiQuantumAssembler extends GuiContainerBase
 
         this.fontRenderer.drawString(displayText, 9, this.ySize - 106, 4210752);
         this.renderUniversalDisplay(100, this.ySize - 94, this.tileEntity.getVoltageInput(null), mouseX, mouseY, Unit.VOLTAGE);
-        this.renderUniversalDisplay(8, this.ySize - 95, tileEntity.MAX_TIME(), mouseX, mouseY, Unit.WATT);
+        this.renderUniversalDisplay(8, this.ySize - 95, tileEntity.MAX_TIME, mouseX, mouseY, Unit.WATT);
     }
 
     /** Draw the background layer for the GuiContainer (everything behind the items) */

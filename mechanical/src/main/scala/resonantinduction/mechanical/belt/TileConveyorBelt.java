@@ -28,7 +28,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 /** Conveyer belt TileEntity that allows entities of all kinds to be moved
  * 
  * @author DarkGuardsman */
-public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRotatable, INodeProvider, IPacketReceiverWithID
+public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRotatable, IPacketReceiverWithID
 {
     public enum BeltType
     {
@@ -44,7 +44,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
     public static final int PACKET_SLANT = 0;
     public static final int PACKET_REFRESH = 1;
     /** Acceleration of entities on the belt */
-    public static final float ACCELERATION = 0.01f;
+    public static final float ACCELERATION = 0.1f;
 
     /** Frame count for texture animation from 0 - maxFrame */
     private int animationFrame = 0;
@@ -56,12 +56,9 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
 
     private boolean markRefresh = true;
 
-    public BeltNode node;
-
     public TileConveyorBelt()
     {
         super(Material.iron);
-        node = new BeltNode(this);
     }
 
     @Override
@@ -80,35 +77,32 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
                 it.remove();
             }
         }
-        this.node.torque = 1;
-        this.node.angularVelocity = 1;
 
         /* DO ANIMATION AND EFFECTS */
-        if (this.worldObj.isRemote && (node.angularVelocity != 0))
+        if (this.worldObj.isRemote)
         {
             if (this.ticks % 10 == 0 && this.worldObj.getBlockId(this.xCoord - 1, this.yCoord, this.zCoord) != Mechanical.blockConveyorBelt.blockID && this.worldObj.getBlockId(xCoord, yCoord, zCoord - 1) != Mechanical.blockConveyorBelt.blockID)
             {
-                worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * (float) getMoveVelocity(), true);
+                worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "conveyor", 0.5f, 0.5f + 0.15f * 1, true);
             }
 
-            double beltPercentage = node.angle / (2 * Math.PI);
+            this.animationFrame += 1;
+            //this.animationFrame = (int) (beltPercentage * MAX_SLANT_FRAME);
 
             // Sync the animation. Slant belts are slower.
             if (this.getBeltType() == BeltType.NORMAL || this.getBeltType() == BeltType.RAISED)
             {
-                this.animationFrame = (int) (beltPercentage * MAX_FRAME);
                 if (this.animationFrame < 0)
                     this.animationFrame = 0;
                 if (this.animationFrame > MAX_FRAME)
-                    this.animationFrame = MAX_FRAME;
+                    this.animationFrame = 0;
             }
             else
             {
-                this.animationFrame = (int) (beltPercentage * MAX_SLANT_FRAME);
                 if (this.animationFrame < 0)
                     this.animationFrame = 0;
                 if (this.animationFrame > MAX_SLANT_FRAME)
-                    this.animationFrame = MAX_SLANT_FRAME;
+                    this.animationFrame = 0;
             }
         }
         else
@@ -119,14 +113,6 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
                 markRefresh = false;
             }
         }
-    }
-
-    @Override
-    public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
-    {
-        if (nodeType.isAssignableFrom(node.getClass()))
-            return (N) node;
-        return null;
     }
 
     @Override
@@ -141,7 +127,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
 
     public void sendRefreshPacket()
     {
-        PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_REFRESH, this, node.angle));
+        //PacketDispatcher.sendPacketToAllPlayers(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_REFRESH, this, node.angle));
     }
 
     @Override
@@ -156,7 +142,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
             }
             else if (id == PACKET_REFRESH)
             {
-                node.angle = data.readDouble();
+                //node.angle = data.readDouble();
                 return true;
             }
         }
@@ -206,11 +192,6 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
         }
     }
 
-    public double getMoveVelocity()
-    {
-        return Math.abs(node.getAngularVelocity());
-    }
-
     public int getAnimationFrame()
     {
         return this.animationFrame;
@@ -228,7 +209,7 @@ public class TileConveyorBelt extends TileBase implements IEntityConveyor, IRota
             slantType = BeltType.NORMAL;
         }
         this.slantType = slantType;
-        node.reconstruct();
-        this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        if (worldObj != null)
+            this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

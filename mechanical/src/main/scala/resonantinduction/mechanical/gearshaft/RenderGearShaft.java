@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import static org.lwjgl.opengl.GL11.glRotatef;
 import net.minecraft.item.ItemStack;
@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -63,7 +62,7 @@ public class RenderGearShaft implements ISimpleItemRenderer
 				break;
 		}
 
-		GL11.glRotatef((float) Math.toDegrees(part.node.angle), 0, 1, 0);
+		GL11.glRotatef((float) Math.toDegrees(part.node.renderAngle), 0, 1, 0);
 
 		switch (part.tier)
 		{

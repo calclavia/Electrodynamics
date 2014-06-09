@@ -15,108 +15,90 @@ import universalelectricity.api.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;
 
+/** Prefab for mechanical tiles
+ * 
+ * @author Calclavia */
 public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiver
 {
-	@Deprecated
-	public TileMechanical()
-	{
-		super(null);
-	}
+    protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
 
-	public TileMechanical(Material material)
-	{
-		super(material);
-	}
+    /** Node that handles most mechanical actions */
+    public MechanicalNode mechanicalNode;
 
-	protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
+    @Deprecated
+    public TileMechanical()
+    {
+        this(null);
+    }
 
-	public MechanicalNode mechanicalNode = new PacketMechanicalNode(this).setLoad(0.5f);
+    public TileMechanical(Material material)
+    {
+        super(material);
+        mechanicalNode = new MechanicalNode(this).setLoad(0.5f);
+    }
 
-	protected class PacketMechanicalNode extends MechanicalNode
-	{
-		public PacketMechanicalNode(INodeProvider parent)
-		{
-			super(parent);
-		}
+    @Override
+    public void initiate()
+    {
+        mechanicalNode.reconstruct();
+        super.initiate();
+    }
 
-		@Override
-		protected void onUpdate()
-		{
-			if (Math.abs(prevAngularVelocity - angularVelocity) > 0.001 || (prevAngularVelocity != angularVelocity && (prevAngularVelocity == 0 || angularVelocity == 0)))
-			{
-				prevAngularVelocity = angularVelocity;
-				markPacketUpdate = true;
-			}
-		}
-	};
+    @Override
+    public void invalidate()
+    {
+        mechanicalNode.deconstruct();
+        super.invalidate();
+    }
 
-	/**
-	 * For sending client update packets
-	 */
-	private boolean markPacketUpdate;
+    @Override
+    public void updateEntity()
+    {
+        super.updateEntity();
+        mechanicalNode.update();
+        if (mechanicalNode.markRotationUpdate && ticks % 10 == 0)
+        {
+            sendRotationPacket();
+            mechanicalNode.markRotationUpdate = false;
+        }
+    }
 
-	@Override
-	public void initiate()
-	{
-		mechanicalNode.reconstruct();
-		super.initiate();
-	}
+    @Override
+    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
+    {
+        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
+            return mechanicalNode;
+        return null;
+    }
 
-	@Override
-	public void invalidate()
-	{
-		mechanicalNode.deconstruct();
-		super.invalidate();
-	}
+    private void sendRotationPacket()
+    {
+        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_VELOCITY, mechanicalNode.angularVelocity), worldObj, new Vector3(this), 20);
+    }
 
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
+    @Override
+    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        onReceivePacket(data.readInt(), data, player, extra);
+    }
 
-		if (markPacketUpdate && ticks % 10 == 0)
-		{
-			sendRotationPacket();
-			markPacketUpdate = false;
-		}
-	}
+    public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    {
+        if (id == PACKET_VELOCITY)
+            mechanicalNode.angularVelocity = data.readDouble();
+    }
 
-	@Override
-	public <N extends INode> N getNode(Class<? super N> nodeType, ForgeDirection from)
-	{
-		if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
-			return (N) mechanicalNode;
-		return null;
-	}
+    @Override
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+        mechanicalNode.load(nbt);
+    }
 
-	private void sendRotationPacket()
-	{
-		PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_VELOCITY, mechanicalNode.angularVelocity), worldObj, new Vector3(this), 20);
-	}
-
-	@Override
-	public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		onReceivePacket(data.readInt(), data, player, extra);
-	}
-
-	public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-	{
-		if (id == PACKET_VELOCITY)
-			mechanicalNode.angularVelocity = data.readDouble();
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		mechanicalNode.load(nbt);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		mechanicalNode.save(nbt);
-	}
+    @Override
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+        mechanicalNode.save(nbt);
+    }
 }

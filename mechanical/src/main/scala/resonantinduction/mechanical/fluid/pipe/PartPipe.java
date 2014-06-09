@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import resonant.api.grid.INode;
 import resonant.lib.type.EvictingList;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.ResonantInduction;
@@ -29,12 +30,13 @@ import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/** Fluid transport pipe
+ * 
+ * @author Calclavia, Darkguardsman */
 public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode, IPressureNodeProvider> implements IPressureNodeProvider, TSlottedPart, JNormalOcclusion, IHollowConnect
 {
     protected final FluidTank tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-	/**
-	 * Computes the average fluid for client to render.
-	 */
+    /** Computes the average fluid for client to render. */
     private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
     private boolean markPacket = true;
 
@@ -43,82 +45,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
         super(null);
         material = EnumPipeMaterial.values()[0];
         requiresInsulation = false;
-
-        node = new FluidPressureNode(this)
-        {
-            @Override
-            public void doRecache()
-            {
-
-                connections.clear();
-
-                if (world() != null)
-                {
-                    byte previousConnections = getAllCurrentConnections();
-                    currentConnections = 0;
-
-                    for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-                    {
-                        TileEntity tile = position().translate(dir).getTileEntity(world());
-
-                        if (tile instanceof IFluidHandler)
-                        {
-                            if (tile instanceof IPressureNodeProvider)
-                            {
-                                FluidPressureNode check = ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
-
-                                if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
-                                {
-                                    currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-                                    connections.put(check, dir);
-
-                                }
-                            }
-                            else if (canConnect(dir, tile))
-                            {
-                                currentConnections = WorldUtility.setEnableSide(currentConnections, dir, true);
-                                connections.put(tile, dir);
-                            }
-                        }
-                    }
-
-                    /** Only send packet updates if visuallyConnected changed. */
-                    if (!world().isRemote && previousConnections != currentConnections)
-                    {
-                        sendConnectionUpdate();
-                    }
-                }
-            }
-
-            @Override
-            public boolean canConnect(ForgeDirection from, Object source)
-            {
-                if (!isBlockedOnSide(from))
-                {
-                    if (source instanceof FluidPressureNode)
-                    {
-                        FluidPressureNode otherNode = (FluidPressureNode) source;
-
-                        if (otherNode.parent instanceof PartPipe)
-                        {
-                            PartPipe otherPipe = (PartPipe) otherNode.parent;
-
-                            if (!otherPipe.isBlockedOnSide(from.getOpposite()) && getMaterial() == otherPipe.getMaterial())
-                            {
-                                return getColor() == otherPipe.getColor() || (getColor() == DEFAULT_COLOR || otherPipe.getColor() == DEFAULT_COLOR);
-                            }
-
-                            return false;
-                        }
-                    }
-
-                    return super.canConnect(from, source) || source instanceof IFluidHandler;
-                }
-
-                return false;
-            }
-        };
-
+        node = new PipePressureNode(this);
     }
 
     @Override
@@ -157,6 +84,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
         }
     }
 
+    /** Sends fluid level to the client to be used in the renderer */
     public void sendFluidUpdate()
     {
         NBTTagCompound nbt = new NBTTagCompound();
@@ -269,7 +197,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
     public void drawBreaking(RenderBlocks renderBlocks)
     {
         CCRenderState.reset();
-        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockMachinePart.getIcon(0, 0)), null);
+        RenderUtils.renderBlock(sides[6], 0, new Translation(x(), y(), z()), new IconTransformation(ResonantInduction.blockIndustrialStone.getIcon(0, 0)), null);
     }
 
     @Override

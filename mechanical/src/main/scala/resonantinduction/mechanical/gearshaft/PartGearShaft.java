@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gear;
+package resonantinduction.mechanical.gearshaft;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -7,8 +7,6 @@ import java.util.Set;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.energy.gearshaft.GearShaftNode;
-import resonantinduction.mechanical.energy.gearshaft.RenderGearShaft;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
 import codechicken.lib.raytracer.IndexedCuboid6;
 import codechicken.lib.vec.Cuboid6;
@@ -40,7 +38,6 @@ public class PartGearShaft extends PartMechanical
 	public PartGearShaft()
 	{
 		super();
-
 		node = new GearShaftNode(this);
 	}
 

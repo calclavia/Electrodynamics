@@ -16,6 +16,9 @@ import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/** A stationary robotic claw used to do simple coded tasks in the world
+ * 
+ * @author Darkguardsman */
 public class BlockArmbot extends BlockTile
 {
     public BlockArmbot(int id)

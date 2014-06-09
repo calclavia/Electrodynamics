@@ -15,14 +15,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.IFluidBlock;
-import resonant.api.IMechanicalNode;
 import resonant.api.recipe.MachineRecipes;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Timer;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.resource.ResourceGenerator;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
+import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 
@@ -41,7 +42,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	{
 		super(Material.iron);
 
-		mechanicalNode = new PacketMechanicalNode(this)
+		mechanicalNode = new MechanicalNode(this)
 		{
 			@Override
 			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
@@ -97,7 +98,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	 */
 	public boolean canWork()
 	{
-		return mechanicalNode.getAngularVelocity() != 0 && areaBlockedFromMoving;
+		return mechanicalNode.getAngularSpeed() != 0 && !areaBlockedFromMoving;
 	}
 
 	public void doWork()
@@ -116,7 +117,7 @@ public class TileMixer extends TileMechanical implements IInventory
 			 */
 			Vector3 originalPosition = new Vector3(entity);
 			Vector3 relativePosition = originalPosition.clone().subtract(new Vector3(this).add(0.5));
-			relativePosition.rotate(-mechanicalNode.getAngularVelocity(), 0, 0);
+			relativePosition.rotate(-mechanicalNode.getAngularSpeed(), 0, 0);
 			Vector3 newPosition = new Vector3(this).add(0.5).add(relativePosition);
 			Vector3 difference = newPosition.difference(originalPosition).scale(0.5);
 

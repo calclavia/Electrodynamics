@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import resonantinduction.core.prefab.part.IHighlight;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.JItemMultiPart;

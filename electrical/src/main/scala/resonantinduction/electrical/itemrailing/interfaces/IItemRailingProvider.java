@@ -9,5 +9,7 @@ import universalelectricity.api.vector.IVectorWorld;
  */
 public interface IItemRailingProvider extends INodeProvider
 {
-	public IVectorWorld getWorldPos();
+	public IVectorWorld getVectorWorld();
+
+    public void onInventoryChanged();
 }

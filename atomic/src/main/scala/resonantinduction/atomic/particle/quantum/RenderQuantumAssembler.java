@@ -40,21 +40,21 @@ public class RenderQuantumAssembler extends TileEntitySpecialRenderer
         bindTexture(TEXTURE);
 
         GL11.glPushMatrix();
-        GL11.glRotatef(-tileEntity.rotationYaw1(), 0, 1f, 0);
+        GL11.glRotatef(-tileEntity.rotation.floatX(), 0, 1f, 0);
         MODEL.renderOnly(hands);
         MODEL.renderOnly("Resonance_Crystal");
         GL11.glPopMatrix();
 
         /** Small Laser Arm */
         GL11.glPushMatrix();
-        GL11.glRotatef(tileEntity.rotationYaw2(), 0, 1f, 0);
+        GL11.glRotatef(tileEntity.rotation.floatY(), 0, 1f, 0);
         MODEL.renderOnly(arms);
 
         GL11.glPopMatrix();
 
         /** Large Laser Arm */
         GL11.glPushMatrix();
-        GL11.glRotatef(-tileEntity.rotationYaw3(), 0, 1f, 0);
+        GL11.glRotatef(-tileEntity.rotation.floatZ(), 0, 1f, 0);
         MODEL.renderOnly(largeArms);
         GL11.glPopMatrix();
 
@@ -66,9 +66,9 @@ public class RenderQuantumAssembler extends TileEntitySpecialRenderer
 
         GL11.glPushMatrix();
 
-        if (tileEntity.entityItem() != null)
+        if (tileEntity.entityItem != null)
         {
-            renderItem.doRenderItem(tileEntity.entityItem(), x + 0.5, y + 0.4, z + 0.5, 0, 0);
+            renderItem.doRenderItem(tileEntity.entityItem, x + 0.5, y + 0.4, z + 0.5, 0, 0);
         }
 
         GL11.glPopMatrix();

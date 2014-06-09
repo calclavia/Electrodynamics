@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.energy.gearshaft;
+package resonantinduction.mechanical.gearshaft;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,11 +6,10 @@ import java.util.List;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.IMechanicalNode;
 import resonant.api.grid.INodeProvider;
-import resonantinduction.mechanical.energy.gear.PartGear;
-import resonantinduction.mechanical.energy.gear.PartGearShaft;
+import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.gear.PartGear;
 
 public class GearShaftNode extends MechanicalNode
 {
@@ -41,9 +40,9 @@ public class GearShaftNode extends MechanicalNode
     }
 
     @Override
-    public void doRecache()
+    public void recache()
     {
-        connections.clear();
+        getConnections().clear();
         List<ForgeDirection> dirs = new ArrayList<ForgeDirection>();
         dirs.add(shaft().placementSide);
         dirs.add(shaft().placementSide.getOpposite());
@@ -56,11 +55,11 @@ public class GearShaftNode extends MechanicalNode
             {
                 if (shaft().tile() instanceof INodeProvider)
                 {
-                    MechanicalNode instance = ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
+                    MechanicalNode instance = (MechanicalNode) ((INodeProvider) shaft().tile()).getNode(MechanicalNode.class, checkDir);
 
                     if (instance != null && instance != this && instance.canConnect(checkDir.getOpposite(), this))
                     {
-                        connections.put(instance, checkDir);
+                        getConnections().put(instance, checkDir);
                         it.remove();
                     }
                 }
@@ -71,18 +70,18 @@ public class GearShaftNode extends MechanicalNode
         if (!dirs.isEmpty())
             for (ForgeDirection checkDir : dirs)
             {
-                if (!connections.containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
+                if (!getConnections().containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
                 {
                     TileEntity checkTile = new universalelectricity.api.vector.Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
 
                     if (checkTile instanceof INodeProvider)
                     {
-                        MechanicalNode instance = ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
+                        MechanicalNode instance = (MechanicalNode) ((INodeProvider) checkTile).getNode(MechanicalNode.class, checkDir.getOpposite());
 
                         // Only connect to shafts outside of this block space.
-                        if (instance != null && instance != this && instance.parent instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
+                        if (instance != null && instance != this && instance.getParent() instanceof PartGearShaft && instance.canConnect(checkDir.getOpposite(), this))
                         {
-                            connections.put(instance, checkDir);
+                            getConnections().put(instance, checkDir);
                         }
                     }
                 }
@@ -94,9 +93,9 @@ public class GearShaftNode extends MechanicalNode
     {
         if (source instanceof MechanicalNode)
         {
-            if (((MechanicalNode) source).parent instanceof PartGear)
+            if (((MechanicalNode) source).getParent() instanceof PartGear)
             {
-                PartGear gear = (PartGear) ((MechanicalNode) source).parent;
+                PartGear gear = (PartGear) ((MechanicalNode) source).getParent();
 
                 if (!(Math.abs(gear.placementSide.offsetX) == Math.abs(shaft().placementSide.offsetX) && Math.abs(gear.placementSide.offsetY) == Math.abs(shaft().placementSide.offsetY) && Math.abs(gear.placementSide.offsetZ) == Math.abs(shaft().placementSide.offsetZ)))
                 {
@@ -121,6 +120,6 @@ public class GearShaftNode extends MechanicalNode
 
     public PartGearShaft shaft()
     {
-        return (PartGearShaft) this.parent;
+        return (PartGearShaft) this.getParent();
     }
 }
