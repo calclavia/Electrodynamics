@@ -1,8 +1,8 @@
 package mffs.item.module.projector;
 
-import java.util.HashMap;
-import java.util.Set;
-
+import calclavia.api.mffs.Blacklist;
+import calclavia.api.mffs.EventStabilize;
+import calclavia.api.mffs.IProjector;
 import mffs.ModularForceFieldSystem;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.item.mode.ItemModeCustom;
@@ -17,12 +17,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
+import resonant.lib.network.PacketHandler;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
-import calclavia.api.mffs.Blacklist;
-import calclavia.api.mffs.EventStabilize;
-import calclavia.api.mffs.IProjector;
-import resonant.lib.network.PacketHandler;
+
+import java.util.HashMap;
+import java.util.Set;
 
 public class ItemModuleStablize extends ItemModule
 {

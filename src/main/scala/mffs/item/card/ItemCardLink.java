@@ -1,24 +1,23 @@
 package mffs.item.card;
 
-import java.util.List;
-
+import calclavia.api.mffs.card.ICoordLink;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.card.ItemCard;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.VectorWorld;
-import calclavia.api.mffs.card.ICoordLink;
 import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.vector.VectorWorld;
+
+import java.util.List;
 
 /**
  * A linking card used to link machines in specific positions.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class ItemCardLink extends ItemCard implements ICoordLink
 {

@@ -6,9 +6,8 @@ import net.minecraftforge.fluids.FluidTank;
 
 /**
  * A class with useful functions related to Fortron.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class FortronHelper
 {

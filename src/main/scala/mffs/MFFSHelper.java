@@ -1,8 +1,11 @@
 package mffs;
 
-import java.util.HashMap;
-import java.util.Set;
-
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.modules.IModuleAcceptor;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
 import mffs.item.mode.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,20 +16,16 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import universalelectricity.api.vector.Vector3;
 import resonant.api.blocks.IBlockFrequency;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.modules.IModuleAcceptor;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
+import universalelectricity.api.vector.Vector3;
+
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * A class containing some general helpful functions.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class MFFSHelper
 {
@@ -138,9 +137,9 @@ public class MFFSHelper
 	/**
 	 * Tries to transfer Fortron to a specific machine from this capacitor. Renders an animation on
 	 * the client side.
-	 * 
+	 *
 	 * @param receiver : The machine to be transfered to.
-	 * @param joules : The amount of energy to be transfered.
+	 * @param joules   : The amount of energy to be transfered.
 	 */
 	public static void doTransferFortron(IFortronFrequency transferer, IFortronFrequency receiver, int joules, int limit)
 	{
@@ -214,7 +213,7 @@ public class MFFSHelper
 
 	/**
 	 * Returns true of the interdictionMatrix has a specific set of permissions.
-	 * 
+	 *
 	 * @param interdictionMatrix
 	 * @param username
 	 * @param permissions
@@ -258,7 +257,7 @@ public class MFFSHelper
 
 	/**
 	 * Gets the first itemStack that is an ItemBlock in this TileEntity or in nearby chests.
-	 * 
+	 *
 	 * @param itemStack
 	 * @return
 	 */

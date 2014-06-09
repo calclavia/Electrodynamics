@@ -1,7 +1,5 @@
 package mffs.item.card;
 
-import java.util.List;
-
 import mffs.Settings;
 import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +10,8 @@ import net.minecraft.world.World;
 import resonant.api.blocks.IBlockFrequency;
 import resonant.api.items.IItemFrequency;
 import resonant.lib.utility.LanguageUtility;
+
+import java.util.List;
 
 public class ItemCardFrequency extends ItemCard implements IItemFrequency
 {

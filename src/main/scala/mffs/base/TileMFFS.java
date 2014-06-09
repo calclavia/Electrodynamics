@@ -1,11 +1,6 @@
 package mffs.base;
 
 import calclavia.api.mffs.IActivatable;
-import resonant.lib.network.IPacketReceiver;
-import resonant.lib.network.IPacketSender;
-import resonant.api.IPlayerUsing;
-import resonant.api.IRotatable;
-import resonant.lib.prefab.tile.TileAdvanced;
 import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -15,6 +10,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
+import resonant.api.IPlayerUsing;
+import resonant.api.IRotatable;
+import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketSender;
+import resonant.lib.prefab.tile.TileAdvanced;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -197,7 +197,6 @@ public abstract class TileMFFS extends TileAdvanced
 		return this.playersUsing;
 	}
 
-	
 	@Override public boolean equals(IPeripheral other)
 	{
 		return equals(other);

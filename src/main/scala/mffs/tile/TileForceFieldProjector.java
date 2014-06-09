@@ -18,12 +18,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.chunk.Chunk;
 import resonant.lib.network.PacketHandler;
 import universalelectricity.api.vector.Vector3;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,15 +32,12 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 	 * A set containing all positions of all force field blocks.
 	 */
 	protected final Set<Vector3> forceFields = new HashSet();
-
+	public boolean markFieldUpdate = true;
 	/**
 	 * True if the field is done constructing and the projector is simply maintaining the field *
 	 */
 	private boolean isCompleteConstructing = false;
-
 	private boolean fieldRequireTicks = false;
-
-	public boolean markFieldUpdate = true;
 
 	public TileForceFieldProjector()
 	{

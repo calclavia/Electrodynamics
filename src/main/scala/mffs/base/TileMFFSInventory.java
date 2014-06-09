@@ -1,10 +1,6 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.io.ByteArrayDataInput;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import mffs.ModularForceFieldSystem;
@@ -18,18 +14,19 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.vector.Vector3;
 import resonant.lib.multiblock.TileMultiBlockPart;
 import resonant.lib.network.PacketHandler;
+import universalelectricity.api.vector.Vector3;
 
-import com.google.common.io.ByteArrayDataInput;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * All TileEntities that have an inventory should extend this.
- * 
+ *
  * @author Calclavia
- * 
  */
 public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 {
@@ -49,7 +46,7 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 			this.writeToNBT(nbt);
 			data.add(nbt);
 		}
-		
+
 		return data;
 	}
 
@@ -181,7 +178,6 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 
 	/**
 	 * @return Returns if a specific slot is valid to input a specific itemStack.
-	 * 
 	 */
 	public boolean canIncreaseStack(int slotID, ItemStack itemStack)
 	{
@@ -221,7 +217,7 @@ public abstract class TileMFFSInventory extends TileMFFS implements IInventory
 
 	/**
 	 * Tries to place an itemStack in a specific position if it is an inventory.
-	 * 
+	 *
 	 * @return The ItemStack remained after place attempt
 	 */
 	public ItemStack tryPlaceInPosition(ItemStack itemStack, Vector3 position, ForgeDirection dir)

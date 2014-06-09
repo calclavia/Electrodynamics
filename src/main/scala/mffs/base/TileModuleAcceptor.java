@@ -1,23 +1,18 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.modules.IModuleAcceptor;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import calclavia.api.mffs.ICache;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IModuleAcceptor;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.*;
 
 public abstract class TileModuleAcceptor extends TileFortron implements IModuleAcceptor, ICache
 {
@@ -29,12 +24,12 @@ public abstract class TileModuleAcceptor extends TileFortron implements IModuleA
 
 	public int startModuleIndex = 0;
 	public int endModuleIndex = this.getSizeInventory() - 1;
-
+	/**
+	 * Used for client-side only.
+	 */
+	public int clientFortronCost = 0;
 	protected int capacityBase = 500;
 	protected int capacityBoost = 5;
-
-	/** Used for client-side only. */
-	public int clientFortronCost = 0;
 
 	@Override
 	public ArrayList getPacketData(int packetID)

@@ -1,20 +1,20 @@
 package mffs.item.module;
 
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IModule;
 import mffs.base.ItemMFFS;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.modules.IModule;
-import resonant.lib.utility.LanguageUtility;
+
+import java.util.List;
+import java.util.Set;
 
 public class ItemModule extends ItemMFFS implements IModule
 {

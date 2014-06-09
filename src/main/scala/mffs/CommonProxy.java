@@ -1,25 +1,15 @@
 package mffs;
 
-import mffs.container.ContainerBiometricIdentifier;
-import mffs.container.ContainerCoercionDeriver;
-import mffs.container.ContainerForceFieldProjector;
-import mffs.container.ContainerForceManipulator;
-import mffs.container.ContainerFortronCapacitor;
-import mffs.container.ContainerInterdictionMatrix;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.IGuiHandler;
+import mffs.container.*;
 import mffs.render.IEffectController;
-import mffs.tile.TileBiometricIdentifier;
-import mffs.tile.TileCoercionDeriver;
-import mffs.tile.TileForceFieldProjector;
-import mffs.tile.TileForceManipulator;
-import mffs.tile.TileFortronCapacitor;
-import mffs.tile.TileInterdictionMatrix;
+import mffs.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.IGuiHandler;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -80,9 +70,9 @@ public class CommonProxy implements IGuiHandler
 
 	/**
 	 * Checks if the player is an operator.
-	 * 
-	 * @author King_Lemming
+	 *
 	 * @param username
+	 * @author King_Lemming
 	 */
 	public boolean isOp(String username)
 	{

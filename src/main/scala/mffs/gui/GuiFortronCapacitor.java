@@ -1,5 +1,6 @@
 package mffs.gui;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
@@ -8,14 +9,11 @@ import mffs.gui.button.GuiButtonPressTransferMode;
 import mffs.tile.TileFortronCapacitor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-
 import org.lwjgl.opengl.GL11;
-
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;
 import universalelectricity.api.vector.Vector2;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiFortronCapacitor extends GuiMFFS
 {
@@ -53,10 +51,12 @@ public class GuiFortronCapacitor extends GuiMFFS
 		this.textFieldFrequency.drawTextBox();
 		this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y);
 		this.fontRenderer.drawString(UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplay(this.tileEntity.getFortronCapacity(), Unit.LITER, UnitPrefix.MILLI), 8, 105, 4210752);
-		
+
 		if (tileEntity.getFortronCost() > 0)
+		{
 			fontRenderer.drawString("\u00a74-" + UnitDisplay.getDisplayShort(tileEntity.getFortronCost() * 20, Unit.LITER) + "/s", 118, 116, 4210752);
-		
+		}
+
 		super.drawGuiContainerForegroundLayer(x, y);
 	}
 

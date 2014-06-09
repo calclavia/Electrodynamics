@@ -1,19 +1,18 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
+import calclavia.api.mffs.card.ICardIdentification;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.Permission;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileFrequency;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.ItemStack;
-import calclavia.api.mffs.card.ICardIdentification;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.Permission;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TileBiometricIdentifier extends TileFrequency implements IBiometricIdentifier
 {

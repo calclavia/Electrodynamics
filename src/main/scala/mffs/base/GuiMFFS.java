@@ -1,5 +1,7 @@
 package mffs.base;
 
+import calclavia.api.mffs.IBiometricIdentifierLink;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileMFFS.TilePacketType;
@@ -10,15 +12,11 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.input.Keyboard;
-
-import universalelectricity.api.vector.Vector2;
 import resonant.api.blocks.IBlockFrequency;
-import calclavia.api.mffs.IBiometricIdentifierLink;
 import resonant.lib.gui.GuiContainerBase;
 import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import universalelectricity.api.vector.Vector2;
 
 public class GuiMFFS extends GuiContainerBase
 {

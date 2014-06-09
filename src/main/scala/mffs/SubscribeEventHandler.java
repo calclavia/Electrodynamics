@@ -1,7 +1,13 @@
 package mffs;
 
-import java.util.HashMap;
-
+import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
+import calclavia.api.mffs.EventStabilize;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.base.TileFortron;
 import mffs.fortron.FortronHelper;
 import mffs.tile.TileForceFieldProjector;
@@ -17,16 +23,10 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
-import calclavia.api.mffs.EventStabilize;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
 import resonant.lib.event.ChunkModifiedEvent.ChunkSetBlockEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.vector.Vector3;
+
+import java.util.HashMap;
 
 public class SubscribeEventHandler
 {
@@ -67,7 +67,7 @@ public class SubscribeEventHandler
 
 	/**
 	 * Special stabilization cases.
-	 * 
+	 *
 	 * @param evt
 	 */
 	@ForgeSubscribe
@@ -145,7 +145,7 @@ public class SubscribeEventHandler
 
 	/**
 	 * When a block breaks, mark force field projectors for an update.
-	 * 
+	 *
 	 * @param evt
 	 */
 	@ForgeSubscribe

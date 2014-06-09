@@ -1,19 +1,17 @@
 package mffs.event;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.tile.TileForceManipulator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
  * Removes the TileEntity
- * 
+ *
  * @author Calclavia
- * 
  */
 public class BlockNotifyDelayedEvent extends DelayedEvent
 {

@@ -1,22 +1,19 @@
 package mffs.render;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
-import universalelectricity.api.vector.Vector3;
 import resonant.lib.render.RenderUtility;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * @author Calclavia
- * 
  */
 @SideOnly(Side.CLIENT)
 public class FXHologramOrbit extends FXHologram

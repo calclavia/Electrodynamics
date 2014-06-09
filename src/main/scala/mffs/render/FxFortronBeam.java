@@ -1,18 +1,17 @@
 package mffs.render;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
 import resonant.lib.render.fx.FxBeam;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.vector.Vector3;
 
 /**
  * Based off Thaumcraft's Beam Renderer.
- * 
+ *
  * @author Calclavia, Azanor
- * 
  */
 @SideOnly(Side.CLIENT)
 public class FxFortronBeam extends FxBeam

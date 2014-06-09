@@ -1,17 +1,17 @@
 package mffs.item.card;
 
-import java.util.List;
-
+import calclavia.api.mffs.card.ICardIdentification;
+import calclavia.api.mffs.security.Permission;
 import mffs.card.ItemCard;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import calclavia.api.mffs.card.ICardIdentification;
-import calclavia.api.mffs.security.Permission;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
+
+import java.util.List;
 
 public class ItemCardID extends ItemCard implements ICardIdentification
 {

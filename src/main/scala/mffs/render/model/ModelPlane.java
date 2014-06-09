@@ -1,15 +1,14 @@
 package mffs.render.model;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelRenderer;
 
 /**
  * A plane model.
- * 
+ *
  * @author Calclavia
- * 
  */
 @SideOnly(Side.CLIENT)
 public class ModelPlane extends ModelBase

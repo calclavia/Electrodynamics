@@ -1,5 +1,8 @@
 package mffs.gui;
 
+import calclavia.api.mffs.card.ICardIdentification;
+import calclavia.api.mffs.security.Permission;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
@@ -10,9 +13,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import universalelectricity.api.vector.Vector2;
-import calclavia.api.mffs.card.ICardIdentification;
-import calclavia.api.mffs.security.Permission;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiBiometricIdentifier extends GuiMFFS
 {

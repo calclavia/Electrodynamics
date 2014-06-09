@@ -1,8 +1,7 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.EnumSet;
-
+import calclavia.api.mffs.modules.IModule;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileMFFSElectrical;
@@ -14,32 +13,31 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.energy.EnergyStorageHandler;
-import calclavia.api.mffs.modules.IModule;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.EnumSet;
 
 /**
  * A TileEntity that extract energy into Fortron.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class TileCoercionDeriver extends TileMFFSElectrical
 {
+	public static final int FUEL_PROCESS_TIME = 10 * 20;
+	public static final int MULTIPLE_PRODUCTION = 4;
+	/**
+	 * Ration from UE to Fortron. Multiply J by this value to convert to Fortron.
+	 */
+	public static final float UE_FORTRON_RATIO = 0.001f;
+	public static final int ENERGY_LOSS = 1;
+	public static final int SLOT_FREQUENCY = 0;
+	public static final int SLOT_BATTERY = 1;
+	public static final int SLOT_FUEL = 2;
 	/**
 	 * The amount of KiloWatts this machine uses.
 	 */
 	private static final int DEFAULT_WATTAGE = 5000000;
-	public static final int FUEL_PROCESS_TIME = 10 * 20;
-	public static final int MULTIPLE_PRODUCTION = 4;
-	/** Ration from UE to Fortron. Multiply J by this value to convert to Fortron. */
-	public static final float UE_FORTRON_RATIO = 0.001f;
-	public static final int ENERGY_LOSS = 1;
-
-	public static final int SLOT_FREQUENCY = 0;
-	public static final int SLOT_BATTERY = 1;
-	public static final int SLOT_FUEL = 2;
-
 	public int processTime = 0;
 	public boolean isInversed = false;
 
@@ -140,7 +138,9 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	public long onReceiveEnergy(ForgeDirection from, long receive, boolean doReceive)
 	{
 		if (!isInversed)
+		{
 			return super.onReceiveEnergy(from, receive, doReceive);
+		}
 		return receive;
 	}
 
@@ -148,7 +148,9 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	public long onExtractEnergy(ForgeDirection from, long extract, boolean doExtract)
 	{
 		if (isInversed)
+		{
 			return super.onExtractEnergy(from, extract, doExtract);
+		}
 		return 0;
 	}
 

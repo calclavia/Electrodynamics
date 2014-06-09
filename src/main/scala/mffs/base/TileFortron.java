@@ -1,8 +1,9 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+import calclavia.api.mffs.card.ICard;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
@@ -10,30 +11,22 @@ import mffs.fortron.FortronHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.card.ICard;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
+import net.minecraftforge.fluids.*;
 import resonant.lib.network.PacketHandler;
+import universalelectricity.api.vector.Vector3;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A TileEntity that is powered by FortronHelper.
- * 
+ *
  * @author Calclavia
- * 
  */
 public abstract class TileFortron extends TileFrequency implements IFluidHandler, IFortronFrequency
 {
-	protected FluidTank fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 	public boolean markSendFortron = true;
+	protected FluidTank fortronTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
 
 	@Override
 	public void updateEntity()
@@ -177,15 +170,15 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 	}
 
 	@Override
-	public void setFortronEnergy(int joules)
-	{
-		this.fortronTank.setFluid(FortronHelper.getFortron(joules));
-	}
-
-	@Override
 	public int getFortronEnergy()
 	{
 		return FortronHelper.getAmount(this.fortronTank);
+	}
+
+	@Override
+	public void setFortronEnergy(int joules)
+	{
+		this.fortronTank.setFluid(FortronHelper.getFortron(joules));
 	}
 
 	@Override
@@ -208,7 +201,7 @@ public abstract class TileFortron extends TileFrequency implements IFluidHandler
 
 	/**
 	 * Gets the card that's in this machine.
-	 * 
+	 *
 	 * @return
 	 */
 	public ItemStack getCard()

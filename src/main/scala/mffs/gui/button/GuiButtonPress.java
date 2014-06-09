@@ -1,24 +1,21 @@
 package mffs.gui.button;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-
 import org.lwjgl.opengl.GL11;
-
-import universalelectricity.api.vector.Vector2;
 import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.client.FMLClientHandler;
+import universalelectricity.api.vector.Vector2;
 
 public class GuiButtonPress extends GuiButton
 {
-	protected Vector2 offset = new Vector2();
-
 	/**
 	 * Stuck determines if the button is hard pressed done, or disabled looking.
 	 */
 	public boolean stuck = false;
+	protected Vector2 offset = new Vector2();
 	private GuiMFFS mainGui;
 
 	public GuiButtonPress(int id, int x, int y, Vector2 offset, GuiMFFS mainGui, String name)

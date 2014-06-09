@@ -26,15 +26,14 @@ import java.util.Set;
 public abstract class TileFieldInteraction extends TileModuleAcceptor implements IFieldInteraction, IDelayedEventHandler
 {
 	protected static final int MODULE_SLOT_ID = 2;
-	protected boolean isCalculating = false;
-	protected boolean isCalculated = false;
-
+	protected final Set<Vector3> calculatedField = new HashSet();
+	protected final Queue<DelayedEvent> delayedEvents = new LinkedList();
 	/**
 	 * Are the directions on the GUI absolute values?
 	 */
 	public boolean isAbsolute = false;
-	protected final Set<Vector3> calculatedField = new HashSet();
-	protected final Queue<DelayedEvent> delayedEvents = new LinkedList();
+	protected boolean isCalculating = false;
+	protected boolean isCalculated = false;
 
 	@Override
 	public void updateEntity()

@@ -1,5 +1,6 @@
 package mffs.gui;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
@@ -8,15 +9,12 @@ import mffs.tile.TileCoercionDeriver;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
-
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiCoercionDeriver extends GuiMFFS
 {

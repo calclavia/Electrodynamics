@@ -1,19 +1,17 @@
 package mffs.item.mode;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import mffs.ModularForceFieldSystem;
-import mffs.render.model.ModelCube;
-import net.minecraft.tileentity.TileEntity;
-
-import org.lwjgl.opengl.GL11;
-
-import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.IProjector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mffs.ModularForceFieldSystem;
+import mffs.render.model.ModelCube;
+import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL11;
+import universalelectricity.api.vector.Vector3;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemModeSphere extends ItemMode
 {

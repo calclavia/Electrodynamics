@@ -1,20 +1,19 @@
 package mffs;
 
-import java.io.File;
-
-import resonant.lib.config.Config;
+import calclavia.api.mffs.Blacklist;
+import cpw.mods.fml.common.Loader;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
-import calclavia.api.mffs.Blacklist;
+import resonant.lib.config.Config;
 import resonant.lib.content.IDManager;
 import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.common.Loader;
+
+import java.io.File;
 
 /**
  * Settings include all configuration for MFFS.
- * 
+ *
  * @author Calclavia
- * 
  */
 public class Settings
 {
@@ -24,17 +23,7 @@ public class Settings
 	 * Auto-incrementing configuration IDs. Use this to make sure no config ID is the same.
 	 */
 	public static final IDManager idManager = new IDManager(1680, 11130);
-
-	public static int getNextBlockID()
-	{
-		return idManager.getNextBlockID();
-	}
-
-	public static int getNextItemID()
-	{
-		return idManager.getNextItemID();
-	}
-
+	public static final int MAX_FREQUENCY_DIGITS = 6;
 	/**
 	 * MFFS Configuration Settings
 	 */
@@ -50,12 +39,21 @@ public class Settings
 	public static boolean HIGH_GRAPHICS = true;
 	public static int INTERDICTION_MURDER_ENERGY = 0;
 	public static int INTERDICTION_MAX_RANGE = Integer.MAX_VALUE;
-	public static final int MAX_FREQUENCY_DIGITS = 6;
 	public static boolean ENABLE_MANIPULATOR = true;
 	@Config
 	public static boolean allowForceManipulatorTeleport = true;
 	@Config
 	public static boolean allowFortronTeleport = true;
+
+	public static int getNextBlockID()
+	{
+		return idManager.getNextBlockID();
+	}
+
+	public static int getNextItemID()
+	{
+		return idManager.getNextItemID();
+	}
 
 	public static void load()
 	{

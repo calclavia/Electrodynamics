@@ -1,5 +1,9 @@
 package mffs.base;
 
+import calclavia.api.mffs.IBiometricIdentifierLink;
+import calclavia.api.mffs.security.Permission;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -11,13 +15,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.UniversalElectricity;
 import resonant.api.blocks.ICamouflageMaterial;
-import calclavia.api.mffs.IBiometricIdentifierLink;
-import calclavia.api.mffs.security.Permission;
 import resonant.lib.prefab.block.BlockRotatable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.UniversalElectricity;
 
 public abstract class BlockMFFS extends BlockRotatable implements ICamouflageMaterial
 {

@@ -3,8 +3,6 @@ package mffs.item.module.projector;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.security.IBiometricIdentifier;
 import calclavia.api.mffs.security.Permission;
-import resonant.lib.prefab.vector.Cuboid;
-import mffs.ModularForceFieldSystem;
 import mffs.item.module.ItemModule;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.entity.Entity;
@@ -12,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.prefab.vector.Cuboid;
 import universalelectricity.api.vector.Vector3;
 
 import java.util.ArrayList;

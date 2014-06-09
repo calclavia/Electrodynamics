@@ -1,7 +1,5 @@
 package mffs.base;
 
-import java.util.EnumSet;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -13,9 +11,10 @@ import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.api.energy.IEnergyInterface;
 import universalelectricity.api.vector.Vector3;
 
+import java.util.EnumSet;
+
 /**
  * @author Calclavia
- * 
  */
 @UniversalClass
 public abstract class TileMFFSElectrical extends TileModuleAcceptor implements IEnergyInterface, IEnergyContainer
@@ -40,7 +39,7 @@ public abstract class TileMFFSElectrical extends TileModuleAcceptor implements I
 
 	/**
 	 * The electrical input direction.
-	 * 
+	 *
 	 * @return The direction that electricity is entered into the tile. Return null for no input. By
 	 * default you can accept power from all sides.
 	 */
@@ -51,7 +50,7 @@ public abstract class TileMFFSElectrical extends TileModuleAcceptor implements I
 
 	/**
 	 * The electrical output direction.
-	 * 
+	 *
 	 * @return The direction that electricity is output from the tile. Return null for no output. By
 	 * default it will return an empty EnumSet.
 	 */

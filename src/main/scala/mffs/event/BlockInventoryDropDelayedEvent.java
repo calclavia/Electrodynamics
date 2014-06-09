@@ -1,13 +1,13 @@
 package mffs.event;
 
-import java.util.ArrayList;
-
 import mffs.IDelayedEventHandler;
 import mffs.base.TileMFFSInventory;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import universalelectricity.api.vector.Vector3;
+
+import java.util.ArrayList;
 
 public class BlockInventoryDropDelayedEvent extends BlockDropDelayedEvent
 {

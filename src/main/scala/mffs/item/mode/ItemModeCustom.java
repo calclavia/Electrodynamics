@@ -1,10 +1,11 @@
 package mffs.item.mode;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.ICache;
+import calclavia.api.mffs.IFieldInteraction;
+import calclavia.api.mffs.IProjector;
+import calclavia.api.mffs.modules.IProjectorMode;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.item.module.projector.ItemModuleArray;
@@ -17,15 +18,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import universalelectricity.api.vector.Vector3;
-import calclavia.api.mffs.ICache;
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.modules.IProjectorMode;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import universalelectricity.api.vector.Vector3;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class ItemModeCustom extends ItemMode implements ICache
 {

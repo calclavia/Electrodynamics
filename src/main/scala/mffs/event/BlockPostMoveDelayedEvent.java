@@ -1,14 +1,13 @@
 package mffs.event;
 
 import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
-import resonant.lib.utility.MovementUtility;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
-import mffs.tile.TileForceManipulator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import resonant.lib.utility.MovementUtility;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 

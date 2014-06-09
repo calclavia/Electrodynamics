@@ -1,5 +1,6 @@
 package mffs.gui;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
@@ -12,12 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import resonant.lib.prefab.vector.Rectangle;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector2;
-import resonant.lib.prefab.vector.Rectangle;
-import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GuiForceManipulator extends GuiMFFS
 {
@@ -91,7 +91,7 @@ public class GuiForceManipulator extends GuiMFFS
 		this.textFieldFrequency.drawTextBox();
 
 		drawTextWithTooltip("fortron", "\u00a74Consumption: -" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCost() * 20, Unit.LITER) + "/s", 30, 110, x, y);
-		drawTextWithTooltip("fortron", "\u00a7F" +UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.LITER), 68, 122, x, y);
+		drawTextWithTooltip("fortron", "\u00a7F" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronEnergy(), Unit.LITER) + "/" + UnitDisplay.getDisplayShort(this.tileEntity.getFortronCapacity(), Unit.LITER), 68, 122, x, y);
 		fontRenderer.drawString(LanguageUtility.getLocal("gui.manipulator.fortron"), 8, 121, 4210752);
 		super.drawGuiContainerForegroundLayer(x, y);
 	}

@@ -1,39 +1,17 @@
 package mffs;
 
-import mffs.gui.GuiBiometricIdentifier;
-import mffs.gui.GuiCoercionDeriver;
-import mffs.gui.GuiForceFieldProjector;
-import mffs.gui.GuiForceManipulator;
-import mffs.gui.GuiFortronCapacitor;
-import mffs.gui.GuiInterdictionMatrix;
-import mffs.render.FXHologram;
-import mffs.render.FXHologramMoving;
-import mffs.render.FXHologramOrbit;
-import mffs.render.FxFortronBeam;
-import mffs.render.FxMFFS;
-import mffs.render.IEffectController;
-import mffs.render.RenderBlockHandler;
-import mffs.render.RenderCoercionDeriver;
-import mffs.render.RenderForceField;
-import mffs.render.RenderForceFieldProjector;
-import mffs.render.RenderForceManipulator;
-import mffs.render.RenderFortronCapacitor;
-import mffs.render.RenderIDCard;
-import mffs.tile.TileBiometricIdentifier;
-import mffs.tile.TileCoercionDeriver;
-import mffs.tile.TileForceFieldProjector;
-import mffs.tile.TileForceManipulator;
-import mffs.tile.TileFortronCapacitor;
-import mffs.tile.TileInterdictionMatrix;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import mffs.gui.*;
+import mffs.render.*;
+import mffs.tile.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.api.vector.Vector3;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {

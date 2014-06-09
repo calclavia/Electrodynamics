@@ -1,7 +1,6 @@
 package mffs.base;
 
-import java.util.List;
-
+import cpw.mods.fml.common.registry.GameRegistry;
 import mffs.MFFSCreativeTab;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -9,7 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.common.registry.GameRegistry;
+
+import java.util.List;
 
 public class ItemMFFS extends Item
 {

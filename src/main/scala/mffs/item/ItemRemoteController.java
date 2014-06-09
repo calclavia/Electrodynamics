@@ -1,9 +1,13 @@
 package mffs.item;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
+import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
+import calclavia.api.mffs.card.ICoordLink;
+import calclavia.api.mffs.fortron.FrequencyGrid;
+import calclavia.api.mffs.fortron.IFortronFrequency;
+import calclavia.api.mffs.security.Permission;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.item.card.ItemCardFrequency;
@@ -17,23 +21,20 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
-import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
-import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.security.Permission;
-import resonant.lib.utility.LanguageUtility;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ItemRemoteController extends ItemCardFrequency implements ICoordLink
 {
 	private final Set<ItemStack> remotesCached = new HashSet<ItemStack>();
+	private final Set<ItemStack> temporaryRemoteBlacklist = new HashSet<ItemStack>();
 
 	public ItemRemoteController(int id)
 	{
@@ -177,8 +178,6 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 		return itemStack;
 	}
 
-	private final Set<ItemStack> temporaryRemoteBlacklist = new HashSet<ItemStack>();
-
 	@ForgeSubscribe
 	public void preMove(EventPreForceManipulate evt)
 	{
@@ -188,7 +187,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 	/**
 	 * Moves the coordinates of the link if the Force Manipulator moved a block that is linked by
 	 * the remote.
-	 * 
+	 *
 	 * @param evt
 	 */
 	@ForgeSubscribe

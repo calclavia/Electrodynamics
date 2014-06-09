@@ -1,11 +1,11 @@
 package mffs.tile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import calclavia.api.mffs.modules.IInterdictionMatrixModule;
+import calclavia.api.mffs.modules.IModule;
+import calclavia.api.mffs.security.IBiometricIdentifier;
+import calclavia.api.mffs.security.IInterdictionMatrix;
+import calclavia.api.mffs.security.Permission;
+import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileModuleAcceptor;
@@ -15,14 +15,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import calclavia.api.mffs.modules.IInterdictionMatrixModule;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
 import resonant.lib.utility.LanguageUtility;
 
-import com.google.common.io.ByteArrayDataInput;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TileInterdictionMatrix extends TileModuleAcceptor implements IInterdictionMatrix
 {
@@ -122,7 +121,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 	/**
 	 * Applies an action.
-	 * 
+	 *
 	 * @param entityLiving
 	 */
 	public void applyAction(EntityLivingBase entityLiving)

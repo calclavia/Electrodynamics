@@ -1,20 +1,19 @@
 package mffs.base;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import universalelectricity.api.vector.Vector3;
-import resonant.api.blocks.IBlockFrequency;
 import calclavia.api.mffs.IBiometricIdentifierLink;
 import calclavia.api.mffs.card.ICoordLink;
 import calclavia.api.mffs.fortron.FrequencyGrid;
 import calclavia.api.mffs.security.IBiometricIdentifier;
-
 import com.google.common.io.ByteArrayDataInput;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import resonant.api.blocks.IBlockFrequency;
+import universalelectricity.api.vector.Vector3;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class TileFrequency extends TileMFFSInventory implements IBlockFrequency, IBiometricIdentifierLink
 {
@@ -73,7 +72,7 @@ public abstract class TileFrequency extends TileMFFSInventory implements IBlockF
 
 	/**
 	 * Gets the first linked security station, based on the card slots and frequency.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override

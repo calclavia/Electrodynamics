@@ -1,12 +1,12 @@
 package mffs.item.mode;
 
-import mffs.base.ItemMFFS;
-import universalelectricity.api.vector.Vector3;
 import calclavia.api.mffs.IFieldInteraction;
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.modules.IProjectorMode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mffs.base.ItemMFFS;
+import universalelectricity.api.vector.Vector3;
 
 public abstract class ItemMode extends ItemMFFS implements IProjectorMode
 {

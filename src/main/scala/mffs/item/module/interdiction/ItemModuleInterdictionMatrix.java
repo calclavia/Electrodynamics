@@ -1,14 +1,14 @@
 package mffs.item.module.interdiction;
 
-import java.util.List;
-
+import calclavia.api.mffs.modules.IInterdictionMatrixModule;
+import calclavia.api.mffs.security.IInterdictionMatrix;
 import mffs.item.module.ItemModule;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import calclavia.api.mffs.modules.IInterdictionMatrixModule;
-import calclavia.api.mffs.security.IInterdictionMatrix;
 import resonant.lib.utility.LanguageUtility;
+
+import java.util.List;
 
 public class ItemModuleInterdictionMatrix extends ItemModule implements IInterdictionMatrixModule
 {

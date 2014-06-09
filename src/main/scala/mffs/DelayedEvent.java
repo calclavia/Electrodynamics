@@ -25,7 +25,7 @@ public abstract class DelayedEvent
 
 	/**
 	 * The higher the number, the higher the priority.
-	 * 
+	 *
 	 * @return
 	 */
 	public int getPriority()

@@ -15,8 +15,8 @@ import universalelectricity.api.vector.Vector3;
 
 public class TileForceField extends TileAdvanced implements IPacketReceiver
 {
-	private Vector3 projector = null;
 	public ItemStack camoStack = null;
+	private Vector3 projector = null;
 
 	@Override
 	public boolean canUpdate()
@@ -67,16 +67,6 @@ public class TileForceField extends TileAdvanced implements IPacketReceiver
 		}
 	}
 
-	public void setProjector(Vector3 position)
-	{
-		this.projector = position;
-
-		if (!this.worldObj.isRemote)
-		{
-			this.refreshCamoBlock();
-		}
-	}
-
 	/**
 	 * @return Gets the projector block controlling this force field. Removes the force field if no
 	 * projector can be found.
@@ -94,6 +84,16 @@ public class TileForceField extends TileAdvanced implements IPacketReceiver
 		}
 
 		return null;
+	}
+
+	public void setProjector(Vector3 position)
+	{
+		this.projector = position;
+
+		if (!this.worldObj.isRemote)
+		{
+			this.refreshCamoBlock();
+		}
 	}
 
 	public TileForceFieldProjector getProjectorSafe()
