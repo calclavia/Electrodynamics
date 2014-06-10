@@ -4,11 +4,14 @@ import java.io.IOException;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
+import resonant.core.ResonantEngine;
 import resonant.lib.References;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.network.IPacketReceiver;
@@ -16,7 +19,9 @@ import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.PacketHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.gear.MechanicalNodeFrame;
 import universalelectricity.api.vector.Vector3;
+import codechicken.multipart.ControlKeyModifer;
 
 import com.google.common.io.ByteArrayDataInput;
 
@@ -30,6 +35,9 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
 
     /** Node that handles most mechanical actions */
     public MechanicalNode mechanicalNode;
+    
+    /** External debug GUI */
+    MechanicalNodeFrame frame = null;
 
     @Deprecated
     public TileMechanical()
@@ -70,6 +78,37 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
                 mechanicalNode.markTorqueUpdate = false;
             }
         }
+    }
+   
+    @Override
+    protected boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+        ItemStack itemStack = player.getHeldItem();
+        if (ResonantEngine.runningAsDev)
+        {
+            if (itemStack != null && !world().isRemote)
+            {
+                if (itemStack.getItem().itemID == Item.stick.itemID)
+                {
+                    //Set the nodes debug mode
+                    if (ControlKeyModifer.isControlDown(player))
+                    {
+                        //Opens a debug GUI
+                        if (frame == null)
+                        {
+                            frame = new MechanicalNodeFrame(this.mechanicalNode);
+                            frame.showDebugFrame();
+                        } //Closes the debug GUI
+                        else
+                        {
+                            frame.closeDebugFrame();
+                            frame = null;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
