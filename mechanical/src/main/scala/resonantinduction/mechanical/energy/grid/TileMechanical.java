@@ -8,6 +8,7 @@ import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.network.IPacketReceiver;
+import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.PacketHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
@@ -18,7 +19,7 @@ import com.google.common.io.ByteArrayDataInput;
 /** Prefab for mechanical tiles
  * 
  * @author Calclavia */
-public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiver
+public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiverWithID
 {
     protected static final int PACKET_VELOCITY = 1;
 
@@ -76,19 +77,21 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
 
     private void sendRotationPacket()
     {
-        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacket(this, PACKET_VELOCITY, mechanicalNode.angularVelocity), worldObj, new Vector3(this), 20);
+        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_VELOCITY, this, mechanicalNode.angularVelocity), worldObj, new Vector3(this), 20);
     }
 
     @Override
-    public void onReceivePacket(ByteArrayDataInput data, EntityPlayer player, Object... extra)
+    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
-        onReceivePacket(data.readInt(), data, player, extra);
-    }
-
-    public void onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-    {
-        if (id == PACKET_VELOCITY)
-            mechanicalNode.angularVelocity = data.readDouble();
+        if (!world().isRemote)
+        {
+            if (id == PACKET_VELOCITY)
+            {
+                mechanicalNode.angularVelocity = data.readDouble();
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
