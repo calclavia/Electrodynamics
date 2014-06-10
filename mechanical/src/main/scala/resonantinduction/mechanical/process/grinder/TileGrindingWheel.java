@@ -49,7 +49,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
     public void updateEntity()
     {
         super.updateEntity();
-        counter = Math.max(counter + mechanicalNode.torque, 0);
+        counter = Math.max(counter + Math.abs(mechanicalNode.torque), 0);
         doWork();
     }
 

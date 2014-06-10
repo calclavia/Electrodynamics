@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import net.minecraftforge.common.ForgeDirection;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.PartMechanical;
+import resonantinduction.mechanical.energy.grid.TileMechanical;
 
 /** Java GUI used to help debug gear information
  * 
@@ -25,65 +26,31 @@ import resonantinduction.mechanical.energy.grid.PartMechanical;
 public class MechanicalNodeFrame extends Frame implements ActionListener
 {
     List<UpdatedLabel> dataLabels = new ArrayList<UpdatedLabel>();
-    Label[] connections = new Label[20];
+    Label[] connections = new Label[10];
 
     long tick = 0;
-    MechanicalNode part = null;
+    PartMechanical partMechanical = null;
+    TileMechanical tileMechanical = null;
 
-    public MechanicalNodeFrame(MechanicalNode part)
+    public MechanicalNodeFrame(TileMechanical tile)
+    {        
+        this();
+        this.tileMechanical = tile;
+        
+    }
+    
+    public MechanicalNodeFrame(PartMechanical part)
     {
-        this.part = part;
+        this();
+        this.partMechanical = part;
+    }
+    
+    protected MechanicalNodeFrame()
+    {
         setLayout(new BorderLayout());
         setBackground(Color.LIGHT_GRAY);
-
-        //Top bar
-        Panel topPanel = new Panel(new GridLayout(1, 4, 0, 0));
-
-        UpdatedLabel tickLabel = new UpdatedLabel("Tick: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + tick;
-            }
-        };
-        dataLabels.add(tickLabel);
-        topPanel.add(tickLabel);
-
-        UpdatedLabel xLabel = new UpdatedLabel("X: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.x();
-            }
-        };
-        dataLabels.add(xLabel);
-        topPanel.add(xLabel);
-        
-        UpdatedLabel yLabel = new UpdatedLabel("Y: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.y();
-            }
-        };
-        topPanel.add(yLabel);
-        dataLabels.add(yLabel);
-        
-        UpdatedLabel zLabel = new UpdatedLabel("Z: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.z();
-            }
-        };
-        topPanel.add(zLabel);
-        dataLabels.add(zLabel);
-        
-        add(topPanel, BorderLayout.NORTH);
+        this.createBottomBar();
+        this.createTopBar();
 
         //Middle bar
         Panel middlePanel = new Panel(new GridLayout(3, 1, 0, 0));
@@ -93,7 +60,7 @@ public class MechanicalNodeFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.angularVelocity;
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().angularVelocity;
             }
         };
         dataLabels.add(velLabel);
@@ -104,7 +71,7 @@ public class MechanicalNodeFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.renderAngle;
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().renderAngle;
             }
         };
         dataLabels.add(angleLabel);
@@ -115,21 +82,21 @@ public class MechanicalNodeFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + MechanicalNodeFrame.this.part.torque;
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().torque;
             }
         };
         dataLabels.add(torqueLabel);
         middlePanel.add(torqueLabel);
 
-        add(middlePanel, BorderLayout.CENTER);
+        add(middlePanel, BorderLayout.WEST);
 
-        Panel connectionPanel = new Panel(new GridLayout(this.connections.length / 4, 4, 0, 0));
+        Panel connectionPanel = new Panel(new GridLayout(this.connections.length / 2, 2, 0, 0));
         for (int i = 0; i < connections.length; i++)
         {
             this.connections[i] = new Label("Connection" + i + ":  ----");
             connectionPanel.add(connections[i]);
         }
-        add(connectionPanel, BorderLayout.SOUTH);
+        add(connectionPanel, BorderLayout.EAST);
 
         //exit icon handler
         addWindowListener(new WindowAdapter()
@@ -143,18 +110,107 @@ public class MechanicalNodeFrame extends Frame implements ActionListener
         });
     }
 
+    public MechanicalNode getNode()
+    {
+        if(partMechanical != null)
+        {
+            return partMechanical.node;
+        }
+        return tileMechanical.mechanicalNode;
+    }
+
+    public void createTopBar()
+    {
+        Panel panel = new Panel(new GridLayout(1, 2, 0, 0));
+
+        UpdatedLabel tickLabel = new UpdatedLabel("Node: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode();
+            }
+        };
+        dataLabels.add(tickLabel);
+        panel.add(tickLabel);
+
+        UpdatedLabel xLabel = new UpdatedLabel("Parent: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + (MechanicalNodeFrame.this.getNode() != null ? MechanicalNodeFrame.this.getNode().getParent() : "null");
+            }
+        };
+        dataLabels.add(xLabel);
+        panel.add(xLabel);
+
+        add(panel, BorderLayout.NORTH);
+    }
+
+    public void createBottomBar()
+    {
+        Panel bottomPanel = new Panel(new GridLayout(1, 4, 0, 0));
+
+        UpdatedLabel tickLabel = new UpdatedLabel("Tick: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + tick;
+            }
+        };
+        dataLabels.add(tickLabel);
+        bottomPanel.add(tickLabel);
+
+        UpdatedLabel xLabel = new UpdatedLabel("X: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().x();
+            }
+        };
+        dataLabels.add(xLabel);
+        bottomPanel.add(xLabel);
+
+        UpdatedLabel yLabel = new UpdatedLabel("Y: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().y();
+            }
+        };
+        bottomPanel.add(yLabel);
+        dataLabels.add(yLabel);
+
+        UpdatedLabel zLabel = new UpdatedLabel("Z: ")
+        {
+            @Override
+            public String buildLabel()
+            {
+                return super.buildLabel() + MechanicalNodeFrame.this.getNode().z();
+            }
+        };
+        bottomPanel.add(zLabel);
+        dataLabels.add(zLabel);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
     /** Called each cpu cycle */
     public void update()
     {
         tick++;
-        if (this.part != null)
+        if (this.getNode() != null)
         {
             for (UpdatedLabel label : dataLabels)
             {
                 label.update();
             }
             int c = 0;
-            for (Entry<MechanicalNode, ForgeDirection> entry : part.getConnections().entrySet())
+            for (Entry<MechanicalNode, ForgeDirection> entry : getNode().getConnections().entrySet())
             {
                 if (entry.getKey() != null)
                 {

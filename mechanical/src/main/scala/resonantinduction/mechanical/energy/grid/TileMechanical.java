@@ -96,7 +96,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
                         //Opens a debug GUI
                         if (frame == null)
                         {
-                            frame = new MechanicalNodeFrame(this.mechanicalNode);
+                            frame = new MechanicalNodeFrame(this);
                             frame.showDebugFrame();
                         } //Closes the debug GUI
                         else
