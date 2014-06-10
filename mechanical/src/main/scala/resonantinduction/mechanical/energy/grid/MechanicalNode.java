@@ -124,7 +124,7 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
                 prevAngularVelocity = angularVelocity;
                 markRotationUpdate = true;
             }
-            
+
             if (Math.abs(prevTorque - torque) > 0.01f)
             {
                 prevTorque = torque;
@@ -135,26 +135,10 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
             // Loss calculations
             //-----------------------------------
             double torqueLoss = Math.min(Math.abs(getTorque()), (Math.abs(getTorque() * getTorqueLoad()) + getTorqueLoad() / 10) * deltaTime);
-
-            if (torque > 0)
-            {
-                torque -= torqueLoss;
-            }
-            else
-            {
-                torque += torqueLoss;
-            }
+            torque += torque > 0 ? -torqueLoss : torqueLoss;
 
             double velocityLoss = Math.min(Math.abs(getAngularSpeed()), (Math.abs(getAngularSpeed() * getAngularVelocityLoad()) + getAngularVelocityLoad() / 10) * deltaTime);
-
-            if (angularVelocity > 0)
-            {
-                angularVelocity -= velocityLoss;
-            }
-            else
-            {
-                angularVelocity += velocityLoss;
-            }
+            angularVelocity += angularVelocity > 0 ? -velocityLoss : velocityLoss;
 
             if (getEnergy() <= 0)
             {
