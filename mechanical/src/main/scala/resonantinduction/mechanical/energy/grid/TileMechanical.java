@@ -1,11 +1,15 @@
 package resonantinduction.mechanical.energy.grid;
 
+import java.io.IOException;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
+import resonant.lib.References;
 import resonant.lib.content.module.TileBase;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.IPacketReceiverWithID;
@@ -21,6 +25,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia */
 public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiverWithID
 {
+    protected static final int PACKET_NBT = 0;
     protected static final int PACKET_VELOCITY = 1;
 
     /** Node that handles most mechanical actions */
@@ -74,6 +79,14 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
             return mechanicalNode;
         return null;
     }
+    
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return References.PACKET_TILE.getPacketWithID(PACKET_NBT, this, tag);
+    }
 
     private void sendRotationPacket()
     {
@@ -83,13 +96,26 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     @Override
     public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
     {
-        if (!world().isRemote)
+        try
         {
-            if (id == PACKET_VELOCITY)
+            if (!world().isRemote)
             {
-                mechanicalNode.angularVelocity = data.readDouble();
-                return true;
+                if (id == PACKET_NBT)
+                {
+                    readFromNBT(PacketHandler.readNBTTagCompound(data));
+                    return true;
+                }
+                else if (id == PACKET_VELOCITY)
+                {
+                    mechanicalNode.angularVelocity = data.readDouble();
+                    return true;
+                }
             }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return true;
         }
         return false;
     }
