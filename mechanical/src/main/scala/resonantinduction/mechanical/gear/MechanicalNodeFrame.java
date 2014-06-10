@@ -22,7 +22,7 @@ import resonantinduction.mechanical.energy.grid.PartMechanical;
  * 
  * @author Darkguardsman */
 @SuppressWarnings("serial")
-public class GearDebugFrame extends Frame implements ActionListener
+public class MechanicalNodeFrame extends Frame implements ActionListener
 {
     List<UpdatedLabel> dataLabels = new ArrayList<UpdatedLabel>();
     Label[] connections = new Label[20];
@@ -30,7 +30,7 @@ public class GearDebugFrame extends Frame implements ActionListener
     long tick = 0;
     MechanicalNode part = null;
 
-    public GearDebugFrame(MechanicalNode part)
+    public MechanicalNodeFrame(MechanicalNode part)
     {
         this.part = part;
         setLayout(new BorderLayout());
@@ -55,7 +55,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.x();
+                return super.buildLabel() + MechanicalNodeFrame.this.part.x();
             }
         };
         dataLabels.add(xLabel);
@@ -66,7 +66,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.y();
+                return super.buildLabel() + MechanicalNodeFrame.this.part.y();
             }
         };
         topPanel.add(yLabel);
@@ -77,7 +77,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.z();
+                return super.buildLabel() + MechanicalNodeFrame.this.part.z();
             }
         };
         topPanel.add(zLabel);
@@ -93,7 +93,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.angularVelocity;
+                return super.buildLabel() + MechanicalNodeFrame.this.part.angularVelocity;
             }
         };
         dataLabels.add(velLabel);
@@ -104,7 +104,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.renderAngle;
+                return super.buildLabel() + MechanicalNodeFrame.this.part.renderAngle;
             }
         };
         dataLabels.add(angleLabel);
@@ -115,7 +115,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.torque;
+                return super.buildLabel() + MechanicalNodeFrame.this.part.torque;
             }
         };
         dataLabels.add(torqueLabel);
