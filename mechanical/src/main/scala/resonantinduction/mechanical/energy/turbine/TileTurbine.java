@@ -1,29 +1,16 @@
 package resonantinduction.mechanical.energy.turbine;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.io.ByteArrayDataInput;
-
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
-import resonant.lib.References;
-import resonant.lib.content.module.TileBase;
 import resonant.lib.multiblock.IMultiBlockStructure;
 import resonant.lib.network.IPacketReceiverWithID;
-import resonant.lib.network.PacketHandler;
-import resonant.lib.network.Synced;
-import resonant.lib.network.Synced.SyncedInput;
-import resonant.lib.network.Synced.SyncedOutput;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -102,7 +89,6 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
 
     /** Reads a tile entity from NBT. */
     @Override
-    @SyncedInput
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
@@ -113,7 +99,6 @@ public class TileTurbine extends TileMechanical implements IMultiBlockStructure<
 
     /** Writes a tile entity to NBT. */
     @Override
-    @SyncedOutput
     public void writeToNBT(NBTTagCompound nbt)
     {
         super.writeToNBT(nbt);

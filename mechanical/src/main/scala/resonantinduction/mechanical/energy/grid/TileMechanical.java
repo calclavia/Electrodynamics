@@ -40,7 +40,6 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     public TileMechanical(Material material)
     {
         super(material);
-        mechanicalNode = new MechanicalNode(this).setLoad(0.5f);
     }
 
     @Override
@@ -64,7 +63,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
         mechanicalNode.update();
         if (!this.getWorldObj().isRemote)
         {
-            if (mechanicalNode.markRotationUpdate && ticks % 10 == 0)
+            if (mechanicalNode.markRotationUpdate && ticks % 3 == 0)
             {
                 sendRotationPacket();
                 mechanicalNode.markRotationUpdate = false;
@@ -98,7 +97,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     {
         try
         {
-            if (!world().isRemote)
+            if (world().isRemote)
             {
                 if (id == PACKET_NBT)
                 {
