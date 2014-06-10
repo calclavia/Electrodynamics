@@ -22,7 +22,11 @@ public class GrinderNode extends MechanicalNode
     @Override
     public boolean canConnect(ForgeDirection from, Object source)
     {
-        return grider().getDirection() == from || grider().getDirection().getOpposite() == from;
+        if(grider().getDirection() == ForgeDirection.UP || grider().getDirection() == ForgeDirection.DOWN)
+        {
+            return grider().getDirection() == from || grider().getDirection().getOpposite() == from;
+        }
+        return grider().getDirection() != from && grider().getDirection().getOpposite() != from;
     }
 
     @Override
