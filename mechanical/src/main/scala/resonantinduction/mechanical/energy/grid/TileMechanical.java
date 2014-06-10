@@ -63,10 +63,11 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
         mechanicalNode.update();
         if (!this.getWorldObj().isRemote)
         {
-            if (mechanicalNode.markRotationUpdate && ticks % 3 == 0)
+            if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
             {
                 sendRotationPacket();
                 mechanicalNode.markRotationUpdate = false;
+                mechanicalNode.markTorqueUpdate = false;
             }
         }
     }
@@ -89,7 +90,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
 
     private void sendRotationPacket()
     {
-        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_VELOCITY, this, mechanicalNode.angularVelocity), worldObj, new Vector3(this), 20);
+        PacketHandler.sendPacketToClients(ResonantInduction.PACKET_TILE.getPacketWithID(PACKET_VELOCITY, this, mechanicalNode.angularVelocity, mechanicalNode.torque), worldObj, new Vector3(this), 20);
     }
 
     @Override
@@ -107,6 +108,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
                 else if (id == PACKET_VELOCITY)
                 {
                     mechanicalNode.angularVelocity = data.readDouble();
+                    mechanicalNode.torque = data.readDouble();
                     return true;
                 }
             }

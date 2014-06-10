@@ -26,11 +26,12 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
     public boolean doDebug = false;
     /** Used to note that you should trigger a packet update for rotation */
     public boolean markRotationUpdate = false;
+    public boolean markTorqueUpdate = false;
     /** Which section of debug is enabled */
     public int debugCue = 0, maxDebugCue = 1, minDebugCue = 0;
     public static final int UPDATE_DEBUG = 0, CONNECTION_DEBUG = 1;
     /** Rotational Force */
-    public double torque = 0;
+    public double torque = 0, prevTorque;
     /** Rotational speed */
     public double prevAngularVelocity, angularVelocity = 0;
     /** Rotational acceleration */
@@ -122,6 +123,12 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
             {
                 prevAngularVelocity = angularVelocity;
                 markRotationUpdate = true;
+            }
+            
+            if (Math.abs(prevTorque - torque) > 0.01f)
+            {
+                prevTorque = torque;
+                markTorqueUpdate = true;
             }
 
             //----------------------------------- 
