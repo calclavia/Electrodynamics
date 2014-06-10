@@ -41,17 +41,7 @@ public class TileMixer extends TileMechanical implements IInventory
 	public TileMixer()
 	{
 		super(Material.iron);
-
-		mechanicalNode = new MechanicalNode(this)
-		{
-			@Override
-			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-			{
-				return dir == ForgeDirection.DOWN;
-			}
-
-		}.setConnection(Byte.parseByte("000011", 2));
-
+		mechanicalNode = new MixerNode(this).setConnection(Byte.parseByte("000011", 2));
 		isOpaqueCube = false;
 		normalRender = false;
 		customItemRender = true;

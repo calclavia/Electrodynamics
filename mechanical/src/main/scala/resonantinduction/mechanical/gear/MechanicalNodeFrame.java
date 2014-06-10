@@ -29,8 +29,8 @@ public class MechanicalNodeFrame extends Frame implements ActionListener
     Label[] connections = new Label[10];
 
     long tick = 0;
-    PartMechanical partMechanical = null;
-    TileMechanical tileMechanical = null;
+    private PartMechanical partMechanical = null;
+    private TileMechanical tileMechanical = null;
 
     public MechanicalNodeFrame(TileMechanical tile)
     {        
