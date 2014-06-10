@@ -38,27 +38,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 	public TileGrindingWheel()
 	{
 		super(Material.rock);
-
-		mechanicalNode = new MechanicalNode(this)
-		{
-			@Override
-			public boolean canConnect(ForgeDirection from, Object source)
-			{
-				if (getDirection().ordinal() < 2)
-				{
-					return from.offsetY != 0;
-				}
-
-				return getDirection().getRotation(ForgeDirection.UP) == from || getDirection().getRotation(ForgeDirection.DOWN) == from;
-			}
-
-			@Override
-			public boolean inverseRotation(ForgeDirection dir, IMechanicalNode with)
-			{
-				return !(dir.offsetX > 0 || dir.offsetZ < 0 || dir.offsetY < 0);
-			}
-		}.setLoad(2);
-
+		mechanicalNode = new GrinderNode(this).setLoad(2);
 		bounds = new Cuboid(0.05f, 0.05f, 0.05f, 0.95f, 0.95f, 0.95f);
 		isOpaqueCube = false;
 		normalRender = false;
