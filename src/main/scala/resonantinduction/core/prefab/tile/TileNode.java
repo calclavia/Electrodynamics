@@ -135,10 +135,10 @@ public class TileNode extends TileBase implements INodeProvider, IRotatable
         super.readFromNBT(nbt);
         if (nbt.hasKey("NodeSaves"))
         {
-            List list = nbt.getTagList("NodeSaves").tagList;
-            for (int i = 0; i < list.size(); i++)
+            NBTTagList list = nbt.getTagList("NodeSaves");
+            for (int i = 0; i < list.tagCount(); i++)
             {
-                Object obj = list.get(i);
+                Object obj = list.tagAt(i);
                 if (obj instanceof NBTTagCompound)
                 {
                     NBTTagCompound tag = (NBTTagCompound) obj;
