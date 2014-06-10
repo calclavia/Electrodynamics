@@ -24,12 +24,13 @@ import resonant.lib.network.Synced;
 import resonant.lib.network.Synced.SyncedInput;
 import resonant.lib.network.Synced.SyncedOutput;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
+import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /** Reduced version of the main turbine class */
-public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTurbine>, INodeProvider, IPacketReceiverWithID
+public class TileTurbine extends TileMechanical implements IMultiBlockStructure<TileTurbine>, INodeProvider, IPacketReceiverWithID
 {
     /** Tier of the tile */
     public int tier = 0;
@@ -43,10 +44,10 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     /** The power of the turbine this tick. In joules/tick */
     public long power = 0;
 
-    protected final long defaultTorque = 5000;
-    protected double prevAngularVelocity = 0;
-    /** Node that handles most of the mechanical connections */
-    protected MechanicalNode mechanicalNode;
+    protected final long defaultTorque = 5000;  
+
+    /** MutliBlock methods. */
+    private TurbineMBlockHandler multiBlock;
 
     public TileTurbine()
     {
@@ -54,23 +55,10 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
         mechanicalNode = new TurbineNode(this);
     }
 
-    public ForgeDirection getDirection()
-    {
-        return ForgeDirection.getOrientation(getBlockMetadata());
-    }
-
-    @Override
-    public void initiate()
-    {
-        mechanicalNode.reconstruct();
-        super.initiate();
-    }
-
     @Override
     public void updateEntity()
     {
         super.updateEntity();
-        mechanicalNode.update();
         getMultiBlock().update();
 
         if (getMultiBlock().isPrimary())
@@ -79,12 +67,6 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
             {
                 /** Set angular velocity based on power and torque. */
                 mechanicalNode.angularVelocity = (float) ((double) power / mechanicalNode.torque);
-
-                if (ticks % 3 == 0 && prevAngularVelocity != mechanicalNode.angularVelocity)
-                {
-                    sendPowerUpdate();
-                    prevAngularVelocity = mechanicalNode.angularVelocity;
-                }
             }
 
             if (mechanicalNode.angularVelocity != 0)
@@ -116,20 +98,7 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     public void playSound()
     {
 
-    }
-
-    @Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return References.PACKET_TILE.getPacketWithID(0, this, tag);
-    }
-
-    public void sendPowerUpdate()
-    {
-        References.PACKET_TILE.getPacketWithID(1, this, this.mechanicalNode.angularVelocity);
-    }
+    }   
 
     /** Reads a tile entity from NBT. */
     @Override
@@ -139,7 +108,6 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
         super.readFromNBT(nbt);
         multiBlockRadius = nbt.getInteger("multiBlockRadius");
         tier = nbt.getInteger("tier");
-        mechanicalNode.load(nbt);
         getMultiBlock().load(nbt);
     }
 
@@ -151,7 +119,6 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
         super.writeToNBT(nbt);
         nbt.setInteger("multiBlockRadius", multiBlockRadius);
         nbt.setInteger("tier", tier);
-        mechanicalNode.save(nbt);
         getMultiBlock().save(nbt);
     }
 
@@ -161,9 +128,6 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     {
         return AxisAlignedBB.getAABBPool().getAABB(this.xCoord - multiBlockRadius, this.yCoord - multiBlockRadius, this.zCoord - multiBlockRadius, this.xCoord + 1 + multiBlockRadius, this.yCoord + 1 + multiBlockRadius, this.zCoord + 1 + multiBlockRadius);
     }
-
-    /** MutliBlock methods. */
-    private TurbineMBlockHandler multiBlock;
 
     @Override
     public Vector3[] getMultiBlockVectors()
@@ -216,44 +180,4 @@ public class TileTurbine extends TileBase implements IMultiBlockStructure<TileTu
     {
         return worldObj;
     }
-
-    @Override
-    public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
-    {
-        if (nodeType.isAssignableFrom(mechanicalNode.getClass()))
-            return ((TileTurbine) getMultiBlock().get()).mechanicalNode;
-        return null;
-    }
-
-    @Override
-    public void invalidate()
-    {
-        mechanicalNode.deconstruct();
-        super.invalidate();
-    }
-
-    @Override
-    public boolean onReceivePacket(int id, ByteArrayDataInput data, EntityPlayer player, Object... extra)
-    {
-        if (world().isRemote)
-        {
-            if (id == 0)
-            {
-                try
-                {
-                    readFromNBT(PacketHandler.readNBTTagCompound(data));
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else if (id == 1)
-            {
-                this.mechanicalNode.angularVelocity = data.readDouble();
-            }
-        }
-        return false;
-    }
-
 }
