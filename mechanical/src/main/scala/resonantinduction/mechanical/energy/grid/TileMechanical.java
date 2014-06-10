@@ -20,7 +20,7 @@ import com.google.common.io.ByteArrayDataInput;
  * @author Calclavia */
 public abstract class TileMechanical extends TileBase implements INodeProvider, IPacketReceiver
 {
-    protected static final int PACKET_VELOCITY = Mechanical.contentRegistry.getNextPacketID();
+    protected static final int PACKET_VELOCITY = 1;
 
     /** Node that handles most mechanical actions */
     public MechanicalNode mechanicalNode;
