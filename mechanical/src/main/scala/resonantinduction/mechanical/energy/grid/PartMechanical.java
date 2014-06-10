@@ -83,7 +83,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
                         //Opens a debug GUI
                         if (frame == null)
                         {
-                            frame = new GearDebugFrame(this);
+                            frame = new GearDebugFrame(this.node);
                             frame.showDebugFrame();
                         } //Closes the debug GUI
                         else

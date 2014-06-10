@@ -28,9 +28,9 @@ public class GearDebugFrame extends Frame implements ActionListener
     Label[] connections = new Label[20];
 
     long tick = 0;
-    PartMechanical part = null;
+    MechanicalNode part = null;
 
-    public GearDebugFrame(PartMechanical part)
+    public GearDebugFrame(MechanicalNode part)
     {
         this.part = part;
         setLayout(new BorderLayout());
@@ -93,7 +93,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.node.angularVelocity;
+                return super.buildLabel() + GearDebugFrame.this.part.angularVelocity;
             }
         };
         dataLabels.add(velLabel);
@@ -104,7 +104,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.node.renderAngle;
+                return super.buildLabel() + GearDebugFrame.this.part.renderAngle;
             }
         };
         dataLabels.add(angleLabel);
@@ -115,7 +115,7 @@ public class GearDebugFrame extends Frame implements ActionListener
             @Override
             public String buildLabel()
             {
-                return super.buildLabel() + GearDebugFrame.this.part.node.torque;
+                return super.buildLabel() + GearDebugFrame.this.part.torque;
             }
         };
         dataLabels.add(torqueLabel);
@@ -154,7 +154,7 @@ public class GearDebugFrame extends Frame implements ActionListener
                 label.update();
             }
             int c = 0;
-            for (Entry<MechanicalNode, ForgeDirection> entry : part.node.getConnections().entrySet())
+            for (Entry<MechanicalNode, ForgeDirection> entry : part.getConnections().entrySet())
             {
                 if (entry.getKey() != null)
                 {
