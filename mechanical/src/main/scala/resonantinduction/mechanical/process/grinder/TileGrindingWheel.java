@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import resonant.api.IRotatable;
 import resonant.api.recipe.MachineRecipes;
 import resonant.api.recipe.RecipeResource;
+import resonant.lib.prefab.CustomDamageSource;
 import resonant.lib.prefab.vector.Cuboid;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
@@ -29,7 +30,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
 
     public EntityItem grindingItem = null;
 
-    private final long requiredTorque = 1000;
+    private final long requiredTorque = 250;
     private double counter = 0;
 
     public TileGrindingWheel()
@@ -83,7 +84,7 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
             }
             else
             {
-                entity.attackEntityFrom(DamageSource.cactus, 2);
+                entity.attackEntityFrom(new CustomDamageSource("grinder", this), 2);
             }
 
         }
