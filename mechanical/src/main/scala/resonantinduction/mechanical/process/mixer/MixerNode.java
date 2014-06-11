@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process.purifier;
+package resonantinduction.mechanical.process.mixer;
 
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INodeProvider;

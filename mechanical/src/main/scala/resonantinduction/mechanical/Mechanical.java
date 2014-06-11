@@ -41,7 +41,7 @@ import resonantinduction.mechanical.process.crusher.TileMechanicalPiston;
 import resonantinduction.mechanical.process.edit.TileBreaker;
 import resonantinduction.mechanical.process.edit.TilePlacer;
 import resonantinduction.mechanical.process.grinder.TileGrindingWheel;
-import resonantinduction.mechanical.process.purifier.TileMixer;
+import resonantinduction.mechanical.process.mixer.TileMixer;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;

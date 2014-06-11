@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.process.purifier;
+package resonantinduction.mechanical.process.mixer;
 
 import java.util.LinkedHashSet;
 import java.util.List;
