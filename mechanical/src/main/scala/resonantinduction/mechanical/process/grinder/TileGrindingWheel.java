@@ -95,7 +95,22 @@ public class TileGrindingWheel extends TileMechanical implements IRotatable
             ForgeDirection dir = getDirection();
             dir = ForgeDirection.getOrientation(!(dir.ordinal() % 2 == 0) ? dir.ordinal() - 1 : dir.ordinal()).getOpposite();
             double speed = mechanicalNode.getAngularSpeed() / 20;
-            entity.addVelocity(dir.offsetX * speed, Math.random() * speed, dir.offsetZ * speed);
+            double speedX = dir.offsetX * speed;
+            double speedZ = dir.offsetZ * speed;
+            double speedY = Math.random() * speed;
+            if(Math.abs(speedX) > 1)
+            {
+                speedX = speedX > 0 ? 1 : -1;
+            }
+            if(Math.abs(speedZ) > 1)
+            {
+                speedZ = speedZ > 0 ? 1 : -1;
+            }
+            if(Math.abs(speedZ) > 1)
+            {
+                speedY = speedY > 0 ? 1 : -1;
+            }
+            entity.addVelocity(speedX, speedY, speedZ);
         }
     }
 

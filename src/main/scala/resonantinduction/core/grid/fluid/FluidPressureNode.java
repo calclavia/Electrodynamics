@@ -16,6 +16,7 @@ import resonant.lib.grid.TickingGrid;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.TMultiPart;
 
+@SuppressWarnings("deprecation")
 public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, Object>
 {
     public int maxFlowRate = 20;
@@ -214,15 +215,7 @@ public class FluidPressureNode extends Node<IPressureNodeProvider, TickingGrid, 
             if (tile instanceof IPressureNodeProvider)
             {
                 // If anything happens while trying to access the node then forget about it.
-                FluidPressureNode check = null;
-                try
-                {
-                    check = (FluidPressureNode) ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());
-                }
-                catch (Exception err)
-                {
-                    check = null;
-                }
+                FluidPressureNode check = (FluidPressureNode) ((IPressureNodeProvider) tile).getNode(FluidPressureNode.class, dir.getOpposite());              
 
                 if (check != null && canConnect(dir, check) && check.canConnect(dir.getOpposite(), this))
                 {
