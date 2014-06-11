@@ -369,18 +369,30 @@ public class MechanicalNode implements IMechanicalNode, ISaveObj, IVectorWorld
     @Override
     public double z()
     {
+        if(this.getParent() instanceof TileEntity)
+        {
+            return ((TileEntity)this.getParent()).zCoord;
+        }
         return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).z() : 0;
     }
 
     @Override
     public double x()
     {
+        if(this.getParent() instanceof TileEntity)
+        {
+            return ((TileEntity)this.getParent()).xCoord;
+        }
         return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).x() : 0;
     }
 
     @Override
     public double y()
     {
+        if(this.getParent() instanceof TileEntity)
+        {
+            return ((TileEntity)this.getParent()).yCoord;
+        }
         return this.getParent() instanceof TMultiPart && ((TMultiPart) this.getParent()).tile() != null ? ((TMultiPart) this.getParent()).y() : 0;
     }
 }
