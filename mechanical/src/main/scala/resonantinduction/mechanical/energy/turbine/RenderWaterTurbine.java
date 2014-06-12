@@ -47,7 +47,7 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			
 			// Call to actually rotate the gear model to the specified degree.
 			GL11.glRotatef(renderAngleInDegrees, 0, 1, 0);
-			ResonantInduction.LOGGER.info("[RenderWaterTurbine] Render Angle: " + renderAngleInDegrees);
+			//ResonantInduction.LOGGER.info("[RenderWaterTurbine] Render Angle: " + renderAngleInDegrees);
 
 			// Determine what type of water turbine model we need to use based on orientation.
 			if (tile.getDirection().offsetY != 0)

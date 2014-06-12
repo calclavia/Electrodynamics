@@ -84,7 +84,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
         {
             if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
             {
-                ResonantInduction.LOGGER.info("[mechanicalNode] Sending Update");
+                //ResonantInduction.LOGGER.info("[mechanicalNode] Sending Update");
                 sendRotationPacket();
                 mechanicalNode.markRotationUpdate = false;
                 mechanicalNode.markTorqueUpdate = false;
