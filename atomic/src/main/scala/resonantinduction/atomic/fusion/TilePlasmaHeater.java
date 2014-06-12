@@ -29,7 +29,7 @@ import com.google.common.io.ByteArrayDataInput;
 
 public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver, ITagRender, IFluidHandler
 {
-    public static long DIAN = 10000000000L;
+    public static long joules = 10000000000L;
 
     @Config
     public static int plasmaHeatAmount = 100;
@@ -42,7 +42,7 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
 
     public TilePlasmaHeater()
     {
-        energy = new EnergyStorageHandler(DIAN, DIAN / 20);
+        energy = new EnergyStorageHandler(joules, joules / 20);
     }
 
     @Override
