@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantInduction;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -30,13 +31,33 @@ public class RenderWaterTurbine extends TileEntitySpecialRenderer implements ISi
 			GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
 			GL11.glPushMatrix();
 
+			// Determine if the turbine is facing horizontally or vertical.
 			RenderUtility.rotateBlockBasedOnDirectionUp(tile.getDirection());
-			GL11.glRotatef((float) Math.toDegrees(tile.mechanicalNode.renderAngle), 0, 1, 0);
+			
+			// Get the rotation directly from the mechanical node running client side.
+			double mechanicalNodeRenderAngle = tile.mechanicalNode.renderAngle;
+			
+			// We need to convert this value into something the model renderer can understand.
+			// Note: Check for NaN and if so then just defaults to zero.
+			float renderAngleInDegrees = 0;
+			if (!Double.isNaN(mechanicalNodeRenderAngle))
+			{
+			    renderAngleInDegrees = (float) Math.toDegrees(mechanicalNodeRenderAngle);
+			}
+			
+			// Call to actually rotate the gear model to the specified degree.
+			GL11.glRotatef(renderAngleInDegrees, 0, 1, 0);
+			ResonantInduction.LOGGER.info("[RenderWaterTurbine] Render Angle: " + renderAngleInDegrees);
 
+			// Determine what type of water turbine model we need to use based on orientation.
 			if (tile.getDirection().offsetY != 0)
+			{
 				renderWaterTurbine(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());
+			}
 			else
+			{
 				renderWaterWheel(tile.tier, tile.multiBlockRadius, tile.getMultiBlock().isConstructed());
+			}
 
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();

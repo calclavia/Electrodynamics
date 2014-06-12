@@ -69,6 +69,7 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
     {
         super.updateEntity();
         mechanicalNode.update();
+        
         if(frame != null)
         {
             frame.update();
@@ -78,10 +79,12 @@ public abstract class TileMechanical extends TileBase implements INodeProvider, 
                 frame = null;
             }
         }
+        
         if (!this.getWorldObj().isRemote)
         {
             if (ticks % 3 == 0 && (mechanicalNode.markTorqueUpdate || mechanicalNode.markRotationUpdate))
             {
+                ResonantInduction.LOGGER.info("[mechanicalNode] Sending Update");
                 sendRotationPacket();
                 mechanicalNode.markRotationUpdate = false;
                 mechanicalNode.markTorqueUpdate = false;
