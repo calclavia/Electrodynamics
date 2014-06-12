@@ -5,6 +5,11 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
@@ -17,7 +22,8 @@ import resonantinduction.core.debug.UpdatedLabel;
 @SuppressWarnings("serial")
 public class MechanicalNodeFrame extends FrameNodeDebug
 {
-    Label[] connections;
+    JList<String> connectionList_component = null;
+    DefaultListModel<String> connectionList_model = new DefaultListModel<String>();;
 
     public MechanicalNodeFrame(INodeProvider node)
     {
@@ -50,60 +56,38 @@ public class MechanicalNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildBottom(Panel panel)
-    {
-        panel.setLayout(new GridLayout(1, 4, 0, 0));
-        UpdatedLabel tickLabel = new UpdatedLabel("Tick: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + tick;
-            }
-        };
-        panel.add(tickLabel);
-
-        UpdatedLabel xLabel = new UpdatedLabel("X: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + (MechanicalNodeFrame.this.getNode() != null ? MechanicalNodeFrame.this.getNode().x() : 0);
-            }
-        };
-        panel.add(xLabel);
-
-        UpdatedLabel yLabel = new UpdatedLabel("Y: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + (MechanicalNodeFrame.this.getNode() != null ? MechanicalNodeFrame.this.getNode().y() : 0);
-            }
-        };
-        panel.add(yLabel);
-
-        UpdatedLabel zLabel = new UpdatedLabel("Z: ")
-        {
-            @Override
-            public String buildLabel()
-            {
-                return super.buildLabel() + (MechanicalNodeFrame.this.getNode() != null ? MechanicalNodeFrame.this.getNode().z() : 0);
-            }
-        };
-        panel.add(zLabel);
-    }
-
-    @Override
     public void buildRight(Panel panel)
     {
-        connections = new Label[10];
-        panel.setLayout(new GridLayout(5, 2, 0, 0));
-        for (int i = 0; i < connections.length; i++)
+        panel.setLayout(new GridLayout(2, 1, 0, 0));
+
+        Label label = new Label("Connections");
+        panel.add(label);
+
+        AbstractListModel model = new AbstractListModel()
         {
-            this.connections[i] = new Label("Connection" + i + ":  ----");
-            panel.add(connections[i]);
-        }
+            @Override
+            public int getSize()
+            {
+                if (getNode() != null)
+                {
+                    return getNode().getConnections().size();
+                }
+                return 0;
+            }
+
+            @Override
+            public Object getElementAt(int index)
+            {
+                if (getNode() != null)
+                {
+                    return "[" + getNode().getConnections().keySet().toArray()[index] + "@" + getNode().getConnections().values().toArray()[index] + "]";
+                }
+                return null;
+            }
+        };
+        connectionList_component = new JList(model);
+
+        panel.add(connectionList_component);
     }
 
     @Override
@@ -139,29 +123,6 @@ public class MechanicalNodeFrame extends FrameNodeDebug
             }
         };
         panel.add(torqueLabel);
-    }
-
-    @Override
-    public void update()
-    {
-        super.update();
-        if (this.getNode() != null && connections != null)
-        {
-            int c = 0;
-            for (Entry<MechanicalNode, ForgeDirection> entry : getNode().getConnections().entrySet())
-            {
-                if (entry.getKey() != null && this.connections[c] != null)
-                {
-                    this.connections[c].setText("Connection" + c + ": " + entry.getKey());
-                    c++;
-                }
-            }
-            for (int i = c; i < connections.length; i++)
-            {
-                if (this.connections[c] != null)
-                    this.connections[i].setText("Connection" + i + ": NONE");
-            }
-        }
     }
 
     @Override
