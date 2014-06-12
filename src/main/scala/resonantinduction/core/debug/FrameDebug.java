@@ -4,19 +4,20 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Panel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import net.minecraft.tileentity.TileEntity;
-import resonant.api.grid.INode;
 
+/** @author Darkguardsman */
 @SuppressWarnings("serial")
 public class FrameDebug extends Frame
 {
     /** Linked tile */
     TileEntity tile = null;
-    /** Linked node */
-    INode node = null;
-    /** Are we debugging a node */
+   
     boolean debugNode = false;
+    protected long tick = 0;
 
     public FrameDebug(TileEntity tile)
     {
@@ -24,11 +25,6 @@ public class FrameDebug extends Frame
         this.tile = tile;
     }
 
-    public FrameDebug(INode node)
-    {
-        this();
-        this.node = node;
-    }
 
     protected FrameDebug()
     {
@@ -43,6 +39,8 @@ public class FrameDebug extends Frame
         UpdatePanel leftPanel = new UpdatePanel();
         UpdatePanel rightPanel = new UpdatePanel();
 
+        setLayout(new BorderLayout());
+
         buildTop(topPanel);
         buildBottom(botPanel);
         buildLeft(leftPanel);
@@ -52,6 +50,17 @@ public class FrameDebug extends Frame
         this.add(botPanel, BorderLayout.SOUTH);
         this.add(rightPanel, BorderLayout.EAST);
         this.add(leftPanel, BorderLayout.WEST);
+
+        //exit icon handler
+        addWindowListener(new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                Frame f = (Frame) e.getSource();
+                f.setVisible(false);
+                f.dispose();
+            }
+        });
     }
 
     /** Top are of the Frame */
@@ -81,12 +90,32 @@ public class FrameDebug extends Frame
     /** Called each tick by the host of this GUI */
     public void update()
     {
-        for(Component component : getComponents())
+        tick++;
+        if (tick >= Long.MAX_VALUE)
         {
-            if(component instanceof IUpdate)
+            tick = 0;
+        }
+
+        for (Component component : getComponents())
+        {
+            if (component instanceof IUpdate)
             {
-                ((IUpdate)component).update();
+                ((IUpdate) component).update();
             }
         }
+    }  
+
+    /** Shows the frame */
+    public void showDebugFrame()
+    {
+        setTitle("Resonant Engine Debug Window");
+        setBounds(200, 200, 450, 600);
+        setVisible(true);
+    }
+
+    /** Hides the frame and tells it to die off */
+    public void closeDebugFrame()
+    {
+        dispose();
     }
 }

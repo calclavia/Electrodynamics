@@ -3,17 +3,19 @@ package resonantinduction.core.debug;
 import java.awt.Component;
 import java.awt.Panel;
 
+
+/** @author Darkguardsman */
 @SuppressWarnings("serial")
 public class UpdatePanel extends Panel implements IUpdate
 {
     @Override
     public void update()
     {
-        for(Component component : getComponents())
+        for (Component component : getComponents())
         {
-            if(component instanceof IUpdate)
+            if (component instanceof IUpdate)
             {
-                ((IUpdate)component).update();
+                ((IUpdate) component).update();
             }
         }
     }
