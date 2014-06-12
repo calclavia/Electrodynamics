@@ -1,6 +1,8 @@
 package resonantinduction.core.debug;
 
+import codechicken.multipart.TMultiPart;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
@@ -47,5 +49,61 @@ public class FrameNodeDebug extends FrameDebug
             return nodeProvider.getNode(nodeClazz, ForgeDirection.UNKNOWN);
         }
         return node;
+    }
+
+    @Override
+    public double z()
+    {
+        if (nodeProvider instanceof TileEntity)
+        {
+            return ((TileEntity) nodeProvider).zCoord;
+        }
+        else if (nodeProvider instanceof TMultiPart)
+        {
+            return ((TMultiPart) nodeProvider).z();
+        }
+        return super.z();
+    }
+
+    @Override
+    public double x()
+    {
+        if (nodeProvider instanceof TileEntity)
+        {
+            return ((TileEntity) nodeProvider).xCoord;
+        }
+        else if (nodeProvider instanceof TMultiPart)
+        {
+            return ((TMultiPart) nodeProvider).x();
+        }
+        return super.x();
+    }
+
+    @Override
+    public double y()
+    {
+        if (nodeProvider instanceof TileEntity)
+        {
+            return ((TileEntity) nodeProvider).yCoord;
+        }
+        else if (nodeProvider instanceof TMultiPart)
+        {
+            return ((TMultiPart) nodeProvider).y();
+        }
+        return super.y();
+    }
+
+    @Override
+    public World world()
+    {
+        if (nodeProvider instanceof TileEntity)
+        {
+            return ((TileEntity) nodeProvider).getWorldObj();
+        }
+        else if (nodeProvider instanceof TMultiPart)
+        {
+            return ((TMultiPart) nodeProvider).world();
+        }
+        return super.world();
     }
 }
