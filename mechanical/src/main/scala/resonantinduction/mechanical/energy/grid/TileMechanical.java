@@ -19,7 +19,6 @@ import resonant.lib.network.IPacketReceiverWithID;
 import resonant.lib.network.PacketHandler;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.Mechanical;
-import resonantinduction.mechanical.gear.MechanicalNodeFrame;
 import universalelectricity.api.vector.Vector3;
 import codechicken.multipart.ControlKeyModifer;
 

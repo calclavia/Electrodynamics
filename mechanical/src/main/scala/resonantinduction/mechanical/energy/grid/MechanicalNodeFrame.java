@@ -1,4 +1,4 @@
-package resonantinduction.mechanical.gear;
+package resonantinduction.mechanical.energy.grid;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraftforge.common.ForgeDirection;
-import resonantinduction.mechanical.energy.grid.MechanicalNode;
-import resonantinduction.mechanical.energy.grid.PartMechanical;
-import resonantinduction.mechanical.energy.grid.TileMechanical;
+import resonantinduction.core.debug.UpdatedLabel;
 
 /** Java GUI used to help debug gear information
  * 

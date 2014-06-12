@@ -12,7 +12,6 @@ import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.core.ResonantEngine;
-import resonantinduction.mechanical.gear.MechanicalNodeFrame;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.ControlKeyModifer;
