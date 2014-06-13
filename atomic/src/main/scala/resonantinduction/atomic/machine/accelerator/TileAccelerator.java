@@ -1,6 +1,7 @@
 package resonantinduction.atomic.machine.accelerator;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -18,6 +19,7 @@ import resonantinduction.atomic.items.ItemDarkMatter;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
+import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.electricity.IVoltageInput;
 import universalelectricity.api.energy.EnergyStorageHandler;
 import universalelectricity.api.energy.IEnergyInterface;
@@ -57,6 +59,7 @@ public class TileAccelerator extends TileElectricalInventory implements IElectro
 
     public TileAccelerator()
     {
+        super(UniversalElectricity.machine);
         energy = new EnergyStorageHandler(energyPerTick * 2, energyPerTick / 20);
         maxSlots = 4;
         antiMatterDensityMultiplyer = DENSITY_MULTIPLYER_DEFAULT;
@@ -239,6 +242,16 @@ public class TileAccelerator extends TileElectricalInventory implements IElectro
 
             lastSpawnTick++;
         }
+    }
+    
+    @Override
+    protected boolean use(EntityPlayer player, int side, Vector3 hit)
+    {
+        if (!world().isRemote)
+        {
+            player.openGui(Atomic.INSTANCE, 0, world(), x(), y(), z());
+        }
+        return true;
     }
 
     private void CalculateParticleDensity()
