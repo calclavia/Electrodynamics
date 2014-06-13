@@ -1,6 +1,7 @@
 package resonantinduction.atomic.blocks;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.lib.content.module.TileBlock;
 import resonantinduction.core.Reference;
@@ -30,30 +31,26 @@ public class TileSiren extends TileBlock
     @Override
     public void updateEntity()
     {
-        if (worldObj == null)
+        World world = worldObj;
+        if (world != null)
         {
-            return;
-        }
+            int metadata = world.getBlockMetadata(x(), y(), z());
 
-        int metadata = worldObj.getBlockMetadata(x(), y(), z());
-
-        if (worldObj.getBlockPowerInput(x(), y(), z()) > 0)
-        {
-            float volume = 0.5f;
-
-            for (int i = 0; i < 6; i++)
+            if (world.getBlockPowerInput(x(), y(), z()) > 0)
             {
-                Vector3 check = position().translate(ForgeDirection.getOrientation(i));
-                int blockID = check.getBlockID(worldObj);
-
-                if (blockID == blockID())
+                float volume = 0.5f;
+                for (int i = 0; i < 6; i++)
                 {
-                    volume *= 1.5f;
+                    Vector3 check = position().translate(ForgeDirection.getOrientation(i));
+                    if (check.getBlockID(world) == blockID())
+                    {
+                        volume *= 1.5f;
+                    }
                 }
-            }
 
-            worldObj.playSoundEffect(x(), y(), z(), Reference.PREFIX + "alarm", volume, 1f - 0.18f * (metadata / 15f));
-            scheduelTick(30);
+                world.playSoundEffect(x(), y(), z(), Reference.PREFIX + "alarm", volume, 1f - 0.18f * (metadata / 15f));
+                scheduelTick(30);
+            }
         }
     }
 
