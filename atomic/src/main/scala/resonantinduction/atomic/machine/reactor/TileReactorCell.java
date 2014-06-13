@@ -110,15 +110,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
         {
             TileReactorCell tile = getMultiBlock().get();
 
-            if (!player.isSneaking())
+            if (player.isSneaking())
             {
-                if (tile.getStackInSlot(0) != null)
-                {
-                    InventoryUtility.dropItemStack(world(), new Vector3(player), tile.getStackInSlot(0), 0);
-                    tile.setInventorySlotContents(0, null);
-                    return true;
-                }
-                else if (player.inventory.getCurrentItem() != null)
+                if (player.inventory.getCurrentItem() != null)
                 {
                     if (player.inventory.getCurrentItem().getItem() instanceof IReactorComponent)
                     {
@@ -128,6 +122,12 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         player.inventory.decrStackSize(player.inventory.currentItem, 1);
                         return true;
                     }
+                }
+                else if (tile.getStackInSlot(0) != null)
+                {
+                    InventoryUtility.dropItemStack(world(), new Vector3(player), tile.getStackInSlot(0), 0);
+                    tile.setInventorySlotContents(0, null);
+                    return true;
                 }
             }
 
@@ -214,8 +214,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         {
                             if (worldObj.rand.nextFloat() > 0.65)
                             {
-                                List<EntityLiving> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class,
-                                        AxisAlignedBB.getBoundingBox(xCoord - RADIUS * 2, yCoord - RADIUS * 2, zCoord - RADIUS * 2, xCoord + RADIUS * 2, yCoord + RADIUS * 2, zCoord + RADIUS * 2));
+                                List<EntityLiving> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.getBoundingBox(xCoord - RADIUS * 2, yCoord - RADIUS * 2, zCoord - RADIUS * 2, xCoord + RADIUS * 2, yCoord + RADIUS * 2, zCoord + RADIUS * 2));
 
                                 for (EntityLiving entity : entities)
                                 {
@@ -276,7 +275,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         previousTemperature = temperature;
                         //System.out.println("[Atomic Science] [Thermal Grid] Temperature: " + String.valueOf(previousTemperature));
                     }
-                    
+
                     if (previousTemperature >= MELTING_POINT && meltdownCounter < meltdownCounterMaximum)
                     {
                         shouldUpdate = true;
@@ -290,7 +289,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         meltDown();
                         return;
                     }
-                    
+
                     // Reset meltdown ticker to give the reactor more of a 'goldilocks zone'.
                     if (previousTemperature < MELTING_POINT && meltdownCounter < meltdownCounterMaximum && meltdownCounter > 0)
                     {
@@ -479,7 +478,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
         {
             // Turn the reactor cell into a block of lava to imply it melted.
             this.worldObj.setBlock(Block.lavaStill.blockID, 0, this.xCoord, this.yCoord, this.zCoord, 3);
-            
+
             ReactorExplosion reactorExplosion = new ReactorExplosion(worldObj, null, xCoord, yCoord, zCoord, 9f);
             reactorExplosion.doExplosionA();
             reactorExplosion.doExplosionB(true);
@@ -514,7 +513,8 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
         return 1;
     }
 
-    /** Returns true if automation can insert the given item in the given slot from the given side. Args: Slot, item, side */
+    /** Returns true if automation can insert the given item in the given slot from the given side.
+     * Args: Slot, item, side */
     @Override
     public boolean canInsertItem(int slot, ItemStack items, int side)
     {
@@ -583,8 +583,7 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from)
     {
-        return new FluidTankInfo[]
-        { tank.getInfo() };
+        return new FluidTankInfo[] { tank.getInfo() };
     }
 
     @Override
