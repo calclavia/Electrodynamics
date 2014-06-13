@@ -2,6 +2,7 @@ package resonantinduction.atomic.machine.accelerator;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,9 +52,10 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         this.movementDirection = dir;
     }
 
-    public static boolean canRenderAcceleratedParticle(World world, Vector3 pos)
+    public static boolean canSpawnParticle(World world, Vector3 pos)
     {
-        if (pos.getBlockID(world) != 0)
+        Block block  = Block.blocksList[pos.getBlockID(world)];
+        if (block != null && !block.isAirBlock(world, pos.intX(), pos.intY(), pos.intZ()))
         {
             return false;
         }
@@ -178,7 +180,7 @@ public class EntityParticle extends Entity implements IEntityAdditionalSpawnData
         this.lastTurn--;
 
         /** Checks if the current block condition allows the particle to exist */
-        if (!canRenderAcceleratedParticle(this.worldObj, new Vector3(this)) || this.isCollided)
+        if (!canSpawnParticle(this.worldObj, new Vector3(this)) || this.isCollided)
         {
             explode();
             return;

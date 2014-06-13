@@ -151,16 +151,16 @@ public class TileAccelerator extends TileElectricalInventory implements IElectro
                         // Creates a accelerated particle if one needs to exist (on world load for example or player login).
                         if (getStackInSlot(0) != null && lastSpawnTick >= 40)
                         {
-                            Vector3 spawnAcceleratedParticle = new Vector3(this);
-                            spawnAcceleratedParticle.translate(getDirection().getOpposite());
-                            spawnAcceleratedParticle.translate(0.5f);
+                            Vector3 spawn_vec = new Vector3(this);
+                            spawn_vec.translate(getDirection().getOpposite());
+                            spawn_vec.translate(0.5f);
 
                             // Only render the particle if container within the proper environment for it.
-                            if (EntityParticle.canRenderAcceleratedParticle(worldObj, spawnAcceleratedParticle))
+                            if (EntityParticle.canSpawnParticle(worldObj, spawn_vec))
                             {
                                 // Spawn the particle.
                                 totalEnergyConsumed = 0;
-                                entityParticle = new EntityParticle(worldObj, spawnAcceleratedParticle, new Vector3(this), getDirection().getOpposite());
+                                entityParticle = new EntityParticle(worldObj, spawn_vec, new Vector3(this), getDirection().getOpposite());
                                 worldObj.spawnEntityInWorld(entityParticle);
 
                                 // Grabs input block hardness if available, otherwise defaults are used.

@@ -29,7 +29,7 @@ public class GuiAccelerator extends GuiContainerBase
         Vector3 position = new Vector3(this.tileEntity);
         position.translate(this.tileEntity.getDirection().getOpposite());
 
-        if (!EntityParticle.canRenderAcceleratedParticle(this.tileEntity.worldObj, position))
+        if (!EntityParticle.canSpawnParticle(this.tileEntity.worldObj, position))
         {
             status = "\u00a74Fail to emit; try rotating.";
         }
