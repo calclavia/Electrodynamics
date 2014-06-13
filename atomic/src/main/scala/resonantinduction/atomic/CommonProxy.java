@@ -4,18 +4,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import resonant.lib.prefab.ProxyBase;
-import resonantinduction.atomic.fission.reactor.ContainerReactorCell;
-import resonantinduction.atomic.fission.reactor.TileReactorCell;
-import resonantinduction.atomic.fusion.ContainerNuclearBoiler;
-import resonantinduction.atomic.particle.accelerator.ContainerAccelerator;
-import resonantinduction.atomic.particle.accelerator.TileAccelerator;
-import resonantinduction.atomic.particle.quantum.ContainerQuantumAssembler;
-import resonantinduction.atomic.particle.quantum.TileQuantumAssembler;
-import resonantinduction.atomic.process.ContainerChemicalExtractor;
-import resonantinduction.atomic.process.TileChemicalExtractor;
-import resonantinduction.atomic.process.fission.ContainerCentrifuge;
-import resonantinduction.atomic.process.fission.TileCentrifuge;
-import resonantinduction.atomic.process.fission.TileNuclearBoiler;
+import resonantinduction.atomic.machine.accelerator.ContainerAccelerator;
+import resonantinduction.atomic.machine.accelerator.TileAccelerator;
+import resonantinduction.atomic.machine.boiler.TileNuclearBoiler;
+import resonantinduction.atomic.machine.centrifuge.ContainerCentrifuge;
+import resonantinduction.atomic.machine.centrifuge.TileCentrifuge;
+import resonantinduction.atomic.machine.extractor.ContainerChemicalExtractor;
+import resonantinduction.atomic.machine.extractor.TileChemicalExtractor;
+import resonantinduction.atomic.machine.plasma.ContainerNuclearBoiler;
+import resonantinduction.atomic.machine.quantum.ContainerQuantumAssembler;
+import resonantinduction.atomic.machine.quantum.TileQuantumAssembler;
+import resonantinduction.atomic.machine.reactor.ContainerReactorCell;
+import resonantinduction.atomic.machine.reactor.TileReactorCell;
 
 public class CommonProxy extends ProxyBase
 {
