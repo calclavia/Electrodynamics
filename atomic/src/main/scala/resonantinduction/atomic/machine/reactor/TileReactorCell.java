@@ -110,9 +110,9 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
         {
             TileReactorCell tile = getMultiBlock().get();
 
-            if (player.isSneaking())
+            if (player.inventory.getCurrentItem() != null)
             {
-                if (player.inventory.getCurrentItem() != null)
+                if (tile.getStackInSlot(0) == null)
                 {
                     if (player.inventory.getCurrentItem().getItem() instanceof IReactorComponent)
                     {
@@ -123,15 +123,17 @@ public class TileReactorCell extends TileInventory implements IMultiBlockStructu
                         return true;
                     }
                 }
-                else if (tile.getStackInSlot(0) != null)
-                {
-                    InventoryUtility.dropItemStack(world(), new Vector3(player), tile.getStackInSlot(0), 0);
-                    tile.setInventorySlotContents(0, null);
-                    return true;
-                }
             }
-
-            player.openGui(Atomic.INSTANCE, 0, world(), tile.xCoord, tile.yCoord, tile.zCoord);
+            else if (player.isSneaking() && tile.getStackInSlot(0) != null)
+            {
+                InventoryUtility.dropItemStack(world(), new Vector3(player), tile.getStackInSlot(0), 0);
+                tile.setInventorySlotContents(0, null);
+                return true;
+            }
+            else
+            {
+                player.openGui(Atomic.INSTANCE, 0, world(), tile.xCoord, tile.yCoord, tile.zCoord);
+            }
         }
 
         return true;
