@@ -4,15 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import resonantinduction.mechanical.energy.grid.MechanicalNodeFrame;
-import universalelectricity.api.vector.IVectorWorld;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import universalelectricity.api.vector.IVectorWorld;
 
 /** @author Darkguardsman */
 @SuppressWarnings("serial")

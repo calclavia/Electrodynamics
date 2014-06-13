@@ -1,11 +1,11 @@
 package resonantinduction.core.debug;
 
-import codechicken.multipart.TMultiPart;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
+import codechicken.multipart.TMultiPart;
 
 /** @author Darkguardsman */
 @SuppressWarnings("serial")
