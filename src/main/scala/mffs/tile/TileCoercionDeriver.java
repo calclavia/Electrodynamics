@@ -29,7 +29,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	/**
 	 * Ration from UE to Fortron. Multiply J by this value to convert to Fortron.
 	 */
-	public static final float UE_FORTRON_RATIO = 0.001f;
+	public static final float UE_FORTRON_RATIO = 0.005f;
 	public static final int ENERGY_LOSS = 1;
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
