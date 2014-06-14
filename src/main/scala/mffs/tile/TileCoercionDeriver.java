@@ -33,6 +33,7 @@ public class TileCoercionDeriver extends TileMFFSElectrical
 	public static final int ENERGY_LOSS = 1;
 	public static final int SLOT_FREQUENCY = 0;
 	public static final int SLOT_BATTERY = 1;
+
 	public static final int SLOT_FUEL = 2;
 	/**
 	 * The amount of KiloWatts this machine uses.
