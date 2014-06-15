@@ -10,6 +10,7 @@ import resonant.api.grid.INodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.gear.PartGear;
+import universalelectricity.api.vector.Vector3;
 
 public class GearShaftNode extends MechanicalNode
 {
@@ -72,7 +73,7 @@ public class GearShaftNode extends MechanicalNode
             {
                 if (!getConnections().containsValue(checkDir) && (checkDir == shaft().placementSide || checkDir == shaft().placementSide.getOpposite()))
                 {
-                    TileEntity checkTile = new universalelectricity.api.vector.Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
+                    TileEntity checkTile = new Vector3(shaft().tile()).translate(checkDir).getTileEntity(world());
 
                     if (checkTile instanceof INodeProvider)
                     {
