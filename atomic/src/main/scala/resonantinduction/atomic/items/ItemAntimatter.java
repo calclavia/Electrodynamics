@@ -42,6 +42,8 @@ public class ItemAntimatter extends ItemCell
     @Override
     public void registerIcons(IconRegister iconRegister)
     {
+        // Animated Icons
+        //ResonantInduction.LOGGER.info(this.getUnlocalizedName().replace("item.", "") + "_milligram");
         this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", "") + "_milligram");
         this.iconGram = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", "") + "_gram");
     }
@@ -73,7 +75,7 @@ public class ItemAntimatter extends ItemCell
     }
 
     @ForgeSubscribe
-    public void baoZhaEvent(ItemExpireEvent evt)
+    public void antimatterExpireEvent(ItemExpireEvent evt)
     {
         if (evt.entityItem != null)
         {
@@ -89,7 +91,7 @@ public class ItemAntimatter extends ItemCell
                     {
                         if (!FlagRegistry.getModFlag(FlagRegistry.DEFAULT_NAME).containsValue(evt.entityItem.worldObj, Atomic.BAN_ANTIMATTER_POWER, "true", new Vector3(evt.entityItem)))
                         {
-                            IExplosion explosive = new BzFanWuSu(evt.entity.worldObj, evt.entityItem, evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, 4, itemStack.getItemDamage());
+                            IExplosion explosive = new AntimatterExposion(evt.entity.worldObj, evt.entityItem, evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, 4, itemStack.getItemDamage());
                             MinecraftForge.EVENT_BUS.post(new DoExplosionEvent(evt.entityItem.worldObj, explosive));
                             evt.entityItem.worldObj.createExplosion(evt.entityItem, evt.entityItem.posX, evt.entityItem.posY, evt.entityItem.posZ, explosive.getRadius(), true);
                             ResonantInduction.LOGGER.fine("Antimatter cell detonated at: " + evt.entityItem.posX + ", " + evt.entityItem.posY + ", " + evt.entityItem.posZ);
@@ -110,11 +112,11 @@ public class ItemAntimatter extends ItemCell
         }
     }
 
-    public static class BzFanWuSu extends Explosion implements IExplosion
+    public static class AntimatterExposion extends Explosion implements IExplosion
     {
         private int tier;
 
-        public BzFanWuSu(World par1World, Entity par2Entity, double x, double y, double z, float size, int tier)
+        public AntimatterExposion(World par1World, Entity par2Entity, double x, double y, double z, float size, int tier)
         {
             super(par1World, par2Entity, x, y, z, size + 2 * tier);
             this.tier = tier;
