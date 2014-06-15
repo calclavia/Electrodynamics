@@ -13,4 +13,4 @@ Resonant Induction is a Minecraft mod that brings in realistic, world-based tech
 * CyanideX
 
 ### License
-"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/license/cl
+"Resonant Induction" is under the Calclavia Mod License: http://calclavia.com/calclavia-mod-license/
