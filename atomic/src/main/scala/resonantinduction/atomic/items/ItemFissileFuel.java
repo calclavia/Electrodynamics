@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import resonant.api.IReactor;
 import resonant.api.IReactorComponent;
 import resonantinduction.atomic.Atomic;
+import resonantinduction.atomic.machine.reactor.TileReactorCell;
 import resonantinduction.core.Settings;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -22,7 +23,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
     public static final int DECAY = 2500;
 
     /** Temperature at which the fuel rod will begin to re-enrich itself. */
-    public static final int BREEDING_TEMP = 1200;
+    public static final int BREEDING_TEMP = 1100;
 
     /** The energy in one KG of uranium is: 72PJ, 100TJ in one cell of uranium. */
     public static final long ENERGY = 100000000000L;
@@ -51,7 +52,7 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
             TileEntity tile = checkPos.getTileEntity(worldObj);
 
             // Check that the other reactors not only exist but also are running.
-            if (tile instanceof IReactor && ((IReactor) tile).getTemperature() > BREEDING_TEMP)
+            if (tile instanceof TileReactorCell && ((TileReactorCell) tile).getTemperature() > BREEDING_TEMP)
             {
                 reactors++;
             }
@@ -61,12 +62,15 @@ public class ItemFissileFuel extends ItemRadioactive implements IReactorComponen
         if (reactors >= 2)
         {
             // Begin the process of re-enriching the uranium rod but not consistently.
-            if (worldObj.rand.nextInt(1000) <= 100 && reactor.getTemperature() > BREEDING_TEMP)
+            // Note: The center reactor cell only needs to be half of breeding temperature for this to work.
+            if (worldObj.rand.nextInt(1000) <= 100 && reactor.getTemperature() > (BREEDING_TEMP / 2))
             {
                 // Cells can regain a random amount of health per tick.
                 int healAmt = worldObj.rand.nextInt(5);
+                
+                // Determine if this is a completely dead cell (creative menu fission rod is like this).
+                //System.out.println("[Atomic Science] [Reactor Cell] Breeding " + String.valueOf(healAmt) + " back into fissle rod. " + String.valueOf(itemStack.getItemDamage()) + " / " + String.valueOf(itemStack.getMaxDamage()));
                 itemStack.setItemDamage(Math.max(itemStack.getItemDamage() - healAmt, 0));
-                // System.out.println("[Atomic Science] [Reactor Cell] Breeding " + String.valueOf(healAmt) + " back into fissle rod. " + String.valueOf(itemStack.getItemDamage()) + " / " + String.valueOf(itemStack.getMaxDamage()));
             }
         }
         else
