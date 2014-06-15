@@ -1,5 +1,8 @@
 package resonantinduction.atomic.items;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import resonant.api.IReactor;
@@ -20,6 +23,13 @@ public class ItemCell extends ItemTooltip
     {
         return world.getBlockTileEntity(x, y, z) instanceof IReactor;
     }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", ""));
+    }
 
     @Override
     public String getUnlocalizedName(ItemStack itemstack)
@@ -29,6 +39,7 @@ public class ItemCell extends ItemTooltip
         {
             return getUnlocalizedName() + "." + itemstack.getItemDamage();
         }
+        
         return getUnlocalizedName();
     }
 }
