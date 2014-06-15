@@ -67,11 +67,14 @@ public class TilePlasmaHeater extends TileElectrical implements IPacketReceiver,
         {
             if (energy.checkExtract())
             {
-                if (tankInputDeuterium.getFluidAmount() >= plasmaHeatAmount && tankInputTritium.getFluidAmount() >= plasmaHeatAmount)
+                // Creates plasma if there is enough Deuterium, Tritium AND Plasma output is not full.
+                if (tankInputDeuterium.getFluidAmount() >= plasmaHeatAmount &&
+                        tankInputTritium.getFluidAmount() >= plasmaHeatAmount &&
+                        tankOutput.getFluidAmount() < tankOutput.getCapacity())
                 {
                     tankInputDeuterium.drain(plasmaHeatAmount, true);
                     tankInputTritium.drain(plasmaHeatAmount, true);
-                    tankOutput.fill(new FluidStack(Atomic.FLUID_PLASMA, plasmaHeatAmount), true);
+                    tankOutput.fill(new FluidStack(Atomic.FLUID_PLASMA, tankOutput.getCapacity()), true);
                     energy.extractEnergy();
                 }
             }
