@@ -4,9 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.Panel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -36,12 +41,16 @@ public class FrameDebug extends Frame implements IVectorWorld
     /** Called to build the base of the GUI */
     protected void buildGUI()
     {
+        Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         UpdatePanel topPanel = new UpdatePanel();
         UpdatePanel botPanel = new UpdatePanel();
         UpdatePanel leftPanel = new UpdatePanel();
         UpdatePanel rightPanel = new UpdatePanel();
 
-        setLayout(new BorderLayout());
+        topPanel.setBorder(loweredetched);
+        botPanel.setBorder(loweredetched);
+        leftPanel.setBorder(loweredetched);
+        rightPanel.setBorder(loweredetched);
 
         buildTop(topPanel);
         buildBottom(botPanel);
@@ -66,7 +75,7 @@ public class FrameDebug extends Frame implements IVectorWorld
     }
 
     /** Top are of the Frame */
-    public void buildTop(Panel panel)
+    public void buildTop(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(1, 2, 0, 0));
         UpdatedLabel tickLabel = new UpdatedLabel("Tile: ")
@@ -81,7 +90,7 @@ public class FrameDebug extends Frame implements IVectorWorld
     }
 
     /** Bottom are of the Frame */
-    public void buildBottom(Panel panel)
+    public void buildBottom(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(1, 4, 0, 0));
         UpdatedLabel tickLabel = new UpdatedLabel("Tick: ")
@@ -126,7 +135,7 @@ public class FrameDebug extends Frame implements IVectorWorld
     }
 
     /** Left are of the Frame */
-    public void buildRight(Panel panel)
+    public void buildRight(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(1, 2, 0, 0));
         UpdatedLabel tickLabel = new UpdatedLabel("Valid: ")
@@ -141,7 +150,7 @@ public class FrameDebug extends Frame implements IVectorWorld
     }
 
     /** Right are of the Frame */
-    public void buildLeft(Panel panel)
+    public void buildLeft(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(4, 1, 0, 0));
         UpdatedLabel block_label = new UpdatedLabel("BLOCK: ")

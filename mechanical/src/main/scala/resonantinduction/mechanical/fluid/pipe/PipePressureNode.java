@@ -103,4 +103,10 @@ public class PipePressureNode extends FluidPressureNode
 
         return false;
     }
+    
+    @Override
+    public String toString()
+    {
+        return this.getClass().getSimpleName() + this.hashCode();
+    }
 }

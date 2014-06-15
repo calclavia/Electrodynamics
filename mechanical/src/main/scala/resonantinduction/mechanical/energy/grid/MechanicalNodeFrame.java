@@ -3,17 +3,15 @@ package resonantinduction.mechanical.energy.grid;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
-import java.util.Map.Entry;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 
-import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonantinduction.core.debug.FrameNodeDebug;
+import resonantinduction.core.debug.UpdatePanel;
 import resonantinduction.core.debug.UpdatedLabel;
 
 /** Java GUI used to help debug gear information
@@ -31,7 +29,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildTop(Panel panel)
+    public void buildTop(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(1, 2, 0, 0));
         UpdatedLabel tickLabel = new UpdatedLabel("Node: ")
@@ -56,7 +54,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildRight(Panel panel)
+    public void buildRight(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(2, 1, 0, 0));
 
@@ -91,7 +89,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildLeft(Panel panel)
+    public void buildLeft(UpdatePanel panel)
     {
         panel.setLayout(new GridLayout(3, 1, 0, 0));
         UpdatedLabel velLabel = new UpdatedLabel("Vel: ")

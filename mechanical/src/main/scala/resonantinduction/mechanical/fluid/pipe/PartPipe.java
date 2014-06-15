@@ -1,9 +1,12 @@
 package resonantinduction.mechanical.fluid.pipe;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -12,6 +15,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.grid.INode;
+import resonant.core.ResonantEngine;
 import resonant.lib.type.EvictingList;
 import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.ResonantInduction;
@@ -19,12 +23,14 @@ import resonantinduction.core.grid.fluid.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;
+import resonantinduction.mechanical.energy.grid.MechanicalNodeFrame;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.IconTransformation;
 import codechicken.lib.render.RenderUtils;
 import codechicken.lib.vec.Translation;
 import codechicken.microblock.IHollowConnect;
+import codechicken.multipart.ControlKeyModifer;
 import codechicken.multipart.JNormalOcclusion;
 import codechicken.multipart.TSlottedPart;
 import cpw.mods.fml.relauncher.Side;
@@ -39,6 +45,7 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
     /** Computes the average fluid for client to render. */
     private EvictingList<Integer> averageTankData = new EvictingList<Integer>(20);
     private boolean markPacket = true;
+    private PipeNodeFrame frame = null;
 
     public PartPipe()
     {
@@ -81,6 +88,11 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
         {
             sendFluidUpdate();
             markPacket = false;
+        }        
+
+        if (frame != null)
+        {
+            frame.update();
         }
     }
 
@@ -219,5 +231,45 @@ public class PartPipe extends PartFramedNode<EnumPipeMaterial, FluidPressureNode
     @Override
     public void onFluidChanged()
     {
+    }
+
+    @Override
+    public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack itemStack)
+    {
+        if (ResonantEngine.runningAsDev)
+        {
+            if (itemStack != null && !world().isRemote)
+            {
+                if (itemStack.getItem().itemID == Item.stick.itemID)
+                {
+                    //Set the nodes debug mode
+                    if (ControlKeyModifer.isControlDown(player))
+                    {
+                        //Opens a debug GUI
+                        if (frame == null)
+                        {
+                            frame = new PipeNodeFrame(this);
+                            frame.showDebugFrame();
+                        } //Closes the debug GUI
+                        else
+                        {
+                            frame.closeDebugFrame();
+                            frame = null;
+                        }
+                    }
+                }
+            }
+        }
+        return super.activate(player, hit, itemStack);
+    }
+    
+    @Override
+    public void onWorldSeparate()
+    {
+        super.onWorldSeparate();
+        if (frame != null)
+        {
+            frame.closeDebugFrame();
+        }
     }
 }
