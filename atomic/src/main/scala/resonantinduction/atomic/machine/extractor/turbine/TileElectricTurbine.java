@@ -41,11 +41,11 @@ public class TileElectricTurbine extends TileTurbine implements IBoilHandler
     @Override
     public void playSound()
     {
-        if (this.worldObj.getWorldTime() % (Atomic.SECOND_IN_TICKS * 1.3F) == 0)
+        if (this.worldObj.getWorldTime() % Atomic.SECOND_IN_TICKS == 0)
         {
             double maxVelocity = (getMaxPower() / torque) * 4;
-            float percentage = angularVelocity * 4 / (float) maxVelocity;
-            this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "turbine", percentage, 1.0F);
+            float percentage = Math.max(angularVelocity * 4 / (float) maxVelocity, 1.0f);
+            this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, Reference.PREFIX + "turbine", percentage, 1.0f);
         }
     }
 
