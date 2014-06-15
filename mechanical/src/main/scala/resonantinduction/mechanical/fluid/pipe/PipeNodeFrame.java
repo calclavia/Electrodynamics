@@ -1,5 +1,6 @@
 package resonantinduction.mechanical.fluid.pipe;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
@@ -52,8 +53,9 @@ public class PipeNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildRight(UpdatePanel panel)
+    public void buildCenter(UpdatePanel panel)
     {
+        panel.setLayout(new BorderLayout());
         TableModel dataModel = new AbstractTableModel()
         {
             @Override
@@ -93,11 +95,14 @@ public class PipeNodeFrame extends FrameNodeDebug
                 if (getNode() != null && getNode().getConnections() != null)
                 {
                     ForgeDirection dir = (ForgeDirection) getNode().getConnections().values().toArray()[row];
-                    switch(col)
+                    switch (col)
                     {
-                        case 0: return dir;
-                        case 1: return getNode().getConnections().keySet().toArray()[row];
-                        case 2: return getNode().getPressure(dir);
+                        case 0:
+                            return dir;
+                        case 1:
+                            return getNode().getConnections().keySet().toArray()[row];
+                        case 2:
+                            return getNode().getPressure(dir);
                     }
                 }
                 return "00000";
@@ -109,13 +114,10 @@ public class PipeNodeFrame extends FrameNodeDebug
         Dimension tablePreferred = tableScroll.getPreferredSize();
         tableScroll.setPreferredSize(new Dimension(tablePreferred.width, tablePreferred.height / 3));
 
-        panel.add(tableScroll);
-    }
+        panel.add(tableScroll, BorderLayout.SOUTH);
 
-    @Override
-    public void buildLeft(UpdatePanel panel)
-    {
-        panel.setLayout(new GridLayout(2, 1, 0, 0));
+        UpdatePanel topPanel = new UpdatePanel();
+        topPanel.setLayout(new GridLayout(1, 2, 0, 0));
         UpdatedLabel velLabel = new UpdatedLabel("Fluid: ")
         {
             @Override
@@ -124,7 +126,7 @@ public class PipeNodeFrame extends FrameNodeDebug
                 return super.buildLabel() + PipeNodeFrame.this.getNode().pipe().tank.getFluid();
             }
         };
-        panel.add(velLabel);
+        topPanel.add(velLabel);
 
         UpdatedLabel angleLabel = new UpdatedLabel("Volume: ")
         {
@@ -134,7 +136,8 @@ public class PipeNodeFrame extends FrameNodeDebug
                 return super.buildLabel() + PipeNodeFrame.this.getNode().pipe().tank.getFluidAmount() + "mb";
             }
         };
-        panel.add(angleLabel);
+        topPanel.add(angleLabel);
+        panel.add(topPanel, BorderLayout.NORTH);
     }
 
     @Override

@@ -44,23 +44,19 @@ public class FrameDebug extends Frame implements IVectorWorld
         Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         UpdatePanel topPanel = new UpdatePanel();
         UpdatePanel botPanel = new UpdatePanel();
-        UpdatePanel leftPanel = new UpdatePanel();
         UpdatePanel rightPanel = new UpdatePanel();
 
         topPanel.setBorder(loweredetched);
         botPanel.setBorder(loweredetched);
-        leftPanel.setBorder(loweredetched);
         rightPanel.setBorder(loweredetched);
 
         buildTop(topPanel);
         buildBottom(botPanel);
-        buildLeft(leftPanel);
-        buildRight(rightPanel);
+        buildCenter(rightPanel);
 
         this.add(topPanel, BorderLayout.NORTH);
         this.add(botPanel, BorderLayout.SOUTH);
-        this.add(rightPanel, BorderLayout.EAST);
-        this.add(leftPanel, BorderLayout.WEST);
+        this.add(rightPanel, BorderLayout.CENTER);
 
         //exit icon handler
         addWindowListener(new WindowAdapter()
@@ -135,9 +131,9 @@ public class FrameDebug extends Frame implements IVectorWorld
     }
 
     /** Left are of the Frame */
-    public void buildRight(UpdatePanel panel)
+    public void buildCenter(UpdatePanel panel)
     {
-        panel.setLayout(new GridLayout(1, 2, 0, 0));
+        panel.setLayout(new GridLayout(1, 4, 0, 0));
         UpdatedLabel tickLabel = new UpdatedLabel("Valid: ")
         {
             @Override
@@ -147,12 +143,6 @@ public class FrameDebug extends Frame implements IVectorWorld
             }
         };
         panel.add(tickLabel);
-    }
-
-    /** Right are of the Frame */
-    public void buildLeft(UpdatePanel panel)
-    {
-        panel.setLayout(new GridLayout(4, 1, 0, 0));
         UpdatedLabel block_label = new UpdatedLabel("BLOCK: ")
         {
             @Override
@@ -162,7 +152,7 @@ public class FrameDebug extends Frame implements IVectorWorld
             }
         };
         panel.add(block_label);
-        
+
         UpdatedLabel meta_label = new UpdatedLabel("META: ")
         {
             @Override
@@ -172,7 +162,7 @@ public class FrameDebug extends Frame implements IVectorWorld
             }
         };
         panel.add(meta_label);
-        
+
         UpdatedLabel id_label = new UpdatedLabel("ID: ")
         {
             @Override

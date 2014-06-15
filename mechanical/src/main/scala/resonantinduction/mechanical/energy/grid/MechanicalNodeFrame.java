@@ -1,5 +1,7 @@
 package resonantinduction.mechanical.energy.grid;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.Panel;
@@ -7,7 +9,12 @@ import java.awt.Panel;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
+import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonantinduction.core.debug.FrameNodeDebug;
@@ -54,44 +61,73 @@ public class MechanicalNodeFrame extends FrameNodeDebug
     }
 
     @Override
-    public void buildRight(UpdatePanel panel)
-    {
-        panel.setLayout(new GridLayout(2, 1, 0, 0));
-
-        Label label = new Label("Connections");
-        panel.add(label);
-
-        AbstractListModel model = new AbstractListModel()
+    public void buildCenter(UpdatePanel panel)
+    {        
+        panel.setLayout(new BorderLayout());
+        TableModel dataModel = new AbstractTableModel()
         {
             @Override
-            public int getSize()
+            public int getColumnCount()
             {
-                if (getNode() != null)
+                return 4;
+            }
+
+            @Override
+            public String getColumnName(int column)
+            {
+                switch (column)
+                {
+                    case 0:
+                        return "Direction";
+                    case 1:
+                        return "Tile";
+                    case 2:
+                        return "Torque";
+                    case 3:
+                        return "Speed";
+                }
+                return "---";
+            }
+
+            @Override
+            public int getRowCount()
+            {
+                if (getNode() != null && getNode().getConnections() != null)
                 {
                     return getNode().getConnections().size();
                 }
-                return 0;
+                return 10;
             }
 
             @Override
-            public Object getElementAt(int index)
+            public Object getValueAt(int row, int col)
             {
-                if (getNode() != null)
+                if (getNode() != null && getNode().getConnections() != null)
                 {
-                    return "[" + getNode().getConnections().keySet().toArray()[index] + "@" + getNode().getConnections().values().toArray()[index] + "]";
+                    ForgeDirection dir = (ForgeDirection) getNode().getConnections().values().toArray()[row];
+                    MechanicalNode node = (MechanicalNode) getNode().getConnections().keySet().toArray()[row];
+                    switch(col)
+                    {
+                        case 0: return dir;
+                        case 1: return node;
+                        case 2: return node.getTorque();
+                        case 3: return node.getAngularSpeed();
+                    }
                 }
-                return null;
+                return "00000";
             }
         };
-        connectionList_component = new JList(model);
+        JTable table = new JTable(dataModel);
+        table.setAutoCreateRowSorter(true);
+        JScrollPane tableScroll = new JScrollPane(table);
+        Dimension tablePreferred = tableScroll.getPreferredSize();
+        tableScroll.setPreferredSize(new Dimension(tablePreferred.width, tablePreferred.height / 3));
 
-        panel.add(connectionList_component);
-    }
-
-    @Override
-    public void buildLeft(UpdatePanel panel)
-    {
-        panel.setLayout(new GridLayout(3, 1, 0, 0));
+        panel.add(tableScroll, BorderLayout.SOUTH);
+        
+        UpdatePanel topPanel = new UpdatePanel();
+        topPanel.setLayout(new GridLayout(1, 3, 0, 0));
+        
         UpdatedLabel velLabel = new UpdatedLabel("Vel: ")
         {
             @Override
@@ -100,7 +136,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
                 return super.buildLabel() + MechanicalNodeFrame.this.getNode().angularVelocity;
             }
         };
-        panel.add(velLabel);
+        topPanel.add(velLabel);
 
         UpdatedLabel angleLabel = new UpdatedLabel("Angle: ")
         {
@@ -110,7 +146,7 @@ public class MechanicalNodeFrame extends FrameNodeDebug
                 return super.buildLabel() + MechanicalNodeFrame.this.getNode().renderAngle;
             }
         };
-        panel.add(angleLabel);
+        topPanel.add(angleLabel);
 
         UpdatedLabel torqueLabel = new UpdatedLabel("Torque: ")
         {
@@ -120,7 +156,8 @@ public class MechanicalNodeFrame extends FrameNodeDebug
                 return super.buildLabel() + MechanicalNodeFrame.this.getNode().torque;
             }
         };
-        panel.add(torqueLabel);
+        topPanel.add(torqueLabel);
+        panel.add(topPanel, BorderLayout.NORTH);
     }
 
     @Override
