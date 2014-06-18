@@ -1,7 +1,7 @@
 package resonantinduction.mechanical.process.crusher;
 
-import java.lang.reflect.Method;
-
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
@@ -19,15 +19,17 @@ import resonantinduction.core.ResonantInduction;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import resonantinduction.mechanical.energy.grid.TileMechanical;
 import universalelectricity.api.vector.Vector3;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+
+import java.lang.reflect.Method;
 
 public class TileMechanicalPiston extends TileMechanical implements IRotatable
 {
-	@Config
+	@Config(comment = "Outdated, not used anymore. use mechanicalPistonMultiplier as its based on block hardness now")
+	@Deprecated
 	private static int mechanicalPistonBreakCount = 5;
 
-	private int breakCount = mechanicalPistonBreakCount;
+	@Config
+	private static int mechanicalPistonMultiplier = 2;
 
 	private boolean markRevolve = false;
 
@@ -88,6 +90,9 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
 		if (block != null)
 		{
+			int breakCount = (int) (mechanicalPistonMultiplier * block.blockHardness);
+			final int startBreakCount = breakCount;
+
 			ItemStack blockStack = new ItemStack(block);
 			RecipeResource[] resources = MachineRecipes.INSTANCE.getOutput(ResonantInduction.RecipeType.CRUSHER.name(), blockStack);
 
@@ -95,7 +100,7 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 			{
 				if (!worldObj.isRemote)
 				{
-					int breakStatus = (int) (((float) (mechanicalPistonBreakCount - breakCount) / (float) mechanicalPistonBreakCount) * 10f);
+					int breakStatus = (int) (((float) (startBreakCount - breakCount) / (float) startBreakCount) * 10f);
 					world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), breakStatus);
 
 					if (breakCount <= 0)
@@ -112,8 +117,6 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 
 							getWorldObj().destroyBlock(blockPos.intX(), blockPos.intY(), blockPos.intZ(), false);
 						}
-
-						breakCount = mechanicalPistonBreakCount;
 					}
 				}
 
@@ -122,8 +125,6 @@ public class TileMechanicalPiston extends TileMechanical implements IRotatable
 				return true;
 			}
 		}
-
-		breakCount = mechanicalPistonBreakCount;
 
 		if (!worldObj.isRemote)
 			world().destroyBlockInWorldPartially(0, blockPos.intX(), blockPos.intY(), blockPos.intZ(), -1);
