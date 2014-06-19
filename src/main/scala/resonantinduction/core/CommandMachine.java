@@ -196,7 +196,7 @@ public class CommandMachine extends CommandBase
     {
         if (event.action == Action.RIGHT_CLICK_BLOCK)
         {
-            if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().itemID == ResonantInduction.itemDevStaff.itemID)
+            if (event.entityPlayer.getHeldItem() != null && ResonantInduction.itemDevStaff != null && event.entityPlayer.getHeldItem().itemID == ResonantInduction.itemDevStaff.itemID)
             {
                 if (event.entityPlayer.isSneaking())
                 {
