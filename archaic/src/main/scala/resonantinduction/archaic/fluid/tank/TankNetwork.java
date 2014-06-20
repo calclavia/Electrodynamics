@@ -25,14 +25,13 @@ public class TankNetwork extends FluidDistributionetwork
         final FluidStack networkTankFluid = getTank().getFluid();
         int lowestY = 255;
         int highestY = 0;
-        int connectorCount = 0;
+        int connectorCount;
         int totalFluid = networkTankFluid != null ? networkTankFluid.amount : 0;
 
         //If we only have one tank only fill one tank
 
         if (getConnectors().size() > 0)
         {
-
             IFluidDistribution tank = ((IFluidDistribution) getConnectors().toArray()[0]);
             if (getConnectors().size() == 1)
             {
@@ -61,14 +60,14 @@ public class TankNetwork extends FluidDistributionetwork
                 }
                 else
                 {
-                    HashMap<Integer, LinkedList<IFluidDistribution>> heightMap = new HashMap<Integer, LinkedList<IFluidDistribution>>();
+                    HashMap<Integer, LinkedList<IFluidDistribution>> heightMap = new HashMap();
 
                     //Build map of all tanks by their y level
                     for (IFluidDistribution connector : this.getConnectors())
                     {
                         if (connector instanceof TileEntity)
                         {
-                            LinkedList<IFluidDistribution> list = new LinkedList<IFluidDistribution>();
+                            LinkedList<IFluidDistribution> list = new LinkedList();
                             int yCoord = ((TileEntity) connector).yCoord;
 
                             if (yCoord < lowestY)

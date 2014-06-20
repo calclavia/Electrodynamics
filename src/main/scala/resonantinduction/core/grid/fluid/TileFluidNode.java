@@ -57,7 +57,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
             sendTankUpdate();
             markTankUpdate = false;
         }
-    }
+	}
 
     @Override
     public void readFromNBT(NBTTagCompound nbt)
@@ -138,7 +138,7 @@ public abstract class TileFluidNode extends TileBase implements IPacketReceiverW
     {
         if (!worldObj.isRemote)
         {
-            if (!FluidUtility.matchExact(prevStack, getInternalTank().getFluid()))
+            if (!FluidUtility.matchExact(prevStack, getInternalTank().getFluid()) || ticks == 0)
             {
                 markTankUpdate = true;
                 prevStack = tank.getFluid() != null ? tank.getFluid().copy() : null;
