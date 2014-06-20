@@ -26,4 +26,4 @@ Join *#mffs* or *#calclavia* on EsperNet (irc.esper.net:5555). Remember to follo
 Modular Force Field System is licensed under Calclavia's Educational Public License (http://calclavia.com/educational-public-license/).
 By using or interacting with this software in any way shape or form, you agree to the license of this software.
 
-The original Modular Force Field System 2.0 is licensed under GPL v3.0. Because MFFS 3.0 is a complete rewrite and not a derived work, it is under a different license.
+The original Modular Force Field System 2.0 is licensed under GPL v3.0. Because MFFS 3.0 is a complete rewrite and not a derived work, it is permitted to be under a different license.

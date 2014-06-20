@@ -49,6 +49,8 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 					int blockID = this.position.getBlockID(this.world);
 					int blockMetadata = this.position.getBlockMetadata(this.world);
 
+					MovementUtility.setBlockSneaky(this.world, this.position, 0, 0, null);
+
 					NBTTagCompound tileData = new NBTTagCompound();
 
 					if (tileEntity != null)
@@ -56,7 +58,6 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 						tileEntity.writeToNBT(tileData);
 					}
 
-					MovementUtility.setBlockSneaky(this.world, this.position, 0, 0, null);
 					this.handler.queueEvent(new BlockPostMoveDelayedEvent(this.handler, 0, this.world, this.position, this.newPosition, blockID, blockMetadata, tileEntity, tileData));
 				}
 			}
