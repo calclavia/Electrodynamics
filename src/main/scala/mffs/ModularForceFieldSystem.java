@@ -320,7 +320,7 @@ public class ModularForceFieldSystem
 		// Interdiction Matrix
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInterdictionMatrix), "SSS", "FFF", "FEF", 'S', itemModuleShock, 'E', Block.enderChest, 'F', itemFocusMatix));
 		// Force Manipulator
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceManipulator), "F F", "FMF", "F F", 'F', itemFocusMatix, 'M', UniversalRecipe.MOTOR.get()));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceManipulator), "FCF", "TMT", "FCF", 'F', itemFocusMatix, 'C', UniversalRecipe.MOTOR.get(), 'T', itemModuleTranslate, 'M', UniversalRecipe.MOTOR.get()));
 
 		// -- Cards --
 		// Blank

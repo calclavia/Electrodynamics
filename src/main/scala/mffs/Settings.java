@@ -23,9 +23,12 @@ public class Settings
 	 * Auto-incrementing configuration IDs. Use this to make sure no config ID is the same.
 	 */
 	public static final IDManager idManager = new IDManager(1680, 11130);
+
 	public static final int MAX_FREQUENCY_DIGITS = 6;
+
 	/**
 	 * MFFS Configuration Settings
+	 * TODO: Transfer to new config system.
 	 */
 	public static int MAX_FORCE_FIELDS_PER_TICK = 1000;
 	public static int MAX_FORCE_FIELD_SCALE = 200;
