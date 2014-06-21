@@ -22,7 +22,6 @@ public class TileWindTurbine extends TileTurbine
     private float efficiency = 0;
     private long windPower = 0;
 
-   
 
     @Override
     public void updateEntity()
