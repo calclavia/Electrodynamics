@@ -29,7 +29,7 @@ public class BlockUraniumOre extends BlockRadioactive
         this.canSpread = false;
         this.radius = 1f;
         this.amplifier = 0;
-        this.spawnParticle = false;
+        this.spawnParticle = true;
     }
 
     @Override
