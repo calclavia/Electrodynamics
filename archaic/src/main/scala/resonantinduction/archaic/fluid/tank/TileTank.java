@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.FluidTank;
 import org.lwjgl.opengl.GL11;
 
 import resonant.api.IRemovable.ISneakPickup;
+import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.content.module.TileBlock.IComparatorInputOverride;
 import resonant.lib.content.module.TileRender;
 import resonant.lib.render.FluidRenderUtility;
@@ -154,9 +155,9 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 							double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
 
 							double ySouthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.EAST);
-							double yNorthEast = percentageFilled;//FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
-							double ySouthWest = percentageFilled;//FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
-							double yNorthWest = percentageFilled;//FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
+							double yNorthEast = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.EAST);
+							double ySouthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.SOUTH, ForgeDirection.WEST);
+							double yNorthWest = FluidUtility.getAveragePercentageFilledForSides(TileTank.class, percentageFilled, tileEntity.worldObj, new Vector3(tileEntity), ForgeDirection.NORTH, ForgeDirection.WEST);
 							FluidRenderUtility.renderFluidTesselation(tank, ySouthEast, yNorthEast, ySouthWest, yNorthWest);
 						}
 						else
@@ -198,30 +199,73 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 				renderTank(TileTank.this, position.x, position.y, position.z, getInternalTank().getFluid());
 				return false;
 			}
+		};
+	}
 
-			@Override
-			public boolean renderItem(ItemStack itemStack)
+	public static class ItemRenderer implements ISimpleItemRenderer
+	{
+		public static ItemRenderer instance = new ItemRenderer();
+
+		public void renderTank(double x, double y, double z, FluidStack fluid, int capacity)
+		{
+			FluidTank tank = new FluidTank(fluid, capacity);
+			GL11.glPushMatrix();
+
+			GL11.glTranslated(0.02, 0.02, 0.02);
+			GL11.glScaled(0.92, 0.92, 0.92);
+
+			if (fluid != null)
 			{
 				GL11.glPushMatrix();
-				GL11.glTranslated(0.5, 0.5, 0.5);
-				RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
-				GL11.glPopMatrix();
 
-				GL11.glPushMatrix();
-				GL11.glTranslated(0, -0.1, 0);
-
-				FluidStack fluid = null;
-
-				if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("fluid"))
+				if (!fluid.getFluid().isGaseous())
 				{
-					fluid = FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound().getCompoundTag("fluid"));
+					double percentageFilled = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+					FluidRenderUtility.renderFluidTesselation(tank, percentageFilled, percentageFilled, percentageFilled, percentageFilled);
+				}
+				else
+				{
+					double filledPercentage = (double) fluid.amount / (double) capacity;
+
+					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+					GL11.glEnable(GL11.GL_CULL_FACE);
+					GL11.glDisable(GL11.GL_LIGHTING);
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+					Color color = new Color(fluid.getFluid().getColor());
+					RenderUtility.enableBlending();
+					GL11.glColor4d(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, fluid.getFluid().isGaseous() ? filledPercentage : 1);
+
+					RenderUtility.bind(FluidRenderUtility.getFluidSheet(fluid));
+					FluidRenderUtility.renderFluidTesselation(tank, 1, 1, 1, 1);
+					RenderUtility.disableBlending();
+					GL11.glPopAttrib();
 				}
 
-				renderTank(TileTank.this, 0, 0, 0, fluid);
 				GL11.glPopMatrix();
-				return true;
 			}
-		};
+
+			GL11.glPopMatrix();
+		}
+
+		@Override
+		public void renderInventoryItem(ItemStack itemStack)
+		{
+			GL11.glPushMatrix();
+			RenderBlockUtility.tessellateBlockWithConnectedTextures(itemStack.getItemDamage(), Archaic.blockTank, null, RenderUtility.getIcon(Reference.PREFIX + "tankEdge"));
+			GL11.glPopMatrix();
+
+			GL11.glPushMatrix();
+
+			if (itemStack.getTagCompound() != null && itemStack.getTagCompound().hasKey("fluid"))
+			{
+				renderTank(0, 0, 0, FluidStack.loadFluidStackFromNBT(itemStack.getTagCompound().getCompoundTag("fluid")), VOLUME * FluidContainerRegistry.BUCKET_VOLUME);
+			}
+
+			GL11.glPopMatrix();
+		}
+
 	}
 
 	@Override
