@@ -1,10 +1,11 @@
 /**
- * 
+ *
  */
 package resonantinduction.electrical.battery;
 
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +22,16 @@ import org.lwjgl.opengl.GL11;
 
 import resonant.api.items.ISimpleItemRenderer;
 import resonant.lib.render.RenderUtility;
+import resonant.lib.utility.WorldUtility;
 import resonantinduction.core.Reference;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * TODO: Make this more efficient.
+ *
  * @author Calclavia
- * 
  */
 @SideOnly(Side.CLIENT)
 public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleItemRenderer
@@ -83,8 +86,8 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 		int energyLevel = (int) Math.round(((double) tile.getEnergyHandler().getEnergy() / (double) TileBattery.getEnergyForTier(tile.getBlockMetadata())) * 8);
 		RenderUtility.bind(Reference.DOMAIN, Reference.MODEL_PATH + "battery/battery.png");
 
-		List<String> disabledParts = new ArrayList<String>();
-		List<String> enabledParts = new ArrayList<String>();
+		List<String> disabledParts = new ArrayList();
+		List<String> enabledParts = new ArrayList();
 
 		for (ForgeDirection check : ForgeDirection.VALID_DIRECTIONS)
 		{
@@ -128,6 +131,24 @@ public class RenderBattery extends TileEntitySpecialRenderer implements ISimpleI
 			{
 				GL11.glPushMatrix();
 				RenderUtility.rotateBlockBasedOnDirection(check);
+
+				//TODO: Fix this horrible patch.
+				switch (check)
+				{
+					case NORTH:
+						glRotatef(0, 0, 1, 0);
+						break;
+					case SOUTH:
+						glRotatef(0, 0, 1, 0);
+						break;
+					case WEST:
+						glRotatef(-180, 0, 1, 0);
+						break;
+					case EAST:
+						glRotatef(180, 0, 1, 0);
+						break;
+				}
+
 				GL11.glRotatef(-90, 0, 1, 0);
 
 				int io = tile.getIO(check);
