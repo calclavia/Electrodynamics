@@ -1,5 +1,8 @@
 package resonantinduction.core.resource;
 
+import net.minecraft.client.renderer.texture.IconRegister;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import resonant.lib.prefab.item.ItemTooltip;
 
 /** Bio mass item used as a crafting part and fuel
@@ -10,5 +13,12 @@ public class ItemBiomass extends ItemTooltip
     public ItemBiomass(int id)
     {
         super(id);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister iconRegister)
+    {
+        this.itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().replace("item.", ""));
     }
 }

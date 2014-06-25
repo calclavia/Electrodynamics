@@ -12,7 +12,6 @@ import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.core.ResonantEngine;
-import resonantinduction.mechanical.gear.GearDebugFrame;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.multipart.ControlKeyModifer;
@@ -32,7 +31,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
     /** Packets */
     boolean markPacketUpdate = false;
     /** Simple debug external GUI */
-    GearDebugFrame frame = null;
+    MechanicalNodeFrame frame = null;
 
     /** Side of the block this is placed on */
     public ForgeDirection placementSide = ForgeDirection.UNKNOWN;
@@ -55,7 +54,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
         }
         
         //Make sure to update on both sides
-        this.node.update(0.05f);
+        this.node.update();
         
         if (!world().isRemote)
         {
@@ -83,7 +82,7 @@ public abstract class PartMechanical extends JCuboidPart implements JNormalOcclu
                         //Opens a debug GUI
                         if (frame == null)
                         {
-                            frame = new GearDebugFrame(this);
+                            frame = new MechanicalNodeFrame(this);
                             frame.showDebugFrame();
                         } //Closes the debug GUI
                         else

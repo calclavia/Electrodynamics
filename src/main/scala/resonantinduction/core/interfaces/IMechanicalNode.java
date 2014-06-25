@@ -16,8 +16,7 @@ public interface IMechanicalNode extends INode
     public double getAngularSpeed();
     
     /** Applies rotational force and velocity to the mechanical object */
-    public void apply(Object source, double torque, double angularVelocity);
-    
+    public void apply(Object source, double torque, double angularVelocity);   
     
     
     /** The Rotational force */

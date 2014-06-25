@@ -308,4 +308,10 @@ public abstract class PartFramedNode<M extends Enum, N extends Node, T extends I
         super.load(nbt);
         node.load(nbt);
     }
+
+    @Override
+    public String toString()
+    {
+        return this.getClass().getSimpleName() + this.hashCode();
+    }
 }

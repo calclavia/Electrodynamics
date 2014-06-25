@@ -9,14 +9,15 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.api.grid.INodeProvider;
+import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
 import universalelectricity.api.vector.Vector3;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
 /**
- * The vertical wind turbine collects airflow.
- * The horizontal wind turbine collects steam from steam power plants.
+ * The vertical water turbine collects flowing water flowing on X axis.
+ * The horizontal water turbine collects flowing water on Z axis.
  * 
  * @author Calclavia
  * 
@@ -56,9 +57,13 @@ public class TileWaterTurbine extends TileTurbine
 	public void updateEntity()
 	{
 		if (getMultiBlock().isConstructed())
+		{
 		    mechanicalNode.torque = (long) (defaultTorque / (1d / multiBlockRadius));
+		}
 		else
+		{
 		    mechanicalNode.torque = defaultTorque / 12;
+		}
 
 		/**
 		 * If this is a horizontal turbine.
@@ -108,12 +113,21 @@ public class TileWaterTurbine extends TileTurbine
 							Vector3 vector = new Vector3((Vec3) m.invoke(Block.waterMoving, worldObj, check.intX(), check.intY(), check.intZ()));
 
 							if ((currentDir.offsetZ > 0 && vector.x < 0) || (currentDir.offsetZ < 0 && vector.x > 0) || (currentDir.offsetX > 0 && vector.z > 0) || (currentDir.offsetX < 0 && vector.z < 0))
+							{
 							    mechanicalNode.torque = -mechanicalNode.torque;
+							}
 
 							if (getDirection().offsetX != 0)
+							{
 								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.z * (7 - metadata) / 7f);
+								powerTicks = 20;
+							}
+							
 							if (getDirection().offsetZ != 0)
+							{
 								getMultiBlock().get().power += Math.abs(getWaterPower() * vector.x * (7 - metadata) / 7f);
+								powerTicks = 20;
+							}
 						}
 						catch (Exception e)
 						{

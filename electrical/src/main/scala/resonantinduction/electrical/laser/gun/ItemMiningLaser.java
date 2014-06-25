@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.api.event.LaserEvent;
+import resonant.api.event.LaserFiredPlayerEvent;
 import resonant.lib.prefab.vector.RayTraceHelper;
 import resonant.lib.type.Pair;
 import resonantinduction.core.ResonantInduction;
@@ -120,7 +121,7 @@ public class ItemMiningLaser extends ItemEnergyTool
 
             if (hit != null)
             {
-                LaserEvent event = new LaserEvent.LaserFiredPlayerEvent(player, hit, stack);
+                LaserEvent event = new LaserFiredPlayerEvent(player, hit, stack);
                 MinecraftForge.EVENT_BUS.post(event);
                 if (!player.worldObj.isRemote && !event.isCanceled())
                 {
