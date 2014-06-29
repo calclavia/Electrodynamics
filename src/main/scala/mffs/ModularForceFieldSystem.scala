@@ -47,12 +47,12 @@ object ModularForceFieldSystem
   /**
    * Machines
    */
-  var blockCoercionDeriver: BlockMFFS = _
-  var blockFortronCapacitor: BlockMFFS = _
-  var blockForceFieldProjector: BlockMFFS = _
-  var blockBiometricIdentifier: BlockMFFS = _
-  var blockInterdictionMatrix: BlockMFFS = _
-  var blockForceManipulator: BlockMFFS = _
+  var blockCoercionDeriver: Block = _
+  var blockFortronCapacitor: Block = _
+  var blockForceFieldProjector: Block = _
+  var blockBiometricIdentifier: Block = _
+  var blockInterdictionMatrix: Block = _
+  var blockForceManipulator: Block = _
   var blockForceField: BlockForceField = _
   /**
    * Items
@@ -179,21 +179,9 @@ object ModularForceFieldSystem
     itemModuleRepulsion = new ItemModuleRepulsion
     itemModuleApproximation = new ItemModule("moduleApproximation").setMaxStackSize(1).setCost(1f)
     itemModuleArray = new ItemModuleArray().setCost(3f)
-    Settings.configuration.save
-    GameRegistry.registerBlock(blockForceField, blockForceField.getUnlocalizedName)
-    GameRegistry.registerBlock(blockCoercionDeriver, blockCoercionDeriver.getUnlocalizedName)
-    GameRegistry.registerBlock(blockFortronCapacitor, blockFortronCapacitor.getUnlocalizedName)
-    GameRegistry.registerBlock(blockForceFieldProjector, blockForceFieldProjector.getUnlocalizedName)
-    GameRegistry.registerBlock(blockBiometricIdentifier, blockBiometricIdentifier.getUnlocalizedName)
-    GameRegistry.registerBlock(blockInterdictionMatrix, blockInterdictionMatrix.getUnlocalizedName)
-    GameRegistry.registerBlock(blockForceManipulator, blockForceManipulator.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileForceField], blockForceField.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileCoercionDeriver], blockCoercionDeriver.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileFortronCapacitor], blockFortronCapacitor.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileForceFieldProjector], blockForceFieldProjector.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileBiometricIdentifier], blockBiometricIdentifier.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileInterdictionMatrix], blockInterdictionMatrix.getUnlocalizedName)
-    GameRegistry.registerTileEntity(classOf[TileForceManipulator], blockForceManipulator.getUnlocalizedName)
+
+    Settings.configuration.save()
+
     proxy.preInit
   }
 
@@ -220,6 +208,8 @@ object ModularForceFieldSystem
     metadata.version = VERSION + "." + BUILD_VERSION
     metadata.authorList = Arrays.asList(Array[String]("Calclavia"))
     metadata.credits = "Please visit the website."
+
+    proxy.init()
   }
 
   @EventHandler
@@ -277,7 +267,7 @@ object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAlter), " G ", "GFG", " G ", 'F', itemModuleBlockAccess, 'G', Block.blockGold))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiSpawn), " H ", "G G", " H ", 'H', itemModuleAntiHostile, 'G', itemModuleAntiFriendly))
 
-    proxy.init()
+    proxy.postInit()
 
     try
     {

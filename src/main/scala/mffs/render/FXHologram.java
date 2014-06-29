@@ -13,7 +13,7 @@ import resonant.lib.render.RenderUtility;
 import universalelectricity.api.vector.Vector3;
 
 @SideOnly(Side.CLIENT)
-public class FXHologram extends FxMFFS
+public class FXHologram extends FXMFFS
 {
 	private Vector3 targetPosition = null;
 
