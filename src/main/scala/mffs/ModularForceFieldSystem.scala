@@ -1,13 +1,13 @@
 package mffs
 
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import cpw.mods.fml.common.event.{FMLServerStartingEvent, FMLPostInitializationEvent, FMLInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
+import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import ic2.api.tile.ExplosionWhitelist
 import mffs.base.ItemMFFS
-import mffs.block._
 import mffs.card.ItemCard
-import mffs.field
 import mffs.fortron.FortronHelper
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCardFrequency, ItemCardID, ItemCardInfinite, ItemCardLink}
@@ -17,13 +17,17 @@ import mffs.item.module.interdiction._
 import mffs.item.module.projector._
 import mffs.tile._
 import net.minecraft.block.Block
-import net.minecraft.item.Item
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
+import net.minecraftforge.fluids.{Fluid, FluidStack, FluidRegistry}
+import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
+import resonant.api.mffs.Blacklist
 import resonant.content.ModManager
+import resonant.lib.config.ConfigHandler
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
+import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 @Mod(modid = Reference.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine")
 @ModstatInfo(prefix = "mffs")
@@ -48,7 +52,7 @@ object ModularForceFieldSystem
   var blockBiometricIdentifier: Block = _
   var blockInterdictionMatrix: Block = _
   var blockForceManipulator: Block = _
-  var blockForceField: BlockForceField = _
+  var blockForceField: Block = _
   /**
    * Items
    */
@@ -203,7 +207,7 @@ object ModularForceFieldSystem
     metadata.url = "http://www.calclavia.com/mffs/"
     metadata.logoFile = "/mffs_logo.png"
     metadata.version = VERSION + "." + BUILD_VERSION
-    metadata.authorList = Arrays.asList(Array[String]("Calclavia"))
+    metadata.authorList = Array[String]("Calclavia").toList
     metadata.credits = "Please visit the website."
 
     proxy.init()
@@ -280,9 +284,4 @@ object ModularForceFieldSystem
     Settings.configuration.save()
   }
 
-  @EventHandler
-  def serverStarting(evt: FMLServerStartingEvent)
-  {
-    FrequencyGrid.reinitiate
-  }
 }

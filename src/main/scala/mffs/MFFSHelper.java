@@ -1,7 +1,6 @@
 package mffs;
 
 import resonant.api.mffs.IProjector;
-import resonant.api.mffs.fortron.FrequencyGrid;
 import resonant.api.mffs.fortron.IFortronFrequency;
 import resonant.api.mffs.modules.IModuleAcceptor;
 import resonant.api.mffs.security.IInterdictionMatrix;
@@ -14,12 +13,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import resonant.api.blocks.IBlockFrequency;
-import universalelectricity.api.vector.Vector3;
 
-import java.util.HashMap;
 import java.util.Set;
 
 /**

@@ -1,17 +1,16 @@
 package mffs.item.module;
 
-import resonant.api.mffs.IFieldInteraction;
-import resonant.api.mffs.IProjector;
-import resonant.api.mffs.modules.IModule;
 import mffs.base.ItemMFFS;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import resonant.api.mffs.IFieldInteraction;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.modules.IModule;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.api.UnitDisplay;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.List;
 import java.util.Set;
@@ -28,7 +27,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List info, boolean b)
 	{
-		info.add(LanguageUtility.getLocal("info.item.fortron") + " " + UnitDisplay.getDisplay(getFortronCost(1) * 20, Unit.LITER) + "/s");
+		info.add(LanguageUtility.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s");
 		super.addInformation(itemStack, player, info, b);
 	}
 
@@ -58,7 +57,7 @@ public class ItemModule extends ItemMFFS implements IModule
 	@Override
 	public boolean onCollideWithForceField(World world, int x, int y, int z, Entity entity, ItemStack moduleStack)
 	{
-		return false;
+		return true;
 	}
 
 	public ItemModule setCost(float cost)

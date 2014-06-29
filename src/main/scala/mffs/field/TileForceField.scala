@@ -14,12 +14,12 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{AxisAlignedBB, MovingObjectPosition}
-import net.minecraft.world.{World, IBlockAccess}
+import net.minecraft.util.{IIcon, MovingObjectPosition}
+import net.minecraft.world.{IBlockAccess, World}
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.IFortronStorage
 import resonant.api.mffs.modules.IModule
-import resonant.api.mffs.security.{IBiometricIdentifier, Permission}
+import resonant.api.mffs.security.Permission
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.IPacketReceiver
 import universalelectricity.core.transform.region.Cuboid
@@ -166,10 +166,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
 
     if (projector != null)
     {
-      projector.getModuleStacks(projector.getModuleSlots()).foreach(moduleStack =>
-      {
-        moduleStack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entityPlayer, moduleStack)
-      })
+      projector.getModuleStacks(projector.getModuleSlots()).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack))
     }
   }
 
@@ -203,140 +200,111 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     return super.getCollisionBoxes(intersect, entity)
   }
 
-  def onEntityCollidedWithBlock(world: World, x: Int, y: Int, z: Int, entity: Entity)
+  override def collide(entity: Entity)
   {
-    val tileEntity: TileEntity = world.getBlockTileEntity(x, y, z)
-    if (tileEntity.isInstanceOf[TileForceField])
+    val projector = getProjector()
+
+    if (projector != null)
     {
-      if (this.getProjector(world, x, y, z) != null)
+      if (!projector.getModuleStacks(projector.getModuleSlots()).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
+        return
+
+      val biometricIdentifier = projector.getBiometricIdentifier()
+
+      if (center.distance(new Vector3(entity)) < 0.5)
       {
-        import scala.collection.JavaConversions._
-        for (moduleStack <- (tileEntity.asInstanceOf[TileForceField]).getProjector.getModuleStacks((tileEntity.asInstanceOf[TileForceField]).getProjector.getModuleSlots))
+        if (!world.isRemote && entity.isInstanceOf[EntityLiving])
         {
-          if ((moduleStack.getItem.asInstanceOf[IModule]).onCollideWithForceField(world, x, y, z, entity, moduleStack))
+          val entityLiving = entity.asInstanceOf[EntityLiving]
+
+          entityLiving.addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3))
+          entityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1))
+
+          if (entity.isInstanceOf[EntityPlayer])
           {
-            return
-          }
-        }
-        val biometricIdentifier: IBiometricIdentifier = this.getProjector(world, x, y, z).getBiometricIdentifier
-        if (new Nothing(entity).distance(new Nothing(x, y, z).add(0.4)) < 0.5)
-        {
-          if (entity.isInstanceOf[EntityLiving] && !world.isRemote)
-          {
-            (entity.asInstanceOf[EntityLiving]).addPotionEffect(new PotionEffect(Potion.confusion.id, 4 * 20, 3))
-            (entity.asInstanceOf[EntityLiving]).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 1))
-            var hasPermission: Boolean = false
-            val entities: List[EntityPlayer] = world.getEntitiesWithinAABB(classOf[EntityPlayer], AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 0.9, z + 1))
-            for (entityPlayer <- entities)
+            val player = entity.asInstanceOf[EntityPlayer]
+
+            if (player.isSneaking)
             {
-              if (entityPlayer != null)
+              if (player.capabilities.isCreativeMode)
               {
-                if (entityPlayer.isSneaking)
+                return
+              }
+              else if (biometricIdentifier != null)
+              {
+                if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
                 {
-                  if (entityPlayer.capabilities.isCreativeMode)
-                  {
-                    hasPermission = true
-                    break //todo: break is not supported
-                  }
-                  else if (biometricIdentifier != null)
-                  {
-                    if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
-                    {
-                      hasPermission = true
-                    }
-                  }
+                  return
                 }
               }
             }
-            if (!hasPermission)
-            {
-              entity.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100)
-            }
           }
+
+          entity.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100)
         }
       }
     }
+
   }
 
-  def getBlockTexture(iBlockAccess: IBlockAccess, x: Int, y: Int, z: Int, side: Int): Nothing =
+  @SideOnly(Side.CLIENT)
+  override def getIcon(access: IBlockAccess, side: Int): IIcon =
   {
-    val tileEntity: TileEntity = iBlockAccess.getBlockTileEntity(x, y, z)
-    if (tileEntity.isInstanceOf[TileForceField])
+    if (camoStack != null)
     {
-      val checkStack: ItemStack = (tileEntity.asInstanceOf[TileForceField]).camoStack
-      if (checkStack != null)
+      try
       {
-        try
+        val block = camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a
+        val icon = block.getIcon(side, camoStack.getItemDamage)
+
+        if (icon != null)
         {
-          val block: Block = Block.blocksList((checkStack.getItem.asInstanceOf[ItemBlock]).getBlockID)
-          val icon: Nothing = block.getIcon(side, checkStack.getItemDamage)
-          if (icon != null)
+          return icon
+        }
+      }
+      catch
+        {
+          case e: Exception =>
           {
-            return icon
+            e.printStackTrace
           }
         }
-        catch
-          {
-            case e: Exception =>
-            {
-              e.printStackTrace
-            }
-          }
-      }
     }
-    return this.getIcon(side, iBlockAccess.getBlockMetadata(x, y, z))
+
+    return super.getIcon(access, side)
   }
 
   /**
    * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color.
    * Note only called when first determining what to render.
    */
-  def colorMultiplier(iBlockAccess: IBlockAccess, x: Int, y: Int, z: Int): Int =
+  def colorMultiplier(): Int =
   {
-    try
+    if (camoStack != null)
     {
-      val tileEntity: TileEntity = iBlockAccess.getBlockTileEntity(x, y, z)
-      if (tileEntity.isInstanceOf[TileForceField])
+      try
       {
-        val checkStack: ItemStack = (tileEntity.asInstanceOf[TileForceField]).camoStack
-        if (checkStack != null)
+        return camoStack.getItem().asInstanceOf[ItemBlock].field_150939_a.colorMultiplier(access, x, y, x)
+      }
+      catch
         {
-          try
+          case e: Exception =>
           {
-            return Block.blocksList((checkStack.getItem.asInstanceOf[ItemBlock]).getBlockID).colorMultiplier(iBlockAccess, x, y, x)
+            e.printStackTrace
           }
-          catch
-            {
-              case e: Exception =>
-              {
-                e.printStackTrace
-              }
-            }
         }
-      }
     }
-    catch
-      {
-        case e: Exception =>
-        {
-          e.printStackTrace
-        }
-      }
-    return super.colorMultiplier(iBlockAccess, x, y, z)
+    return super.colorMultiplier()
   }
 
-  def getLightValue(iBlockAccess: IBlockAccess, x: Int, y: Int, z: Int): Int =
+  def getLightValue(access: IBlockAccess): Int =
   {
     try
     {
-      val tileEntity: TileEntity = iBlockAccess.getBlockTileEntity(x, y, z)
-      if (tileEntity.isInstanceOf[TileForceField])
+      val projector = getProjectorSafe()
+      if (projector != null)
       {
-        val zhuYao: IProjector = (tileEntity.asInstanceOf[TileForceField]).getProjectorSafe
-        if (zhuYao.isInstanceOf[IProjector])
-        {
-          return ((Math.min(zhuYao.getModuleCount(ModularForceFieldSystem.itemModuleGlow), 64).asInstanceOf[Float] / 64) * 15f).asInstanceOf[Int]
-        }
+        return ((Math.min(projector.getModuleCount(ModularForceFieldSystem.itemModuleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
       }
     }
     catch
@@ -346,6 +314,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
           e.printStackTrace
         }
       }
+
     return 0
   }
 
@@ -433,15 +402,6 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     return null
   }
 
-  def setProjector(position: Nothing)
-  {
-    this.projector = position
-    if (!this.worldObj.isRemote)
-    {
-      this.refreshCamoBlock
-    }
-  }
-
   def getProjectorSafe: TileForceFieldProjector =
   {
     if (this.projector != null)
@@ -457,6 +417,16 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     return null
   }
 
+  def setProjector(position: Vector3)
+  {
+    projector = position
+
+    if (!world.isRemote)
+    {
+      refreshCamoBlock()
+    }
+  }
+
   /**
    * Server Side Only
    */
@@ -464,7 +434,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   {
     if (this.getProjectorSafe != null)
     {
-      this.camoStack = MFFSHelper.getCamoBlock(this.getProjector, new Nothing(this))
+      camoStack = MFFSHelper.getCamoBlock(this.getProjector, new Vector3(this))
     }
   }
 
