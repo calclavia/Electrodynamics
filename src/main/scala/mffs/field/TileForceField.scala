@@ -2,7 +2,7 @@ package mffs.field
 
 import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.tile.TileElectromagnetProjector
+import mffs.field.TileElectromagnetProjector
 import mffs.{MFFSHelper, ModularForceFieldSystem}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material

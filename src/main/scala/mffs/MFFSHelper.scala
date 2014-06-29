@@ -2,7 +2,8 @@ package mffs
 
 import java.util.Set
 
-import mffs.item.mode.ItemModeCustom
+import mffs.fortron.TransferMode
+import mffs.field.mode.ItemModeCustom
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory

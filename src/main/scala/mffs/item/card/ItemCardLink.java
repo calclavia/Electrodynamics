@@ -3,7 +3,6 @@ package mffs.item.card;
 import resonant.api.mffs.card.ICoordLink;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mffs.card.ItemCard;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

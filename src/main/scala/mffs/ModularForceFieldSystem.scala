@@ -6,15 +6,18 @@ import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import ic2.api.tile.ExplosionWhitelist
-import mffs.base.ItemMFFS
-import mffs.card.ItemCard
+import mffs.base.{ItemModule, ItemMFFS}
+import mffs.field.TileElectromagnetProjector
+import mffs.fortron.FortronHelper
 import mffs.item.ItemRemoteController
-import mffs.item.card.{ItemCardFrequency, ItemCardID, ItemCardInfinite, ItemCardLink}
-import mffs.item.mode._
-import mffs.item.module.ItemModule
-import mffs.item.module.interdiction._
-import mffs.item.module.projector._
-import mffs.tile._
+import mffs.item.card._
+import mffs.field.mode._
+import mffs.field.module._
+import mffs.security.module._
+import mffs.field.module.projector._
+import mffs.mobilize.TileForceMobilizer
+import mffs.security.{TileInterdictionMatrix, TileBiometricIdentifier}
+import mffs.production._
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge

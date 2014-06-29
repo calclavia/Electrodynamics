@@ -1,7 +1,6 @@
 package mffs.item.card;
 
 import mffs.Settings;
-import mffs.card.ItemCard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,8 +1,7 @@
 package mffs.field.thread
 
 import java.util.HashSet
-
-import mffs.tile.TileForceMobilizer
+import mffs.mobilize.TileForceMobilizer
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._

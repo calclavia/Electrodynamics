@@ -1,9 +1,13 @@
 package mffs
 
 import cpw.mods.fml.client.FMLClientHandler
+import mffs.field.TileElectromagnetProjector
 import mffs.gui._
+import mffs.mobilize.TileForceMobilizer
 import mffs.render._
-import mffs.tile._
+import mffs.render.fx._
+import mffs.security.{TileInterdictionMatrix, TileBiometricIdentifier}
+import mffs.production._
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World

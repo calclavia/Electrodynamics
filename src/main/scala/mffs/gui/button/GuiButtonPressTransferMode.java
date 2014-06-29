@@ -1,7 +1,7 @@
 package mffs.gui.button;
 
 import mffs.base.GuiMFFS;
-import mffs.tile.TileFortronCapacitor;
+import mffs.production.TileFortronCapacitor;
 import net.minecraft.client.Minecraft;
 import universalelectricity.api.vector.Vector2;
 

@@ -1,7 +1,8 @@
 package mffs.base
 
 import com.google.common.io.ByteArrayDataInput
-import mffs.{FortronHelper, MFFSHelper, ModularForceFieldSystem, TransferMode}
+import mffs.fortron.{FortronHelper, TransferMode}
+import mffs.{MFFSHelper, ModularForceFieldSystem}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids._

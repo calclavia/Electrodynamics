@@ -3,8 +3,11 @@ package mffs
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
 import mffs.container._
-import mffs.render.IEffectController
-import mffs.tile._
+import mffs.field.{ContainerForceFieldProjector, TileElectromagnetProjector}
+import mffs.mobilize.{ContainerForceManipulator, TileForceMobilizer}
+import mffs.render.fx.IEffectController
+import mffs.security.{ContainerInterdictionMatrix, ContainerBiometricIdentifier, TileInterdictionMatrix, TileBiometricIdentifier}
+import mffs.production._
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.tileentity.TileEntity

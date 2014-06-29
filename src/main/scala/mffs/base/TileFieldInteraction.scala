@@ -3,10 +3,10 @@ package mffs.base
 import java.util.{HashSet, LinkedList, Queue, Set}
 
 import com.google.common.io.ByteArrayDataInput
+import mffs.field.module.ItemModuleArray
 import mffs.{ModularForceFieldSystem, Settings}
-import mffs.event.{DelayedEvent, IDelayedEventHandler}
+import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.thread.ProjectorCalculationThread
-import mffs.item.module.projector.ItemModuleArray
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.{ICache, IFieldInteraction}

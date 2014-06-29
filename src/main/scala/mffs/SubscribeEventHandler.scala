@@ -5,7 +5,8 @@ import java.util.HashMap
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
-import mffs.tile.TileElectromagnetProjector
+import mffs.field.TileElectromagnetProjector
+import mffs.fortron.FortronHelper
 import net.minecraft.block.{Block, BlockSkull}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemSkull

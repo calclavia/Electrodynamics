@@ -2,7 +2,6 @@ package mffs.item.card;
 
 import resonant.api.mffs.card.ICardIdentification;
 import resonant.api.mffs.security.Permission;
-import mffs.card.ItemCard;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
