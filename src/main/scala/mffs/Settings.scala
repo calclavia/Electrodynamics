@@ -49,7 +49,7 @@ object Settings
   @Config
   var allowFortronTeleport: Boolean = true
 
-  def load
+  def load()
   {
     configuration.load()
 

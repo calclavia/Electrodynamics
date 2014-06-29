@@ -284,12 +284,11 @@ public class ItemModeCustom extends ItemMode implements ICache
 		return this.getFieldBlockMapClean(projector, itemStack).keySet();
 	}
 
-	@SuppressWarnings("unchecked")
 	public HashMap<Vector3, int[]> getFieldBlockMap(IFieldInteraction projector, ItemStack itemStack)
 	{
 		String cacheID = "itemStack_" + itemStack.hashCode();
 
-		if (Settings.USE_CACHE)
+		if (Settings.useCache())
 		{
 			if (this.cache.containsKey(cacheID))
 			{

@@ -2,8 +2,9 @@ package mffs
 
 import java.util.Set
 
-import mffs.fortron.TransferMode
 import mffs.field.mode.ItemModeCustom
+import mffs.fortron.TransferMode
+import mffs.fortron.TransferMode.TransferMode
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -16,6 +17,7 @@ import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
 import resonant.api.mffs.security.{IInterdictionMatrix, Permission}
+import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -46,7 +48,7 @@ object MFFSHelper
       {
         transferMode match
         {
-          case EQUALIZE =>
+          case TransferMode.EQUALIZE =>
           {
             for (machine <- frequencyTiles)
             {
@@ -58,7 +60,7 @@ object MFFSHelper
               }
             }
           }
-          case DISTRIBUTE =>
+          case TransferMode.DISTRIBUTE =>
           {
             val amountToSet: Int = totalFortron / frequencyTiles.size
             for (machine <- frequencyTiles)
@@ -69,7 +71,7 @@ object MFFSHelper
               }
             }
           }
-          case DRAIN =>
+          case TransferMode.DRAIN =>
           {
             frequencyTiles.remove(transferer)
 
@@ -87,7 +89,7 @@ object MFFSHelper
               }
             }
           }
-          case FILL =>
+          case TransferMode.FILL =>
           {
             if (transferer.getFortronEnergy < transferer.getFortronCapacity)
             {
@@ -140,7 +142,7 @@ object MFFSHelper
         toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
         if (world.isRemote && toBeInjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3(tileEntity), 0.5), Vector3.translate(new Vector3(receiver.asInstanceOf[TileEntity]), 0.5), 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, 0.6f, 0.6f, 1, 20)
         }
       }
       else
@@ -150,7 +152,7 @@ object MFFSHelper
         toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true)
         if (world.isRemote && toBeEjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3(receiver.asInstanceOf[TileEntity]), 0.5), Vector3.translate(new Vector3(tileEntity), 0.5), 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3(tileEntity) + 0.5, 0.6f, 0.6f, 1, 20)
         }
       }
     }
@@ -237,32 +239,30 @@ object MFFSHelper
   {
     if (tileEntity.isInstanceOf[IProjector])
     {
-      for (i <- (tileEntity.asInstanceOf[IProjector]).getModuleSlots)
-      {
-        val checkStack: ItemStack = getFirstItemBlock(i, (tileEntity.asInstanceOf[IProjector]), itemStack)
+      val projector = tileEntity.asInstanceOf[IProjector]
 
-        if (checkStack != null)
-        {
-          return checkStack
-        }
+      projector.getModuleSlots().find(getFirstItemBlock(_, projector, itemStack) != null) match
+      {
+        case Some(entry) => return getFirstItemBlock(entry, projector, itemStack)
+        case _ =>
       }
     }
     else if (tileEntity.isInstanceOf[IInventory])
     {
       val inventory: IInventory = tileEntity.asInstanceOf[IInventory]
+
+      var i = 0
+
+      while (i < inventory.getSizeInventory())
       {
-        var i = 0
+        val checkStack: ItemStack = getFirstItemBlock(i, inventory, itemStack)
 
-        while (i < inventory.getSizeInventory())
+        if (checkStack != null)
         {
-          val checkStack: ItemStack = getFirstItemBlock(i, inventory, itemStack)
-          if (checkStack != null)
-          {
-            return checkStack
-          }
-
-          i += 1
+          return checkStack
         }
+
+        i += 1
       }
     }
 
@@ -315,9 +315,11 @@ object MFFSHelper
 
   def getCamoBlock(projector: IProjector, position: Vector3): ItemStack =
   {
+    val tile = projector.asInstanceOf[TileEntity]
+
     if (projector != null)
     {
-      if (!projector.asInstanceOf[TileEntity].getWorldObj().isRemote)
+      if (!tile.getWorldObj().isRemote)
       {
         if (projector != null)
         {
@@ -325,18 +327,19 @@ object MFFSHelper
           {
             if (projector.getMode.isInstanceOf[ItemModeCustom])
             {
-              val fieldMap: Vector3 = (projector.getMode.asInstanceOf[ItemModeCustom]).getFieldBlockMap(projector, projector.getModeStack)
+              val fieldMap = (projector.getMode.asInstanceOf[ItemModeCustom]).getFieldBlockMap(projector, projector.getModeStack)
 
               if (fieldMap != null)
               {
-                val fieldCenter: Vector3 = new Vector3(projector.asInstanceOf[TileEntity]).translate(projector.getTranslation)
-                val relativePosition: Vector3 = position.clone.subtract(fieldCenter)
-                relativePosition.rotate(-projector.getRotationYaw, -projector.getRotationPitch)
-                val blockInfo: Array[Int] = fieldMap.get(relativePosition.round)
+                val fieldCenter: Vector3 = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
+                var relativePosition: Vector3 = position.clone.subtract(fieldCenter)
+                relativePosition = relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
-                if (blockInfo != null && blockInfo(0) > 0)
+                val blockInfo = fieldMap(relativePosition.round)
+
+                if (blockInfo != null && blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
                 {
-                  return new ItemStack(blockInfo(0), 1, blockInfo(1))
+                  return new ItemStack(blockInfo._1, 1, blockInfo._2)
                 }
               }
             }
@@ -359,7 +362,7 @@ object MFFSHelper
 
   def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
   {
-    return hasPermission(world, position, permission, player.username)
+    return hasPermission(world, position, permission, player.getGameProfile().getName())
   }
 
   def hasPermission(world: World, position: Vector3, permission: Permission, username: String): Boolean =
@@ -393,7 +396,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.username, Permission.BLOCK_ACCESS))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ACCESS))
         {
           hasPermission = true
         }
@@ -404,7 +407,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.username, Permission.BLOCK_ALTER))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ALTER))
         {
           hasPermission = true
         }
