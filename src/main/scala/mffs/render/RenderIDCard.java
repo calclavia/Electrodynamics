@@ -104,15 +104,15 @@ public class RenderIDCard implements IItemRenderer
 			int xSize = 4;
 			int ySize = 4;
 
-			int topLX = translation.intX();
-			int topRX = translation.intX() + xSize;
-			int botLX = translation.intX();
-			int botRX = translation.intX() + xSize;
+			int topLX = translation.xi();
+			int topRX = translation.xi() + xSize;
+			int botLX = translation.xi();
+			int botRX = translation.xi() + xSize;
 
-			int topLY = translation.intY();
-			int topRY = translation.intY();
-			int botLY = translation.intY() + ySize;
-			int botRY = translation.intY() + ySize;
+			int topLY = translation.yi();
+			int topRY = translation.yi();
+			int botLY = translation.yi() + ySize;
+			int botRY = translation.yi() + ySize;
 
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(resourcelocation);
 			// glBindTexture(GL_TEXTURE_2D, texID);

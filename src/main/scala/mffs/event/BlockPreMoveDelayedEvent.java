@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.lib.utility.MovementUtility;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 /**
@@ -39,7 +39,7 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 			{
 				TileEntity tileEntity = this.position.getTileEntity(this.world);
 
-				EventPreForceManipulate evt = new EventPreForceManipulate(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ());
+				EventPreForceManipulate evt = new EventPreForceManipulate(this.world, this.position.xi(), this.position.yi(), this.position.zi(), this.newPosition.xi(), this.newPosition.yi(), this.newPosition.zi());
 				MinecraftForge.EVENT_BUS.post(evt);
 
 				if (!evt.isCanceled())

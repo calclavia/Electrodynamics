@@ -2,7 +2,7 @@ package mffs.event;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class BlockDropDelayedEvent extends DelayedEvent
 {
@@ -25,7 +25,7 @@ public class BlockDropDelayedEvent extends DelayedEvent
 		{
 			if (this.position.getBlockID(this.world) == this.block.blockID)
 			{
-				this.block.dropBlockAsItem(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
+				this.block.dropBlockAsItem(this.world, this.position.xi(), this.position.yi(), this.position.zi(), this.position.getBlockMetadata(world), 0);
 				this.position.setBlock(this.world, 0);
 			}
 		}

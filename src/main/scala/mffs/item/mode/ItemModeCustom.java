@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.io.File;
 import java.util.HashMap;
@@ -53,10 +53,10 @@ public class ItemModeCustom extends ItemMode implements ICache
 		list.add(LanguageUtility.getLocal("info.modeCustom.mode") + " " + (nbt.getBoolean(NBT_MODE) ? LanguageUtility.getLocal("info.modeCustom.substraction") : LanguageUtility.getLocal("info.modeCustom.additive")));
 
 		Vector3 point1 = new Vector3(nbt.getCompoundTag(NBT_POINT_1));
-		list.add(LanguageUtility.getLocal("info.modeCustom.point1") + " " + point1.intX() + ", " + point1.intY() + ", " + point1.intZ());
+		list.add(LanguageUtility.getLocal("info.modeCustom.point1") + " " + point1.xi() + ", " + point1.yi() + ", " + point1.zi());
 
 		Vector3 point2 = new Vector3(nbt.getCompoundTag(NBT_POINT_2));
-		list.add(LanguageUtility.getLocal("info.modeCustom.point2") + " " + point2.intX() + ", " + point2.intY() + ", " + point2.intZ());
+		list.add(LanguageUtility.getLocal("info.modeCustom.point2") + " " + point2.xi() + ", " + point2.yi() + ", " + point2.zi());
 
 		int modeID = nbt.getInteger(NBT_ID);
 
@@ -139,11 +139,11 @@ public class ItemModeCustom extends ItemMode implements ICache
 								list = new NBTTagList();
 							}
 
-							for (int x = minPoint.intX(); x <= maxPoint.intX(); x++)
+							for (int x = minPoint.xi(); x <= maxPoint.xi(); x++)
 							{
-								for (int y = minPoint.intY(); y <= maxPoint.intY(); y++)
+								for (int y = minPoint.yi(); y <= maxPoint.yi(); y++)
 								{
-									for (int z = minPoint.intZ(); z <= maxPoint.intZ(); z++)
+									for (int z = minPoint.zi(); z <= maxPoint.zi(); z++)
 									{
 										Vector3 position = new Vector3(x, y, z);
 										Vector3 targetCheck = midPoint.clone().translate(position);

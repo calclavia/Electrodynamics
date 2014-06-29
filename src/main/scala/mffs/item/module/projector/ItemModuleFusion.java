@@ -5,7 +5,7 @@ import resonant.api.mffs.fortron.FrequencyGrid;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import resonant.api.blocks.IBlockFrequency;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.Iterator;
 import java.util.Set;

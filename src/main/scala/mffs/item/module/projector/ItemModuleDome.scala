@@ -3,7 +3,7 @@ package mffs.item.module.projector
 import java.util.Set
 import mffs.item.module.ItemModule
 import net.minecraft.tileentity.TileEntity
-import universalelectricity.api.vector.Vector3
+import universalelectricity.core.transform.vector.Vector3
 import resonant.api.mffs.IFieldInteraction
 import scala.collection.convert.wrapAll._
 

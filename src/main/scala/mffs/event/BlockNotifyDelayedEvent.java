@@ -4,7 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 /**
  * Removes the TileEntity
@@ -28,7 +28,7 @@ public class BlockNotifyDelayedEvent extends DelayedEvent
 	{
 		if (!this.world.isRemote)
 		{
-			this.world.notifyBlocksOfNeighborChange(this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockID(this.world));
+			this.world.notifyBlocksOfNeighborChange(this.position.xi(), this.position.yi(), this.position.zi(), this.position.getBlockID(this.world));
 
 			TileEntity newTile = this.position.getTileEntity(this.world);
 

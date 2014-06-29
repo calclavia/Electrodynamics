@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import resonant.lib.prefab.vector.Cuboid;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,10 +28,10 @@ public class ItemModePyramid extends ItemMode
 		final Vector3 posScale = projector.getPositiveScale();
 		final Vector3 negScale = projector.getNegativeScale();
 
-		final int xStretch = posScale.intX() + negScale.intX();
-		final int yStretch = posScale.intY() + negScale.intY();
-		final int zStretch = posScale.intZ() + negScale.intZ();
-		final Vector3 translation = new Vector3(0, -negScale.intY(), 0);
+		final int xStretch = posScale.xi() + negScale.xi();
+		final int yStretch = posScale.yi() + negScale.yi();
+		final int zStretch = posScale.zi() + negScale.zi();
+		final Vector3 translation = new Vector3(0, -negScale.yi(), 0);
 
 		final int inverseThickness = (int) Math.max((yStretch + zStretch) / 4f, 1);
 		System.out.println(inverseThickness);
@@ -80,9 +80,9 @@ public class ItemModePyramid extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		int xStretch = posScale.intX() + negScale.intX();
-		int yStretch = posScale.intY() + negScale.intY();
-		int zStretch = posScale.intZ() + negScale.intZ();
+		int xStretch = posScale.xi() + negScale.xi();
+		int yStretch = posScale.yi() + negScale.yi();
+		int zStretch = posScale.zi() + negScale.zi();
 		Vector3 translation = new Vector3(0, -0.4, 0);
 
 		for (float x = -xStretch; x <= xStretch; x++)
@@ -110,13 +110,13 @@ public class ItemModePyramid extends ItemMode
 		Vector3 posScale = projector.getPositiveScale().clone();
 		Vector3 negScale = projector.getNegativeScale().clone();
 
-		int xStretch = posScale.intX() + negScale.intX();
-		int yStretch = posScale.intY() + negScale.intY();
-		int zStretch = posScale.intZ() + negScale.intZ();
+		int xStretch = posScale.xi() + negScale.xi();
+		int yStretch = posScale.yi() + negScale.yi();
+		int zStretch = posScale.zi() + negScale.zi();
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());
-		projectorPos.add(new Vector3(0, -negScale.intY() + 1, 0));
+		projectorPos.add(new Vector3(0, -negScale.yi() + 1, 0));
 
 		Vector3 relativePosition = position.clone().subtract(projectorPos);
 		relativePosition.rotate(-projector.getRotationYaw(), -projector.getRotationPitch());

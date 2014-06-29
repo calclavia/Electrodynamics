@@ -4,7 +4,7 @@ import mffs.base.TileMFFSInventory;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class BlockInventoryDropDelayedEvent extends BlockDropDelayedEvent
 		{
 			if (this.position.getBlockID(this.world) == this.block.blockID)
 			{
-				ArrayList<ItemStack> itemStacks = this.block.getBlockDropped(this.world, this.position.intX(), this.position.intY(), this.position.intZ(), this.position.getBlockMetadata(world), 0);
+				ArrayList<ItemStack> itemStacks = this.block.getBlockDropped(this.world, this.position.xi(), this.position.yi(), this.position.zi(), this.position.getBlockMetadata(world), 0);
 
 				for (ItemStack itemStack : itemStacks)
 				{

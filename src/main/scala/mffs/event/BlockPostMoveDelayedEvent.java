@@ -6,7 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.lib.utility.MovementUtility;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 import java.lang.reflect.Method;
@@ -103,7 +103,7 @@ public class BlockPostMoveDelayedEvent extends DelayedEvent
 					this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.originalPosition));
 					this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, this.world, this.newPosition));
 
-					MinecraftForge.EVENT_BUS.post(new EventPostForceManipulate(this.world, this.originalPosition.intX(), this.originalPosition.intY(), this.originalPosition.intZ(), this.newPosition.intX(), this.newPosition.intY(), this.newPosition.intZ()));
+					MinecraftForge.EVENT_BUS.post(new EventPostForceManipulate(this.world, this.originalPosition.xi(), this.originalPosition.yi(), this.originalPosition.zi(), this.newPosition.xi(), this.newPosition.yi(), this.newPosition.zi()));
 				}
 				catch (Exception e)
 				{

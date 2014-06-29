@@ -1,7 +1,7 @@
 package mffs.base;
 
+import net.minecraft.init.Blocks;
 import resonant.api.mffs.IBiometricIdentifierLink;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileMFFS.TilePacketType;
@@ -16,7 +16,7 @@ import org.lwjgl.input.Keyboard;
 import resonant.api.blocks.IBlockFrequency;
 import resonant.lib.gui.GuiContainerBase;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.vector.Vector2;
+import universalelectricity.core.transform.vector.Vector2;
 
 public class GuiMFFS extends GuiContainerBase
 {
@@ -45,14 +45,14 @@ public class GuiMFFS extends GuiContainerBase
 		super.initGui();
 		this.buttonList.clear();
 		// Redstone config button.
-		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Block.torchRedstoneIdle), new ItemStack(Block.torchRedstoneActive)));
+		this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Blocks.unlit_redstone_torch), new ItemStack(Blocks.redstone_torch)));
 
 		Keyboard.enableRepeatEvents(true);
 
 		if (this.frequencyTile != null)
 		{
-			this.textFieldFrequency = new GuiTextField(this.fontRenderer, this.textFieldPos.intX(), this.textFieldPos.intY(), 50, 12);
-			this.textFieldFrequency.setMaxStringLength(Settings.MAX_FREQUENCY_DIGITS);
+			this.textFieldFrequency = new GuiTextField(this.fontRendererObj, this.textFieldPos.xi(), this.textFieldPos.yi(), 50, 12);
+			this.textFieldFrequency.setMaxStringLength(Settings.maxFrequencyDigits());
 			this.textFieldFrequency.setText(frequencyTile.getFrequency() + "");
 		}
 	}
@@ -133,7 +133,7 @@ public class GuiMFFS extends GuiContainerBase
 
 		if (this.textFieldFrequency != null)
 		{
-			if (this.isPointInRegion(textFieldPos.intX(), textFieldPos.intY(), this.textFieldFrequency.getWidth(), 12, mouseX, mouseY))
+			if (this.isPointInRegion(textFieldPos.xi(), textFieldPos.yi(), this.textFieldFrequency.getWidth(), 12, mouseX, mouseY))
 			{
 				this.tooltip = LanguageUtility.getLocal("gui.frequency.tooltip");
 			}

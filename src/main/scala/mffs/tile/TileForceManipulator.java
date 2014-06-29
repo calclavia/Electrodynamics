@@ -28,7 +28,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import resonant.lib.network.PacketHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 import java.io.IOException;
@@ -218,7 +218,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 					int i = 0;
 					for (Vector3 position : this.getInteriorPoints())
 					{
-						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
+						if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.xi(), position.yi(), position.zi()) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
 						{
 							i++;
 							nbtList.appendTag(new Vector3(position).writeToNBT(new NBTTagCompound()));
@@ -380,7 +380,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 								ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f);
 							}
 
-							if (targetPosition.world != null && targetPosition.world.getChunkProvider().chunkExists(targetPosition.intX(), targetPosition.intZ()))
+							if (targetPosition.world != null && targetPosition.world.getChunkProvider().chunkExists(targetPosition.xi(), targetPosition.zi()))
 							{
 								// Render hologram for destination position
 								Vector3 destination = vector.clone().difference(anchorPosition).add(targetPosition);
@@ -473,7 +473,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 
 		for (Vector3 position : mobilizationPoints)
 		{
-			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()))
+			if (!this.worldObj.isAirBlock(position.xi(), position.yi(), position.zi()))
 			{
 				// The relative position between this coordinate and the anchor.
 				Vector3 relativePosition = position.clone().subtract(this.getAbsoluteAnchor());
@@ -500,7 +500,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			return false;
 		}
 
-		EventCheckForceManipulate evt = new EventCheckForceManipulate(position.world, position.intX(), position.intY(), position.intZ(), target.intX(), target.intY(), target.intZ());
+		EventCheckForceManipulate evt = new EventCheckForceManipulate(position.world, position.xi(), position.yi(), position.zi(), target.xi(), target.yi(), target.zi());
 		MinecraftForge.EVENT_BUS.post(evt);
 
 		if (evt.isCanceled())
@@ -540,7 +540,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		/** Check Target */
 		int targetBlockID = target.getBlockID();
 
-		if (!(target.world.isAirBlock(target.intX(), target.intY(), target.intZ()) || (targetBlockID > 0 && (Block.blocksList[targetBlockID].isBlockReplaceable(target.world, target.intX(), target.intY(), target.intZ())))))
+		if (!(target.world.isAirBlock(target.xi(), target.yi(), target.zi()) || (targetBlockID > 0 && (Block.blocksList[targetBlockID].isBlockReplaceable(target.world, target.xi(), target.yi(), target.zi())))))
 		{
 			return false;
 		}
@@ -558,7 +558,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 			TileEntity tileEntity = position.getTileEntity(this.worldObj);
 			int blockID = position.getBlockID(this.worldObj);
 
-			if (!this.worldObj.isAirBlock(position.intX(), position.intY(), position.intZ()) && tileEntity != this)
+			if (!this.worldObj.isAirBlock(position.xi(), position.yi(), position.zi()) && tileEntity != this)
 			{
 				queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime(), this.worldObj, position, newPosition));
 				return true;
@@ -576,7 +576,7 @@ public class TileForceManipulator extends TileFieldInteraction implements IEffec
 		Vector3 minScale = positiveScale.min(negativeScale);
 		Vector3 maxScale = positiveScale.max(negativeScale);
 
-		return AxisAlignedBB.getAABBPool().getAABB(minScale.intX(), minScale.intY(), minScale.intZ(), maxScale.intX(), maxScale.intY(), maxScale.intZ());
+		return AxisAlignedBB.getAABBPool().getAABB(minScale.xi(), minScale.yi(), minScale.zi(), maxScale.xi(), maxScale.yi(), maxScale.zi());
 	}
 
 	/**

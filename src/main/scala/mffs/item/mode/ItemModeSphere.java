@@ -8,7 +8,7 @@ import mffs.ModularForceFieldSystem;
 import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.HashSet;
 import java.util.Set;

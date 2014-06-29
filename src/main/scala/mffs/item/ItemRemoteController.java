@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonant.lib.utility.LanguageUtility;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 
 import java.util.HashSet;
@@ -57,7 +57,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
-			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
+			list.add(vec.xi() + ", " + vec.yi() + ", " + vec.zi());
 			list.add(LanguageUtility.getLocal("info.item.dimension") + " '" + vec.world.provider.getDimensionName() + "'");
 		}
 		else
@@ -128,7 +128,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 				if (Block.blocksList[blockId] != null)
 				{
-					Chunk chunk = world.getChunkFromBlockCoords(position.intX(), position.intZ());
+					Chunk chunk = world.getChunkFromBlockCoords(position.xi(), position.zi());
 
 					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer)))
 					{
@@ -155,7 +155,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 							{
 								try
 								{
-									Block.blocksList[blockId].onBlockActivated(world, position.intX(), position.intY(), position.intZ(), entityPlayer, 0, 0, 0, 0);
+									Block.blocksList[blockId].onBlockActivated(world, position.xi(), position.yi(), position.zi(), entityPlayer, 0, 0, 0, 0);
 								}
 								catch (Exception e)
 								{

@@ -120,7 +120,7 @@ object ModularForceFieldSystem
   {
     Modstats.instance.getReporter.registerMod(this)
     NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
-    MinecraftForge.EVENT_BUS.register(new SubscribeEventHandler)
+    MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
 
     Settings.load()
     Settings.configuration.load()

@@ -8,7 +8,7 @@ import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import resonant.lib.prefab.vector.Cuboid;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,13 +32,13 @@ public class ItemModeCube extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		for (float x = -negScale.intX(); x <= posScale.intX(); x += 0.5f)
+		for (float x = -negScale.xi(); x <= posScale.xi(); x += 0.5f)
 		{
-			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 0.5f)
+			for (float z = -negScale.zi(); z <= posScale.zi(); z += 0.5f)
 			{
-				for (float y = -negScale.intY(); y <= posScale.intY(); y += 0.5f)
+				for (float y = -negScale.yi(); y <= posScale.yi(); y += 0.5f)
 				{
-					if (y == -negScale.intY() || y == posScale.intY() || x == -negScale.intX() || x == posScale.intX() || z == -negScale.intZ() || z == posScale.intZ())
+					if (y == -negScale.yi() || y == posScale.yi() || x == -negScale.xi() || x == posScale.xi() || z == -negScale.zi() || z == posScale.zi())
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 					}
@@ -55,11 +55,11 @@ public class ItemModeCube extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		for (float x = -negScale.intX(); x <= posScale.intX(); x += 0.5f)
+		for (float x = -negScale.xi(); x <= posScale.xi(); x += 0.5f)
 		{
-			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 0.5f)
+			for (float z = -negScale.zi(); z <= posScale.zi(); z += 0.5f)
 			{
-				for (float y = -negScale.intY(); y <= posScale.intY(); y += 0.5f)
+				for (float y = -negScale.yi(); y <= posScale.yi(); y += 0.5f)
 				{
 					fieldBlocks.add(new Vector3(x, y, z));
 				}

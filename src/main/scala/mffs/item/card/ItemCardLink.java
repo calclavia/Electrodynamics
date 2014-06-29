@@ -42,7 +42,7 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
 			}
 
-			list.add(vec.intX() + ", " + vec.intY() + ", " + vec.intZ());
+			list.add(vec.xi() + ", " + vec.yi() + ", " + vec.zi());
 			list.add(LanguageUtility.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName());
 		}
 		else

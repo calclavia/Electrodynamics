@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import resonant.lib.network.PacketHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -272,7 +272,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 						 */
 						if (block != ModularForceFieldSystem.blockForceField && !vector.equals(new Vector3(this)))
 						{
-							if (this.worldObj.getChunkFromBlockCoords(vector.intX(), vector.intZ()).isChunkLoaded)
+							if (this.worldObj.getChunkFromBlockCoords(vector.xi(), vector.zi()).isChunkLoaded)
 							{
 								constructionCount++;
 
@@ -292,7 +292,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 
 								if (!this.worldObj.isRemote)
 								{
-									this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
+									this.worldObj.setBlock(vector.xi(), vector.yi(), vector.zi(), ModularForceFieldSystem.blockForceField.blockID, 0, 2);
 								}
 
 								this.forceFields.add(vector);
@@ -301,7 +301,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 									 * Sets the controlling projector of the force field block to
 									 * this one.
 									 */
-								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
+								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.xi(), vector.yi(), vector.zi());
 
 								if (tileEntity instanceof mffs.field.TileForceField)
 								{
@@ -330,7 +330,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 
 	private boolean canReplaceBlock(Vector3 vector, Block block)
 	{
-		return block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.intX(), vector.intY(), vector.intZ()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.intX(), vector.intY(), vector.intZ());
+		return block == null || (this.getModuleCount(ModularForceFieldSystem.itemModuleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi(), vector.yi(), vector.zi()) != -1) || block.blockMaterial.isLiquid() || block == Block.snow || block == Block.vine || block == Block.tallGrass || block == Block.deadBush || block.isBlockReplaceable(this.worldObj, vector.xi(), vector.yi(), vector.zi());
 	}
 
 	@Override
@@ -358,7 +358,7 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 
 					if (block == ModularForceFieldSystem.blockForceField)
 					{
-						this.worldObj.setBlock(vector.intX(), vector.intY(), vector.intZ(), 0, 0, 3);
+						this.worldObj.setBlock(vector.xi(), vector.yi(), vector.zi(), 0, 0, 3);
 					}
 				}
 			}

@@ -82,7 +82,7 @@ public class GuiForceManipulator extends GuiMFFS
 
 		if (this.tileEntity.anchor != null)
 		{
-			this.fontRenderer.drawString(this.tileEntity.anchor.intX() + ", " + this.tileEntity.anchor.intY() + ", " + this.tileEntity.anchor.intZ(), 35, 70, 4210752);
+			this.fontRenderer.drawString(this.tileEntity.anchor.xi() + ", " + this.tileEntity.anchor.yi() + ", " + this.tileEntity.anchor.zi(), 35, 70, 4210752);
 		}
 
 		this.fontRenderer.drawString(this.tileEntity.getDirection().name(), 35, 82, 4210752);

@@ -14,7 +14,7 @@ import net.minecraft.item.ItemBlock
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
-import universalelectricity.api.vector.Vector3
+import universalelectricity.core.transform.vector.Vector3
 import resonant.api.mffs.Blacklist
 import resonant.api.mffs.IProjector
 import resonant.lib.network.PacketHandler

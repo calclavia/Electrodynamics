@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.prefab.tile.TileAdvanced;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public class TileForceField extends TileAdvanced implements IPacketReceiver
 {
@@ -38,7 +38,7 @@ public class TileForceField extends TileAdvanced implements IPacketReceiver
 				itemMetadata = camoStack.getItemDamage();
 			}
 
-			return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.projector.intX(), this.projector.intY(), this.projector.intZ(), itemID, itemMetadata);
+			return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.projector.xi(), this.projector.yi(), this.projector.zi(), itemID, itemMetadata);
 		}
 
 		return null;

@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mffs.render.model.ModelCube;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,8 +34,8 @@ public class ItemModeCylinder extends ItemMode
 		final Vector3 posScale = projector.getPositiveScale();
 		final Vector3 negScale = projector.getNegativeScale();
 
-		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
-		int height = posScale.intY() + negScale.intY();
+		int radius = (posScale.xi() + negScale.xi() + posScale.zi() + negScale.zi()) / 2;
+		int height = posScale.yi() + negScale.yi();
 
 		for (float x = -radius; x <= radius; x += 1)
 		{
@@ -68,8 +68,8 @@ public class ItemModeCylinder extends ItemMode
 		final Vector3 posScale = projector.getPositiveScale();
 		final Vector3 negScale = projector.getNegativeScale();
 
-		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
-		int height = posScale.intY() + negScale.intY();
+		int radius = (posScale.xi() + negScale.xi() + posScale.zi() + negScale.zi()) / 2;
+		int height = posScale.yi() + negScale.yi();
 
 		for (int x = -radius; x <= radius; x++)
 		{
@@ -96,7 +96,7 @@ public class ItemModeCylinder extends ItemMode
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		int radius = (posScale.intX() + negScale.intX() + posScale.intZ() + negScale.intZ()) / 2;
+		int radius = (posScale.xi() + negScale.xi() + posScale.zi() + negScale.zi()) / 2;
 
 		Vector3 projectorPos = new Vector3((TileEntity) projector);
 		projectorPos.add(projector.getTranslation());

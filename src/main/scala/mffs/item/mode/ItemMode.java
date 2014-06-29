@@ -6,7 +6,7 @@ import resonant.api.mffs.modules.IProjectorMode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.base.ItemMFFS;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 public abstract class ItemMode extends ItemMFFS implements IProjectorMode
 {

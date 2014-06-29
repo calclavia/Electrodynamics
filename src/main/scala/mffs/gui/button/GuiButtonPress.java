@@ -60,7 +60,7 @@ public class GuiButtonPress extends GuiButton
 				GL11.glColor4f(1, 1, 1, 1);
 			}
 
-			this.drawTexturedModalRect(this.xPosition, this.yPosition, this.offset.intX(), this.offset.intY(), this.width, this.height);
+			this.drawTexturedModalRect(this.xPosition, this.yPosition, this.offset.xi(), this.offset.yi(), this.width, this.height);
 			this.mouseDragged(minecraft, x, y);
 		}
 	}

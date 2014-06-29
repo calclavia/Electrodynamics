@@ -27,7 +27,7 @@ object SubscribeEventHandler
   {
     fluidIconMap.put(name, event.map.registerIcon(name))
   }
-  
+
   @SubscribeEvent
   @SideOnly(Side.CLIENT)
   def preTextureHook(event: TextureStitchEvent.Pre)

@@ -3,7 +3,7 @@ package mffs.item.module.projector
 import resonant.api.mffs.IFieldInteraction
 import mffs.item.module.ItemModule
 import net.minecraftforge.common.ForgeDirection
-import universalelectricity.api.vector.Vector3
+import universalelectricity.core.transform.vector.Vector3
 import java.util.HashMap
 import java.util.HashSet
 import java.util.Set

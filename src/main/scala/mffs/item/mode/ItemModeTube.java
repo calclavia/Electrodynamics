@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mffs.render.model.ModelPlane;
 import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,25 +27,25 @@ public class ItemModeTube extends ItemModeCube
 		Vector3 posScale = projector.getPositiveScale();
 		Vector3 negScale = projector.getNegativeScale();
 
-		for (float x = -negScale.intX(); x <= posScale.intX(); x += 0.5f)
+		for (float x = -negScale.xi(); x <= posScale.xi(); x += 0.5f)
 		{
-			for (float z = -negScale.intZ(); z <= posScale.intZ(); z += 0.5f)
+			for (float z = -negScale.zi(); z <= posScale.zi(); z += 0.5f)
 			{
-				for (float y = -negScale.intY(); y <= posScale.intY(); y += 0.5f)
+				for (float y = -negScale.yi(); y <= posScale.yi(); y += 0.5f)
 				{
-					if (!(direction == ForgeDirection.UP || direction == ForgeDirection.DOWN) && (y == -negScale.intY() || y == posScale.intY()))
+					if (!(direction == ForgeDirection.UP || direction == ForgeDirection.DOWN) && (y == -negScale.yi() || y == posScale.yi()))
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 						continue;
 					}
 
-					if (!(direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) && (z == -negScale.intZ() || z == posScale.intZ()))
+					if (!(direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) && (z == -negScale.zi() || z == posScale.zi()))
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 						continue;
 					}
 
-					if (!(direction == ForgeDirection.WEST || direction == ForgeDirection.EAST) && (x == -negScale.intX() || x == posScale.intX()))
+					if (!(direction == ForgeDirection.WEST || direction == ForgeDirection.EAST) && (x == -negScale.xi() || x == posScale.xi()))
 					{
 						fieldBlocks.add(new Vector3(x, y, z));
 						continue;

@@ -12,7 +12,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
-import resonant.api.mffs.fortron.IFortronFrequency
+import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
 import resonant.api.mffs.security.{IInterdictionMatrix, Permission}
 import universalelectricity.core.transform.vector.Vector3
@@ -139,7 +139,7 @@ object MFFSHelper
         toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
         if (world.isRemote && toBeInjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Nothing(tileEntity), 0.5), Vector3.translate(new Nothing(receiver.asInstanceOf[TileEntity]), 0.5), 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3(tileEntity), 0.5), Vector3.translate(new Vector3(receiver.asInstanceOf[TileEntity]), 0.5), 0.6f, 0.6f, 1, 20)
         }
       }
       else
@@ -149,7 +149,7 @@ object MFFSHelper
         toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true)
         if (world.isRemote && toBeEjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Nothing(receiver.asInstanceOf[TileEntity]), 0.5), Vector3.translate(new Nothing(tileEntity), 0.5), 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, Vector3.translate(new Vector3(receiver.asInstanceOf[TileEntity]), 0.5), Vector3.translate(new Vector3(tileEntity), 0.5), 0.6f, 0.6f, 1, 20)
         }
       }
     }
@@ -158,16 +158,17 @@ object MFFSHelper
   /**
    * Gets the nearest active Interdiction Matrix.
    */
-  def getNearestInterdictionMatrix(world: World, position: Nothing): IInterdictionMatrix =
+  def getNearestInterdictionMatrix(world: World, position: Vector3): IInterdictionMatrix =
   {
-    for (frequencyTile <- FrequencyGrid.instance.get)
+    for (frequencyTile <- FrequencyGridRegistry.instance().getNodes())
     {
-      if ((frequencyTile.asInstanceOf[TileEntity]).worldObj eq world && frequencyTile.isInstanceOf[IInterdictionMatrix])
+      if ((frequencyTile.asInstanceOf[TileEntity]).getWorldObj() == world && frequencyTile.isInstanceOf[IInterdictionMatrix])
       {
         val interdictionMatrix: IInterdictionMatrix = frequencyTile.asInstanceOf[IInterdictionMatrix]
+
         if (interdictionMatrix.isActive)
         {
-          if (position.distance(new Nothing(interdictionMatrix.asInstanceOf[TileEntity])) <= interdictionMatrix.getActionRange)
+          if (position.distance(new Vector3(interdictionMatrix.asInstanceOf[TileEntity])) <= interdictionMatrix.getActionRange)
           {
             return interdictionMatrix
           }

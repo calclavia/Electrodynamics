@@ -18,7 +18,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidBlock;
 import resonant.lib.network.PacketHandler;
-import universalelectricity.api.vector.Vector3;
+import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorHelper;
 
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class ItemModuleStablize extends ItemModule
 
 						if (checkStack != null)
 						{
-							EventStabilize evt = new EventStabilize(world, position.intX(), position.intY(), position.intZ(), checkStack);
+							EventStabilize evt = new EventStabilize(world, position.xi(), position.yi(), position.zi(), checkStack);
 							MinecraftForge.EVENT_BUS.post(evt);
 
 							if (!evt.isCanceled())
@@ -87,7 +87,7 @@ public class ItemModuleStablize extends ItemModule
 									{
 										try
 										{
-											if (world.canPlaceEntityOnSide(((ItemBlock) checkStack.getItem()).getBlockID(), position.intX(), position.intY(), position.intZ(), false, 0, null, checkStack))
+											if (world.canPlaceEntityOnSide(((ItemBlock) checkStack.getItem()).getBlockID(), position.xi(), position.yi(), position.zi(), false, 0, null, checkStack))
 											{
 												int metadata = blockInfo != null ? blockInfo[1] : (checkStack.getHasSubtypes() ? checkStack.getItemDamage() : 0);
 												Block block = blockInfo != null ? Block.blocksList[blockInfo[0]] : null;
@@ -99,8 +99,8 @@ public class ItemModuleStablize extends ItemModule
 
 												ItemStack copyStack = checkStack.copy();
 												inventory.decrStackSize(i, 1);
-												((ItemBlock) copyStack.getItem()).placeBlockAt(copyStack, null, ((TileEntity) projector).worldObj, position.intX(), position.intY(), position.intZ(), 0, 0, 0, 0, metadata);
-												PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.intX(), position.intY(), position.intZ()), ((TileEntity) projector).worldObj);
+												((ItemBlock) copyStack.getItem()).placeBlockAt(copyStack, null, ((TileEntity) projector).worldObj, position.xi(), position.yi(), position.zi(), 0, 0, 0, 0, metadata);
+												PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket((TileEntity) projector, TilePacketType.FXS.ordinal(), 1, position.xi(), position.yi(), position.zi()), ((TileEntity) projector).worldObj);
 
 												if (this.blockCount++ >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
 												{
