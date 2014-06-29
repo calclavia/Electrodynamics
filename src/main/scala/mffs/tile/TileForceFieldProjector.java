@@ -1,12 +1,10 @@
 package mffs.tile;
 
-import mffs.field.thread.IThreadCallBack;
 import resonant.api.mffs.ICache;
 import resonant.api.mffs.IProjector;
 import resonant.api.mffs.modules.IModule;
 import resonant.api.mffs.modules.IProjectorMode;
 import com.google.common.io.ByteArrayDataInput;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
@@ -19,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import resonant.lib.network.PacketHandler;
 import universalelectricity.core.transform.vector.Vector3;
 
 import java.io.IOException;
@@ -27,7 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class TileForceFieldProjector extends TileFieldInteraction implements IProjector, IThreadCallBack
+public class TileForceFieldProjector extends TileFieldInteraction implements IProjector
 {
 	/**
 	 * A set containing all positions of all force field blocks.

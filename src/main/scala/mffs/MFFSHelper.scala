@@ -335,7 +335,7 @@ object MFFSHelper
 
                 if (blockInfo != null && blockInfo(0) > 0)
                 {
-                  return new ItemStack(Block.blocksList(blockInfo(0)), 1, blockInfo(1))
+                  return new ItemStack(blockInfo(0), 1, blockInfo(1))
                 }
               }
             }

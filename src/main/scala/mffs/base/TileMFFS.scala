@@ -1,11 +1,8 @@
-package mffs.base
+package cw
 
 import java.text.MessageFormat
 import java.util
-import java.util.ArrayList
 
-import resonant.api.mffs.security.Permission
-import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
 import com.google.common.io.ByteArrayDataInput
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardLink
@@ -16,10 +13,12 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import resonant.api.blocks.ICamouflageMaterial
+import resonant.api.mffs.security.Permission
+import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
 import resonant.api.{IPlayerUsing, IRotatable}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.{IPacketReceiver, IPacketSender}
+import resonant.lib.network.IPacketReceiver
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.mutable.HashSet
@@ -28,8 +27,13 @@ import scala.collection.mutable.HashSet
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPacketSender with IPlayerUsing with IRotatable with IActivatable
+abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPlayerUsing with IRotatable with IActivatable
 {
+  object TilePacketType extends Enumeration
+  {
+    val NONE, DESCRIPTION, FREQUENCY, FORTRON, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER = Value
+  }
+
   /**
    * The players to send packets to for machine update info.
    */
@@ -127,21 +131,6 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
 
   override def getExplosionResistance(entity: Entity, d: Double, d1: Double, d2: Double): Float = 100.0F
 
-  /**
-   * Override this for packet updating list.
-   */
-  def getPacketData(packetID: Int): ArrayList[_] =
-  {
-    val data: ArrayList[_] = new ArrayList[_]
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
-    {
-      data.add(TilePacketType.DESCRIPTION.ordinal)
-      data.add(active)
-      data.add(isRedstoneActive)
-    }
-    return data
-  }
-
   override def update()
   {
     super.update()
@@ -150,6 +139,21 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     {
       playersUsing.foreach(ModularForceFieldSystem.packetHandler.sendToPlayer(getDescriptionPacket(), _))
     }
+  }
+
+  /**
+   * Override this for packet updating list.
+   */
+  def getPacketData(packetID: Int): List[_] =
+  {
+    val data = List()
+    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    {
+      data.add(TilePacketType.DESCRIPTION.ordinal)
+      data.add(active)
+      data.add(isRedstoneActive)
+    }
+    return data
   }
 
   override def getDescriptionPacket: Nothing =
@@ -246,23 +250,41 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     return this.playersUsing
   }
 
+  /**
+   * ComputerCraft
 
-  final object TilePacketType extends Enumeration
+  def getType: String =
   {
-    val NONE = 0
-    val DESCRIPTION = 1
-    val FREQUENCY = 2
-    val FORTRON = 3
-    val TOGGLE_ACTIVATION = 4
-    val TOGGLE_MODE = 5
-    val INVENTORY = 6
-    val STRING = 7
-    val FXS = 8
-    val TOGGLE_MODE_2 = 9
-    val TOGGLE_MODE_3 = 10
-    val TOGGLE_MODE_4 = 11
-    val FIELD = 12
-    val RENDER = 13
+    return this.getInvName
   }
 
+  def getMethodNames: Array[String] =
+  {
+    return Array[String]("isActivate", "setActivate")
+  }
+
+  def callMethod(computer: Nothing, context: Nothing, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
+  {
+    method match
+    {
+      case 0 =>
+      {
+        return Array[AnyRef](this.isActive)
+      }
+      case 1 =>
+      {
+        this.setActive(arguments(0).asInstanceOf[Boolean])
+        return null
+      }
+    }
+    throw new Exception("Invalid method.")
+  }
+
+  def attach(computer: Nothing)
+  {
+  }
+
+  def detach(computer: Nothing)
+  {
+  }*/
 }
