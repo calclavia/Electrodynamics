@@ -17,10 +17,10 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with
 {
   private var frequency: Int = 0
 
-  def initiate()
+  override def validate()
   {
     FrequencyGrid.instance.register(this)
-    super.initiate()
+    super.validate()
   }
 
   override def invalidate()

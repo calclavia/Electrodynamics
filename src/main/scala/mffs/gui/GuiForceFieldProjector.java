@@ -6,7 +6,7 @@ import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerForceFieldProjector;
 import mffs.gui.button.GuiIcon;
-import mffs.tile.TileForceFieldProjector;
+import mffs.tile.TileElectromagnetProjector;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,9 +22,9 @@ import universalelectricity.api.vector.Vector2;
 
 public class GuiForceFieldProjector extends GuiMFFS
 {
-	private TileForceFieldProjector tileEntity;
+	private TileElectromagnetProjector tileEntity;
 
-	public GuiForceFieldProjector(EntityPlayer player, TileForceFieldProjector tileEntity)
+	public GuiForceFieldProjector(EntityPlayer player, TileElectromagnetProjector tileEntity)
 	{
 		super(new ContainerForceFieldProjector(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;

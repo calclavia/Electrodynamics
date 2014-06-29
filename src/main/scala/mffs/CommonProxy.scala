@@ -22,9 +22,9 @@ class CommonProxy extends ProxyBase with IGuiHandler
       {
         return new ContainerFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
       }
-      else if (tileEntity.getClass == classOf[TileForceFieldProjector])
+      else if (tileEntity.getClass == classOf[TileElectromagnetProjector])
       {
-        return new ContainerForceFieldProjector(player, tileEntity.asInstanceOf[TileForceFieldProjector])
+        return new ContainerForceFieldProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
       }
       else if (tileEntity.getClass == classOf[TileCoercionDeriver])
       {
@@ -38,9 +38,9 @@ class CommonProxy extends ProxyBase with IGuiHandler
       {
         return new ContainerInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
       }
-      else if (tileEntity.getClass == classOf[TileForceManipulator])
+      else if (tileEntity.getClass == classOf[TileForceMobilizer])
       {
-        return new ContainerForceManipulator(player, tileEntity.asInstanceOf[TileForceManipulator])
+        return new ContainerForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
       }
     }
     return null

@@ -30,9 +30,9 @@ class ClientProxy extends CommonProxy
       {
         return new GuiFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
       }
-      else if (tileEntity.getClass eq classOf[TileForceFieldProjector])
+      else if (tileEntity.getClass eq classOf[TileElectromagnetProjector])
       {
-        return new GuiForceFieldProjector(player, tileEntity.asInstanceOf[TileForceFieldProjector])
+        return new GuiForceFieldProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
       }
       else if (tileEntity.getClass eq classOf[TileCoercionDeriver])
       {
@@ -46,9 +46,9 @@ class ClientProxy extends CommonProxy
       {
         return new GuiInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
       }
-      else if (tileEntity.getClass eq classOf[TileForceManipulator])
+      else if (tileEntity.getClass eq classOf[TileForceMobilizer])
       {
-        return new GuiForceManipulator(player, tileEntity.asInstanceOf[TileForceManipulator])
+        return new GuiForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
       }
     }
     return null

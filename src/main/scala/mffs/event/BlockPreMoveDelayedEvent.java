@@ -1,7 +1,7 @@
 package mffs.event;
 
+import mffs.tile.TileForceMobilizer;
 import resonant.api.mffs.EventForceManipulate.EventPreForceManipulate;
-import mffs.tile.TileForceManipulator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -35,7 +35,7 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 		if (!this.world.isRemote)
 		{
 			// Do a final check before actually moving.
-			if (((TileForceManipulator) this.handler).canMove(new VectorWorld(world, position), newPosition))
+			if (((TileForceMobilizer) this.handler).canMove(new VectorWorld(world, position), newPosition))
 			{
 				TileEntity tileEntity = this.position.getTileEntity(this.world);
 
@@ -61,7 +61,7 @@ public class BlockPreMoveDelayedEvent extends DelayedEvent
 			}
 			else
 			{
-				((TileForceManipulator) this.handler).markFailMove = true;
+				((TileForceMobilizer) this.handler).markFailMove = true;
 			}
 		}
 	}

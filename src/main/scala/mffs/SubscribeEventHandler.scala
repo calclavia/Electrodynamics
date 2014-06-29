@@ -5,7 +5,7 @@ import java.util.HashMap
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
-import mffs.tile.TileForceFieldProjector
+import mffs.tile.TileElectromagnetProjector
 import net.minecraft.block.{Block, BlockSkull}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemSkull
@@ -128,9 +128,9 @@ object SubscribeEventHandler
     {
       for (fortronFrequency <- FrequencyGrid.instance.getFortronTiles(evt.world))
       {
-        if (fortronFrequency.isInstanceOf[TileForceFieldProjector])
+        if (fortronFrequency.isInstanceOf[TileElectromagnetProjector])
         {
-          val projector: TileForceFieldProjector = fortronFrequency.asInstanceOf[TileForceFieldProjector]
+          val projector: TileElectromagnetProjector = fortronFrequency.asInstanceOf[TileElectromagnetProjector]
           if (projector.getCalculatedField != null)
           {
             if (projector.getCalculatedField.contains(new Nothing(evt.x, evt.y, evt.z)))

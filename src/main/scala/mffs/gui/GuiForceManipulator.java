@@ -6,7 +6,7 @@ import mffs.base.GuiMFFS;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.container.ContainerForceManipulator;
 import mffs.gui.button.GuiIcon;
-import mffs.tile.TileForceManipulator;
+import mffs.tile.TileForceMobilizer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +21,9 @@ import universalelectricity.api.vector.Vector2;
 
 public class GuiForceManipulator extends GuiMFFS
 {
-	private TileForceManipulator tileEntity;
+	private TileForceMobilizer tileEntity;
 
-	public GuiForceManipulator(EntityPlayer player, TileForceManipulator tileEntity)
+	public GuiForceManipulator(EntityPlayer player, TileForceMobilizer tileEntity)
 	{
 		super(new ContainerForceManipulator(player, tileEntity), tileEntity);
 		this.tileEntity = tileEntity;

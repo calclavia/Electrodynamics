@@ -7,7 +7,7 @@ import mffs.base.TileMFFS.TilePacketType
 import mffs.base.TileMFFSInventory
 import mffs.event.{IDelayedEventHandler, BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.item.module.ItemModule
-import mffs.tile.TileForceFieldProjector
+import mffs.tile.TileElectromagnetProjector
 import net.minecraft.block.Block
 import net.minecraft.block.BlockFluid
 import net.minecraft.item.ItemBlock
@@ -71,12 +71,12 @@ class ItemModuleDisintegration(id: Integer) extends ItemModule(id, "moduleDisint
 
 				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCollection) > 0)
 				{
-					(projector.asInstanceOf[TileForceFieldProjector]).queueEvent(new
+					(projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new
 									BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.worldObj, position, projector.asInstanceOf[TileMFFSInventory]))
 				}
 				else
 				{
-					(projector.asInstanceOf[TileForceFieldProjector]).queueEvent(new
+					(projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new
 									BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.worldObj, position))
 				}
 

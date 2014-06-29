@@ -50,9 +50,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     }
   }
 
-  override def initiate()
+  override def start()
   {
-    super.initiate()
+    super.start()
     fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
   }
 

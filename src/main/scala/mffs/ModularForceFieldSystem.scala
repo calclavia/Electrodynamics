@@ -128,10 +128,10 @@ object ModularForceFieldSystem
     blockForceField = manager.newBlock(classOf[field.TileForceField])
     blockCoercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
     blockFortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
-    blockForceFieldProjector = manager.newBlock(classOf[TileForceFieldProjector])
+    blockForceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
     blockBiometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
     blockInterdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
-    blockForceManipulator = manager.newBlock(classOf[TileForceManipulator])
+    blockForceManipulator = manager.newBlock(classOf[TileForceMobilizer])
 
     itemRemoteController = new ItemRemoteController
     itemFocusMatix = new ItemMFFS("focusMatrix")

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.render.model.ModelForceFieldProjector;
-import mffs.tile.TileForceFieldProjector;
+import mffs.tile.TileElectromagnetProjector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -28,9 +28,9 @@ public class RenderForceFieldProjector extends TileEntitySpecialRenderer
 	@Override
 	public void renderTileEntityAt(TileEntity t, double x, double y, double z, float f)
 	{
-		if (t instanceof TileForceFieldProjector)
+		if (t instanceof TileElectromagnetProjector)
 		{
-			TileForceFieldProjector tileEntity = (TileForceFieldProjector) t;
+			TileElectromagnetProjector tileEntity = (TileElectromagnetProjector) t;
 
 			/**
 			 * Render Model

@@ -1,4 +1,4 @@
-package cw
+package mffs.base
 
 import java.text.MessageFormat
 import java.util
@@ -27,7 +27,7 @@ import scala.collection.mutable.HashSet
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPlayerUsing with IRotatable with IActivatable
+abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPlayerUsing with TRotatable with IActivatable
 {
   object TilePacketType extends Enumeration
   {

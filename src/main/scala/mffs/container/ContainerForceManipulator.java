@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tile.TileForceManipulator;
+import mffs.tile.TileForceMobilizer;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 
 public class ContainerForceManipulator extends ContainerBase
 {
-	public ContainerForceManipulator(EntityPlayer player, TileForceManipulator tileEntity)
+	public ContainerForceManipulator(EntityPlayer player, TileForceMobilizer tileEntity)
 	{
 		super(tileEntity);
 

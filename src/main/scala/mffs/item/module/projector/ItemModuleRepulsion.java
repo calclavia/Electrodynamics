@@ -4,7 +4,7 @@ import resonant.api.mffs.IProjector;
 import resonant.api.mffs.security.IBiometricIdentifier;
 import resonant.api.mffs.security.Permission;
 import mffs.item.module.ItemModule;
-import mffs.tile.TileForceFieldProjector;
+import mffs.tile.TileElectromagnetProjector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -98,7 +98,7 @@ public class ItemModuleRepulsion extends ItemModule
 	@Override
 	public boolean onDestroy(IProjector projector, Set<Vector3> field)
 	{
-		((TileForceFieldProjector) projector).sendFieldToClient();
+		((TileElectromagnetProjector) projector).sendFieldToClient();
 		return false;
 	}
 

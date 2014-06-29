@@ -2,13 +2,13 @@ package mffs.container;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.tile.TileForceFieldProjector;
+import mffs.tile.TileElectromagnetProjector;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 
 public class ContainerForceFieldProjector extends ContainerBase
 {
-	public ContainerForceFieldProjector(EntityPlayer player, TileForceFieldProjector tileEntity)
+	public ContainerForceFieldProjector(EntityPlayer player, TileElectromagnetProjector tileEntity)
 	{
 		super(tileEntity);
 

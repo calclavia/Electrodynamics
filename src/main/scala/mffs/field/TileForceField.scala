@@ -2,7 +2,7 @@ package mffs.field
 
 import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.tile.TileForceFieldProjector
+import mffs.tile.TileElectromagnetProjector
 import mffs.{MFFSHelper, ModularForceFieldSystem}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -387,7 +387,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
    * @return Gets the projector block controlling this force field. Removes the force field if no
    *         projector can be found.
    */
-  def getProjector(): TileForceFieldProjector =
+  def getProjector(): TileElectromagnetProjector =
   {
     if (this.getProjectorSafe != null)
     {
@@ -402,15 +402,15 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     return null
   }
 
-  def getProjectorSafe: TileForceFieldProjector =
+  def getProjectorSafe: TileElectromagnetProjector =
   {
     if (this.projector != null)
     {
-      if (this.projector.getTileEntity(this.worldObj).isInstanceOf[TileForceFieldProjector])
+      if (this.projector.getTileEntity(this.worldObj).isInstanceOf[TileElectromagnetProjector])
       {
         if (worldObj.isRemote || (projector.getTileEntity(this.worldObj).asInstanceOf[IProjector]).getCalculatedField.contains(new Nothing(this)))
         {
-          return this.projector.getTileEntity(this.worldObj).asInstanceOf[TileForceFieldProjector]
+          return this.projector.getTileEntity(this.worldObj).asInstanceOf[TileElectromagnetProjector]
         }
       }
     }
