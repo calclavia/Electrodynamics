@@ -1,0 +1,34 @@
+{
+    "mffs.field": {
+        "category": "mffs",
+        "sounds": [
+            "field/field1",
+            "field/field2",
+            "field/field3",
+            "field/field4",
+            "field/field5"
+        ]
+    },
+    "mffs.fieldmove": {
+        "category": "mffs",
+        "sounds": [
+            "fieldmove/fieldmove1",
+            "fieldmove/fieldmove2",
+            "fieldmove/fieldmove3",
+            "fieldmove/fieldmove4",
+            "fieldmove/fieldmove5"
+        ]
+    },
+    "mffs.misc.powerdown": {
+        "category": "mffs",
+        "sounds": [
+            "misc/powerdown"
+        ]
+    },
+    "mffs.misc.teleport": {
+        "category": "mffs",
+        "sounds": [
+            "misc/teleport"
+        ]
+    }
+}

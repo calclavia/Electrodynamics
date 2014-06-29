@@ -12,12 +12,6 @@ import net.minecraftforge.common.MinecraftForge
 
 class ClientProxy extends CommonProxy
 {
-  override def preInit()
-  {
-    super.preInit
-    MinecraftForge.EVENT_BUS.register(SoundHandler.INSTANCE)
-  }
-
   override def init()
   {
     super.init()
