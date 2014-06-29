@@ -1,6 +1,5 @@
 package mffs.block;
 
-import mffs.base.BlockMFFS;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;

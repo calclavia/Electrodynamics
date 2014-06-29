@@ -1,6 +1,5 @@
 package mffs.block;
 
-import mffs.base.BlockMFFS;
 import mffs.tile.TileForceManipulator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

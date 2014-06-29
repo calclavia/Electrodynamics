@@ -2,7 +2,6 @@ package mffs.item.module.projector;
 
 import calclavia.api.mffs.IProjector;
 import calclavia.api.mffs.fortron.FrequencyGrid;
-import mffs.base.TileMFFS;
 import mffs.item.module.ItemModule;
 import net.minecraft.tileentity.TileEntity;
 import resonant.api.blocks.IBlockFrequency;

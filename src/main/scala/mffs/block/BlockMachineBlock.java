@@ -1,6 +1,5 @@
 package mffs.block;
 
-import mffs.base.BlockMFFS;
 import mffs.base.TileMFFS;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;

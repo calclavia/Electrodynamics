@@ -3,7 +3,7 @@ package mffs
 import java.util.Arrays
 
 import calclavia.api.mffs.Blacklist
-import cpw.mods.fml.common.Mod.{EventHandler, Instance}
+import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent, FMLServerStartingEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
@@ -28,15 +28,16 @@ import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.lib.config.ConfigHandler
+import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 @Mod(modid = Reference.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine")
 @ModstatInfo(prefix = "mffs")
-class ModularForceFieldSystem
+object ModularForceFieldSystem
 {
-  @Instance(Reference.ID)
-  var instance: ModularForceFieldSystem = _
+  //@Instance(Reference.ID)
+  // var instance: ModularForceFieldSystem = _
   @Mod.Metadata(Reference.ID)
   var metadata: ModMetadata = _
 
@@ -113,7 +114,8 @@ class ModularForceFieldSystem
   /**
    * Damages
    */
-  var damageFieldShock: DamageSource = new CustomDamageSource("fieldShock").setDamageBypassesArmor
+  val damageFieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor
+  val packetHandler = new PacketManager()
 
   @EventHandler
   def preInit(event: FMLPreInitializationEvent)
