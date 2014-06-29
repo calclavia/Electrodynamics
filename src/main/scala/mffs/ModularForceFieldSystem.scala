@@ -7,6 +7,7 @@ import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import mffs.base.ItemMFFS
 import mffs.block._
 import mffs.card.ItemCard
+import mffs.field
 import mffs.fortron.FortronHelper
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCardFrequency, ItemCardID, ItemCardInfinite, ItemCardLink}
@@ -121,7 +122,7 @@ object ModularForceFieldSystem
     Settings.load()
     Settings.configuration.load()
 
-    blockForceField = manager.newBlock(classOf[TileForceField])
+    blockForceField = manager.newBlock(classOf[field.TileForceField])
     blockCoercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
     blockFortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
     blockForceFieldProjector = manager.newBlock(classOf[TileForceFieldProjector])

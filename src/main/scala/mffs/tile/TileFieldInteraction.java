@@ -1,5 +1,7 @@
 package mffs.tile;
 
+import mffs.field.thread.IThreadCallBack;
+import mffs.field.thread.ProjectorCalculationThread;
 import resonant.api.mffs.ICache;
 import resonant.api.mffs.IFieldInteraction;
 import resonant.api.mffs.modules.IModule;

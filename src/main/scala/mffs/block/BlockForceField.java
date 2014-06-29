@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import mffs.base.BlockBase;
 import mffs.render.RenderForceField;
-import mffs.tile.TileForceField;
+import mffs.field.TileForceField;
 import micdoodle8.mods.galacticraft.api.block.IPartialSealableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

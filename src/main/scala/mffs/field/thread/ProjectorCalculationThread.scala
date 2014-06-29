@@ -1,11 +1,13 @@
-package mffs.tile
+package mffs.field.thread
 
-import resonant.api.mffs.IFieldInteraction
-import resonant.api.mffs.fortron.IServerThread
+import java.util.Set
+
 import mffs.ModularForceFieldSystem
 import net.minecraft.tileentity.TileEntity
-import universalelectricity.api.vector.Vector3
-import java.util.Set
+import resonant.api.mffs.IFieldInteraction
+import resonant.api.mffs.fortron.IServerThread
+import universalelectricity.core.transform.vector.Vector3
+
 import scala.collection.convert.wrapAll._
 
 /**
@@ -13,16 +15,8 @@ import scala.collection.convert.wrapAll._
  *
  * @author Calclavia
  */
-class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread with IServerThread
+class ProjectorCalculationThread(callBack : () => Unit,projector: IFieldInteraction) extends AbstractFieldCalculationThread(callBack)
 {
-	private var callBack: IThreadCallBack = null
-
-	def this(projector: IFieldInteraction, callBack: IThreadCallBack)
-	{
-		this(projector)
-		this.callBack = callBack
-	}
-
 	override def run
 	{
 		projector.setCalculating(true)
@@ -78,7 +72,7 @@ class ProjectorCalculationThread(projector: IFieldInteraction) extends Thread wi
 
 		if (callBack != null)
 		{
-			callBack.onThreadComplete
+      callBack.apply()
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package mffs.tile;
 
+import mffs.field.thread.ManipulatorCalculationThread;
 import resonant.api.mffs.Blacklist;
 import resonant.api.mffs.EventForceManipulate.EventCheckForceManipulate;
 import resonant.api.mffs.card.ICoordLink;

@@ -1,5 +1,6 @@
 package mffs.tile;
 
+import mffs.field.thread.IThreadCallBack;
 import resonant.api.mffs.ICache;
 import resonant.api.mffs.IProjector;
 import resonant.api.mffs.modules.IModule;
@@ -302,9 +303,9 @@ public class TileForceFieldProjector extends TileFieldInteraction implements IPr
 									 */
 								TileEntity tileEntity = this.worldObj.getBlockTileEntity(vector.intX(), vector.intY(), vector.intZ());
 
-								if (tileEntity instanceof TileForceField)
+								if (tileEntity instanceof mffs.field.TileForceField)
 								{
-									((TileForceField) tileEntity).setProjector(new Vector3(this));
+									((mffs.field.TileForceField) tileEntity).setProjector(new Vector3(this));
 								}
 
 								this.requestFortron(1, true);
