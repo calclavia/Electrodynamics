@@ -1,7 +1,7 @@
 package mffs.item.mode;
 
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.IProjector;
+import resonant.api.mffs.IFieldInteraction;
+import resonant.api.mffs.IProjector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;

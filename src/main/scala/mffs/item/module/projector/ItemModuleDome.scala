@@ -4,7 +4,7 @@ import java.util.Set
 import mffs.item.module.ItemModule
 import net.minecraft.tileentity.TileEntity
 import universalelectricity.api.vector.Vector3
-import calclavia.api.mffs.IFieldInteraction
+import resonant.api.mffs.IFieldInteraction
 import scala.collection.convert.wrapAll._
 
 class ItemModuleDome(id: Int) extends ItemModule(id, "moduleDome")

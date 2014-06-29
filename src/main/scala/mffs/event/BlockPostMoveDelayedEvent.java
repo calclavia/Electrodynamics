@@ -1,6 +1,6 @@
 package mffs.event;
 
-import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
+import resonant.api.mffs.EventForceManipulate.EventPostForceManipulate;
 import mffs.DelayedEvent;
 import mffs.IDelayedEventHandler;
 import net.minecraft.nbt.NBTTagCompound;

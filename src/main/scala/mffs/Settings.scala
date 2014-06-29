@@ -2,7 +2,7 @@ package mffs
 
 import java.io.File
 
-import calclavia.api.mffs.Blacklist
+import resonant.api.mffs.Blacklist
 import cpw.mods.fml.common.Loader
 import net.minecraftforge.common.config.{Configuration, Property}
 import resonant.lib.config.Config

@@ -1,6 +1,6 @@
 package mffs.item.card;
 
-import calclavia.api.mffs.card.ICoordLink;
+import resonant.api.mffs.card.ICoordLink;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.card.ItemCard;

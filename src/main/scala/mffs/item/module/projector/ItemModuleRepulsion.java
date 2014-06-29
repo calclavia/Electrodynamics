@@ -1,8 +1,8 @@
 package mffs.item.module.projector;
 
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.security.IBiometricIdentifier;
+import resonant.api.mffs.security.Permission;
 import mffs.item.module.ItemModule;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.entity.Entity;

@@ -1,6 +1,6 @@
 package mffs.base;
 
-import calclavia.api.mffs.IBiometricIdentifierLink;
+import resonant.api.mffs.IBiometricIdentifierLink;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;

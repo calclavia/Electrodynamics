@@ -1,8 +1,8 @@
 package mffs.item.module;
 
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.modules.IModule;
+import resonant.api.mffs.IFieldInteraction;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.modules.IModule;
 import mffs.base.ItemMFFS;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

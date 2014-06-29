@@ -1,6 +1,6 @@
 package mffs.render;
 
-import calclavia.api.mffs.card.ICardIdentification;
+import resonant.api.mffs.card.ICardIdentification;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

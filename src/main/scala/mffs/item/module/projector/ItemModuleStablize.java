@@ -1,8 +1,8 @@
 package mffs.item.module.projector;
 
-import calclavia.api.mffs.Blacklist;
-import calclavia.api.mffs.EventStabilize;
-import calclavia.api.mffs.IProjector;
+import resonant.api.mffs.Blacklist;
+import resonant.api.mffs.EventStabilize;
+import resonant.api.mffs.IProjector;
 import mffs.ModularForceFieldSystem;
 import mffs.base.TileMFFS.TilePacketType;
 import mffs.item.mode.ItemModeCustom;

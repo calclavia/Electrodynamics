@@ -1,7 +1,7 @@
 package mffs.tile
 
-import calclavia.api.mffs.IFieldInteraction
-import calclavia.api.mffs.fortron.IServerThread
+import resonant.api.mffs.IFieldInteraction
+import resonant.api.mffs.fortron.IServerThread
 import mffs.ModularForceFieldSystem
 import net.minecraft.tileentity.TileEntity
 import universalelectricity.api.vector.Vector3

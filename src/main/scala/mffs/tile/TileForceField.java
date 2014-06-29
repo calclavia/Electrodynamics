@@ -1,6 +1,6 @@
 package mffs.tile;
 
-import calclavia.api.mffs.IProjector;
+import resonant.api.mffs.IProjector;
 import com.google.common.io.ByteArrayDataInput;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;

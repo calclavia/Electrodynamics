@@ -1,9 +1,9 @@
 package mffs.base;
 
-import calclavia.api.mffs.IBiometricIdentifierLink;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.security.IBiometricIdentifier;
+import resonant.api.mffs.IBiometricIdentifierLink;
+import resonant.api.mffs.card.ICoordLink;
+import resonant.api.mffs.fortron.FrequencyGrid;
+import resonant.api.mffs.security.IBiometricIdentifier;
 import com.google.common.io.ByteArrayDataInput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

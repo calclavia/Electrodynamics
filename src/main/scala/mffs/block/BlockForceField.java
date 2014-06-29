@@ -1,11 +1,11 @@
 package mffs.block;
 
-import calclavia.api.mffs.IForceFieldBlock;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.fortron.IFortronStorage;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.IForceFieldBlock;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.fortron.IFortronStorage;
+import resonant.api.mffs.modules.IModule;
+import resonant.api.mffs.security.IBiometricIdentifier;
+import resonant.api.mffs.security.Permission;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;

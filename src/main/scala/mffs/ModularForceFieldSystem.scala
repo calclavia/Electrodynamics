@@ -1,15 +1,10 @@
 package mffs
 
-import java.util.Arrays
-
-import calclavia.api.mffs.Blacklist
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent, FMLServerStartingEvent}
+import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
-import ic2.api.tile.ExplosionWhitelist
-import mffs.base.{BlockMFFS, ItemMFFS}
+import mffs.base.ItemMFFS
 import mffs.block._
 import mffs.card.ItemCard
 import mffs.fortron.FortronHelper
@@ -21,16 +16,13 @@ import mffs.item.module.interdiction._
 import mffs.item.module.projector._
 import mffs.tile._
 import net.minecraft.block.Block
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.util.DamageSource
+import net.minecraft.item.Item
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
-import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.lib.config.ConfigHandler
+import resonant.content.ModManager
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
-import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 @Mod(modid = Reference.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine")
 @ModstatInfo(prefix = "mffs")
@@ -43,6 +35,8 @@ object ModularForceFieldSystem
 
   @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
   var proxy: CommonProxy = _
+
+  val manager = new ModManager(Settings.configuration, Reference.ID)
 
   /**
    * Machines
@@ -127,13 +121,14 @@ object ModularForceFieldSystem
     Settings.load()
     Settings.configuration.load()
 
-    blockForceField = new BlockForceField
-    blockCoercionDeriver = new BlockCoercionDeriver
-    blockFortronCapacitor = new BlockFortronCapacitor
-    blockForceFieldProjector = new BlockForceFieldProjector
-    blockBiometricIdentifier = new BlockBiometricIdentifier
-    blockInterdictionMatrix = new BlockInterdictionMatrix
-    blockForceManipulator = new BlockForceManipulator
+    blockForceField = manager.newBlock(classOf[TileForceField])
+    blockCoercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
+    blockFortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
+    blockForceFieldProjector = manager.newBlock(classOf[TileForceFieldProjector])
+    blockBiometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
+    blockInterdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
+    blockForceManipulator = manager.newBlock(classOf[TileForceManipulator])
+
     itemRemoteController = new ItemRemoteController
     itemFocusMatix = new ItemMFFS("focusMatrix")
     itemModeCube = new ItemModeCube
@@ -171,6 +166,7 @@ object ModularForceFieldSystem
     itemModuleCollection = new ItemModule("moduleCollection").setMaxStackSize(1).setCost(15)
     itemModuleInvert = new ItemModule("moduleInvert").setMaxStackSize(1).setCost(15)
     itemModuleSilence = new ItemModule("moduleSilence").setMaxStackSize(1).setCost(1)
+
     MinecraftForge.EVENT_BUS.register(itemRemoteController)
     FortronHelper.FLUID_FORTRON = new Fluid("fortron")
     FortronHelper.FLUID_FORTRON.setGaseous(true)
@@ -182,7 +178,7 @@ object ModularForceFieldSystem
 
     Settings.configuration.save()
 
-    proxy.preInit
+    proxy.preInit()
   }
 
   @EventHandler

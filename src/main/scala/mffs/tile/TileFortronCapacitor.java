@@ -1,13 +1,13 @@
 package mffs.tile;
 
-import calclavia.api.mffs.card.ICard;
-import calclavia.api.mffs.card.ICardInfinite;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronCapacitor;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.fortron.IFortronStorage;
-import calclavia.api.mffs.modules.IModule;
+import resonant.api.mffs.card.ICard;
+import resonant.api.mffs.card.ICardInfinite;
+import resonant.api.mffs.card.ICoordLink;
+import resonant.api.mffs.fortron.FrequencyGrid;
+import resonant.api.mffs.fortron.IFortronCapacitor;
+import resonant.api.mffs.fortron.IFortronFrequency;
+import resonant.api.mffs.fortron.IFortronStorage;
+import resonant.api.mffs.modules.IModule;
 import com.google.common.io.ByteArrayDataInput;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;

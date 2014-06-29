@@ -4,8 +4,8 @@ import java.text.MessageFormat
 import java.util
 import java.util.ArrayList
 
-import calclavia.api.mffs.security.Permission
-import calclavia.api.mffs.{IActivatable, IBiometricIdentifierLink}
+import resonant.api.mffs.security.Permission
+import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
 import com.google.common.io.ByteArrayDataInput
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardLink

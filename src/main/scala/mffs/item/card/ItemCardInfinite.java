@@ -1,6 +1,6 @@
 package mffs.item.card;
 
-import calclavia.api.mffs.card.ICardInfinite;
+import resonant.api.mffs.card.ICardInfinite;
 import mffs.card.ItemCard;
 
 /**

@@ -17,12 +17,12 @@ import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
 import universalelectricity.api.vector.Vector3
-import calclavia.api.mffs.Blacklist
-import calclavia.api.mffs.IProjector
+import resonant.api.mffs.Blacklist
+import resonant.api.mffs.IProjector
 import resonant.lib.network.PacketHandler
-import calclavia.api.mffs.fortron.FrequencyGrid
+import resonant.api.mffs.fortron.FrequencyGrid
 import scala.collection.convert.wrapAll._
-import calclavia.api.mffs.security.IInterdictionMatrix
+import resonant.api.mffs.security.IInterdictionMatrix
 
 class ItemModuleDisintegration(id: Integer) extends ItemModule(id, "moduleDisintegration")
 {

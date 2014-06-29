@@ -1,8 +1,8 @@
 package mffs.item.module.interdiction;
 
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.security.IBiometricIdentifier;
+import resonant.api.mffs.security.IInterdictionMatrix;
+import resonant.api.mffs.security.Permission;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

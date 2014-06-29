@@ -1,11 +1,11 @@
 package mffs;
 
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.modules.IModuleAcceptor;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.fortron.FrequencyGrid;
+import resonant.api.mffs.fortron.IFortronFrequency;
+import resonant.api.mffs.modules.IModuleAcceptor;
+import resonant.api.mffs.security.IInterdictionMatrix;
+import resonant.api.mffs.security.Permission;
 import mffs.item.mode.ItemModeCustom;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;

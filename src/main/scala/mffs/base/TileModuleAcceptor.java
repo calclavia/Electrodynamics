@@ -1,8 +1,8 @@
 package mffs.base;
 
-import calclavia.api.mffs.ICache;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IModuleAcceptor;
+import resonant.api.mffs.ICache;
+import resonant.api.mffs.modules.IModule;
+import resonant.api.mffs.modules.IModuleAcceptor;
 import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;

@@ -1,6 +1,6 @@
 package mffs.item.module.projector;
 
-import calclavia.api.mffs.IProjector;
+import resonant.api.mffs.IProjector;
 import mffs.item.module.ItemModule;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;

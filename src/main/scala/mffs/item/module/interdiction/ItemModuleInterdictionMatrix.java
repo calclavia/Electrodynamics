@@ -1,7 +1,7 @@
 package mffs.item.module.interdiction;
 
-import calclavia.api.mffs.modules.IInterdictionMatrixModule;
-import calclavia.api.mffs.security.IInterdictionMatrix;
+import resonant.api.mffs.modules.IInterdictionMatrixModule;
+import resonant.api.mffs.security.IInterdictionMatrix;
 import mffs.item.module.ItemModule;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

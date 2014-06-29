@@ -1,11 +1,11 @@
 package mffs.item;
 
-import calclavia.api.mffs.EventForceManipulate.EventPostForceManipulate;
-import calclavia.api.mffs.EventForceManipulate.EventPreForceManipulate;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.fortron.FrequencyGrid;
-import calclavia.api.mffs.fortron.IFortronFrequency;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.EventForceManipulate.EventPostForceManipulate;
+import resonant.api.mffs.EventForceManipulate.EventPreForceManipulate;
+import resonant.api.mffs.card.ICoordLink;
+import resonant.api.mffs.fortron.FrequencyGrid;
+import resonant.api.mffs.fortron.IFortronFrequency;
+import resonant.api.mffs.security.Permission;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.MFFSHelper;

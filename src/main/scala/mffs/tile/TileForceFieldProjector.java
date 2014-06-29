@@ -1,9 +1,9 @@
 package mffs.tile;
 
-import calclavia.api.mffs.ICache;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IProjectorMode;
+import resonant.api.mffs.ICache;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.modules.IModule;
+import resonant.api.mffs.modules.IProjectorMode;
 import com.google.common.io.ByteArrayDataInput;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;

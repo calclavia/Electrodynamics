@@ -1,8 +1,8 @@
 package mffs.item.mode;
 
-import calclavia.api.mffs.IFieldInteraction;
-import calclavia.api.mffs.IProjector;
-import calclavia.api.mffs.modules.IProjectorMode;
+import resonant.api.mffs.IFieldInteraction;
+import resonant.api.mffs.IProjector;
+import resonant.api.mffs.modules.IProjectorMode;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.base.ItemMFFS;

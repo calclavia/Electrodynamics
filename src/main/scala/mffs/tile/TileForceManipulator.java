@@ -1,11 +1,11 @@
 package mffs.tile;
 
-import calclavia.api.mffs.Blacklist;
-import calclavia.api.mffs.EventForceManipulate.EventCheckForceManipulate;
-import calclavia.api.mffs.card.ICoordLink;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.modules.IProjectorMode;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.Blacklist;
+import resonant.api.mffs.EventForceManipulate.EventCheckForceManipulate;
+import resonant.api.mffs.card.ICoordLink;
+import resonant.api.mffs.modules.IModule;
+import resonant.api.mffs.modules.IProjectorMode;
+import resonant.api.mffs.security.Permission;
 import com.google.common.io.ByteArrayDataInput;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;

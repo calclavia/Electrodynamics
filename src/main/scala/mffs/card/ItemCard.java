@@ -1,6 +1,6 @@
 package mffs.card;
 
-import calclavia.api.mffs.card.ICard;
+import resonant.api.mffs.card.ICard;
 import mffs.base.ItemMFFS;
 
 public class ItemCard extends ItemMFFS implements ICard

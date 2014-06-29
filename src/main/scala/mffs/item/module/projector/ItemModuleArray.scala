@@ -1,6 +1,6 @@
 package mffs.item.module.projector
 
-import calclavia.api.mffs.IFieldInteraction
+import resonant.api.mffs.IFieldInteraction
 import mffs.item.module.ItemModule
 import net.minecraftforge.common.ForgeDirection
 import universalelectricity.api.vector.Vector3

@@ -1,7 +1,7 @@
 package mffs.gui;
 
-import calclavia.api.mffs.card.ICardIdentification;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.card.ICardIdentification;
+import resonant.api.mffs.security.Permission;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;

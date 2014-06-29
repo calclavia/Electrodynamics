@@ -2,7 +2,7 @@ package mffs.tile
 
 import java.util.HashSet
 import universalelectricity.api.vector.Vector3
-import calclavia.api.mffs.fortron.IServerThread
+import resonant.api.mffs.fortron.IServerThread
 import scala.collection.JavaConversions._
 
 /**

@@ -5,7 +5,7 @@ import mffs.item.module.ItemModule
 import net.minecraft.entity.Entity
 import net.minecraft.world.World
 import net.minecraft.item.ItemStack
-import calclavia.api.mffs.security.{IBiometricIdentifier, Permission}
+import resonant.api.mffs.security.{IBiometricIdentifier, Permission}
 import net.minecraft.entity.player.EntityPlayer
 
 class ItemModuleShock(i: Int) extends ItemModule(i, "moduleShock")

@@ -1,10 +1,10 @@
 package mffs.tile;
 
-import calclavia.api.mffs.modules.IInterdictionMatrixModule;
-import calclavia.api.mffs.modules.IModule;
-import calclavia.api.mffs.security.IBiometricIdentifier;
-import calclavia.api.mffs.security.IInterdictionMatrix;
-import calclavia.api.mffs.security.Permission;
+import resonant.api.mffs.modules.IInterdictionMatrixModule;
+import resonant.api.mffs.modules.IModule;
+import resonant.api.mffs.security.IBiometricIdentifier;
+import resonant.api.mffs.security.IInterdictionMatrix;
+import resonant.api.mffs.security.Permission;
 import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
