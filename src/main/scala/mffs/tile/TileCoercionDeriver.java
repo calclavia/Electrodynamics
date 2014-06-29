@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
 import mffs.base.TileMFFSElectrical;
-import mffs.fortron.FortronHelper;
+import mffs.FortronHelper;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

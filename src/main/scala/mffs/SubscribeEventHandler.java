@@ -9,7 +9,6 @@ import resonant.api.mffs.security.Permission;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.base.TileFortron;
-import mffs.fortron.FortronHelper;
 import mffs.tile.TileForceFieldProjector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;

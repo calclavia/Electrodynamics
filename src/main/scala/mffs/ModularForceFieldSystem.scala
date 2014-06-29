@@ -1,14 +1,13 @@
 package mffs
 
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLServerStartingEvent, FMLPostInitializationEvent, FMLInitializationEvent, FMLPreInitializationEvent}
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import ic2.api.tile.ExplosionWhitelist
 import mffs.base.ItemMFFS
 import mffs.card.ItemCard
-import mffs.fortron.FortronHelper
 import mffs.item.ItemRemoteController
 import mffs.item.card.{ItemCardFrequency, ItemCardID, ItemCardInfinite, ItemCardLink}
 import mffs.item.mode._
@@ -19,7 +18,7 @@ import mffs.tile._
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.fluids.{Fluid, FluidStack, FluidRegistry}
+import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
@@ -41,7 +40,7 @@ object ModularForceFieldSystem
   @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
   var proxy: CommonProxy = _
 
-  val manager = new ModManager(Settings.configuration, Reference.ID)
+  val manager = new ModManager(Settings.configuration, Reference.ID).setTab(MFFSCreativeTab).setPrefix(Reference.PREFIX)
 
   /**
    * Machines

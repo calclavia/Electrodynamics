@@ -1,4 +1,4 @@
-package mffs;
+package mffs.event;
 
 public interface IDelayedEventHandler
 {

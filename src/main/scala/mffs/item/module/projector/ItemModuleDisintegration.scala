@@ -1,13 +1,11 @@
 package mffs.item.module.projector
 
 import java.util.Set
-import mffs.IDelayedEventHandler
 import mffs.MFFSHelper
 import mffs.ModularForceFieldSystem
 import mffs.base.TileMFFS.TilePacketType
 import mffs.base.TileMFFSInventory
-import mffs.event.BlockDropDelayedEvent
-import mffs.event.BlockInventoryDropDelayedEvent
+import mffs.event.{IDelayedEventHandler, BlockDropDelayedEvent, BlockInventoryDropDelayedEvent}
 import mffs.item.module.ItemModule
 import mffs.tile.TileForceFieldProjector
 import net.minecraft.block.Block

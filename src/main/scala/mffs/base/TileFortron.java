@@ -7,7 +7,7 @@ import com.google.common.io.ByteArrayDataInput;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.TransferMode;
-import mffs.fortron.FortronHelper;
+import mffs.FortronHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.ForgeDirection;

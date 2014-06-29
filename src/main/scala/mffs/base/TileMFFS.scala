@@ -247,22 +247,22 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   }
 
 
-  final object TilePacketType
+  final object TilePacketType extends Enumeration
   {
-    final val NONE = 0
-    final val DESCRIPTION = 1
-    final val FREQUENCY = 2
-    final val FORTRON = 3
-    final val TOGGLE_ACTIVATION = 4
-    final val TOGGLE_MODE = 5
-    final val INVENTORY = 6
-    final val STRING = 7
-    final val FXS = 8
-    final val TOGGLE_MODE_2 = 9
-    final val TOGGLE_MODE_3 = 10
-    final val TOGGLE_MODE_4 = 11
-    final val FIELD = 12
-    final val RENDER = 13
+    val NONE = 0
+    val DESCRIPTION = 1
+    val FREQUENCY = 2
+    val FORTRON = 3
+    val TOGGLE_ACTIVATION = 4
+    val TOGGLE_MODE = 5
+    val INVENTORY = 6
+    val STRING = 7
+    val FXS = 8
+    val TOGGLE_MODE_2 = 9
+    val TOGGLE_MODE_3 = 10
+    val TOGGLE_MODE_4 = 11
+    val FIELD = 12
+    val RENDER = 13
   }
 
 }

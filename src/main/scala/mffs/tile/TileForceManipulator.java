@@ -10,7 +10,7 @@ import resonant.api.mffs.security.Permission;
 import com.google.common.io.ByteArrayDataInput;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import mffs.DelayedEvent;
+import mffs.event.DelayedEvent;
 import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
