@@ -2,11 +2,9 @@ package mffs
 
 import java.io.File
 
-import resonant.api.mffs.Blacklist
 import cpw.mods.fml.common.Loader
-import net.minecraftforge.common.config.{Configuration, Property}
+import net.minecraftforge.common.config.Configuration
 import resonant.lib.config.Config
-import resonant.lib.utility.LanguageUtility
 
 /**
  * MFFS Configuration Settings
@@ -15,7 +13,7 @@ import resonant.lib.utility.LanguageUtility
  */
 object Settings
 {
-  final val configuration: Configuration = new Configuration(new File(Loader.instance.getConfigDir, Reference.NAME + ".cfg"))
+  final val configuration = new Configuration(new File(Loader.instance.getConfigDir, Reference.NAME + ".cfg"))
   final val maxFrequencyDigits: Int = 6
 
   @Config
@@ -48,23 +46,10 @@ object Settings
   var allowForceManipulatorTeleport: Boolean = true
   @Config
   var allowFortronTeleport: Boolean = true
-
-  def load()
-  {
-    configuration.load()
-
-    val forceManipulatorBlacklist: Property = configuration.get(Configuration.CATEGORY_GENERAL, "Force Manipulator Blacklist", "")
-    forceManipulatorBlacklist.comment = "Put a list of block IDs to be not-moved by the force manipulator. Separate by commas, no space."
-    val blackListManipulate: String = forceManipulatorBlacklist.getString()
-    Blacklist.forceManipulationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListManipulate))
-    val blacklist1: Property = configuration.get(Configuration.CATEGORY_GENERAL, "Stabilization Blacklist", "")
-    val blackListStabilize: String = blacklist1.getString
-    Blacklist.stabilizationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListStabilize))
-    val blacklist2: Property = configuration.get(Configuration.CATEGORY_GENERAL, "Disintegration Blacklist", "")
-    val blackListDisintegrate: String = blacklist1.getString
-    Blacklist.disintegrationBlacklist.addAll(LanguageUtility.decodeIDSplitByComma(blackListDisintegrate))
-
-    configuration.save()
-  }
-
+  @Config(comment = "A list of block names to not be moved by the force mobilizer.")
+  var mobilizerBlacklist: Array[String] = _
+  @Config(comment = "A list of block names to not be stabilized by the electromagnetic projector.")
+  var stabilizationBlacklist: Array[String] = _
+  @Config(comment = "A list of block names to not be disintegrated by the electromagnetic projector.")
+  var disintegrationBlacklist: Array[String] = _
 }

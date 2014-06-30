@@ -9,6 +9,7 @@ import mffs.field.TileElectromagnetProjector
 import mffs.fortron.FortronHelper
 import net.minecraft.block.{Block, BlockSkull}
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.init.Blocks
 import net.minecraft.item.ItemSkull
 import net.minecraft.tileentity.{TileEntity, TileEntitySkull}
 import net.minecraft.util.IIcon
@@ -35,7 +36,7 @@ object SubscribeEventHandler
   {
     if (event.map.getTextureType() == 0)
     {
-      registerIcon(ModularForceFieldSystem.PREFIX + "fortron", event)
+      registerIcon(Reference.PREFIX + "fortron", event)
     }
   }
 
@@ -43,13 +44,13 @@ object SubscribeEventHandler
   @SideOnly(Side.CLIENT)
   def textureHook(event: TextureStitchEvent.Post)
   {
-    FortronHelper.FLUID_FORTRON.setIcons(fluidIconMap.get(ModularForceFieldSystem.PREFIX + "fortron"))
+    FortronHelper.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.PREFIX + "fortron"))
   }
 
   @SubscribeEvent
   def eventPreForceManipulate(evt: EventForceManipulate.EventPreForceManipulate)
   {
-    val tileEntity: TileEntity = evt.world.getBlockTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ)
+    val tileEntity: TileEntity = evt.world.getTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ)
 
     if (tileEntity.isInstanceOf[TileFortron])
     {
@@ -67,7 +68,7 @@ object SubscribeEventHandler
   {
     if (evt.itemStack.getItem.isInstanceOf[ItemSkull])
     {
-      evt.world.setBlock(evt.x, evt.y, evt.z, Block.skull.blockID, evt.itemStack.getItemDamage, 2)
+      evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.itemStack.getItemDamage, 2)
       val tileentity: TileEntity = evt.world.getBlockTileEntity(evt.x, evt.y, evt.z)
       if (tileentity.isInstanceOf[TileEntitySkull])
       {

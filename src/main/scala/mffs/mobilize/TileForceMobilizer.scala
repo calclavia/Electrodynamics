@@ -402,7 +402,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
   def canMove(position: Nothing, target: Nothing): Boolean =
   {
-    if (Blacklist.forceManipulationBlacklist.contains(position.getBlockID))
+    if (Blacklist.mobilizerBlacklist.contains(position.getBlockID))
     {
       return false
     }
