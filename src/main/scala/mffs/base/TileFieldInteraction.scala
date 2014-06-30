@@ -1,65 +1,76 @@
 package mffs.base
 
-import java.util.{HashSet, LinkedList, Queue, Set}
+import java.util.Set
 
 import com.google.common.io.ByteArrayDataInput
 import mffs.field.module.ItemModuleArray
-import mffs.{ModularForceFieldSystem, Settings}
-import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.thread.ProjectorCalculationThread
+import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.mffs.{ICache, IFieldInteraction}
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
+import resonant.api.mffs.{ICache, IFieldInteraction}
 import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.mutable.{HashSet, Queue}
 
 abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldInteraction with IDelayedEventHandler
 {
+  protected final val calculatedField = new HashSet[Vector3]()
+  protected final val delayedEvents = new Queue[DelayedEvent]()
+
+  /**
+   * Are the directions on the GUI absolute values?
+   */
+  var isAbsolute: Boolean = false
+  protected var isCalculating: Boolean = false
+  protected var isCalculated: Boolean = false
+
   protected val moduleSlotID: Int = 2
 
-  override def updateEntity
+  override def update()
   {
-    super.updateEntity
-    val continueEvents: Queue[DelayedEvent] = new LinkedList[_]
-    while (!delayedEvents.isEmpty)
-    {
-      val evt: DelayedEvent = delayedEvents.poll
-      evt.update
-      if (evt.ticks > 0)
-      {
-        continueEvents.add(evt)
-      }
-    }
-    delayedEvents.addAll(continueEvents)
+    super.update()
+
+    /**
+     * Evaluated queued objects
+     */
+    delayedEvents.clone foreach (_.update())
+    delayedEvents dequeueAll (_.ticks <= 0)
   }
 
   override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
   {
     super.onReceivePacket(packetID, dataStream)
-    if (packetID == TilePacketType.TOGGLE_MODE_4.ordinal && !this.worldObj.isRemote)
+
+    if (packetID == TilePacketType.TOGGLE_MODE_4.id && !world.isRemote)
     {
       this.isAbsolute = !this.isAbsolute
     }
   }
 
-  protected def calculateForceField(callBack: Nothing)
+  protected def calculateForceField(callBack: () => Unit = null)
   {
     if (!this.worldObj.isRemote && !this.isCalculating)
     {
       if (this.getMode != null)
       {
-        if (this.getModeStack.getItem.isInstanceOf[ICache])
+        if (getModeStack.getItem.isInstanceOf[ICache])
         {
-          (this.getModeStack.getItem.asInstanceOf[ICache]).clearCache
+          (getModeStack.getItem.asInstanceOf[ICache]).clearCache()
         }
-        calculatedField.clear
-        (new ProjectorCalculationThread(this, callBack)).start
+        calculatedField.clear()
+
+        new ProjectorCalculationThread(this, callBack).start()
+
         isCalculating = true
       }
     }
   }
 
-  protected def calculateForceField
+  protected def calculateForceField()
   {
     this.calculateForceField(null)
   }
@@ -85,44 +96,23 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return null
   }
 
-  def getSidedModuleCount(module: IModule, direction: Nothing*): Int =
+  def getSidedModuleCount(module: IModule, directions: ForgeDirection*): Int =
   {
-    var count: Int = 0
-    if (direction != null && direction.length > 0)
-    {
-      for (checkDir <- direction)
-      {
-        count += this.getModuleCount(module, this.getSlotsBasedOnDirection(checkDir))
-      }
-    }
-    else
-    {
-      {
-        var i: Int = 0
-        while (i < 6)
-        {
-          {
-            val checkDir: Nothing = ForgeDirection.getOrientation(i)
-            count += this.getModuleCount(module, this.getSlotsBasedOnDirection(checkDir))
-          }
-          ({
-            i += 1; i - 1
-          })
-        }
-      }
-    }
-    return count
+    var actualDirs = directions
+
+    if (directions == null || directions.length > 0)
+      actualDirs = ForgeDirection.VALID_DIRECTIONS
+
+    return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getSlotsBasedOnDirection(a): _*))
   }
 
-  def getModuleSlots: Array[Int] =
-  {
-    return Array[Int](15, 16, 17, 18, 19, 20)
-  }
+  def getModuleSlots: Array[Int] = Array(15, 16, 17, 18, 19, 20)
 
   def getTranslation: Vector3 =
   {
     val cacheID: String = "getTranslation"
-    if (Settings.USE_CACHE)
+
+    if (Settings.useCache)
     {
       if (this.cache.containsKey(cacheID))
       {
@@ -132,47 +122,54 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
         }
       }
     }
-    var direction: Nothing = this.getDirection
-    if (direction eq ForgeDirection.UP || direction eq ForgeDirection.DOWN)
+    var direction = getDirection
+
+    if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
     {
       direction = ForgeDirection.NORTH
     }
-    var zTranslationNeg: Int = 0
-    var zTranslationPos: Int = 0
-    var xTranslationNeg: Int = 0
-    var xTranslationPos: Int = 0
-    var yTranslationPos: Int = 0
-    var yTranslationNeg: Int = 0
+
+    var zTranslationNeg = 0
+    var zTranslationPos = 0
+    var xTranslationNeg = 0
+    var xTranslationPos = 0
+    var yTranslationPos = 0
+    var yTranslationNeg = 0
+
     if (this.isAbsolute)
     {
-      zTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.NORTH))
-      zTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.SOUTH))
-      xTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.WEST))
-      xTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.EAST))
-      yTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.UP))
-      yTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.DOWN))
+      zTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.NORTH): _*)
+      zTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.SOUTH): _*)
+      xTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.WEST): _*)
+      xTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.EAST): _*)
+      yTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
+      yTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
     }
     else
     {
-      zTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)))
-      zTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)))
-      xTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)))
-      xTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)))
-      yTranslationPos = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.UP))
-      yTranslationNeg = this.getModuleCount(ModularForceFieldSystem.itemModuleTranslate, this.getSlotsBasedOnDirection(ForgeDirection.DOWN))
+      zTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)): _*)
+      zTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)): _*)
+      xTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)): _*)
+      xTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)): _*)
+      yTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
+      yTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
     }
-    val translation: Vector3 = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
-    if (Settings.USE_CACHE)
+
+    val translation = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)
+
+    if (Settings.useCache)
     {
       this.cache.put(cacheID, translation)
     }
+
     return translation
   }
 
   def getPositiveScale: Vector3 =
   {
     val cacheID: String = "getPositiveScale"
-    if (Settings.USE_CACHE)
+
+    if (Settings.useCache)
     {
       if (this.cache.containsKey(cacheID))
       {
@@ -182,9 +179,11 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
         }
       }
     }
-    var zScalePos: Int = 0
-    var xScalePos: Int = 0
-    var yScalePos: Int = 0
+
+    var zScalePos = 0
+    var xScalePos = 0
+    var yScalePos = 0
+
     if (this.isAbsolute)
     {
       zScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.SOUTH))
@@ -194,7 +193,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     else
     {
       var direction: Nothing = this.getDirection
-      if (direction eq ForgeDirection.UP || direction eq ForgeDirection.DOWN)
+      if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
       {
         direction = ForgeDirection.NORTH
       }
@@ -202,6 +201,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
       xScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)))
       yScalePos = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getSlotsBasedOnDirection(ForgeDirection.UP))
     }
+
     val omnidirectionalScale: Int = this.getModuleCount(ModularForceFieldSystem.itemModuleScale, this.getModuleSlots)
     zScalePos += omnidirectionalScale
     xScalePos += omnidirectionalScale
@@ -214,10 +214,10 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return positiveScale
   }
 
-  def getNegativeScale: Vector3 =
+  def getNegativeScale(): Vector3 =
   {
     val cacheID: String = "getNegativeScale"
-    if (Settings.USE_CACHE)
+    if (Settings.useCache)
     {
       if (this.cache.containsKey(cacheID))
       {
@@ -239,7 +239,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     else
     {
       var direction: Nothing = this.getDirection
-      if (direction eq ForgeDirection.UP || direction eq ForgeDirection.DOWN)
+      if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
       {
         direction = ForgeDirection.NORTH
       }
@@ -259,7 +259,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return negativeScale
   }
 
-  def getRotationYaw: Int =
+  def getRotationYaw(): Int =
   {
     val cacheID: String = "getRotationYaw"
     if (Settings.USE_CACHE)
@@ -338,7 +338,6 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     val translation: Vector3 = this.getTranslation
     val rotationYaw: Int = this.getRotationYaw
     val rotationPitch: Int = this.getRotationPitch
-    import scala.collection.JavaConversions._
     for (position <- newField)
     {
       val newPosition: Vector3 = position.clone
@@ -357,23 +356,23 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return returnField
   }
 
-  def getSlotsBasedOnDirection(direction: Nothing): Array[Int] =
+  def getSlotsBasedOnDirection(direction: ForgeDirection): Array[Int] =
   {
     direction match
     {
       case _ =>
         return Array[Int]
-      case UP =>
+      case ForgeDirection.UP =>
         return Array[Int](3, 11)
-      case DOWN =>
+      case ForgeDirection.DOWN =>
         return Array[Int](6, 14)
-      case NORTH =>
+      case ForgeDirection.NORTH =>
         return Array[Int](7, 9)
-      case SOUTH =>
+      case ForgeDirection.SOUTH =>
         return Array[Int](8, 10)
-      case WEST =>
+      case ForgeDirection.WEST =>
         return Array[Int](4, 5)
-      case EAST =>
+      case ForgeDirection.EAST =>
         return Array[Int](12, 13)
     }
   }
@@ -413,12 +412,4 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     nbt.setBoolean("isAbsolute", isAbsolute)
   }
 
-  protected final val calculatedField: Set[Vector3] = new HashSet[_]
-  protected final val delayedEvents: Queue[DelayedEvent] = new LinkedList[_]
-  /**
-   * Are the directions on the GUI absolute values?
-   */
-  var isAbsolute: Boolean = false
-  protected var isCalculating: Boolean = false
-  protected var isCalculated: Boolean = false
 }

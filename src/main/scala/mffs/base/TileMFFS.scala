@@ -84,7 +84,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     {
       if (!world.isRemote)
       {
-        val tileEntity: TileEntity = world.getBlockTileEntity(x, y, z)
+        val tileEntity: TileEntity = world.getTileEntity(x, y, z)
         if (tileEntity.isInstanceOf[IBiometricIdentifierLink])
         {
           if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)

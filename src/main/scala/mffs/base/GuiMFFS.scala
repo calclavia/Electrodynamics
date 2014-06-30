@@ -1,7 +1,7 @@
 package mffs.base
 
-import mffs.{ModularForceFieldSystem, Settings}
 import mffs.gui.button.GuiIcon
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.gui.{GuiButton, GuiTextField}
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
@@ -52,7 +52,7 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
         val newFrequency: Int = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText))
         this.frequencyTile.setFrequency(newFrequency)
         this.textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
-        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity],  Array(TilePacketType.FREQUENCY.ordinal, this.frequencyTile.getFrequency)))
+        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TileMFFS.TilePacketType.FREQUENCY.ordinal, frequencyTile.getFrequency(): Integer)))
       }
       catch
         {

@@ -1,25 +1,30 @@
 package mffs
 
-import java.util.HashMap
+import java.util.{HashMap, UUID}
 
+import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
 import mffs.field.TileElectromagnetProjector
 import mffs.fortron.FortronHelper
-import net.minecraft.block.{Block, BlockSkull}
+import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemSkull
+import net.minecraft.nbt.{NBTTagCompound, NBTUtil}
 import net.minecraft.tileentity.{TileEntity, TileEntitySkull}
-import net.minecraft.util.IIcon
+import net.minecraft.util.{ChatComponentText, IIcon}
 import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
+import resonant.api.mffs.fortron.{IFortronFrequency, FrequencyGridRegistry}
 import resonant.api.mffs.security.{IInterdictionMatrix, Permission}
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
+import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.event.ChunkModifiedEvent
+import universalelectricity.core.transform.vector.Vector3
 
 object SubscribeEventHandler
 {
@@ -69,17 +74,31 @@ object SubscribeEventHandler
     if (evt.itemStack.getItem.isInstanceOf[ItemSkull])
     {
       evt.world.setBlock(evt.x, evt.y, evt.z, Blocks.skull, evt.itemStack.getItemDamage, 2)
-      val tileentity: TileEntity = evt.world.getBlockTileEntity(evt.x, evt.y, evt.z)
-      if (tileentity.isInstanceOf[TileEntitySkull])
+      val tile = evt.world.getTileEntity(evt.x, evt.y, evt.z)
+
+      if (tile.isInstanceOf[TileEntitySkull])
       {
-        var s: String = ""
-        if (evt.itemStack.hasTagCompound && evt.itemStack.getTagCompound.hasKey("SkullOwner"))
+        val nbt: NBTTagCompound = evt.itemStack.getTagCompound()
+
+        var gameprofile: GameProfile = null
+
+        if (nbt.hasKey("SkullOwner", 10))
         {
-          s = evt.itemStack.getTagCompound.getString("SkullOwner")
+          gameprofile = NBTUtil.func_152459_a(nbt.getCompoundTag("SkullOwner"))
         }
-        (tileentity.asInstanceOf[TileEntitySkull]).setSkullType(evt.itemStack.getItemDamage, s)
-        (Block.skull.asInstanceOf[BlockSkull]).makeWither(evt.world, evt.x, evt.y, evt.z, tileentity.asInstanceOf[TileEntitySkull])
+        else if (nbt.hasKey("SkullOwner", 8) && nbt.getString("SkullOwner").length > 0)
+        {
+          gameprofile = new GameProfile(null.asInstanceOf[UUID], nbt.getString("SkullOwner"))
+        }
+
+        if (gameprofile != null)
+          tile.asInstanceOf[TileEntitySkull].func_152106_a(gameprofile)
+        else
+          tile.asInstanceOf[TileEntitySkull].func_152107_a(evt.itemStack.getItemDamage)
+
+        Blocks.skull.asInstanceOf[BlockSkull].func_149965_a(evt.world, evt.x, evt.y, evt.z, tile.asInstanceOf[TileEntitySkull])
       }
+
       evt.itemStack.stackSize -= 1
       evt.setCanceled(true)
     }
@@ -88,9 +107,9 @@ object SubscribeEventHandler
   @SubscribeEvent
   def playerInteractEvent(evt: PlayerInteractEvent)
   {
-    if (evt.action eq Action.RIGHT_CLICK_BLOCK || evt.action eq Action.LEFT_CLICK_BLOCK)
+    if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
     {
-      if (evt.action eq Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlockId(evt.x, evt.y, evt.z) eq ModularForceFieldSystem.blockForceField.blockID)
+      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == ModularForceFieldSystem.blockForceField)
       {
         evt.setCanceled(true)
         return
@@ -99,19 +118,21 @@ object SubscribeEventHandler
       {
         return
       }
-      val position: Nothing = new Nothing(evt.x, evt.y, evt.z)
+      val position: Vector3 = new Vector3(evt.x, evt.y, evt.z)
       val interdictionMatrix: IInterdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.entityPlayer.worldObj, position)
       if (interdictionMatrix != null)
       {
-        val blockID: Int = position.getBlockID(evt.entityPlayer.worldObj)
-        if (ModularForceFieldSystem.blockBiometricIdentifier.blockID eq blockID && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
+        val block = position.getBlock(evt.entityPlayer.worldObj)
+
+        if (ModularForceFieldSystem.blockBiometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
         {
           return
         }
-        val hasPermission: Boolean = MFFSHelper.hasPermission(evt.entityPlayer.worldObj, new Nothing(evt.x, evt.y, evt.z), interdictionMatrix, evt.action, evt.entityPlayer)
+
+        val hasPermission: Boolean = MFFSHelper.hasPermission(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), interdictionMatrix, evt.action, evt.entityPlayer)
         if (!hasPermission)
         {
-          evt.entityPlayer.addChatMessage("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName + "] You have no permission to do that!")
+          evt.entityPlayer.addChatMessage(new ChatComponentText("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!"))
           evt.setCanceled(true)
         }
       }
@@ -128,14 +149,14 @@ object SubscribeEventHandler
   {
     if (!evt.world.isRemote && evt.blockID == 0)
     {
-      for (fortronFrequency <- FrequencyGrid.instance.getFortronTiles(evt.world))
+      for (fortronFrequency <- FrequencyGridRegistry.instance().asInstanceOf[FrequencyGrid].getNodes(classOf[IFortronFrequency], _.asInstanceOf[TileEntity].getWorldObj() == evt.world))
       {
         if (fortronFrequency.isInstanceOf[TileElectromagnetProjector])
         {
           val projector: TileElectromagnetProjector = fortronFrequency.asInstanceOf[TileElectromagnetProjector]
           if (projector.getCalculatedField != null)
           {
-            if (projector.getCalculatedField.contains(new Nothing(evt.x, evt.y, evt.z)))
+            if (projector.getCalculatedField.contains(new Vector3(evt.x, evt.y, evt.z)))
             {
               projector.markFieldUpdate = true
             }
@@ -148,7 +169,7 @@ object SubscribeEventHandler
   @SubscribeEvent
   def livingSpawnEvent(evt: LivingSpawnEvent)
   {
-    val interdictionMatrix: IInterdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.world, new Nothing(evt.entityLiving))
+    val interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.world, new Vector3(evt.entityLiving))
     if (interdictionMatrix != null && !(evt.entity.isInstanceOf[EntityPlayer]))
     {
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleAntiSpawn) > 0)

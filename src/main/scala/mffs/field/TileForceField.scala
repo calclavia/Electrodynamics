@@ -55,7 +55,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   {
     var renderType: Int = 0
     var camoBlock: Block = null
-    val tileEntity: TileEntity = iBlockAccess.getBlockTileEntity(x, y, z)
+    val tileEntity: TileEntity = iBlockAccess.getTileEntity(x, y, z)
 
     if (camoStack != null && camoStack.getItem().isInstanceOf[ItemBlock])
     {

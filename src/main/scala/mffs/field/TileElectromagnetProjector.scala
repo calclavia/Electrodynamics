@@ -244,7 +244,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
                   this.worldObj.setBlock(vector.xi, vector.yi, vector.zi, ModularForceFieldSystem.blockForceField.blockID, 0, 2)
                 }
                 this.forceFields.add(vector)
-                val tileEntity: TileEntity = this.worldObj.getBlockTileEntity(vector.xi, vector.yi, vector.zi)
+                val tileEntity: TileEntity = this.worldObj.getTileEntity(vector.xi, vector.yi, vector.zi)
                 if (tileEntity.isInstanceOf[TileForceField])
                 {
                   (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))

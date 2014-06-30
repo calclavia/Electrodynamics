@@ -1,6 +1,7 @@
 package mffs.field.thread
 
 import java.util.HashSet
+
 import mffs.mobilize.TileForceMobilizer
 import universalelectricity.core.transform.vector.Vector3
 
@@ -12,7 +13,7 @@ import scala.collection.JavaConversions._
  * @author Calclavia
  *
  */
-class ManipulatorCalculationThread(callBack: () => Unit, manipulator: TileForceMobilizer) extends AbstractFieldCalculationThread(callBack)
+class ManipulatorCalculationThread(manipulator: TileForceMobilizer, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
 {
   override def run
   {

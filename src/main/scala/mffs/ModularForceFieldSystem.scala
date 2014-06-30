@@ -18,7 +18,6 @@ import mffs.production._
 import mffs.security.module._
 import mffs.security.{TileBiometricIdentifier, TileInterdictionMatrix}
 import net.minecraft.block.Block
-import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
@@ -47,72 +46,76 @@ final object ModularForceFieldSystem
 
   val manager = new ModManager(Settings.configuration, Reference.ID).setTab(MFFSCreativeTab).setPrefix(Reference.PREFIX)
 
-  /**
-   * Machines
-   */
-  var blockCoercionDeriver: Block = _
-  var blockFortronCapacitor: Block = _
-  var blockForceFieldProjector: Block = _
-  var blockBiometricIdentifier: Block = _
-  var blockInterdictionMatrix: Block = _
-  var blockForceManipulator: Block = _
-  var blockForceField: Block = _
-  /**
-   * Items
-   */
-  var itemRemoteController: Item = _
-  var itemFocusMatix: Item = _
+  object Blocks
+  {
+    /**
+     * Machines
+     */
+    var coercionDeriver: Block = _
+    var fortronCapacitor: Block = _
+    var forceFieldProjector: Block = _
+    var biometricIdentifier: Block = _
+    var interdictionMatrix: Block = _
+    var forceManipulator: Block = _
+    var forceField: Block = _
+  }
 
-  /**
-   * Cards
-   */
-  var itemCardBlank: ItemCard = _
-  var itemCardInfinite: ItemCard = _
-  var itemCardFrequency: ItemCard = _
-  var itemCardID: ItemCard = _
-  var itemCardLink: ItemCard = _
+  object Items
+  {
+    var remoteController: Item = _
+    var focusMatix: Item = _
 
-  /**
-   * Modes
-   */
-  var itemModeCube: ItemMode = _
-  var itemModeSphere: ItemMode = _
-  var itemModeTube: ItemMode = _
-  var itemModeCylinder: ItemMode = _
-  var itemModePyramid: ItemMode = _
-  var itemModeCustom: ItemMode = _
+    /**
+     * Cards
+     */
+    var cardBlank: ItemCard = _
+    var cardInfinite: ItemCard = _
+    var cardFrequency: ItemCard = _
+    var cardID: ItemCard = _
+    var cardLink: ItemCard = _
 
-  /**
-   * Modules
-   */
-  var itemModule: ItemModule = _
-  var itemModuleSpeed: ItemModule = _
-  var itemModuleCapacity: ItemModule = _
-  var itemModuleTranslate: ItemModule = _
-  var itemModuleScale: ItemModule = _
-  var itemModuleRotate: ItemModule = _
-  var itemModuleCollection: ItemModule = _
-  var itemModuleInvert: ItemModule = _
-  var itemModuleSilence: ItemModule = _
-  var itemModuleFusion: ItemModule = _
-  var itemModuleDome: ItemModule = _
-  var itemModuleCamouflage: ItemModule = _
-  var itemModuleApproximation: ItemModule = _
-  var itemModuleArray: ItemModule = _
-  var itemModuleDisintegration: ItemModule = _
-  var itemModuleShock: ItemModule = _
-  var itemModuleGlow: ItemModule = _
-  var itemModuleSponge: ItemModule = _
-  var itemModuleStablize: ItemModule = _
-  var itemModuleRepulsion: ItemModule = _
-  var itemModuleAntiHostile: ItemModule = _
-  var itemModuleAntiFriendly: ItemModule = _
-  var itemModuleAntiPersonnel: ItemModule = _
-  var itemModuleConfiscate: ItemModule = _
-  var itemModuleWarn: ItemModule = _
-  var itemModuleBlockAccess: ItemModule = _
-  var itemModuleBlockAlter: ItemModule = _
-  var itemModuleAntiSpawn: ItemModule = _
+    /**
+     * Modes
+     */
+    var modeCube: ItemMode = _
+    var modeSphere: ItemMode = _
+    var modeTube: ItemMode = _
+    var modeCylinder: ItemMode = _
+    var modePyramid: ItemMode = _
+    var modeCustom: ItemMode = _
+
+    /**
+     * Modules
+     */
+    var module: ItemModule = _
+    var moduleSpeed: ItemModule = _
+    var moduleCapacity: ItemModule = _
+    var moduleTranslate: ItemModule = _
+    var moduleScale: ItemModule = _
+    var moduleRotate: ItemModule = _
+    var moduleCollection: ItemModule = _
+    var moduleInvert: ItemModule = _
+    var moduleSilence: ItemModule = _
+    var moduleFusion: ItemModule = _
+    var moduleDome: ItemModule = _
+    var moduleCamouflage: ItemModule = _
+    var moduleApproximation: ItemModule = _
+    var moduleArray: ItemModule = _
+    var moduleDisintegration: ItemModule = _
+    var moduleShock: ItemModule = _
+    var moduleGlow: ItemModule = _
+    var moduleSponge: ItemModule = _
+    var moduleStabilize: ItemModule = _
+    var moduleRepulsion: ItemModule = _
+    var moduleAntiHostile: ItemModule = _
+    var moduleAntiFriendly: ItemModule = _
+    var moduleAntiPersonnel: ItemModule = _
+    var moduleConfiscate: ItemModule = _
+    var moduleWarn: ItemModule = _
+    var moduleBlockAccess: ItemModule = _
+    var moduleBlockAlter: ItemModule = _
+    var moduleAntiSpawn: ItemModule = _
+  }
 
   /**
    * Damages
@@ -128,57 +131,57 @@ final object ModularForceFieldSystem
     /**
      * Block Instantiation
      */
-    blockForceField = manager.newBlock(classOf[field.TileForceField])
-    blockCoercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
-    blockFortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
-    blockForceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
-    blockBiometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
-    blockInterdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
-    blockForceManipulator = manager.newBlock(classOf[TileForceMobilizer])
+    Blocks.forceField = manager.newBlock(classOf[field.TileForceField])
+    Blocks.coercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
+    Blocks.fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
+    Blocks.forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
+    Blocks.biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
+    Blocks.interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
+    Blocks.forceManipulator = manager.newBlock(classOf[TileForceMobilizer])
 
     /**
      * Item Instantiation
      */
-    itemRemoteController = manager.newItem(classOf[ItemRemoteController])
-    itemFocusMatix = manager.newItem(classOf[ItemMFFS], "focusMatrix")
-    itemModeCube = manager.newItem(classOf[ItemModeCube])
-    itemModeSphere = manager.newItem(classOf[ItemModeSphere])
-    itemModeTube = manager.newItem(classOf[ItemModeTube])
-    itemModePyramid = manager.newItem(classOf[ItemModePyramid])
-    itemModeCylinder = manager.newItem(classOf[ItemModeCylinder])
-    itemModeCustom = manager.newItem(classOf[ItemModeCustom])
-    itemModuleTranslate = manager.newItem(classOf[ItemModule], "moduleTranslate").setCost(2.5f)
-    itemModuleScale = manager.newItem(classOf[ItemModule], "moduleScale").setCost(2.5f)
-    itemModuleRotate = manager.newItem(classOf[ItemModule], "moduleRotate").setCost(0.5f)
-    itemModuleSpeed = manager.newItem(classOf[ItemModule], "moduleSpeed").setCost(1f)
-    itemModuleCapacity = manager.newItem(classOf[ItemModule], "moduleCapacity").setCost(0.5f)
-    itemModuleFusion = manager.newItem(classOf[ItemModuleFusion])
-    itemModuleDome = manager.newItem(classOf[ItemModuleDome])
-    itemModuleCamouflage = manager.newItem(classOf[ItemModule], "moduleCamouflage").setCost(1.5f).setMaxStackSize(1)
-    itemModuleDisintegration = manager.newItem(classOf[ItemModuleDisintegration])
-    itemModuleShock = manager.newItem(classOf[ItemModuleShock])
-    itemModuleGlow = manager.newItem(classOf[ItemModule], "moduleGlow")
-    itemModuleSponge = manager.newItem(classOf[ItemModuleSponge])
-    itemModuleStablize = manager.newItem(classOf[ItemModuleStablize])
-    itemCardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
-    itemCardFrequency = manager.newItem(classOf[ItemCardFrequency])
-    itemCardLink = manager.newItem(classOf[ItemCardLink])
-    itemCardID = manager.newItem(classOf[ItemCardID])
-    itemCardInfinite = manager.newItem(classOf[ItemCardInfinite])
-    itemModuleAntiFriendly = manager.newItem(classOf[ItemModuleAntiFriendly])
-    itemModuleAntiHostile = manager.newItem(classOf[ItemModuleAntiHostile])
-    itemModuleAntiPersonnel = manager.newItem(classOf[ItemModuleAntiPersonnel])
-    itemModuleConfiscate = manager.newItem(classOf[ItemModuleConfiscate])
-    itemModuleWarn = manager.newItem(classOf[ItemModuleWarn])
-    itemModuleBlockAccess = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAccess").setCost(10)
-    itemModuleBlockAlter = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAlter").setCost(15)
-    itemModuleAntiSpawn = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleAntiSpawn").setCost(10)
-    itemModuleCollection = manager.newItem(classOf[ItemModule], "moduleCollection").setMaxStackSize(1).setCost(15)
-    itemModuleInvert = manager.newItem(classOf[ItemModule], "moduleInvert").setMaxStackSize(1).setCost(15)
-    itemModuleSilence = manager.newItem(classOf[ItemModule], "moduleSilence").setMaxStackSize(1).setCost(1)
-    itemModuleRepulsion = manager.newItem(classOf[ItemModuleRepulsion])
-    itemModuleApproximation = manager.newItem(classOf[ItemModule], "moduleApproximation").setMaxStackSize(1).setCost(1f)
-    itemModuleArray = manager.newItem(classOf[ItemModuleArray]).setCost(3f)
+    Items.remoteController = manager.newItem(classOf[ItemRemoteController])
+    Items.FocusMatix = manager.newItem(classOf[ItemMFFS], "focusMatrix")
+    Items.ModeCube = manager.newItem(classOf[ItemModeCube])
+    Items.ModeSphere = manager.newItem(classOf[ItemModeSphere])
+    Items.ModeTube = manager.newItem(classOf[ItemModeTube])
+    Items.ModePyramid = manager.newItem(classOf[ItemModePyramid])
+    Items.ModeCylinder = manager.newItem(classOf[ItemModeCylinder])
+    Items.ModeCustom = manager.newItem(classOf[ItemModeCustom])
+    Items.ModuleTranslate = manager.newItem(classOf[ItemModule], "moduleTranslate").setCost(2.5f)
+    Items.ModuleScale = manager.newItem(classOf[ItemModule], "moduleScale").setCost(2.5f)
+    Items.ModuleRotate = manager.newItem(classOf[ItemModule], "moduleRotate").setCost(0.5f)
+    Items.ModuleSpeed = manager.newItem(classOf[ItemModule], "moduleSpeed").setCost(1f)
+    Items.ModuleCapacity = manager.newItem(classOf[ItemModule], "moduleCapacity").setCost(0.5f)
+    Items.ModuleFusion = manager.newItem(classOf[ItemModuleFusion])
+    Items.ModuleDome = manager.newItem(classOf[ItemModuleDome])
+    Items.ModuleCamouflage = manager.newItem(classOf[ItemModule], "moduleCamouflage").setCost(1.5f).setMaxStackSize(1)
+    Items.ModuleDisintegration = manager.newItem(classOf[ItemModuleDisintegration])
+    Items.ModuleShock = manager.newItem(classOf[ItemModuleShock])
+    Items.ModuleGlow = manager.newItem(classOf[ItemModule], "moduleGlow")
+    Items.ModuleSponge = manager.newItem(classOf[ItemModuleSponge])
+    Items.ModuleStablize = manager.newItem(classOf[ItemModuleStablize])
+    Items.CardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
+    Items.CardFrequency = manager.newItem(classOf[ItemCardFrequency])
+    Items.CardLink = manager.newItem(classOf[ItemCardLink])
+    Items.CardID = manager.newItem(classOf[ItemCardID])
+    Items.CardInfinite = manager.newItem(classOf[ItemCardInfinite])
+    Items.ModuleAntiFriendly = manager.newItem(classOf[ItemModuleAntiFriendly])
+    Items.ModuleAntiHostile = manager.newItem(classOf[ItemModuleAntiHostile])
+    Items.ModuleAntiPersonnel = manager.newItem(classOf[ItemModuleAntiPersonnel])
+    Items.ModuleConfiscate = manager.newItem(classOf[ItemModuleConfiscate])
+    Items.ModuleWarn = manager.newItem(classOf[ItemModuleWarn])
+    Items.ModuleBlockAccess = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAccess").setCost(10)
+    Items.ModuleBlockAlter = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAlter").setCost(15)
+    Items.ModuleAntiSpawn = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleAntiSpawn").setCost(10)
+    Items.ModuleCollection = manager.newItem(classOf[ItemModule], "moduleCollection").setMaxStackSize(1).setCost(15)
+    Items.ModuleInvert = manager.newItem(classOf[ItemModule], "moduleInvert").setMaxStackSize(1).setCost(15)
+    Items.ModuleSilence = manager.newItem(classOf[ItemModule], "moduleSilence").setMaxStackSize(1).setCost(1)
+    Items.ModuleRepulsion = manager.newItem(classOf[ItemModuleRepulsion])
+    Items.ModuleApproximation = manager.newItem(classOf[ItemModule], "moduleApproximation").setMaxStackSize(1).setCost(1f)
+    Items.ModuleArray = manager.newItem(classOf[ItemModuleArray]).setCost(3f)
 
     /**
      * Registration

@@ -58,7 +58,7 @@ class CommonProxy extends ProxyBase with IGuiHandler
   /**
    * Checks if the player is an operator.
    */
-  override def isOp(profile: GameProfile): Boolean =
+  def isOp(profile: GameProfile): Boolean =
   {
     val theServer: MinecraftServer = FMLCommonHandler.instance.getMinecraftServerInstance()
 
