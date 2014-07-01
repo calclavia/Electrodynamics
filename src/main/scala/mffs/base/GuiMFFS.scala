@@ -13,6 +13,7 @@ import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.network.PacketTile
 import resonant.lib.utility.LanguageUtility
+import universalelectricity.core.transform.region.Rectangle
 import universalelectricity.core.transform.vector.Vector2
 
 class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiContainerBase(container)
@@ -52,7 +53,7 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
         val newFrequency: Int = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText))
         this.frequencyTile.setFrequency(newFrequency)
         this.textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
-        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TileMFFS.TilePacketType.FREQUENCY.ordinal, frequencyTile.getFrequency(): Integer)))
+        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TileMFFS.TilePacketType.FREQUENCY.ordinal, frequencyTile.getFrequency: Integer)))
       }
       catch
         {
@@ -74,19 +75,20 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
 
   override def updateScreen()
   {
-    super.updateScreen
-    if (this.textFieldFrequency != null)
+    super.updateScreen()
+
+    if (textFieldFrequency != null)
     {
-      if (!this.textFieldFrequency.isFocused)
+      if (!textFieldFrequency.isFocused)
       {
-        this.textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
+        textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
       }
     }
-    if (this.frequencyTile.isInstanceOf[TileMFFS])
+    if (frequencyTile.isInstanceOf[TileMFFS])
     {
-      if (this.buttonList.size > 0 && this.buttonList.get(0) != null)
+      if (buttonList.size > 0 && this.buttonList.get(0) != null)
       {
-        (this.buttonList.get(0).asInstanceOf[GuiIcon]).setIndex(if ((this.frequencyTile.asInstanceOf[TileMFFS]).isRedstoneActive) 1 else 0)
+        buttonList.get(0).asInstanceOf[GuiIcon].setIndex(if ((this.frequencyTile.asInstanceOf[TileMFFS]).isRedstoneActive) 1 else 0)
       }
     }
   }
@@ -94,18 +96,20 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   override def mouseClicked(x: Int, y: Int, par3: Int)
   {
     super.mouseClicked(x, y, par3)
-    if (this.textFieldFrequency != null)
+
+    if (textFieldFrequency != null)
     {
-      this.textFieldFrequency.mouseClicked(x - this.containerWidth, y - this.containerHeight, par3)
+      textFieldFrequency.mouseClicked(x - this.containerWidth, y - this.containerHeight, par3)
     }
   }
 
   protected override def drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int)
   {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY)
-    if (this.textFieldFrequency != null)
+
+    if (textFieldFrequency != null)
     {
-      if (this.isPointInRegion(textFieldPos.xi, textFieldPos.yi, this.textFieldFrequency.getWidth, 12, mouseX, mouseY))
+      if (new Rectangle(textFieldPos.xi, textFieldPos.yi, textFieldPos.xi + textFieldFrequency.getWidth, textFieldPos.yi + 12).intersects(new Vector2(mouseX, mouseY)))
       {
         this.tooltip = LanguageUtility.getLocal("gui.frequency.tooltip")
       }
@@ -116,9 +120,9 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   {
     super.drawGuiContainerBackgroundLayer(var1, x, y)
 
-    if (this.frequencyTile.isInstanceOf[IBiometricIdentifierLink])
+    if (frequencyTile.isInstanceOf[IBiometricIdentifierLink])
     {
-      this.drawBulb(167, 4, (this.frequencyTile.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
+      drawBulb(167, 4, (frequencyTile.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
     }
   }
 

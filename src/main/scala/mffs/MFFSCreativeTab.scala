@@ -5,5 +5,5 @@ import net.minecraft.item.Item
 
 object MFFSCreativeTab extends CreativeTabs(CreativeTabs.getNextID, "MFFS")
 {
-  override def getTabIconItem: Item = ModularForceFieldSystem.itemFocusMatix
+  override def getTabIconItem: Item = ModularForceFieldSystem.Items.focusMatrix
 }

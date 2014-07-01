@@ -63,7 +63,7 @@ final object ModularForceFieldSystem
   object Items
   {
     var remoteController: Item = _
-    var focusMatix: Item = _
+    var focusMatrix: Item = _
 
     /**
      * Cards
@@ -117,6 +117,11 @@ final object ModularForceFieldSystem
     var moduleAntiSpawn: ItemModule = _
   }
 
+  import net.minecraft.init.Items._
+  import net.minecraft.init.Blocks._
+  import Items._
+  import Blocks._
+
   /**
    * Damages
    */
@@ -131,57 +136,57 @@ final object ModularForceFieldSystem
     /**
      * Block Instantiation
      */
-    Blocks.forceField = manager.newBlock(classOf[field.TileForceField])
-    Blocks.coercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
-    Blocks.fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
-    Blocks.forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
-    Blocks.biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
-    Blocks.interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
-    Blocks.forceManipulator = manager.newBlock(classOf[TileForceMobilizer])
+    forceField = manager.newBlock(classOf[field.TileForceField])
+    coercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
+    fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
+    forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
+    biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
+    interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
+    forceManipulator = manager.newBlock(classOf[TileForceMobilizer])
 
     /**
      * Item Instantiation
      */
-    Items.remoteController = manager.newItem(classOf[ItemRemoteController])
-    Items.FocusMatix = manager.newItem(classOf[ItemMFFS], "focusMatrix")
-    Items.ModeCube = manager.newItem(classOf[ItemModeCube])
-    Items.ModeSphere = manager.newItem(classOf[ItemModeSphere])
-    Items.ModeTube = manager.newItem(classOf[ItemModeTube])
-    Items.ModePyramid = manager.newItem(classOf[ItemModePyramid])
-    Items.ModeCylinder = manager.newItem(classOf[ItemModeCylinder])
-    Items.ModeCustom = manager.newItem(classOf[ItemModeCustom])
-    Items.ModuleTranslate = manager.newItem(classOf[ItemModule], "moduleTranslate").setCost(2.5f)
-    Items.ModuleScale = manager.newItem(classOf[ItemModule], "moduleScale").setCost(2.5f)
-    Items.ModuleRotate = manager.newItem(classOf[ItemModule], "moduleRotate").setCost(0.5f)
-    Items.ModuleSpeed = manager.newItem(classOf[ItemModule], "moduleSpeed").setCost(1f)
-    Items.ModuleCapacity = manager.newItem(classOf[ItemModule], "moduleCapacity").setCost(0.5f)
-    Items.ModuleFusion = manager.newItem(classOf[ItemModuleFusion])
-    Items.ModuleDome = manager.newItem(classOf[ItemModuleDome])
-    Items.ModuleCamouflage = manager.newItem(classOf[ItemModule], "moduleCamouflage").setCost(1.5f).setMaxStackSize(1)
-    Items.ModuleDisintegration = manager.newItem(classOf[ItemModuleDisintegration])
-    Items.ModuleShock = manager.newItem(classOf[ItemModuleShock])
-    Items.ModuleGlow = manager.newItem(classOf[ItemModule], "moduleGlow")
-    Items.ModuleSponge = manager.newItem(classOf[ItemModuleSponge])
-    Items.ModuleStablize = manager.newItem(classOf[ItemModuleStablize])
-    Items.CardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
-    Items.CardFrequency = manager.newItem(classOf[ItemCardFrequency])
-    Items.CardLink = manager.newItem(classOf[ItemCardLink])
-    Items.CardID = manager.newItem(classOf[ItemCardID])
-    Items.CardInfinite = manager.newItem(classOf[ItemCardInfinite])
-    Items.ModuleAntiFriendly = manager.newItem(classOf[ItemModuleAntiFriendly])
-    Items.ModuleAntiHostile = manager.newItem(classOf[ItemModuleAntiHostile])
-    Items.ModuleAntiPersonnel = manager.newItem(classOf[ItemModuleAntiPersonnel])
-    Items.ModuleConfiscate = manager.newItem(classOf[ItemModuleConfiscate])
-    Items.ModuleWarn = manager.newItem(classOf[ItemModuleWarn])
-    Items.ModuleBlockAccess = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAccess").setCost(10)
-    Items.ModuleBlockAlter = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAlter").setCost(15)
-    Items.ModuleAntiSpawn = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleAntiSpawn").setCost(10)
-    Items.ModuleCollection = manager.newItem(classOf[ItemModule], "moduleCollection").setMaxStackSize(1).setCost(15)
-    Items.ModuleInvert = manager.newItem(classOf[ItemModule], "moduleInvert").setMaxStackSize(1).setCost(15)
-    Items.ModuleSilence = manager.newItem(classOf[ItemModule], "moduleSilence").setMaxStackSize(1).setCost(1)
-    Items.ModuleRepulsion = manager.newItem(classOf[ItemModuleRepulsion])
-    Items.ModuleApproximation = manager.newItem(classOf[ItemModule], "moduleApproximation").setMaxStackSize(1).setCost(1f)
-    Items.ModuleArray = manager.newItem(classOf[ItemModuleArray]).setCost(3f)
+    remoteController = manager.newItem(classOf[ItemRemoteController])
+    focusMatrix = manager.newItem(classOf[ItemMFFS], "focusMatrix")
+    modeCube = manager.newItem(classOf[ItemModeCube])
+    modeSphere = manager.newItem(classOf[ItemModeSphere])
+    modeTube = manager.newItem(classOf[ItemModeTube])
+    modePyramid = manager.newItem(classOf[ItemModePyramid])
+    modeCylinder = manager.newItem(classOf[ItemModeCylinder])
+    modeCustom = manager.newItem(classOf[ItemModeCustom])
+    moduleTranslate = manager.newItem(classOf[ItemModule], "moduleTranslate").setCost(2.5f)
+    moduleScale = manager.newItem(classOf[ItemModule], "moduleScale").setCost(2.5f)
+    moduleRotate = manager.newItem(classOf[ItemModule], "moduleRotate").setCost(0.5f)
+    moduleSpeed = manager.newItem(classOf[ItemModule], "moduleSpeed").setCost(1f)
+    moduleCapacity = manager.newItem(classOf[ItemModule], "moduleCapacity").setCost(0.5f)
+    moduleFusion = manager.newItem(classOf[ItemModuleFusion])
+    moduleDome = manager.newItem(classOf[ItemModuleDome])
+    moduleCamouflage = manager.newItem(classOf[ItemModule], "moduleCamouflage").setCost(1.5f).setMaxStackSize(1)
+    moduleDisintegration = manager.newItem(classOf[ItemModuleDisintegration])
+    moduleShock = manager.newItem(classOf[ItemModuleShock])
+    moduleGlow = manager.newItem(classOf[ItemModule], "moduleGlow")
+    moduleSponge = manager.newItem(classOf[ItemModuleSponge])
+    moduleStabilize = manager.newItem(classOf[ItemModuleStabilize])
+    cardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
+    cardFrequency = manager.newItem(classOf[ItemCardFrequency])
+    cardLink = manager.newItem(classOf[ItemCardLink])
+    cardID = manager.newItem(classOf[ItemCardID])
+    cardInfinite = manager.newItem(classOf[ItemCardInfinite])
+    moduleAntiFriendly = manager.newItem(classOf[ItemModuleAntiFriendly])
+    moduleAntiHostile = manager.newItem(classOf[ItemModuleAntiHostile])
+    moduleAntiPersonnel = manager.newItem(classOf[ItemModuleAntiPersonnel])
+    moduleConfiscate = manager.newItem(classOf[ItemModuleConfiscate])
+    moduleWarn = manager.newItem(classOf[ItemModuleWarn])
+    moduleBlockAccess = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAccess").setCost(10)
+    moduleBlockAlter = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleBlockAlter").setCost(15)
+    moduleAntiSpawn = manager.newItem(classOf[ItemModuleInterdictionMatrix], "moduleAntiSpawn").setCost(10)
+    moduleCollection = manager.newItem(classOf[ItemModule], "moduleCollection").setMaxStackSize(1).setCost(15)
+    moduleInvert = manager.newItem(classOf[ItemModule], "moduleInvert").setMaxStackSize(1).setCost(15)
+    moduleSilence = manager.newItem(classOf[ItemModule], "moduleSilence").setMaxStackSize(1).setCost(1)
+    moduleRepulsion = manager.newItem(classOf[ItemModuleRepulsion])
+    moduleApproximation = manager.newItem(classOf[ItemModule], "moduleApproximation").setMaxStackSize(1).setCost(1f)
+    moduleArray = manager.newItem(classOf[ItemModuleArray]).setCost(3f)
 
     /**
      * Registration
@@ -189,7 +194,7 @@ final object ModularForceFieldSystem
     Modstats.instance.getReporter.registerMod(this)
     NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
     MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
-    MinecraftForge.EVENT_BUS.register(itemRemoteController)
+    MinecraftForge.EVENT_BUS.register(remoteController)
 
     /**
      * Fluid Instantiation
@@ -210,23 +215,23 @@ final object ModularForceFieldSystem
   {
     Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
-    Blacklist.stabilizationBlacklist.add(Blocks.water)
-    Blacklist.stabilizationBlacklist.add(Blocks.flowing_water)
-    Blacklist.stabilizationBlacklist.add(Blocks.lava)
-    Blacklist.stabilizationBlacklist.add(Blocks.flowing_lava)
+    Blacklist.stabilizationBlacklist.add(water)
+    Blacklist.stabilizationBlacklist.add(flowing_water)
+    Blacklist.stabilizationBlacklist.add(lava)
+    Blacklist.stabilizationBlacklist.add(flowing_lava)
 
     Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
-    Blacklist.disintegrationBlacklist.add(Blocks.water)
-    Blacklist.disintegrationBlacklist.add(Blocks.flowing_water)
-    Blacklist.disintegrationBlacklist.add(Blocks.lava)
-    Blacklist.disintegrationBlacklist.add(Blocks.flowing_lava)
+    Blacklist.disintegrationBlacklist.add(water)
+    Blacklist.disintegrationBlacklist.add(flowing_water)
+    Blacklist.disintegrationBlacklist.add(lava)
+    Blacklist.disintegrationBlacklist.add(flowing_lava)
 
     Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
-    Blacklist.mobilizerBlacklist.add(Blocks.bedrock)
-    Blacklist.mobilizerBlacklist.add(ModularForceFieldSystem.blockForceField)
-    ExplosionWhitelist.addWhitelistedBlock(blockForceField)
+    Blacklist.mobilizerBlacklist.add(bedrock)
+    Blacklist.mobilizerBlacklist.add(forceField)
+    ExplosionWhitelist.addWhitelistedBlock(forceField)
 
     metadata.modId = Reference.ID
     metadata.name = Reference.NAME
@@ -248,52 +253,52 @@ final object ModularForceFieldSystem
     /**
      * Add recipe.
      */
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemFocusMatix, 8), "RMR", "MDM", "RMR", 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'D': Character, Items.diamond, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemRemoteController), "WWW", "MCM", "MCM", 'W': Character, UniversalRecipe.WIRE.get, 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockCoercionDeriver), "FMF", "FCF", "FMF", 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockFortronCapacitor), "MFM", "FCF", "MFM", 'D': Character, Items.diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, itemFocusMatix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceFieldProjector), " D ", "FFF", "MCM", 'D': Character, Items.diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, itemFocusMatix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockBiometricIdentifier), "FMF", "MCM", "FMF", 'C': Character, itemCardBlank, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockInterdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, itemModuleShock, 'E': Character, Blocks.ender_chest, 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(blockForceManipulator), "FCF", "TMT", "FCF", 'F': Character, itemFocusMatix, 'C': Character, UniversalRecipe.MOTOR.get, 'T': Character, itemModuleTranslate, 'M': Character, UniversalRecipe.MOTOR.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardBlank), "PPP", "PMP", "PPP", 'P': Character, Items.paper, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardLink), "BWB", 'B': Character, itemCardBlank, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardFrequency), "WBW", 'B': Character, itemCardBlank, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemCardID), "R R", " B ", "R R", 'B': Character, itemCardBlank, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeSphere), " F ", "FFF", " F ", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeCube), "FFF", "FFF", "FFF", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeTube), "FFF", "   ", "FFF", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModePyramid), "F  ", "FF ", "FFF", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeCylinder), "S", "S", "S", 'S': Character, itemModeSphere))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModeCustom), " C ", "TFP", " S ", 'S': Character, itemModeSphere, 'C': Character, itemModeCube, 'T': Character, itemModeTube, 'P': Character, itemModePyramid, 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(itemModeCustom), new ItemStack(itemModeCustom)))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSpeed, 1), "FFF", "RRR", "FFF", 'F': Character, itemFocusMatix, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCapacity, 2), "FCF", 'F': Character, itemFocusMatix, 'C': Character, UniversalRecipe.BATTERY.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleShock), "FWF", 'F': Character, itemFocusMatix, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSponge), "BBB", "BFB", "BBB", 'F': Character, itemFocusMatix, 'B': Character, Items.water_bucket))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDisintegration), " W ", "FBF", " W ", 'F': Character, itemFocusMatix, 'W': Character, UniversalRecipe.WIRE.get, 'B': Character, UniversalRecipe.BATTERY.get), Settings.configuration, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleDome), "F", " ", "F", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCamouflage), "WFW", "FWF", "WFW", 'F': Character, itemFocusMatix, 'W': Character, new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleFusion), "FJF", 'F': Character, itemFocusMatix, 'J': Character, itemModuleShock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleScale, 2), "FRF", 'F': Character, itemFocusMatix))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleTranslate, 2), "FSF", 'F': Character, itemFocusMatix, 'S': Character, itemModuleScale), Settings.configuration, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRotate, 4), "F  ", " F ", "  F", 'F': Character, itemFocusMatix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleGlow, 4), "GGG", "GFG", "GGG", 'F': Character, itemFocusMatix, 'G': Character, Blocks.glowstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleStablize), "FDF", "PSA", "FDF", 'F': Character, itemFocusMatix, 'P': Character, Items.diamond_pickaxe, 'S': Character, Items.diamond_shovel, 'A': Character, Items.diamond_axe, 'D': Character, Items.diamond))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleCollection), "F F", " H ", "F F", 'F': Character, itemFocusMatix, 'H': Character, Blocks.hopper))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleInvert), "L", "F", "L", 'F': Character, itemFocusMatix, 'L': Character, Blocks.lapis_block))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleSilence), " N ", "NFN", " N ", 'F': Character, itemFocusMatix, 'N': Character, Blocks.noteblock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleApproximation), " N ", "NFN", " N ", 'F': Character, itemFocusMatix, 'N': Character, Items.golden_pickaxe))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleArray), " F ", "DFD", " F ", 'F': Character, itemFocusMatix, 'D': Character, Items.diamond))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleRepulsion), "FFF", "DFD", "SFS", 'F': Character, itemFocusMatix, 'D': Character, Items.diamond, 'S': Character, Items.slime_ball), Settings.configuration, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiHostile), " R ", "GFB", " S ", 'F': Character, itemFocusMatix, 'G': Character, Items.gunpowder, 'R': Character, Items.rotten_flesh, 'B': Character, Items.bone, 'S': Character, Items.ghast_tear))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiFriendly), " R ", "GFB", " S ", 'F': Character, itemFocusMatix, 'G': Character, Items.cooked_porkchop, 'R': Character, new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'B': Character, Items.leather, 'S': Character, Items.slime_ball))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiPersonnel), "BFG", 'F': Character, itemFocusMatix, 'B': Character, itemModuleAntiHostile, 'G': Character, itemModuleAntiFriendly))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleConfiscate), "PEP", "EFE", "PEP", 'F': Character, itemFocusMatix, 'E': Character, Items.ender_eye, 'P': Character, Items.ender_pearl), Settings.configuration, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleWarn), "NFN", 'F': Character, itemFocusMatix, 'N': Character, Blocks.noteblock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAccess), " C ", "BFB", " C ", 'F': Character, itemFocusMatix, 'B': Character, Blocks.iron_block, 'C': Character, Blocks.chest))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleBlockAlter), " G ", "GFG", " G ", 'F': Character, itemModuleBlockAccess, 'G': Character, Blocks.gold_block))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemModuleAntiSpawn), " H ", "G G", " H ", 'H': Character, itemModuleAntiHostile, 'G': Character, itemModuleAntiFriendly))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(focusMatrix, 8), "RMR", "MDM", "RMR", 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'D': Character, diamond, 'R': Character, redstone))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(remoteController), "WWW", "MCM", "MCM", 'W': Character, UniversalRecipe.WIRE.get, 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(coercionDeriver), "FMF", "FCF", "FMF", 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C': Character, cardBlank, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(interdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, moduleShock, 'E': Character, ender_chest, 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.MOTOR.get, 'T': Character, moduleTranslate, 'M': Character, UniversalRecipe.MOTOR.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P': Character, paper, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardLink), "BWB", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardFrequency), "WBW", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardID), "R R", " B ", "R R", 'B': Character, cardBlank, 'R': Character, redstone))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeSphere), " F ", "FFF", " F ", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCube), "FFF", "FFF", "FFF", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeTube), "FFF", "   ", "FFF", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modePyramid), "F  ", "FF ", "FFF", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCylinder), "S", "S", "S", 'S': Character, modeSphere))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCustom), " C ", "TFP", " S ", 'S': Character, modeSphere, 'C': Character, modeCube, 'T': Character, modeTube, 'P': Character, modePyramid, 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(modeCustom), new ItemStack(modeCustom)))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSpeed, 1), "FFF", "RRR", "FFF", 'F': Character, focusMatrix, 'R': Character, redstone))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCapacity, 2), "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.BATTERY.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleShock), "FWF", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSponge), "BBB", "BFB", "BBB", 'F': Character, focusMatrix, 'B': Character, water_bucket))
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDisintegration), " W ", "FBF", " W ", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get, 'B': Character, UniversalRecipe.BATTERY.get), Settings.configuration, true)
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDome), "F", " ", "F", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCamouflage), "WFW", "FWF", "WFW", 'F': Character, focusMatrix, 'W': Character, new ItemStack(wool, 1, OreDictionary.WILDCARD_VALUE)))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleFusion), "FJF", 'F': Character, focusMatrix, 'J': Character, moduleShock))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleScale, 2), "FRF", 'F': Character, focusMatrix))
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleTranslate, 2), "FSF", 'F': Character, focusMatrix, 'S': Character, moduleScale), Settings.configuration, true)
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRotate, 4), "F  ", " F ", "  F", 'F': Character, focusMatrix))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleGlow, 4), "GGG", "GFG", "GGG", 'F': Character, focusMatrix, 'G': Character, glowstone))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleStabilize), "FDF", "PSA", "FDF", 'F': Character, focusMatrix, 'P': Character, diamond_pickaxe, 'S': Character, diamond_shovel, 'A': Character, diamond_axe, 'D': Character, diamond))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCollection), "F F", " H ", "F F", 'F': Character, focusMatrix, 'H': Character, hopper))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleInvert), "L", "F", "L", 'F': Character, focusMatrix, 'L': Character, lapis_block))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSilence), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, noteblock))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleApproximation), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, golden_pickaxe))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleArray), " F ", "DFD", " F ", 'F': Character, focusMatrix, 'D': Character, diamond))
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRepulsion), "FFF", "DFD", "SFS", 'F': Character, focusMatrix, 'D': Character, diamond, 'S': Character, slime_ball), Settings.configuration, true)
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiHostile), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, gunpowder, 'R': Character, rotten_flesh, 'B': Character, bone, 'S': Character, ghast_tear))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiFriendly), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, cooked_porkchop, 'R': Character, new ItemStack(wool, 1, OreDictionary.WILDCARD_VALUE), 'B': Character, leather, 'S': Character, slime_ball))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiPersonnel), "BFG", 'F': Character, focusMatrix, 'B': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleConfiscate), "PEP", "EFE", "PEP", 'F': Character, focusMatrix, 'E': Character, ender_eye, 'P': Character, ender_pearl), Settings.configuration, true)
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleWarn), "NFN", 'F': Character, focusMatrix, 'N': Character, noteblock))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAccess), " C ", "BFB", " C ", 'F': Character, focusMatrix, 'B': Character, iron_block, 'C': Character, chest))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAlter), " G ", "GFG", " G ", 'F': Character, moduleBlockAccess, 'G': Character, gold_block))
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiSpawn), " H ", "G G", " H ", 'H': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
 
     proxy.postInit()
 
@@ -308,6 +313,7 @@ final object ModularForceFieldSystem
           e.printStackTrace
         }
       }
+
     Settings.configuration.save()
   }
 

@@ -24,11 +24,11 @@ import universalelectricity.api.vector.VectorHelper;
 import java.util.HashMap;
 import java.util.Set;
 
-public class ItemModuleStablize extends ItemModule
+public class ItemModuleStabilize extends ItemModule
 {
 	private int blockCount = 0;
 
-	public ItemModuleStablize(int id)
+	public ItemModuleStabilize(int id)
 	{
 		super(id, "moduleStabilize");
 		this.setMaxStackSize(1);

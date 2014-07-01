@@ -138,21 +138,21 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
 
     if (this.isAbsolute)
     {
-      zTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.NORTH): _*)
-      zTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.SOUTH): _*)
-      xTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.WEST): _*)
-      xTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.EAST): _*)
-      yTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
-      yTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
+      zTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.NORTH): _*)
+      zTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.SOUTH): _*)
+      xTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.WEST): _*)
+      xTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.EAST): _*)
+      yTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
+      yTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
     }
     else
     {
-      zTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)): _*)
-      zTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)): _*)
-      xTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)): _*)
-      xTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)): _*)
-      yTranslationPos = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
-      yTranslationNeg = getModuleCount(ModularForceFieldSystem.itemModuleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
+      zTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.NORTH)): _*)
+      zTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.SOUTH)): _*)
+      xTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.WEST)): _*)
+      xTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(VectorHelper.getOrientationFromSide(direction, ForgeDirection.EAST)): _*)
+      yTranslationPos = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.UP): _*)
+      yTranslationNeg = getModuleCount(ModularForceFieldSystem.Items.moduleTranslate, getSlotsBasedOnDirection(ForgeDirection.DOWN): _*)
     }
 
     val translation = new Vector3(xTranslationPos - xTranslationNeg, yTranslationPos - yTranslationNeg, zTranslationPos - zTranslationNeg)

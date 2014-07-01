@@ -109,7 +109,7 @@ object SubscribeEventHandler
   {
     if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
     {
-      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == ModularForceFieldSystem.blockForceField)
+      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == ModularForceFieldSystem.Blocks.forceField)
       {
         evt.setCanceled(true)
         return
@@ -124,7 +124,7 @@ object SubscribeEventHandler
       {
         val block = position.getBlock(evt.entityPlayer.worldObj)
 
-        if (ModularForceFieldSystem.blockBiometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
+        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
         {
           return
         }
@@ -132,7 +132,7 @@ object SubscribeEventHandler
         val hasPermission: Boolean = MFFSHelper.hasPermission(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), interdictionMatrix, evt.action, evt.entityPlayer)
         if (!hasPermission)
         {
-          evt.entityPlayer.addChatMessage(new ChatComponentText("[" + ModularForceFieldSystem.blockInterdictionMatrix.getLocalizedName() + "] You have no permission to do that!"))
+          evt.entityPlayer.addChatMessage(new ChatComponentText("[" + ModularForceFieldSystem.Blocks.interdictionMatrix.getLocalizedName() + "] You have no permission to do that!"))
           evt.setCanceled(true)
         }
       }
@@ -170,9 +170,10 @@ object SubscribeEventHandler
   def livingSpawnEvent(evt: LivingSpawnEvent)
   {
     val interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.world, new Vector3(evt.entityLiving))
+
     if (interdictionMatrix != null && !(evt.entity.isInstanceOf[EntityPlayer]))
     {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleAntiSpawn) > 0)
+      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0)
       {
         evt.setResult(Event.Result.DENY)
       }

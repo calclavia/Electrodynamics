@@ -19,7 +19,7 @@ class ClientProxy extends CommonProxy
   override def init()
   {
     super.init()
-    MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.itemCardID, new RenderIDCard())
+    MinecraftForgeClient.registerItemRenderer(ModularForceFieldSystem.Items.cardID, new RenderIDCard())
   }
 
   override def getClientWorld(): World = FMLClientHandler.instance.getClient.theWorld

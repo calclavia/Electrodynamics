@@ -132,7 +132,7 @@ object MFFSHelper
 
       if (transferer.isInstanceOf[IModuleAcceptor])
       {
-        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0
+        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0
       }
 
       if (joules > 0)
@@ -201,7 +201,7 @@ object MFFSHelper
           {
             if (!interdictionMatrix.getBiometricIdentifier.isAccessGranted(username, permission))
             {
-              if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+              if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
               {
                 return true
               }
@@ -214,7 +214,7 @@ object MFFSHelper
         }
       }
     }
-    if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+    if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
     {
       return false
     }
@@ -323,7 +323,7 @@ object MFFSHelper
       {
         if (projector != null)
         {
-          if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0)
+          if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0)
           {
             if (projector.getMode.isInstanceOf[ItemModeCustom])
             {
@@ -393,7 +393,7 @@ object MFFSHelper
 
     if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && position.getTileEntity(world) != null)
     {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAccess) > 0)
+      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
       {
         hasPermission = false
         if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ACCESS))
@@ -404,7 +404,7 @@ object MFFSHelper
     }
     if (hasPermission)
     {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
         hasPermission = false
         if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ALTER))
