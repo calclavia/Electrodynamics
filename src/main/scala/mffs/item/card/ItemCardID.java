@@ -1,7 +1,7 @@
 package mffs.item.card;
 
 import resonant.api.mffs.card.ICardIdentification;
-import resonant.api.mffs.security.Permission;
+import mffs.security.access.MFFSPermissions;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -52,7 +52,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 		String tooltip = "";
 		boolean isFirst = true;
 
-		for (Permission permission : Permission.getPermissions())
+		for (MFFSPermissions permission : MFFSPermissions.getPermissions())
 		{
 			if (this.hasPermission(itemStack, permission))
 			{
@@ -102,14 +102,14 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	}
 
 	@Override
-	public boolean hasPermission(ItemStack itemStack, Permission permission)
+	public boolean hasPermission(ItemStack itemStack, MFFSPermissions permission)
 	{
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		return nbt.getBoolean(NBT_PREFIX + permission.id);
 	}
 
 	@Override
-	public boolean addPermission(ItemStack itemStack, Permission permission)
+	public boolean addPermission(ItemStack itemStack, MFFSPermissions permission)
 	{
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, true);
@@ -117,7 +117,7 @@ public class ItemCardID extends ItemCard implements ICardIdentification
 	}
 
 	@Override
-	public boolean removePermission(ItemStack itemStack, Permission permission)
+	public boolean removePermission(ItemStack itemStack, MFFSPermissions permission)
 	{
 		NBTTagCompound nbt = NBTUtility.getNBTTagCompound(itemStack);
 		nbt.setBoolean(NBT_PREFIX + permission.id, false);

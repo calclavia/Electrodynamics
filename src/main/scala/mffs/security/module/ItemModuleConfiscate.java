@@ -2,7 +2,7 @@ package mffs.security.module;
 
 import resonant.api.mffs.security.IBiometricIdentifier;
 import resonant.api.mffs.security.IInterdictionMatrix;
-import resonant.api.mffs.security.Permission;
+import mffs.security.access.MFFSPermissions;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -27,7 +27,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 
 			IBiometricIdentifier biometricIdentifier = interdictionMatrix.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.DEFENSE_STATION_CONFISCATION))
+			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.DEFENSE_STATION_CONFISCATION))
 			{
 				return false;
 			}
@@ -42,7 +42,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 		{
 			IBiometricIdentifier biometricIdentifier = interdictionMatrix.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(((EntityPlayer) entityLiving).username, Permission.BYPASS_INTERDICTION_MATRIX))
+			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(((EntityPlayer) entityLiving).username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 			{
 				return false;
 			}

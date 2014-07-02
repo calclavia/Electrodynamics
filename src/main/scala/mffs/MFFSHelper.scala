@@ -5,6 +5,7 @@ import java.util.Set
 import mffs.field.mode.ItemModeCustom
 import mffs.fortron.TransferMode
 import mffs.fortron.TransferMode.TransferMode
+import mffs.security.access.MFFSPermissions
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -16,7 +17,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
-import resonant.api.mffs.security.{IInterdictionMatrix, Permission}
+import resonant.api.mffs.security.IInterdictionMatrix
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
@@ -360,12 +361,12 @@ object MFFSHelper
     return null
   }
 
-  def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: MFFSPermissions, player: EntityPlayer): Boolean =
   {
     return hasPermission(world, position, permission, player.getGameProfile().getName())
   }
 
-  def hasPermission(world: World, position: Vector3, permission: Permission, username: String): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: MFFSPermissions, username: String): Boolean =
   {
     val interdictionMatrix: IInterdictionMatrix = getNearestInterdictionMatrix(world, position)
 
@@ -396,7 +397,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ACCESS))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.BLOCK_ACCESS))
         {
           hasPermission = true
         }
@@ -407,7 +408,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), Permission.BLOCK_ALTER))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.BLOCK_ALTER))
         {
           hasPermission = true
         }

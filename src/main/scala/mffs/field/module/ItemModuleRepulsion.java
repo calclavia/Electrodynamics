@@ -2,7 +2,7 @@ package mffs.field.module;
 
 import resonant.api.mffs.IProjector;
 import resonant.api.mffs.security.IBiometricIdentifier;
-import resonant.api.mffs.security.Permission;
+import mffs.security.access.MFFSPermissions;
 import mffs.base.ItemModule;
 import mffs.field.TileElectromagnetProjector;
 import net.minecraft.entity.Entity;
@@ -58,7 +58,7 @@ public class ItemModuleRepulsion extends ItemModule
 						}
 						else if (biometricIdentifier != null)
 						{
-							if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+							if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
 							{
 								continue;
 							}

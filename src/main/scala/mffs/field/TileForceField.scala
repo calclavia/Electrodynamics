@@ -3,6 +3,7 @@ package mffs.field
 import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.TileElectromagnetProjector
+import mffs.security.access.MFFSPermissions
 import mffs.{MFFSHelper, ModularForceFieldSystem}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
@@ -19,7 +20,6 @@ import net.minecraft.world.{IBlockAccess, World}
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.IFortronStorage
 import resonant.api.mffs.modules.IModule
-import resonant.api.mffs.security.Permission
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.IPacketReceiver
 import universalelectricity.core.transform.region.Cuboid
@@ -189,7 +189,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
         }
         else if (biometricIdentifier != null)
         {
-          if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+          if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
           {
             return null
           }
@@ -232,7 +232,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
               }
               else if (biometricIdentifier != null)
               {
-                if (biometricIdentifier.isAccessGranted(entityPlayer.username, Permission.FORCE_FIELD_WARP))
+                if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
                 {
                   return
                 }

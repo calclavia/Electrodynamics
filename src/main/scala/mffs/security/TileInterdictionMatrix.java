@@ -1,10 +1,10 @@
 package mffs.security;
 
+import mffs.security.access.MFFSPermissions;
 import resonant.api.mffs.modules.IInterdictionMatrixModule;
 import resonant.api.mffs.modules.IModule;
 import resonant.api.mffs.security.IBiometricIdentifier;
 import resonant.api.mffs.security.IInterdictionMatrix;
-import resonant.api.mffs.security.Permission;
 import com.google.common.io.ByteArrayDataInput;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
@@ -90,7 +90,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 					boolean isGranted = false;
 
-					if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
+					if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 					{
 						isGranted = true;
 					}
@@ -135,7 +135,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 			IBiometricIdentifier biometricIdentifier = this.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, Permission.BYPASS_INTERDICTION_MATRIX))
+			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 			{
 				return;
 			}

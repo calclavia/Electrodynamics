@@ -1,7 +1,7 @@
 package mffs.gui;
 
 import resonant.api.mffs.card.ICardIdentification;
-import resonant.api.mffs.security.Permission;
+import mffs.security.access.MFFSPermissions;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import mffs.ModularForceFieldSystem;
 import mffs.base.GuiMFFS;
@@ -37,10 +37,10 @@ public class GuiBiometricIdentifier extends GuiMFFS
 		int x = 0;
 		int y = 0;
 
-		for (int i = 0; i < Permission.getPermissions().length; i++)
+		for (int i = 0; i < MFFSPermissions.getPermissions().length; i++)
 		{
 			x++;
-			this.buttonList.add(new GuiButtonPress(i + 1, this.width / 2 - 50 + 20 * x, this.height / 2 - 75 + 20 * y, new Vector2(18, 18 * i), this, Permission.getPermissions()[i].name));
+			this.buttonList.add(new GuiButtonPress(i + 1, this.width / 2 - 50 + 20 * x, this.height / 2 - 75 + 20 * y, new Vector2(18, 18 * i), this, MFFSPermissions.getPermissions()[i].name));
 
 			if (i % 3 == 0 && i != 0)
 			{
@@ -77,9 +77,9 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 							int permissionID = i - 1;
 
-							if (Permission.getPermission(permissionID) != null)
+							if (MFFSPermissions.getPermission(permissionID) != null)
 							{
-								if (idCard.hasPermission(this.tileEntity.getManipulatingCard(), Permission.getPermission(permissionID)))
+								if (idCard.hasPermission(this.tileEntity.getManipulatingCard(), MFFSPermissions.getPermission(permissionID)))
 								{
 									button.stuck = true;
 								}

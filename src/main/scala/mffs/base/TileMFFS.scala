@@ -6,6 +6,7 @@ import java.util
 import com.google.common.io.ByteArrayDataInput
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardLink
+import mffs.security.access.MFFSPermissions
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
@@ -13,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import resonant.api.blocks.ICamouflageMaterial
-import resonant.api.mffs.security.Permission
 import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
 import resonant.api.{IPlayerUsing, IRotatable}
 import resonant.content.spatial.block.SpatialTile
@@ -89,7 +89,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
         {
           if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
           {
-            if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier.isAccessGranted(entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
+            if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.SECURITY_CENTER_CONFIGURE))
             {
               this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0)
               world.setBlock(x, y, z, 0)

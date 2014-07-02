@@ -5,7 +5,7 @@ import resonant.api.mffs.EventForceManipulate.EventPreForceManipulate;
 import resonant.api.mffs.card.ICoordLink;
 import resonant.api.mffs.fortron.FrequencyGrid;
 import resonant.api.mffs.fortron.IFortronFrequency;
-import resonant.api.mffs.security.Permission;
+import mffs.security.access.MFFSPermissions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.MFFSHelper;
@@ -130,7 +130,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 				{
 					Chunk chunk = world.getChunkFromBlockCoords(position.xi(), position.zi());
 
-					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, Permission.REMOTE_CONTROL, entityPlayer)))
+					if (chunk != null && chunk.isChunkLoaded && (MFFSHelper.hasPermission(world, position, Action.RIGHT_CLICK_BLOCK, entityPlayer) || MFFSHelper.hasPermission(world, position, MFFSPermissions.REMOTE_CONTROL, entityPlayer)))
 					{
 						float requiredEnergy = (float) Vector3.distance(new Vector3(entityPlayer), position) * (FluidContainerRegistry.BUCKET_VOLUME / 100);
 						int receivedEnergy = 0;

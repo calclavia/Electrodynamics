@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
 import mffs.field.TileElectromagnetProjector
 import mffs.fortron.FortronHelper
+import mffs.security.access.MFFSPermissions
 import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
@@ -20,7 +21,7 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.fortron.{IFortronFrequency, FrequencyGridRegistry}
-import resonant.api.mffs.security.{IInterdictionMatrix, Permission}
+import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.event.ChunkModifiedEvent
@@ -124,7 +125,7 @@ object SubscribeEventHandler
       {
         val block = position.getBlock(evt.entityPlayer.worldObj)
 
-        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, Permission.SECURITY_CENTER_CONFIGURE))
+        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, MFFSPermissions.SECURITY_CENTER_CONFIGURE))
         {
           return
         }

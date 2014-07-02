@@ -5,16 +5,17 @@ import java.util.{HashSet, Set}
 import com.google.common.io.ByteArrayDataInput
 import mffs.base.TileFrequency
 import mffs.item.card.ItemCardFrequency
+import mffs.security.access.MFFSPermissions
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.ICardIdentification
-import resonant.api.mffs.security.{IBiometricIdentifier, Permission}
+import resonant.api.mffs.security.IBiometricIdentifier
 
 class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 {
   val SLOT_COPY = 12
 
-  def isAccessGranted(username: String, permission: Permission): Boolean =
+  def isAccessGranted(username: String, permission: MFFSPermissions): Boolean =
   {
     if (!isActive)
     {
@@ -56,7 +57,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
       {
         val idCard: ICardIdentification = this.getManipulatingCard.getItem.asInstanceOf[ICardIdentification]
         val id: Int = dataStream.readInt
-        val permission: Permission = Permission.getPermission(id)
+        val permission: MFFSPermissions = MFFSPermissions.getPermission(id)
         if (permission != null)
         {
           if (!idCard.hasPermission(this.getManipulatingCard, permission))
@@ -116,7 +117,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
     {
       val masterCard: ICardIdentification = (this.getManipulatingCard.getItem.asInstanceOf[ICardIdentification])
       val copyCard: ICardIdentification = (this.getStackInSlot(SLOT_COPY).getItem.asInstanceOf[ICardIdentification])
-      for (permission <- Permission.getPermissions)
+      for (permission <- MFFSPermissions.getPermissions)
       {
         if (masterCard.hasPermission(this.getManipulatingCard, permission))
         {

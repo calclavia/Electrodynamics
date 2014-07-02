@@ -8,6 +8,7 @@ import mffs.item.card.ItemCard
 import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.field.thread.ManipulatorCalculationThread
 import mffs.render.fx.IEffectController
+import mffs.security.access.MFFSPermissions
 import mffs.{MFFSHelper, ModularForceFieldSystem, Settings}
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
@@ -20,7 +21,6 @@ import net.minecraftforge.common.MinecraftForge
 import resonant.api.mffs.Blacklist
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.api.mffs.security.Permission
 import universalelectricity.core.transform.vector.Vector3
 
 class TileForceMobilizer extends TileFieldInteraction with IEffectController
@@ -415,12 +415,12 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     val tileEntity: TileEntity = position.getTileEntity
     if (this.getBiometricIdentifier != null)
     {
-      if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, this.getBiometricIdentifier.getOwner) && !MFFSHelper.hasPermission(target.world, target, Permission.BLOCK_ALTER, this.getBiometricIdentifier.getOwner))
+      if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.BLOCK_ALTER, this.getBiometricIdentifier.getOwner) && !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.BLOCK_ALTER, this.getBiometricIdentifier.getOwner))
       {
         return false
       }
     }
-    else if (!MFFSHelper.hasPermission(this.worldObj, position, Permission.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(target.world, target, Permission.BLOCK_ALTER, ""))
+    else if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.BLOCK_ALTER, ""))
     {
       return false
     }
