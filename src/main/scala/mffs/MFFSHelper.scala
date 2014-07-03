@@ -18,6 +18,7 @@ import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
 import resonant.api.mffs.security.IInterdictionMatrix
+import resonant.lib.access.Permission
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 

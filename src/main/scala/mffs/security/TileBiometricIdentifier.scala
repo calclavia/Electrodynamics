@@ -3,7 +3,6 @@ package mffs.security
 import com.google.common.io.ByteArrayDataInput
 import com.mojang.authlib.GameProfile
 import mffs.base.TileFrequency
-import mffs.item.card.ItemCardFrequency
 import mffs.security.access.AccessProfile
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
@@ -15,6 +14,13 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 {
   val SLOT_COPY = 12
   var access = new AccessProfile()
+
+  /**
+   * 2 slots: Card copying
+   * 9 x 4 slots: Access Cards
+   * Under access cards we have a permission selector
+   */
+  maxSlots = 2 + 9 * 4
 
   def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
   {
@@ -64,32 +70,12 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
-    if (slotID == 0)
-    {
-      return itemStack.getItem.isInstanceOf[ItemCardFrequency]
-    }
-    else
-    {
-      return itemStack.getItem.isInstanceOf[ICardIdentification]
-    }
+    return itemStack.getItem.isInstanceOf[ICardIdentification]
   }
 
-  def getOwner: String =
+  def onInventoryChanged()
   {
-    val itemStack: ItemStack = this.getStackInSlot(2)
-    if (itemStack != null)
-    {
-      if (itemStack.getItem.isInstanceOf[ICardIdentification])
-      {
-        return (itemStack.getItem.asInstanceOf[ICardIdentification]).getUsername(itemStack)
-      }
-    }
-    return null
-  }
-
-  def onInventoryChanged
-  {
-    super.onInventoryChanged
+    super.onInventoryChanged()
     /*
     if (this.getEditCard != null && this.getStackInSlot(SLOT_COPY) != null && this.getStackInSlot(SLOT_COPY).getItem.isInstanceOf[ICardIdentification])
     {
@@ -109,9 +95,11 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
     }*/
   }
 
-  override def getSizeInventory: Int =
+  def rebuildAccess()
   {
-    return 13
+    access = new AccessProfile()
+
+    getCards.filter()
   }
 
   override def getInventoryStackLimit: Int =
