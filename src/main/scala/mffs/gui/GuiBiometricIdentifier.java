@@ -59,13 +59,13 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 		try
 		{
-			if (this.tileEntity.getManipulatingCard() != null)
+			if (this.tileEntity.getEditCard() != null)
 			{
-				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getManipulatingCard().getItem();
+				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getEditCard().getItem();
 
 				this.textFieldUsername.drawTextBox();
 
-				if (idCard.getUsername(this.tileEntity.getManipulatingCard()) != null)
+				if (idCard.getUsername(this.tileEntity.getEditCard()) != null)
 				{
 
 					for (int i = 0; i < this.buttonList.size(); i++)
@@ -79,7 +79,7 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 							if (MFFSPermissions.getPermission(permissionID) != null)
 							{
-								if (idCard.hasPermission(this.tileEntity.getManipulatingCard(), MFFSPermissions.getPermission(permissionID)))
+								if (idCard.hasPermission(this.tileEntity.getEditCard(), MFFSPermissions.getPermission(permissionID)))
 								{
 									button.stuck = true;
 								}
@@ -121,13 +121,13 @@ public class GuiBiometricIdentifier extends GuiMFFS
 
 		if (!this.textFieldUsername.isFocused())
 		{
-			if (this.tileEntity.getManipulatingCard() != null)
+			if (this.tileEntity.getEditCard() != null)
 			{
-				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getManipulatingCard().getItem();
+				ICardIdentification idCard = (ICardIdentification) this.tileEntity.getEditCard().getItem();
 
-				if (idCard.getUsername(this.tileEntity.getManipulatingCard()) != null)
+				if (idCard.getUsername(this.tileEntity.getEditCard()) != null)
 				{
-					this.textFieldUsername.setText(idCard.getUsername(this.tileEntity.getManipulatingCard()));
+					this.textFieldUsername.setText(idCard.getUsername(this.tileEntity.getEditCard()));
 				}
 			}
 		}

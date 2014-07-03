@@ -397,7 +397,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.BLOCK_ACCESS))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.blockAccess))
         {
           hasPermission = true
         }
@@ -408,7 +408,7 @@ object MFFSHelper
       if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
         hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.BLOCK_ALTER))
+        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.blockAlter))
         {
           hasPermission = true
         }

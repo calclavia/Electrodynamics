@@ -125,7 +125,7 @@ object SubscribeEventHandler
       {
         val block = position.getBlock(evt.entityPlayer.worldObj)
 
-        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, MFFSPermissions.SECURITY_CENTER_CONFIGURE))
+        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, MFFSPermissions.configure))
         {
           return
         }

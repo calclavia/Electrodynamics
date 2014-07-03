@@ -415,12 +415,12 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     val tileEntity: TileEntity = position.getTileEntity
     if (this.getBiometricIdentifier != null)
     {
-      if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.BLOCK_ALTER, this.getBiometricIdentifier.getOwner) && !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.BLOCK_ALTER, this.getBiometricIdentifier.getOwner))
+      if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner) && !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner))
       {
         return false
       }
     }
-    else if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.BLOCK_ALTER, "") || !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.BLOCK_ALTER, ""))
+    else if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, "") || !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.blockAlter, ""))
     {
       return false
     }

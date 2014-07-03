@@ -21,7 +21,7 @@ class ItemModuleShock(i: Int) extends ItemModule(i, "moduleShock")
 
 			if (biometricIdentifier != null)
 			{
-				if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
+				if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.forceFieldWrap))
 				{
 					return false
 				}
