@@ -2,8 +2,7 @@ package mffs.field.mode
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import mffs.ModularForceFieldSystem
-import mffs.Settings
+import mffs.{TCache, ModularForceFieldSystem, Settings}
 import mffs.field.module.ItemModuleArray
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
@@ -15,7 +14,6 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.ICache
 import resonant.api.mffs.IFieldInteraction
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.modules.IProjectorMode
@@ -28,7 +26,7 @@ import java.util.List
 import java.util.Set
 
 
-class ItemModeCustom extends ItemMode with ICache
+class ItemModeCustom extends ItemMode with TCache
 {
   private final val NBT_ID: String = "id"
   private final val NBT_MODE: String = "mode"

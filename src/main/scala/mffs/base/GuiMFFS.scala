@@ -54,7 +54,7 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
         val newFrequency: Int = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText))
         this.frequencyTile.setFrequency(newFrequency)
         this.textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
-        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TileMFFS.TilePacketType.FREQUENCY.ordinal, frequencyTile.getFrequency: Integer)))
+        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TilePacketType.FREQUENCY.id: Integer, frequencyTile.getFrequency: Integer)))
       }
       catch
         {
@@ -70,7 +70,7 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
     super.actionPerformed(guiButton)
     if (this.frequencyTile != null && guiButton.id == 0)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TileMFFS.TilePacketType.TOGGLE_ACTIVATION.ordinal)))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TilePacketType.TOGGLE_ACTIVATION.id: Integer)))
     }
   }
 

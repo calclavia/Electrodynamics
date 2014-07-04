@@ -3,22 +3,16 @@ package mffs.base
 import java.util._
 
 import com.google.common.io.ByteArrayDataInput
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.{ModularForceFieldSystem, Settings, TCache}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.api.mffs.ICache
 import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
 
 import scala.collection.JavaConversions._
 
-abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with ICache
+abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
 {
-  /**
-   * Caching for the module stack data. This is used to reduce calculation time. Cache gets reset
-   * when inventory changes.
-   */
-  val cache = new HashMap[String, AnyRef]
   var startModuleIndex = 0
   var endModuleIndex = this.getSizeInventory - 1
   /**
@@ -66,17 +60,10 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
 
   def getModule(module: IModule): ItemStack =
   {
-    val cacheID: String = "getModule_" + module.hashCode
-    if (Settings.USE_CACHE)
-    {
-      if (this.cache.containsKey(cacheID))
-      {
-        if (this.cache.get(cacheID).isInstanceOf[ItemStack])
-        {
-          return this.cache.get(cacheID).asInstanceOf[ItemStack]
-        }
-      }
-    }
+    val cacheID = "getModule_" + module.hashCode
+
+    if (getCache(classOf[ItemStack], cacheID)) return getCache(classOf[ItemStack], cacheID)
+
     val returnStack: ItemStack = new ItemStack(module.asInstanceOf[Item], 0)
 
     for (comparedModule <- getModuleStacks)
@@ -86,10 +73,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
         returnStack.stackSize += comparedModule.stackSize
       }
     }
-    if (Settings.USE_CACHE)
-    {
-      this.cache.put(cacheID, returnStack.copy)
-    }
+    cache(cacheID, returnStack.copy)
+
+
     return returnStack
   }
 
@@ -98,21 +84,15 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     var count: Int = 0
     if (module != null)
     {
-      var cacheID: String = "getModuleCount_" + module.hashCode
+      var cacheID = "getModuleCount_" + module.hashCode
+
       if (slots != null)
       {
         cacheID += "_" + Arrays.hashCode(slots)
       }
-      if (Settings.USE_CACHE)
-      {
-        if (this.cache.containsKey(cacheID))
-        {
-          if (this.cache.get(cacheID).isInstanceOf[Integer])
-          {
-            return this.cache.get(cacheID).asInstanceOf[Integer]
-          }
-        }
-      }
+
+      if (getCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
+
       if (slots != null && slots.length > 0)
       {
         for (slotID <- slots)
@@ -136,10 +116,8 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
           }
         }
       }
-      if (Settings.USE_CACHE)
-      {
-        this.cache.put(cacheID, count)
-      }
+      cache(cacheID, count)
+
     }
     return count
   }
@@ -152,16 +130,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     {
       cacheID += Arrays.hashCode(slots)
     }
-    if (Settings.USE_CACHE)
-    {
-      if (this.cache.containsKey(cacheID))
-      {
-        if (this.cache.get(cacheID).isInstanceOf[Set[_]])
-        {
-          return this.cache.get(cacheID).asInstanceOf[Set[ItemStack]]
-        }
-      }
-    }
+
+    if (hasCache(classOf[Set[ItemStack]], cacheID)) return getCache(classOf[Set[ItemStack]], cacheID)
+
     val modules: Set[ItemStack] = new HashSet[ItemStack]
     if (slots == null || slots.length <= 0)
     {
@@ -200,10 +171,8 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
         }
       }
     }
-    if (Settings.USE_CACHE)
-    {
-      this.cache.put(cacheID, modules)
-    }
+    cache(cacheID, modules)
+
     return modules
   }
 
@@ -215,16 +184,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     {
       cacheID += Arrays.hashCode(slots)
     }
-    if (Settings.USE_CACHE)
-    {
-      if (this.cache.containsKey(cacheID))
-      {
-        if (this.cache.get(cacheID).isInstanceOf[Set[_]])
-        {
-          return this.cache.get(cacheID).asInstanceOf[Set[IModule]]
-        }
-      }
-    }
+
+    if (hasCache(classOf[Set[IModule]], cacheID)) return getCache(classOf[Set[IModule]], cacheID)
+
     val modules: Set[IModule] = new HashSet[IModule]
     if (slots == null || slots.length <= 0)
     {
@@ -263,10 +225,8 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
         }
       }
     }
-    if (Settings.USE_CACHE)
-    {
-      this.cache.put(cacheID, modules)
-    }
+    cache(cacheID, modules)
+
 
     return modules
   }
@@ -280,24 +240,16 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     {
       return this.clientFortronCost
     }
-    val cacheID: String = "getFortronCost"
-    if (Settings.USE_CACHE)
-    {
-      if (this.cache.containsKey(cacheID))
-      {
-        val obj: AnyRef = this.cache.get(cacheID)
-        if (obj != null && obj.isInstanceOf[Integer])
-        {
-          return obj.asInstanceOf[Integer]
-        }
-      }
-    }
-    val result: Int = this.doGetFortronCost
-    if (Settings.USE_CACHE)
-    {
-      this.cache.put(cacheID, result)
-    }
-    return this.doGetFortronCost
+
+    val cacheID = "getFortronCost"
+
+    if (hasCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
+
+    val result = doGetFortronCost
+
+    cache(cacheID, result)
+
+    return result
   }
 
   protected def doGetFortronCost: Int =
@@ -322,27 +274,12 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   {
     super.onInventoryChanged
     this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
-    this.clearCache
-  }
-
-  def getCache(cacheID: String): AnyRef =
-  {
-    return this.cache.get(cacheID)
-  }
-
-  def clearCache(cacheID: String)
-  {
-    this.cache.remove(cacheID)
-  }
-
-  def clearCache
-  {
-    this.cache.clear
+    clearCache()
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
-    clearCache
+    clearCache()
     super.readFromNBT(nbt)
     this.clientFortronCost = nbt.getInteger("fortronCost")
   }

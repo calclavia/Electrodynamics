@@ -13,9 +13,9 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
+import resonant.api.IPlayerUsing
 import resonant.api.blocks.ICamouflageMaterial
 import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
-import resonant.api.{IPlayerUsing, IRotatable}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
 import resonant.lib.network.IPacketReceiver
@@ -29,11 +29,6 @@ import scala.collection.mutable.HashSet
  */
 abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPlayerUsing with TRotatable with IActivatable
 {
-  object TilePacketType extends Enumeration
-  {
-    val NONE, DESCRIPTION, FREQUENCY, FORTRON, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, FXS, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, FIELD, RENDER = Value
-  }
-
   /**
    * The players to send packets to for machine update info.
    */

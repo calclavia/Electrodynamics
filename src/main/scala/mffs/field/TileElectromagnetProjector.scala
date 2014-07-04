@@ -9,7 +9,7 @@ import mffs.base.TileFieldInteraction
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.security.access.MFFSPermissions
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.{TCache, ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.tileentity.TileEntity
@@ -17,7 +17,7 @@ import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.api.mffs.{ICache, IProjector}
+import resonant.api.mffs.IProjector
 import resonant.lib.access.Permission
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
@@ -215,9 +215,9 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
         markFieldUpdate = false
         if (forceFields.size <= 0)
         {
-          if (getModeStack.getItem.isInstanceOf[ICache])
+          if (getModeStack.getItem.isInstanceOf[TCache])
           {
-            (getModeStack.getItem.asInstanceOf[ICache]).clearCache
+            (getModeStack.getItem.asInstanceOf[TCache]).clearCache
           }
         }
         var constructionCount: Int = 0
