@@ -1,13 +1,10 @@
 package mffs
 
-import java.util.Set
-
 import com.mojang.authlib.GameProfile
 import mffs.field.TileElectromagnetProjector
 import mffs.field.mode.ItemModeCustom
 import mffs.fortron.TransferMode
 import mffs.fortron.TransferMode.TransferMode
-import mffs.security.access.MFFSPermissions
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -26,6 +23,7 @@ import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 /**
  * A class containing some general helpful functions.
@@ -163,41 +161,10 @@ object MFFSHelper
     }
   }
 
-  /**
-   * Gets the nearest active Interdiction Matrix.
-   */
-  def getNearestProjector(world: World, position: Vector3): TileElectromagnetProjector =
-  {
-    return (FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagnetProjector]).view.toList sortWith (_.position.distance(position) < _.position.distance(position))).head
-  }
 
-  /**
-   * Returns true of the interdictionMatrix has a specific set of permissions.
-   */
-  def isPermittedByInterdictionMatrix(matrix: IInterdictionMatrix, profile: GameProfile, permissions: Permission*): Boolean =
-  {
-    if (matrix != null)
-    {
-      if (matrix.isActive)
-      {
-        if (matrix.getBiometricIdentifier != null)
-        {
-          if (permissions exists (!matrix.getBiometricIdentifier.hasPermission(profile, _)))
-          {
-            return matrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0
-          }
-        }
-      }
-    }
-
-    return !(matrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
-  }
 
   /**
    * Gets the first itemStack that is an ItemBlock in this TileEntity or in nearby chests.
-   *
-   * @param itemStack
-   * @return
    */
   def getFirstItemBlock(tileEntity: TileEntity, itemStack: ItemStack): ItemStack =
   {
@@ -218,20 +185,12 @@ object MFFSHelper
     }
     else if (tileEntity.isInstanceOf[IInventory])
     {
-      val inventory: IInventory = tileEntity.asInstanceOf[IInventory]
+      val inventory = tileEntity.asInstanceOf[IInventory]
 
-      var i = 0
-
-      while (i < inventory.getSizeInventory())
+      (0 until inventory.getSizeInventory()).view map (getFirstItemBlock(_, inventory, itemStack)) headOption match
       {
-        val checkStack: ItemStack = getFirstItemBlock(i, inventory, itemStack)
-
-        if (checkStack != null)
-        {
-          return checkStack
-        }
-
-        i += 1
+        case Some(entry) => return entry
+        case _ =>
       }
     }
 
@@ -329,6 +288,14 @@ object MFFSHelper
     return null
   }
 
+  /**
+   * Gets the set of projectors that have an effect in this position.
+   */
+  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagnetProjector] =
+  {
+    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector]) filter (_.isInField(position))
+  }
+
   def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
   {
     return hasPermission(world, position, permission, player.getGameProfile())
@@ -336,45 +303,16 @@ object MFFSHelper
 
   def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean =
   {
-    return (FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector]) filter (_.getForceFields.contains(position))).forall(_.isAccessGranted(profile, permission))
+    return getRelevantProjectors(world, position).forall(_.isAccessGranted(profile, permission))
   }
 
   def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
   {
-    val interdictionMatrix: IInterdictionMatrix = getNearestInterdictionMatrix(world, position)
-    if (interdictionMatrix != null)
-    {
-      return MFFSHelper.hasPermission(world, position, interdictionMatrix, action, player)
-    }
-    return true
+    return hasPermission(world, position, action, player.getGameProfile)
   }
 
-  def hasPermission(world: World, position: Vector3, interdictionMatrix: IInterdictionMatrix, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =
+  def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, profile: GameProfile): Boolean =
   {
-    var hasPermission: Boolean = true
-
-    if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && position.getTileEntity(world) != null)
-    {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
-      {
-        hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.blockAccess))
-        {
-          hasPermission = true
-        }
-      }
-    }
-    if (hasPermission)
-    {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
-      {
-        hasPermission = false
-        if (isPermittedByInterdictionMatrix(interdictionMatrix, player.getGameProfile().getName(), MFFSPermissions.blockAlter))
-        {
-          hasPermission = true
-        }
-      }
-    }
-    return hasPermission
+    return getRelevantProjectors(world, position).forall(_.isAccessGranted(world, position, profile, action))
   }
 }

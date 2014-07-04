@@ -21,7 +21,6 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.event.ChunkModifiedEvent
@@ -112,32 +111,28 @@ object SubscribeEventHandler
   {
     if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
     {
+      // Cancel if we click on a force field.
       if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == ModularForceFieldSystem.Blocks.forceField)
       {
         evt.setCanceled(true)
         return
       }
+
+      // Only check non-creative players
       if (evt.entityPlayer.capabilities.isCreativeMode)
       {
         return
       }
-      val position: Vector3 = new Vector3(evt.x, evt.y, evt.z)
-      val interdictionMatrix: IInterdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.entityPlayer.worldObj, position)
-      if (interdictionMatrix != null)
+
+      val position = new Vector3(evt.x, evt.y, evt.z)
+
+      val relevantProjectors = MFFSHelper.getRelevantProjectors(evt.entityPlayer.worldObj, position)
+
+      //Check if we can configure this block (activate). If not, we cancel the event.
+      if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer.getGameProfile, evt.action) && x.isAccessGranted(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
       {
-        val block = position.getBlock(evt.entityPlayer.worldObj)
-
-        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.getGameProfile, MFFSPermissions.configure))
-        {
-          return
-        }
-
-        val hasPermission: Boolean = MFFSHelper.hasPermission(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), interdictionMatrix, evt.action, evt.entityPlayer)
-        if (!hasPermission)
-        {
-          evt.entityPlayer.addChatMessage(new ChatComponentText("[" + ModularForceFieldSystem.Blocks.interdictionMatrix.getLocalizedName() + "] You have no permission to do that!"))
-          evt.setCanceled(true)
-        }
+        evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.NAME + "] You have no permission to do that!"))
+        evt.setCanceled(true)
       }
     }
   }
@@ -150,10 +145,12 @@ object SubscribeEventHandler
   {
     if (!evt.world.isRemote && evt.blockID == 0)
     {
-      FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector], _.asInstanceOf[TileEntity].getWorldObj() == evt.world)
+      FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagnetProjector])
               .view
+              .filter(_.getWorldObj == evt.world)
               .filter(_.getCalculatedField != null)
               .filter(_.getCalculatedField.contains(new Vector3(evt.x, evt.y, evt.z)))
+              .force
               .foreach(_.markFieldUpdate = true)
     }
   }
@@ -161,11 +158,9 @@ object SubscribeEventHandler
   @SubscribeEvent
   def livingSpawnEvent(evt: LivingSpawnEvent)
   {
-    val interdictionMatrix = MFFSHelper.getNearestInterdictionMatrix(evt.world, new Vector3(evt.entityLiving))
-
-    if (interdictionMatrix != null && !(evt.entity.isInstanceOf[EntityPlayer]))
+    if (!(evt.entity.isInstanceOf[EntityPlayer]))
     {
-      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0)
+      if (MFFSHelper.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0))
       {
         evt.setResult(Event.Result.DENY)
       }

@@ -8,12 +8,14 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFieldInteraction
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
+import mffs.security.access.MFFSPermissions
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
-import net.minecraft.world.IBlockAccess
+import net.minecraft.world.{IBlockAccess, World}
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{ICache, IProjector}
 import resonant.lib.access.Permission
@@ -370,7 +372,40 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
   def getTicks: Long = ticks
 
+  def isInField(position: Vector3) = if (getMode != null) getMode.isInField(this, position) else false
+
   //TODO: Finish this
-  def isAccessGranted(profile: GameProfile, permission: Permission): Boolean = false
+  def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
+  {
+    if (isActive && getBiometricIdentifiers.forall(_.hasPermission(profile, permission)))
+      return matrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) == 0
+
+    return true
+  }
+
+  def isAccessGranted(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(isAccessGranted(profile, _))
+
+  def isAccessGranted(checkWorld: World, checkPos: Vector3, profile: GameProfile, action: PlayerInteractEvent.Action): Boolean =
+  {
+    var hasPermission: Boolean = true
+
+    if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && checkPos.getTileEntity(checkWorld) != null)
+    {
+      if (getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
+      {
+        hasPermission = hasPermission(player.getGameProfile(), MFFSPermissions.blockAccess)
+      }
+    }
+
+    if (hasPermission)
+    {
+      if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+      {
+        hasPermission = hasPermission(player.getGameProfile(), MFFSPermissions.blockAlter)
+      }
+    }
+
+    return hasPermission
+  }
 
 }
