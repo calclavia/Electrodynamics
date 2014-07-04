@@ -9,7 +9,8 @@ import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.field.thread.ManipulatorCalculationThread
 import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
-import mffs.{MFFSHelper, ModularForceFieldSystem, Settings}
+import mffs.util.MFFSUtility
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.block.Block
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
@@ -415,12 +416,12 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     val tileEntity: TileEntity = position.getTileEntity
     if (this.getBiometricIdentifier != null)
     {
-      if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner) && !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner))
+      if (!MFFSUtility.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner))
       {
         return false
       }
     }
-    else if (!MFFSHelper.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, "") || !MFFSHelper.hasPermission(target.world, target, MFFSPermissions.blockAlter, ""))
+    else if (!MFFSUtility.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, "") || !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ""))
     {
       return false
     }

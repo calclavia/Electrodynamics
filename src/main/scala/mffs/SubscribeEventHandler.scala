@@ -7,7 +7,7 @@ import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
 import mffs.field.TileElectromagnetProjector
-import mffs.fortron.FortronHelper
+import mffs.util.{MFFSUtility, FortronUtility}
 import mffs.security.access.MFFSPermissions
 import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
@@ -51,7 +51,7 @@ object SubscribeEventHandler
   @SideOnly(Side.CLIENT)
   def textureHook(event: TextureStitchEvent.Post)
   {
-    FortronHelper.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.PREFIX + "fortron"))
+    FortronUtility.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.PREFIX + "fortron"))
   }
 
   @SubscribeEvent
@@ -126,7 +126,7 @@ object SubscribeEventHandler
 
       val position = new Vector3(evt.x, evt.y, evt.z)
 
-      val relevantProjectors = MFFSHelper.getRelevantProjectors(evt.entityPlayer.worldObj, position)
+      val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
 
       //Check if we can configure this block (activate). If not, we cancel the event.
       if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer.getGameProfile, evt.action) && x.isAccessGranted(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
@@ -160,7 +160,7 @@ object SubscribeEventHandler
   {
     if (!(evt.entity.isInstanceOf[EntityPlayer]))
     {
-      if (MFFSHelper.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0))
+      if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0))
       {
         evt.setResult(Event.Result.DENY)
       }

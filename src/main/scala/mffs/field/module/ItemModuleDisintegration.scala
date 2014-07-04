@@ -2,10 +2,11 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.{MFFSHelper, ModularForceFieldSystem}
+import mffs.ModularForceFieldSystem
 import mffs.base.{ItemModule, TileMFFSInventory}
 import mffs.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.field.TileElectromagnetProjector
+import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
@@ -46,7 +47,7 @@ class ItemModuleDisintegration(id: Integer) extends ItemModule(id, "moduleDisint
 					{
 						val filterStack = projector.getStackInSlot(i)
 
-						MFFSHelper.getFilterBlock(filterStack) != null &&
+						MFFSUtility.getFilterBlock(filterStack) != null &&
 								(filterStack.isItemEqual(new
 												ItemStack(blockID, 1, blockMetadata)) ||
 										((filterStack.getItem.asInstanceOf[ItemBlock]).getBlockID == blockID && projector.getModuleCount(ModularForceFieldSystem.itemModuleApproximation) > 0))

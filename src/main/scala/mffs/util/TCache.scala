@@ -1,4 +1,6 @@
-package mffs
+package mffs.util
+
+import mffs.Settings
 
 import scala.collection.mutable
 

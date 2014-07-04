@@ -9,7 +9,8 @@ import mffs.base.TileFieldInteraction
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.security.access.MFFSPermissions
-import mffs.{TCache, ModularForceFieldSystem, Settings}
+import mffs.util.TCache
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.tileentity.TileEntity

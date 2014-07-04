@@ -4,7 +4,7 @@ import java.util.EnumSet
 
 import com.google.common.io.ByteArrayDataInput
 import mffs.base.TileModuleAcceptor
-import mffs.fortron.FortronHelper
+import mffs.util.FortronUtility
 import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.{Item, ItemStack}
@@ -80,7 +80,7 @@ class TileCoercionDeriver extends TileModuleAcceptor
             this.discharge(this.getStackInSlot(SLOT_BATTERY))
             if (this.energy.checkExtract || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
             {
-              this.fortronTank.fill(FortronHelper.getFortron(this.getProductionRate), true)
+              this.fortronTank.fill(FortronUtility.getFortron(this.getProductionRate), true)
               this.energy.extractEnergy
               if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
               {
@@ -170,7 +170,7 @@ class TileCoercionDeriver extends TileModuleAcceptor
   {
     if (this.isActive && !this.isInversed)
     {
-      return FortronHelper.getAmount(this.fortronTank) < this.fortronTank.getCapacity
+      return FortronUtility.getAmount(this.fortronTank) < this.fortronTank.getCapacity
     }
     return false
   }

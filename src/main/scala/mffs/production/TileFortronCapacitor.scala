@@ -4,8 +4,8 @@ import java.util.{ArrayList, HashSet, Set}
 
 import com.google.common.io.ByteArrayDataInput
 import mffs.base.TileModuleAcceptor
-import mffs.fortron.TransferMode
-import mffs.{MFFSHelper, ModularForceFieldSystem}
+import mffs.util.{MFFSUtility, TransferMode}
+import mffs.ModularForceFieldSystem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.blocks.IBlockFrequency
@@ -56,7 +56,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
       {
         machines = this.getLinkedDevices
       }
-      MFFSHelper.transferFortron(this, machines, this.transferMode, getTransmissionRate * 10)
+      MFFSUtility.transferFortron(this, machines, this.transferMode, getTransmissionRate * 10)
     }
   }
 

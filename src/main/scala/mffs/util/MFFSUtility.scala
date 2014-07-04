@@ -1,10 +1,10 @@
-package mffs
+package mffs.util
 
 import com.mojang.authlib.GameProfile
 import mffs.field.TileElectromagnetProjector
 import mffs.field.mode.ItemModeCustom
-import mffs.fortron.TransferMode
-import mffs.fortron.TransferMode.TransferMode
+import mffs.util.TransferMode.TransferMode
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -16,7 +16,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
-import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.Permission
 import universalelectricity.core.transform.rotation.Rotation
@@ -30,139 +29,8 @@ import scala.collection.mutable
  *
  * @author Calclavia
  */
-object MFFSHelper
+object MFFSUtility
 {
-  def transferFortron(transferer: IFortronFrequency, frequencyTiles: Set[IFortronFrequency], transferMode: TransferMode, limit: Int)
-  {
-    if (transferer != null && frequencyTiles.size > 1 && Settings.allowFortronTeleport)
-    {
-      var totalFortron: Int = 0
-      var totalCapacity: Int = 0
-
-      for (machine <- frequencyTiles)
-      {
-        if (machine != null)
-        {
-          totalFortron += machine.getFortronEnergy
-          totalCapacity += machine.getFortronCapacity
-        }
-      }
-      if (totalFortron > 0 && totalCapacity > 0)
-      {
-        transferMode match
-        {
-          case TransferMode.EQUALIZE =>
-          {
-            for (machine <- frequencyTiles)
-            {
-              if (machine != null)
-              {
-                val capacityPercentage: Double = machine.getFortronCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double]
-                val amountToSet: Int = (totalFortron * capacityPercentage).asInstanceOf[Int]
-                doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy, limit)
-              }
-            }
-          }
-          case TransferMode.DISTRIBUTE =>
-          {
-            val amountToSet: Int = totalFortron / frequencyTiles.size
-            for (machine <- frequencyTiles)
-            {
-              if (machine != null)
-              {
-                doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy, limit)
-              }
-            }
-          }
-          case TransferMode.DRAIN =>
-          {
-            frequencyTiles.remove(transferer)
-
-            for (machine <- frequencyTiles)
-            {
-              if (machine != null)
-              {
-                val capacityPercentage: Double = machine.getFortronCapacity.asInstanceOf[Double] / totalCapacity.asInstanceOf[Double]
-                val amountToSet: Int = (totalFortron * capacityPercentage).asInstanceOf[Int]
-
-                if (amountToSet - machine.getFortronEnergy > 0)
-                {
-                  doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy, limit)
-                }
-              }
-            }
-          }
-          case TransferMode.FILL =>
-          {
-            if (transferer.getFortronEnergy < transferer.getFortronCapacity)
-            {
-              frequencyTiles.remove(transferer)
-              val requiredFortron: Int = transferer.getFortronCapacity - transferer.getFortronEnergy
-
-              for (machine <- frequencyTiles)
-              {
-                if (machine != null)
-                {
-                  val amountToConsume: Int = Math.min(requiredFortron, machine.getFortronEnergy)
-                  val amountToSet: Int = -machine.getFortronEnergy - amountToConsume
-                  if (amountToConsume > 0)
-                  {
-                    doTransferFortron(transferer, machine, amountToSet - machine.getFortronEnergy, limit)
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Tries to transfer Fortron to a specific machine from this capacitor. Renders an animation on
-   * the client side.
-   *
-   * @param receiver : The machine to be transfered to.
-   * @param joules   : The amount of energy to be transfered.
-   */
-  def doTransferFortron(transferer: IFortronFrequency, receiver: IFortronFrequency, joules: Int, limit: Int)
-  {
-    if (transferer != null && receiver != null)
-    {
-      val tileEntity = transferer.asInstanceOf[TileEntity]
-      val world: World = tileEntity.getWorldObj()
-      var isCamo = false
-
-      if (transferer.isInstanceOf[IModuleAcceptor])
-      {
-        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0
-      }
-
-      if (joules > 0)
-      {
-        val transferEnergy = Math.min(joules, limit)
-        var toBeInjected: Int = receiver.provideFortron(transferer.requestFortron(transferEnergy, false), false)
-        toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
-        if (world.isRemote && toBeInjected > 0 && !isCamo)
-        {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, 0.6f, 0.6f, 1, 20)
-        }
-      }
-      else
-      {
-        val transferEnergy = Math.min(Math.abs(joules), limit)
-        var toBeEjected: Int = transferer.provideFortron(receiver.requestFortron(transferEnergy, false), false)
-        toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true)
-        if (world.isRemote && toBeEjected > 0 && !isCamo)
-        {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3(tileEntity) + 0.5, 0.6f, 0.6f, 1, 20)
-        }
-      }
-    }
-  }
-
-
-
   /**
    * Gets the first itemStack that is an ItemBlock in this TileEntity or in nearby chests.
    */

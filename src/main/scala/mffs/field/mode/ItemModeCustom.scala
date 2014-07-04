@@ -2,7 +2,8 @@ package mffs.field.mode
 
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.relauncher.SideOnly
-import mffs.{TCache, ModularForceFieldSystem, Settings}
+import mffs.util.TCache
+import mffs.{ModularForceFieldSystem, Settings}
 import mffs.field.module.ItemModuleArray
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen

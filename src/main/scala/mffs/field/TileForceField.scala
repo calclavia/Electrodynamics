@@ -4,7 +4,8 @@ import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.TileElectromagnetProjector
 import mffs.security.access.MFFSPermissions
-import mffs.{MFFSHelper, ModularForceFieldSystem}
+import mffs.ModularForceFieldSystem
+import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
@@ -434,7 +435,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   {
     if (this.getProjectorSafe != null)
     {
-      camoStack = MFFSHelper.getCamoBlock(this.getProjector, new Vector3(this))
+      camoStack = MFFSUtility.getCamoBlock(this.getProjector, new Vector3(this))
     }
   }
 

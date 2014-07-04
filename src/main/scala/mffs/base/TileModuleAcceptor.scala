@@ -3,7 +3,8 @@ package mffs.base
 import java.util._
 
 import com.google.common.io.ByteArrayDataInput
-import mffs.{ModularForceFieldSystem, Settings, TCache}
+import mffs.util.TCache
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry

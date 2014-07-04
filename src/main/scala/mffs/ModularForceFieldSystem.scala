@@ -10,7 +10,7 @@ import mffs.base.{ItemMFFS, ItemModule}
 import mffs.field.TileElectromagnetProjector
 import mffs.field.mode._
 import mffs.field.module._
-import mffs.fortron.FortronHelper
+import mffs.util.FortronUtility
 import mffs.item.ItemRemoteController
 import mffs.item.card._
 import mffs.mobilize.TileForceMobilizer
@@ -199,10 +199,10 @@ final object ModularForceFieldSystem
     /**
      * Fluid Instantiation
      */
-    FortronHelper.FLUID_FORTRON = new Fluid("fortron")
-    FortronHelper.FLUID_FORTRON.setGaseous(true)
-    FluidRegistry.registerFluid(FortronHelper.FLUID_FORTRON)
-    FortronHelper.FLUIDSTACK_FORTRON = new FluidStack(FortronHelper.FLUID_FORTRON, 0)
+    FortronUtility.FLUID_FORTRON = new Fluid("fortron")
+    FortronUtility.FLUID_FORTRON.setGaseous(true)
+    FluidRegistry.registerFluid(FortronUtility.FLUID_FORTRON)
+    FortronUtility.FLUIDSTACK_FORTRON = new FluidStack(FortronUtility.FLUID_FORTRON, 0)
 
 
     Settings.configuration.save()

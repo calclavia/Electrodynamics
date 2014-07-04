@@ -6,7 +6,8 @@ import com.google.common.io.ByteArrayDataInput
 import mffs.field.module.ItemModuleArray
 import mffs.field.thread.ProjectorCalculationThread
 import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
-import mffs.{ModularForceFieldSystem, TCache}
+import mffs.ModularForceFieldSystem
+import mffs.util.TCache
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection

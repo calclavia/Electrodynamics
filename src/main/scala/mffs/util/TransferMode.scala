@@ -1,4 +1,4 @@
-package mffs.fortron
+package mffs.util
 
 /**
  * The force field transfer mode.

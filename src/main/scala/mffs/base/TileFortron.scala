@@ -1,13 +1,13 @@
 package mffs.base
 
 import com.google.common.io.ByteArrayDataInput
-import mffs.fortron.{FortronHelper, TransferMode}
-import mffs.{MFFSHelper, ModularForceFieldSystem}
+import mffs.util.{MFFSUtility, FortronUtility, TransferMode}
+import mffs.ModularForceFieldSystem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids._
 import resonant.api.mffs.card.ICard
-import resonant.api.mffs.fortron.IFortronFrequency
+import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -34,7 +34,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
   {
     if (this.markSendFortron)
     {
-      MFFSHelper.transferFortron(this, FrequencyGrid.instance.getFortronTiles(this.worldObj, new Vector3(this), 100, this.getFrequency), TransferMode.DRAIN, Integer.MAX_VALUE)
+      FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], this.worldObj, new Vector3(this), 100, this.getFrequency), TransferMode.DRAIN, Integer.MAX_VALUE)
     }
 
     super.invalidate()
@@ -104,7 +104,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
    */
   override def fill(from: Nothing, resource: FluidStack, doFill: Boolean): Int =
   {
-    if (resource.isFluidEqual(FortronHelper.FLUIDSTACK_FORTRON))
+    if (resource.isFluidEqual(FortronUtility.FLUIDSTACK_FORTRON))
     {
       return this.fortronTank.fill(resource, doFill)
     }
@@ -142,12 +142,12 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
   override def getFortronEnergy: Int =
   {
-    return FortronHelper.getAmount(this.fortronTank)
+    return FortronUtility.getAmount(this.fortronTank)
   }
 
   override def setFortronEnergy(joules: Int)
   {
-    this.fortronTank.setFluid(FortronHelper.getFortron(joules))
+    this.fortronTank.setFluid(FortronUtility.getFortron(joules))
   }
 
   override def getFortronCapacity: Int =
@@ -157,12 +157,12 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
   override def requestFortron(joules: Int, doUse: Boolean): Int =
   {
-    return FortronHelper.getAmount(this.fortronTank.drain(joules, doUse))
+    return FortronUtility.getAmount(this.fortronTank.drain(joules, doUse))
   }
 
   override def provideFortron(joules: Int, doUse: Boolean): Int =
   {
-    return this.fortronTank.fill(FortronHelper.getFortron(joules), doUse)
+    return this.fortronTank.fill(FortronUtility.getFortron(joules), doUse)
   }
 
   /**
