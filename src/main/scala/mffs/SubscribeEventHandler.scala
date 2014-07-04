@@ -20,12 +20,14 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
-import resonant.api.mffs.fortron.{IFortronFrequency, FrequencyGridRegistry}
+import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.event.ChunkModifiedEvent
 import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.JavaConversions._
 
 object SubscribeEventHandler
 {
@@ -125,7 +127,7 @@ object SubscribeEventHandler
       {
         val block = position.getBlock(evt.entityPlayer.worldObj)
 
-        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.username, MFFSPermissions.configure))
+        if (ModularForceFieldSystem.Blocks.biometricIdentifier == block && MFFSHelper.isPermittedByInterdictionMatrix(interdictionMatrix, evt.entityPlayer.getGameProfile, MFFSPermissions.configure))
         {
           return
         }
@@ -142,28 +144,17 @@ object SubscribeEventHandler
 
   /**
    * When a block breaks, mark force field projectors for an update.
-   *
-   * @param evt
    */
   @SubscribeEvent
   def chunkModifyEvent(evt: ChunkModifiedEvent.ChunkSetBlockEvent)
   {
     if (!evt.world.isRemote && evt.blockID == 0)
     {
-      for (fortronFrequency <- FrequencyGridRegistry.instance().asInstanceOf[FrequencyGrid].getNodes(classOf[IFortronFrequency], _.asInstanceOf[TileEntity].getWorldObj() == evt.world))
-      {
-        if (fortronFrequency.isInstanceOf[TileElectromagnetProjector])
-        {
-          val projector: TileElectromagnetProjector = fortronFrequency.asInstanceOf[TileElectromagnetProjector]
-          if (projector.getCalculatedField != null)
-          {
-            if (projector.getCalculatedField.contains(new Vector3(evt.x, evt.y, evt.z)))
-            {
-              projector.markFieldUpdate = true
-            }
-          }
-        }
-      }
+      FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector], _.asInstanceOf[TileEntity].getWorldObj() == evt.world)
+              .view
+              .filter(_.getCalculatedField != null)
+              .filter(_.getCalculatedField.contains(new Vector3(evt.x, evt.y, evt.z)))
+              .foreach(_.markFieldUpdate = true)
     }
   }
 

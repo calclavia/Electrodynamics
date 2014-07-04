@@ -22,7 +22,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
    */
   maxSlots = 2 + 9 * 4
 
-  def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
+  override def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
   {
     if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.OP_OVERRIDE)
       return true

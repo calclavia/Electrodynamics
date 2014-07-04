@@ -2,6 +2,8 @@ package mffs
 
 import java.util.Set
 
+import com.mojang.authlib.GameProfile
+import mffs.field.TileElectromagnetProjector
 import mffs.field.mode.ItemModeCustom
 import mffs.fortron.TransferMode
 import mffs.fortron.TransferMode.TransferMode
@@ -18,6 +20,7 @@ import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.api.mffs.modules.IModuleAcceptor
 import resonant.api.mffs.security.IInterdictionMatrix
+import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.Permission
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -163,67 +166,31 @@ object MFFSHelper
   /**
    * Gets the nearest active Interdiction Matrix.
    */
-  def getNearestInterdictionMatrix(world: World, position: Vector3): IInterdictionMatrix =
+  def getNearestProjector(world: World, position: Vector3): TileElectromagnetProjector =
   {
-    for (frequencyTile <- FrequencyGridRegistry.instance().getNodes())
-    {
-      if ((frequencyTile.asInstanceOf[TileEntity]).getWorldObj() == world && frequencyTile.isInstanceOf[IInterdictionMatrix])
-      {
-        val interdictionMatrix: IInterdictionMatrix = frequencyTile.asInstanceOf[IInterdictionMatrix]
-
-        if (interdictionMatrix.isActive)
-        {
-          if (position.distance(new Vector3(interdictionMatrix.asInstanceOf[TileEntity])) <= interdictionMatrix.getActionRange)
-          {
-            return interdictionMatrix
-          }
-        }
-      }
-    }
-    return null
+    return (FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagnetProjector]).view.toList sortWith (_.position.distance(position) < _.position.distance(position))).head
   }
 
   /**
    * Returns true of the interdictionMatrix has a specific set of permissions.
-   *
-   * @param interdictionMatrix
-   * @param username
-   * @param permissions
-   * @return
    */
-  def isPermittedByInterdictionMatrix(interdictionMatrix: IInterdictionMatrix, username: String, permissions: Permission*): Boolean =
+  def isPermittedByInterdictionMatrix(matrix: IInterdictionMatrix, profile: GameProfile, permissions: Permission*): Boolean =
   {
-    if (interdictionMatrix != null)
+    if (matrix != null)
     {
-      if (interdictionMatrix.isActive)
+      if (matrix.isActive)
       {
-        if (interdictionMatrix.getBiometricIdentifier != null)
+        if (matrix.getBiometricIdentifier != null)
         {
-          for (permission <- permissions)
+          if (permissions exists (!matrix.getBiometricIdentifier.hasPermission(profile, _)))
           {
-            if (!interdictionMatrix.getBiometricIdentifier.isAccessGranted(username, permission))
-            {
-              if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
-              {
-                return true
-              }
-              else
-              {
-                return false
-              }
-            }
+            return matrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0
           }
         }
       }
     }
-    if (interdictionMatrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
-    {
-      return false
-    }
-    else
-    {
-      return true
-    }
+
+    return !(matrix.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
   }
 
   /**
@@ -362,21 +329,14 @@ object MFFSHelper
     return null
   }
 
-  def hasPermission(world: World, position: Vector3, permission: MFFSPermissions, player: EntityPlayer): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =
   {
-    return hasPermission(world, position, permission, player.getGameProfile().getName())
+    return hasPermission(world, position, permission, player.getGameProfile())
   }
 
-  def hasPermission(world: World, position: Vector3, permission: MFFSPermissions, username: String): Boolean =
+  def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean =
   {
-    val interdictionMatrix: IInterdictionMatrix = getNearestInterdictionMatrix(world, position)
-
-    if (interdictionMatrix != null)
-    {
-      return isPermittedByInterdictionMatrix(interdictionMatrix, username, permission)
-    }
-
-    return true
+    return (FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector]) filter (_.getForceFields.contains(position))).forall(_.isAccessGranted(profile, permission))
   }
 
   def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =

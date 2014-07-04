@@ -90,7 +90,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 					boolean isGranted = false;
 
-					if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
+					if (biometricIdentifier != null && biometricIdentifier.hasPermission(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 					{
 						isGranted = true;
 					}
@@ -135,7 +135,7 @@ public class TileInterdictionMatrix extends TileModuleAcceptor implements IInter
 
 			IBiometricIdentifier biometricIdentifier = this.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
+			if (biometricIdentifier != null && biometricIdentifier.hasPermission(player.username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 			{
 				return;
 			}

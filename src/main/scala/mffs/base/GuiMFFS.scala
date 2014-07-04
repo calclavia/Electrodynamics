@@ -13,6 +13,7 @@ import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.network.PacketTile
 import resonant.lib.utility.LanguageUtility
+import resonant.lib.wrapper.WrapList._
 import universalelectricity.core.transform.region.Rectangle
 import universalelectricity.core.transform.vector.Vector2
 

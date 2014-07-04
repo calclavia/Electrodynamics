@@ -89,7 +89,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
         {
           if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
           {
-            if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.configure))
+            if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.configure))
             {
               this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0)
               world.setBlock(x, y, z, 0)

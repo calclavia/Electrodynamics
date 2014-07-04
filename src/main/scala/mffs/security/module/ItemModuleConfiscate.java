@@ -27,7 +27,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 
 			IBiometricIdentifier biometricIdentifier = interdictionMatrix.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(player.username, MFFSPermissions.DEFENSE_STATION_CONFISCATION))
+			if (biometricIdentifier != null && biometricIdentifier.hasPermission(player.username, MFFSPermissions.DEFENSE_STATION_CONFISCATION))
 			{
 				return false;
 			}
@@ -42,7 +42,7 @@ public class ItemModuleConfiscate extends ItemModuleInterdictionMatrix
 		{
 			IBiometricIdentifier biometricIdentifier = interdictionMatrix.getBiometricIdentifier();
 
-			if (biometricIdentifier != null && biometricIdentifier.isAccessGranted(((EntityPlayer) entityLiving).username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
+			if (biometricIdentifier != null && biometricIdentifier.hasPermission(((EntityPlayer) entityLiving).username, MFFSPermissions.BYPASS_INTERDICTION_MATRIX))
 			{
 				return false;
 			}

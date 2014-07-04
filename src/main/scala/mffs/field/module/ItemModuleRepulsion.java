@@ -58,7 +58,7 @@ public class ItemModuleRepulsion extends ItemModule
 						}
 						else if (biometricIdentifier != null)
 						{
-							if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
+							if (biometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.FORCE_FIELD_WARP))
 							{
 								continue;
 							}

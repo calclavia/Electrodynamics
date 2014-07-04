@@ -3,6 +3,7 @@ package mffs.field
 import java.util.{HashSet, Iterator, Set}
 
 import com.google.common.io.ByteArrayDataInput
+import com.mojang.authlib.GameProfile
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFieldInteraction
 import mffs.field.mode.ItemModeCustom
@@ -15,11 +16,24 @@ import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{ICache, IProjector}
+import resonant.lib.access.Permission
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
 class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 {
+  /** A set containing all positions of all force field blocks generated. */
+  val forceFields = Set[Vector3]
+
+  /** Marks the field for an update call */
+  var markFieldUpdate = true
+
+  /** True if the field is done constructing and the projector is simply maintaining the field  */
+  private var isCompleteConstructing = false
+
+  /** True to make the field constantly tick */
+  private var fieldRequireTicks = false
+
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 50
   startModuleIndex = 1
@@ -30,7 +44,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
     this.calculateForceField(this)
   }
 
-  override def getLightValue(access: IBlockAccess): Int = if (getMode() != null) 10 else 0
+  override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
   override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
   {
@@ -348,24 +362,15 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
     return cards
   }
 
-  @SideOnly(Side.CLIENT) override def getRenderBoundingBox: AxisAlignedBB =
+  @SideOnly(Side.CLIENT)
+  override def getRenderBoundingBox: AxisAlignedBB =
   {
     return AxisAlignedBB.getAABBPool.getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 2, this.zCoord + 1)
   }
 
-  def getTicks: Long =
-  {
-    return this.ticks
-  }
+  def getTicks: Long = ticks
 
-  /**
-   * A set containing all positions of all force field blocks.
-   */
-  protected final val forceFields: Set[Vector3] = new HashSet[_]
-  var markFieldUpdate: Boolean = true
-  /**
-   * True if the field is done constructing and the projector is simply maintaining the field *
-   */
-  private var isCompleteConstructing: Boolean = false
-  private var fieldRequireTicks: Boolean = false
+  //TODO: Finish this
+  def isAccessGranted(profile: GameProfile, permission: Permission): Boolean = false
+
 }

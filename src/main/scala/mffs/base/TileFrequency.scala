@@ -68,7 +68,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with
             .filter(_.isInstanceOf[IBiometricIdentifier])
             .force
 
-    val frequencyLinks = FrequencyGridRegistry.instance.getNodes(classOf[IBiometricIdentifier], getFrequency] )
+    val frequencyLinks = FrequencyGridRegistry.instance.getNodes(classOf[IBiometricIdentifier], getFrequency)
 
     return cardLinks ::: frequencyLinks
   }

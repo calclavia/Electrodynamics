@@ -189,7 +189,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
         }
         else if (biometricIdentifier != null)
         {
-          if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.forceFieldWrap))
+          if (biometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.forceFieldWrap))
           {
             return null
           }
@@ -232,7 +232,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
               }
               else if (biometricIdentifier != null)
               {
-                if (biometricIdentifier.isAccessGranted(entityPlayer.username, MFFSPermissions.forceFieldWrap))
+                if (biometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.forceFieldWrap))
                 {
                   return
                 }
