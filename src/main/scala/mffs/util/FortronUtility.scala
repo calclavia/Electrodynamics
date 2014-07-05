@@ -9,6 +9,8 @@ import resonant.api.mffs.fortron.IFortronFrequency
 import resonant.api.mffs.modules.IModuleAcceptor
 import universalelectricity.core.transform.vector.Vector3
 
+import scala.collection.mutable
+
 /**
  * A class with useful functions related to Fortron.
  *
@@ -43,12 +45,12 @@ object FortronUtility
     return 0
   }
 
-  def transferFortron(source: IFortronFrequency, frequencyTiles: Set[IFortronFrequency], transferMode: TransferMode, limit: Int)
+  def transferFortron(source: IFortronFrequency, frequencyTiles: mutable.Set[IFortronFrequency], transferMode: TransferMode, limit: Int)
   {
-    if (source != null && frequencyTiles.size > 1 && Settings.allowFortronTeleport)
+    if (frequencyTiles.size > 1 && Settings.allowFortronTeleport)
     {
-      var totalFortron: Int = 0
-      var totalCapacity: Int = 0
+      var totalFortron = 0
+      var totalCapacity = 0
 
       for (machine <- frequencyTiles)
       {

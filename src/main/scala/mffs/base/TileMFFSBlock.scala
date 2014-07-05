@@ -35,8 +35,8 @@ class TileMFFSBlock extends TileMFFS
   override def registerIcons(iconRegister: IIconRegister)
   {
     super.registerIcons(iconRegister)
-    this.blockIconTop = par1IconRegister.registerIcon(this.getTextureName + "_top")
-    this.blockIconOn = par1IconRegister.registerIcon(this.getTextureName + "_on")
-    this.blockIconTopOn = par1IconRegister.registerIcon(this.getTextureName + "_top_on")
+    this.blockIconTop = iconRegister.registerIcon(this.getTextureName + "_top")
+    this.blockIconOn = iconRegister.registerIcon(this.getTextureName + "_on")
+    this.blockIconTopOn = iconRegister.registerIcon(this.getTextureName + "_top_on")
   }
 }

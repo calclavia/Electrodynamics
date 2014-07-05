@@ -11,13 +11,13 @@ import scala.collection.convert.wrapAll._
 
 class ItemModuleDome(id: Int) extends ItemModule(id, "moduleDome")
 {
-	setMaxStackSize(1)
+  setMaxStackSize(1)
 
-	override def onCalculate(projector: IFieldInteraction, fieldBlocks: Set[Vector3])
-	{
-		val absoluteTranslation = new Vector3(projector.asInstanceOf[TileEntity]).translate(projector.getTranslation)
-		val newField = fieldBlocks.par.filter(_.y > absoluteTranslation.y).seq
-		fieldBlocks.clear()
-		fieldBlocks.addAll(newField)
-	}
+  override def onCalculate(projector: IFieldInteraction, fieldBlocks: Set[Vector3])
+  {
+    val absoluteTranslation = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation
+    val newField = fieldBlocks.par.filter(_.y > absoluteTranslation.y).seq
+    fieldBlocks.clear()
+    fieldBlocks.addAll(newField)
+  }
 }

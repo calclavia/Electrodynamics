@@ -5,6 +5,7 @@ import java.util.Set
 import mffs.ModularForceFieldSystem
 import net.minecraft.tileentity.TileEntity
 import resonant.api.mffs.IFieldInteraction
+import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
@@ -26,31 +27,22 @@ class ProjectorCalculationThread(projector: IFieldInteraction, callBack: () => U
       {
         var newField: Set[Vector3] = null
 
-        if (projector.getModuleCount(ModularForceFieldSystem.itemModuleInvert) > 0)
+        if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
           newField = projector.getMode.getInteriorPoints(projector)
         else
           newField = projector.getMode.getExteriorPoints(projector)
 
-        val translation = projector.getTranslation()
-        val rotationYaw = projector.getRotationYaw()
-        val rotationPitch = projector.getRotationPitch()
+        val translation = projector.getTranslation
+        val rotationYaw = projector.getRotationYaw
+        val rotationPitch = projector.getRotationPitch
 
-        projector.getModules().foreach(_.onPreCalculate(projector, newField))
+        //TODO: Check efficiency of parallel
+        projector.getModules().par foreach (_.onPreCalculate(projector, newField))
 
-        val maxHeight = projector.asInstanceOf[TileEntity].worldObj.getHeight()
-        val center = new Vector3(this.projector.asInstanceOf[TileEntity])
+        val maxHeight = projector.asInstanceOf[TileEntity].getWorldObj.getHeight
+        val center = new Vector3(projector.asInstanceOf[TileEntity])
 
-        newField.par.map(
-          position =>
-          {
-            if (rotationYaw != 0 || rotationPitch != 0)
-              position.rotate(rotationYaw, rotationPitch)
-
-            position.translate(center)
-            position.translate(translation)
-            position.toRound()
-          }
-        ).filter(position => position.intY <= maxHeight && position.intY >= 0)
+        newField = newField.par map (pos => (pos.apply(new Rotation(rotationYaw, rotationPitch, 0)) + center + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)
 
         projector.getModules().foreach(_.onCalculate(projector, newField))
 

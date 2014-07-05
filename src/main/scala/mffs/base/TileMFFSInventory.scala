@@ -1,10 +1,13 @@
 package mffs.base
 
 import com.google.common.io.ByteArrayDataInput
+import cpw.mods.fml.common.network.ByteBufUtils
+import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
+import resonant.lib.network.PacketTile
 
 /**
  * All TileEntities that have an inventory should extend this.
@@ -13,27 +16,28 @@ import resonant.lib.content.prefab.TInventory
  */
 abstract class TileMFFSInventory extends TileMFFS with TInventory
 {
-  override def getPacketData(packetID: Int): List[_] =
+  override def getPacketData(packetID: Int): List[AnyRef] =
   {
     val data = super.getPacketData(packetID)
 
-    if (packetID == TileMFFS.TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      val nbt: NBTTagCompound = new NBTTagCompound
-      this.writeToNBT(nbt)
-      data.add(nbt)
+      val nbt = new NBTTagCompound
+      getInventory.save(nbt)
+      return super.getPacketData(packetID) :+ nbt
     }
-    return data
+    return super.getPacketData(packetID)
   }
 
-  def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
-    if (this.worldObj.isRemote)
+
+    if (worldObj.isRemote)
     {
-      if (packetID == TilePacketType.DESCRIPTION.ordinal || packetID == TilePacketType.INVENTORY.ordinal)
+      if (packetID == TilePacketType.DESCRIPTION.id || packetID == TilePacketType.INVENTORY.id)
       {
-        this.readFromNBT(PacketHandler.readNBTTagCompound(dataStream))
+        getInventory.load(ByteBufUtils.readTag(dataStream))
       }
     }
   }
@@ -42,7 +46,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory
   {
     val nbt: NBTTagCompound = new NBTTagCompound
     this.writeToNBT(nbt)
-    PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.INVENTORY.ordinal, nbt))
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.INVENTORY.id : Integer, nbt))
   }
 
   /**

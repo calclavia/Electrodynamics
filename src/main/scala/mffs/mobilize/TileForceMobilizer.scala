@@ -19,7 +19,7 @@ import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
-import resonant.api.mffs.Blacklist
+import resonant.api.mffs.{EventForceManipulate, Blacklist}
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import universalelectricity.core.transform.vector.Vector3
@@ -273,7 +273,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
           {
             val animationTime: Int = dataStream.readInt
             val anchorPosition: Vector3 = new Vector3(dataStream.readDouble, dataStream.readDouble, dataStream.readDouble)
-            val targetPosition: Nothing = new Nothing(PacketHandler.readNBTTagCompound(dataStream))
+            val targetPosition: Vector3 = new Vector3(PacketHandler.readNBTTagCompound(dataStream))
             val isPreview: Boolean = dataStream.readBoolean
             val nbt: NBTTagCompound = PacketHandler.readNBTTagCompound(dataStream)
             val nbtList: NBTTagList = nbt.getTag("list").asInstanceOf[NBTTagList]
@@ -383,15 +383,15 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   protected def canMove: Boolean =
   {
     val mobilizationPoints: Set[Vector3] = this.getInteriorPoints
-    val targetCenterPosition: Nothing = this.getTargetPosition
+    val targetCenterPosition: Vector3 = this.getTargetPosition
     import scala.collection.JavaConversions._
     for (position <- mobilizationPoints)
     {
       if (!this.worldObj.isAirBlock(position.xi, position.yi, position.zi))
       {
         val relativePosition: Vector3 = position.clone.subtract(this.getAbsoluteAnchor)
-        val targetPosition: Nothing = targetCenterPosition.clone.add(relativePosition).asInstanceOf[Nothing]
-        if (!this.canMove(new Nothing(this.worldObj, position), targetPosition))
+        val targetPosition: Vector3 = targetCenterPosition.clone.add(relativePosition).asInstanceOf[Vector3]
+        if (!this.canMove(new Vector3(this.worldObj, position), targetPosition))
         {
           this.failedPositions.add(position)
           return false
@@ -401,7 +401,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return true
   }
 
-  def canMove(position: Nothing, target: Nothing): Boolean =
+  def canMove(position: Vector3, target: Vector3): Boolean =
   {
     if (Blacklist.mobilizerBlacklist.contains(position.getBlockID))
     {
@@ -450,7 +450,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     if (!this.worldObj.isRemote)
     {
       val relativePosition: Vector3 = position.clone.subtract(this.getAbsoluteAnchor)
-      val newPosition: Nothing = this.getTargetPosition.clone.add(relativePosition).asInstanceOf[Nothing]
+      val newPosition: Vector3 = this.getTargetPosition.clone.add(relativePosition).asInstanceOf[Vector3]
       val tileEntity: TileEntity = position.getTileEntity(this.worldObj)
       val blockID: Int = position.getBlockID(this.worldObj)
       if (!this.worldObj.isAirBlock(position.xi, position.yi, position.zi) && tileEntity ne this)
@@ -476,13 +476,13 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
    *
    * @return A vector of the target position.
    */
-  def getTargetPosition: Nothing =
+  def getTargetPosition: Vector3 =
   {
     if (this.isTeleport)
     {
       return (this.getCard.getItem.asInstanceOf[ICoordLink]).getLink(this.getCard)
     }
-    return new Nothing(this.worldObj, this.getAbsoluteAnchor).clone.translate(this.getDirection).asInstanceOf[Nothing]
+    return new Vector3(this.worldObj, this.getAbsoluteAnchor).clone.translate(this.getDirection).asInstanceOf[Vector3]
   }
 
   /**
@@ -529,7 +529,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
   protected def moveEntities
   {
-    val targetLocation: Nothing = this.getTargetPosition
+    val targetLocation: Vector3 = this.getTargetPosition
     val axisalignedbb: AxisAlignedBB = this.getSearchAxisAlignedBB
     if (axisalignedbb != null)
     {
@@ -537,14 +537,14 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       import scala.collection.JavaConversions._
       for (entity <- entities)
       {
-        val relativePosition: Vector3 = new Nothing(entity).clone.subtract(this.getAbsoluteAnchor.translate(0.5))
-        val newLocation: Nothing = targetLocation.clone.translate(0.5).add(relativePosition).asInstanceOf[Nothing]
+        val relativePosition: Vector3 = new Vector3(entity).clone.subtract(this.getAbsoluteAnchor.translate(0.5))
+        val newLocation: Vector3 = targetLocation.clone.translate(0.5).add(relativePosition).asInstanceOf[Vector3]
         moveEntity(entity, newLocation)
       }
     }
   }
 
-  protected def moveEntity(entity: Entity, location: Nothing)
+  protected def moveEntity(entity: Entity, location: Vector3)
   {
     if (entity != null && location != null)
     {
@@ -620,7 +620,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return Array[String]("isActivate", "setActivate", "resetAnchor", "canMove")
   }
 
-  def callMethod(computer: Nothing, context: Nothing, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
+  def callMethod(computer: Vector3, context: Vector3, method: Int, arguments: Array[AnyRef]): Array[AnyRef] =
   {
     method match
     {

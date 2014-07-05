@@ -1,43 +1,40 @@
 package mffs.field
 
-import com.google.common.io.ByteArrayDataInput
+import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.field.TileElectromagnetProjector
-import mffs.security.access.MFFSPermissions
+import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
+import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.entity.{Entity, EntityLiving}
+import net.minecraft.init.Blocks
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.{IBlockAccess, World}
-import resonant.api.mffs.IProjector
-import resonant.api.mffs.fortron.IFortronStorage
 import resonant.api.mffs.modules.IModule
+import resonant.api.mffs.{IForceField, IProjector}
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.network.IPacketReceiver
+import resonant.lib.network.{IPacketReceiver, PacketTile}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
-import scala.collection.JavaConversions._
-
-class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
+class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver with IForceField
 {
   private var camoStack: ItemStack = null
-  private var projector: Nothing = null
+  private var projector: Vector3 = null
 
   /**
    * Constructor
    */
   blockHardness = -1
-  blockResistance = Integer.MAX_VALUE
+  blockResistance = Float.MaxValue
   creativeTab = null
   isOpaqueCube = false
   normalRender = false
@@ -56,7 +53,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   {
     var renderType: Int = 0
     var camoBlock: Block = null
-    val tileEntity: TileEntity = iBlockAccess.getTileEntity(x, y, z)
+    val tileEntity = access.getTileEntity(x, y, z)
 
     if (camoStack != null && camoStack.getItem().isInstanceOf[ItemBlock])
     {
@@ -80,7 +77,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
         renderType match
         {
           case 4 =>
-            renderer.renderBlockFluids(block, x, y, z)
+            renderer.renderBlockLiquid(block, x, y, z)
           case 31 =>
             renderer.renderBlockLog(block, x, y, z)
           case 1 =>
@@ -144,8 +141,8 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     {
       try
       {
-        val block: Block = Block.blocksList(((tileEntity.asInstanceOf[TileForceField]).camoStack.getItem.asInstanceOf[ItemBlock]).getBlockID)
-        return block.shouldSideBeRendered(world, x, y, z, par5)
+        val block = camoStack.getItem.asInstanceOf[ItemBlock].field_150939_a
+        return block.shouldSideBeRendered(access, x, y, z, side)
       }
       catch
         {
@@ -157,18 +154,15 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
       return true
     }
 
-    val i1: Int = world.getBlockId(x, y, z)
-    return if (i1 == this.blockID) false else super.shouldSideBeRendered(world, x, y, z, par5)
+    return if (access.getBlock(x, y, z) == block) false else super.shouldSideBeRendered(world, x, y, z, side)
   }
 
   override def click(player: EntityPlayer)
   {
-    val projector = getProjector()
+    val projector = getProjector
 
     if (projector != null)
-    {
-      projector.getModuleStacks(projector.getModuleSlots()).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack))
-    }
+      projector.getModuleStacks(projector.getModuleSlots(): _*) forall (stack => stack.getItem.asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, player, stack))
   }
 
   override def getCollisionBoxes(intersect: Cuboid, entity: Entity): Iterable[Cuboid] =
@@ -190,7 +184,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
         }
         else if (biometricIdentifier != null)
         {
-          if (biometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.forceFieldWrap))
+          if (biometricIdentifier.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
           {
             return null
           }
@@ -207,7 +201,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
 
     if (projector != null)
     {
-      if (!projector.getModuleStacks(projector.getModuleSlots()).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
+      if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
         return
 
       val biometricIdentifier = projector.getBiometricIdentifier()
@@ -233,7 +227,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
               }
               else if (biometricIdentifier != null)
               {
-                if (biometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.forceFieldWrap))
+                if (biometricIdentifier.hasPermission(player.getGameProfile, MFFSPermissions.forceFieldWrap))
                 {
                   return
                 }
@@ -241,7 +235,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
             }
           }
 
-          entity.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100)
+          entity.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 100)
         }
       }
     }
@@ -279,7 +273,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
    * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color.
    * Note only called when first determining what to render.
    */
-  def colorMultiplier(): Int =
+  def colorMultiplier: Int =
   {
     if (camoStack != null)
     {
@@ -295,17 +289,17 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
           }
         }
     }
-    return super.colorMultiplier()
+    return super.colorMultiplier
   }
 
   def getLightValue(access: IBlockAccess): Int =
   {
     try
     {
-      val projector = getProjectorSafe()
+      val projector = getProjectorSafe
       if (projector != null)
       {
-        return ((Math.min(projector.getModuleCount(ModularForceFieldSystem.itemModuleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
+        return ((Math.min(projector.getModuleCount(ModularForceFieldSystem.Items.moduleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
       }
     }
     catch
@@ -324,13 +318,15 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
     return Integer.MAX_VALUE
   }
 
-  def weakenForceField(world: World, x: Int, y: Int, z: Int, joules: Int)
+  override def weakenForceField(joules: Int)
   {
-    val projector: IProjector = this.getProjector(world, x, y, z)
+    val projector = getProjector
+
     if (projector != null)
     {
-      (projector.asInstanceOf[IFortronStorage]).provideFortron(joules, true)
+      projector.provideFortron(joules, true)
     }
+
     if (!world.isRemote)
     {
       world.setBlockToAir(x, y, z)
@@ -348,31 +344,30 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   {
     if (getProjector() != null)
     {
-      var itemID: Int = -1
-      var itemMetadata: Int = -1
       if (camoStack != null)
       {
-        itemID = camoStack.itemID
-        itemMetadata = camoStack.getItemDamage
+        val nbt = new NBTTagCompound
+        camoStack.writeToNBT(nbt)
+        return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this, projector.xi: Integer, projector.yi: Integer, projector.zi: Integer, true: java.lang.Boolean, camoStack))
       }
-      return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.projector.intX, this.projector.intY, this.projector.intZ, itemID, itemMetadata)
+
+      return ModularForceFieldSystem.packetHandler.toMCPacket(new PacketTile(this, projector.xi: Integer, projector.yi: Integer, projector.zi: Integer, false: java.lang.Boolean))
     }
 
     return null
   }
 
-  override def onReceivePacket(data: ByteArrayDataInput, player: EntityPlayer, obj: AnyRef*)
+  override def onReceivePacket(data: ByteBuf, player: EntityPlayer, obj: AnyRef*)
   {
     try
     {
-      this.setProjector(new Nothing(data.readInt, data.readInt, data.readInt))
-      this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord)
-      this.camoStack = null
-      val itemID: Int = data.readInt
-      val itemMetadata: Int = data.readInt
-      if (itemID != -1 && itemMetadata != -1)
+      setProjector(new Vector3(data.readInt, data.readInt, data.readInt))
+      markRender()
+      camoStack = null
+
+      if (data.readBoolean)
       {
-        this.camoStack = new ItemStack(Block.blocksList(itemID), 1, itemMetadata)
+        camoStack = ItemStack.loadItemStackFromNBT(ByteBufUtils.readTag(data))
       }
     }
     catch
@@ -388,7 +383,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
    * @return Gets the projector block controlling this force field. Removes the force field if no
    *         projector can be found.
    */
-  def getProjector(): TileElectromagnetProjector =
+  def getProjector: TileElectromagnetProjector =
   {
     if (this.getProjectorSafe != null)
     {
@@ -397,7 +392,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
 
     if (!this.worldObj.isRemote)
     {
-      this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, 0)
+      world.setBlock(xCoord, yCoord, zCoord, Blocks.air)
     }
 
     return null
@@ -405,13 +400,15 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
 
   def getProjectorSafe: TileElectromagnetProjector =
   {
-    if (this.projector != null)
+    if (projector != null)
     {
-      if (this.projector.getTileEntity(this.worldObj).isInstanceOf[TileElectromagnetProjector])
+      val projTile = projector.getTileEntity(world)
+
+      if (projTile.isInstanceOf[TileElectromagnetProjector])
       {
-        if (worldObj.isRemote || (projector.getTileEntity(this.worldObj).asInstanceOf[IProjector]).getCalculatedField.contains(new Nothing(this)))
+        if (world.isRemote || projTile.asInstanceOf[IProjector].getCalculatedField.contains(new Vector3(this)))
         {
-          return this.projector.getTileEntity(this.worldObj).asInstanceOf[TileElectromagnetProjector]
+          return projTile.asInstanceOf[TileElectromagnetProjector]
         }
       }
     }
@@ -431,18 +428,18 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   /**
    * Server Side Only
    */
-  def refreshCamoBlock
+  def refreshCamoBlock()
   {
-    if (this.getProjectorSafe != null)
+    if (getProjectorSafe != null)
     {
-      camoStack = MFFSUtility.getCamoBlock(this.getProjector, new Vector3(this))
+      camoStack = MFFSUtility.getCamoBlock(getProjector, new Vector3(this))
     }
   }
 
   def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    this.projector = new Nothing(nbt.getCompoundTag("projector"))
+    projector = new Vector3(nbt.getCompoundTag("projector"))
   }
 
   /**
@@ -451,9 +448,10 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver
   def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    if (this.getProjector != null)
+
+    if (getProjector != null)
     {
-      nbt.setCompoundTag("projector", this.projector.writeToNBT(new NBTTagCompound))
+      nbt.setTag("projector", projector.toNBT)
     }
   }
 }

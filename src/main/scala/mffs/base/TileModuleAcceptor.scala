@@ -1,16 +1,12 @@
 package mffs.base
 
-import java.util._
-
-import com.google.common.io.ByteArrayDataInput
+import io.netty.buffer.ByteBuf
+import mffs.ModularForceFieldSystem
 import mffs.util.TCache
-import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
-
-import scala.collection.JavaConversions._
 
 abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
 {
@@ -23,23 +19,21 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   protected var capacityBase = 500
   protected var capacityBoost = 5
 
-  override def getPacketData(packetID: Int): List[_] =
+  override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    val data = super.getPacketData(packetID)
-
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      data.add(this.getFortronCost)
+      return super.getPacketData(packetID) :+ (getFortronCost: Integer)
     }
 
-    return data
+    return super.getPacketData(packetID)
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
 
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
       clientFortronCost = dataStream.readInt
     }
@@ -48,7 +42,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   override def start()
   {
     super.start()
-    fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+    fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.Items.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
   }
 
   def consumeCost()
@@ -63,63 +57,34 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   {
     val cacheID = "getModule_" + module.hashCode
 
-    if (getCache(classOf[ItemStack], cacheID)) return getCache(classOf[ItemStack], cacheID)
+    if (hasCache(classOf[ItemStack], cacheID)) return getCache(classOf[ItemStack], cacheID)
 
-    val returnStack: ItemStack = new ItemStack(module.asInstanceOf[Item], 0)
+    val returnStack = new ItemStack(module.asInstanceOf[Item], getModuleStacks().count(_.getItem == module))
 
-    for (comparedModule <- getModuleStacks)
-    {
-      if (comparedModule.getItem eq module)
-      {
-        returnStack.stackSize += comparedModule.stackSize
-      }
-    }
     cache(cacheID, returnStack.copy)
-
-
     return returnStack
   }
 
-  def getModuleCount(module: IModule, slots: Int*): Int =
+  override def getModuleCount(module: IModule, slots: Int*): Int =
   {
-    var count: Int = 0
-    if (module != null)
+    var cacheID = "getModuleCount_" + module.hashCode
+
+    if (slots != null)
     {
-      var cacheID = "getModuleCount_" + module.hashCode
-
-      if (slots != null)
-      {
-        cacheID += "_" + Arrays.hashCode(slots)
-      }
-
-      if (getCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
-
-      if (slots != null && slots.length > 0)
-      {
-        for (slotID <- slots)
-        {
-          if (this.getStackInSlot(slotID) != null)
-          {
-            if (this.getStackInSlot(slotID).getItem eq module)
-            {
-              count += this.getStackInSlot(slotID).stackSize
-            }
-          }
-        }
-      }
-      else
-      {
-        for (itemStack <- getModuleStacks)
-        {
-          if (itemStack.getItem eq module)
-          {
-            count += itemStack.stackSize
-          }
-        }
-      }
-      cache(cacheID, count)
-
+      cacheID += "_" + slots.hashCode()
     }
+
+    if (hasCache(classOf[Integer], cacheID)) return getCache(classOf[Integer], cacheID)
+
+    var count = 0
+
+    if (slots != null && slots.length > 0)
+      count = (slots map (getStackInSlot(_)) filter (_.getItem == module) foldLeft 0)((a: Int, b: ItemStack) => a + b.stackSize)
+    else
+      count = (getModuleStacks() filter (_.getItem == module) foldLeft 0)((a: Int, b: ItemStack) => a + b.stackSize)
+
+    cache(cacheID, count)
+
     return count
   }
 
@@ -127,51 +92,21 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   def getModuleStacks(slots: Int*): Set[ItemStack] =
   {
     var cacheID: String = "getModuleStacks_"
+
     if (slots != null)
     {
-      cacheID += Arrays.hashCode(slots)
+      cacheID += slots.hashCode()
     }
 
     if (hasCache(classOf[Set[ItemStack]], cacheID)) return getCache(classOf[Set[ItemStack]], cacheID)
 
-    val modules: Set[ItemStack] = new HashSet[ItemStack]
+    var modules: Set[ItemStack] = null
+
     if (slots == null || slots.length <= 0)
-    {
-      {
-        var slotID: Int = startModuleIndex
-        while (slotID <= endModuleIndex)
-        {
-          {
-            val itemStack: ItemStack = this.getStackInSlot(slotID)
-            if (itemStack != null)
-            {
-              if (itemStack.getItem.isInstanceOf[IModule])
-              {
-                modules.add(itemStack)
-              }
-            }
-          }
-          ({
-            slotID += 1;
-            slotID - 1
-          })
-        }
-      }
-    }
+      modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
     else
-    {
-      for (slotID <- slots)
-      {
-        val itemStack: ItemStack = this.getStackInSlot(slotID)
-        if (itemStack != null)
-        {
-          if (itemStack.getItem.isInstanceOf[IModule])
-          {
-            modules.add(itemStack)
-          }
-        }
-      }
-    }
+      modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule])).toSet
+
     cache(cacheID, modules)
 
     return modules
@@ -183,52 +118,19 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     var cacheID: String = "getModules_"
     if (slots != null)
     {
-      cacheID += Arrays.hashCode(slots)
+      cacheID += slots.hashCode()
     }
 
     if (hasCache(classOf[Set[IModule]], cacheID)) return getCache(classOf[Set[IModule]], cacheID)
 
-    val modules: Set[IModule] = new HashSet[IModule]
+    var modules: Set[IModule] = null
+
     if (slots == null || slots.length <= 0)
-    {
-      {
-        var slotID: Int = startModuleIndex
-        while (slotID <= endModuleIndex)
-        {
-          {
-            val itemStack: ItemStack = this.getStackInSlot(slotID)
-            if (itemStack != null)
-            {
-              if (itemStack.getItem.isInstanceOf[IModule])
-              {
-                modules.add(itemStack.getItem.asInstanceOf[IModule])
-              }
-            }
-          }
-          ({
-            slotID += 1;
-            slotID - 1
-          })
-        }
-      }
-    }
+      modules = ((startModuleIndex until endModuleIndex) map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
     else
-    {
-      for (slotID <- slots)
-      {
-        val itemStack: ItemStack = this.getStackInSlot(slotID)
-        if (itemStack != null)
-        {
-          if (itemStack.getItem.isInstanceOf[IModule])
-          {
-            modules.add(itemStack.getItem.asInstanceOf[IModule])
-          }
-        }
-      }
-    }
+      modules = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem.isInstanceOf[IModule]) map (_.getItem.asInstanceOf[IModule])).toSet
+
     cache(cacheID, modules)
-
-
     return modules
   }
 
@@ -253,28 +155,14 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     return result
   }
 
-  protected def doGetFortronCost: Int =
-  {
-    var cost: Float = 0
-    for (itemStack <- this.getModuleStacks)
-    {
-      if (itemStack != null)
-      {
-        cost += itemStack.stackSize * (itemStack.getItem.asInstanceOf[IModule]).getFortronCost(this.getAmplifier)
-      }
-    }
-    return Math.round(cost)
-  }
+  protected def doGetFortronCost: Int = Math.round((getModuleStacks() foldLeft 0f)((a: Float, b: ItemStack) => a + b.stackSize * b.getItem.asInstanceOf[IModule].getFortronCost(getAmplifier)))
 
-  protected def getAmplifier: Float =
-  {
-    return 1
-  }
+  protected def getAmplifier: Float = 1f
 
-  def onInventoryChanged
+  override def markDirty()
   {
-    super.onInventoryChanged
-    this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.itemModuleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+    super.markDirty()
+    this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.Items.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
     clearCache()
   }
 

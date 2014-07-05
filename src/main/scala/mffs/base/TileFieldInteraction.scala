@@ -3,6 +3,7 @@ package mffs.base
 import java.util.Set
 
 import com.google.common.io.ByteArrayDataInput
+import io.netty.buffer.ByteBuf
 import mffs.field.module.ItemModuleArray
 import mffs.field.thread.ProjectorCalculationThread
 import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
@@ -18,11 +19,12 @@ import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 import scala.collection.mutable.{HashSet, Queue}
 
 abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldInteraction with IDelayedEventHandler
 {
-  protected final val calculatedField = new HashSet[Vector3]()
+  protected val calculatedField = mutable.Set.empty[Vector3]
   protected final val delayedEvents = new Queue[DelayedEvent]()
 
   /**
@@ -45,7 +47,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     delayedEvents dequeueAll (_.ticks <= 0)
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
 
@@ -57,14 +59,13 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
 
   protected def calculateForceField(callBack: () => Unit = null)
   {
-    if (!this.worldObj.isRemote && !this.isCalculating)
+    if (!worldObj.isRemote && !isCalculating)
     {
-      if (this.getMode != null)
+      if (getMode != null)
       {
         if (getModeStack.getItem.isInstanceOf[TCache])
-        {
           (getModeStack.getItem.asInstanceOf[TCache]).clearCache()
-        }
+
         calculatedField.clear()
 
         new ProjectorCalculationThread(this, callBack).start()

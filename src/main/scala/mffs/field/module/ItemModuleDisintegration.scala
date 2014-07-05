@@ -3,92 +3,89 @@ package mffs.field.module
 import java.util.Set
 
 import mffs.ModularForceFieldSystem
-import mffs.base.{ItemModule, TileMFFSInventory}
-import mffs.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
+import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
 import mffs.field.TileElectromagnetProjector
+import mffs.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
-import net.minecraft.block.Block
+import net.minecraft.block.BlockLiquid
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
-import resonant.api.mffs.{Blacklist, IProjector}
+import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.security.IInterdictionMatrix
+import resonant.api.mffs.{Blacklist, IProjector}
+import resonant.lib.network.PacketTile
 import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.convert.wrapAll._
 
 class ItemModuleDisintegration(id: Integer) extends ItemModule(id, "moduleDisintegration")
 {
-	setMaxStackSize(1)
-	setCost(20)
 
-	override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
-	{
-		this.blockCount = 0
-		return false
-	}
+  private var blockCount: Int = 0
 
-	override def onProject(projector: IProjector, position: Vector3): Int =
-	{
-		if (projector.getTicks % 40 == 0)
-		{
-			val tileEntity = projector.asInstanceOf[TileEntity]
-			val blockID = position.getBlockID(tileEntity.worldObj)
-			val block = Block.blocksList(blockID)
+  setMaxStackSize(1)
+  setCost(20)
 
-			if (block != null)
-			{
-				val blockMetadata = position.getBlockMetadata(tileEntity.worldObj)
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+  {
+    this.blockCount = 0
+    return false
+  }
 
-				if (FrequencyGrid.instance().get().filter(i => i.isInstanceOf[IInterdictionMatrix] && i.asInstanceOf[IInterdictionMatrix].isActive() && new
-								Vector3(i.asInstanceOf[TileEntity]).distance(position) <= i.asInstanceOf[IInterdictionMatrix].getActionRange() && i.asInstanceOf[IInterdictionMatrix].getFrequency() != projector.getFrequency()).exists(_.asInstanceOf[IInterdictionMatrix].getModuleCount(ModularForceFieldSystem.itemModuleBlockAlter) > 0))
-					return 1
+  override def onProject(projector: IProjector, position: Vector3): Int =
+  {
+    if (projector.getTicks % 40 == 0)
+    {
+      val tileEntity = projector.asInstanceOf[TileEntity]
+      val block = position.getBlock(tileEntity.getWorldObj)
 
-				val filterMatch = !projector.getModuleSlots.exists(
-					i =>
-					{
-						val filterStack = projector.getStackInSlot(i)
+      if (block != null)
+      {
+        val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
-						MFFSUtility.getFilterBlock(filterStack) != null &&
-								(filterStack.isItemEqual(new
-												ItemStack(blockID, 1, blockMetadata)) ||
-										((filterStack.getItem.asInstanceOf[ItemBlock]).getBlockID == blockID && projector.getModuleCount(ModularForceFieldSystem.itemModuleApproximation) > 0))
-					}
-				)
+        if (FrequencyGridRegistry.instance.getNodes(classOf[IInterdictionMatrix]) filter ((i: IInterdictionMatrix) => i.isActive() && new Vector3(i.asInstanceOf[TileEntity]).distance(position) <= i.getActionRange() && i.getFrequency() != projector.getFrequency()) exists (_.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0))
+          return 1
 
-				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCamouflage) > 0 == !filterMatch)
-					return 1
+        val filterMatch = !projector.getModuleSlots().exists(
+          i =>
+          {
+            val filterStack = projector.getStackInSlot(i)
 
-				if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockFluid] || block.isInstanceOf[IFluidBlock])
-					return 1
+            MFFSUtility.getFilterBlock(filterStack) != null &&
+                    (filterStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) ||
+                            (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(ModularForceFieldSystem.Items.moduleApproximation) > 0))
+          })
 
-				PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(projector.asInstanceOf[TileEntity], Int.box(TilePacketType.FXS.ordinal), Int.box(2), Int.box(position.intX), Int.box(position.intY), Int.box(position.intZ)), projector.asInstanceOf[TileEntity].worldObj)
+        if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0 == !filterMatch)
+          return 1
 
-				if (projector.getModuleCount(ModularForceFieldSystem.itemModuleCollection) > 0)
-				{
-					(projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new
-									BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.worldObj, position, projector.asInstanceOf[TileMFFSInventory]))
-				}
-				else
-				{
-					(projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new
-									BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.worldObj, position))
-				}
+        if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
+          return 1
 
-				blockCount += 1
+        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(projector.asInstanceOf[TileEntity], TilePacketType.FXS.id: Integer, 2: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer))
 
-				if (blockCount >= projector.getModuleCount(ModularForceFieldSystem.itemModuleSpeed) / 3)
-					return 2
-				else
-					return 1
-			}
-		}
+        if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCollection) > 0)
+        {
+          (projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position, projector.asInstanceOf[TileMFFSInventory]))
+        }
+        else
+        {
+          (projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position))
+        }
 
-		return 1
-	}
+        blockCount += 1
 
-	override def getFortronCost(amplifier: Float): Float =
-	{
-		return super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier)
-	}
+        if (blockCount >= projector.getModuleCount(ModularForceFieldSystem.Items.moduleSpeed) / 3)
+          return 2
+        else
+          return 1
+      }
+    }
 
-	private var blockCount: Int = 0
+    return 1
+  }
+
+  override def getFortronCost(amplifier: Float): Float = super.getFortronCost(amplifier) + (super.getFortronCost(amplifier) * amplifier)
+
 }

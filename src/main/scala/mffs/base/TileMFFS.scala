@@ -1,38 +1,37 @@
 package mffs.base
 
 import java.text.MessageFormat
-import java.util
 
-import com.google.common.io.ByteArrayDataInput
-import mffs.ModularForceFieldSystem
+import io.netty.buffer.ByteBuf
 import mffs.item.card.ItemCardLink
-import mffs.security.access.MFFSPermissions
+import mffs.{ModularForceFieldSystem, Reference}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
+import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import resonant.api.IPlayerUsing
+import net.minecraft.network.Packet
 import resonant.api.blocks.ICamouflageMaterial
-import resonant.api.mffs.{IActivatable, IBiometricIdentifierLink}
+import resonant.api.mffs.IActivatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.IPacketReceiver
+import resonant.lib.network.{IPacketReceiver, PacketTile}
+import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 
-import scala.collection.mutable.HashSet
+import scala.collection.mutable._
 
 /**
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IPlayerUsing with TRotatable with IActivatable
+abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IActivatable
 {
   /**
    * The players to send packets to for machine update info.
    */
-  final val playersUsing = new HashSet[EntityPlayer]()
+  val playersUsing = new HashSet[EntityPlayer]()
   /**
    * Used for client side animations.
    */
@@ -49,7 +48,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   /**
    * Constructor
    */
-  blockHardness = Float.MAX_VALUE
+  blockHardness = Float.MaxValue
   blockResistance = 100f
   stepSound = Block.soundTypeMetal
   textureName = "machine"
@@ -60,15 +59,15 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   {
     if (!world.isRemote)
     {
-      if (entityPlayer.getCurrentEquippedItem != null)
+      if (player.getCurrentEquippedItem != null)
       {
-        if (entityPlayer.getCurrentEquippedItem().getItem().isInstanceOf[ItemCardLink])
+        if (player.getCurrentEquippedItem().getItem().isInstanceOf[ItemCardLink])
         {
           return false
         }
       }
 
-      entityPlayer.openGui(ModularForceFieldSystem.instance, 0, world, x, y, z)
+      player.openGui(ModularForceFieldSystem, 0, world, x, y, z)
     }
     return true
   }
@@ -79,29 +78,9 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     {
       if (!world.isRemote)
       {
-        val tileEntity: TileEntity = world.getTileEntity(x, y, z)
-        if (tileEntity.isInstanceOf[IBiometricIdentifierLink])
-        {
-          if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
-          {
-            if ((tileEntity.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier.hasPermission(entityPlayer.username, MFFSPermissions.configure))
-            {
-              this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0)
-              world.setBlock(x, y, z, 0)
-              return true
-            }
-            else
-            {
-              entityPlayer.addChatMessage("[" + ModularForceFieldSystem.blockBiometricIdentifier.getLocalizedName + "]" + " Cannot remove machine! Access denied!")
-            }
-          }
-          else
-          {
-            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0)
-            world.setBlock(x, y, z, 0)
-            return true
-          }
-        }
+        InventoryUtility.dropBlockAsItem(world, position)
+        world.setBlock(x, y, z, Blocks.air)
+        return true
       }
       return false
     }
@@ -115,11 +94,11 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     {
       if (world.isBlockIndirectlyGettingPowered(x, y, z))
       {
-        onPowerOn()
+        powerOn()
       }
       else
       {
-        onPowerOff()
+        powerOff()
       }
     }
   }
@@ -130,33 +109,33 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   {
     super.update()
 
-    if (ticks % 3 == 0 && playersUsing.size() > 0)
+    if (ticks % 3 == 0 && playersUsing.size > 0)
     {
-      playersUsing.foreach(ModularForceFieldSystem.packetHandler.sendToPlayer(getDescriptionPacket(), _))
+      playersUsing.foreach(player => ModularForceFieldSystem.packetHandler.sendToPlayer(getDescPacket, player.asInstanceOf[EntityPlayerMP]))
     }
   }
 
   /**
    * Override this for packet updating list.
    */
-  def getPacketData(packetID: Int): List[_] =
+  def getPacketData(packetID: Int): List[AnyRef] =
   {
-    val data = List()
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      data.add(TilePacketType.DESCRIPTION.ordinal)
-      data.add(active)
-      data.add(isRedstoneActive)
+      return List(TilePacketType.DESCRIPTION.id: Integer, active: java.lang.Boolean, isRedstoneActive: java.lang.Boolean)
     }
-    return data
+
+    return List[AnyRef]()
   }
 
-  override def getDescriptionPacket: Nothing =
+  override def getDescriptionPacket: Packet =
   {
-    return ModularForceFieldSystem.PACKET_TILE.getPacket(this, this.getPacketData(TilePacketType.DESCRIPTION.ordinal).toArray)
+    return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  override def onReceivePacket(data: ByteArrayDataInput, player: EntityPlayer, obj: AnyRef*)
+  def getDescPacket: PacketTile = new PacketTile(this, getPacketData(TilePacketType.DESCRIPTION.id).toArray)
+
+  override def onReceivePacket(data: ByteBuf, player: EntityPlayer, obj: AnyRef*)
   {
     try
     {
@@ -166,7 +145,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
       {
         case e: Exception =>
         {
-          ModularForceFieldSystem.LOGGER.severe(MessageFormat.format("Packet receiving failed: {0}", this.getClass.getSimpleName))
+          Reference.LOGGER.error(MessageFormat.format("Packet receiving failed: {0}", this.getClass.getSimpleName))
           e.printStackTrace
         }
       }
@@ -177,19 +156,20 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
    *
    * @throws IOException
    */
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      val prevActive: Boolean = this.active
-      active = dataStream.readBoolean
-      isRedstoneActive = dataStream.readBoolean
+      val prevActive = active
+      active = dataStream.readBoolean()
+      isRedstoneActive = dataStream.readBoolean()
+
       if (prevActive != this.active)
       {
-        this.worldObj.markBlockForRenderUpdate(this.xCoord, this.yCoord, this.zCoord)
+        markRender()
       }
     }
-    else if (packetID == TilePacketType.TOGGLE_ACTIVATION.ordinal)
+    else if (packetID == TilePacketType.TOGGLE_ACTIVATION.id)
     {
       this.isRedstoneActive = !this.isRedstoneActive
       if (isRedstoneActive)
@@ -227,22 +207,17 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
   }
 
-  def onPowerOn
+  def powerOn()
   {
     this.setActive(true)
   }
 
-  def onPowerOff
+  def powerOff()
   {
     if (!this.isRedstoneActive && !this.worldObj.isRemote)
     {
       this.setActive(false)
     }
-  }
-
-  def getPlayersUsing: util.HashSet[EntityPlayer] =
-  {
-    return this.playersUsing
   }
 
   /**

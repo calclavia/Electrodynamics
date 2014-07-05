@@ -129,7 +129,7 @@ object SubscribeEventHandler
       val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
 
       //Check if we can configure this block (activate). If not, we cancel the event.
-      if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer.getGameProfile, evt.action) && x.isAccessGranted(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
+      if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action) && x.isAccessGranted(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
       {
         evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.NAME + "] You have no permission to do that!"))
         evt.setCanceled(true)

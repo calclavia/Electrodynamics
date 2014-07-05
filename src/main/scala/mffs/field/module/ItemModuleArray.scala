@@ -3,6 +3,7 @@ package mffs.field.module
 import java.util.{HashMap, HashSet, Set}
 
 import mffs.base.ItemModule
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.IFieldInteraction
 import universalelectricity.core.transform.vector.Vector3
 
@@ -34,7 +35,7 @@ class ItemModuleArray(i: Int) extends ItemModule(i, "moduleArray")
 
 						originalField.foreach(originalFieldBlock =>
 						{
-							val newFieldBlock: Vector3 = originalFieldBlock.clone.translate(new Vector3(direction).scale(directionalDisplacementScale))
+							val newFieldBlock: Vector3 = originalFieldBlock.clone + (new Vector3(direction) * directionalDisplacementScale)
 							interior.add(newFieldBlock)
 						})
 					}
@@ -54,29 +55,29 @@ class ItemModuleArray(i: Int) extends ItemModule(i, "moduleArray")
 		longestDirectional.put(ForgeDirection.EAST, 0)
 		for (fieldPosition <- field)
 		{
-			if (fieldPosition.intX > 0 && fieldPosition.intX > longestDirectional.get(ForgeDirection.EAST))
+			if (fieldPosition.xi > 0 && fieldPosition.xi > longestDirectional.get(ForgeDirection.EAST))
 			{
-				longestDirectional.put(ForgeDirection.EAST, fieldPosition.intX)
+				longestDirectional.put(ForgeDirection.EAST, fieldPosition.xi)
 			}
-			else if (fieldPosition.intX < 0 && fieldPosition.intX < longestDirectional.get(ForgeDirection.WEST))
+			else if (fieldPosition.xi < 0 && fieldPosition.xi < longestDirectional.get(ForgeDirection.WEST))
 			{
-				longestDirectional.put(ForgeDirection.WEST, fieldPosition.intX)
+				longestDirectional.put(ForgeDirection.WEST, fieldPosition.xi)
 			}
-			if (fieldPosition.intY > 0 && fieldPosition.intY > longestDirectional.get(ForgeDirection.UP))
+			if (fieldPosition.yi > 0 && fieldPosition.yi > longestDirectional.get(ForgeDirection.UP))
 			{
-				longestDirectional.put(ForgeDirection.UP, fieldPosition.intY)
+				longestDirectional.put(ForgeDirection.UP, fieldPosition.yi)
 			}
-			else if (fieldPosition.intY < 0 && fieldPosition.intY < longestDirectional.get(ForgeDirection.DOWN))
+			else if (fieldPosition.yi < 0 && fieldPosition.yi < longestDirectional.get(ForgeDirection.DOWN))
 			{
-				longestDirectional.put(ForgeDirection.DOWN, fieldPosition.intY)
+				longestDirectional.put(ForgeDirection.DOWN, fieldPosition.yi)
 			}
-			if (fieldPosition.intZ > 0 && fieldPosition.intZ > longestDirectional.get(ForgeDirection.SOUTH))
+			if (fieldPosition.zi > 0 && fieldPosition.zi > longestDirectional.get(ForgeDirection.SOUTH))
 			{
-				longestDirectional.put(ForgeDirection.SOUTH, fieldPosition.intZ)
+				longestDirectional.put(ForgeDirection.SOUTH, fieldPosition.zi)
 			}
-			else if (fieldPosition.intZ < 0 && fieldPosition.intZ < longestDirectional.get(ForgeDirection.NORTH))
+			else if (fieldPosition.zi < 0 && fieldPosition.zi < longestDirectional.get(ForgeDirection.NORTH))
 			{
-				longestDirectional.put(ForgeDirection.NORTH, fieldPosition.intZ)
+				longestDirectional.put(ForgeDirection.NORTH, fieldPosition.zi)
 			}
 		}
 		return longestDirectional
