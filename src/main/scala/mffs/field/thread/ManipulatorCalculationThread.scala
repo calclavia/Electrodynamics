@@ -1,11 +1,8 @@
 package mffs.field.thread
 
-import java.util.HashSet
-
 import mffs.mobilize.TileForceMobilizer
-import universalelectricity.core.transform.vector.Vector3
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.wrapAll._
 
 /**
  * A thread that allows multi-threading calculation of projector fields.
@@ -19,27 +16,14 @@ class ManipulatorCalculationThread(manipulator: TileForceMobilizer, callBack: ()
   {
     manipulator.isCalculatingManipulation = true
 
-    try
+    if (manipulator.canMove)
     {
-      val mobilizationPoints = this.manipulator.getInteriorPoints
-
-      if (manipulator.canMove())
-      {
-        manipulator.manipulationVectors = new HashSet[Vector3]
-        mobilizationPoints.foreach(pos => manipulator.manipulationVectors.add(pos.clone()))
-      }
-      else
-      {
-        manipulator.markFailMove = true
-      }
+      manipulator.manipulationVectors = manipulator.getInteriorPoints.toSet
     }
-    catch
-      {
-        case e: Exception =>
-        {
-          e.printStackTrace
-        }
-      }
+    else
+    {
+      manipulator.markFailMove = true
+    }
 
     manipulator.isCalculatingManipulation = false
 

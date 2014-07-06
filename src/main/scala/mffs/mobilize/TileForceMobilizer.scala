@@ -1,17 +1,18 @@
 package mffs.mobilize
 
-import java.util.{ArrayList, LinkedHashSet, List, Set}
+import java.util.UUID
 
-import com.google.common.io.ByteArrayDataInput
-import mffs.base.TileFieldInteraction
+import com.mojang.authlib.GameProfile
+import cpw.mods.fml.common.network.ByteBufUtils
+import io.netty.buffer.ByteBuf
+import mffs.base.{TileFieldInteraction, TilePacketType}
+import mffs.field.thread.ManipulatorCalculationThread
 import mffs.item.card.ItemCard
 import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
-import mffs.field.thread.ManipulatorCalculationThread
 import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
-import mffs.{ModularForceFieldSystem, Settings}
-import net.minecraft.block.Block
+import mffs.{ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
@@ -19,15 +20,43 @@ import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
-import resonant.api.mffs.{EventForceManipulate, Blacklist}
+import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import universalelectricity.core.transform.vector.Vector3
+import resonant.api.mffs.{Blacklist, EventForceManipulate}
+import resonant.lib.network.PacketTile
+import universalelectricity.core.transform.region.Cuboid
+import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
+import scala.collection.convert.wrapAll._
+import scala.math._
 class TileForceMobilizer extends TileFieldInteraction with IEffectController
 {
-  val PACKET_DISTANCE: Int = 60
-  val ANIMATION_TIME: Int = 20
+  val packetRange = 60
+  val animationTime = 20
+
+  private var failedPositions = Set.empty[Vector3]
+  var anchor: Vector3 = null
+  /**
+   * The display mode. 0 = none, 1 = minimal, 2 = maximal.
+   */
+  var displayMode: Int = 1
+  var isCalculatingManipulation: Boolean = false
+  var manipulationVectors: Set[Vector3] = null
+  var doAnchor: Boolean = true
+  var clientMoveTime: Int = 0
+
+  /**
+   * Marking failures
+   */
+  var markFailMove: Boolean = false
+  private var markActive: Boolean = false
+
+  /**
+   * Used ONLY for teleporting.
+   */
+  private var moveTime: Int = 0
+  private var canRenderMove: Boolean = true
 
   rotationMask = 63
 
@@ -38,7 +67,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     {
       this.anchor = new Vector3
     }
-    if (this.getMode != null && Settings.ENABLE_MANIPULATOR)
+    if (this.getMode != null && Settings.enableForceManipulator)
     {
       if (!this.worldObj.isRemote)
       {
@@ -47,42 +76,40 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
           val nbt: NBTTagCompound = new NBTTagCompound
           val nbtList: NBTTagList = new NBTTagList
           var i: Int = 0
-          import scala.collection.JavaConversions._
           for (position <- this.manipulationVectors)
           {
             if (this.moveBlock(position) && this.isBlockVisibleByPlayer(position) && i < Settings.maxForceFieldsPerTick)
             {
-              nbtList.appendTag(position.writeToNBT(new NBTTagCompound))
+              nbtList.appendTag(position.toNBT)
               i += 1
             }
           }
           if (i > 0)
           {
-            queueEvent(new DelayedEvent((this, getMoveTime))
-            {
-              protected def onEvent
-              {
-                moveEntities
-                PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(TileForceMobilizer.this, TilePacketType.FIELD.ordinal))
-              }
-            })
+            queueEvent(new DelayedEvent(this, getMoveTime, () => ({
+              moveEntities
+              ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(TileForceMobilizer.this, TilePacketType.FIELD.id: Integer))
+            })))
+
             nbt.setByte("type", 2.asInstanceOf[Byte])
             nbt.setTag("list", nbtList)
+
             if (!this.isTeleport)
             {
-              PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal, 1.asInstanceOf[Byte], nbt), worldObj, new Vector3(this), PACKET_DISTANCE)
-              if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0)
+              ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 1.toByte: java.lang.Byte, nbt), worldObj, new Vector3(this), packetRange)
+
+              if (this.getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
               {
-                this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+                this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
               }
               if (this.doAnchor)
               {
-                this.anchor = this.anchor.translate(this.getDirection)
+                anchor += this.getDirection
               }
             }
             else
             {
-              PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal, 2.asInstanceOf[Byte], this.getMoveTime, this.getAbsoluteAnchor.translate(0.5), this.getTargetPosition.translate(0.5).writeToNBT(new NBTTagCompound), false, nbt), worldObj, new Vector3(this), PACKET_DISTANCE)
+              ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 2.toByte: java.lang.Byte, getMoveTime: Integer, (getAbsoluteAnchor + 0.5).toNBT, (getTargetPosition + 0.5).toNBT, false: java.lang.Boolean, nbt), worldObj, new Vector3(this), packetRange)
               this.moveTime = this.getMoveTime
             }
           }
@@ -91,24 +118,24 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
             this.markFailMove = true
           }
           this.manipulationVectors = null
-          this.onInventoryChanged
+          markDirty()
         }
       }
       if (this.moveTime > 0)
       {
         if (this.isTeleport && this.requestFortron(this.getFortronCost, true) >= this.getFortronCost)
         {
-          if (this.getModuleCount(ModularForceFieldSystem.itemModuleSilence) <= 0 && this.ticks % 10 eq 0)
+          if (this.getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0 && this.ticks % 10 == 0)
           {
             val moveTime: Int = this.getMoveTime
-            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
+            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
           }
-          if (({
-            this.moveTime -= 1;
-            this.moveTime
-          }) == 0)
+
+          moveTime -= 1
+
+          if (moveTime <= 0)
           {
-            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
           }
         }
         else
@@ -120,7 +147,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       {
         markActive = true
       }
-      if (ticks % 20 eq 0 && markActive)
+      if (ticks % 20 == 0 && markActive)
       {
         if (moveTime <= 0 && requestFortron(this.getFortronCost, false) > 0)
         {
@@ -143,18 +170,17 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
         {
           this.calculateForceField
         }
-        if (this.ticks % 120 eq 0 && !this.isCalculating && Settings.HIGH_GRAPHICS && this.delayedEvents.size <= 0 && this.displayMode > 0)
+        if (this.ticks % 120 == 0 && !this.isCalculating && Settings.highGraphics && this.delayedEvents.size <= 0 && this.displayMode > 0)
         {
           val nbt: NBTTagCompound = new NBTTagCompound
           val nbtList: NBTTagList = new NBTTagList
           var i: Int = 0
-          import scala.collection.JavaConversions._
           for (position <- this.getInteriorPoints)
           {
-            if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.xi, position.yi, position.zi) && i < Settings.MAX_FORCE_FIELDS_PER_TICK))
+            if (this.isBlockVisibleByPlayer(position) && (this.displayMode == 2 || !this.worldObj.isAirBlock(position.xi, position.yi, position.zi) && i < Settings.maxForceFieldsPerTick))
             {
               i += 1
-              nbtList.appendTag(new Vector3(position).writeToNBT(new NBTTagCompound))
+              nbtList.appendTag(position.toNBT)
             }
           }
           nbt.setByte("type", 1.asInstanceOf[Byte])
@@ -162,6 +188,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
           if (this.isTeleport)
           {
             var targetPosition: Vector3 = null
+
             if (getTargetPosition.world == null)
             {
               targetPosition = new Vector3(getTargetPosition)
@@ -170,32 +197,36 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
             {
               targetPosition = getTargetPosition
             }
-            PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal, 2.asInstanceOf[Byte], 60, getAbsoluteAnchor.translate(0.5), targetPosition.translate(0.5).writeToNBT(new NBTTagCompound), true, nbt), worldObj, new Vector3(this), PACKET_DISTANCE)
+
+            ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 2.toByte: java.lang.Byte, 60: Integer, getAbsoluteAnchor + 0.5, targetPosition + 0.5, true: java.lang.Boolean, nbt), worldObj, new Vector3(this), packetRange)
           }
           else
           {
-            PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal, 1.asInstanceOf[Byte], nbt), worldObj, new Vector3(this), PACKET_DISTANCE)
+            ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 1.toByte: java.lang.Byte), worldObj, new Vector3(this), packetRange)
           }
         }
       }
+
       if (this.markFailMove)
       {
-        this.moveTime = 0
+        moveTime = 0
         delayedEvents.clear
-        this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, ModularForceFieldSystem.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
-        PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.RENDER.ordinal), this.worldObj, new Vector3(this), PACKET_DISTANCE)
-        this.markFailMove = false
-        val nbt: NBTTagCompound = new NBTTagCompound
-        val nbtList: NBTTagList = new NBTTagList
-        import scala.collection.JavaConversions._
+        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+        ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.RENDER.id: Integer), this.worldObj, new Vector3(this), packetRange)
+
+        markFailMove = false
+        val nbt = new NBTTagCompound
+        val nbtList = new NBTTagList
+
         for (position <- this.failedPositions)
         {
-          nbtList.appendTag(position.writeToNBT(new NBTTagCompound))
+          nbtList.appendTag(position.toNBT)
         }
-        nbt.setByte("type", 1.asInstanceOf[Byte])
+
+        nbt.setByte("type", 1.toByte)
         nbt.setTag("list", nbtList)
         this.failedPositions.clear
-        PacketHandler.sendPacketToClients(ModularForceFieldSystem.PACKET_TILE.getPacket(this, TilePacketType.FXS.ordinal, 3.asInstanceOf[Byte], nbt), this.worldObj, new Vector3(this), PACKET_DISTANCE)
+        ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 3.toByte: java.lang.Byte, nbt), this.worldObj, new Vector3(this), packetRange)
       }
     }
     else if (!worldObj.isRemote && isActive)
@@ -206,192 +237,137 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
   def isBlockVisibleByPlayer(position: Vector3): Boolean =
   {
-    var i: Int = 0
-    for (direction <- ForgeDirection.VALID_DIRECTIONS)
-    {
-      val checkPos: Vector3 = position.clone.translate(direction)
-      val blockID: Int = checkPos.getBlockID(this.worldObj)
-      if (blockID > 0)
-      {
-        if (Block.blocksList(blockID) != null)
-        {
-          if (Block.blocksList(blockID).isOpaqueCube)
-          {
-            i += 1
-          }
-        }
-      }
-    }
-    return !(i >= 6)
+    return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
   }
 
-  override def getPacketData(packetID: Int): ArrayList[_] =
+  override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    val objects: ArrayList[_] = super.getPacketData(packetID)
-    objects.add(if (this.moveTime > 0) this.moveTime else this.getMoveTime)
-    return objects
+    return super.getPacketData(packetID) :+ ((if (moveTime > 0) moveTime else getMoveTime): Integer)
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
+
     if (this.worldObj.isRemote)
     {
-      if (packetID == TilePacketType.FXS.ordinal)
+      if (packetID == TilePacketType.FXS.id)
       {
         dataStream.readByte match
         {
           case 1 =>
           {
-            val nbt: NBTTagCompound = PacketHandler.readNBTTagCompound(dataStream)
-            val `type`: Byte = nbt.getByte("type")
-            val nbtList: NBTTagList = nbt.getTag("list").asInstanceOf[NBTTagList]
+            /**
+             * Movement Rendering
+             */
+            val nbt = ByteBufUtils.readTag(dataStream)
+            val nbtList = nbt.getTagList("list", 10)
+
+            val hologramRenderPoints = (0 until nbtList.tagCount) map (dir => new Vector3(nbtList.getCompoundTagAt(dir)) + 0.5)
+            val direction = getDirection
+
+            nbt.getByte("type") match
             {
-              var i: Int = 0
-              while (i < nbtList.tagCount)
-              {
-                {
-                  val vector: Vector3 = new Vector3(nbtList.tagAt(i).asInstanceOf[NBTTagCompound]).translate(0.5)
-                  if (`type` == 1)
-                  {
-                    ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector.clone.translate(this.getDirection))
-                  }
-                  else if (`type` == 2)
-                  {
-                    ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector.clone.translate(this.getDirection))
-                  }
-                }
-                ({
-                  i += 1;
-                  i - 1
-                })
-              }
+              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector + direction))
+              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector + direction))
             }
-            break //todo: break is not supported
           }
           case 2 =>
           {
-            val animationTime: Int = dataStream.readInt
-            val anchorPosition: Vector3 = new Vector3(dataStream.readDouble, dataStream.readDouble, dataStream.readDouble)
-            val targetPosition: Vector3 = new Vector3(PacketHandler.readNBTTagCompound(dataStream))
-            val isPreview: Boolean = dataStream.readBoolean
-            val nbt: NBTTagCompound = PacketHandler.readNBTTagCompound(dataStream)
-            val nbtList: NBTTagList = nbt.getTag("list").asInstanceOf[NBTTagList]
+            /**
+             * Teleportation Rendering
+             */
+            val animationTime = dataStream.readInt
+            val anchorPosition = new Vector3(dataStream)
+            val targetPosition = new VectorWorld(dataStream)
+            val isPreview = dataStream.readBoolean
+            val nbt = ByteBufUtils.readTag(dataStream)
+            val nbtList = nbt.getTagList("list", 10)
+
+            val hologramRenderPoints = (0 until nbtList.tagCount) map (dir => new Vector3(nbtList.getCompoundTagAt(dir)) + 0.5)
+            val color = if (isPreview) (1f, 1f, 1f) else (0.1f, 1f, 0f)
+
+            hologramRenderPoints foreach (vector =>
             {
-              var i: Int = 0
-              while (i < nbtList.tagCount)
+              //Render teleport start
+              ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color._1, color._2, color._3, animationTime, 30f)
+
+              if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi))
               {
-                {
-                  val vector: Vector3 = new Vector3(nbtList.tagAt(i).asInstanceOf[NBTTagCompound]).translate(0.5)
-                  if (isPreview)
-                  {
-                    ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 1, 1, 1, animationTime, 30f)
-                  }
-                  else
-                  {
-                    ModularForceFieldSystem.proxy.renderHologramOrbit(this, this.worldObj, anchorPosition, vector, 0.1f, 1, 0, animationTime, 30f)
-                  }
-                  if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi))
-                  {
-                    val destination: Vector3 = vector.clone.difference(anchorPosition).add(targetPosition)
-                    if (isPreview)
-                    {
-                      ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 1, 1, 1, animationTime, 30f)
-                    }
-                    else
-                    {
-                      ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, 0.1f, 1, 0, animationTime, 30f)
-                    }
-                  }
-                }
-                ({
-                  i += 1;
-                  i - 1
-                })
+                //Render teleport end
+                val destination = vector - anchorPosition + targetPosition
+                ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color._1, color._2, color._3, animationTime, 30f)
               }
-            }
-            this.canRenderMove = true
-            break //todo: break is not supported
+            })
+
+            canRenderMove = true
           }
           case 3 =>
           {
-            val nbt: NBTTagCompound = PacketHandler.readNBTTagCompound(dataStream)
-            val nbtList: NBTTagList = nbt.getTag("list").asInstanceOf[NBTTagList]
-            {
-              var i: Int = 0
-              while (i < nbtList.tagCount)
-              {
-                {
-                  val vector: Vector3 = new Vector3(nbtList.tagAt(i).asInstanceOf[NBTTagCompound]).translate(0.5)
-                  ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 0, 0, 30, null)
-                }
-                ({
-                  i += 1;
-                  i - 1
-                })
-              }
-            }
-            break //todo: break is not supported
+            /**
+             * Fail hologram rendering
+             */
+            val nbt = ByteBufUtils.readTag(dataStream)
+            val nbtList = nbt.getTagList("list", 10)
+            (0 until nbtList.tagCount) map (dir => new Vector3(nbtList.getCompoundTagAt(dir)) + 0.5) foreach (ModularForceFieldSystem.proxy.renderHologram(this.worldObj, _, 1, 0, 0, 30, null))
           }
         }
       }
-      else if (packetID == TilePacketType.RENDER.ordinal)
+      else if (packetID == TilePacketType.RENDER.id)
       {
         this.canRenderMove = false
       }
-      else if (packetID == TilePacketType.FIELD.ordinal)
+      else if (packetID == TilePacketType.FIELD.id)
       {
         this.moveEntities
       }
-      else if (packetID == TilePacketType.DESCRIPTION.ordinal)
+      else if (packetID == TilePacketType.DESCRIPTION.id)
       {
         this.clientMoveTime = dataStream.readInt
       }
     }
     else
     {
-      if (packetID == TilePacketType.TOGGLE_MODE.ordinal)
+      if (packetID == TilePacketType.TOGGLE_MODE.id)
       {
         this.anchor = null
-        this.onInventoryChanged
+        markDirty()
       }
-      else if (packetID == TilePacketType.TOGGLE_MODE_2.ordinal)
+      else if (packetID == TilePacketType.TOGGLE_MODE_2.id)
       {
         this.displayMode = (this.displayMode + 1) % 3
       }
-      else if (packetID == TilePacketType.TOGGLE_MODE_3.ordinal)
+      else if (packetID == TilePacketType.TOGGLE_MODE_3.id)
       {
         this.doAnchor = !this.doAnchor
       }
     }
   }
 
-  override def doGetFortronCost: Int =
-  {
-    return Math.round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.getMagnitude * 1000 else 0)).asInstanceOf[Int]
-  }
+  override def doGetFortronCost: Int = round(super.doGetFortronCost + (if (this.anchor != null) this.anchor.magnitude * 1000 else 0)).toInt
 
-  override def onInventoryChanged
+  override def markDirty()
   {
-    super.onInventoryChanged
+    super.markDirty()
     this.isCalculated = false
   }
 
   /**
-   * Scan target area...
+   * Scan target area to see if we can mvoe. Called on a separate thread.
    */
-  protected def canMove: Boolean =
+  def canMove: Boolean =
   {
-    val mobilizationPoints: Set[Vector3] = this.getInteriorPoints
-    val targetCenterPosition: Vector3 = this.getTargetPosition
-    import scala.collection.JavaConversions._
+    val mobilizationPoints = getInteriorPoints
+    val targetCenterPosition = getTargetPosition
+
     for (position <- mobilizationPoints)
     {
       if (!this.worldObj.isAirBlock(position.xi, position.yi, position.zi))
       {
-        val relativePosition: Vector3 = position.clone.subtract(this.getAbsoluteAnchor)
-        val targetPosition: Vector3 = targetCenterPosition.clone.add(relativePosition).asInstanceOf[Vector3]
-        if (!this.canMove(new Vector3(this.worldObj, position), targetPosition))
+        val relativePosition = position - getAbsoluteAnchor
+        val targetPosition = (targetCenterPosition + relativePosition).asInstanceOf[VectorWorld]
+
+        if (!canMove(new VectorWorld(this.worldObj, position), targetPosition))
         {
           this.failedPositions.add(position)
           return false
@@ -401,35 +377,29 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return true
   }
 
-  def canMove(position: Vector3, target: Vector3): Boolean =
+  def canMove(position: VectorWorld, target: VectorWorld): Boolean =
   {
-    if (Blacklist.mobilizerBlacklist.contains(position.getBlockID))
+    if (Blacklist.mobilizerBlacklist.contains(position.getBlock))
     {
       return false
     }
-    val evt: EventForceManipulate.EventCheckForceManipulate = new EventForceManipulate.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
+    val evt = new EventForceManipulate.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
     MinecraftForge.EVENT_BUS.post(evt)
+
     if (evt.isCanceled)
     {
       return false
     }
-    val tileEntity: TileEntity = position.getTileEntity
-    if (this.getBiometricIdentifier != null)
-    {
-      if (!MFFSUtility.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, this.getBiometricIdentifier.getOwner))
-      {
-        return false
-      }
-    }
-    else if (!MFFSUtility.hasPermission(this.worldObj, position, MFFSPermissions.blockAlter, "") || !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ""))
+
+    if (!MFFSUtility.hasPermission(worldObj, position, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile) && !MFFSUtility.hasPermission(target.world, target, MFFSPermissions.blockAlter, ModularForceFieldSystem.fakeProfile))
     {
       return false
     }
-    if (target.getTileEntity eq this)
+
+    if (target.getTileEntity == this)
     {
       return false
     }
-    import scala.collection.JavaConversions._
     for (checkPos <- this.getInteriorPoints)
     {
       if (checkPos == target)
@@ -437,12 +407,9 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
         return true
       }
     }
-    val targetBlockID: Int = target.getBlockID
-    if (!(target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlockID > 0 && (Block.blocksList(targetBlockID).isBlockReplaceable(target.world, target.xi, target.yi, target.zi)))))
-    {
-      return false
-    }
-    return true
+
+    val targetBlock = target.getBlock
+    return target.world.isAirBlock(target.xi, target.yi, target.zi) || (targetBlock.isReplaceable(target.world, target.xi, target.yi, target.zi))
   }
 
   protected def moveBlock(position: Vector3): Boolean =
@@ -452,8 +419,8 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       val relativePosition: Vector3 = position.clone.subtract(this.getAbsoluteAnchor)
       val newPosition: Vector3 = this.getTargetPosition.clone.add(relativePosition).asInstanceOf[Vector3]
       val tileEntity: TileEntity = position.getTileEntity(this.worldObj)
-      val blockID: Int = position.getBlockID(this.worldObj)
-      if (!this.worldObj.isAirBlock(position.xi, position.yi, position.zi) && tileEntity ne this)
+
+      if (!worldObj.isAirBlock(position.xi, position.yi, position.zi) && tileEntity != this)
       {
         queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, this.worldObj, position, newPosition))
         return true
@@ -462,13 +429,13 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return false
   }
 
-  def getSearchAxisAlignedBB: AxisAlignedBB =
+  def getSearchBounds: AxisAlignedBB =
   {
-    val positiveScale: Vector3 = new Vector3(this).translate(this.getTranslation).add(this.getPositiveScale).add(1)
-    val negativeScale: Vector3 = new Vector3(this).translate(this.getTranslation).subtract(this.getNegativeScale)
-    val minScale: Vector3 = positiveScale.min(negativeScale)
-    val maxScale: Vector3 = positiveScale.max(negativeScale)
-    return AxisAlignedBB.getAABBPool.getAABB(minScale.xi, minScale.yi, minScale.zi, maxScale.xi, maxScale.yi, maxScale.zi)
+    val positiveScale = position + getTranslation + getPositiveScale + 1
+    val negativeScale = position + getTranslation - getNegativeScale
+    val minScale = positiveScale.min(negativeScale)
+    val maxScale = positiveScale.max(negativeScale)
+    return new Cuboid(minScale, maxScale).toAABB
   }
 
   /**
@@ -476,13 +443,13 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
    *
    * @return A vector of the target position.
    */
-  def getTargetPosition: Vector3 =
+  def getTargetPosition: VectorWorld =
   {
-    if (this.isTeleport)
+    if (isTeleport)
     {
-      return (this.getCard.getItem.asInstanceOf[ICoordLink]).getLink(this.getCard)
+      return getCard.getItem.asInstanceOf[ICoordLink].getLink(this.getCard)
     }
-    return new Vector3(this.worldObj, this.getAbsoluteAnchor).clone.translate(this.getDirection).asInstanceOf[Vector3]
+    return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
   }
 
   /**
@@ -503,16 +470,16 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       }
       return time
     }
-    return ANIMATION_TIME
+    return animationTime
   }
 
   private def isTeleport: Boolean =
   {
     if (this.getCard != null && Settings.allowForceManipulatorTeleport)
     {
-      if (this.getCard.getItem.isInstanceOf[ICoordLink])
+      if (getCard.getItem.isInstanceOf[ICoordLink])
       {
-        return (this.getCard.getItem.asInstanceOf[ICoordLink]).getLink(this.getCard) != null
+        return getCard.getItem.asInstanceOf[ICoordLink].getLink(this.getCard) != null
       }
     }
     return false
@@ -530,15 +497,16 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   protected def moveEntities
   {
     val targetLocation: Vector3 = this.getTargetPosition
-    val axisalignedbb: AxisAlignedBB = this.getSearchAxisAlignedBB
+    val axisalignedbb: AxisAlignedBB = this.getSearchBounds
+
     if (axisalignedbb != null)
     {
       val entities: List[Entity] = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb)
-      import scala.collection.JavaConversions._
+
       for (entity <- entities)
       {
-        val relativePosition: Vector3 = new Vector3(entity).clone.subtract(this.getAbsoluteAnchor.translate(0.5))
-        val newLocation: Vector3 = targetLocation.clone.translate(0.5).add(relativePosition).asInstanceOf[Vector3]
+        val relativePosition: Vector3 = new Vector3(entity).clone.subtract(this.getAbsoluteAnchor + 0.5)
+        val newLocation: Vector3 = targetLocation.clone + 0.5.add(relativePosition).asInstanceOf[Vector3]
         moveEntity(entity, newLocation)
       }
     }
@@ -652,24 +620,4 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return this.canRenderMove
   }
 
-  private final val failedPositions: Set[Vector3] = new LinkedHashSet[Vector3]
-  var anchor: Vector3 = null
-  /**
-   * The display mode. 0 = none, 1 = minimal, 2 = maximal.
-   */
-  var displayMode: Int = 1
-  var isCalculatingManipulation: Boolean = false
-  var manipulationVectors: Set[Vector3] = null
-  var doAnchor: Boolean = true
-  var clientMoveTime: Int = 0
-  /**
-   * Marking failures
-   */
-  var markFailMove: Boolean = false
-  private var markActive: Boolean = false
-  /**
-   * Used ONLY for teleporting.
-   */
-  private var moveTime: Int = 0
-  private var canRenderMove: Boolean = true
 }

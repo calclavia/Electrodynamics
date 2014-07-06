@@ -1,21 +1,20 @@
 package mffs.field.thread
 
-import java.util.Set
-
 import mffs.ModularForceFieldSystem
+import mffs.base.TileFieldInteraction
 import net.minecraft.tileentity.TileEntity
-import resonant.api.mffs.IFieldInteraction
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
+import scala.collection.mutable
 
 /**
  * A thread that allows multi-threading calculation of projector fields.
  *
  * @author Calclavia
  */
-class ProjectorCalculationThread(projector: IFieldInteraction, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
+class ProjectorCalculationThread(projector: TileFieldInteraction, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
 {
   override def run
   {
@@ -25,7 +24,7 @@ class ProjectorCalculationThread(projector: IFieldInteraction, callBack: () => U
     {
       if (projector.getMode != null)
       {
-        var newField: Set[Vector3] = null
+        var newField = mutable.Set.empty[Vector3]
 
         if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
           newField = projector.getMode.getInteriorPoints(projector)
@@ -39,15 +38,15 @@ class ProjectorCalculationThread(projector: IFieldInteraction, callBack: () => U
         //TODO: Check efficiency of parallel
         projector.getModules().par foreach (_.onPreCalculate(projector, newField))
 
-        val maxHeight = projector.asInstanceOf[TileEntity].getWorldObj.getHeight
+        val maxHeight = projector.world.getHeight
         val center = new Vector3(projector.asInstanceOf[TileEntity])
 
-        newField = newField.par map (pos => (pos.apply(new Rotation(rotationYaw, rotationPitch, 0)) + center + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)
+        newField = (newField.par map (pos => (pos.apply(new Rotation(rotationYaw, rotationPitch, 0)) + center + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq
 
         projector.getModules().foreach(_.onCalculate(projector, newField))
 
-        projector.getCalculatedField().clear()
-        projector.getCalculatedField().addAll(newField)
+        projector.getCalculatedField.clear()
+        projector.getCalculatedField.addAll(newField)
       }
     }
     catch

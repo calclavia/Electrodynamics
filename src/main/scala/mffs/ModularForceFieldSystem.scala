@@ -1,5 +1,8 @@
 package mffs
 
+import java.util.UUID
+
+import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
@@ -126,6 +129,8 @@ final object ModularForceFieldSystem
    * Damages
    */
   val damageFieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor
+  val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
+
   val packetHandler = new PacketManager()
 
   @EventHandler

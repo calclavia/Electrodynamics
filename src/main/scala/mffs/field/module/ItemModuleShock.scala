@@ -20,11 +20,13 @@ class ItemModuleShock(i: Int) extends ItemModule(i, "moduleShock")
 
       if (tile.isInstanceOf[TileForceField])
       {
-        return tile.asInstanceOf[TileForceField].getProjector.isAccessGranted(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap)
+        if (tile.asInstanceOf[TileForceField].getProjector.isAccessGranted(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
+          return true
       }
 
       entity.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, moduleStack.stackSize)
-      return false
     }
+
+    return true
   }
 }

@@ -135,7 +135,7 @@ class ItemModeCustom extends ItemMode with TCache
                                 {
                                   if (!nbt.getBoolean(NBT_MODE))
                                   {
-                                    val vectorTag = position.toNBT(new NBTTagCompound)
+                                    val vectorTag = position.toNBT
                                     vectorTag.setString(NBT_FIELD_BLOCK_NAME, Block.blockRegistry.getNameForObject(block))
                                     vectorTag.setInteger(NBT_FIELD_BLOCK_METADATA, targetCheck.getBlockMetadata(world))
                                     list.appendTag(vectorTag)
@@ -203,12 +203,12 @@ class ItemModeCustom extends ItemMode with TCache
         val point1: Vector3 = new Vector3(nbt.getCompoundTag(NBT_POINT_1))
         if (!nbt.hasKey(NBT_POINT_1) || (point1 == new Vector3(0, 0, 0)))
         {
-          nbt.setTag(NBT_POINT_1, new Vector3(x, y, z).toNBT(new NBTTagCompound))
+          nbt.setTag(NBT_POINT_1, new Vector3(x, y, z).toNBT)
           player.addChatMessage(new ChatComponentText("Set point 1: " + x + ", " + y + ", " + z + "."))
         }
         else
         {
-          nbt.setTag(NBT_POINT_2, new Vector3(x, y, z).toNBT(new NBTTagCompound))
+          nbt.setTag(NBT_POINT_2, new Vector3(x, y, z).toNBT)
           player.addChatMessage(new ChatComponentText("Set point 2: " + x + ", " + y + ", " + z + "."))
         }
       }
