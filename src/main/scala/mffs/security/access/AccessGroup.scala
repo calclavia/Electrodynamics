@@ -6,13 +6,13 @@ import resonant.lib.access.Permission
 
 class AccessGroup extends AbstractAccess
 {
-  var users = Set[AccessUser]()
+  var users = Set.empty[AccessUser]
 
   def this(nbt: NBTTagCompound)
   {
     this()
-    val userList = nbt.getTagList("users", 10)
-    users = (0 until userList.tagCount()).map(new AccessUser(nbtList.getCompoundTagAt(_)))
+    val nbtList = nbt.getTagList("users", 10)
+    users = ((0 until nbtList.tagCount()) map (i => new AccessUser(nbtList.getCompoundTagAt(i)))).toSet
     fromNBT(nbt)
   }
 
@@ -28,6 +28,6 @@ class AccessGroup extends AbstractAccess
 
   def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {
-    return users.exists(_.profile.equals(profile)) && (permissions.exists(permission) || users.exists(_.hasPermission(permission)))
+    return users.exists(_.profile.equals(profile)) && (permissions.contains(permission) || users.exists(_.hasPermission(permission)))
   }
 }

@@ -10,7 +10,7 @@ object TransferMode extends Enumeration
 
   implicit class TransferModeValue(value: Value)
   {
-    def toggle: TransferMode = TransferMode.values((value.id + 1) % TransferMode.values.size)
+    def toggle: TransferMode = TransferMode((value.id + 1) % TransferMode.values.size)
   }
 
 }

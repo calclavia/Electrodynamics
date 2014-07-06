@@ -44,15 +44,15 @@ class TileCoercionDeriver extends TileModuleAcceptor
   startModuleIndex = 3
   updateEnergyInfo()
 
-  private def updateEnergyInfo
+  private def updateEnergyInfo()
   {
     this.energy.setCapacity(getWattage)
     this.energy.setMaxTransfer(getWattage / 20)
   }
 
-  override def initiate
+  override def start()
   {
-    super.initiate
+    super.start()
     updateEnergyInfo
   }
 
@@ -63,7 +63,7 @@ class TileCoercionDeriver extends TileModuleAcceptor
     {
       if (isActive)
       {
-        if (isInversed && Settings.ENABLE_ELECTRICITY)
+        if (isInversed && Settings.enableElectricity)
         {
           if (energy.getEnergy < energy.getEnergyCapacity)
           {

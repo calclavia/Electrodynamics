@@ -10,9 +10,13 @@ import resonant.api.mffs.card.ICardIdentification
 import resonant.api.mffs.security.IBiometricIdentifier
 import resonant.lib.access.Permission
 
-class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
+object TileBiometricIdentifier
 {
   val SLOT_COPY = 12
+}
+
+class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
+{
   var access = new AccessProfile()
 
   /**
@@ -24,58 +28,60 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 
   override def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
   {
-    if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.OP_OVERRIDE)
+    if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride)
       return true
 
     return access.hasPermission(profile, permission)
   }
+  /*
+   override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+   {
+     super.onReceivePacket(packetID, dataStream)
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
-  {
-    super.onReceivePacket(packetID, dataStream)
-    /*
-    if (packetID == TilePacketType.TOGGLE_MODE.ordinal)
-    {
-      if (this.getEditCard != null)
-      {
-        val idCard: ICardIdentification = this.getEditCard.getItem.asInstanceOf[ICardIdentification]
-        val id: Int = dataStream.readInt
-        val permission = Permission.getPermission(id)
-        if (permission != null)
-        {
-          if (!idCard.hasPermission(this.getEditCard, permission))
-          {
-            idCard.addPermission(this.getEditCard, permission)
-          }
-          else
-          {
-            idCard.removePermission(this.getEditCard, permission)
-          }
-        }
-        else
-        {
-          ModularForceFieldSystem.LOGGER.severe("Error handling security station permission packet: " + id + " - " + permission)
-        }
-      }
-    }
-    else if (packetID == TilePacketType.STRING.ordinal)
-    {
-      if (this.getEditCard != null)
-      {
-        val idCard: ICardIdentification = this.getEditCard.getItem.asInstanceOf[ICardIdentification]
-        idCard.setUsername(this.getEditCard, dataStream.readUTF)
-      }
-    }*/
-  }
+     if (packetID == TilePacketType.TOGGLE_MODE.ordinal)
+     {
+       if (this.getEditCard != null)
+       {
+         val idCard: ICardIdentification = this.getEditCard.getItem.asInstanceOf[ICardIdentification]
+         val id: Int = dataStream.readInt
+         val permission = Permission.getPermission(id)
+         if (permission != null)
+         {
+           if (!idCard.hasPermission(this.getEditCard, permission))
+           {
+             idCard.addPermission(this.getEditCard, permission)
+           }
+           else
+           {
+             idCard.removePermission(this.getEditCard, permission)
+           }
+         }
+         else
+         {
+           ModularForceFieldSystem.LOGGER.severe("Error handling security station permission packet: " + id + " - " + permission)
+         }
+       }
+     }
+     else if (packetID == TilePacketType.STRING.ordinal)
+     {
+       if (this.getEditCard != null)
+       {
+         val idCard: ICardIdentification = this.getEditCard.getItem.asInstanceOf[ICardIdentification]
+         idCard.setUsername(this.getEditCard, dataStream.readUTF)
+       }
+     }
+  }*/
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
     return itemStack.getItem.isInstanceOf[ICardIdentification]
   }
 
-  def onInventoryChanged()
+  override def markDity()
   {
-    super.onInventoryChanged()
+    rebuildAccess()
+    super.markDirty()
+
     /*
     if (this.getEditCard != null && this.getStackInSlot(SLOT_COPY) != null && this.getStackInSlot(SLOT_COPY).getItem.isInstanceOf[ICardIdentification])
     {
@@ -98,8 +104,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
   def rebuildAccess()
   {
     access = new AccessProfile()
-
-    getCards.filter()
+    //TODO: Rebuild the access based on the cards.
   }
 
   override def getInventoryStackLimit: Int =

@@ -14,7 +14,7 @@ class ItemModuleAntiFriendly(i: Int) extends ItemModuleInterdictionMatrix(i, "mo
 		if (!(entityLiving.isInstanceOf[IMob] && !(entityLiving.isInstanceOf[INpc])) && !(entityLiving.isInstanceOf[EntityPlayer]))
 		{
 			entityLiving.setHealth(1)
-			entityLiving.attackEntityFrom(ModularForceFieldSystem.damagefieldShock, 100)
+			entityLiving.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 100)
 		}
 
 		return false

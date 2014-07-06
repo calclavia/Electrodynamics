@@ -1,8 +1,5 @@
 package mffs.mobilize
 
-import java.util.UUID
-
-import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldInteraction, TilePacketType}
@@ -17,7 +14,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
@@ -30,12 +26,13 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.convert.wrapAll._
 import scala.math._
+
 class TileForceMobilizer extends TileFieldInteraction with IEffectController
 {
   val packetRange = 60
   val animationTime = 20
 
-  private var failedPositions = Set.empty[Vector3]
+  private val failedPositions = Set.empty[Vector3]
   var anchor: Vector3 = null
   /**
    * The display mode. 0 = none, 1 = minimal, 2 = maximal.
@@ -59,6 +56,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   private var canRenderMove: Boolean = true
 
   rotationMask = 63
+  maxSlots = 3 + 18
 
   override def updateEntity
   {
@@ -218,10 +216,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
         val nbt = new NBTTagCompound
         val nbtList = new NBTTagList
 
-        for (position <- this.failedPositions)
-        {
-          nbtList.appendTag(position.toNBT)
-        }
+        failedPositions foreach (pos => nbtList.appendTag(pos.toNBT))
 
         nbt.setByte("type", 1.toByte)
         nbt.setTag("list", nbtList)
@@ -362,7 +357,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
     for (position <- mobilizationPoints)
     {
-      if (!this.worldObj.isAirBlock(position.xi, position.yi, position.zi))
+      if (world.isAirBlock(position.xi, position.yi, position.zi))
       {
         val relativePosition = position - getAbsoluteAnchor
         val targetPosition = (targetCenterPosition + relativePosition).asInstanceOf[VectorWorld]
@@ -416,13 +411,13 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   {
     if (!this.worldObj.isRemote)
     {
-      val relativePosition: Vector3 = position.clone.subtract(this.getAbsoluteAnchor)
-      val newPosition: Vector3 = this.getTargetPosition.clone.add(relativePosition).asInstanceOf[Vector3]
-      val tileEntity: TileEntity = position.getTileEntity(this.worldObj)
+      val relativePosition = position.clone.subtract(getAbsoluteAnchor)
+      val newPosition = getTargetPosition + relativePosition
+      val tileEntity = position.getTileEntity(world)
 
       if (!worldObj.isAirBlock(position.xi, position.yi, position.zi) && tileEntity != this)
       {
-        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, this.worldObj, position, newPosition))
+        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(world, position), newPosition))
         return true
       }
     }
@@ -496,23 +491,17 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
   protected def moveEntities
   {
-    val targetLocation: Vector3 = this.getTargetPosition
-    val axisalignedbb: AxisAlignedBB = this.getSearchBounds
+    val targetLocation = getTargetPosition
+    val bounds = getSearchBounds
 
-    if (axisalignedbb != null)
+    if (bounds != null)
     {
-      val entities: List[Entity] = this.worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb)
-
-      for (entity <- entities)
-      {
-        val relativePosition: Vector3 = new Vector3(entity).clone.subtract(this.getAbsoluteAnchor + 0.5)
-        val newLocation: Vector3 = targetLocation.clone + 0.5.add(relativePosition).asInstanceOf[Vector3]
-        moveEntity(entity, newLocation)
-      }
+      val entities = this.worldObj.getEntitiesWithinAABB(classOf[Entity], bounds)
+      entities map (_.asInstanceOf[Entity]) foreach (entity => moveEntity(entity, targetLocation + 0.5 + new Vector3(entity) - (getAbsoluteAnchor + 0.5)))
     }
   }
 
-  protected def moveEntity(entity: Entity, location: Vector3)
+  protected def moveEntity(entity: Entity, location: VectorWorld)
   {
     if (entity != null && location != null)
     {
@@ -523,6 +512,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       entity.motionX = 0
       entity.motionY = 0
       entity.motionZ = 0
+
       if (entity.isInstanceOf[EntityPlayerMP])
       {
         (entity.asInstanceOf[EntityPlayerMP]).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
@@ -565,25 +555,22 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    if (this.anchor != null)
+
+    if (anchor != null)
     {
-      nbt.setCompoundTag("anchor", this.anchor.writeToNBT(new NBTTagCompound))
+      nbt.setTag("anchor", anchor.toNBT)
     }
-    nbt.setInteger("displayMode", this.displayMode)
-    nbt.setBoolean("doAnchor", this.doAnchor)
+
+    nbt.setInteger("displayMode", displayMode)
+    nbt.setBoolean("doAnchor", doAnchor)
   }
 
-  override def getTranslation: Vector3 =
-  {
-    return super.getTranslation.clone.add(this.anchor)
-  }
+  override def getTranslation: Vector3 = super.getTranslation + anchor
 
-  override def getSizeInventory: Int =
-  {
-    return 3 + 18
-  }
+  def canContinueEffect = canRenderMove
 
-  def getMethodNames: Array[String] =
+  /*
+   def getMethodNames: Array[String] =
   {
     return Array[String]("isActivate", "setActivate", "resetAnchor", "canMove")
   }
@@ -614,10 +601,6 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     }
     return super.callMethod(computer, context, method, arguments)
   }
-
-  def canContinueEffect: Boolean =
-  {
-    return this.canRenderMove
-  }
+*/
 
 }

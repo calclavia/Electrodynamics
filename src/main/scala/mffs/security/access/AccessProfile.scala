@@ -13,20 +13,20 @@ import scala.collection.mutable
 
 class AccessProfile
 {
-  var groups = new mutable.HashSet[AccessGroup]()
+  var groups = Set.empty[AccessGroup]
 
   def this(nbt: NBTTagCompound)
   {
     this()
     val nbtList = nbt.getTagList("groups", 10)
-    groups = (0 until nbtList.tagCount()).map(new AccessGroup(nbtList.getCompoundTagAt(_)))
+    groups = ((0 until nbtList.tagCount()) map (i => new AccessGroup(nbtList.getCompoundTagAt(i)))).toSet
   }
 
   def toNBT: NBTTagCompound =
   {
     val nbt = new NBTTagCompound()
     val nbtList = new NBTTagList()
-    groups.foreach(group => nbtList.appendTag(user.toNBT))
+    groups.foreach(group => nbtList.appendTag(group.toNBT))
     nbt.setTag("groups", nbtList)
     return nbt
   }

@@ -1,24 +1,24 @@
 package mffs.production
 
-import java.util.{ArrayList, HashSet, Set}
-
-import com.google.common.io.ByteArrayDataInput
-import mffs.base.TileModuleAcceptor
-import mffs.util.{MFFSUtility, TransferMode}
+import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
+import mffs.base.{TileModuleAcceptor, TilePacketType}
+import mffs.util.TransferMode.TransferMode
+import mffs.util.{FortronUtility, TransferMode}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import resonant.api.blocks.IBlockFrequency
-import resonant.api.mffs.card.{ICardInfinite, ICard, ICoordLink}
-import resonant.api.mffs.fortron.{IFortronCapacitor, IFortronFrequency, IFortronStorage}
+import resonant.api.mffs.card.{ICard, ICardInfinite, ICoordLink}
+import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonant.api.mffs.modules.IModule
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
-  private var transferMode: TransferMode = TransferMode.EQUALIZE
+  private var transferMode = TransferMode.EQUALIZE
+  private val tickRate = 10
 
   capacityBase = 700
   capacityBoost = 10
@@ -29,9 +29,9 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     super.update()
     this.consumeCost()
 
-    if (this.isActive && this.ticks % 10 == 0)
+    if (this.isActive && this.ticks % tickRate == 0)
     {
-      var machines: Set[IFortronFrequency] = new HashSet[IFortronFrequency]
+      var machines = mutable.Set.empty[IFortronFrequency]
 
       for (itemStack <- this.getCards)
       {
@@ -44,19 +44,20 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
           else if (itemStack.getItem.isInstanceOf[ICoordLink])
           {
             val linkPosition: Vector3 = (itemStack.getItem.asInstanceOf[ICoordLink]).getLink(itemStack)
-            if (linkPosition != null && linkPosition.getTileEntity(this.worldObj).isInstanceOf[IFortronFrequency])
+            if (linkPosition != null && linkPosition.getTileEntity(world).isInstanceOf[IFortronFrequency])
             {
               machines.add(this)
-              machines.add(linkPosition.getTileEntity(this.worldObj).asInstanceOf[IFortronFrequency])
+              machines.add(linkPosition.getTileEntity(world).asInstanceOf[IFortronFrequency])
             }
           }
         }
       }
       if (machines.size < 1)
       {
-        machines = this.getLinkedDevices
+        machines = getLinkedDevices
       }
-      MFFSUtility.transferFortron(this, machines, this.transferMode, getTransmissionRate * 10)
+
+      FortronUtility.transferFortron(this, machines, this.transferMode, getTransmissionRate * tickRate)
     }
   }
 
@@ -68,26 +69,27 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   /**
    * Packet Methods
    */
-  override def getPacketData(packetID: Int): ArrayList[_] =
+  override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    val data: ArrayList[_] = super.getPacketData(packetID)
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      data.add(this.transferMode.ordinal)
+      return super.getPacketData(packetID) :+ (transferMode.id: Integer)
     }
-    return data
+
+    return super.getPacketData(packetID)
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
-    if (packetID == TilePacketType.DESCRIPTION.ordinal)
+
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      this.transferMode = TransferMode.values(dataStream.readInt)
+      transferMode = TransferMode(dataStream.readInt)
     }
-    else if (packetID == TilePacketType.TOGGLE_MODE.ordinal)
+    else if (packetID == TilePacketType.TOGGLE_MODE.id)
     {
-      this.transferMode = this.transferMode.toggle
+      transferMode = this.transferMode.toggle
     }
   }
 
@@ -99,28 +101,18 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    this.transferMode = TransferMode.values(nbt.getInteger("transferMode"))
+    this.transferMode = TransferMode(nbt.getInteger("transferMode"))
   }
 
   override def writeToNBT(nbttagcompound: NBTTagCompound)
   {
     super.writeToNBT(nbttagcompound)
-    nbttagcompound.setInteger("transferMode", this.transferMode.ordinal)
+    nbttagcompound.setInteger("transferMode", this.transferMode.id)
   }
 
-  def getLinkedDevices: Set[IFortronFrequency] =
+  def getLinkedDevices: mutable.Set[IFortronFrequency] =
   {
-    val fortronBlocks: Set[IFortronFrequency] = new HashSet[IFortronFrequency]
-    val frequencyBlocks: Set[IBlockFrequency] = FrequencyGrid.instance.get(this.worldObj, new Vector3(this), this.getTransmissionRange, this.getFrequency)
-    import scala.collection.JavaConversions._
-    for (frequencyBlock <- frequencyBlocks)
-    {
-      if (frequencyBlock.isInstanceOf[IFortronFrequency])
-      {
-        fortronBlocks.add(frequencyBlock.asInstanceOf[IFortronFrequency])
-      }
-    }
-    return fortronBlocks
+    return FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(this), getTransmissionRange, getFrequency)
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -135,27 +127,12 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def getCards: Set[ItemStack] =
-  {
-    val cards: Set[ItemStack] = new HashSet[ItemStack]
-    cards.add(super.getCard)
-    cards.add(this.getStackInSlot(1))
-    return cards
-  }
+  override def getCards: Set[ItemStack] = Set[ItemStack](super.getCard, getStackInSlot(1))
 
-  def getTransferMode: TransferMode =
-  {
-    return this.transferMode
-  }
+  def getTransferMode: TransferMode = transferMode
 
-  def getTransmissionRange: Int =
-  {
-    return 15 + this.getModuleCount(ModularForceFieldSystem.itemModuleScale)
-  }
+  def getTransmissionRange: Int = 15 + getModuleCount(ModularForceFieldSystem.Items.moduleScale)
 
-  def getTransmissionRate: Int =
-  {
-    return 250 + 50 * this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed)
-  }
+  def getTransmissionRate: Int = 250 + 50 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed)
 
 }
