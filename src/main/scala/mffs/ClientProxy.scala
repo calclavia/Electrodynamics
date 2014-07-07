@@ -3,11 +3,9 @@ package mffs
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import mffs.field.{GuiElectromagneticProjector, TileElectromagnetProjector}
-import mffs.gui._
 import mffs.item.card.RenderIDCard
 import mffs.mobilize.{GuiForceMobilizer, TileForceMobilizer}
 import mffs.production._
-import mffs.render._
 import mffs.render.fx._
 import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
