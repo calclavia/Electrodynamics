@@ -7,10 +7,12 @@ import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import resonant.api.mffs.card.ICoordLink
 import resonant.lib.utility.LanguageUtility
 import universalelectricity.core.transform.vector.VectorWorld
+import resonant.lib.wrapper.WrapList._
 
 /**
  * A linking card used to link machines in specific positions.
@@ -23,14 +25,17 @@ class ItemCardLink extends ItemCard with ICoordLink
   override def addInformation(itemstack: ItemStack, entityplayer: EntityPlayer, list: List[_], flag: Boolean)
   {
     super.addInformation(itemstack, entityplayer, list, flag)
+
     if (hasLink(itemstack))
     {
       val vec: VectorWorld = getLink(itemstack)
-      val block: Block = vec.getBlock(entityplayer.worldObj)
+      val block = vec.getBlock(entityplayer.worldObj)
+
       if (block != null)
       {
         list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + block.getLocalizedName)
       }
+
       list.add(vec.xi + ", " + vec.yi + ", " + vec.zi)
       list.add(LanguageUtility.getLocal("info.item.dimension") + " " + vec.world.provider.getDimensionName)
     }
@@ -48,7 +53,7 @@ class ItemCardLink extends ItemCard with ICoordLink
       this.setLink(itemStack, vector)
       if (vector.getBlock(world) != null)
       {
-        player.addChatMessage(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName)
+        player.addChatMessage(new ChatComponentText(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName))
       }
     }
     return true

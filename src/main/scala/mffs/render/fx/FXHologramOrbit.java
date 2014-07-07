@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import resonant.lib.render.RenderUtility;
+import universalelectricity.core.transform.rotation.Rotation;
 import universalelectricity.core.transform.vector.Vector3;
 
 /**
@@ -34,19 +35,19 @@ public class FXHologramOrbit extends FXHologram
 	{
 		super.onUpdate();
 
-		double xDifference = this.posX - orbitPosition.x;
-		double yDifference = this.posY - orbitPosition.y;
-		double zDifference = this.posZ - orbitPosition.z;
+		double xDifference = this.posX - orbitPosition.x();
+		double yDifference = this.posY - orbitPosition.y();
+		double zDifference = this.posZ - orbitPosition.z();
 
 		double speed = this.maxSpeed * ((float) this.particleAge / (float) this.particleMaxAge);
 		Vector3 originalPosition = new Vector3(this);
 		Vector3 relativePosition = originalPosition.clone().subtract(this.orbitPosition);
-		relativePosition.rotate(speed, 0, 0);
+		relativePosition.apply(new Rotation(speed, 0, 0));
 		Vector3 newPosition = this.orbitPosition.clone().add(relativePosition);
 		this.rotation += speed;
 
 		// Orbit
-		this.moveEntity(newPosition.x - originalPosition.x, newPosition.y - originalPosition.y, newPosition.z - originalPosition.z);
+		this.moveEntity(newPosition.x() - originalPosition.x(), newPosition.y() - originalPosition.y(), newPosition.z() - originalPosition.z());
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class FXHologramOrbit extends FXHologram
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		RenderUtility.enableBlending();
 		RenderUtility.setTerrainTexture();
-		RenderUtility.renderNormalBlockAsItem(ModularForceFieldSystem.blockForceField, 0, new RenderBlocks());
+		RenderUtility.renderNormalBlockAsItem(ModularForceFieldSystem.Blocks.forceField(), 0, new RenderBlocks());
 		RenderUtility.disableBlending();
 		GL11.glPopMatrix();
 

@@ -38,7 +38,7 @@ class RenderIDCard extends IItemRenderer
       {
         glTranslatef(0f, 0f, -0.0005f)
       }
-      renderPlayerFace(getSkinFace(card.getProfile(itemStack)))
+      renderPlayerFace(getSkinFace(card.getProfile(itemStack).getName))
       glEnable(GL_CULL_FACE)
       glPopMatrix
     }
@@ -68,6 +68,7 @@ class RenderIDCard extends IItemRenderer
     try
     {
       var resourcelocation: ResourceLocation = Minecraft.getMinecraft.thePlayer.getLocationSkin
+
       if (name != null && !name.isEmpty)
       {
         resourcelocation = AbstractClientPlayer.getLocationSkin(name)

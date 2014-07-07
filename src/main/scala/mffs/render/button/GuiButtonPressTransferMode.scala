@@ -13,7 +13,7 @@ class GuiButtonPressTransferMode(id: Int, x: Int, y: Int, mainGui: GuiMFFS, tile
     val first = Character.toUpperCase(transferName.charAt(0))
     transferName = first + transferName.substring(1)
     this.displayString = "transferMode" + transferName
-    this.offset.y = 18 * tile.getTransferMode.id
+    val offsetY = 18 * tile.getTransferMode.id
     super.drawButton(minecraft, x, y)
   }
 }

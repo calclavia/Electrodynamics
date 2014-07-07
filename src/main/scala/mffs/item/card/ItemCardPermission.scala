@@ -1,35 +1,47 @@
 package mffs.item.card
 
-import mffs.security.access.MFFSPermissions
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.NBTTagCompound
-import resonant.lib.access.Permission
+import net.minecraft.nbt.{NBTTagList, NBTTagString}
+import resonant.lib.access.{Permission, Permissions}
 import resonant.lib.utility.nbt.NBTUtility
+import java.util.{Set=>JSet}
+import scala.collection.convert.wrapAll._
+import scala.collection.mutable
 
 /**
  * @author Calclavia
  */
 class ItemCardPermission extends ItemCard
 {
-  private final val NBT_PREFIX = "mffs_permission_"
+  private final val nbtPermission = "permissions"
 
-  def hasPermission(itemStack: ItemStack, permission: Permission): Boolean =
+  def getPermissions(itemStack: ItemStack): JSet[Permission] =
   {
     val nbt = NBTUtility.getNBTTagCompound(itemStack)
-    return nbt.getBoolean(NBT_PREFIX + permission.id)
+    val nbtList = nbt.getTagList(nbtPermission, 9)
+    return ((0 until nbtList.tagCount) map (i => Permissions.find(nbtList.getStringTagAt(i))) filter (_ != null)).to[mutable.Set]
   }
 
-  def addPermission(itemStack: ItemStack, permission: Permission): Boolean =
+  def setPermissions(itemStack: ItemStack, permissions: Permission*)
   {
     val nbt = NBTUtility.getNBTTagCompound(itemStack)
-    nbt.setBoolean(NBT_PREFIX + permission.id, true)
-    return false
+    val nbtList = new NBTTagList
+    permissions foreach (permission=>nbtList.appendTag(new NBTTagString(permission.toString)))
+    nbt.setTag(nbtPermission, nbtList)
   }
 
-  def removePermission(itemStack: ItemStack, permission: Permission): Boolean =
+  def hasPermission(itemStack: ItemStack, permission: Permission*): Boolean =
   {
-    val nbt = NBTUtility.getNBTTagCompound(itemStack)
-    nbt.setBoolean(NBT_PREFIX + permission.id, false)
-    return false
+    return getPermissions(itemStack).containsAll(permission)
+  }
+
+  def addPermission(itemStack: ItemStack, permission: Permission*)
+  {
+     setPermissions(itemStack, (getPermissions(itemStack) ++ permission).toSeq : _*)
+  }
+
+  def removePermission(itemStack: ItemStack, permission: Permission*)
+  {
+     setPermissions(itemStack, (getPermissions(itemStack) -- permission).toSeq : _*)
   }
 }

@@ -19,7 +19,7 @@ public class FXHologram extends FXMFFS
 
 	public FXHologram(World par1World, Vector3 position, float red, float green, float blue, int age)
 	{
-		super(par1World, position.x, position.y, position.z);
+		super(par1World, position.x(), position.y(), position.z());
 		this.setRBGColorF(red, green, blue);
 		this.particleMaxAge = age;
 		this.noClip = true;
@@ -34,9 +34,9 @@ public class FXHologram extends FXMFFS
 	public FXHologram setTarget(Vector3 targetPosition)
 	{
 		this.targetPosition = targetPosition;
-		this.motionX = (this.targetPosition.x - this.posX) / this.particleMaxAge;
-		this.motionY = (this.targetPosition.y - this.posY) / this.particleMaxAge;
-		this.motionZ = (this.targetPosition.z - this.posZ) / this.particleMaxAge;
+		this.motionX = (this.targetPosition.x() - this.posX) / this.particleMaxAge;
+		this.motionY = (this.targetPosition.y() - this.posY) / this.particleMaxAge;
+		this.motionZ = (this.targetPosition.z() - this.posZ) / this.particleMaxAge;
 
 		return this;
 	}
@@ -86,7 +86,7 @@ public class FXHologram extends FXMFFS
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		RenderUtility.enableBlending();
 		RenderUtility.setTerrainTexture();
-		RenderUtility.renderNormalBlockAsItem(ModularForceFieldSystem.blockForceField, 0, new RenderBlocks());
+		RenderUtility.renderNormalBlockAsItem(ModularForceFieldSystem.Blocks.forceField(), 0, new RenderBlocks());
 		RenderUtility.disableBlending();
 		GL11.glPopMatrix();
 
