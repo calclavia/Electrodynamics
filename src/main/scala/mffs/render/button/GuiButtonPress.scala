@@ -56,10 +56,6 @@ class GuiButtonPress(id: Int, x: Int, y: Int, offset: Vector2 = new Vector2, mai
 
   protected def isPointInRegion(x: Int, y: Int, width: Int, height: Int, checkX: Int, checkY: Int): Boolean =
   {
-    val var7: Int = 0
-    val var8: Int = 0
-    checkX -= var7
-    checkY -= var8
     return checkX >= x - 1 && checkX < x + width + 1 && checkY >= y - 1 && checkY < y + height + 1
   }
 

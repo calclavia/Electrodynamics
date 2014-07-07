@@ -176,7 +176,7 @@ final object ModularForceFieldSystem
     cardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
     cardFrequency = manager.newItem(classOf[ItemCardFrequency])
     cardLink = manager.newItem(classOf[ItemCardLink])
-    cardID = manager.newItem(classOf[ItemCardID])
+    cardID = manager.newItem(classOf[ItemCardIdentification])
     cardInfinite = manager.newItem(classOf[ItemCardInfinite])
     moduleAntiFriendly = manager.newItem(classOf[ItemModuleAntiFriendly])
     moduleAntiHostile = manager.newItem(classOf[ItemModuleAntiHostile])

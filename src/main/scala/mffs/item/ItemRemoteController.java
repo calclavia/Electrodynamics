@@ -1,14 +1,14 @@
 package mffs.item;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import resonant.api.mffs.EventForceManipulate.EventPostForceManipulate;
 import resonant.api.mffs.EventForceManipulate.EventPreForceManipulate;
 import resonant.api.mffs.card.ICoordLink;
-import resonant.api.mffs.fortron.FrequencyGrid;
+import resonant.api.mffs.fortron.FrequencyGridRegistry;
 import resonant.api.mffs.fortron.IFortronFrequency;
 import mffs.security.access.MFFSPermissions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import mffs.MFFSHelper;
 import mffs.ModularForceFieldSystem;
 import mffs.item.card.ItemCardFrequency;
 import net.minecraft.block.Block;
@@ -18,14 +18,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.energy.UnitDisplay;
-import universalelectricity.api.energy.UnitDisplay.Unit;
+import universalelectricity.api.UnitDisplay;
 import universalelectricity.core.transform.vector.Vector3;
-import universalelectricity.api.vector.VectorWorld;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,11 +33,6 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 {
 	private final Set<ItemStack> remotesCached = new HashSet<ItemStack>();
 	private final Set<ItemStack> temporaryRemoteBlacklist = new HashSet<ItemStack>();
-
-	public ItemRemoteController(int id)
-	{
-		super("remoteController", id);
-	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -135,7 +128,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 						float requiredEnergy = (float) Vector3.distance(new Vector3(entityPlayer), position) * (FluidContainerRegistry.BUCKET_VOLUME / 100);
 						int receivedEnergy = 0;
 
-						Set<IFortronFrequency> fortronTiles = FrequencyGrid.instance().getFortronTiles(world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack));
+						Set<IFortronFrequency> fortronTiles = FrequencyGridRegistry.instance().getFortronTiles(world, new Vector3(entityPlayer), 50, this.getFrequency(itemStack));
 
 						for (IFortronFrequency fortronTile : fortronTiles)
 						{
@@ -168,7 +161,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 
 						if (!world.isRemote)
 						{
-							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("%p", UnitDisplay.getDisplay(requiredEnergy, Unit.JOULES)));
+							entityPlayer.addChatMessage(LanguageUtility.getLocal("message.remoteController.fail").replaceAll("%p", new UnitDisplay(requiredEnergy, UnitDisplay.Unit.JOULES)));
 						}
 					}
 				}
@@ -178,7 +171,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 		return itemStack;
 	}
 
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void preMove(EventPreForceManipulate evt)
 	{
 		this.temporaryRemoteBlacklist.clear();
@@ -190,7 +183,7 @@ public class ItemRemoteController extends ItemCardFrequency implements ICoordLin
 	 *
 	 * @param evt
 	 */
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void onMove(EventPostForceManipulate evt)
 	{
 		if (!evt.world.isRemote)

@@ -5,22 +5,17 @@ import java.util.UUID
 import com.mojang.authlib.GameProfile
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.access.Permission
+import resonant.lib.utility.nbt.NBTUtility
 
 class AccessUser(val profile: GameProfile) extends AbstractAccess
 {
   def this(nbt: NBTTagCompound)
   {
-    this(new GameProfile(UUID.fromString(nbt.getString("UUID")), nbt.getString("username")))
+    this(NBTUtility.loadProfile(nbt))
     fromNBT(nbt)
   }
 
-  override def toNBT: NBTTagCompound =
-  {
-    val nbt = super.toNBT
-    nbt.setString("UUID", profile.getId.toString)
-    nbt.setString("username", profile.getName)
-    return nbt
-  }
+  override def toNBT: NBTTagCompound =  NBTUtility.saveProfile(super.toNBT, profile)
 
   def hasPermission(permission: Permission): Boolean = permissions.contains(permission)
 }

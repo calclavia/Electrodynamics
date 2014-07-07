@@ -72,7 +72,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
        if (this.getEditCard != null)
        {
          val idCard: ICardIdentification = this.getEditCard.getItem.asInstanceOf[ICardIdentification]
-         idCard.setUsername(this.getEditCard, dataStream.readUTF)
+         idCard.setProfile(this.getEditCard, dataStream.readUTF)
        }
      }
   }*/

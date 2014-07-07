@@ -38,7 +38,7 @@ class RenderIDCard extends IItemRenderer
       {
         glTranslatef(0f, 0f, -0.0005f)
       }
-      renderPlayerFace(getSkinFace(card.getUsername(itemStack)))
+      renderPlayerFace(getSkinFace(card.getProfile(itemStack)))
       glEnable(GL_CULL_FACE)
       glPopMatrix
     }

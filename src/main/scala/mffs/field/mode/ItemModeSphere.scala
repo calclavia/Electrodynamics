@@ -22,7 +22,7 @@ class ItemModeSphere extends ItemMode
     {
       val phi = Math.PI * 2 / steps * phi_n
       val theta = Math.PI / steps * theta_n
-      val point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)).scale(radius)
+      val point = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi)) * radius
       fieldBlocks.add(point)
     }
 
@@ -38,7 +38,7 @@ class ItemModeSphere extends ItemMode
     for (x <- radius to radius; y <- -radius to radius; z <- -radius to radius)
     {
       val position = new Vector3(x, y, z)
-      if (isInField(projector, position + new Vector3(projector.asInstanceOf[TileEntity])) + translation)
+      if (isInField(projector, position + new Vector3(projector.asInstanceOf[TileEntity]) + translation))
       {
         fieldBlocks.add(position)
       }
@@ -64,7 +64,7 @@ class ItemModeSphere extends ItemMode
       val phi = Math.PI * 2 / steps * phi_n
       val theta = Math.PI / steps * theta_n
       val vector = new Vector3(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi))
-      vector.scale(radius)
+      vector * radius
       GL11.glTranslated(vector.x, vector.y, vector.z)
       ModelCube.INSTNACE.render
       GL11.glTranslated(-vector.x, -vector.y, -vector.z)

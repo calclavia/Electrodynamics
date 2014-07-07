@@ -52,7 +52,7 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
       {
         val idCard: ICardIdentification = this.tile.getEditCard.getItem.asInstanceOf[ICardIdentification]
         this.textFieldUsername.drawTextBox
-        if (idCard.getUsername(this.tile.getEditCard) != null)
+        if (idCard.getProfile(this.tile.getEditCard) != null)
         {
           {
             var i: Int = 0
@@ -119,9 +119,9 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
       if (this.tile.getEditCard != null)
       {
         val idCard: ICardIdentification = this.tile.getEditCard.getItem.asInstanceOf[ICardIdentification]
-        if (idCard.getUsername(this.tile.getEditCard) != null)
+        if (idCard.getProfile(this.tile.getEditCard) != null)
         {
-          this.textFieldUsername.setText(idCard.getUsername(this.tile.getEditCard))
+          this.textFieldUsername.setText(idCard.getProfile(this.tile.getEditCard))
         }
       }
     }*/
