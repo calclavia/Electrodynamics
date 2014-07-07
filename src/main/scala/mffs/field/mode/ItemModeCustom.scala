@@ -25,6 +25,7 @@ import resonant.lib.wrapper.WrapList._
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
+import java.util.{Set => JSet}
 
 class ItemModeCustom extends ItemMode with TCache
 {
@@ -273,7 +274,7 @@ class ItemModeCustom extends ItemMode with TCache
       for (direction <- ForgeDirection.VALID_DIRECTIONS)
       {
         val copyAmount = projector.getSidedModuleCount(ModularForceFieldSystem.Items.moduleArray, direction)
-        val directionalDisplacement = (Math.abs(longestDirectional.get(direction)) + Math.abs(longestDirectional.get(direction.getOpposite))) + 1
+        val directionalDisplacement = (Math.abs(longestDirectional(direction)) + Math.abs(longestDirectional(direction.getOpposite))) + 1
 
         (0 until copyAmount) foreach (i =>
         {
@@ -312,12 +313,12 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldBlocks
   }
 
-  override def getExteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  override def getExteriorPoints(projector: IFieldInteraction): JSet[Vector3] =
   {
     return this.getFieldBlocks(projector, projector.getModeStack)
   }
 
-  override def getInteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  override def getInteriorPoints(projector: IFieldInteraction): JSet[Vector3] =
   {
     return this.getExteriorPoints(projector)
   }

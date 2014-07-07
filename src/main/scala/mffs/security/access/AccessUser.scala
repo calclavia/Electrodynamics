@@ -14,7 +14,7 @@ class AccessUser(val profile: GameProfile) extends AbstractAccess
     fromNBT(nbt)
   }
 
-  def toNBT: NBTTagCompound =
+  override def toNBT: NBTTagCompound =
   {
     val nbt = super.toNBT
     nbt.setString("UUID", profile.getId.toString)

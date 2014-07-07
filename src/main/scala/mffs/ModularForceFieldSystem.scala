@@ -13,13 +13,13 @@ import mffs.base.{ItemMFFS, ItemModule}
 import mffs.field.TileElectromagnetProjector
 import mffs.field.mode._
 import mffs.field.module._
-import mffs.util.FortronUtility
 import mffs.item.ItemRemoteController
 import mffs.item.card._
 import mffs.mobilize.TileForceMobilizer
 import mffs.production._
+import mffs.security.TileBiometricIdentifier
 import mffs.security.module._
-import mffs.security.{TileBiometricIdentifier, TileInterdictionMatrix}
+import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
@@ -58,7 +58,7 @@ final object ModularForceFieldSystem
     var fortronCapacitor: Block = _
     var forceFieldProjector: Block = _
     var biometricIdentifier: Block = _
-    var interdictionMatrix: Block = _
+   // var interdictionMatrix: Block = _
     var forceManipulator: Block = _
     var forceField: Block = _
   }
@@ -120,10 +120,10 @@ final object ModularForceFieldSystem
     var moduleAntiSpawn: ItemModule = _
   }
 
-  import net.minecraft.init.Items._
+  import mffs.ModularForceFieldSystem.Blocks._
+  import mffs.ModularForceFieldSystem.Items._
   import net.minecraft.init.Blocks._
-  import Items._
-  import Blocks._
+  import net.minecraft.init.Items._
 
   /**
    * Damages
@@ -146,7 +146,7 @@ final object ModularForceFieldSystem
     fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
     forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
     biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
-    interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
+   // interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
     forceManipulator = manager.newBlock(classOf[TileForceMobilizer])
 
     /**
@@ -264,7 +264,7 @@ final object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C': Character, cardBlank, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(interdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, moduleShock, 'E': Character, ender_chest, 'F': Character, focusMatrix))
+   // GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(interdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, moduleShock, 'E': Character, ender_chest, 'F': Character, focusMatrix))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.MOTOR.get, 'T': Character, moduleTranslate, 'M': Character, UniversalRecipe.MOTOR.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P': Character, paper, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardLink), "BWB", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))

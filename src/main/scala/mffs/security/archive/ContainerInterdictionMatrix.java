@@ -2,7 +2,7 @@ package mffs.security;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.security.TileInterdictionMatrix;
+import mffs.security.archive.TileInterdictionMatrix;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 

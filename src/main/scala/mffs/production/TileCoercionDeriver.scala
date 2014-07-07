@@ -1,15 +1,17 @@
 package mffs.production
 
-import java.util.EnumSet
-
-import com.google.common.io.ByteArrayDataInput
-import mffs.base.TileModuleAcceptor
-import mffs.util.FortronUtility
+import io.netty.buffer.ByteBuf
+import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
+import mffs.util.FortronUtility
 import mffs.{ModularForceFieldSystem, Settings}
+import net.minecraft.init.Items
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
+import resonant.lib.content.prefab.TElectric
+import universalelectricity.api.UniversalClass
+import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.region.Cuboid
 
 /**
@@ -19,85 +21,90 @@ import universalelectricity.core.transform.region.Cuboid
  */
 object TileCoercionDeriver
 {
-  val FUEL_PROCESS_TIME = 10 * 20
-  val MULTIPLE_PRODUCTION = 4
+  val fuelProcessTime = 10 * 20
+  val productionMultiplier = 4
 
   /**
    * Ration from UE to Fortron. Multiply J by this value to convert to Fortron.
    */
-  val UE_FORTRON_RATIO = 0.005f
-  val ENERGY_LOSS = 1
-  val SLOT_FREQUENCY = 0
-  val SLOT_BATTERY = 1
-  val SLOT_FUEL = 2
+  val ueToFortronRatio = 0.005f
+  val energyConversionPercentage = 1
+
+  val slotFrequency = 0
+  val slotBattery = 1
+  val slotFuel = 2
 
   /**
-   * The amount of KiloWatts this machine uses.
+   * The amount of power (watts) this machine uses.
    */
-  val DEFAULT_WATTAGE = 5000000
+  val power = 5000000
 }
 
-class TileCoercionDeriver extends TileModuleAcceptor
+@UniversalClass
+class TileCoercionDeriver extends TileModuleAcceptor with TElectric
 {
+  var processTime: Int = 0
+  var isInversed: Boolean = false
+
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 30
   startModuleIndex = 3
-  updateEnergyInfo()
-
-  private def updateEnergyInfo()
-  {
-    this.energy.setCapacity(getWattage)
-    this.energy.setMaxTransfer(getWattage / 20)
-  }
+  maxSlots = 6
 
   override def start()
   {
     super.start()
-    updateEnergyInfo
   }
 
-  override def updateEntity
+  override def update()
   {
-    super.updateEntity
+    super.update()
+
     if (!worldObj.isRemote)
     {
       if (isActive)
       {
         if (isInversed && Settings.enableElectricity)
         {
-          if (energy.getEnergy < energy.getEnergyCapacity)
+          //TODO: Check this
+          if (electricNode.getVoltage < 100)
           {
-            val withdrawnElectricity: Long = (requestFortron(getProductionRate / 20, true) / UE_FORTRON_RATIO).asInstanceOf[Long]
-            energy.receiveEnergy(withdrawnElectricity * ENERGY_LOSS, true)
+            val withdrawnElectricity = (requestFortron(productionRate / 20, true) / TileCoercionDeriver.ueToFortronRatio)
+            electricNode.applyPower(withdrawnElectricity * TileCoercionDeriver.energyConversionPercentage)
           }
-          recharge(getStackInSlot(SLOT_BATTERY))
-          produce
+
+          recharge(getStackInSlot(TileCoercionDeriver.slotBattery))
         }
         else
         {
-          if (this.getFortronEnergy < this.getFortronCapacity)
+          if (getFortronEnergy < getFortronCapacity)
           {
-            this.discharge(this.getStackInSlot(SLOT_BATTERY))
-            if (this.energy.checkExtract || (!Settings.ENABLE_ELECTRICITY && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL))))
+            discharge(getStackInSlot(TileCoercionDeriver.slotBattery))
+            val energy = electricNode.getEnergy(getVoltage)
+
+            if (energy >= getPower || (!Settings.enableElectricity && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel))))
             {
-              this.fortronTank.fill(FortronUtility.getFortron(this.getProductionRate), true)
-              this.energy.extractEnergy
-              if (this.processTime == 0 && this.isItemValidForSlot(SLOT_FUEL, this.getStackInSlot(SLOT_FUEL)))
+              fortronTank.fill(FortronUtility.getFortron(productionRate), true)
+              electricNode.drawPower(getPower)
+
+              if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
-                this.decrStackSize(SLOT_FUEL, 1)
-                this.processTime = FUEL_PROCESS_TIME * Math.max(this.getModuleCount(ModularForceFieldSystem.itemModuleScale) / 20, 1)
+                decrStackSize(TileCoercionDeriver.slotFuel, 1)
+                processTime = TileCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(ModularForceFieldSystem.Items.moduleScale) / 20, 1)
               }
-              if (this.processTime > 0)
+
+              if (processTime > 0)
               {
-                this.processTime -= 1
-                if (this.processTime < 1)
+                processTime -= 1
+
+                if (processTime < 1)
                 {
-                  this.processTime = 0
+                  processTime = 0
                 }
               }
               else
               {
-                this.processTime = 0
+                processTime = 0
               }
             }
           }
@@ -110,60 +117,27 @@ class TileCoercionDeriver extends TileModuleAcceptor
     }
   }
 
-  def getWattage: Long =
-  {
-    return (DEFAULT_WATTAGE + (DEFAULT_WATTAGE * (this.getModuleCount(ModularForceFieldSystem.itemModuleSpeed).asInstanceOf[Float] / 8.asInstanceOf[Float]))).asInstanceOf[Long]
-  }
+  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(ModularForceFieldSystem.Items.moduleSpeed) / 8d))
 
-  def onReceiveEnergy(from: Nothing, receive: Long, doReceive: Boolean): Long =
-  {
-    if (!isInversed)
-    {
-      return super.onReceiveEnergy(from, receive, doReceive)
-    }
-    return receive
-  }
-
-  def onExtractEnergy(from: Nothing, extract: Long, doExtract: Boolean): Long =
-  {
-    if (isInversed)
-    {
-      return super.onExtractEnergy(from, extract, doExtract)
-    }
-    return 0
-  }
-
-  def onInventoryChanged
-  {
-    super.onInventoryChanged
-    updateEnergyInfo
-  }
-
-  def getOutputDirections: EnumSet[Nothing] =
-  {
-    return EnumSet.allOf(classOf[Nothing])
-  }
+  override def getVoltage = 1000D
 
   /**
    * @return The Fortron production rate per tick!
    */
-  def getProductionRate: Int =
+  def productionRate: Int =
   {
     if (this.isActive)
     {
-      var production: Int = (getWattage.asInstanceOf[Float] / 20f * UE_FORTRON_RATIO * Settings.FORTRON_PRODUCTION_MULTIPLIER).asInstanceOf[Int]
-      if (this.processTime > 0)
+      var production = (getPower.asInstanceOf[Float] / 20f * TileCoercionDeriver.ueToFortronRatio * Settings.fortronProductionMultiplier).asInstanceOf[Int]
+
+      if (processTime > 0)
       {
-        production *= MULTIPLE_PRODUCTION
+        production *= TileCoercionDeriver.productionMultiplier
       }
+
       return production
     }
     return 0
-  }
-
-  override def getSizeInventory: Int =
-  {
-    return 6
   }
 
   def canConsume: Boolean =
@@ -175,27 +149,28 @@ class TileCoercionDeriver extends TileModuleAcceptor
     return false
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
-    if (packetID == TilePacketType.TOGGLE_MODE.ordinal)
+
+    if (packetID == TilePacketType.TOGGLE_MODE.id)
     {
-      this.isInversed = !this.isInversed
+      isInversed = !isInversed
     }
   }
 
   override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
-    this.processTime = nbt.getInteger("processTime")
-    this.isInversed = nbt.getBoolean("isInversed")
+    processTime = nbt.getInteger("processTime")
+    isInversed = nbt.getBoolean("isInversed")
   }
 
   override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
-    nbt.setInteger("processTime", this.processTime)
-    nbt.setBoolean("isInversed", this.isInversed)
+    nbt.setInteger("processTime", processTime)
+    nbt.setBoolean("isInversed", isInversed)
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -208,22 +183,15 @@ class TileCoercionDeriver extends TileModuleAcceptor
       }
       slotID match
       {
-        case SLOT_FREQUENCY =>
+        case TileCoercionDeriver.slotFrequency =>
           return itemStack.getItem.isInstanceOf[ItemCardFrequency]
-        case SLOT_BATTERY =>
-          return CompatibilityModule.isHandler(itemStack.getItem)
-        case SLOT_FUEL =>
-          return itemStack.isItemEqual(new ItemStack(Item.dyePowder, 1, 4)) || itemStack.isItemEqual(new ItemStack(Item.netherQuartz))
+        case TileCoercionDeriver.slotBattery =>
+          return Compatibility.isHandler(itemStack.getItem)
+        case TileCoercionDeriver.slotFuel =>
+          return itemStack.isItemEqual(new ItemStack(Items.dye, 1, 4)) || itemStack.isItemEqual(new ItemStack(Items.quartz))
       }
     }
     return false
   }
 
-  def canConnect(direction: Nothing, obj: AnyRef): Boolean =
-  {
-    return true
-  }
-
-  var processTime: Int = 0
-  var isInversed: Boolean = false
 }

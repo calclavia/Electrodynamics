@@ -9,21 +9,23 @@ import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.entity.{EntityLiving, Entity}
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.entity.{Entity, EntityLiving}
 import net.minecraft.init.Blocks
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.util.{IIcon, MovingObjectPosition}
-import net.minecraft.world.{IBlockAccess, World}
+import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.modules.IModule
 import resonant.api.mffs.{IForceField, IProjector}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.{IPacketReceiver, PacketTile}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
+
+import scala.collection.convert.wrapAll._
 
 class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver with IForceField
 {
@@ -273,7 +275,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
    * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color.
    * Note only called when first determining what to render.
    */
-  def colorMultiplier: Int =
+  override def colorMultiplier: Int =
   {
     if (camoStack != null)
     {
@@ -292,7 +294,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
     return super.colorMultiplier
   }
 
-  def getLightValue(access: IBlockAccess): Int =
+  override def getLightValue(access: IBlockAccess): Int =
   {
     try
     {
@@ -313,10 +315,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
     return 0
   }
 
-  def getExplosionResistance(entity: Entity, world: World, x: Int, y: Int, z: Int, d: Double, d1: Double, d2: Double): Float =
-  {
-    return Integer.MAX_VALUE
-  }
+  override def getExplosionResistance(entity: Entity): Float = Float.MaxValue
 
   override def weakenForceField(joules: Int)
   {
@@ -436,7 +435,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
     }
   }
 
-  def readFromNBT(nbt: NBTTagCompound)
+  override def readFromNBT(nbt: NBTTagCompound)
   {
     super.readFromNBT(nbt)
     projector = new Vector3(nbt.getCompoundTag("projector"))
@@ -445,7 +444,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
   /**
    * Writes a tile entity to NBT.
    */
-  def writeToNBT(nbt: NBTTagCompound)
+  override def writeToNBT(nbt: NBTTagCompound)
   {
     super.writeToNBT(nbt)
 

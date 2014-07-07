@@ -7,6 +7,8 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
+import scala.collection.convert.wrapAll._
+import java.util.{Set => JSet}
 
 abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
 {
@@ -53,7 +55,8 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     }
   }
 
-  def getModule(module: IModule): ItemStack =
+  @unchecked
+  override def getModule(module: IModule): ItemStack =
   {
     val cacheID = "getModule_" + module.hashCode
 
@@ -65,6 +68,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     return returnStack
   }
 
+  @unchecked
   override def getModuleCount(module: IModule, slots: Int*): Int =
   {
     var cacheID = "getModuleCount_" + module.hashCode
@@ -88,8 +92,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     return count
   }
 
-  @SuppressWarnings(Array("unchecked"))
-  def getModuleStacks(slots: Int*): Set[ItemStack] =
+  def getModuleStacks(slots: Int*): JSet[ItemStack] =
   {
     var cacheID: String = "getModuleStacks_"
 
@@ -113,7 +116,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   }
 
   @SuppressWarnings(Array("unchecked"))
-  def getModules(slots: Int*): Set[IModule] =
+  def getModules(slots: Int*): JSet[IModule] =
   {
     var cacheID: String = "getModules_"
     if (slots != null)

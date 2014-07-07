@@ -103,7 +103,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     }
   }
 
-  override def getExplosionResistance(entity: Entity, d: Double, d1: Double, d2: Double): Float = 100.0F
+  override def getExplosionResistance(entity: Entity): Float = 100
 
   override def update()
   {

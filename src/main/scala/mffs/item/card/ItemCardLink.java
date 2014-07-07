@@ -1,6 +1,5 @@
 package mffs.item.card;
 
-import resonant.api.mffs.card.ICoordLink;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -8,8 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import resonant.api.mffs.card.ICoordLink;
 import resonant.lib.utility.LanguageUtility;
-import universalelectricity.api.vector.VectorWorld;
+import universalelectricity.core.transform.vector.VectorWorld;
 
 import java.util.List;
 
@@ -34,11 +34,11 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 		if (hasLink(itemstack))
 		{
 			VectorWorld vec = getLink(itemstack);
-			int blockId = vec.getBlockID(entityplayer.worldObj);
+			Block block = vec.getBlock(entityplayer.worldObj);
 
-			if (Block.blocksList[blockId] != null)
+			if (block != null)
 			{
-				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + Block.blocksList[blockId].getLocalizedName());
+				list.add(LanguageUtility.getLocal("info.item.linkedWith") + " " + block.getLocalizedName());
 			}
 
 			list.add(vec.xi() + ", " + vec.yi() + ", " + vec.zi());
@@ -58,9 +58,9 @@ public class ItemCardLink extends ItemCard implements ICoordLink
 			VectorWorld vector = new VectorWorld(world, x, y, z);
 			this.setLink(itemStack, vector);
 
-			if (Block.blocksList[vector.getBlockID(world)] != null)
+			if (vector.getBlock(world) != null)
 			{
-				player.addChatMessage(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + Block.blocksList[vector.getBlockID(world)].getLocalizedName());
+				player.addChatMessage(LanguageUtility.getLocal("info.item.linkedWith") + " " + x + ", " + y + ", " + z + " - " + vector.getBlock(world).getLocalizedName());
 			}
 		}
 

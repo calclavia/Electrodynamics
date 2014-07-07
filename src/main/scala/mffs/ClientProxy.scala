@@ -1,18 +1,18 @@
 package mffs
 
+import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import mffs.field.TileElectromagnetProjector
 import mffs.gui._
 import mffs.mobilize.TileForceMobilizer
+import mffs.production._
 import mffs.render._
 import mffs.render.fx._
-import mffs.security.{TileInterdictionMatrix, TileBiometricIdentifier}
-import mffs.production._
+import mffs.security.TileBiometricIdentifier
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.client.MinecraftForgeClient
-import net.minecraftforge.common.MinecraftForge
+import universalelectricity.core.transform.vector.Vector3
 
 class ClientProxy extends CommonProxy
 {
@@ -30,27 +30,27 @@ class ClientProxy extends CommonProxy
 
     if (tileEntity != null)
     {
-      if (tileEntity.getClass eq classOf[TileFortronCapacitor])
+      if (tileEntity.getClass == classOf[TileFortronCapacitor])
       {
         return new GuiFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
       }
-      else if (tileEntity.getClass eq classOf[TileElectromagnetProjector])
+      else if (tileEntity.getClass == classOf[TileElectromagnetProjector])
       {
         return new GuiForceFieldProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
       }
-      else if (tileEntity.getClass eq classOf[TileCoercionDeriver])
+      else if (tileEntity.getClass == classOf[TileCoercionDeriver])
       {
         return new GuiCoercionDeriver(player, tileEntity.asInstanceOf[TileCoercionDeriver])
       }
-      else if (tileEntity.getClass eq classOf[TileBiometricIdentifier])
+      else if (tileEntity.getClass == classOf[TileBiometricIdentifier])
       {
         return new GuiBiometricIdentifier(player, tileEntity.asInstanceOf[TileBiometricIdentifier])
       }
-      else if (tileEntity.getClass eq classOf[TileInterdictionMatrix])
+      /* else if (tileEntity.getClass == classOf[TileInterdictionMatrix])
       {
         return new GuiInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
-      }
-      else if (tileEntity.getClass eq classOf[TileForceMobilizer])
+      }*/
+      else if (tileEntity.getClass == classOf[TileForceMobilizer])
       {
         return new GuiForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
       }
@@ -58,17 +58,14 @@ class ClientProxy extends CommonProxy
     return null
   }
 
-  override def isOp(username: String): Boolean =
-  {
-    return false
-  }
+  override def isOp(profile: GameProfile) = false
 
-  override def renderBeam(world: World, position: Nothing, target: Nothing, red: Float, green: Float, blue: Float, age: Int)
+  override def renderBeam(world: World, position: Vector3, target: Vector3, red: Float, green: Float, blue: Float, age: Int)
   {
     FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXFortronBeam(world, position, target, red, green, blue, age))
   }
 
-  override def renderHologram(world: World, position: Nothing, red: Float, green: Float, blue: Float, age: Int, targetPosition: Nothing)
+  override def renderHologram(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int, targetPosition: Vector3)
   {
     if (targetPosition != null)
     {
@@ -80,19 +77,19 @@ class ClientProxy extends CommonProxy
     }
   }
 
-  override def renderHologramOrbit(world: World, orbitCenter: Nothing, position: Nothing, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  override def renderHologramOrbit(world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
   {
     FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed))
   }
 
-  override def renderHologramOrbit(controller: IEffectController, world: World, orbitCenter: Nothing, position: Nothing, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  override def renderHologramOrbit(controller: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
   {
     val fx: FXMFFS = new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed)
     fx.setController(controller)
     FMLClientHandler.instance.getClient.effectRenderer.addEffect(fx)
   }
 
-  override def renderHologramMoving(world: World, position: Nothing, red: Float, green: Float, blue: Float, age: Int)
+  override def renderHologramMoving(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int)
   {
     FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramMoving(world, position, red, green, blue, age))
   }

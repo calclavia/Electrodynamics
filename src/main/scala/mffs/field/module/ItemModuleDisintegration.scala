@@ -19,11 +19,9 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
-class ItemModuleDisintegration(id: Integer) extends ItemModule(id, "moduleDisintegration")
+class ItemModuleDisintegration extends ItemModule("moduleDisintegration")
 {
-
   private var blockCount: Int = 0
-
   setMaxStackSize(1)
   setCost(20)
 

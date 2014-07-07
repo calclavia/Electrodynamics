@@ -29,7 +29,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory
     return super.getPacketData(packetID)
   }
 
-  def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
 

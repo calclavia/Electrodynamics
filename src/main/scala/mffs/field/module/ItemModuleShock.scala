@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 
-class ItemModuleShock(i: Int) extends ItemModule(i, "moduleShock")
+class ItemModuleShock extends ItemModule( "moduleShock")
 {
   override def onCollideWithForceField(world: World, x: Int, y: Int, z: Int, entity: Entity, moduleStack: ItemStack): Boolean =
   {
@@ -20,7 +20,7 @@ class ItemModuleShock(i: Int) extends ItemModule(i, "moduleShock")
 
       if (tile.isInstanceOf[TileForceField])
       {
-        if (tile.asInstanceOf[TileForceField].getProjector.isAccessGranted(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
+        if (tile.asInstanceOf[TileForceField].getProjector.hasPermission(entityPlayer.getGameProfile, MFFSPermissions.forceFieldWrap))
           return true
       }
 

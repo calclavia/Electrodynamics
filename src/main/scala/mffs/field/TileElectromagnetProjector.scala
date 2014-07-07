@@ -27,6 +27,7 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+import java.util.{Set => JSet}
 
 class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 {
@@ -45,6 +46,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 50
   startModuleIndex = 1
+  maxSlots = 3 + 18
 
   override def start()
   {
@@ -122,9 +124,9 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
     return getModuleCount(ModularForceFieldSystem.Items.moduleRepulsion) > 0
   }
 
-  override def updateEntity
+  override def update()
   {
-    super.updateEntity
+    super.update()
 
     if (isActive && getMode != null && requestFortron(getFortronCost, false) >= this.getFortronCost)
     {
@@ -222,8 +224,8 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
             var flag = 0
 
             relevantModules.exists({ module =>
-              flag = module.onProject(this, vector.clone)
-              return flag == 1 || flag == 2
+              flag = module.onProject(this, vector)
+               flag == 1 || flag == 2
             })
 
             if (flag != 1 && flag != 2)
@@ -243,7 +245,8 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
               //requestFortron(1, true)
             }
-            return flag == 2
+
+             flag == 2
           })
 
         isCompleteConstructing = evaluateField.size == 0
@@ -331,12 +334,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed, getModuleSlots: _*)
 
-  override def getSizeInventory: Int =
-  {
-    return 3 + 18
-  }
-
-  def getForceFields: mutable.Set[Vector3] = forceFields
+  override def getForceFields: JSet[Vector3] = forceFields
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
@@ -364,9 +362,9 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
   def isInField(position: Vector3) = if (getMode != null) getMode.isInField(this, position) else false
 
-  override def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
+  override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {
-    if (super.isAccessGranted(profile, permission))
+    if (super.hasPermission(profile, permission))
       return getModuleCount(ModularForceFieldSystem.Items.moduleInvert) == 0
 
     return true
@@ -374,25 +372,25 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
   def isAccessGranted(checkWorld: World, checkPos: Vector3, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean =
   {
-    var hasPermission = true
+    var hasPerm = true
 
     if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && checkPos.getTileEntity(checkWorld) != null)
     {
       if (getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
       {
-        hasPermission = isAccessGranted(player.getGameProfile, MFFSPermissions.blockAccess)
+        hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.blockAccess)
       }
     }
 
-    if (hasPermission)
+    if (hasPerm)
     {
       if (getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
-        hasPermission = isAccessGranted(player.getGameProfile, MFFSPermissions.blockAlter)
+        hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.blockAlter)
       }
     }
 
-    return hasPermission
+    return hasPerm
   }
 
 }

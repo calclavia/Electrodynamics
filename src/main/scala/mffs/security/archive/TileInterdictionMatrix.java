@@ -1,4 +1,4 @@
-package mffs.security;
+package mffs.security.archive;
 
 import mffs.security.access.MFFSPermissions;
 import resonant.api.mffs.modules.IInterdictionMatrixModule;

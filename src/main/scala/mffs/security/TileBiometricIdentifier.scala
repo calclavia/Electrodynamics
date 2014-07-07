@@ -1,6 +1,8 @@
 package mffs.security
 
-import com.google.common.io.ByteArrayDataInput
+import java.util
+import java.util.{Set => JSet}
+
 import com.mojang.authlib.GameProfile
 import mffs.base.TileFrequency
 import mffs.security.access.AccessProfile
@@ -9,6 +11,8 @@ import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.ICardIdentification
 import resonant.api.mffs.security.IBiometricIdentifier
 import resonant.lib.access.Permission
+import scala.collection.JavaConversions._
+import scala.collection.mutable
 
 object TileBiometricIdentifier
 {
@@ -17,7 +21,7 @@ object TileBiometricIdentifier
 
 class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 {
-  var access = new AccessProfile()
+  var accessProfile = new AccessProfile()
 
   /**
    * 2 slots: Card copying
@@ -26,13 +30,14 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
    */
   maxSlots = 2 + 9 * 4
 
-  override def isAccessGranted(profile: GameProfile, permission: Permission): Boolean =
+  override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {
     if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride)
       return true
 
-    return access.hasPermission(profile, permission)
+    return accessProfile.hasPermission(profile, permission)
   }
+
   /*
    override def onReceivePacket(packetID: Int, dataStream: ByteArrayDataInput)
    {
@@ -77,7 +82,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
     return itemStack.getItem.isInstanceOf[ICardIdentification]
   }
 
-  override def markDity()
+  override def markDirty()
   {
     rebuildAccess()
     super.markDirty()
@@ -103,7 +108,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
 
   def rebuildAccess()
   {
-    access = new AccessProfile()
+    accessProfile = new AccessProfile()
     //TODO: Rebuild the access based on the cards.
   }
 
@@ -136,13 +141,11 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
     return null;
   }
 
-  override def setActive(flag: Boolean)
+  override def getBiometricIdentifiers: JSet[IBiometricIdentifier] =
   {
-    if (this.getOwner != null || !flag)
-    {
-      super.setActive(flag)
-    }
+    //TODO: Fix this
+    val set = new util.HashSet[IBiometricIdentifier] ()
+    set.add(this)
+    return set
   }
-
-  override def getBiometricIdentifiers: Set[IBiometricIdentifier] = Set(this)
 }

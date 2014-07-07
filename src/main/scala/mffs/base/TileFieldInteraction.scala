@@ -2,12 +2,11 @@ package mffs.base
 
 import java.util.Set
 
-import com.google.common.io.ByteArrayDataInput
 import io.netty.buffer.ByteBuf
+import mffs.ModularForceFieldSystem
 import mffs.field.module.ItemModuleArray
 import mffs.field.thread.ProjectorCalculationThread
 import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
-import mffs.ModularForceFieldSystem
 import mffs.util.TCache
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -17,10 +16,9 @@ import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
-
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import scala.collection.mutable.{HashSet, Queue}
+import scala.collection.mutable.Queue
 
 abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldInteraction with IDelayedEventHandler
 {
@@ -30,11 +28,11 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
   /**
    * Are the directions on the GUI absolute values?
    */
-  var absoluteDirection: Boolean = false
-  protected var isCalculating: Boolean = false
-  protected var isCalculated: Boolean = false
+  var absoluteDirection = false
+  protected var isCalculating = false
+  protected var isCalculated = false
 
-  protected val moduleSlotID: Int = 2
+  protected val moduleSlotID = 2
 
   override def update()
   {
@@ -64,7 +62,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
       if (getMode != null)
       {
         if (getModeStack.getItem.isInstanceOf[TCache])
-          (getModeStack.getItem.asInstanceOf[TCache]).clearCache()
+          getModeStack.getItem.asInstanceOf[TCache].clearCache()
 
         calculatedField.clear()
 
@@ -315,12 +313,10 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return returnField
   }
 
-  def getSlotsBasedOnDirection(direction: ForgeDirection): Array[Int] =
+  override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
   {
     direction match
     {
-      case _ =>
-        return Array[Int]()
       case ForgeDirection.UP =>
         return Array[Int](3, 11)
       case ForgeDirection.DOWN =>
@@ -333,6 +329,8 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
         return Array[Int](4, 5)
       case ForgeDirection.EAST =>
         return Array[Int](12, 13)
+      case _ =>
+        return Array[Int]()
     }
   }
 

@@ -171,7 +171,7 @@ object MFFSUtility
 
   def hasPermission(world: World, position: Vector3, permission: Permission, profile: GameProfile): Boolean =
   {
-    return getRelevantProjectors(world, position).forall(_.isAccessGranted(profile, permission))
+    return getRelevantProjectors(world, position).forall(_.hasPermission(profile, permission))
   }
 
   def hasPermission(world: World, position: Vector3, action: PlayerInteractEvent.Action, player: EntityPlayer): Boolean =

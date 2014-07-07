@@ -14,6 +14,7 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
+import java.util.{Set => JSet}
 
 class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
@@ -61,10 +62,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def getAmplifier: Float =
-  {
-    return 0.001f
-  }
+  override def getAmplifier: Float =  0.001f
 
   /**
    * Packet Methods
@@ -110,7 +108,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     nbttagcompound.setInteger("transferMode", this.transferMode.id)
   }
 
-  def getLinkedDevices: mutable.Set[IFortronFrequency] =
+ override def getLinkedDevices: JSet[IFortronFrequency] =
   {
     return FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(this), getTransmissionRange, getFrequency)
   }

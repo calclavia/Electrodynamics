@@ -16,7 +16,7 @@ class AccessGroup extends AbstractAccess
     fromNBT(nbt)
   }
 
-  def toNBT: NBTTagCompound =
+  override def toNBT: NBTTagCompound =
   {
     val nbt = super.toNBT
 

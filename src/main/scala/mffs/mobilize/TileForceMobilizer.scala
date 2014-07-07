@@ -33,7 +33,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   val animationTime = 20
 
   private val failedPositions = Set.empty[Vector3]
-  var anchor: Vector3 = null
+  var anchor = new Vector3()
   /**
    * The display mode. 0 = none, 1 = minimal, 2 = maximal.
    */
@@ -58,13 +58,10 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   rotationMask = 63
   maxSlots = 3 + 18
 
-  override def updateEntity
+  override def update()
   {
-    super.updateEntity
-    if (this.anchor == null)
-    {
-      this.anchor = new Vector3
-    }
+    super.update()
+
     if (this.getMode != null && Settings.enableForceManipulator)
     {
       if (!this.worldObj.isRemote)
@@ -325,7 +322,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     {
       if (packetID == TilePacketType.TOGGLE_MODE.id)
       {
-        this.anchor = null
+        this.anchor = new Vector3()
         markDirty()
       }
       else if (packetID == TilePacketType.TOGGLE_MODE_2.id)
@@ -581,7 +578,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     {
       case 2 =>
       {
-        this.anchor = null
+        this.anchor = new Vector3
         return null
       }
       case 3 =>

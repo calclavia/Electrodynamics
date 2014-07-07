@@ -7,7 +7,7 @@ import mffs.field.{ContainerForceFieldProjector, TileElectromagnetProjector}
 import mffs.mobilize.{ContainerForceManipulator, TileForceMobilizer}
 import mffs.production._
 import mffs.render.fx.IEffectController
-import mffs.security.{ContainerBiometricIdentifier, ContainerInterdictionMatrix, TileBiometricIdentifier, TileInterdictionMatrix}
+import mffs.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
@@ -38,10 +38,10 @@ class CommonProxy extends ProxyBase with IGuiHandler
       {
         return new ContainerBiometricIdentifier(player, tileEntity.asInstanceOf[TileBiometricIdentifier])
       }
-      else if (tileEntity.getClass == classOf[TileInterdictionMatrix])
+      /*else if (tileEntity.getClass == classOf[TileInterdictionMatrix])
       {
         return new ContainerInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
-      }
+      }*/
       else if (tileEntity.getClass == classOf[TileForceMobilizer])
       {
         return new ContainerForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
@@ -50,7 +50,7 @@ class CommonProxy extends ProxyBase with IGuiHandler
     return null
   }
 
-  override def getClientWorld: World =
+  def getClientWorld: World =
   {
     return null
   }
@@ -69,23 +69,23 @@ class CommonProxy extends ProxyBase with IGuiHandler
     return false
   }
 
-  override def renderBeam(world: World, position: Vector3, target: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  def renderBeam(world: World, position: Vector3, target: Vector3, red: Float, green: Float, blue: Float, age: Int)
   {
   }
 
-  override def renderHologram(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int, targetPosition: Vector3)
+  def renderHologram(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int, targetPosition: Vector3)
   {
   }
 
-  override def renderHologramMoving(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  def renderHologramMoving(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int)
   {
   }
 
-  override def renderHologramOrbit(world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  def renderHologramOrbit(world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
   {
   }
 
-  override def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
   {
   }
 }
