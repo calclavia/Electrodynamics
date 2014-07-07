@@ -1,6 +1,6 @@
 package mffs.base
 
-import mffs.gui.button.GuiIcon
+import mffs.render.button.GuiIcon
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.gui.{GuiButton, GuiTextField}
 import net.minecraft.init.Blocks

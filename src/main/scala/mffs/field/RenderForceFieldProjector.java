@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mffs.ModularForceFieldSystem;
 import mffs.Settings;
-import mffs.render.model.ModelForceFieldProjector;
 import mffs.field.TileElectromagnetProjector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;

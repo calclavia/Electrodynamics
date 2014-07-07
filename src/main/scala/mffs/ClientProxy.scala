@@ -2,13 +2,14 @@ package mffs
 
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
-import mffs.field.TileElectromagnetProjector
+import mffs.field.{GuiElectromagneticProjector, TileElectromagnetProjector}
 import mffs.gui._
-import mffs.mobilize.TileForceMobilizer
+import mffs.item.card.RenderIDCard
+import mffs.mobilize.{GuiForceMobilizer, TileForceMobilizer}
 import mffs.production._
 import mffs.render._
 import mffs.render.fx._
-import mffs.security.TileBiometricIdentifier
+import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
 import net.minecraftforge.client.MinecraftForgeClient
@@ -36,7 +37,7 @@ class ClientProxy extends CommonProxy
       }
       else if (tileEntity.getClass == classOf[TileElectromagnetProjector])
       {
-        return new GuiForceFieldProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
+        return new GuiElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
       }
       else if (tileEntity.getClass == classOf[TileCoercionDeriver])
       {
@@ -52,7 +53,7 @@ class ClientProxy extends CommonProxy
       }*/
       else if (tileEntity.getClass == classOf[TileForceMobilizer])
       {
-        return new GuiForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
+        return new GuiForceMobilizer(player, tileEntity.asInstanceOf[TileForceMobilizer])
       }
     }
     return null

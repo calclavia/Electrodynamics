@@ -1,4 +1,4 @@
-package mffs.gui.button;
+package mffs.render.button;
 
 import mffs.base.GuiMFFS;
 import mffs.production.TileFortronCapacitor;

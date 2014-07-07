@@ -10,7 +10,7 @@ import resonant.lib.network.PacketTile
 import resonant.lib.utility.LanguageUtility
 import universalelectricity.api.UnitDisplay
 import universalelectricity.core.transform.vector.Vector2
-
+import resonant.lib.wrapper.WrapList._
 class GuiInterdictionMatrix(player: EntityPlayer, tileEntity: TileInterdictionMatrix) extends GuiMFFS(new ContainerInterdictionMatrix(player, tileEntity), tileEntity)
 {
   override def initGui
@@ -25,13 +25,13 @@ class GuiInterdictionMatrix(player: EntityPlayer, tileEntity: TileInterdictionMa
     super.actionPerformed(guiButton)
     if (guiButton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tileEntity, TilePacketType.TOGGLE_MODE.id))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tileEntity, TilePacketType.TOGGLE_MODE.id : Integer))
     }
   }
 
   override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    this.fontRenderer.drawString(this.tileEntity.getInvName, this.xSize / 2 - fontRendererObj.getStringWidth(tileEntity.getInvName) / 2, 6, 4210752)
+    this.fontRenderer.drawString(this.tileEntity.getInvName, xSize / 2 - fontRendererObj.getStringWidth(tileEntity.getInvName) / 2, 6, 4210752)
     this.drawTextWithTooltip("warn", "%1: " + this.tileEntity.getWarningRange, 35, 19, x, y)
     this.drawTextWithTooltip("action", "%1: " + this.tileEntity.getActionRange, 100, 19, x, y)
     this.drawTextWithTooltip("filterMode", "%1:", 9, 32, x, y)

@@ -1,4 +1,4 @@
-package mffs.gui.button;
+package mffs.render.button;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import mffs.ModularForceFieldSystem;

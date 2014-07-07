@@ -1,4 +1,4 @@
-package mffs.gui.button
+package mffs.render.button
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.{FontRenderer, GuiButton}
