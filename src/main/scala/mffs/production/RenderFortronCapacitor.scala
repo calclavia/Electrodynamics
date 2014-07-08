@@ -14,7 +14,7 @@ final object RenderFortronCapacitor
   val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor.tcn"))
 
-  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float,  isActive:Boolean)
+  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
   {
     if (isActive)
     {
@@ -26,7 +26,7 @@ final object RenderFortronCapacitor
     }
 
     GL11.glPushMatrix
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    GL11.glTranslated(x + 0.5, y + 0.5 + 0.3 / 2, z + 0.5)
     GL11.glScalef(1.3f, 1.3f, 1.3f)
     model.renderAll
     GL11.glPopMatrix

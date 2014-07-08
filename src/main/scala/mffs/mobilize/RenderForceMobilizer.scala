@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
+import resonant.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 final object RenderForceMobilizer
@@ -31,24 +32,7 @@ final object RenderForceMobilizer
 
     if (tileEntity.world != null)
     {
-      tileEntity.getDirection match
-      {
-        case ForgeDirection.UP =>
-          GL11.glRotatef(-90, 1f, 0f, 0)
-          GL11.glTranslated(0, -1, 1)
-        case ForgeDirection.DOWN =>
-          GL11.glRotatef(90, 1f, 0f, 0)
-          GL11.glTranslated(0, -1, -1)
-        case ForgeDirection.NORTH =>
-          GL11.glRotatef(0, 0f, 1f, 0f)
-        case ForgeDirection.SOUTH =>
-          GL11.glRotatef(180, 0f, 1f, 0f)
-        case ForgeDirection.WEST =>
-          GL11.glRotatef(-90, 0f, 1f, 0f)
-        case ForgeDirection.EAST =>
-          GL11.glRotatef(90, 0f, 1f, 0f)
-        case _ =>
-      }
+      RenderUtility.rotateBlockBasedOnDirection(tileEntity.getDirection)
     }
 
     model.renderAll

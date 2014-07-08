@@ -52,9 +52,6 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
   {
     if (packetID == TilePacketType.FORTRON.id)
     {
-      val data = List[AnyRef]()
-      data.add(TilePacketType.FORTRON.id: Integer)
-
       val nbt = new NBTTagCompound
 
       if (fortronTank.getFluid != null)
@@ -62,8 +59,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
         nbt.setTag("fortron", fortronTank.getFluid.writeToNBT(new NBTTagCompound))
       }
 
-      data.add(nbt)
-      return data
+      return List((TilePacketType.FORTRON.id: Integer), nbt)
     }
 
     return super.getPacketData(packetID)
@@ -86,7 +82,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
   def sendFortronToClients(range: Int)
   {
-    ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, getPacketData(TilePacketType.FORTRON.id).toArray), this.worldObj, new Vector3(this), range)
+    ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, getPacketData(TilePacketType.FORTRON.id).toArray: _*), this.worldObj, new Vector3(this), range)
   }
 
   /**

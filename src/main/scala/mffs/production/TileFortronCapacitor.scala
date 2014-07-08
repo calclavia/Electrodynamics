@@ -27,6 +27,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   capacityBase = 700
   capacityBoost = 10
   startModuleIndex = 2
+  maxSlots = 5
 
   override def update()
   {
@@ -92,11 +93,6 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     {
       transferMode = this.transferMode.toggle
     }
-  }
-
-  override def getSizeInventory: Int =
-  {
-    return 5
   }
 
   override def readFromNBT(nbt: NBTTagCompound)

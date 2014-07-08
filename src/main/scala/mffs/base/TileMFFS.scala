@@ -137,7 +137,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   {
     try
     {
-      this.onReceivePacket(data.readInt, data)
+      onReceivePacket(data.readInt, data)
     }
     catch
       {

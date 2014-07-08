@@ -18,14 +18,13 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
 {
   override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    val data = super.getPacketData(packetID)
-
     if (packetID == TilePacketType.DESCRIPTION.id)
     {
       val nbt = new NBTTagCompound
       getInventory.save(nbt)
       return super.getPacketData(packetID) :+ nbt
     }
+
     return super.getPacketData(packetID)
   }
 

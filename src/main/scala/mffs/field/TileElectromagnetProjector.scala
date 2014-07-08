@@ -357,9 +357,6 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
   override def getCards: Set[ItemStack] = Set[ItemStack](super.getCard, getStackInSlot(1))
 
-  @SideOnly(Side.CLIENT)
-  override def getRenderBoundingBox: AxisAlignedBB = bounds.toAABB
-
   def getTicks: Long = ticks
 
   def isInField(position: Vector3) = if (getMode != null) getMode.isInField(this, position) else false

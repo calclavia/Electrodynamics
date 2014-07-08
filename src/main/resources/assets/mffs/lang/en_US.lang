@@ -8,7 +8,7 @@ fluid.fortron=Fortron
 # Chat Messages
 death.attack.areaDefense=%1$s disregarded warnings and was disintegrated.
 death.attack.fieldShock=%1$s was disintegrated by a force field.
-
+x
 message.cardFrequency.generated=Generated random frequency:
 message.cardFrequency.set=Frequency set to: %p
 message.remoteController.linked=Linked to position: %p with block: %q
@@ -25,9 +25,9 @@ tile.mffs:fortronite.name=Fortronite
 tile.mffs:biometricIdentifier.name=Biometric Identifier
 tile.mffs:interdictionMatrix.name=Interdiction Matrix
 tile.mffs:fortronCapacitor.name=Fortron Capacitor
-tile.mffs:projector.name=Force Field Projector
+tile.mffs:electromagneticProjector.name=Electromagnetic Projector
 tile.mffs:coercionDeriver.name=Coercion Deriver
-tile.mffs:manipulator.name=Force Manipulator
+tile.mffs:forceMobilizer.name=Force Mobilizer
 tile.mffs:forceField.name=Force Field
 
 
