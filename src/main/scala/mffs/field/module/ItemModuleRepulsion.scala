@@ -15,7 +15,7 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 
-class ItemModuleRepulsion extends ItemModule("moduleRepulsion")
+class ItemModuleRepulsion extends ItemModule
 {
   setCost(8)
 

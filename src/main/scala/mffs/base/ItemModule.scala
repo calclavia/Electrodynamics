@@ -13,7 +13,7 @@ import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
 import universalelectricity.core.transform.vector.Vector3
 
-class ItemModule(name: String) extends ItemMFFS with IModule
+class ItemModule extends ItemMFFS with IModule
 {
   private var fortronCost = 0.5f
 

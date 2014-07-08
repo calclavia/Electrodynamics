@@ -11,7 +11,7 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
-class ItemModuleFusion extends ItemModule("moduleFusion")
+class ItemModuleFusion extends ItemModule
 {
   setMaxStackSize(1)
   setCost(1f)

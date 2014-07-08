@@ -18,7 +18,7 @@ import resonant.lib.network.PacketTile
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
-class ItemModuleStabilize extends ItemModule("moduleStabilize")
+class ItemModuleStabilize extends ItemModule
 {
   private var blockCount: Int = 0
 

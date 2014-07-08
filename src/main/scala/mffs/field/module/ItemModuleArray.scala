@@ -10,7 +10,7 @@ import universalelectricity.core.transform.vector.Vector3
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
-class ItemModuleArray extends ItemModule("moduleArray")
+class ItemModuleArray extends ItemModule
 {
   override def onPreCalculate(projector: IFieldInteraction, fieldBlocks: Set[Vector3])
   {

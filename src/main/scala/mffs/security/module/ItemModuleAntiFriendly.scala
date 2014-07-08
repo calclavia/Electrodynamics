@@ -7,7 +7,7 @@ import net.minecraft.entity.INpc
 import net.minecraft.entity.monster.IMob
 import net.minecraft.entity.player.EntityPlayer
 
-class ItemModuleAntiFriendly(i: Int) extends ItemModuleInterdictionMatrix(i, "moduleAntiFriendly")
+class ItemModuleAntiFriendly extends ItemModuleDefense
 {
 	override def onDefend(interdictionMatrix: IInterdictionMatrix, entityLiving: EntityLivingBase): Boolean =
 	{

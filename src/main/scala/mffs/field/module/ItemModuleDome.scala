@@ -9,7 +9,7 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
-class ItemModuleDome extends ItemModule("moduleDome")
+class ItemModuleDome extends ItemModule
 {
   setMaxStackSize(1)
 
