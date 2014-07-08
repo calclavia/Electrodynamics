@@ -8,13 +8,14 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
 import resonant.lib.network.PacketTile
+import resonant.lib.utility.inventory.TPrefabInventory
 
 /**
  * All TileEntities that have an inventory should extend this.
  *
  * @author Calclavia
  */
-abstract class TileMFFSInventory extends TileMFFS with TInventory
+abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabInventory
 {
   override def getPacketData(packetID: Int): List[AnyRef] =
   {
