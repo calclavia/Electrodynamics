@@ -1,5 +1,7 @@
 package mffs.base
 
+import java.util.{Set => JSet}
+
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.util.TCache
@@ -7,8 +9,8 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
+
 import scala.collection.convert.wrapAll._
-import java.util.{Set => JSet}
 
 abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
 {

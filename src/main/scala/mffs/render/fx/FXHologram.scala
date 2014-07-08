@@ -43,7 +43,7 @@ class FXHologram(par1World: World, position: Vector3, red: Float, green: Float, 
 
     particleAge += 1
 
-    if (particleAge - 1>= this.particleMaxAge)
+    if (particleAge - 1 >= this.particleMaxAge)
     {
       this.setDead
       return

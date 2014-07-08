@@ -11,7 +11,7 @@ import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 
-abstract class ItemModuleDefense extends ItemModule with IInterdictionMatrixModule
+class ItemModuleDefense extends ItemModule with IInterdictionMatrixModule
 {
   override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: List[_], b: Boolean)
   {

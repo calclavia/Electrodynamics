@@ -1,7 +1,5 @@
 package mffs.security.access
 
-import java.util.UUID
-
 import com.mojang.authlib.GameProfile
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.access.Permission
@@ -15,7 +13,7 @@ class AccessUser(val profile: GameProfile) extends AbstractAccess
     fromNBT(nbt)
   }
 
-  override def toNBT: NBTTagCompound =  NBTUtility.saveProfile(super.toNBT, profile)
+  override def toNBT: NBTTagCompound = NBTUtility.saveProfile(super.toNBT, profile)
 
   def hasPermission(permission: Permission): Boolean = permissions.contains(permission)
 }

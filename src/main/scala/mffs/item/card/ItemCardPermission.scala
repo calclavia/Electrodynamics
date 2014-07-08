@@ -1,10 +1,12 @@
 package mffs.item.card
 
+import java.util.{Set => JSet}
+
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagList, NBTTagString}
 import resonant.lib.access.{Permission, Permissions}
 import resonant.lib.utility.nbt.NBTUtility
-import java.util.{Set=>JSet}
+
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 
@@ -26,7 +28,7 @@ class ItemCardPermission extends ItemCard
   {
     val nbt = NBTUtility.getNBTTagCompound(itemStack)
     val nbtList = new NBTTagList
-    permissions foreach (permission=>nbtList.appendTag(new NBTTagString(permission.toString)))
+    permissions foreach (permission => nbtList.appendTag(new NBTTagString(permission.toString)))
     nbt.setTag(nbtPermission, nbtList)
   }
 
@@ -37,11 +39,11 @@ class ItemCardPermission extends ItemCard
 
   def addPermission(itemStack: ItemStack, permission: Permission*)
   {
-     setPermissions(itemStack, (getPermissions(itemStack) ++ permission).toSeq : _*)
+    setPermissions(itemStack, (getPermissions(itemStack) ++ permission).toSeq: _*)
   }
 
   def removePermission(itemStack: ItemStack, permission: Permission*)
   {
-     setPermissions(itemStack, (getPermissions(itemStack) -- permission).toSeq : _*)
+    setPermissions(itemStack, (getPermissions(itemStack) -- permission).toSeq: _*)
   }
 }

@@ -71,7 +71,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with
   {
     if (!hasPermission(player.getGameProfile, MFFSPermissions.configure))
     {
-      player.addChatMessage(new ChatComponentText("[" + Reference.NAME + "]" + " Access denied!"))
+      player.addChatMessage(new ChatComponentText("[" + Reference.name + "]" + " Access denied!"))
       return false
     }
 

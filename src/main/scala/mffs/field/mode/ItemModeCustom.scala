@@ -2,6 +2,7 @@ package mffs.field.mode
 
 import java.io.File
 import java.util
+import java.util.{Set => JSet}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.module.ItemModuleArray
@@ -25,7 +26,6 @@ import resonant.lib.wrapper.WrapList._
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
-import java.util.{Set => JSet}
 
 class ItemModeCustom extends ItemMode with TCache
 {
@@ -307,7 +307,7 @@ class ItemModeCustom extends ItemMode with TCache
       {
         val nbtTagList = nbt.getTagList(NBT_FIELD_BLOCK_LIST, 10)
 
-        (0 until nbtTagList.tagCount) map (i => nbtTagList.getCompoundTagAt(i)) foreach (vectorTag =>fieldBlocks.put( new Vector3(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
+        (0 until nbtTagList.tagCount) map (i => nbtTagList.getCompoundTagAt(i)) foreach (vectorTag => fieldBlocks.put(new Vector3(vectorTag) * scale, (Block.blockRegistry.getObject(vectorTag.getString(NBT_FIELD_BLOCK_NAME)).asInstanceOf[Block], vectorTag.getInteger(NBT_FIELD_BLOCK_METADATA))))
       }
     }
     return fieldBlocks

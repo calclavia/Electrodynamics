@@ -1,6 +1,5 @@
 package mffs.base
 
-import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
@@ -15,7 +14,6 @@ import resonant.lib.network.PacketTile
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
-import scala.collection.immutable
 
 /**
  * A TileEntity that is powered by FortronHelper.
@@ -55,7 +53,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
     if (packetID == TilePacketType.FORTRON.id)
     {
       val data = List[AnyRef]()
-      data.add(TilePacketType.FORTRON.id : Integer)
+      data.add(TilePacketType.FORTRON.id: Integer)
 
       val nbt = new NBTTagCompound
 

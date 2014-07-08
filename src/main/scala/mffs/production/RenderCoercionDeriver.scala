@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11
 @SideOnly(Side.CLIENT)
 final object RenderCoercionDeriver
 {
-  val textureOn: ResourceLocation = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "coercionDeriver_on.png")
-  val textureOff: ResourceLocation = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "coercionDeriver_off.png")
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "coercionDeriver.tcn"))
+  val textureOn: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelDirectory + "coercionDeriver_on.png")
+  val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelDirectory + "coercionDeriver_off.png")
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "coercionDeriver.tcn"))
 
   def render(tileEntity: TileCoercionDeriver, x: Double, y: Double, z: Double, frame: Float)
   {

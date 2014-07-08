@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11
 @SideOnly(Side.CLIENT)
 final object RenderFortronCapacitor
 {
-  val textureOn = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "fortronCapacitor_on.png")
-  val textureOff = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "fortronCapacitor_off.png")
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "fortronCapacitor.tcn"))
+  val textureOn = new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor_on.png")
+  val textureOff = new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor_off.png")
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor.tcn"))
 
   def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float)
   {

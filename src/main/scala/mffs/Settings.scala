@@ -13,7 +13,7 @@ import resonant.lib.config.Config
  */
 object Settings
 {
-  final val configuration = new Configuration(new File(Loader.instance.getConfigDir, Reference.NAME + ".cfg"))
+  final val configuration = new Configuration(new File(Loader.instance.getConfigDir, Reference.name + ".cfg"))
   final val maxFrequencyDigits: Int = 6
 
   @Config

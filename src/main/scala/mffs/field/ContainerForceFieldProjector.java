@@ -2,7 +2,6 @@ package mffs.field;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.field.TileElectromagnetProjector;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 

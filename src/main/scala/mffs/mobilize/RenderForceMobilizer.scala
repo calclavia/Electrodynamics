@@ -11,9 +11,9 @@ import org.lwjgl.opengl.GL11
 @SideOnly(Side.CLIENT)
 final object RenderForceMobilizer
 {
-  val textureOn: ResourceLocation = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "forceMobilizer_on.png")
-  val textureOff: ResourceLocation = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "forceMobilizer_off.png")
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "forceMobilizer.tcn"))
+  val textureOn: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelDirectory + "forceMobilizer_on.png")
+  val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelDirectory + "forceMobilizer_off.png")
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "forceMobilizer.tcn"))
 
   def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float)
   {

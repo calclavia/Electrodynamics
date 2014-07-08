@@ -1,7 +1,7 @@
 package mffs.render.button
 
 import cpw.mods.fml.client.FMLClientHandler
-import mffs.{Reference, ModularForceFieldSystem}
+import mffs.Reference
 import mffs.base.GuiMFFS
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiButton
@@ -20,7 +20,7 @@ class GuiButtonPress(id: Int, x: Int, y: Int, offset: Vector2 = new Vector2, mai
   {
     if (this.visible)
     {
-      FMLClientHandler.instance.getClient.renderEngine.bindTexture(Reference.GUI_BUTTON)
+      FMLClientHandler.instance.getClient.renderEngine.bindTexture(Reference.guiButtonTexture)
       if (this.stuck)
       {
         GL11.glColor4f(0.6f, 0.6f, 0.6f, 1)

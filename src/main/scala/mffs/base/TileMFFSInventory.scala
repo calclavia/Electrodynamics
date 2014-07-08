@@ -1,6 +1,5 @@
 package mffs.base
 
-import com.google.common.io.ByteArrayDataInput
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
@@ -47,7 +46,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
   {
     val nbt: NBTTagCompound = new NBTTagCompound
     this.writeToNBT(nbt)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.INVENTORY.id : Integer, nbt))
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.INVENTORY.id: Integer, nbt))
   }
 
   /**

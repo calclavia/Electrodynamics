@@ -7,32 +7,33 @@ import org.apache.logging.log4j.LogManager
  * A static variable reference file.
  * @author Calclavia
  */
-object Reference
+final object Reference
 {
   /**
    * General Variable Definition
    */
-  final val CHANNEL = "MFFS"
-  final val ID = "MFFS"
-  final val NAME = "Modular Force Field System"
-  final val LOGGER = LogManager.getLogger(NAME)
-  final val DOMAIN = "mffs"
-  final val PREFIX = DOMAIN + ":"
-  final val MAJOR_VERSION = "@MAJOR@"
-  final val MINOR_VERSION = "@MINOR@"
-  final val REVISION_VERSION = "@REVIS@"
-  final val VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION
-  final val BUILD_VERSION = "@BUILD@"
+  final val channel = "MFFS"
+  final val id = "MFFS"
+  final val name = "Modular Force Field System"
+  final val logger = LogManager.getLogger(name)
+  final val domain = "mffs"
+  final val prefix = domain + ":"
+  final val majorVersion = "@MAJOR@"
+  final val minorVersion = "@MINOR@"
+  final val revisionVersion = "@REVIS@"
+  final val version = majorVersion + "." + minorVersion + "." + revisionVersion
+  final val buildVersion = "@BUILD@"
 
   /**
    * Directories Definition
    */
-  final val RESOURCE_DIRECTORY: String = "/assets/mffs/"
-  final val TEXTURE_DIRECTORY: String = "textures/"
-  final val BLOCK_DIRECTORY: String = TEXTURE_DIRECTORY + "blocks/"
-  final val HOLOGAM_TEXTURE: ResourceLocation = new ResourceLocation(DOMAIN, BLOCK_DIRECTORY + "forceField.png")
-  final val ITEM_DIRECTORY: String = TEXTURE_DIRECTORY + "items/"
-  final val MODEL_DIRECTORY: String = RESOURCE_DIRECTORY + "models/"
-  final val GUI_DIRECTORY: String = TEXTURE_DIRECTORY + "gui/"
-  final val GUI_BUTTON: ResourceLocation = new ResourceLocation(DOMAIN, GUI_DIRECTORY + "gui_button.png")
+  final val resourceDirectory = "/assets/mffs/"
+  final val textureDirectory = "textures/"
+  final val blockDirectory = textureDirectory + "blocks/"
+  final val itemDirectory = textureDirectory + "items/"
+  final val modelDirectory = resourceDirectory + "models/"
+  final val guiDirectory = textureDirectory + "gui/"
+
+  final val hologramTexture = new ResourceLocation(domain, modelDirectory + "hologram.png")
+  final val guiButtonTexture = new ResourceLocation(domain, guiDirectory + "gui_button.png")
 }

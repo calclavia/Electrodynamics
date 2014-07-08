@@ -1,6 +1,6 @@
 package mffs.field.module
 
-import java.util.{HashMap, HashSet, Set}
+import java.util.{HashSet, Set}
 
 import mffs.base.ItemModule
 import net.minecraftforge.common.util.ForgeDirection
@@ -47,7 +47,7 @@ class ItemModuleArray extends ItemModule
 
   def getDirectionWidthMap(field: Set[Vector3]): mutable.Map[ForgeDirection, Integer] =
   {
-    val longestDirectional= mutable.Map.empty[ForgeDirection, Integer]
+    val longestDirectional = mutable.Map.empty[ForgeDirection, Integer]
 
     longestDirectional.put(ForgeDirection.DOWN, 0)
     longestDirectional.put(ForgeDirection.UP, 0)

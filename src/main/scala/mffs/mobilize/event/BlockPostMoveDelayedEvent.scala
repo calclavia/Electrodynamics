@@ -1,24 +1,23 @@
 package mffs.mobilize.event
 
+import java.lang.reflect.Method
+
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
-import resonant.api.mffs.EventForceManipulate
-import resonant.api.mffs.EventForceManipulate.EventPostForceManipulate
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
+import resonant.api.mffs.EventForceManipulate
 import resonant.lib.utility.MovementUtility
-import universalelectricity.core.transform.vector.Vector3
 import universalelectricity.core.transform.vector.VectorWorld
-import java.lang.reflect.Method
 
 /**
  * Sets the new position into the original TileEntities' block.
  *
  * @author Calclavia
  */
-class BlockPostMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int,  startPosition: VectorWorld, newPosition: VectorWorld, block: Block, blockMetadata: Int, tileEntity: TileEntity, tileData: NBTTagCompound) extends DelayedEvent(_handler, _ticks)
+class BlockPostMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, startPosition: VectorWorld, newPosition: VectorWorld, block: Block, blockMetadata: Int, tileEntity: TileEntity, tileData: NBTTagCompound) extends DelayedEvent(_handler, _ticks)
 {
   protected override def onEvent
   {

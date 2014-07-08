@@ -1,7 +1,7 @@
 package mffs.util
 
-import mffs.{ModularForceFieldSystem, Settings}
 import mffs.util.TransferMode._
+import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank}

@@ -16,6 +16,7 @@ import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
+
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.Queue

@@ -22,7 +22,7 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) exte
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    fontRendererObj.drawString(tile.getInventoryName,  this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
+    fontRendererObj.drawString(tile.getInventoryName, this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
     GL11.glPushMatrix
     GL11.glRotatef(-90, 0, 0, 1)
     this.drawTextWithTooltip("upgrade", -95, 140, x, y)

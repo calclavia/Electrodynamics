@@ -2,7 +2,6 @@ package mffs.mobilize;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.mobilize.TileForceMobilizer;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 

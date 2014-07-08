@@ -150,7 +150,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
       }
       if (ticks % (2 * 20) == 0 && getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
       {
-        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
       }
     }
     else if (!worldObj.isRemote)

@@ -1,10 +1,9 @@
 package mffs.security.module
 
-import resonant.api.mffs.security.IInterdictionMatrix
 import mffs.ModularForceFieldSystem
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.INpc
+import net.minecraft.entity.{EntityLivingBase, INpc}
 import net.minecraft.entity.monster.IMob
+import resonant.api.mffs.security.IInterdictionMatrix
 
 class ItemModuleAntiHostile extends ItemModuleDefense
 {

@@ -11,8 +11,6 @@ import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.ICardIdentification
 import resonant.api.mffs.security.IBiometricIdentifier
 import resonant.lib.access.Permission
-import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 object TileBiometricIdentifier
 {
@@ -144,7 +142,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
   override def getBiometricIdentifiers: JSet[IBiometricIdentifier] =
   {
     //TODO: Fix this
-    val set = new util.HashSet[IBiometricIdentifier] ()
+    val set = new util.HashSet[IBiometricIdentifier]()
     set.add(this)
     return set
   }

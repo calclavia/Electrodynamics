@@ -35,19 +35,20 @@ import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 import scala.collection.convert.wrapAll._
 
-@Mod(modid = Reference.ID, name = Reference.NAME, version = Reference.VERSION, dependencies = "required-after:ResonantEngine")
+@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala")
 @ModstatInfo(prefix = "mffs")
-final object ModularForceFieldSystem
+object ModularForceFieldSystem
 {
   //@Instance(Reference.ID)
   // var instance: ModularForceFieldSystem = _
-  @Mod.Metadata(Reference.ID)
+
+  @Mod.Metadata(Reference.id)
   var metadata: ModMetadata = _
 
   @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
   var proxy: CommonProxy = _
 
-  val manager = new ModManager(Settings.configuration, Reference.ID).setTab(MFFSCreativeTab).setPrefix(Reference.PREFIX)
+  val manager = new ModManager(Settings.configuration, Reference.id).setTab(MFFSCreativeTab).setPrefix(Reference.prefix)
 
   object Blocks
   {
@@ -58,7 +59,7 @@ final object ModularForceFieldSystem
     var fortronCapacitor: Block = _
     var forceFieldProjector: Block = _
     var biometricIdentifier: Block = _
-   // var interdictionMatrix: Block = _
+    // var interdictionMatrix: Block = _
     var forceManipulator: Block = _
     var forceField: Block = _
   }
@@ -146,34 +147,34 @@ final object ModularForceFieldSystem
     fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
     forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
     biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
-   // interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
+    // interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
     forceManipulator = manager.newBlock(classOf[TileForceMobilizer])
 
     /**
      * Item Instantiation
      */
     remoteController = manager.newItem(classOf[ItemRemoteController])
-    focusMatrix = manager.newItem(classOf[ItemMFFS], "focusMatrix")
+    focusMatrix = manager.newItem("focusMatrix", classOf[ItemMFFS])
     modeCube = manager.newItem(classOf[ItemModeCube])
     modeSphere = manager.newItem(classOf[ItemModeSphere])
     modeTube = manager.newItem(classOf[ItemModeTube])
     modePyramid = manager.newItem(classOf[ItemModePyramid])
     modeCylinder = manager.newItem(classOf[ItemModeCylinder])
     modeCustom = manager.newItem(classOf[ItemModeCustom])
-    moduleTranslate = manager.newItem(classOf[ItemModule], "moduleTranslate").setCost(2.5f)
-    moduleScale = manager.newItem(classOf[ItemModule], "moduleScale").setCost(2.5f)
-    moduleRotate = manager.newItem(classOf[ItemModule], "moduleRotate").setCost(0.5f)
-    moduleSpeed = manager.newItem(classOf[ItemModule], "moduleSpeed").setCost(1f)
-    moduleCapacity = manager.newItem(classOf[ItemModule], "moduleCapacity").setCost(0.5f)
+    moduleTranslate = manager.newItem("moduleTranslate", classOf[ItemModule]).setCost(2.5f)
+    moduleScale = manager.newItem("moduleScale", classOf[ItemModule]).setCost(2.5f)
+    moduleRotate = manager.newItem("moduleRotate", classOf[ItemModule]).setCost(0.5f)
+    moduleSpeed = manager.newItem("moduleSpeed", classOf[ItemModule]).setCost(1f)
+    moduleCapacity = manager.newItem("moduleCapacity", classOf[ItemModule]).setCost(0.5f)
     moduleFusion = manager.newItem(classOf[ItemModuleFusion])
     moduleDome = manager.newItem(classOf[ItemModuleDome])
-    moduleCamouflage = manager.newItem(classOf[ItemModule], "moduleCamouflage").setCost(1.5f).setMaxStackSize(1)
+    moduleCamouflage = manager.newItem("moduleCamouflage", classOf[ItemModule]).setCost(1.5f).setMaxStackSize(1)
     moduleDisintegration = manager.newItem(classOf[ItemModuleDisintegration])
     moduleShock = manager.newItem(classOf[ItemModuleShock])
-    moduleGlow = manager.newItem(classOf[ItemModule], "moduleGlow")
+    moduleGlow = manager.newItem("moduleGlow", classOf[ItemModule])
     moduleSponge = manager.newItem(classOf[ItemModuleSponge])
     moduleStabilize = manager.newItem(classOf[ItemModuleStabilize])
-    cardBlank = manager.newItem(classOf[ItemCard], "cardBlank")
+    cardBlank = manager.newItem("cardBlank", classOf[ItemCard])
     cardFrequency = manager.newItem(classOf[ItemCardFrequency])
     cardLink = manager.newItem(classOf[ItemCardLink])
     cardID = manager.newItem(classOf[ItemCardIdentification])
@@ -183,14 +184,14 @@ final object ModularForceFieldSystem
     moduleAntiPersonnel = manager.newItem(classOf[ItemModuleAntiPersonnel])
     moduleConfiscate = manager.newItem(classOf[ItemModuleConfiscate])
     moduleWarn = manager.newItem(classOf[ItemModuleWarn])
-    moduleBlockAccess = manager.newItem(classOf[ItemModuleDefense], "moduleBlockAccess").setCost(10)
-    moduleBlockAlter = manager.newItem(classOf[ItemModuleDefense], "moduleBlockAlter").setCost(15)
-    moduleAntiSpawn = manager.newItem(classOf[ItemModuleDefense], "moduleAntiSpawn").setCost(10)
-    moduleCollection = manager.newItem(classOf[ItemModule], "moduleCollection").setMaxStackSize(1).setCost(15)
-    moduleInvert = manager.newItem(classOf[ItemModule], "moduleInvert").setMaxStackSize(1).setCost(15)
-    moduleSilence = manager.newItem(classOf[ItemModule], "moduleSilence").setMaxStackSize(1).setCost(1)
+    moduleBlockAccess = manager.newItem("moduleBlockAccess", classOf[ItemModuleDefense]).setCost(10)
+    moduleBlockAlter = manager.newItem("moduleBlockAlter", classOf[ItemModuleDefense]).setCost(15)
+    moduleAntiSpawn = manager.newItem("moduleAntiSpawn", classOf[ItemModuleDefense]).setCost(10)
+    moduleCollection = manager.newItem("moduleCollection", classOf[ItemModule]).setMaxStackSize(1).setCost(15)
+    moduleInvert = manager.newItem("moduleInvert", classOf[ItemModule]).setMaxStackSize(1).setCost(15)
+    moduleSilence = manager.newItem("moduleSilence", classOf[ItemModule]).setMaxStackSize(1).setCost(1)
     moduleRepulsion = manager.newItem(classOf[ItemModuleRepulsion])
-    moduleApproximation = manager.newItem(classOf[ItemModule], "moduleApproximation").setMaxStackSize(1).setCost(1f)
+    moduleApproximation = manager.newItem("moduleApproximation", classOf[ItemModule]).setMaxStackSize(1).setCost(1f)
     moduleArray = manager.newItem(classOf[ItemModuleArray]).setCost(3f)
 
     /**
@@ -218,35 +219,15 @@ final object ModularForceFieldSystem
   @EventHandler
   def load(evt: FMLInitializationEvent)
   {
-    Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-
-    Blacklist.stabilizationBlacklist.add(water)
-    Blacklist.stabilizationBlacklist.add(flowing_water)
-    Blacklist.stabilizationBlacklist.add(lava)
-    Blacklist.stabilizationBlacklist.add(flowing_lava)
-
-    Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-
-    Blacklist.disintegrationBlacklist.add(water)
-    Blacklist.disintegrationBlacklist.add(flowing_water)
-    Blacklist.disintegrationBlacklist.add(lava)
-    Blacklist.disintegrationBlacklist.add(flowing_lava)
-
-    Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-
-    Blacklist.mobilizerBlacklist.add(bedrock)
-    Blacklist.mobilizerBlacklist.add(forceField)
-    ExplosionWhitelist.addWhitelistedBlock(forceField)
-
-    metadata.modId = Reference.ID
-    metadata.name = Reference.NAME
+/*    metadata.modId = Reference.id
+    metadata.name = Reference.name
     metadata.description = "Modular Force Field System is a mod that adds force fields, high tech machinery and defensive systems to Minecraft."
     metadata.url = "http://www.calclavia.com/mffs/"
     metadata.logoFile = "/mffs_logo.png"
-    metadata.version = Reference.VERSION + "." + Reference.BUILD_VERSION
+    metadata.version = Reference.version + "." + Reference.buildVersion
     metadata.authorList = Array[String]("Calclavia").toList
     metadata.credits = "Please visit the website."
-
+*/
     proxy.init()
   }
 
@@ -264,7 +245,7 @@ final object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D': Character, diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C': Character, cardBlank, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
-   // GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(interdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, moduleShock, 'E': Character, ender_chest, 'F': Character, focusMatrix))
+    // GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(interdictionMatrix), "SSS", "FFF", "FEF", 'S': Character, moduleShock, 'E': Character, ender_chest, 'F': Character, focusMatrix))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.MOTOR.get, 'T': Character, moduleTranslate, 'M': Character, UniversalRecipe.MOTOR.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P': Character, paper, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardLink), "BWB", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))
@@ -318,6 +299,26 @@ final object ModularForceFieldSystem
           e.printStackTrace
         }
       }
+
+    Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+
+    Blacklist.stabilizationBlacklist.add(water)
+    Blacklist.stabilizationBlacklist.add(flowing_water)
+    Blacklist.stabilizationBlacklist.add(lava)
+    Blacklist.stabilizationBlacklist.add(flowing_lava)
+
+    Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+
+    Blacklist.disintegrationBlacklist.add(water)
+    Blacklist.disintegrationBlacklist.add(flowing_water)
+    Blacklist.disintegrationBlacklist.add(lava)
+    Blacklist.disintegrationBlacklist.add(flowing_lava)
+
+    Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+
+    Blacklist.mobilizerBlacklist.add(bedrock)
+    Blacklist.mobilizerBlacklist.add(forceField)
+    ExplosionWhitelist.addWhitelistedBlock(forceField)
 
     Settings.configuration.save()
   }

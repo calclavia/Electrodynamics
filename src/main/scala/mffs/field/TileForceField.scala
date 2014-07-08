@@ -9,8 +9,8 @@ import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
-import net.minecraft.entity.{EntityLiving, Entity}
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.{Entity, EntityLiving}
 import net.minecraft.init.Blocks
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.nbt.NBTTagCompound

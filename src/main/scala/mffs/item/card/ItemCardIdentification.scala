@@ -11,6 +11,7 @@ import resonant.api.mffs.card.ICardIdentification
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
+
 import scala.collection.convert.wrapAll._
 
 class ItemCardIdentification extends ItemCardPermission with ICardIdentification

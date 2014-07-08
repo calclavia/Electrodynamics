@@ -4,8 +4,6 @@ import com.mojang.authlib.GameProfile
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import resonant.lib.access.Permission
 
-import scala.collection.mutable
-
 /**
  * Access Management Classes
  * @author Calclavia

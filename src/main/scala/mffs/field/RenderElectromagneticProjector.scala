@@ -13,11 +13,10 @@ import resonant.lib.render.RenderUtility
 @SideOnly(Side.CLIENT)
 final object RenderElectromagneticProjector
 {
-  val textureOn = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "electromagneticProjector_on.png")
-  val textureOff = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "electromagneticProjector_off.png")
-  val textureHologram = new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "hologram.png")
+  val textureOn = new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector_on.png")
+  val textureOff = new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector_off.png")
 
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.DOMAIN, Reference.MODEL_DIRECTORY + "electromagneticProjector.tcn"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector.tcn"))
 
   def render(tileEntity: TileElectromagnetProjector, x: Double, y: Double, z: Double, frame: Float)
   {
@@ -82,7 +81,7 @@ final object RenderElectromagneticProjector
       {
         glPushMatrix
         glTranslated(x + 0.5, y + 1.35, z + 0.5)
-        FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureHologram)
+        FMLClientHandler.instance.getClient.renderEngine.bindTexture(Reference.hologramTexture)
         RenderUtility.enableBlending
         RenderUtility.disableLighting
         glPushMatrix

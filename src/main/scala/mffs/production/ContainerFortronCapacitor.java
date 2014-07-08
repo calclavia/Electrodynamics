@@ -2,7 +2,6 @@ package mffs.production;
 
 import mffs.slot.SlotBase;
 import mffs.slot.SlotCard;
-import mffs.production.TileFortronCapacitor;
 import net.minecraft.entity.player.EntityPlayer;
 import resonant.lib.gui.ContainerBase;
 

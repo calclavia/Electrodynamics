@@ -145,7 +145,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
       {
         case e: Exception =>
         {
-          Reference.LOGGER.error(MessageFormat.format("Packet receiving failed: {0}", this.getClass.getSimpleName))
+          Reference.logger.error(MessageFormat.format("Packet receiving failed: {0}", this.getClass.getSimpleName))
           e.printStackTrace
         }
       }

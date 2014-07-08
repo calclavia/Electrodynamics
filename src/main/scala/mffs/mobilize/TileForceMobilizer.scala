@@ -4,7 +4,6 @@ import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldInteraction, TilePacketType}
-import mffs.field.RenderElectromagneticProjector
 import mffs.field.thread.ManipulatorCalculationThread
 import mffs.item.card.ItemCard
 import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
@@ -97,7 +96,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
 
               if (this.getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
               {
-                this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+                this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
               }
               if (this.doAnchor)
               {
@@ -125,14 +124,14 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
           if (this.getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0 && this.ticks % 10 == 0)
           {
             val moveTime: Int = this.getMoveTime
-            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
+            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)
           }
 
           moveTime -= 1
 
           if (moveTime <= 0)
           {
-            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+            this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "teleport", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
           }
         }
         else
@@ -208,7 +207,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
       {
         moveTime = 0
         delayedEvents.clear
-        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.PREFIX + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
+        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
         ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.RENDER.id: Integer), this.worldObj, new Vector3(this), packetRange)
 
         markFailMove = false

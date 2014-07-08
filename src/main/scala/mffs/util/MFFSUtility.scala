@@ -1,10 +1,9 @@
 package mffs.util
 
 import com.mojang.authlib.GameProfile
+import mffs.ModularForceFieldSystem
 import mffs.field.TileElectromagnetProjector
 import mffs.field.mode.ItemModeCustom
-import mffs.util.TransferMode.TransferMode
-import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -14,8 +13,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
-import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.api.mffs.modules.IModuleAcceptor
+import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.Permission
 import universalelectricity.core.transform.rotation.Rotation

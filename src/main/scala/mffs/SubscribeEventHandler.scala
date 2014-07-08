@@ -7,8 +7,8 @@ import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
 import mffs.field.TileElectromagnetProjector
-import mffs.util.{MFFSUtility, FortronUtility}
 import mffs.security.access.MFFSPermissions
+import mffs.util.{FortronUtility, MFFSUtility}
 import net.minecraft.block.BlockSkull
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
@@ -22,7 +22,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
-import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.event.ChunkModifiedEvent
 import universalelectricity.core.transform.vector.Vector3
 
@@ -43,7 +42,7 @@ object SubscribeEventHandler
   {
     if (event.map.getTextureType() == 0)
     {
-      registerIcon(Reference.PREFIX + "fortron", event)
+      registerIcon(Reference.prefix + "fortron", event)
     }
   }
 
@@ -51,7 +50,7 @@ object SubscribeEventHandler
   @SideOnly(Side.CLIENT)
   def textureHook(event: TextureStitchEvent.Post)
   {
-    FortronUtility.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.PREFIX + "fortron"))
+    FortronUtility.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.prefix + "fortron"))
   }
 
   @SubscribeEvent
@@ -131,7 +130,7 @@ object SubscribeEventHandler
       //Check if we can configure this block (activate). If not, we cancel the event.
       if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action) && x.hasPermission(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
       {
-        evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.NAME + "] You have no permission to do that!"))
+        evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.name + "] You have no permission to do that!"))
         evt.setCanceled(true)
       }
     }

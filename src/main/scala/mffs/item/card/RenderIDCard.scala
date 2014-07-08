@@ -12,7 +12,7 @@ import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11._
-import org.lwjgl.opengl.{GL11, GL12}
+import org.lwjgl.opengl.GL12
 import resonant.api.mffs.card.ICardIdentification
 import universalelectricity.core.transform.vector.Vector2
 
@@ -133,16 +133,16 @@ class RenderIDCard extends IItemRenderer
   private def renderItemIcon(icon: IIcon)
   {
     glBegin(GL_QUADS)
-    
-      glTexCoord2f(icon.getMinU, icon.getMinV)
-      glVertex2f(0, 0)
-      glTexCoord2f(icon.getMinU, icon.getMaxV)
-      glVertex2f(0, 16)
-      glTexCoord2f(icon.getMaxU, icon.getMaxV)
-      glVertex2f(16, 16)
-      glTexCoord2f(icon.getMaxU, icon.getMinV)
-      glVertex2f(16, 0)
-    
+
+    glTexCoord2f(icon.getMinU, icon.getMinV)
+    glVertex2f(0, 0)
+    glTexCoord2f(icon.getMinU, icon.getMaxV)
+    glVertex2f(0, 16)
+    glTexCoord2f(icon.getMaxU, icon.getMaxV)
+    glVertex2f(16, 16)
+    glTexCoord2f(icon.getMaxU, icon.getMinV)
+    glVertex2f(16, 0)
+
     glEnd
   }
 
@@ -154,7 +154,7 @@ class RenderIDCard extends IItemRenderer
       glPopMatrix
       return
     }
-    
+
     val tessellator: Tessellator = Tessellator.instance
     val f: Float = icon.getMinU
     val f1: Float = icon.getMaxU
