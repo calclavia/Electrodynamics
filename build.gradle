@@ -39,12 +39,18 @@ minecraft {
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
+
 	if (System.getenv("BUILD_NUMBER") != null) {
 		replace "@BUILD@", System.getenv("BUILD_NUMBER")
 	}
 	else {
 		replace "@BUILD@", 1
 	}
+
+    replaceIn "mcmod.info"
+    replace "@MAJOR@", config.version.mod.major
+    replace "@MINOR@", config.version.mod.minor
+    replace "@REVIS@", config.version.mod.revis
 }
 
 if (System.getenv("BUILD_NUMBER") != null)

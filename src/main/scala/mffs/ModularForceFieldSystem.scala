@@ -30,6 +30,7 @@ import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
 import resonant.content.ModManager
 import resonant.lib.config.ConfigHandler
+import resonant.lib.modproxy.ProxyHandler
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
 import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
@@ -127,13 +128,16 @@ object ModularForceFieldSystem
   val damageFieldShock = new CustomDamageSource("fieldShock").setDamageBypassesArmor
   val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
 
-  val packetHandler = new PacketManager()
+  val packetHandler = new PacketManager(Reference.channel)
+  val modProxy = new ProxyHandler
 
   @EventHandler
   def preInit(event: FMLPreInitializationEvent)
   {
     Settings.config = new Configuration(event.getSuggestedConfigurationFile)
     ConfigHandler.sync(Settings, Settings.config)
+
+    modProxy.applyModule(packetHandler)
 
     Settings.config.load
 
@@ -210,14 +214,13 @@ object ModularForceFieldSystem
 
 
     Settings.config.save()
-
-    proxy.preInit()
+    modProxy.preInit()
   }
 
   @EventHandler
   def load(evt: FMLInitializationEvent)
   {
-    proxy.init()
+    modProxy.init()
   }
 
   @EventHandler
@@ -275,8 +278,6 @@ object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAlter), " G ", "GFG", " G ", 'F': Character, moduleBlockAccess, 'G': Character, gold_block))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiSpawn), " H ", "G G", " H ", 'H': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
 
-    proxy.postInit()
-
     Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
     Blacklist.stabilizationBlacklist.add(water)
@@ -296,6 +297,8 @@ object ModularForceFieldSystem
     Blacklist.mobilizerBlacklist.add(bedrock)
     Blacklist.mobilizerBlacklist.add(forceField)
     ExplosionWhitelist.addWhitelistedBlock(forceField)
+
+    modProxy.postInit()
 
     Settings.config.save()
   }

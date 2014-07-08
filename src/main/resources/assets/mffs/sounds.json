@@ -1,6 +1,6 @@
 {
     "mffs.field": {
-        "category": "mffs",
+        "category": "ambient",
         "sounds": [
             "field/field1",
             "field/field2",
@@ -10,7 +10,7 @@
         ]
     },
     "mffs.fieldmove": {
-        "category": "mffs",
+        "category": "ambient",
         "sounds": [
             "fieldmove/fieldmove1",
             "fieldmove/fieldmove2",
@@ -20,13 +20,13 @@
         ]
     },
     "mffs.misc.powerdown": {
-        "category": "mffs",
+        "category": "ambient",
         "sounds": [
             "misc/powerdown"
         ]
     },
     "mffs.misc.teleport": {
-        "category": "mffs",
+        "category": "ambient",
         "sounds": [
             "misc/teleport"
         ]

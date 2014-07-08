@@ -18,7 +18,7 @@ class MFFSGuiFactory extends IModGuiFactory
 
   override def mainConfigGuiClass: Class[_ <: GuiScreen] =
   {
-    return classOf[Nothing]
+    return classOf[MFFSGuiConfig]
   }
 
   override def runtimeGuiCategories: Set[IModGuiFactory.RuntimeOptionCategoryElement] =
