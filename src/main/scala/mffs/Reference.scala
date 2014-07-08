@@ -32,7 +32,7 @@ object Reference
   final val BLOCK_DIRECTORY: String = TEXTURE_DIRECTORY + "blocks/"
   final val HOLOGAM_TEXTURE: ResourceLocation = new ResourceLocation(DOMAIN, BLOCK_DIRECTORY + "forceField.png")
   final val ITEM_DIRECTORY: String = TEXTURE_DIRECTORY + "items/"
-  final val MODEL_DIRECTORY: String = TEXTURE_DIRECTORY + "models/"
+  final val MODEL_DIRECTORY: String = RESOURCE_DIRECTORY + "models/"
   final val GUI_DIRECTORY: String = TEXTURE_DIRECTORY + "gui/"
   final val GUI_BUTTON: ResourceLocation = new ResourceLocation(DOMAIN, GUI_DIRECTORY + "gui_button.png")
 }

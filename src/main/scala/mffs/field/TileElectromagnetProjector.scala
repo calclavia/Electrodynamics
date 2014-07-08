@@ -1,5 +1,7 @@
 package mffs.field
 
+import java.util.{Set => JSet}
+
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
@@ -27,7 +29,6 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import java.util.{Set => JSet}
 
 class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 {
@@ -225,7 +226,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
 
             relevantModules.exists({ module =>
               flag = module.onProject(this, vector)
-               flag == 1 || flag == 2
+              flag == 1 || flag == 2
             })
 
             if (flag != 1 && flag != 2)
@@ -246,7 +247,7 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
               //requestFortron(1, true)
             }
 
-             flag == 2
+            flag == 2
           })
 
         isCompleteConstructing = evaluateField.size == 0
@@ -393,4 +394,12 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
     return hasPerm
   }
 
+  /**
+   * Rendering
+   */
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame)
+  }
 }

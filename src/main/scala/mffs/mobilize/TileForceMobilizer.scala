@@ -1,8 +1,10 @@
 package mffs.mobilize
 
 import cpw.mods.fml.common.network.ByteBufUtils
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldInteraction, TilePacketType}
+import mffs.field.RenderElectromagneticProjector
 import mffs.field.thread.ManipulatorCalculationThread
 import mffs.item.card.ItemCard
 import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
@@ -599,5 +601,9 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return super.callMethod(computer, context, method, arguments)
   }
 */
-
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame)
+  }
 }

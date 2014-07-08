@@ -1,18 +1,20 @@
 package mffs.production
 
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.init.Items
-import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
 import resonant.lib.content.prefab.TElectric
 import universalelectricity.api.UniversalClass
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.region.Cuboid
+import universalelectricity.core.transform.vector.Vector3
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -192,6 +194,12 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
       }
     }
     return false
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame)
   }
 
 }

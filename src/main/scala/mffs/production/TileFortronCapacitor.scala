@@ -1,5 +1,8 @@
 package mffs.production
 
+import java.util.{Set => JSet}
+
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.base.{TileModuleAcceptor, TilePacketType}
@@ -14,7 +17,6 @@ import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable
-import java.util.{Set => JSet}
 
 class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with IFortronCapacitor
 {
@@ -62,7 +64,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     }
   }
 
-  override def getAmplifier: Float =  0.001f
+  override def getAmplifier: Float = 0.001f
 
   /**
    * Packet Methods
@@ -108,7 +110,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
     nbttagcompound.setInteger("transferMode", this.transferMode.id)
   }
 
- override def getLinkedDevices: JSet[IFortronFrequency] =
+  override def getLinkedDevices: JSet[IFortronFrequency] =
   {
     return FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], world, new Vector3(this), getTransmissionRange, getFrequency)
   }
@@ -133,4 +135,9 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getTransmissionRate: Int = 250 + 50 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed)
 
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame)
+  }
 }
