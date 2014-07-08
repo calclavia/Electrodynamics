@@ -1,7 +1,5 @@
 package mffs.base
 
-import java.text.MessageFormat
-
 import io.netty.buffer.ByteBuf
 import mffs.item.card.ItemCardLink
 import mffs.{ModularForceFieldSystem, Reference}
@@ -133,7 +131,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  def getDescPacket: PacketTile = new PacketTile(this, getPacketData(TilePacketType.DESCRIPTION.id).toArray)
+  def getDescPacket: PacketTile = new PacketTile(this, getPacketData(TilePacketType.DESCRIPTION.id).toArray: _*)
 
   override def onReceivePacket(data: ByteBuf, player: EntityPlayer, obj: AnyRef*)
   {
@@ -145,7 +143,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
       {
         case e: Exception =>
         {
-          Reference.logger.error(MessageFormat.format("Packet receiving failed: {0}", this.getClass.getSimpleName))
+          Reference.logger.error("Packet receiving failed: " + getClass.getSimpleName)
           e.printStackTrace
         }
       }

@@ -1,8 +1,5 @@
 package mffs
 
-import java.io.File
-
-import cpw.mods.fml.common.Loader
 import net.minecraftforge.common.config.Configuration
 import resonant.lib.config.Config
 
@@ -13,7 +10,7 @@ import resonant.lib.config.Config
  */
 object Settings
 {
-  final val configuration = new Configuration(new File(Loader.instance.getConfigDir, Reference.name + ".cfg"))
+  var config: Configuration = _
   final val maxFrequencyDigits: Int = 6
 
   @Config

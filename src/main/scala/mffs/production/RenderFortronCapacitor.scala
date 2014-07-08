@@ -10,13 +10,13 @@ import org.lwjgl.opengl.GL11
 @SideOnly(Side.CLIENT)
 final object RenderFortronCapacitor
 {
-  val textureOn = new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor_on.png")
-  val textureOff = new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor_off.png")
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "fortronCapacitor.tcn"))
+  val textureOn = new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor_on.png")
+  val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor_off.png")
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor.tcn"))
 
-  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float)
+  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float,  isActive:Boolean)
   {
-    if (tileEntity.isActive)
+    if (isActive)
     {
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOn)
     }
@@ -26,8 +26,7 @@ final object RenderFortronCapacitor
     }
 
     GL11.glPushMatrix
-    GL11.glTranslated(x + 0.5, y + 1.95, z + 0.5)
-    GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F)
+    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
     GL11.glScalef(1.3f, 1.3f, 1.3f)
     model.renderAll
     GL11.glPopMatrix

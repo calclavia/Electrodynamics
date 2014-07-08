@@ -13,6 +13,7 @@ import mffs.security.access.MFFSPermissions
 import mffs.util.TCache
 import mffs.{ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.block.Block
+import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
@@ -398,8 +399,20 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
    * Rendering
    */
   @SideOnly(Side.CLIENT)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  {
+    return false
+  }
+
+  @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame)
+    RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame, isActive)
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true)
   }
 }

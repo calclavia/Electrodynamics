@@ -3,6 +3,7 @@ package mffs
 import java.util.{HashMap, UUID}
 
 import com.mojang.authlib.GameProfile
+import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
@@ -22,6 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.{EventForceManipulate, EventStabilize}
+import resonant.lib.config.ConfigHandler
 import resonant.lib.event.ChunkModifiedEvent
 import universalelectricity.core.transform.vector.Vector3
 
@@ -51,6 +53,13 @@ object SubscribeEventHandler
   def textureHook(event: TextureStitchEvent.Post)
   {
     FortronUtility.FLUID_FORTRON.setIcons(fluidIconMap.get(Reference.prefix + "fortron"))
+  }
+
+  @SubscribeEvent
+  def onConfigChange(evt: OnConfigChangedEvent)
+  {
+    if (evt.modID.equals(Reference.id))
+      ConfigHandler.sync(Settings, Settings.config)
   }
 
   @SubscribeEvent
@@ -127,7 +136,7 @@ object SubscribeEventHandler
 
       val relevantProjectors = MFFSUtility.getRelevantProjectors(evt.entityPlayer.worldObj, position)
 
-      //Check if we can configure this block (activate). If not, we cancel the event.
+      //Check if we can sync this block (activate). If not, we cancel the event.
       if (!relevantProjectors.forall(x => x.isAccessGranted(evt.entityPlayer.worldObj, new Vector3(evt.x, evt.y, evt.z), evt.entityPlayer, evt.action) && x.hasPermission(evt.entityPlayer.getGameProfile, MFFSPermissions.configure)))
       {
         evt.entityPlayer.addChatMessage(new ChatComponentText("[" + Reference.name + "] You have no permission to do that!"))

@@ -13,17 +13,17 @@ import resonant.lib.render.RenderUtility
 @SideOnly(Side.CLIENT)
 final object RenderElectromagneticProjector
 {
-  val textureOn = new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector_on.png")
-  val textureOff = new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector_off.png")
+  val textureOn = new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector_on.png")
+  val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector_off.png")
 
-  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelDirectory + "electromagneticProjector.tcn"))
+  val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector.tcn"))
 
-  def render(tileEntity: TileElectromagnetProjector, x: Double, y: Double, z: Double, frame: Float)
+  def render(tileEntity: TileElectromagnetProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
   {
     glPushMatrix
-    glTranslated(x + 0.5, y + 1.5, z + 0.5)
+    glTranslated(x + 0.5, y + 0.5, z + 0.5)
 
-    if (tileEntity.isActive)
+    if (isActive)
     {
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOn)
     }
@@ -32,7 +32,6 @@ final object RenderElectromagneticProjector
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOff)
     }
 
-    glRotatef(180F, 0.0F, 0.0F, 1.0F)
     model.renderAll
     //.render(tileEntity.animation, 0.0625F)
     glPopMatrix

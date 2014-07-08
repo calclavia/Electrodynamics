@@ -1,5 +1,6 @@
 package mffs.item.card
 
+import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.ModularForceFieldSystem
@@ -38,7 +39,7 @@ class RenderIDCard extends IItemRenderer
       {
         glTranslatef(0f, 0f, -0.0005f)
       }
-      renderPlayerFace(getSkinFace(card.getProfile(itemStack).getName))
+      renderPlayerFace(getSkinFace(card.getProfile(itemStack)))
       glEnable(GL_CULL_FACE)
       glPopMatrix
     }
@@ -63,26 +64,30 @@ class RenderIDCard extends IItemRenderer
     }
   }
 
-  private def getSkinFace(name: String): ResourceLocation =
+  private def getSkinFace(profile: GameProfile): ResourceLocation =
   {
-    try
+    if(profile != null)
     {
-      var resourcelocation: ResourceLocation = Minecraft.getMinecraft.thePlayer.getLocationSkin
+      val name = profile.getName
+      try
+      {
+        var resourcelocation: ResourceLocation = Minecraft.getMinecraft.thePlayer.getLocationSkin
 
-      if (name != null && !name.isEmpty)
-      {
-        resourcelocation = AbstractClientPlayer.getLocationSkin(name)
-        AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name)
-        return resourcelocation
-      }
-    }
-    catch
-      {
-        case e: Exception =>
+        if (name != null && !name.isEmpty)
         {
-          e.printStackTrace
+          resourcelocation = AbstractClientPlayer.getLocationSkin(name)
+          AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name)
+          return resourcelocation
         }
       }
+      catch
+        {
+          case e: Exception =>
+          {
+            e.printStackTrace
+          }
+        }
+    }
     return null
   }
 

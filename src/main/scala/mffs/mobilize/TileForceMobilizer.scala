@@ -11,6 +11,7 @@ import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{ModularForceFieldSystem, Reference, Settings}
+import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
@@ -600,9 +601,22 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     return super.callMethod(computer, context, method, arguments)
   }
 */
+
+  @SideOnly(Side.CLIENT)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  {
+    return false
+  }
+
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame)
+    RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame, isActive)
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    RenderForceMobilizer.render(this, -0.5, -0.5, -0.5, 0, true)
   }
 }

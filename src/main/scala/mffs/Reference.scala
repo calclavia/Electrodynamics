@@ -31,6 +31,7 @@ final object Reference
   final val textureDirectory = "textures/"
   final val blockDirectory = textureDirectory + "blocks/"
   final val itemDirectory = textureDirectory + "items/"
+  final val modelPath=  "models/"
   final val modelDirectory = resourceDirectory + "models/"
   final val guiDirectory = textureDirectory + "gui/"
 

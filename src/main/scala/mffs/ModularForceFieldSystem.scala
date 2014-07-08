@@ -23,6 +23,7 @@ import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
 import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
@@ -35,20 +36,14 @@ import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 import scala.collection.convert.wrapAll._
 
-@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala")
+@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory", useMetadata = true)
 @ModstatInfo(prefix = "mffs")
 object ModularForceFieldSystem
 {
-  //@Instance(Reference.ID)
-  // var instance: ModularForceFieldSystem = _
-
-  @Mod.Metadata(Reference.id)
-  var metadata: ModMetadata = _
-
   @SidedProxy(clientSide = "mffs.ClientProxy", serverSide = "mffs.CommonProxy")
   var proxy: CommonProxy = _
 
-  val manager = new ModManager(Settings.configuration, Reference.id).setTab(MFFSCreativeTab).setPrefix(Reference.prefix)
+  val manager = new ModManager(Settings.config, Reference.id).setTab(MFFSCreativeTab).setPrefix(Reference.prefix)
 
   object Blocks
   {
@@ -137,12 +132,15 @@ object ModularForceFieldSystem
   @EventHandler
   def preInit(event: FMLPreInitializationEvent)
   {
-    Settings.configuration.load()
+    Settings.config = new Configuration(event.getSuggestedConfigurationFile)
+    ConfigHandler.sync(Settings, Settings.config)
+
+    Settings.config.load
 
     /**
      * Block Instantiation
      */
-    forceField = manager.newBlock(classOf[field.TileForceField])
+    forceField = manager.newBlock(classOf[field.TileForceField]).setCreativeTab(null)
     coercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
     fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
     forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
@@ -211,7 +209,7 @@ object ModularForceFieldSystem
     FortronUtility.FLUIDSTACK_FORTRON = new FluidStack(FortronUtility.FLUID_FORTRON, 0)
 
 
-    Settings.configuration.save()
+    Settings.config.save()
 
     proxy.preInit()
   }
@@ -219,22 +217,13 @@ object ModularForceFieldSystem
   @EventHandler
   def load(evt: FMLInitializationEvent)
   {
-/*    metadata.modId = Reference.id
-    metadata.name = Reference.name
-    metadata.description = "Modular Force Field System is a mod that adds force fields, high tech machinery and defensive systems to Minecraft."
-    metadata.url = "http://www.calclavia.com/mffs/"
-    metadata.logoFile = "/mffs_logo.png"
-    metadata.version = Reference.version + "." + Reference.buildVersion
-    metadata.authorList = Array[String]("Calclavia").toList
-    metadata.credits = "Please visit the website."
-*/
     proxy.init()
   }
 
   @EventHandler
   def postInit(evt: FMLPostInitializationEvent)
   {
-    Settings.configuration.load()
+    Settings.config.load()
 
     /**
      * Add recipe.
@@ -262,12 +251,12 @@ object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCapacity, 2), "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.BATTERY.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleShock), "FWF", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSponge), "BBB", "BFB", "BBB", 'F': Character, focusMatrix, 'B': Character, water_bucket))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDisintegration), " W ", "FBF", " W ", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get, 'B': Character, UniversalRecipe.BATTERY.get), Settings.configuration, true)
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDisintegration), " W ", "FBF", " W ", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get, 'B': Character, UniversalRecipe.BATTERY.get), Settings.config, true)
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDome), "F", " ", "F", 'F': Character, focusMatrix))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCamouflage), "WFW", "FWF", "WFW", 'F': Character, focusMatrix, 'W': Character, new ItemStack(wool, 1, OreDictionary.WILDCARD_VALUE)))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleFusion), "FJF", 'F': Character, focusMatrix, 'J': Character, moduleShock))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleScale, 2), "FRF", 'F': Character, focusMatrix))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleTranslate, 2), "FSF", 'F': Character, focusMatrix, 'S': Character, moduleScale), Settings.configuration, true)
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleTranslate, 2), "FSF", 'F': Character, focusMatrix, 'S': Character, moduleScale), Settings.config, true)
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRotate, 4), "F  ", " F ", "  F", 'F': Character, focusMatrix))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleGlow, 4), "GGG", "GFG", "GGG", 'F': Character, focusMatrix, 'G': Character, glowstone))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleStabilize), "FDF", "PSA", "FDF", 'F': Character, focusMatrix, 'P': Character, diamond_pickaxe, 'S': Character, diamond_shovel, 'A': Character, diamond_axe, 'D': Character, diamond))
@@ -276,29 +265,17 @@ object ModularForceFieldSystem
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSilence), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, noteblock))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleApproximation), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, golden_pickaxe))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleArray), " F ", "DFD", " F ", 'F': Character, focusMatrix, 'D': Character, diamond))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRepulsion), "FFF", "DFD", "SFS", 'F': Character, focusMatrix, 'D': Character, diamond, 'S': Character, slime_ball), Settings.configuration, true)
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRepulsion), "FFF", "DFD", "SFS", 'F': Character, focusMatrix, 'D': Character, diamond, 'S': Character, slime_ball), Settings.config, true)
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiHostile), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, gunpowder, 'R': Character, rotten_flesh, 'B': Character, bone, 'S': Character, ghast_tear))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiFriendly), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, cooked_porkchop, 'R': Character, new ItemStack(wool, 1, OreDictionary.WILDCARD_VALUE), 'B': Character, leather, 'S': Character, slime_ball))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiPersonnel), "BFG", 'F': Character, focusMatrix, 'B': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleConfiscate), "PEP", "EFE", "PEP", 'F': Character, focusMatrix, 'E': Character, ender_eye, 'P': Character, ender_pearl), Settings.configuration, true)
+    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleConfiscate), "PEP", "EFE", "PEP", 'F': Character, focusMatrix, 'E': Character, ender_eye, 'P': Character, ender_pearl), Settings.config, true)
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleWarn), "NFN", 'F': Character, focusMatrix, 'N': Character, noteblock))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAccess), " C ", "BFB", " C ", 'F': Character, focusMatrix, 'B': Character, iron_block, 'C': Character, chest))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAlter), " G ", "GFG", " G ", 'F': Character, moduleBlockAccess, 'G': Character, gold_block))
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiSpawn), " H ", "G G", " H ", 'H': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
 
     proxy.postInit()
-
-    try
-    {
-      ConfigHandler.configure(Settings.configuration, "mffs")
-    }
-    catch
-      {
-        case e: Exception =>
-        {
-          e.printStackTrace
-        }
-      }
 
     Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
@@ -320,7 +297,7 @@ object ModularForceFieldSystem
     Blacklist.mobilizerBlacklist.add(forceField)
     ExplosionWhitelist.addWhitelistedBlock(forceField)
 
-    Settings.configuration.save()
+    Settings.config.save()
   }
 
 }

@@ -17,8 +17,8 @@ object MFFSPermissions
   /** Bypass Confiscation - Allows the bypassing of interdiction matrix confiscation. */
   val bypassConfiscation = defense.addChild("bypassConfiscation")
 
-  /** Configure - Allows to configure biometric identifiers. */
-  val configure = mffs.addChild("configure")
+  /** Configure - Allows to sync biometric identifiers. */
+  val configure = mffs.addChild("sync")
   /** Remote Control - Allows player to remotely control blocks with the remote. */
   val remoteControl = mffs.addChild("remoteControl")
 }

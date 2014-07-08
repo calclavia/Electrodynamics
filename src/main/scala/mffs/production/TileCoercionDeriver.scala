@@ -6,6 +6,7 @@ import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
 import mffs.{ModularForceFieldSystem, Settings}
+import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -197,9 +198,20 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
   }
 
   @SideOnly(Side.CLIENT)
-  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
   {
-    RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame)
+    return false
   }
 
+  @SideOnly(Side.CLIENT)
+  override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
+  {
+    RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame, isActive)
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    RenderCoercionDeriver.render(this, -0.5, -0.5, -0.5, 0, true)
+  }
 }

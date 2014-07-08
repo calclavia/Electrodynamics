@@ -8,6 +8,7 @@ import mffs.ModularForceFieldSystem
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
+import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.card.{ICard, ICardInfinite, ICoordLink}
@@ -136,8 +137,20 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   def getTransmissionRate: Int = 250 + 50 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed)
 
   @SideOnly(Side.CLIENT)
+  override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
+  {
+    return false
+  }
+
+  @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame)
+    RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame, isActive)
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def renderInventory(itemStack: ItemStack)
+  {
+    RenderFortronCapacitor.render(this, -0.5, -0.5, -0.5, 0, true)
   }
 }
