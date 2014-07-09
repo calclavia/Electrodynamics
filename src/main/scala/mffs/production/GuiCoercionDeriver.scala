@@ -17,7 +17,6 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extend
 {
   override def initGui
   {
-    this.textFieldPos = new Vector2(30, 43)
     super.initGui
     this.buttonList.add(new GuiButton(1, this.width / 2 - 10, this.height / 2 - 28, 58, 20, LanguageUtility.getLocal("gui.deriver.derive")))
   }
@@ -26,7 +25,6 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extend
   {
     fontRendererObj.drawString(tile.getInventoryName, this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
     this.drawTextWithTooltip("frequency", "%1:", 8, 30, x, y)
-    this.textFieldFrequency.drawTextBox
     GL11.glPushMatrix
     GL11.glRotatef(-90, 0, 0, 1)
     this.drawTextWithTooltip("upgrade", -95, 140, x, y)

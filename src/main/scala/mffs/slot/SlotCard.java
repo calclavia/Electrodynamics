@@ -22,7 +22,7 @@ public class SlotCard extends SlotBase
 		{
 			if (itemStack.getItem() instanceof IItemFrequency)
 			{
-				((IItemFrequency) itemStack.getItem()).setFrequency(((IBlockFrequency) this.tileEntity).getFrequency(), itemStack);
+				((IItemFrequency) itemStack.getItem()).setFrequency(((IBlockFrequency) tileEntity).getFrequency(), itemStack);
 			}
 		}
 	}

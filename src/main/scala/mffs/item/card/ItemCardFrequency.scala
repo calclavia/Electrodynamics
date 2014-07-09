@@ -18,7 +18,8 @@ class ItemCardFrequency extends ItemCard with IItemFrequency
 {
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {
-    list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + this.getFrequency(itemStack))
+    //TODO: Hash this
+    list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getFrequency(itemStack))
   }
 
   def getFrequency(itemStack: ItemStack): Int =

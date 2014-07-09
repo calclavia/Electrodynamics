@@ -20,7 +20,6 @@ class GuiForceMobilizer(player: EntityPlayer, tileEntity: TileForceMobilizer) ex
 {
   override def initGui
   {
-    this.textFieldPos = new Vector2(111, 93)
     super.initGui
     this.buttonList.add(new GuiIcon(1, this.width / 2 - 82, this.height / 2 - 16, new ItemStack(Items.clock)))
     this.buttonList.add(new GuiIcon(2, this.width / 2 - 82, this.height / 2 - 82, null, new ItemStack(Items.redstone), new ItemStack(Blocks.redstone_block)))
@@ -64,7 +63,6 @@ class GuiForceMobilizer(player: EntityPlayer, tileEntity: TileForceMobilizer) ex
     }
     fontRendererObj.drawString(this.tileEntity.getDirection.name, 35, 82, 4210752)
     fontRendererObj.drawString((this.tileEntity.clientMoveTime / 20) + "s", 35, 94, 4210752)
-    this.textFieldFrequency.drawTextBox
     drawTextWithTooltip("fortron", "\u00a74Consumption: -" + new UnitDisplay(UnitDisplay.Unit.LITER, tileEntity.getFortronCost * 20).simple() + "/s", 30, 110, x, y)
     drawTextWithTooltip("fortron", "\u00a7F" + new UnitDisplay(UnitDisplay.Unit.LITER, tileEntity.getFortronEnergy).simple() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, tileEntity.getFortronCapacity).simple(), 68, 122, x, y)
     fontRendererObj.drawString(LanguageUtility.getLocal("gui.manipulator.fortron"), 8, 121, 4210752)

@@ -15,7 +15,6 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) exte
 {
   override def initGui
   {
-    this.textFieldPos = new Vector2(50, 76)
     super.initGui
     this.buttonList.add(new GuiButtonPressTransferMode(1, this.width / 2 + 15, this.height / 2 - 37, this, this.tile))
   }
@@ -31,7 +30,6 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) exte
     this.drawTextWithTooltip("transmissionRate", "%1: " + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getTransmissionRate * 20).simple() + "/s", 8, 40, x, y)
     this.drawTextWithTooltip("range", "%1: " + this.tile.getTransmissionRange, 8, 52, x, y)
     this.drawTextWithTooltip("frequency", "%1:", 8, 63, x, y)
-    this.textFieldFrequency.drawTextBox
     this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y)
     fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronEnergy).simple() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCapacity), 8, 105, 4210752)
 

@@ -18,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
-import net.minecraft.util.AxisAlignedBB
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
@@ -49,7 +48,7 @@ class TileElectromagneticProjector extends TileFieldInteraction with IProjector
   capacityBase = 50
   startModuleIndex = 1
 
-  override def getSizeInventory = 3 + 18
+  override def getSizeInventory = 1 + 25
 
   override def start()
   {
@@ -341,18 +340,15 @@ class TileElectromagneticProjector extends TileFieldInteraction with IProjector
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
   {
-    if (slotID == 0 || slotID == 1)
+    if (slotID == 0)
     {
       return itemStack.getItem.isInstanceOf[ItemCard]
     }
-    else if (slotID == moduleSlotID)
+    else if (slotID == modeSlotID)
     {
       return itemStack.getItem.isInstanceOf[IProjectorMode]
     }
-    else if (slotID >= 15)
-    {
-      return true
-    }
+
     return itemStack.getItem.isInstanceOf[IModule]
   }
 

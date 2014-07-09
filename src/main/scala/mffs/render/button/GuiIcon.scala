@@ -4,8 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.{FontRenderer, GuiButton}
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.entity.RenderItem
-import net.minecraft.init.Blocks
-import net.minecraft.item.{ItemBlock, ItemStack}
+import net.minecraft.item.ItemStack
 import org.lwjgl.opengl.GL11
 
 class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends GuiButton(id, xPos, yPos, 20, 20, "")
@@ -29,7 +28,8 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
     {
       if (itemStacks(index) != null)
       {
-        var yDisplacement = 2
+        /*
+        var yDisplacement = 0
 
         if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
         {
@@ -41,11 +41,11 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
           }
           else if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
           {
-            yDisplacement = 3
+            yDisplacement = 0
           }
-        }
+        }*/
 
-       // drawItemStack(itemStacks(index), xPosition, yPosition + yDisplacement)
+        drawItemStack(itemStacks(index), xPosition, yPosition)
       }
     }
   }

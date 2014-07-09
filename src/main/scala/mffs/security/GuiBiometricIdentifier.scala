@@ -13,7 +13,6 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
 
   override def initGui
   {
-    this.textFieldPos = new Vector2(109, 92)
     super.initGui
     this.textFieldUsername = new GuiTextField(fontRendererObj, 52, 18, 90, 12)
     this.textFieldUsername.setMaxStringLength(30)
@@ -103,9 +102,7 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
           e.printStackTrace
         }
       }
-
     */
-    this.textFieldFrequency.drawTextBox
     this.drawTextWithTooltip("master", 28, 90 + (fontRendererObj.FONT_HEIGHT / 2), x, y)
     super.drawGuiContainerForegroundLayer(x, y)
   }

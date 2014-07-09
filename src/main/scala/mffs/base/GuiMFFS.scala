@@ -2,21 +2,18 @@ package mffs.base
 
 import mffs.ModularForceFieldSystem
 import mffs.render.button.GuiIcon
-import net.minecraft.client.gui.{GuiButton, GuiTextField}
-import net.minecraft.init.Blocks
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.init.{Items, Blocks}
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
-import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.network.PacketTile
-import resonant.lib.utility.LanguageUtility
+import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
-import universalelectricity.core.transform.region.Rectangle
-import universalelectricity.core.transform.vector.Vector2
+import universalelectricity.api.UnitDisplay
 
-class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiContainerBase(container)
+class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(container)
 {
   ySize = 217
 
@@ -26,24 +23,18 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   {
     super.initGui
     buttonList.clear()
-    //Activation button
-    buttonList.add(new GuiIcon(0, this.width / 2 - 110, this.height / 2 - 104, new ItemStack(Blocks.unlit_redstone_torch), new ItemStack(Blocks.redstone_torch)))
 
-    /*Keyboard.enableRepeatEvents(true)
-     if (this.frequencyTile != null)
-     {
-       this.textFieldFrequency = new GuiTextField(this.fontRendererObj, this.textFieldPos.xi, this.textFieldPos.yi, 50, 12)
-       this.textFieldFrequency.setMaxStringLength(Settings.maxFrequencyDigits)
-       this.textFieldFrequency.setText(frequencyTile.getFrequency + "")
-     }*/
+    //Activation button
+    buttonList.add(new GuiIcon(0, width / 2 - 110, height / 2 - 104, new ItemStack(Blocks.torch), new ItemStack(Blocks.redstone_torch)))
   }
 
   protected override def actionPerformed(guiButton: GuiButton)
   {
     super.actionPerformed(guiButton)
-    if (this.frequencyTile != null && guiButton.id == 0)
+
+    if (tile != null && guiButton.id == 0)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], TilePacketType.TOGGLE_ACTIVATION.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.TOGGLE_ACTIVATION.id: Integer))
     }
   }
 
@@ -51,41 +42,11 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   {
     super.updateScreen()
 
-    if (textFieldFrequency != null)
-    {
-      if (!textFieldFrequency.isFocused)
-      {
-        textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
-      }
-    }
-    if (frequencyTile.isInstanceOf[TileMFFS])
+    if (tile.isInstanceOf[TileMFFS])
     {
       if (buttonList.size > 0 && this.buttonList.get(0) != null)
       {
-        buttonList.get(0).asInstanceOf[GuiIcon].setIndex(if ((this.frequencyTile.asInstanceOf[TileMFFS]).isRedstoneActive) 1 else 0)
-      }
-    }
-  }
-
-  override def mouseClicked(x: Int, y: Int, par3: Int)
-  {
-    super.mouseClicked(x, y, par3)
-
-    if (textFieldFrequency != null)
-    {
-      textFieldFrequency.mouseClicked(x - this.containerWidth, y - this.containerHeight, par3)
-    }
-  }
-
-  protected override def drawGuiContainerForegroundLayer(mouseX: Int, mouseY: Int)
-  {
-    super.drawGuiContainerForegroundLayer(mouseX, mouseY)
-
-    if (textFieldFrequency != null)
-    {
-      if (new Rectangle(textFieldPos.xi, textFieldPos.yi, textFieldPos.xi + textFieldFrequency.getWidth, textFieldPos.yi + 12).intersects(new Vector2(mouseX, mouseY)))
-      {
-        this.tooltip = LanguageUtility.getLocal("gui.frequency.tooltip")
+        buttonList.get(0).asInstanceOf[GuiIcon].setIndex(if (tile.isRedstoneActive) 1 else 0)
       }
     }
   }
@@ -94,9 +55,32 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   {
     super.drawGuiContainerBackgroundLayer(var1, x, y)
 
-    if (frequencyTile.isInstanceOf[IBiometricIdentifierLink])
+    if (tile.isInstanceOf[IBiometricIdentifierLink])
     {
-      drawBulb(167, 4, (frequencyTile.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
+      drawBulb(167, 4, (tile.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
+    }
+  }
+
+  protected def drawFortronText(x: Int, y: Int)
+  {
+    if (tile.isInstanceOf[TileFortron])
+    {
+      val fortronTile = tile.asInstanceOf[TileFortron]
+      drawTextWithTooltip("fortron", EnumColor.WHITE + "" + new UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortronEnergy).symbol() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, fortronTile.getFortronCapacity).symbol(), 35, 119, x, y)
+    }
+  }
+
+  protected def drawFrequencyGui()
+  {
+    //Frequency Card
+    drawSlot(7, 113)
+
+    if (tile.isInstanceOf[TileFortron])
+    {
+      val fortronTile = tile.asInstanceOf[TileFortron]
+
+      //Fortron Bar
+      drawLongBlueBar(30, 115, Math.min(fortronTile.getFortronEnergy.asInstanceOf[Float] / fortronTile.getFortronCapacity.asInstanceOf[Float], 1))
     }
   }
 

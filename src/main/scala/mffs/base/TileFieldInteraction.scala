@@ -33,7 +33,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
   protected var isCalculating = false
   protected var isCalculated = false
 
-  protected val moduleSlotID = 2
+  protected val modeSlotID = 1
 
   override def update()
   {
@@ -52,7 +52,7 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
 
     if (packetID == TilePacketType.TOGGLE_MODE_4.id && !world.isRemote)
     {
-      this.absoluteDirection = !this.absoluteDirection
+      absoluteDirection = !absoluteDirection
     }
   }
 
@@ -81,11 +81,11 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
 
   def getModeStack: ItemStack =
   {
-    if (this.getStackInSlot(moduleSlotID) != null)
+    if (this.getStackInSlot(modeSlotID) != null)
     {
-      if (this.getStackInSlot(moduleSlotID).getItem.isInstanceOf[IProjectorMode])
+      if (this.getStackInSlot(modeSlotID).getItem.isInstanceOf[IProjectorMode])
       {
-        return this.getStackInSlot(moduleSlotID)
+        return this.getStackInSlot(modeSlotID)
       }
     }
     return null
@@ -109,8 +109,6 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
 
     return actualDirs.foldLeft(0)((b, a) => b + getModuleCount(module, getDirectionSlots(a): _*))
   }
-
-  def getModuleSlots: Array[Int] = Array(15, 16, 17, 18, 19, 20)
 
   def getTranslation: Vector3 =
   {
@@ -284,7 +282,6 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return verticalRotation
   }
 
-  @SuppressWarnings(Array("unchecked"))
   def getInteriorPoints: Set[Vector3] =
   {
     val cacheID = "getInteriorPoints"
@@ -314,22 +311,27 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     return returnField
   }
 
+  val _getModuleSlots = (14 until 25).toArray
+
+  def getModuleSlots: Array[Int] = _getModuleSlots
+
+
   override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
   {
     direction match
     {
       case ForgeDirection.UP =>
-        return Array[Int](3, 11)
+        return Array(10, 11)
       case ForgeDirection.DOWN =>
-        return Array[Int](6, 14)
+        return Array(12, 13)
       case ForgeDirection.NORTH =>
-        return Array[Int](7, 9)
+        return Array(2, 3)
       case ForgeDirection.SOUTH =>
-        return Array[Int](8, 10)
-      case ForgeDirection.WEST =>
-        return Array[Int](4, 5)
+        return Array(4, 5)
       case ForgeDirection.EAST =>
-        return Array[Int](12, 13)
+        return Array(6, 7)
+      case ForgeDirection.WEST =>
+        return Array(8, 9)
       case _ =>
         return Array[Int]()
     }

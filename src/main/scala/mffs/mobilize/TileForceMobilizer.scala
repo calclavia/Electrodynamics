@@ -530,7 +530,7 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
     {
       return itemStack.getItem.isInstanceOf[ItemCard]
     }
-    else if (slotID == moduleSlotID)
+    else if (slotID == modeSlotID)
     {
       return itemStack.getItem.isInstanceOf[IProjectorMode]
     }

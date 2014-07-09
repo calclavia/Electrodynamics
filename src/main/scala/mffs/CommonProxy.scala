@@ -3,7 +3,7 @@ package mffs
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
-import mffs.field.{ContainerForceFieldProjector, TileElectromagneticProjector}
+import mffs.field.{ContainerElectromagneticProjector, TileElectromagneticProjector}
 import mffs.mobilize.{ContainerForceManipulator, TileForceMobilizer}
 import mffs.production._
 import mffs.render.fx.IEffectController
@@ -28,7 +28,7 @@ class CommonProxy extends ProxyBase with IGuiHandler
       }
       else if (tileEntity.getClass == classOf[TileElectromagneticProjector])
       {
-        return new ContainerForceFieldProjector(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
+        return new ContainerElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
       }
       else if (tileEntity.getClass == classOf[TileCoercionDeriver])
       {

@@ -5,9 +5,10 @@ import java.util.{Set => JSet}
 import com.mojang.authlib.GameProfile
 import io.netty.buffer.ByteBuf
 import mffs.Reference
+import mffs.item.card.ItemCardFrequency
 import mffs.security.access.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.IBiometricIdentifierLink
@@ -21,7 +22,7 @@ import scala.collection.convert.wrapAll._
 
 abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with IBiometricIdentifierLink
 {
-  private var frequency = 0
+  val frequencySlot = 0
 
   override def validate()
   {
@@ -38,30 +39,33 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with
   override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
+  }
 
-    if (packetID == TilePacketType.FREQUENCY.id)
+  override def getFrequency: Int =
+  {
+    val frequencyCard = getFrequencyCard
+
+    if (frequencyCard != null)
     {
-      setFrequency(dataStream.readInt)
+      return frequencyCard.getItem.asInstanceOf[ItemCardFrequency].getFrequency(frequencyCard)
     }
-  }
 
-  override def readFromNBT(nbt: NBTTagCompound)
-  {
-    super.readFromNBT(nbt)
-    this.setFrequency(nbt.getInteger("frequency"))
+    return 0
   }
-
-  override def writeToNBT(nbt: NBTTagCompound)
-  {
-    super.writeToNBT(nbt)
-    nbt.setInteger("frequency", getFrequency)
-  }
-
-  override def getFrequency = frequency
 
   override def setFrequency(frequency: Int)
   {
-    this.frequency = frequency
+
+  }
+
+  def getFrequencyCard: ItemStack =
+  {
+    val stack = getStackInSlot(frequencySlot)
+
+    if (stack != null && stack.getItem.isInstanceOf[ItemCardFrequency])
+      return stack
+
+    return null
   }
 
   /**
