@@ -1,13 +1,12 @@
 package mffs.base
 
+import mffs.ModularForceFieldSystem
 import mffs.render.button.GuiIcon
-import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.gui.{GuiButton, GuiTextField}
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import org.lwjgl.input.Keyboard
 import resonant.api.blocks.IBlockFrequency
 import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
@@ -19,12 +18,6 @@ import universalelectricity.core.transform.vector.Vector2
 
 class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiContainerBase(container)
 {
-  /**
-   * Frequency Text Field
-   */
-  protected var textFieldFrequency: GuiTextField = null
-  protected var textFieldPos: Vector2 = new Vector2()
-
   ySize = 217
 
   def this(container: Container) = this(container, null)
@@ -32,37 +25,17 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
   override def initGui()
   {
     super.initGui
-    this.buttonList.clear
-    this.buttonList.add(new GuiIcon(0, this.width / 2 - 82, this.height / 2 - 104, new ItemStack(Blocks.unlit_redstone_torch), new ItemStack(Blocks.redstone_torch)))
-    Keyboard.enableRepeatEvents(true)
-    if (this.frequencyTile != null)
-    {
-      this.textFieldFrequency = new GuiTextField(this.fontRendererObj, this.textFieldPos.xi, this.textFieldPos.yi, 50, 12)
-      this.textFieldFrequency.setMaxStringLength(Settings.maxFrequencyDigits)
-      this.textFieldFrequency.setText(frequencyTile.getFrequency + "")
-    }
-  }
+    buttonList.clear()
+    //Activation button
+    buttonList.add(new GuiIcon(0, this.width / 2 - 110, this.height / 2 - 104, new ItemStack(Blocks.unlit_redstone_torch), new ItemStack(Blocks.redstone_torch)))
 
-  protected override def keyTyped(par1: Char, par2: Int)
-  {
-    super.keyTyped(par1, par2)
-    if (this.textFieldFrequency != null)
-    {
-      this.textFieldFrequency.textboxKeyTyped(par1, par2)
-      try
-      {
-        val newFrequency: Int = Math.max(0, Integer.parseInt(this.textFieldFrequency.getText))
-        this.frequencyTile.setFrequency(newFrequency)
-        this.textFieldFrequency.setText(this.frequencyTile.getFrequency + "")
-        ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TilePacketType.FREQUENCY.id: Integer, frequencyTile.getFrequency: Integer)))
-      }
-      catch
-        {
-          case e: NumberFormatException =>
-          {
-          }
-        }
-    }
+    /*Keyboard.enableRepeatEvents(true)
+     if (this.frequencyTile != null)
+     {
+       this.textFieldFrequency = new GuiTextField(this.fontRendererObj, this.textFieldPos.xi, this.textFieldPos.yi, 50, 12)
+       this.textFieldFrequency.setMaxStringLength(Settings.maxFrequencyDigits)
+       this.textFieldFrequency.setText(frequencyTile.getFrequency + "")
+     }*/
   }
 
   protected override def actionPerformed(guiButton: GuiButton)
@@ -70,7 +43,7 @@ class GuiMFFS(container: Container, frequencyTile: IBlockFrequency) extends GuiC
     super.actionPerformed(guiButton)
     if (this.frequencyTile != null && guiButton.id == 0)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], Array(TilePacketType.TOGGLE_ACTIVATION.id: Integer)))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(frequencyTile.asInstanceOf[TileEntity], TilePacketType.TOGGLE_ACTIVATION.id: Integer))
     }
   }
 

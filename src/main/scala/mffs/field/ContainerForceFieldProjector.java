@@ -7,15 +7,15 @@ import resonant.lib.gui.ContainerBase;
 
 public class ContainerForceFieldProjector extends ContainerBase
 {
-	public ContainerForceFieldProjector(EntityPlayer player, TileElectromagnetProjector tileEntity)
+	public ContainerForceFieldProjector(EntityPlayer player, TileElectromagneticProjector tileEntity)
 	{
 		super(tileEntity);
 
 		/**
 		 * Frequency Card
-		 */
 		this.addSlotToContainer(new SlotCard(tileEntity, 0, 10, 89));
 		this.addSlotToContainer(new SlotCard(tileEntity, 1, 28, 89));
+		 */
 
 		/**
 		 * Force Field Manipulation Matrix. Center slot is the mode.

@@ -17,13 +17,14 @@ import universalelectricity.api.UnitDisplay
 import universalelectricity.core.transform.region.Rectangle
 import universalelectricity.core.transform.vector.Vector2
 
-class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagnetProjector) extends GuiMFFS(new ContainerForceFieldProjector(player, tile), tile)
+class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMFFS(new ContainerForceFieldProjector(player, tile), tile)
 {
   override def initGui
   {
     this.textFieldPos = new Vector2(48, 91)
     super.initGui
-    this.buttonList.add(new GuiIcon(1, this.width / 2 - 82, this.height / 2 - 82, null, new ItemStack(Items.compass)))
+    this.buttonList.add(new GuiIcon(1, this.width / 2 - 110, this.height / 2 - 82, null, new ItemStack(Items.compass)))
+
     this.tooltips.put(new Rectangle(new Vector2(117, 44), new Vector2(117, 44).add(18)), LanguageUtility.getLocal("gui.projector.mode"))
     this.tooltips.put(new Rectangle(new Vector2(90, 17), new Vector2(90, 17).add(18)), LanguageUtility.getLocal("gui.projector.up"))
     this.tooltips.put(new Rectangle(new Vector2(90 + 18 * 3, 17), new Vector2(90 + 18 * 3, 17).add(18)), LanguageUtility.getLocal("gui.projector.up"))
@@ -59,24 +60,27 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagnetP
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    fontRendererObj.drawString(tile.getInventoryName, this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
+    fontRendererObj.drawString(tile.getInventoryName, xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
     GL11.glPushMatrix
     GL11.glRotatef(-90, 0, 0, 1)
     fontRendererObj.drawString(this.tile.getDirection.name, -82, 10, 4210752)
     GL11.glPopMatrix
-    this.drawTextWithTooltip("matrix", 40, 20, x, y)
     this.textFieldFrequency.drawTextBox
-    this.drawTextWithTooltip("fortron", "%1: " + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronEnergy).simple() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCapacity).simple(), 8, 110, x, y)
-    fontRendererObj.drawString("\u00a74-" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).simple() + "/s", 118, 121, 4210752)
+    this.drawTextWithTooltip("fortron", "%1: " + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronEnergy).symbol() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCapacity).symbol(), 8, 110, x, y)
+    fontRendererObj.drawString("\u00a74-" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).symbol() + "/s", 118, 121, 4210752)
     super.drawGuiContainerForegroundLayer(x, y)
   }
 
   protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
   {
     super.drawGuiContainerBackgroundLayer(f, x, y)
-    this.drawSlot(9, 88)
-    this.drawSlot(9 + 18, 88)
-    this.drawSlot(117, 44, SlotType.NONE, 1f, 0.4f, 0.4f)
+    /*drawSlot(9, 88)
+    drawSlot(9 + 18, 88)*/
+
+    //Mode
+    drawSlot(xSize / 2 - 16 / 2, 44, SlotType.NONE, 1f, 0.4f, 0.4f)
+
+    (0 until 4)
     /*
     {
       var xSlot: Int = 0
@@ -171,6 +175,7 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagnetP
   protected override def actionPerformed(guiButton: GuiButton)
   {
     super.actionPerformed(guiButton)
+
     if (guiButton.id == 1)
     {
       ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile.asInstanceOf[TileEntity], TilePacketType.TOGGLE_MODE_4.id: Integer))

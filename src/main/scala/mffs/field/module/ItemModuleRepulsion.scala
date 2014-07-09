@@ -3,7 +3,7 @@ package mffs.field.module
 import java.util.{Set => JSet}
 
 import mffs.base.ItemModule
-import mffs.field.TileElectromagnetProjector
+import mffs.field.TileElectromagneticProjector
 import mffs.security.access.MFFSPermissions
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
@@ -65,7 +65,7 @@ class ItemModuleRepulsion extends ItemModule
 
   override def onDestroy(projector: IProjector, field: JSet[Vector3]): Boolean =
   {
-    projector.asInstanceOf[TileElectromagnetProjector].sendFieldToClient
+    projector.asInstanceOf[TileElectromagneticProjector].sendFieldToClient
     return false
   }
 

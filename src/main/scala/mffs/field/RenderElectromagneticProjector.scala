@@ -18,7 +18,7 @@ final object RenderElectromagneticProjector
 
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector.tcn"))
 
-  def render(tileEntity: TileElectromagnetProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
+  def render(tileEntity: TileElectromagneticProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
   {
     glPushMatrix
     glTranslated(x + 0.5, y + 0.5, z + 0.5)

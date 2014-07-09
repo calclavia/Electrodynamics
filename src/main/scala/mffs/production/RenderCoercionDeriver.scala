@@ -5,7 +5,8 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11._
+import resonant.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
 final object RenderCoercionDeriver
@@ -14,7 +15,7 @@ final object RenderCoercionDeriver
   val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelPath + "coercionDeriver_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "coercionDeriver.tcn"))
 
-  def render(tileEntity: TileCoercionDeriver, x: Double, y: Double, z: Double, frame: Float, isActive:Boolean)
+  def render(tileEntity: TileCoercionDeriver, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
   {
     if (isActive)
     {
@@ -25,11 +26,17 @@ final object RenderCoercionDeriver
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOff)
     }
 
-    GL11.glPushMatrix
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
-    GL11.glScalef(1.3f, 1.3f, 1.3f)
-    //model.render(tileEntity.animation, 0.0625F)
-    model.renderAll
-    GL11.glPopMatrix
+    glPushMatrix()
+    glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    model.renderAllExcept("crystal")
+
+    glPushMatrix()
+    glRotated(tileEntity.animation, 0, 1, 0)
+    RenderUtility.enableBlending()
+    model.renderOnly("crystal")
+    RenderUtility.disableBlending()
+    glPopMatrix()
+
+    glPopMatrix()
   }
 }

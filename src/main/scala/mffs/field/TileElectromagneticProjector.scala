@@ -31,7 +31,7 @@ import universalelectricity.core.transform.vector.Vector3
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
-class TileElectromagnetProjector extends TileFieldInteraction with IProjector
+class TileElectromagneticProjector extends TileFieldInteraction with IProjector
 {
   /** A set containing all positions of all force field blocks generated. */
   val forceFields = mutable.Set.empty[Vector3]
@@ -48,7 +48,8 @@ class TileElectromagnetProjector extends TileFieldInteraction with IProjector
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 50
   startModuleIndex = 1
-  maxSlots = 3 + 18
+
+  override def getSizeInventory = 3 + 18
 
   override def start()
   {

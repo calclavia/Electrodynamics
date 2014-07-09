@@ -4,7 +4,7 @@ import java.util.Set
 
 import mffs.ModularForceFieldSystem
 import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
-import mffs.field.TileElectromagnetProjector
+import mffs.field.TileElectromagneticProjector
 import mffs.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
 import net.minecraft.block.BlockLiquid
@@ -65,11 +65,11 @@ class ItemModuleDisintegration extends ItemModule
 
         if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCollection) > 0)
         {
-          (projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position, projector.asInstanceOf[TileMFFSInventory]))
+          (projector.asInstanceOf[TileElectromagneticProjector]).queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position, projector.asInstanceOf[TileMFFSInventory]))
         }
         else
         {
-          (projector.asInstanceOf[TileElectromagnetProjector]).queueEvent(new BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position))
+          (projector.asInstanceOf[TileElectromagneticProjector]).queueEvent(new BlockDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position))
         }
 
         blockCount += 1

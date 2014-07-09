@@ -26,7 +26,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier
    * 9 x 4 slots: Access Cards
    * Under access cards we have a permission selector
    */
-  maxSlots = 2 + 9 * 4
+  override def getSizeInventory = 2 + 9 * 4
 
   override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {

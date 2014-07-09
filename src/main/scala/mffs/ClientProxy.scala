@@ -2,7 +2,7 @@ package mffs
 
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
-import mffs.field.{GuiElectromagneticProjector, TileElectromagnetProjector}
+import mffs.field.{GuiElectromagneticProjector, TileElectromagneticProjector}
 import mffs.item.card.RenderIDCard
 import mffs.mobilize.{GuiForceMobilizer, TileForceMobilizer}
 import mffs.production._
@@ -33,9 +33,9 @@ class ClientProxy extends CommonProxy
       {
         return new GuiFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
       }
-      else if (tileEntity.getClass == classOf[TileElectromagnetProjector])
+      else if (tileEntity.getClass == classOf[TileElectromagneticProjector])
       {
-        return new GuiElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagnetProjector])
+        return new GuiElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
       }
       else if (tileEntity.getClass == classOf[TileCoercionDeriver])
       {

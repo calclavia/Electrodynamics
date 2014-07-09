@@ -10,7 +10,7 @@ import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
 import ic2.api.tile.ExplosionWhitelist
 import mffs.base.{ItemMFFS, ItemModule}
-import mffs.field.TileElectromagnetProjector
+import mffs.field.TileElectromagneticProjector
 import mffs.field.mode._
 import mffs.field.module._
 import mffs.item.ItemRemoteController
@@ -147,7 +147,7 @@ object ModularForceFieldSystem
     forceField = manager.newBlock(classOf[field.TileForceField]).setCreativeTab(null)
     coercionDeriver = manager.newBlock(classOf[TileCoercionDeriver])
     fortronCapacitor = manager.newBlock(classOf[TileFortronCapacitor])
-    forceFieldProjector = manager.newBlock(classOf[TileElectromagnetProjector])
+    forceFieldProjector = manager.newBlock(classOf[TileElectromagneticProjector])
     biometricIdentifier = manager.newBlock(classOf[TileBiometricIdentifier])
     // interdictionMatrix = manager.newBlock(classOf[TileInterdictionMatrix])
     forceManipulator = manager.newBlock(classOf[TileForceMobilizer])

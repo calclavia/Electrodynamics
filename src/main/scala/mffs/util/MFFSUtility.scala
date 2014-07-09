@@ -2,7 +2,7 @@ package mffs.util
 
 import com.mojang.authlib.GameProfile
 import mffs.ModularForceFieldSystem
-import mffs.field.TileElectromagnetProjector
+import mffs.field.TileElectromagneticProjector
 import mffs.field.mode.ItemModeCustom
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
@@ -157,9 +157,9 @@ object MFFSUtility
   /**
    * Gets the set of projectors that have an effect in this position.
    */
-  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagnetProjector] =
+  def getRelevantProjectors(world: World, position: Vector3): mutable.Set[TileElectromagneticProjector] =
   {
-    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagnetProjector]) filter (_.isInField(position))
+    return FrequencyGridRegistry.instance.asInstanceOf[FrequencyGrid].getNodes(classOf[TileElectromagneticProjector]) filter (_.isInField(position))
   }
 
   def hasPermission(world: World, position: Vector3, permission: Permission, player: EntityPlayer): Boolean =

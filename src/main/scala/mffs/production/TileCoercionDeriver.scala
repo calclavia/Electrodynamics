@@ -49,10 +49,10 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
   var processTime: Int = 0
   var isInversed: Boolean = false
 
-  bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 30
   startModuleIndex = 3
-  maxSlots = 6
+
+  override def getSizeInventory = 6
 
   override def start()
   {

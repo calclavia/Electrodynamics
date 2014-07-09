@@ -27,7 +27,8 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   capacityBase = 700
   capacityBoost = 10
   startModuleIndex = 2
-  maxSlots = 5
+
+  override def getSizeInventory = 5
 
   override def update()
   {

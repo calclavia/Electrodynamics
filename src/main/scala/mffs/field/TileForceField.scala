@@ -382,7 +382,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
    * @return Gets the projector block controlling this force field. Removes the force field if no
    *         projector can be found.
    */
-  def getProjector: TileElectromagnetProjector =
+  def getProjector: TileElectromagneticProjector =
   {
     if (this.getProjectorSafe != null)
     {
@@ -397,17 +397,17 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
     return null
   }
 
-  def getProjectorSafe: TileElectromagnetProjector =
+  def getProjectorSafe: TileElectromagneticProjector =
   {
     if (projector != null)
     {
       val projTile = projector.getTileEntity(world)
 
-      if (projTile.isInstanceOf[TileElectromagnetProjector])
+      if (projTile.isInstanceOf[TileElectromagneticProjector])
       {
         if (world.isRemote || projTile.asInstanceOf[IProjector].getCalculatedField.contains(new Vector3(this)))
         {
-          return projTile.asInstanceOf[TileElectromagnetProjector]
+          return projTile.asInstanceOf[TileElectromagneticProjector]
         }
       }
     }

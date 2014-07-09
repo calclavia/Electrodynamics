@@ -7,7 +7,7 @@ import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent
 import cpw.mods.fml.common.eventhandler.{Event, SubscribeEvent}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFortron
-import mffs.field.TileElectromagnetProjector
+import mffs.field.TileElectromagneticProjector
 import mffs.security.access.MFFSPermissions
 import mffs.util.{FortronUtility, MFFSUtility}
 import net.minecraft.block.BlockSkull
@@ -153,7 +153,7 @@ object SubscribeEventHandler
   {
     if (!evt.world.isRemote && evt.blockID == 0)
     {
-      FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagnetProjector])
+      FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector])
               .view
               .filter(_.getWorldObj == evt.world)
               .filter(_.getCalculatedField != null)

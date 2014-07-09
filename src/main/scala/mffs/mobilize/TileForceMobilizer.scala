@@ -58,7 +58,8 @@ class TileForceMobilizer extends TileFieldInteraction with IEffectController
   private var canRenderMove: Boolean = true
 
   rotationMask = 63
-  maxSlots = 3 + 18
+
+  override def getSizeInventory = 3 + 18
 
   override def update()
   {
