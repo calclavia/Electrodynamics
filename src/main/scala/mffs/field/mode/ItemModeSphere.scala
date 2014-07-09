@@ -6,13 +6,13 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.ModularForceFieldSystem
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModeSphere extends ItemMode
 {
-  def getExteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
     val radius = projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale)
@@ -29,7 +29,7 @@ class ItemModeSphere extends ItemMode
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
     val translation: Vector3 = projector.getTranslation
@@ -47,7 +47,7 @@ class ItemModeSphere extends ItemMode
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldInteraction, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
     return new Vector3(projector.asInstanceOf[TileEntity]).add(projector.getTranslation).distance(position) < projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale)
   }

@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11
 import resonant.lib.utility.LanguageUtility
 import universalelectricity.core.transform.vector.Vector2
 
-class GuiButtonPress(id: Int, x: Int, y: Int, offset: Vector2 = new Vector2, mainGui: GuiMFFS = null, name: String = "") extends GuiButton(id, x, y, 18, 18, name)
+class GuiIndexedButton(id: Int, x: Int, y: Int, val offset: Vector2 = new Vector2, mainGui: GuiMFFS = null, name: String = "") extends GuiButton(id, x, y, 18, 18, name)
 {
   /**
    * Stuck determines if the button is should render as pressed or disabled.

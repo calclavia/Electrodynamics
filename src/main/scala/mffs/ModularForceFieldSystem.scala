@@ -15,6 +15,7 @@ import mffs.field.mode._
 import mffs.field.module._
 import mffs.item.ItemRemoteController
 import mffs.item.card._
+import mffs.item.fortron.ItemCardInfinite
 import mffs.mobilize.TileForceMobilizer
 import mffs.production._
 import mffs.security.TileBiometricIdentifier

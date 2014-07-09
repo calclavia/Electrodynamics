@@ -2,21 +2,22 @@ package mffs.production
 
 import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
-import mffs.render.button.GuiButtonPressTransferMode
+import mffs.render.button.GuiTransferModeButton
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
+import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.network.PacketTile
+import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
-import universalelectricity.core.transform.vector.Vector2
 
 class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) extends GuiMFFS(new ContainerFortronCapacitor(player, tile), tile)
 {
-  override def initGui
+  override def initGui()
   {
-    super.initGui
-    this.buttonList.add(new GuiButtonPressTransferMode(1, this.width / 2 + 15, this.height / 2 - 37, this, this.tile))
+    super.initGui()
+    this.buttonList.add(new GuiTransferModeButton(1, this.width / 2 - 30, this.height / 2 - 30, this, this.tile))
   }
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
@@ -24,31 +25,33 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) exte
     fontRendererObj.drawString(tile.getInventoryName, this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
     GL11.glPushMatrix
     GL11.glRotatef(-90, 0, 0, 1)
-    this.drawTextWithTooltip("upgrade", -95, 140, x, y)
+    drawTextWithTooltip("upgrade", -95, 140, x, y)
     GL11.glPopMatrix
-    this.drawTextWithTooltip("linkedDevice", "%1: " + this.tile.getLinkedDevices.size, 8, 28, x, y)
-    this.drawTextWithTooltip("transmissionRate", "%1: " + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getTransmissionRate * 20).simple() + "/s", 8, 40, x, y)
-    this.drawTextWithTooltip("range", "%1: " + this.tile.getTransmissionRange, 8, 52, x, y)
-    this.drawTextWithTooltip("frequency", "%1:", 8, 63, x, y)
-    this.drawTextWithTooltip("fortron", "%1:", 8, 95, x, y)
-    fontRendererObj.drawString(new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronEnergy).simple() + "/" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCapacity), 8, 105, 4210752)
-
-    if (tile.getFortronCost > 0)
-    {
-      fontRendererObj.drawString("\u00a74-" + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).simple() + "/s", 118, 116, 4210752)
-    }
+    drawTextWithTooltip("linkedDevice", "%1: " + tile.getDeviceCount, 8, 20, x, y)
+    drawTextWithTooltip("transmissionRate", "%1: " + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getTransmissionRate * 20).symbol() + "/s", 8, 32, x, y)
+    drawTextWithTooltip("range", "%1: " + tile.getTransmissionRange, 8, 44, x, y)
+    drawTextWithTooltip("input", EnumColor.DARK_GREEN + "%1", 12, 62, x, y)
+    drawTextWithTooltip("output", EnumColor.RED + "%1", 92, 62, x, y)
+    drawFortronText(x, y)
     super.drawGuiContainerForegroundLayer(x, y)
   }
 
   protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
   {
     super.drawGuiContainerBackgroundLayer(f, x, y)
-    this.drawSlot(153, 46)
-    this.drawSlot(153, 66)
-    this.drawSlot(153, 86)
-    this.drawSlot(8, 73)
-    this.drawSlot(26, 73)
-    this.drawForce(8, 115, Math.min(this.tile.getFortronEnergy.asInstanceOf[Float] / this.tile.getFortronCapacity.asInstanceOf[Float], 1))
+
+    //Upgrade slots
+    (0 to 2) foreach (y => drawSlot(153, 46 + y * 18))
+
+    //Input slots
+    for (x <- 0 to 1; y <- 0 to 1)
+      drawSlot(8 + x * 18, 73 + y * 18)
+
+    //Output slots
+    for (x <- 0 to 1; y <- 0 to 1)
+      drawSlot(90 + x * 18, 73 + y * 18)
+
+    drawFrequencyGui()
   }
 
   protected override def actionPerformed(guiButton: GuiButton)

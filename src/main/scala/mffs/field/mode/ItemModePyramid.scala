@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -15,7 +15,7 @@ class ItemModePyramid extends ItemMode
 {
   private val step = 1
 
-  def getExteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks: Set[Vector3] = new HashSet[Vector3]
     val posScale: Vector3 = projector.getPositiveScale
@@ -50,7 +50,7 @@ class ItemModePyramid extends ItemMode
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks: Set[Vector3] = new HashSet[Vector3]
     val posScale: Vector3 = projector.getPositiveScale
@@ -72,7 +72,7 @@ class ItemModePyramid extends ItemMode
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldInteraction, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
     val posScale: Vector3 = projector.getPositiveScale.clone
     val negScale: Vector3 = projector.getNegativeScale.clone

@@ -5,7 +5,7 @@ import java.util.{HashSet, Set}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -20,7 +20,7 @@ class ItemModeCylinder extends ItemMode
   private val step = 1
   private val radiusExpansion: Int = 0
 
-  def getExteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
     val posScale = projector.getPositiveScale
@@ -44,7 +44,7 @@ class ItemModeCylinder extends ItemMode
     return fieldBlocks
   }
 
-  def getInteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  def getInteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
     val translation = projector.getTranslation
@@ -66,7 +66,7 @@ class ItemModeCylinder extends ItemMode
     return fieldBlocks
   }
 
-  override def isInField(projector: IFieldInteraction, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
     val posScale: Vector3 = projector.getPositiveScale
     val negScale: Vector3 = projector.getNegativeScale

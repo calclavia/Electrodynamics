@@ -11,7 +11,7 @@ import mffs.util.TCache
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.IFieldInteraction
+import resonant.api.mffs.IFieldMatrix
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
@@ -21,7 +21,7 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.collection.mutable.Queue
 
-abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldInteraction with IDelayedEventHandler
+abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler
 {
   protected val calculatedField = mutable.Set.empty[Vector3]
   protected final val delayedEvents = new Queue[DelayedEvent]()

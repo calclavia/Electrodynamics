@@ -6,7 +6,7 @@ package mffs.util
 object TransferMode extends Enumeration
 {
   type TransferMode = Value
-  val EQUALIZE, DISTRIBUTE, DRAIN, FILL = Value
+  val equalize, distribute, drain, fill = Value
 
   implicit class TransferModeValue(value: Value)
   {

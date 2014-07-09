@@ -134,6 +134,9 @@ gui.deriver.idle=Idle
 gui.manipulator.anchor=Anchor:
 gui.manipulator.fortron=Fortron:
 
+gui.input.name=Input
+gui.output.name=Output
+
 # Capacitor
 gui.linkedDevice.name=Linked Device
 gui.linkedDevice.tooltip=The amount of devices linked to this machine.
@@ -143,14 +146,14 @@ gui.transmissionRate.name=Transmission Rate
 gui.transmissionRate.tooltip=The rate in which this capacitor can transfer fortron energy.
 
 ## Transfer Modes
-gui.transferModeEqualize.name=Equalize
-gui.transferModeEqualize.tooltip=Spread fortron energy with machines based on the machine's capacity percentage.
-gui.transferModeDistribute.name=Distribute
-gui.transferModeDistribute.tooltip=Spread fortron energy evenly based on the energy amount.
-gui.transferModeDrain.name=Drain
-gui.transferModeDrain.tooltip=Drains out the capacitor's energy and equalizes them to linked machines.
-gui.transferModeFill.name=Fill
-gui.transferModeFill.tooltip=Fills up the capacitor's energy. Equalizes the overflowing energy.
+gui.transferMode.equalize.name=Equalize
+gui.transferMode.equalize.tooltip=Spread fortron energy with machines based on the machine's capacity percentage.
+gui.transferMode.distribute.name=Distribute
+gui.transferMode.distribute.tooltip=Spread fortron energy evenly based on the energy amount.
+gui.transferMode.drain.name=Drain
+gui.transferMode.drain.tooltip=Drains out the capacitor's energy and equalizes them to linked machines.
+gui.transferMode.fill.name=Fill
+gui.transferMode.fill.tooltip=Fills up the capacitor's energy. Equalizes the overflowing energy.
 
 # Permissions
 gui.rights.name=Rights

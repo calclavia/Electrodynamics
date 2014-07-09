@@ -3,7 +3,7 @@ package mffs.field.mode
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.ItemMFFS
 import resonant.api.mffs.modules.IProjectorMode
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.vector.Vector3
 
 abstract class ItemMode extends ItemMFFS with IProjectorMode
@@ -14,7 +14,7 @@ abstract class ItemMode extends ItemMFFS with IProjectorMode
   {
   }
 
-  def isInField(projector: IFieldInteraction, position: Vector3): Boolean =
+  def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
     return false
   }

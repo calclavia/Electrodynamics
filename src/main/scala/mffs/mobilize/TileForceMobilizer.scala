@@ -3,7 +3,7 @@ package mffs.mobilize
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.base.{TileFieldInteraction, TilePacketType}
+import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.thread.ManipulatorCalculationThread
 import mffs.item.card.ItemCard
 import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
@@ -29,7 +29,7 @@ import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 import scala.collection.convert.wrapAll._
 import scala.math._
 
-class TileForceMobilizer extends TileFieldInteraction with IEffectController
+class TileForceMobilizer extends TileFieldMatrix with IEffectController
 {
   val packetRange = 60
   val animationTime = 20

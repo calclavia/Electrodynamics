@@ -4,7 +4,7 @@ import java.util.{HashSet, Set}
 
 import mffs.base.ItemModule
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.IFieldInteraction
+import resonant.api.mffs.IFieldMatrix
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -12,12 +12,12 @@ import scala.collection.mutable
 
 class ItemModuleArray extends ItemModule
 {
-  override def onPreCalculate(projector: IFieldInteraction, fieldBlocks: Set[Vector3])
+  override def onPreCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3])
   {
     onPreCalculateInterior(projector, fieldBlocks, fieldBlocks)
   }
 
-  def onPreCalculateInterior(projector: IFieldInteraction, exterior: Set[Vector3], interior: Set[Vector3])
+  def onPreCalculateInterior(projector: IFieldMatrix, exterior: Set[Vector3], interior: Set[Vector3])
   {
     val originalField: Set[Vector3] = new HashSet(interior)
     val longestDirectional = getDirectionWidthMap(exterior)

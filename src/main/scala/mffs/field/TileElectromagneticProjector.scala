@@ -6,7 +6,7 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.base.{TileFieldInteraction, TilePacketType}
+import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.security.access.MFFSPermissions
@@ -30,7 +30,7 @@ import universalelectricity.core.transform.vector.Vector3
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
-class TileElectromagneticProjector extends TileFieldInteraction with IProjector
+class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 {
   /** A set containing all positions of all force field blocks generated. */
   val forceFields = mutable.Set.empty[Vector3]
@@ -184,7 +184,9 @@ class TileElectromagneticProjector extends TileFieldInteraction with IProjector
   override def markDirty()
   {
     super.markDirty()
-    destroyField()
+
+    if (world != null)
+      destroyField()
   }
 
   /**

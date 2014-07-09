@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._
@@ -254,12 +254,12 @@ class ItemModeCustom extends ItemMode with TCache
     return file
   }
 
-  def getFieldBlocks(projector: IFieldInteraction, itemStack: ItemStack): Set[Vector3] =
+  def getFieldBlocks(projector: IFieldMatrix, itemStack: ItemStack): Set[Vector3] =
   {
     return getFieldBlockMapClean(projector, itemStack).keySet
   }
 
-  def getFieldBlockMap(projector: IFieldInteraction, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
+  def getFieldBlockMap(projector: IFieldMatrix, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
   {
     val cacheID = "itemStack_" + itemStack.hashCode
 
@@ -294,7 +294,7 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldMap
   }
 
-  def getFieldBlockMapClean(projector: IFieldInteraction, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
+  def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
   {
     val scale = projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale) / 3f
     val fieldBlocks = Map[Vector3, (Block, Int)]()
@@ -313,17 +313,17 @@ class ItemModeCustom extends ItemMode with TCache
     return fieldBlocks
   }
 
-  override def getExteriorPoints(projector: IFieldInteraction): JSet[Vector3] =
+  override def getExteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
   {
     return this.getFieldBlocks(projector, projector.getModeStack)
   }
 
-  override def getInteriorPoints(projector: IFieldInteraction): JSet[Vector3] =
+  override def getInteriorPoints(projector: IFieldMatrix): JSet[Vector3] =
   {
     return this.getExteriorPoints(projector)
   }
 
-  override def isInField(projector: IFieldInteraction, position: Vector3): Boolean =
+  override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
     return false
   }

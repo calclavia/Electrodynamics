@@ -1,7 +1,7 @@
 package mffs.field.thread
 
 import mffs.ModularForceFieldSystem
-import mffs.base.TileFieldInteraction
+import mffs.base.TileFieldMatrix
 import net.minecraft.tileentity.TileEntity
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -14,7 +14,7 @@ import scala.collection.mutable
  *
  * @author Calclavia
  */
-class ProjectorCalculationThread(projector: TileFieldInteraction, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
+class ProjectorCalculationThread(projector: TileFieldMatrix, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
 {
   override def run
   {

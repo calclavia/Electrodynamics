@@ -64,7 +64,7 @@ object FortronUtility
       {
         transferMode match
         {
-          case TransferMode.EQUALIZE =>
+          case TransferMode.`equalize` =>
           {
             for (machine <- frequencyTiles)
             {
@@ -76,7 +76,7 @@ object FortronUtility
               }
             }
           }
-          case TransferMode.DISTRIBUTE =>
+          case TransferMode.`distribute` =>
           {
             val amountToSet: Int = totalFortron / frequencyTiles.size
             for (machine <- frequencyTiles)
@@ -87,7 +87,7 @@ object FortronUtility
               }
             }
           }
-          case TransferMode.DRAIN =>
+          case TransferMode.`drain` =>
           {
             frequencyTiles.remove(source)
 
@@ -105,7 +105,7 @@ object FortronUtility
               }
             }
           }
-          case TransferMode.FILL =>
+          case TransferMode.`fill` =>
           {
             if (source.getFortronEnergy < source.getFortronCapacity)
             {

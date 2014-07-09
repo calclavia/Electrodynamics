@@ -6,14 +6,14 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.render.model.ModelPlane
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModeTube extends ItemModeCube
 {
   private val step = 1
 
-  override def getExteriorPoints(projector: IFieldInteraction): Set[Vector3] =
+  override def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
     val direction: ForgeDirection = projector.getDirection

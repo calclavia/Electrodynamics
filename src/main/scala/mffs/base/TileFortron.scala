@@ -39,7 +39,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
   {
     if (this.markSendFortron)
     {
-      FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, new Vector3(this), 100, this.getFrequency), TransferMode.DRAIN, Integer.MAX_VALUE)
+      FortronUtility.transferFortron(this, FrequencyGridRegistry.instance.getNodes(classOf[IFortronFrequency], worldObj, new Vector3(this), 100, this.getFrequency), TransferMode.drain, Integer.MAX_VALUE)
     }
 
     super.invalidate()
@@ -169,6 +169,11 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
   {
     return this.fortronTank.fill(FortronUtility.getFortron(energy), doUse)
   }
+
+  /**
+   * Gets the amount of empty space this tank has.
+   */
+  def getFortronEmpty = fortronTank.getCapacity - fortronTank.getFluidAmount
 
   /**
    * Gets the card that's in this machine.

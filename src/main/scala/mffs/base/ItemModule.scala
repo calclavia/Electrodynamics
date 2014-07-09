@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import resonant.api.mffs.modules.IModule
-import resonant.api.mffs.{IFieldInteraction, IProjector}
+import resonant.api.mffs.{IFieldMatrix, IProjector}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
@@ -23,11 +23,11 @@ class ItemModule extends ItemMFFS with IModule
     super.addInformation(itemStack, player, info, b)
   }
 
-  override def onPreCalculate(projector: IFieldInteraction, position: Set[Vector3])
+  override def onPreCalculate(projector: IFieldMatrix, position: Set[Vector3])
   {
   }
 
-  override def onCalculate(projector: IFieldInteraction, position: Set[Vector3])
+  override def onCalculate(projector: IFieldMatrix, position: Set[Vector3])
   {
   }
 
