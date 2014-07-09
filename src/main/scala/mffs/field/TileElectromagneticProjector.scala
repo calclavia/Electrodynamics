@@ -312,7 +312,7 @@ class TileElectromagneticProjector extends TileFieldInteraction with IProjector
 
   def destroyField()
   {
-    if (!this.worldObj.isRemote && this.isCalculated && !this.isCalculating)
+    if (!world.isRemote && isCalculated && !isCalculating)
     {
       calculatedField synchronized
               {

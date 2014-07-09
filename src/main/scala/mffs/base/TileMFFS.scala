@@ -14,22 +14,18 @@ import resonant.api.blocks.ICamouflageMaterial
 import resonant.api.mffs.IActivatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.{IPacketReceiver, PacketTile}
+import resonant.lib.network.{IPacketReceiver, IPlayerUsing, PacketTile}
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 
-import scala.collection.mutable._
+import scala.collection.convert.wrapAll._
 
 /**
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IActivatable
+abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IActivatable with IPlayerUsing
 {
-  /**
-   * The players to send packets to for machine update info.
-   */
-  val playersUsing = new HashSet[EntityPlayer]()
   /**
    * Used for client side animations.
    */
@@ -107,9 +103,9 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
   {
     super.update()
 
-    if (ticks % 3 == 0 && playersUsing.size > 0)
+    if (!world.isRemote && ticks % 3 == 0 && playersUsing.size > 0)
     {
-      playersUsing.foreach(player => ModularForceFieldSystem.packetHandler.sendToPlayer(getDescPacket, player.asInstanceOf[EntityPlayerMP]))
+      playersUsing foreach (player => ModularForceFieldSystem.packetHandler.sendToPlayer(getDescPacket, player.asInstanceOf[EntityPlayerMP]))
     }
   }
 

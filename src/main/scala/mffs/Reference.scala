@@ -31,10 +31,10 @@ final object Reference
   final val textureDirectory = "textures/"
   final val blockDirectory = textureDirectory + "blocks/"
   final val itemDirectory = textureDirectory + "items/"
-  final val modelPath=  "models/"
+  final val modelPath = "models/"
   final val modelDirectory = resourceDirectory + "models/"
   final val guiDirectory = textureDirectory + "gui/"
 
-  final val hologramTexture = new ResourceLocation(domain, modelDirectory + "hologram.png")
+  final val hologramTexture = new ResourceLocation(domain, modelPath + "hologram.png")
   final val guiButtonTexture = new ResourceLocation(domain, guiDirectory + "gui_button.png")
 }

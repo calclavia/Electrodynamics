@@ -12,12 +12,23 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
   private val itemRenderer = new RenderItem
   private var index = 0
 
-  def setIndex(i: Int)
+  /**
+   * Changes the index of the icon.
+   * @param i - The index of hte icon
+   * @return True if the index of the icon is changed.
+   */
+  def setIndex(i: Int): Boolean =
   {
     if (i >= 0 && i < itemStacks.length)
     {
-      this.index = i
+      if (index != i)
+      {
+        index = i
+        return true
+      }
     }
+
+    return false
   }
 
   override def drawButton(par1Minecraft: Minecraft, par2: Int, par3: Int)
@@ -26,27 +37,25 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
 
     if (visible && itemStacks(index) != null)
     {
-      if (itemStacks(index) != null)
+
+      /*
+      var yDisplacement = 0
+
+      if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
       {
-        /*
-        var yDisplacement = 0
+        val block = itemStacks(index).getItem.asInstanceOf[ItemBlock].field_150939_a
 
-        if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
+        if (block == Blocks.unlit_redstone_torch || block == Blocks.redstone_torch)
         {
-          val block = itemStacks(index).getItem.asInstanceOf[ItemBlock].field_150939_a
+          yDisplacement = 0
+        }
+        else if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
+        {
+          yDisplacement = 0
+        }
+      }*/
 
-          if (block == Blocks.unlit_redstone_torch || block == Blocks.redstone_torch)
-          {
-            yDisplacement = 0
-          }
-          else if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
-          {
-            yDisplacement = 0
-          }
-        }*/
-
-        drawItemStack(itemStacks(index), xPosition, yPosition)
-      }
+      drawItemStack(itemStacks(index), xPosition, yPosition)
     }
   }
 

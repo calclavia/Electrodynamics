@@ -46,13 +46,33 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
     delayedEvents dequeueAll (_.ticks <= 0)
   }
 
+  override def getPacketData(packetID: Int): List[AnyRef] =
+  {
+    if (packetID == TilePacketType.DESCRIPTION.id)
+    {
+      return super.getPacketData(packetID) :+ (absoluteDirection: java.lang.Boolean)
+    }
+
+    return super.getPacketData(packetID)
+  }
+
   override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
   {
     super.onReceivePacket(packetID, dataStream)
 
-    if (packetID == TilePacketType.TOGGLE_MODE_4.id && !world.isRemote)
+    if (world.isRemote)
     {
-      absoluteDirection = !absoluteDirection
+      if (packetID == TilePacketType.DESCRIPTION.id)
+      {
+        absoluteDirection = dataStream.readBoolean()
+      }
+    }
+    else
+    {
+      if (packetID == TilePacketType.TOGGLE_MODE_4.id)
+      {
+        absoluteDirection = !absoluteDirection
+      }
     }
   }
 
@@ -314,7 +334,6 @@ abstract class TileFieldInteraction extends TileModuleAcceptor with IFieldIntera
   val _getModuleSlots = (14 until 25).toArray
 
   def getModuleSlots: Array[Int] = _getModuleSlots
-
 
   override def getDirectionSlots(direction: ForgeDirection): Array[Int] =
   {

@@ -11,10 +11,10 @@ import mffs.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
-import resonant.lib.prefab.ProxyBase
+import resonant.lib.prefab.AbstractProxy
 import universalelectricity.core.transform.vector.Vector3
 
-class CommonProxy extends ProxyBase with IGuiHandler
+class CommonProxy extends AbstractProxy with IGuiHandler
 {
   override def getServerGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef =
   {

@@ -25,8 +25,12 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
   override def initGui()
   {
     super.initGui()
-    buttonList.add(new GuiIcon(1, this.width / 2 - 110, this.height / 2 - 82, null, new ItemStack(Items.compass)))
+    buttonList.add(new GuiIcon(1, width / 2 - 110, height / 2 - 82, null, new ItemStack(Items.compass)))
+    setupTooltips()
+  }
 
+  def setupTooltips()
+  {
     /**
      * Tooltips
      */
@@ -62,7 +66,11 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
   override def updateScreen
   {
     super.updateScreen
-    buttonList.get(1).asInstanceOf[GuiIcon].setIndex(if (tile.absoluteDirection) 1 else 0)
+
+    if(buttonList.get(1).asInstanceOf[GuiIcon].setIndex(if (tile.absoluteDirection) 1 else 0))
+    {
+      setupTooltips()
+    }
   }
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
@@ -82,7 +90,12 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
   protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
   {
     super.drawGuiContainerBackgroundLayer(f, x, y)
+    drawMatrix()
+    drawFrequencyGui()
+  }
 
+  def drawMatrix()
+  {
     //Mode
     drawSlot(matrixCenter.xi, matrixCenter.yi, SlotType.NONE, 1f, 0.4f, 0.4f)
 
@@ -106,9 +119,6 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
     for (x <- -2 to 2; y <- -2 to 2)
       if (new Vector2(x, y).magnitude > 2)
         drawSlot(matrixCenter.xi + 18 * x, matrixCenter.yi + 18 * y)
-
-
-    drawFrequencyGui()
   }
 
   protected override def actionPerformed(guiButton: GuiButton)

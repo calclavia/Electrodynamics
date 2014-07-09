@@ -54,9 +54,9 @@ class ItemModeSphere extends ItemMode
 
   @SideOnly(Side.CLIENT) override def render(projector: IProjector, x1: Double, y1: Double, z1: Double, f: Float, ticks: Long)
   {
-    val scale: Float = 0.15f
+    val scale = 0.2f
     GL11.glScalef(scale, scale, scale)
-    val radius: Float = 1.5f
+    val radius = 0.8f
     val steps: Int = Math.ceil(Math.PI / Math.atan(1.0D / radius / 2)).asInstanceOf[Int]
 
     for (phi_n <- 0 until 2 * steps; theta_n <- 0 until steps)
