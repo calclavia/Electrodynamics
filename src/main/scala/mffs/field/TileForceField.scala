@@ -53,7 +53,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
   @SideOnly(Side.CLIENT)
   override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =
   {
-    var renderType: Int = 0
+    var renderType = 0
     var camoBlock: Block = null
     val tileEntity = access.getTileEntity(x, y, z)
 
@@ -113,7 +113,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
           case 17 =>
             renderer.renderPistonExtension(block, x, y, z, true)
           case _ =>
-            renderer.renderStandardBlock(block, x, y, z)
+            super.renderStatic(renderer, pos, pass)
         }
       }
       catch
@@ -156,7 +156,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
       return true
     }
 
-    return if (access.getBlock(x, y, z) == block) false else super.shouldSideBeRendered(world, x, y, z, side)
+    return if (access.getBlock(x, y, z) == block) false else super.shouldSideBeRendered(access, x, y, z, side)
   }
 
   override def click(player: EntityPlayer)
@@ -317,13 +317,13 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
 
   override def getExplosionResistance(entity: Entity): Float = Float.MaxValue
 
-  override def weakenForceField(joules: Int)
+  override def weakenForceField(energy: Int)
   {
     val projector = getProjector
 
     if (projector != null)
     {
-      projector.provideFortron(joules, true)
+      projector.provideFortron(energy, true)
     }
 
     if (!world.isRemote)

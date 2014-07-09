@@ -199,6 +199,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
       {
         markFieldUpdate = false
+
         if (forceFields.size <= 0)
         {
           if (getModeStack.getItem.isInstanceOf[TCache])
@@ -206,6 +207,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
             (getModeStack.getItem.asInstanceOf[TCache]).clearCache
           }
         }
+
         val constructionSpeed = Math.min(getProjectionSpeed, Settings.maxForceFieldsPerTick)
         val potentialField = calculatedField.clone
         val relevantModules = getModules(getModuleSlots: _*)
@@ -213,6 +215,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         if (relevantModules.exists(_.onProject(this, potentialField)))
           return
 
+        //Creates a collection of positions that will be evaluated
         val evaluateField = potentialField
                 .view.par
                 .filter(!_.equals(position))
@@ -220,19 +223,32 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 .filter(_.getBlock(world) != ModularForceFieldSystem.Blocks.forceField)
                 .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
                 .take(constructionSpeed)
-                .seq
 
-        evaluateField.forall(
+        //The collection containing the coordinates to actually place the field blocks.
+        val constructField = mutable.Set.empty[Vector3]
+
+        val result = evaluateField.forall(
           vector =>
           {
             var flag = 0
 
             relevantModules.exists({ module =>
               flag = module.onProject(this, vector)
-              flag == 1 || flag == 2
+              flag == 0
             })
 
             if (flag != 1 && flag != 2)
+            {
+              constructField.add(vector)
+            }
+
+            flag != 2
+          })
+
+        if (result)
+        {
+          constructField.foreach(
+            vector =>
             {
               /**
                * Default force field block placement action.
@@ -246,61 +262,10 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
               if (tileEntity.isInstanceOf[TileForceField])
                 (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
-
-              //requestFortron(1, true)
-            }
-
-            flag == 2
-          })
+            })
+        }
 
         isCompleteConstructing = evaluateField.size == 0
-
-        /*
-        val it: Iterator[Vector3] = fieldToBeProjected.iterator
-        while (it.hasNext)
-        {
-          val vector: Vector3 = it.next
-          val block = vector.getBlock(worldObj)
-
-          if (canReplaceBlock(vector, block))
-          {
-            if (block != ModularForceFieldSystem.blockForceField && !(vector == new Vector3(this)))
-            {
-              if (this.worldObj.getChunkFromBlockCoords(vector.xi, vector.zi).isChunkLoaded)
-              {
-                constructionCount += 1
-                for (module <- getModules(getModuleSlots))
-                {
-                  val flag: Int = module.onProject(this, vector.clone)
-                  if (flag == 1)
-                  {
-                    continue //todo: continue is not supported
-                  }
-                  else if (flag == 2)
-                  {
-                    break //todo: label break is not supported
-                  }
-                }
-                if (!this.worldObj.isRemote)
-                {
-                  this.worldObj.setBlock(vector.xi, vector.yi, vector.zi, ModularForceFieldSystem.blockForceField.blockID, 0, 2)
-                }
-                this.forceFields.add(vector)
-                val tileEntity: TileEntity = this.worldObj.getTileEntity(vector.xi, vector.yi, vector.zi)
-                if (tileEntity.isInstanceOf[TileForceField])
-                {
-                  (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
-                }
-                this.requestFortron(1, true)
-                if (constructionCount >= constructionSpeed)
-                {
-                  break //todo: break is not supported
-                }
-              }
-            }
-          }
-        } //todo: labels is not supported
-        */
       }
     }
   }
