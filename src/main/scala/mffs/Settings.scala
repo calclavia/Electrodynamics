@@ -11,7 +11,7 @@ import resonant.lib.config.Config
 object Settings
 {
   var config: Configuration = _
-  final val maxFrequencyDigits: Int = 6
+  final val maxFrequencyDigits: Int = 8
 
   @Config
   var maxForceFieldsPerTick: Int = 1000

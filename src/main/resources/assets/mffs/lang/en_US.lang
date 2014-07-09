@@ -36,7 +36,7 @@ item.mffs:cardBlank.name=Blank Card
 item.mffs:cardInfinite.name=Infinite Power Card
 item.mffs:cardInfinite.tooltip=The infinite power card is a creative-only item that can be placed inside a capacitor for infinite energy.
 item.mffs:cardFrequency.name=Frequency Card
-item.mffs:cardFrequency.tooltip=The frequency card is used for ease of frequency transmission. Shift-right clicking the card will generate a random frequency.
+item.mffs:cardFrequency.tooltip=The frequency card defines the Fortron transmission frequency. Configure with shift-right click.
 item.mffs:cardLink.name=Link Card
 item.mffs:cardLink.tooltip=Right clicking the link card on a block will create a link to that specific position.
 item.mffs:cardIdentification.name=Identification Card
@@ -119,6 +119,7 @@ item.mffs:itemMultiTool.name=Multi-Tool
 # GUI
 gui.frequency.name=Frequency
 gui.frequency.tooltip=Machines with the same frequency will share Fortron energy.
+gui.frequency.random=Random Frequency
 gui.progress.name=Progress
 gui.fortron.name=Fortron
 gui.fortron.tooltip=Fortron is the type of force energy used in MFFS machines.
@@ -134,6 +135,7 @@ gui.deriver.idle=Idle
 gui.manipulator.anchor=Anchor:
 gui.manipulator.fortron=Fortron:
 
+gui.makecopy=Make Copy
 gui.input.name=Input
 gui.output.name=Output
 

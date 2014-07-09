@@ -35,15 +35,11 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    fontRendererObj.drawString(tile.getInventoryName, xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
-
-    GL11.glPushMatrix()
-    GL11.glRotatef(-90, 0, 0, 1)
-    fontRendererObj.drawString(this.tile.getDirection.name, -82, 10, 4210752)
-    GL11.glPopMatrix()
+    drawStringCentered(tile.getInventoryName)
+    drawString(tile.getDirection.name, 8, 100)
 
     drawFortronText(x, y)
-    fontRendererObj.drawString(EnumColor.RED + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).symbol().toString + "/s", 120, 119, 4210752)
+    drawString(EnumColor.RED + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).symbol().toString + "/s", 120, 119)
     super.drawGuiContainerForegroundLayer(x, y)
   }
 
