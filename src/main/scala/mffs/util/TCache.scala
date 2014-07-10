@@ -59,7 +59,7 @@ trait TCache
     {
       if (cache.contains(cacheID))
       {
-        return cache.get(cacheID) != null && cache.get(cacheID).getClass.isAssignableFrom(clazz)
+        return cache.get(cacheID) != null && clazz.isAssignableFrom(cache.get(cacheID).getClass)
       }
     }
 

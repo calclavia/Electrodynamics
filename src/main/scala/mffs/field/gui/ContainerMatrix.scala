@@ -22,13 +22,13 @@ class ContainerMatrix(player: EntityPlayer, tileEntity: TileFieldMatrix, val mat
   //Mode
   addSlotToContainer(new SlotBase(tileEntity, 1, slotCenter.xi, slotCenter.yi))
 
-  //NORTH
+  //FRONT (SOUTH)
   (1 to 2) foreach (i => addSlotToContainer(new SlotBase(tileEntity, i + 1, slotCenter.xi, slotCenter.yi - 18 * i)))
-  //SOUTH
+  //BACK (NORTH)
   (1 to 2) foreach (i => addSlotToContainer(new SlotBase(tileEntity, i + 3, slotCenter.xi, slotCenter.yi + 18 * i)))
-  //EAST
+  //RIGHT (WEST)
   (1 to 2) foreach (i => addSlotToContainer(new SlotBase(tileEntity, i + 5, slotCenter.xi + 18 * i, slotCenter.yi)))
-  //WEST
+  //LEFT (EAST)
   (1 to 2) foreach (i => addSlotToContainer(new SlotBase(tileEntity, i + 7, slotCenter.xi - 18 * i, slotCenter.yi)))
 
   //UP

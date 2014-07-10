@@ -85,9 +85,9 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     var count = 0
 
     if (slots != null && slots.length > 0)
-      count = (slots map (getStackInSlot(_)) filter (_ != null) filter (_.getItem == module) foldLeft 0)((a: Int, b: ItemStack) => a + b.stackSize)
+      count = (slots.view map (getStackInSlot(_)) filter (_ != null) filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
     else
-      count = (getModuleStacks()  filter (_.getItem == module) foldLeft 0)((a: Int, b: ItemStack) => a + b.stackSize)
+      count = (getModuleStacks() filter (_.getItem == module) foldLeft 0)(_ + _.stackSize)
 
     cache(cacheID, count)
 
