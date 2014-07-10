@@ -13,7 +13,7 @@ class ItemModuleDome extends ItemModule
 {
   setMaxStackSize(1)
 
-  override def onCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3])
+  override def onPostCalculate(projector: IFieldMatrix, fieldBlocks: Set[Vector3])
   {
     val absoluteTranslation = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation
     val newField = fieldBlocks.par.filter(_.y > absoluteTranslation.y).seq

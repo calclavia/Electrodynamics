@@ -164,9 +164,9 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       }
       if (!this.worldObj.isRemote)
       {
-        if (!this.isCalculated)
+        if (calculatedField != null)
         {
-          this.calculateForceField
+          calculateForceField()
         }
         if (this.ticks % 120 == 0 && !this.isCalculating && Settings.highGraphics && this.delayedEvents.size <= 0 && this.displayMode > 0)
         {
@@ -344,7 +344,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   override def markDirty()
   {
     super.markDirty()
-    this.isCalculated = false
+    calculatedField = null
   }
 
   /**
@@ -360,7 +360,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       if (world.isAirBlock(position.xi, position.yi, position.zi))
       {
         val relativePosition = position - getAbsoluteAnchor
-        val targetPosition = (targetCenterPosition + relativePosition).asInstanceOf[VectorWorld]
+        val targetPosition = (targetCenterPosition + relativePosition)
 
         if (!canMove(new VectorWorld(this.worldObj, position), targetPosition))
         {

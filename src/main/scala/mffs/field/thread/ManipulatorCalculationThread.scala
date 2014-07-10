@@ -10,6 +10,7 @@ import scala.collection.convert.wrapAll._
  * @author Calclavia
  *
  */
+@deprecated
 class ManipulatorCalculationThread(manipulator: TileForceMobilizer, callBack: () => Unit = null) extends AbstractFieldCalculationThread(callBack)
 {
   override def run

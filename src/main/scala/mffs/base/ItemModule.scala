@@ -27,7 +27,7 @@ class ItemModule extends ItemMFFS with IModule
   {
   }
 
-  override def onCalculate(projector: IFieldMatrix, position: Set[Vector3])
+  override def onPostCalculate(projector: IFieldMatrix, position: Set[Vector3])
   {
   }
 

@@ -1,11 +1,10 @@
 package mffs.base
 
-import java.util.Set
+import java.util.{Set => JSet}
 
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.field.module.ItemModuleArray
-import mffs.field.thread.ProjectorCalculationThread
 import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.util.TCache
 import net.minecraft.item.ItemStack
@@ -17,13 +16,16 @@ import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
 
-import scala.collection.JavaConversions._
+import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 import scala.collection.mutable.Queue
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
+import scala.util.{Failure, Success}
 
 abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler
 {
-  protected val calculatedField = mutable.Set.empty[Vector3]
+  protected var calculatedField: mutable.Set[Vector3] = null
   protected final val delayedEvents = new Queue[DelayedEvent]()
 
   /**
@@ -31,7 +33,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
    */
   var absoluteDirection = false
   protected var isCalculating = false
-  protected var isCalculated = false
 
   protected val modeSlotID = 1
 
@@ -74,29 +75,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
         absoluteDirection = !absoluteDirection
       }
     }
-  }
-
-  protected def calculateForceField(callBack: () => Unit = null)
-  {
-    if (!worldObj.isRemote && !isCalculating)
-    {
-      if (getMode != null)
-      {
-        if (getModeStack.getItem.isInstanceOf[TCache])
-          getModeStack.getItem.asInstanceOf[TCache].clearCache()
-
-        calculatedField.clear()
-
-        new ProjectorCalculationThread(this, callBack).start()
-
-        isCalculating = true
-      }
-    }
-  }
-
-  protected def calculateForceField()
-  {
-    this.calculateForceField(null)
   }
 
   def getModeStack: ItemStack =
@@ -302,7 +280,74 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     return verticalRotation
   }
 
-  def getInteriorPoints: Set[Vector3] =
+  /**
+   * Calculates the force field
+   * @param callBack - Optional callback
+   */
+  protected def calculateForceField(callBack: () => Unit = null)
+  {
+    if (!worldObj.isRemote && !isCalculating)
+    {
+      if (getMode != null)
+      {
+        //Clear mode cache
+        if (getModeStack.getItem.isInstanceOf[TCache])
+          getModeStack.getItem.asInstanceOf[TCache].clearCache()
+
+        isCalculating = true
+
+        Future
+        {
+          getExteriorPoints
+        }.onComplete
+        {
+          case Success(field) =>
+          {
+            calculatedField = field
+            isCalculating = false
+
+            if (callBack != null)
+              callBack.apply()
+          }
+          case Failure(t) => println("An error has occurred upon field calculation: " + t.getMessage)
+        }
+      }
+    }
+  }
+
+  /**
+   * Gets the exterior points of the field based on the matrix.
+   */
+  protected def getExteriorPoints: mutable.Set[Vector3] =
+  {
+    var field = mutable.Set.empty[Vector3]
+
+    if (getModuleCount(ModularForceFieldSystem.Items.moduleInvert) > 0)
+      field = getMode.getInteriorPoints(this)
+    else
+      field = getMode.getExteriorPoints(this)
+
+    val t = System.currentTimeMillis()
+
+    getModules().par foreach (_.onPreCalculate(this, field))
+
+    val translation = getTranslation
+    val rotationYaw = getRotationYaw
+    val rotationPitch = getRotationPitch
+
+    val rotation = new Rotation(rotationYaw, rotationPitch, 0)
+
+    val maxHeight = world.getHeight
+    val center = new Vector3(this)
+
+    field = mutable.Set((field.view.par map (pos => (pos.apply(rotation) + center + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).toArray: _*)
+
+    getModules().par foreach (_.onPostCalculate(this, field))
+
+    return field
+  }
+
+  def getInteriorPoints: JSet[Vector3] =
   {
     val cacheID = "getInteriorPoints"
 
@@ -317,7 +362,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
     if (getModuleCount(ModularForceFieldSystem.Items.moduleArray) > 0)
     {
-      (ModularForceFieldSystem.Items.moduleArray.asInstanceOf[ItemModuleArray]).onPreCalculateInterior(this, getMode.getExteriorPoints(this), newField)
+      ModularForceFieldSystem.Items.moduleArray.asInstanceOf[ItemModuleArray].onPreCalculateInterior(this, getMode.getExteriorPoints(this), newField)
     }
 
     val translation = getTranslation
@@ -356,19 +401,9 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     }
   }
 
-  def setCalculating(bool: Boolean)
+  def getCalculatedField: JSet[Vector3] =
   {
-    isCalculating = bool
-  }
-
-  def setCalculated(bool: Boolean)
-  {
-    isCalculated = bool
-  }
-
-  def getCalculatedField: Set[Vector3] =
-  {
-    return calculatedField
+    return if (calculatedField != null) calculatedField else mutable.Set.empty[Vector3]
   }
 
   def queueEvent(evt: DelayedEvent)

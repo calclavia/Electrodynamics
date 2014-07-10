@@ -85,11 +85,9 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       }
       else if (packetID == TilePacketType.FIELD.id)
       {
-        getCalculatedField.clear()
         val nbt = ByteBufUtils.readTag(dataStream)
         val nbtList = nbt.getTagList("blockList", 10)
-        calculatedField ++= ((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i))))
-        isCalculated = true
+        calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i)))).toArray: _ *)
       }
     }
   }
@@ -98,7 +96,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   {
     val nbt = new NBTTagCompound
     val nbtList = new NBTTagList
-    getCalculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
+    calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
     nbt.setTag("blockList", nbtList)
     ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.FIELD.id: Integer, nbt))
   }
@@ -114,11 +112,11 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       {
         forceFields.clear
       }
-    }
 
-    super.calculateForceField(callBack)
-    isCompleteConstructing = false
-    fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
+      super.calculateForceField(callBack)
+      isCompleteConstructing = false
+      fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
+    }
   }
 
   private def clientSideSimulationRequired: Boolean =
@@ -136,7 +134,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
       if (ticks % 10 == 0 || markFieldUpdate || fieldRequireTicks)
       {
-        if (!this.isCalculated)
+        if (calculatedField == null)
         {
           calculateForceField(postCalculation)
         }
@@ -145,6 +143,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
           projectField()
         }
       }
+
       if (isActive && worldObj.isRemote)
       {
         animation += getFortronCost / 100f
@@ -156,7 +155,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     }
     else if (!worldObj.isRemote)
     {
-      destroyField
+      destroyField()
     }
   }
 
@@ -178,7 +177,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     {
       return Math.max((this.getMode.asInstanceOf[ItemModeCustom]).getFieldBlocks(this, this.getModeStack).size / 100, 1)
     }
-    return Math.max(Math.min((this.getCalculatedField.size / 1000), 10), 1)
+    return Math.max(Math.min((if (calculatedField != null) calculatedField.size else 0) / 1000, 10), 1)
   }
 
   override def markDirty()
@@ -194,7 +193,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
    */
   def projectField()
   {
-    if (isCalculated && !isCalculating)
+    if (!isCalculating)
     {
       if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
       {
@@ -209,8 +208,10 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         }
 
         val constructionSpeed = Math.min(getProjectionSpeed, Settings.maxForceFieldsPerTick)
-        val potentialField = calculatedField.clone
+        val potentialField = calculatedField
         val relevantModules = getModules(getModuleSlots: _*)
+
+        val t = System.currentTimeMillis()
 
         if (relevantModules.exists(_.onProject(this, potentialField)))
           return
@@ -264,6 +265,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
             })
         }
+        println("finish proj " + (System.currentTimeMillis() - t))
 
         isCompleteConstructing = evaluateField.size == 0
       }
@@ -279,20 +281,17 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   def destroyField()
   {
-    if (!world.isRemote && isCalculated && !isCalculating)
+    if (!world.isRemote && calculatedField != null && !isCalculating)
     {
-      calculatedField synchronized
-              {
-                getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
-                calculatedField filter (_.getBlock(world) == ModularForceFieldSystem.Blocks.forceField) foreach (_.setBlock(world, Blocks.air))
-              }
-    }
+      getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
+      //TODO: Parallelism?
+      calculatedField.view filter (_.getBlock(world) == ModularForceFieldSystem.Blocks.forceField) foreach (_.setBlock(world, Blocks.air))
 
-    forceFields.clear()
-    calculatedField.clear()
-    isCalculated = false
-    isCompleteConstructing = false
-    fieldRequireTicks = false
+      forceFields.clear()
+      calculatedField = null
+      isCompleteConstructing = false
+      fieldRequireTicks = false
+    }
   }
 
   override def invalidate
