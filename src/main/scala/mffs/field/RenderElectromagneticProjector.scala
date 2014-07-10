@@ -32,6 +32,12 @@ final object RenderElectromagneticProjector
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOff)
     }
 
+    if (tileEntity.world != null)
+    {
+      glRotatef(-90, 0, 1, 0)
+      RenderUtility.rotateBlockBasedOnDirection(tileEntity.getDirection)
+    }
+
     model.renderAll
     //.render(tileEntity.animation, 0.0625F)
     glPopMatrix

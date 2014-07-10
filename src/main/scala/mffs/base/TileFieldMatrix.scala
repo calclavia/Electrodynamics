@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.IFieldMatrix
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
+import resonant.lib.content.prefab.TRotatable
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -24,7 +25,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.util.{Failure, Success}
 
-abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler
+abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable
 {
   protected var calculatedField: mutable.Set[Vector3] = null
   protected final val delayedEvents = new Queue[DelayedEvent]()
@@ -130,13 +131,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     if (hasCache(classOf[Vector3], cacheID)) return getCache(classOf[Vector3], cacheID)
 
     val direction = getDirection
-    /*
-    //TODO: Check why this exists
-    if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
-    {
-      direction = ForgeDirection.NORTH
-    }
-    */
 
     var zTranslationNeg = 0
     var zTranslationPos = 0
@@ -190,13 +184,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     else
     {
       val direction = getDirection
-      /*
-      //TODO: Check why this exists
-      if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
-      {
-        direction = ForgeDirection.NORTH
-      }
-      */
+
       zScalePos = getModuleCount(ModularForceFieldSystem.Items.moduleScale, getDirectionSlots(RotationUtility.rotateSide(direction, ForgeDirection.SOUTH)): _*)
       xScalePos = getModuleCount(ModularForceFieldSystem.Items.moduleScale, getDirectionSlots(RotationUtility.rotateSide(direction, ForgeDirection.EAST)): _*)
       yScalePos = getModuleCount(ModularForceFieldSystem.Items.moduleScale, getDirectionSlots(ForgeDirection.UP): _*)
@@ -346,7 +334,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
     val t = System.currentTimeMillis()
 
-    getModules().par foreach (_.onPreCalculate(this, field))
+    getModules() foreach (_.onPreCalculate(this, field))
 
     val translation = getTranslation
     val rotationYaw = getRotationYaw
@@ -355,11 +343,10 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val rotation = new Rotation(rotationYaw, rotationPitch, 0)
 
     val maxHeight = world.getHeight
-    val center = new Vector3(this)
 
-    field = mutable.Set((field.view.par map (pos => (pos.apply(rotation) + center + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).toArray: _*)
+    field = mutable.Set((field.view.par map (pos => (pos.apply(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
-    getModules().par foreach (_.onPostCalculate(this, field))
+    getModules() foreach (_.onPostCalculate(this, field))
 
     return field
   }
@@ -385,12 +372,14 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val translation = getTranslation
     val rotationYaw = getRotationYaw
     val rotationPitch = getRotationPitch
+    val rotation = new Rotation(rotationYaw, rotationPitch, 0)
+    val maxHeight = world.getHeight
+println(translation)
+    val field = mutable.Set((newField.view.par map (pos => (pos.apply(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
-    val returnField = newField map (_.clone.apply(new Rotation(rotationYaw, rotationPitch, 0)) + new Vector3(this) + translation)
+    cache(cacheID, field)
 
-    cache(cacheID, returnField)
-
-    return returnField
+    return field
   }
 
   val _getModuleSlots = (14 until 25).toArray

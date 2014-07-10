@@ -24,7 +24,7 @@ import scala.collection.convert.wrapAll._
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with ICamouflageMaterial with IPacketReceiver with IActivatable with IPlayerUsing
+abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMaterial with IPacketReceiver with IActivatable with IPlayerUsing
 {
   /**
    * Used for client side animations.
@@ -79,7 +79,10 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with TRotatable with 
       return false
     }
 
-    return rotate(side, hit)
+    if (this.isInstanceOf[TRotatable])
+      return this.asInstanceOf[TRotatable].rotate(side, hit)
+
+    return false
   }
 
   override def onNeighborChanged(block: Block)

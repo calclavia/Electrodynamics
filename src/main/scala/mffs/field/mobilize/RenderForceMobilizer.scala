@@ -5,8 +5,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.model.AdvancedModelLoader
-import net.minecraftforge.common.util.ForgeDirection
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11._
 import resonant.lib.render.RenderUtility
 
 @SideOnly(Side.CLIENT)
@@ -27,15 +26,16 @@ final object RenderForceMobilizer
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOff)
     }
 
-    GL11.glPushMatrix
-    GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5)
+    glPushMatrix
+    glTranslated(x + 0.5, y + 0.5, z + 0.5)
 
     if (tileEntity.world != null)
     {
+      glRotatef(-90, 0, 1, 0)
       RenderUtility.rotateBlockBasedOnDirection(tileEntity.getDirection)
     }
 
     model.renderAll
-    GL11.glPopMatrix
+    glPopMatrix
   }
 }

@@ -222,7 +222,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             dataPacket = Seq(TilePacketType.FXS.id, 1, 1, coordPacketData.size) ++ coordPacketData
           }
 
-          println("Send " + dataPacket.toAnyRef)
           ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, dataPacket.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
         }
       }
@@ -389,6 +388,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   {
     super.markDirty()
     calculatedField = null
+    clearCache()
   }
 
   /**
