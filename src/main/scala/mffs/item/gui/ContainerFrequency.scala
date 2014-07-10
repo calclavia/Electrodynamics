@@ -8,7 +8,7 @@ import resonant.lib.prefab.slot.SlotSpecific
 /**
  * @author Calclavia
  */
-class ContainerFrequency(player: EntityPlayer, itemStack: ItemStack) extends ContainerItem(player, itemStack)
+class ContainerFrequency(player: EntityPlayer, itemStack: ItemStack) extends ContainerItem(player, itemStack, new CopyInventory(itemStack, 1))
 {
-  //addSlotToContainer(new SlotSpecific(inventory, 0, 0, 0, classOf[ItemCardFrequency]))
+  addSlotToContainer(new SlotSpecific(inventory, 0, 81, 101, classOf[ItemCardFrequency]))
 }

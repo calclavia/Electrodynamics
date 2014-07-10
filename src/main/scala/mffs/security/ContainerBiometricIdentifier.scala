@@ -1,6 +1,6 @@
 package mffs.security
 
-import mffs.slot.{SlotActive, SlotBase}
+import mffs.slot.{SlotActive, SlotDisabled, SlotBase}
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.gui.ContainerBase
 

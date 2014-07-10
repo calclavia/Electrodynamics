@@ -26,13 +26,9 @@ class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBa
     super.drawGuiContainerForegroundLayer(x, y)
   }
 
-  protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
-  {
-    super.drawGuiContainerBackgroundLayer(f, x, y)
-  }
-
   override def mouseClicked(x: Int, y: Int, par3: Int)
   {
+
     super.mouseClicked(x, y, par3)
 
     if (textField != null)
@@ -43,7 +39,8 @@ class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBa
 
   override def keyTyped(char: Char, p_73869_2_ : Int)
   {
-    super.keyTyped(char, p_73869_2_)
+    if (p_73869_2_ == 1 || p_73869_2_ == this.mc.gameSettings.keyBindInventory.getKeyCode)
+      super.keyTyped(char, p_73869_2_)
     textField.textboxKeyTyped(char, p_73869_2_)
   }
 }

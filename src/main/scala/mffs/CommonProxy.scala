@@ -54,7 +54,7 @@ class CommonProxy extends AbstractProxy with IGuiHandler
           }
         }
       }
-      case 1 => return new ContainerDummy//new ContainerFrequency(player, player.getCurrentEquippedItem)
+      case 1 => return new ContainerFrequency(player, player.getCurrentEquippedItem)
     }
 
     return null
