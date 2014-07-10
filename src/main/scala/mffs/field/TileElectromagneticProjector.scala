@@ -53,7 +53,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   override def start()
   {
     super.start()
-    calculateForceField(postCalculation)
+    calculateField(postCalculation)
   }
 
   def postCalculation() = if (clientSideSimulationRequired) sendFieldToClient
@@ -104,7 +104,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   /**
    * Initiate a field calculation
    */
-  protected override def calculateForceField(callBack: () => Unit = null)
+  protected override def calculateField(callBack: () => Unit = null)
   {
     if (!worldObj.isRemote && !isCalculating)
     {
@@ -113,7 +113,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         forceFields.clear
       }
 
-      super.calculateForceField(callBack)
+      super.calculateField(callBack)
       isCompleteConstructing = false
       fieldRequireTicks = getModuleStacks() exists (module => module.getItem.asInstanceOf[IModule].requireTicks(module))
     }
@@ -136,7 +136,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       {
         if (calculatedField == null)
         {
-          calculateForceField(postCalculation)
+          calculateField(postCalculation)
         }
         else
         {

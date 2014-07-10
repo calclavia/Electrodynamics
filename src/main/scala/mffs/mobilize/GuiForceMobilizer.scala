@@ -72,7 +72,7 @@ class GuiForceMobilizer(player: EntityPlayer, tileEntity: TileForceMobilizer) ex
   override def updateScreen
   {
     super.updateScreen
-    (this.buttonList.get(2).asInstanceOf[GuiIcon]).setIndex(this.tileEntity.displayMode)
+    (this.buttonList.get(2).asInstanceOf[GuiIcon]).setIndex(this.tileEntity.renderMode)
     (this.buttonList.get(3).asInstanceOf[GuiIcon]).setIndex(if (this.tileEntity.doAnchor) 1 else 0)
     (this.buttonList.get(4).asInstanceOf[GuiIcon]).setIndex(if (this.tileEntity.absoluteDirection) 1 else 0)
   }

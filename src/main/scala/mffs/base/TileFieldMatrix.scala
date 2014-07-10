@@ -284,7 +284,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
    * Calculates the force field
    * @param callBack - Optional callback
    */
-  protected def calculateForceField(callBack: () => Unit = null)
+  protected def calculateField(callBack: () => Unit = null)
   {
     if (!worldObj.isRemote && !isCalculating)
     {
@@ -298,7 +298,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
         Future
         {
-          getExteriorPoints
+          generateCalculatedField
         }.onComplete
         {
           case Success(field) =>
@@ -314,6 +314,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
       }
     }
   }
+
+  protected def generateCalculatedField = getExteriorPoints
 
   /**
    * Gets the exterior points of the field based on the matrix.
