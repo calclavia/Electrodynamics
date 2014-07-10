@@ -409,7 +409,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
   def queueEvent(evt: DelayedEvent)
   {
-    delayedEvents.add(evt)
+    delayedEvents += evt
   }
 
   /**

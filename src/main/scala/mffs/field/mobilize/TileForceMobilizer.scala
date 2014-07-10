@@ -274,7 +274,12 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    return super.getPacketData(packetID) :+ ((if (moveTime > 0) moveTime else getMoveTime): Integer)
+    if (packetID == TilePacketType.DESCRIPTION.id)
+    {
+      return super.getPacketData(packetID) ++ Seq(anchor, renderMode, doAnchor, if (moveTime > 0) moveTime else getMoveTime).toAnyRef
+    }
+
+    return super.getPacketData(packetID)
   }
 
   override def onReceivePacket(packetID: Int, data: ByteBuf)
@@ -315,6 +320,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             /**
              * Teleportation Rendering
              */
+            //TODO: Fix packet
             val animationTime = data.readInt
             val anchorPosition = new Vector3(data)
             val targetPosition = new VectorWorld(data)
@@ -361,7 +367,10 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       }
       else if (packetID == TilePacketType.DESCRIPTION.id)
       {
-        this.clientMoveTime = data.readInt
+        anchor = new Vector3(data)
+        renderMode = data.readInt()
+        doAnchor = data.readBoolean()
+        clientMoveTime = data.readInt
       }
     }
     else
@@ -472,7 +481,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
       if (!world.isAirBlock(position.xi, position.yi, position.zi) && tileEntity != this)
       {
-        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(tileEntity), newPosition))
+        queueEvent(new BlockPreMoveDelayedEvent(this, getMoveTime, new VectorWorld(world, position), newPosition))
         return true
       }
     }
@@ -536,14 +545,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return false
   }
 
-  def getAbsoluteAnchor: Vector3 =
-  {
-    if (this.anchor != null)
-    {
-      return new Vector3(this).add(this.anchor)
-    }
-    return new Vector3(this)
-  }
+  def getAbsoluteAnchor: Vector3 = new Vector3(this).add(this.anchor)
 
   protected def moveEntities
   {
