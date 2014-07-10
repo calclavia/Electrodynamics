@@ -31,6 +31,7 @@ final object RenderCoercionDeriver
     model.renderAllExcept("crystal")
 
     glPushMatrix()
+    glTranslated(0, (0.3 + Math.sin(Math.toRadians(tileEntity.animation)) * 0.08) * tileEntity.animationTween - 0.1, 0)
     glRotated(tileEntity.animation, 0, 1, 0)
     RenderUtility.enableBlending()
     model.renderOnly("crystal")

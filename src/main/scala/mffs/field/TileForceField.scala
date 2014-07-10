@@ -405,7 +405,8 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
 
       if (projTile.isInstanceOf[TileElectromagneticProjector])
       {
-        if (world.isRemote || projTile.asInstanceOf[IProjector].getCalculatedField.contains(new Vector3(this)))
+        val projector = projTile.asInstanceOf[IProjector]
+        if (world.isRemote || (projector.getCalculatedField != null && projector.getCalculatedField.contains(new Vector3(this))))
         {
           return projTile.asInstanceOf[TileElectromagneticProjector]
         }

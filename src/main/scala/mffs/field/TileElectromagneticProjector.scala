@@ -211,8 +211,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         val potentialField = calculatedField
         val relevantModules = getModules(getModuleSlots: _*)
 
-        val t = System.currentTimeMillis()
-
         if (relevantModules.exists(_.onProject(this, potentialField)))
           return
 
@@ -265,7 +263,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
             })
         }
-        println("finish proj " + (System.currentTimeMillis() - t))
 
         isCompleteConstructing = evaluateField.size == 0
       }

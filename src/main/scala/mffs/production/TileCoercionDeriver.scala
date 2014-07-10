@@ -14,7 +14,6 @@ import resonant.api.mffs.modules.IModule
 import resonant.lib.content.prefab.TElectric
 import universalelectricity.api.UniversalClass
 import universalelectricity.compatibility.Compatibility
-import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
 /**
@@ -48,6 +47,9 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
 {
   var processTime: Int = 0
   var isInversed: Boolean = false
+
+  //Client
+  var animationTween = 0f
 
   capacityBase = 30
   startModuleIndex = 3
@@ -114,9 +116,23 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
         }
       }
     }
-    else if (this.isActive)
+    else
     {
-      this.animation += 1
+      /**
+       * Handle animation
+       */
+      if (isActive)
+      {
+        animation += 1
+
+        if (animationTween < 1)
+          animationTween += 0.01f
+      }
+      else
+      {
+        if (animationTween > 0)
+          animationTween -= 0.01f
+      }
     }
   }
 
@@ -152,13 +168,34 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     return false
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def getPacketData(packetID: Int): List[AnyRef] =
   {
-    super.onReceivePacket(packetID, dataStream)
-
-    if (packetID == TilePacketType.TOGGLE_MODE.id)
+    if (packetID == TilePacketType.DESCRIPTION.id)
     {
-      isInversed = !isInversed
+      return super.getPacketData(packetID) :+ (isInversed: java.lang.Boolean) :+ (processTime: Integer)
+    }
+
+    return super.getPacketData(packetID)
+  }
+
+  override def onReceivePacket(packetID: Int, data: ByteBuf)
+  {
+    super.onReceivePacket(packetID, data)
+
+    if (world.isRemote)
+    {
+      if (packetID == TilePacketType.DESCRIPTION.id)
+      {
+        isInversed = data.readBoolean()
+        processTime = data.readInt()
+      }
+    }
+    else
+    {
+      if (packetID == TilePacketType.TOGGLE_MODE.id)
+      {
+        isInversed = !isInversed
+      }
     }
   }
 
