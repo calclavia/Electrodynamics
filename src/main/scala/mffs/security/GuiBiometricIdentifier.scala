@@ -149,11 +149,12 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
 
   protected override def keyTyped(par1: Char, par2: Int)
   {
-    /*
+
     if (par1 != 'e' && par1 != 'E')
     {
       super.keyTyped(par1, par2)
     }
+    /*
     this.textFieldUsername.textboxKeyTyped(par1, par2)
     try
     {
