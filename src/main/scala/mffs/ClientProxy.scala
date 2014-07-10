@@ -2,10 +2,11 @@ package mffs
 
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
-import mffs.field.{GuiElectromagneticProjector, TileElectromagneticProjector}
+import mffs.field.TileElectromagneticProjector
+import mffs.field.gui.{GuiForceMobilizer, GuiElectromagneticProjector}
 import mffs.item.card.RenderIDCard
 import mffs.item.gui.GuiFrequency
-import mffs.mobilize.{GuiForceMobilizer, TileForceMobilizer}
+import mffs.field.mobilize.TileForceMobilizer
 import mffs.production._
 import mffs.render.fx._
 import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}

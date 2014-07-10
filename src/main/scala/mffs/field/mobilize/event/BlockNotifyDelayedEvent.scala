@@ -1,4 +1,4 @@
-package mffs.mobilize.event
+package mffs.field.mobilize.event
 
 import cpw.mods.fml.common.Loader
 import cpw.mods.fml.relauncher.ReflectionHelper

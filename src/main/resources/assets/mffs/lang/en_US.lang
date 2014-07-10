@@ -132,9 +132,11 @@ gui.deriver.derive=Derive
 gui.deriver.integrate=Integrate
 gui.deriver.running=Running
 gui.deriver.idle=Idle
-gui.manipulator.anchor=Anchor:
-gui.manipulator.fortron=Fortron:
+gui.mobilizer.anchor=Anchor
+gui.mobilizer.time=Move Time
 
+gui.energy=Energy
+gui.direction=Direction
 gui.makecopy=Make Copy
 gui.input.name=Input
 gui.output.name=Output

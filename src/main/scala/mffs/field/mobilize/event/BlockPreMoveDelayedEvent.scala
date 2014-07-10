@@ -1,6 +1,6 @@
-package mffs.mobilize.event
+package mffs.field.mobilize.event
 
-import mffs.mobilize.TileForceMobilizer
+import mffs.field.mobilize.TileForceMobilizer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.MinecraftForge

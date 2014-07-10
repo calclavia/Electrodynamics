@@ -3,16 +3,16 @@ package mffs
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
-import mffs.field.{ContainerElectromagneticProjector, TileElectromagneticProjector}
+import mffs.field.TileElectromagneticProjector
+import mffs.field.gui.ContainerMatrix
+import mffs.field.mobilize.TileForceMobilizer
 import mffs.item.gui.ContainerFrequency
-import mffs.mobilize.{ContainerForceManipulator, TileForceMobilizer}
 import mffs.production._
 import mffs.render.fx.IEffectController
 import mffs.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
-import resonant.lib.gui.ContainerDummy
 import resonant.lib.prefab.AbstractProxy
 import universalelectricity.core.transform.vector.Vector3
 
@@ -34,7 +34,7 @@ class CommonProxy extends AbstractProxy with IGuiHandler
           }
           else if (tileEntity.getClass == classOf[TileElectromagneticProjector])
           {
-            return new ContainerElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
+            return new ContainerMatrix(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
           }
           else if (tileEntity.getClass == classOf[TileCoercionDeriver])
           {
@@ -44,13 +44,9 @@ class CommonProxy extends AbstractProxy with IGuiHandler
           {
             return new ContainerBiometricIdentifier(player, tileEntity.asInstanceOf[TileBiometricIdentifier])
           }
-          /*else if (tileEntity.getClass == classOf[TileInterdictionMatrix])
-          {
-            return new ContainerInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
-          }*/
           else if (tileEntity.getClass == classOf[TileForceMobilizer])
           {
-            return new ContainerForceManipulator(player, tileEntity.asInstanceOf[TileForceMobilizer])
+            return new ContainerMatrix(player, tileEntity.asInstanceOf[TileForceMobilizer])
           }
         }
       }

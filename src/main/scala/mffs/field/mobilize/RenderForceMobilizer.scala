@@ -1,4 +1,4 @@
-package mffs.mobilize
+package mffs.field.mobilize
 
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}

@@ -1,11 +1,10 @@
-package mffs.mobilize
+package mffs.field.mobilize
 
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
-import mffs.item.card.ItemCard
-import mffs.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
+import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
@@ -19,9 +18,9 @@ import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.card.ICoordLink
-import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{Blacklist, EventForceManipulate}
 import resonant.lib.network.PacketTile
+import resonant.lib.wrapper.WrapVararg._
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
@@ -58,7 +57,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   rotationMask = 63
 
-  override def getSizeInventory = 3 + 18
+  override def getSizeInventory = 1 + 25
 
   override def update()
   {
@@ -100,12 +99,12 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
                * Params: ID, Type1, Type2, Size, the coordinate
                */
               //TODO: Parallel
-              val coordPacketData = (renderBlocks flatMap (_.toIntList) map (_.asInstanceOf[AnyRef])).toSeq
+              val coordPacketData = (renderBlocks flatMap (_.toIntList)).toSeq
 
               if (!isTeleport)
               {
-                val packetData = Seq[AnyRef](TilePacketType.FXS.id: Integer, 1.toByte: java.lang.Byte, 2.toByte: java.lang.Byte, coordPacketData.size: Integer) :+ coordPacketData
-                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, coordPacketData: _*), worldObj, new Vector3(this), packetRange)
+                val packetData = Seq(TilePacketType.FXS.id, 1.toByte: java.lang.Byte, 2.toByte, coordPacketData.size: Integer) ++ coordPacketData
+                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, coordPacketData.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
 
                 if (getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
                 {
@@ -118,8 +117,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
               }
               else
               {
-                val packetData = Seq[AnyRef](TilePacketType.FXS.id: Integer, 2.toByte: java.lang.Byte, getMoveTime: Integer, getAbsoluteAnchor + 0.5, getTargetPosition + 0.5, false: java.lang.Boolean, coordPacketData.size: Integer) :+ coordPacketData
-                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, packetData: _*), worldObj, new Vector3(this), packetRange)
+                val packetData = Seq(TilePacketType.FXS.id, 2.toByte, getMoveTime, getAbsoluteAnchor + 0.5, getTargetPosition + 0.5, false, coordPacketData.size) ++ coordPacketData
+                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, packetData.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
                 moveTime = getMoveTime
               }
             }
@@ -192,22 +191,18 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         {
           calculateField()
         }
-        if (this.ticks % 120 == 0 && !this.isCalculating && Settings.highGraphics && this.delayedEvents.size <= 0 && this.renderMode > 0)
+
+        /**
+         * Send preview field packet
+         */
+        if (ticks % 120 == 0 && !isCalculating && Settings.highGraphics && delayedEvents.size <= 0 && renderMode > 0)
         {
-          val nbt: NBTTagCompound = new NBTTagCompound
-          val nbtList: NBTTagList = new NBTTagList
-          var i: Int = 0
-          for (position <- this.getInteriorPoints)
-          {
-            if (this.isBlockVisibleByPlayer(position) && (this.renderMode == 2 || !this.worldObj.isAirBlock(position.xi, position.yi, position.zi) && i < Settings.maxForceFieldsPerTick))
-            {
-              i += 1
-              nbtList.appendTag(position.toNBT)
-            }
-          }
-          nbt.setByte("type", 1.asInstanceOf[Byte])
-          nbt.setTag("list", nbtList)
-          if (this.isTeleport)
+          val renderBlocks = getInteriorPoints.view filter isBlockVisibleByPlayer filter (pos => renderMode == 2 || !world.isAirBlock(pos.xi, pos.yi, pos.zi)) take Settings.maxForceFieldsPerTick
+          val coordPacketData = (renderBlocks flatMap (_.toIntList)).toSeq
+
+          var dataPacket: Seq[Any] = null
+
+          if (isTeleport)
           {
             var targetPosition: Vector3 = null
 
@@ -220,12 +215,15 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
               targetPosition = getTargetPosition
             }
 
-            ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 2.toByte: java.lang.Byte, 60: Integer, getAbsoluteAnchor + 0.5, targetPosition + 0.5, true: java.lang.Boolean, nbt), worldObj, new Vector3(this), packetRange)
+            dataPacket = Seq(TilePacketType.FXS.id, 2, 60, getAbsoluteAnchor + 0.5, targetPosition + 0.5, true, coordPacketData.size) ++ coordPacketData
           }
           else
           {
-            ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 1.toByte: java.lang.Byte), worldObj, new Vector3(this), packetRange)
+            dataPacket = Seq(TilePacketType.FXS.id, 1, 1, coordPacketData.size) ++ coordPacketData
           }
+
+          println("Send " + dataPacket.toAnyRef)
+          ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, dataPacket.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
         }
       }
 
@@ -288,7 +286,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     {
       if (packetID == TilePacketType.FXS.id)
       {
-        data.readByte match
+        data.readInt() match
         {
           case 1 =>
           {
@@ -297,10 +295,10 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
              *
              * Params: ID, Type1, Type2, Size, the coordinate
              */
-            val isTeleportPacket = data.readByte()
+            val isTeleportPacket = data.readInt()
             val vecSize = data.readInt()
 
-            val hologramRenderPoints = (0 until vecSize) map (i => data.readInt()) grouped 3 map (new Vector3(_))
+            val hologramRenderPoints = (0 until vecSize) map (i => data.readInt().toDouble + 0.5) grouped 3 map (new Vector3(_))
 
             /**
              * Movement Rendering
@@ -309,8 +307,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
             isTeleportPacket match
             {
-              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 1, 1, 1, 30, vector + direction))
-              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(this.worldObj, vector, 0, 1, 0, 30, vector + direction))
+              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, 1, 1, 1, 30, vector + direction))
+              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, 0, 1, 0, 30, vector + direction))
             }
           }
           case 2 =>
@@ -580,23 +578,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         entity.setPositionAndRotation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
       }
     }
-  }
-
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
-  {
-    if (slotID == 0 || slotID == 1)
-    {
-      return itemStack.getItem.isInstanceOf[ItemCard]
-    }
-    else if (slotID == modeSlotID)
-    {
-      return itemStack.getItem.isInstanceOf[IProjectorMode]
-    }
-    else if (slotID >= 15)
-    {
-      return true
-    }
-    return itemStack.getItem.isInstanceOf[IModule]
   }
 
   /**

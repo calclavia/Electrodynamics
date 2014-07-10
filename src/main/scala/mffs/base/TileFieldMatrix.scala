@@ -4,8 +4,9 @@ import java.util.{Set => JSet}
 
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
+import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
-import mffs.mobilize.event.{DelayedEvent, IDelayedEventHandler}
+import mffs.item.card.ItemCard
 import mffs.util.TCache
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
@@ -75,6 +76,20 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
         absoluteDirection = !absoluteDirection
       }
     }
+  }
+
+  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+  {
+    if (slotID == 0)
+    {
+      return itemStack.getItem.isInstanceOf[ItemCard]
+    }
+    else if (slotID == modeSlotID)
+    {
+      return itemStack.getItem.isInstanceOf[IProjectorMode]
+    }
+
+    return itemStack.getItem.isInstanceOf[IModule]
   }
 
   def getModeStack: ItemStack =

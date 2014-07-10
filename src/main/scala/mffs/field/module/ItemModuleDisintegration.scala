@@ -5,7 +5,7 @@ import java.util.Set
 import mffs.ModularForceFieldSystem
 import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
 import mffs.field.TileElectromagneticProjector
-import mffs.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
+import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
 import net.minecraft.block.BlockLiquid
 import net.minecraft.item.{ItemBlock, ItemStack}

@@ -1,20 +1,20 @@
-package mffs.field
+package mffs.field.gui
 
 import mffs.ModularForceFieldSystem
 import mffs.base.TilePacketType
+import mffs.field.TileElectromagneticProjector
 import mffs.render.button.GuiIcon
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import org.lwjgl.opengl.GL11
 import resonant.lib.network.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
 
-class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)
+class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
 {
   override def initGui()
   {

@@ -1,4 +1,4 @@
-package mffs.mobilize.event
+package mffs.field.mobilize.event
 
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks

@@ -1,4 +1,4 @@
-package mffs.mobilize.event
+package mffs.field.mobilize.event
 
 class DelayedEvent(val handler: IDelayedEventHandler, var ticks: Int, val evtMethod: (() => Unit) = null)
 {

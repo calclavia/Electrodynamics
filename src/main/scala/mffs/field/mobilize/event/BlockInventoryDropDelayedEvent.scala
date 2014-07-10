@@ -1,4 +1,4 @@
-package mffs.mobilize.event
+package mffs.field.mobilize.event
 
 import mffs.base.TileMFFSInventory
 import net.minecraft.block.Block

@@ -1,4 +1,4 @@
-package mffs.field
+package mffs.field.gui
 
 import mffs.base.{GuiMFFS, TileFieldMatrix}
 import net.minecraft.inventory.Container
@@ -11,9 +11,9 @@ import universalelectricity.core.transform.vector.Vector2
  * Anything that has a field matrix within it.
  * @author Calclavia
  */
-abstract class GuiMatrix(container: Container, tile: TileFieldMatrix) extends GuiMFFS(container, tile)
+abstract class GuiMatrix(container: ContainerMatrix, tile: TileFieldMatrix) extends GuiMFFS(container, tile)
 {
-  val matrixCenter = new Vector2(80, 55)
+  val matrixCenter = container.matrixCenter
 
   def setupTooltips()
   {

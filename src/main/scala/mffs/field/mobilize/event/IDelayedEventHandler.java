@@ -1,4 +1,4 @@
-package mffs.mobilize.event;
+package mffs.field.mobilize.event;
 
 public interface IDelayedEventHandler
 {

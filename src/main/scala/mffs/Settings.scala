@@ -14,7 +14,7 @@ object Settings
   final val maxFrequencyDigits: Int = 8
 
   @Config
-  var maxForceFieldsPerTick: Int = 1000
+  var maxForceFieldsPerTick: Int = 5000
   @Config
   var maxForceFieldScale: Int = 200
   @Config

@@ -301,20 +301,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getForceFields: JSet[Vector3] = forceFields
 
-  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
-  {
-    if (slotID == 0)
-    {
-      return itemStack.getItem.isInstanceOf[ItemCard]
-    }
-    else if (slotID == modeSlotID)
-    {
-      return itemStack.getItem.isInstanceOf[IProjectorMode]
-    }
-
-    return itemStack.getItem.isInstanceOf[IModule]
-  }
-
   override def getCards: Set[ItemStack] = Set[ItemStack](super.getCard, getStackInSlot(1))
 
   def getTicks: Long = ticks
