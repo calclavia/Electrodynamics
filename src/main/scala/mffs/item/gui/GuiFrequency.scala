@@ -4,7 +4,7 @@ import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import resonant.lib.network.PacketPlayerItem
+import resonant.lib.network.discriminator.PacketPlayerItem
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 

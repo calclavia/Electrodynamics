@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 import resonant.api.mffs.card.ICard
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

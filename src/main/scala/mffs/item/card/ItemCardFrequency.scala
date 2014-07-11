@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import resonant.api.items.IItemFrequency
-import resonant.lib.network.IPacketReceiver
+import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 

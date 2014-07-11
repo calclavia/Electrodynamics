@@ -14,7 +14,9 @@ import resonant.api.blocks.ICamouflageMaterial
 import resonant.api.mffs.IActivatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.{IPacketReceiver, IPlayerUsing, PacketTile}
+import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.IPlayerUsing
+import resonant.lib.network.handle.IPacketReceiver
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 

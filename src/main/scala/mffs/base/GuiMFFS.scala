@@ -8,7 +8,7 @@ import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
 import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay

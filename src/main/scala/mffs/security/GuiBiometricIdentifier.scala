@@ -4,7 +4,7 @@ import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
 import net.minecraft.client.gui.{GuiButton, GuiTextField}
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.vector.Vector2
 
 class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier) extends GuiMFFS(new ContainerBiometricIdentifier(player, tile), tile)

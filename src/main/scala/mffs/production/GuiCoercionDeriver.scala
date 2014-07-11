@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.lib.gui.GuiContainerBase.SlotType
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._

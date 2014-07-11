@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.IFluidBlock
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.api.mffs.{Blacklist, IProjector}
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

@@ -21,7 +21,8 @@ import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.modules.IModule
 import resonant.api.mffs.{IForceField, IProjector}
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.network.{IPacketReceiver, PacketTile}
+import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.handle.IPacketReceiver
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 

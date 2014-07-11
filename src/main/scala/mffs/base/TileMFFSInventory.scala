@@ -6,7 +6,7 @@ import mffs.ModularForceFieldSystem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.utility.inventory.TPrefabInventory
 
 /**

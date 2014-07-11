@@ -23,7 +23,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.access.Permission
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 

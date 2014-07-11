@@ -13,13 +13,13 @@ import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.{Blacklist, EventForceManipulate}
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.wrapper.WrapVararg._
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
@@ -101,10 +101,15 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
               //TODO: Parallel
               val coordPacketData = (renderBlocks flatMap (_.toIntList)).toSeq
 
+              val packet = new PacketTile(this)
+              packet <<< TilePacketType.FXS.id
+
               if (!isTeleport)
               {
-                val packetData = Seq(TilePacketType.FXS.id, 1.toByte: java.lang.Byte, 2.toByte, coordPacketData.size: Integer) ++ coordPacketData
-                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, coordPacketData.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
+                packet <<< 1
+                packet <<< 2
+                packet <<< coordPacketData.size
+                packet <<< coordPacketData
 
                 if (getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
                 {
@@ -117,10 +122,19 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
               }
               else
               {
-                val packetData = Seq(TilePacketType.FXS.id, 2.toByte, getMoveTime, getAbsoluteAnchor + 0.5, getTargetPosition + 0.5, false, coordPacketData.size) ++ coordPacketData
-                ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, packetData.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
+                packet <<< 2
+                packet <<< getMoveTime
+                packet <<< (getAbsoluteAnchor + 0.5)
+                packet <<< (getTargetPosition + 0.5)
+                packet <<< false
+                packet <<< coordPacketData.size
+                packet <<< coordPacketData
+
+                ModularForceFieldSystem.packetHandler.sendToAllAround(packet, worldObj, new Vector3(this), packetRange)
                 moveTime = getMoveTime
               }
+
+              ModularForceFieldSystem.packetHandler.sendToAllAround(packet, worldObj, new Vector3(this), packetRange)
             }
             else
             {
@@ -200,7 +214,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
           val renderBlocks = getInteriorPoints.view filter isBlockVisibleByPlayer filter (pos => renderMode == 2 || !world.isAirBlock(pos.xi, pos.yi, pos.zi)) take Settings.maxForceFieldsPerTick
           val coordPacketData = (renderBlocks flatMap (_.toIntList)).toSeq
 
-          var dataPacket: Seq[Any] = null
+          val packet = new PacketTile(this)
+          packet <<< TilePacketType.FXS.id
 
           if (isTeleport)
           {
@@ -215,14 +230,23 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
               targetPosition = getTargetPosition
             }
 
-            dataPacket = Seq(TilePacketType.FXS.id, 2, 60, getAbsoluteAnchor + 0.5, targetPosition + 0.5, true, coordPacketData.size) ++ coordPacketData
+            packet <<< 2
+            packet <<< 60
+            packet <<< (getAbsoluteAnchor + 0.5)
+            packet <<< (targetPosition + 0.5)
+            packet <<< true
+
           }
           else
           {
-            dataPacket = Seq(TilePacketType.FXS.id, 1, 1, coordPacketData.size) ++ coordPacketData
+            packet <<< 1
+            packet <<< 1
           }
 
-          ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, dataPacket.toAnyRef: _*), worldObj, new Vector3(this), packetRange)
+          packet <<< coordPacketData.size
+          packet <<< coordPacketData
+
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, new Vector3(this), packetRange)
         }
       }
 
@@ -230,19 +254,19 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       {
         moveTime = 0
         delayedEvents.clear
-        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
-        ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.RENDER.id: Integer), this.worldObj, new Vector3(this), packetRange)
+        worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+        ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.RENDER.id, world, new Vector3(this), packetRange)
 
         markFailMove = false
-        val nbt = new NBTTagCompound
-        val nbtList = new NBTTagList
 
-        failedPositions foreach (pos => nbtList.appendTag(pos.toNBT))
+        failedPositions.clear()
 
-        nbt.setByte("type", 1.toByte)
-        nbt.setTag("list", nbtList)
-        this.failedPositions.clear
-        ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, TilePacketType.FXS.id: Integer, 3.toByte: java.lang.Byte, nbt), this.worldObj, new Vector3(this), packetRange)
+        val packetTile = new PacketTile(this)
+        packetTile <<< TilePacketType.RENDER.id
+        packetTile <<< 3
+        packetTile <<< 1
+        packetTile <<< (failedPositions flatMap (_.toIntList))
+        ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, new Vector3(this), packetRange)
       }
     }
     else if (!worldObj.isRemote && isActive)

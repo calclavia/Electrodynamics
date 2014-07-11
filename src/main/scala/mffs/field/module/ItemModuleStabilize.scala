@@ -14,7 +14,7 @@ import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.IFluidBlock
 import resonant.api.mffs.{Blacklist, EventStabilize, IProjector}
-import resonant.lib.network.PacketTile
+import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
