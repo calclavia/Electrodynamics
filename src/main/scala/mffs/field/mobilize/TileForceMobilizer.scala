@@ -23,7 +23,6 @@ import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{Blacklist, EventForceManipulate}
 import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapVararg._
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
@@ -285,7 +284,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.RENDER.id, world, new Vector3(this), packetRange)
 
 
-      if(failedPositions.size > 0)
+      if (failedPositions.size > 0)
       {
         /**
          * Send failure coordinates to client
@@ -582,7 +581,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   def getLinkCard: ItemStack =
   {
-    getModuleStacks() find (_.getItem.isInstanceOf[ICoordLink]) match
+    getInventory().getContainedItems filter (_ != null) find (_.getItem.isInstanceOf[ICoordLink]) match
     {
       case Some(itemStack) => return itemStack
       case _ => return null
@@ -593,8 +592,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
    * Gets the movement time required in TICKS.
    *
    * @return The time it takes to teleport (using a link card) to another coordinate OR
-   *         ANIMATION_TIME for
-   *         default move
+   *         ANIMATION_TIME for default move.
    */
   def getMoveTime: Int =
   {
@@ -612,7 +610,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   private def isTeleport: Boolean =
   {
-    if (getLinkCard != null && Settings.allowForceManipulatorTeleport)
+    if (Settings.allowForceManipulatorTeleport)
     {
       val cardStack = getLinkCard
 

@@ -14,8 +14,8 @@ import scala.collection.convert.wrapAll._
 
 abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
 {
-  var startModuleIndex = 0
-  var endModuleIndex = this.getSizeInventory - 1
+  var startModuleIndex = 1
+  var endModuleIndex = getSizeInventory - 1
   /**
    * Used for client-side only.
    */
