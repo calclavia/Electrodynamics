@@ -3,9 +3,9 @@ package mffs.field
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.ModularForceFieldSystem
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
+import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.RenderBlocks
@@ -302,7 +302,7 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
       val projector = getProjectorSafe
       if (projector != null)
       {
-        return ((Math.min(projector.getModuleCount(ModularForceFieldSystem.Items.moduleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
+        return ((Math.min(projector.getModuleCount(Content.moduleGlow), 64).asInstanceOf[Float] / 64) * 15f).toInt
       }
     }
     catch

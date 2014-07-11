@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.{Content, ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
@@ -95,7 +95,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
               if (processTime == 0 && isItemValidForSlot(TileCoercionDeriver.slotFuel, getStackInSlot(TileCoercionDeriver.slotFuel)))
               {
                 decrStackSize(TileCoercionDeriver.slotFuel, 1)
-                processTime = TileCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(ModularForceFieldSystem.Items.moduleScale) / 20, 1)
+                processTime = TileCoercionDeriver.fuelProcessTime * Math.max(this.getModuleCount(Content.moduleScale) / 20, 1)
               }
 
               if (processTime > 0)
@@ -136,7 +136,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     }
   }
 
-  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(ModularForceFieldSystem.Items.moduleSpeed) / 8d))
+  def getPower: Double = TileCoercionDeriver.power + (TileCoercionDeriver.power * (getModuleCount(Content.moduleSpeed) / 8d))
 
   override def getVoltage = 1000D
 

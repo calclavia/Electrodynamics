@@ -1,7 +1,7 @@
 package mffs.util
 
 import com.mojang.authlib.GameProfile
-import mffs.ModularForceFieldSystem
+import mffs.Content
 import mffs.field.TileElectromagneticProjector
 import mffs.field.mode.ItemModeCustom
 import net.minecraft.block.Block
@@ -117,7 +117,7 @@ object MFFSUtility
       {
         if (projector != null)
         {
-          if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0)
+          if (projector.getModuleCount(Content.moduleCamouflage) > 0)
           {
             if (projector.getMode.isInstanceOf[ItemModeCustom])
             {

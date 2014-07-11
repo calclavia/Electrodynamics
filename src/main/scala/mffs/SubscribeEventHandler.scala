@@ -120,7 +120,7 @@ object SubscribeEventHandler
     if (evt.action == Action.RIGHT_CLICK_BLOCK || evt.action == Action.LEFT_CLICK_BLOCK)
     {
       // Cancel if we click on a force field.
-      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == ModularForceFieldSystem.Blocks.forceField)
+      if (evt.action == Action.LEFT_CLICK_BLOCK && evt.entityPlayer.worldObj.getBlock(evt.x, evt.y, evt.z) == Content.forceField)
       {
         evt.setCanceled(true)
         return
@@ -168,7 +168,7 @@ object SubscribeEventHandler
   {
     if (!(evt.entity.isInstanceOf[EntityPlayer]))
     {
-      if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(ModularForceFieldSystem.Items.moduleAntiSpawn) > 0))
+      if (MFFSUtility.getRelevantProjectors(evt.world, new Vector3(evt.entityLiving)).exists(_.getModuleCount(Content.moduleAntiSpawn) > 0))
       {
         evt.setResult(Event.Result.DENY)
       }

@@ -11,7 +11,7 @@ import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.security.access.MFFSPermissions
 import mffs.util.TCache
-import mffs.{ModularForceFieldSystem, Reference, Settings}
+import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
@@ -121,7 +121,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   private def clientSideSimulationRequired: Boolean =
   {
-    return getModuleCount(ModularForceFieldSystem.Items.moduleRepulsion) > 0
+    return getModuleCount(Content.moduleRepulsion) > 0
   }
 
   override def update()
@@ -148,7 +148,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
       {
         animation += getFortronCost / 100f
       }
-      if (ticks % (2 * 20) == 0 && getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
+      if (ticks % (2 * 20) == 0 && getModuleCount(Content.moduleSilence) <= 0)
       {
         worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "field", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
       }
@@ -219,7 +219,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                 .view.par
                 .filter(!_.equals(position))
                 .filter(v => canReplaceBlock(v, v.getBlock(world)))
-                .filter(_.getBlock(world) != ModularForceFieldSystem.Blocks.forceField)
+                .filter(_.getBlock(world) != Content.forceField)
                 .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
                 .take(constructionSpeed)
 
@@ -253,7 +253,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
                * Default force field block placement action.
                */
               if (!world.isRemote)
-                vector.setBlock(world, ModularForceFieldSystem.Blocks.forceField)
+                vector.setBlock(world, Content.forceField)
 
               forceFields += vector
 
@@ -272,7 +272,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   private def canReplaceBlock(vector: Vector3, block: Block): Boolean =
   {
     return block == null ||
-            (getModuleCount(ModularForceFieldSystem.Items.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
+            (getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
             (block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
   }
 
@@ -282,7 +282,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     {
       getModules(getModuleSlots: _*).forall(!_.onDestroy(this, calculatedField))
       //TODO: Parallelism?
-      calculatedField.view filter (_.getBlock(world) == ModularForceFieldSystem.Blocks.forceField) foreach (_.setBlock(world, Blocks.air))
+      calculatedField.view filter (_.getBlock(world) == Content.forceField) foreach (_.setBlock(world, Blocks.air))
 
       forceFields.clear()
       calculatedField = null
@@ -297,7 +297,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     super.invalidate
   }
 
-  def getProjectionSpeed: Int = 28 + 28 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed, getModuleSlots: _*)
+  def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
   override def getForceFields: JSet[Vector3] = forceFields
 
@@ -309,7 +309,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
   {
     if (super.hasPermission(profile, permission))
-      return getModuleCount(ModularForceFieldSystem.Items.moduleInvert) == 0
+      return getModuleCount(Content.moduleInvert) == 0
 
     return true
   }
@@ -320,7 +320,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
     if (action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && checkPos.getTileEntity(checkWorld) != null)
     {
-      if (getModuleCount(ModularForceFieldSystem.Items.moduleBlockAccess) > 0)
+      if (getModuleCount(Content.moduleBlockAccess) > 0)
       {
         hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.blockAccess)
       }
@@ -328,7 +328,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
     if (hasPerm)
     {
-      if (getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+      if (getModuleCount(Content.moduleBlockAlter) > 0 && (player.getCurrentEquippedItem != null || action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
       {
         hasPerm = hasPermission(player.getGameProfile, MFFSPermissions.blockAlter)
       }

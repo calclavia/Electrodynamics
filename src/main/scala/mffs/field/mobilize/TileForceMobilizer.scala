@@ -8,7 +8,7 @@ import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
-import mffs.{ModularForceFieldSystem, Reference, Settings}
+import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayerMP
@@ -111,7 +111,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
                 packet <<< coordPacketData.size
                 packet <<< coordPacketData
 
-                if (getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0)
+                if (getModuleCount(Content.moduleSilence) <= 0)
                 {
                   worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, (1 - this.worldObj.rand.nextFloat * 0.1f))
                 }
@@ -152,7 +152,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       {
         if (this.isTeleport && this.requestFortron(this.getFortronCost, true) >= this.getFortronCost)
         {
-          if (this.getModuleCount(ModularForceFieldSystem.Items.moduleSilence) <= 0 && this.ticks % 10 == 0)
+          if (this.getModuleCount(Content.moduleSilence) <= 0 && this.ticks % 10 == 0)
           {
             val moveTime: Int = this.getMoveTime
             worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "fieldmove", 1.5f, 0.5f + 0.8f * (moveTime - this.moveTime) / moveTime)

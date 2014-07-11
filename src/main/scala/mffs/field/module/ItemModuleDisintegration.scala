@@ -2,7 +2,7 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
 import mffs.field.TileElectromagneticProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
@@ -42,7 +42,7 @@ class ItemModuleDisintegration extends ItemModule
       {
         val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
-        if (FrequencyGridRegistry.instance.getNodes(classOf[IInterdictionMatrix]) filter ((i: IInterdictionMatrix) => i.isActive() && new Vector3(i.asInstanceOf[TileEntity]).distance(position) <= i.getActionRange() && i.getFrequency() != projector.getFrequency()) exists (_.getModuleCount(ModularForceFieldSystem.Items.moduleBlockAlter) > 0))
+        if (FrequencyGridRegistry.instance.getNodes(classOf[IInterdictionMatrix]) filter ((i: IInterdictionMatrix) => i.isActive() && new Vector3(i.asInstanceOf[TileEntity]).distance(position) <= i.getActionRange() && i.getFrequency() != projector.getFrequency()) exists (_.getModuleCount(Content.moduleBlockAlter) > 0))
           return 1
 
         val filterMatch = !projector.getModuleSlots().exists(
@@ -52,10 +52,10 @@ class ItemModuleDisintegration extends ItemModule
 
             MFFSUtility.getFilterBlock(filterStack) != null &&
                     (filterStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) ||
-                            (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(ModularForceFieldSystem.Items.moduleApproximation) > 0))
+                            (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
           })
 
-        if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0 == !filterMatch)
+        if (projector.getModuleCount(Content.moduleCamouflage) > 0 == !filterMatch)
           return 1
 
         if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
@@ -63,7 +63,7 @@ class ItemModuleDisintegration extends ItemModule
 
         ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(projector.asInstanceOf[TileEntity], TilePacketType.FXS.id: Integer, 2: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer))
 
-        if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleCollection) > 0)
+        if (projector.getModuleCount(Content.moduleCollection) > 0)
         {
           (projector.asInstanceOf[TileElectromagneticProjector]).queueEvent(new BlockInventoryDropDelayedEvent(projector.asInstanceOf[IDelayedEventHandler], 39, block, tileEntity.getWorldObj, position, projector.asInstanceOf[TileMFFSInventory]))
         }
@@ -74,7 +74,7 @@ class ItemModuleDisintegration extends ItemModule
 
         blockCount += 1
 
-        if (blockCount >= projector.getModuleCount(ModularForceFieldSystem.Items.moduleSpeed) / 3)
+        if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3)
           return 2
         else
           return 1

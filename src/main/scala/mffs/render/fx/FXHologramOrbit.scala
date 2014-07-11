@@ -2,7 +2,7 @@ package mffs.render.fx
 
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World
@@ -53,7 +53,7 @@ class FXHologramOrbit(par1World: World, orbitPosition: Vector3, position: Vector
     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F)
     RenderUtility.enableBlending
     RenderUtility.setTerrainTexture
-    RenderUtility.renderNormalBlockAsItem(ModularForceFieldSystem.Blocks.forceField, 0, new RenderBlocks)
+    RenderUtility.renderNormalBlockAsItem(Content.forceField, 0, new RenderBlocks)
     RenderUtility.disableBlending
     GL11.glPopMatrix
     tessellator.startDrawingQuads

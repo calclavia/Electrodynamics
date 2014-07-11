@@ -3,7 +3,7 @@ package mffs.field.mode
 import java.util.{HashSet, Set}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.api.mffs.{IFieldMatrix, IProjector}
@@ -15,7 +15,7 @@ class ItemModeSphere extends ItemMode
   def getExteriorPoints(projector: IFieldMatrix): Set[Vector3] =
   {
     val fieldBlocks = new HashSet[Vector3]
-    val radius = projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale)
+    val radius = projector.getModuleCount(Content.moduleScale)
     val steps = Math.ceil(Math.PI / Math.atan(1.0D / radius / 2)).asInstanceOf[Int]
 
     for (phi_n <- 0 until 2 * steps; theta_n <- 0 until steps)
@@ -33,7 +33,7 @@ class ItemModeSphere extends ItemMode
   {
     val fieldBlocks = new HashSet[Vector3]
     val translation: Vector3 = projector.getTranslation
-    val radius: Int = projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale)
+    val radius: Int = projector.getModuleCount(Content.moduleScale)
 
     for (x <- radius to radius; y <- -radius to radius; z <- -radius to radius)
     {
@@ -49,7 +49,7 @@ class ItemModeSphere extends ItemMode
 
   override def isInField(projector: IFieldMatrix, position: Vector3): Boolean =
   {
-    return new Vector3(projector.asInstanceOf[TileEntity]).add(projector.getTranslation).distance(position) < projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale)
+    return new Vector3(projector.asInstanceOf[TileEntity]).add(projector.getTranslation).distance(position) < projector.getModuleCount(Content.moduleScale)
   }
 
   @SideOnly(Side.CLIENT) override def render(projector: IProjector, x1: Double, y1: Double, z1: Double, f: Float, ticks: Long)

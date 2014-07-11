@@ -4,7 +4,7 @@ import java.util.{HashSet => JHashSet, Set => JSet}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
@@ -148,9 +148,9 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
 
   def getTransferMode: TransferMode = transferMode
 
-  def getTransmissionRange: Int = 15 + getModuleCount(ModularForceFieldSystem.Items.moduleScale)
+  def getTransmissionRange: Int = 15 + getModuleCount(Content.moduleScale)
 
-  def getTransmissionRate: Int = 300 + 60 * getModuleCount(ModularForceFieldSystem.Items.moduleSpeed)
+  def getTransmissionRate: Int = 300 + 60 * getModuleCount(Content.moduleSpeed)
 
   @SideOnly(Side.CLIENT)
   override def renderStatic(renderer: RenderBlocks, pos: Vector3, pass: Int): Boolean =

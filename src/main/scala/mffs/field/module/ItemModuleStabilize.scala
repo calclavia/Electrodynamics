@@ -4,7 +4,7 @@ import java.util.Set
 
 import mffs.base.{ItemModule, TilePacketType}
 import mffs.field.mode.ItemModeCustom
-import mffs.{ModularForceFieldSystem, Reference}
+import mffs.{Content, ModularForceFieldSystem, Reference}
 import net.minecraft.block.{Block, BlockLiquid}
 import net.minecraft.init.Blocks
 import net.minecraft.inventory.IInventory
@@ -39,7 +39,7 @@ class ItemModuleStabilize extends ItemModule
 
     if (projector.getTicks % 40 == 0)
     {
-      if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0))
+      if (projector.getMode.isInstanceOf[ItemModeCustom] && !(projector.getModuleCount(Content.moduleCamouflage) > 0))
       {
         val fieldBlocks = projector.getMode.asInstanceOf[ItemModeCustom].getFieldBlockMap(projector, projector.getModeStack)
         val fieldCenter: Vector3 = new Vector3(tile) + projector.getTranslation
@@ -73,7 +73,7 @@ class ItemModuleStabilize extends ItemModule
                 {
                   val itemBlock = checkStack.getItem.asInstanceOf[ItemBlock].field_150939_a
 
-                  if (blockInfo == null || (blockInfo._1 == itemBlock && (blockInfo._2 == checkStack.getItemDamage || projector.getModuleCount(ModularForceFieldSystem.Items.moduleApproximation) > 0)) || (projector.getModuleCount(ModularForceFieldSystem.Items.moduleApproximation) > 0 && isApproximationEqual(blockInfo._1, checkStack)))
+                  if (blockInfo == null || (blockInfo._1 == itemBlock && (blockInfo._2 == checkStack.getItemDamage || projector.getModuleCount(Content.moduleApproximation) > 0)) || (projector.getModuleCount(Content.moduleApproximation) > 0 && isApproximationEqual(blockInfo._1, checkStack)))
                   {
                     try
                     {
@@ -94,7 +94,7 @@ class ItemModuleStabilize extends ItemModule
 
                         blockCount += 1;
 
-                        if (blockCount >= projector.getModuleCount(ModularForceFieldSystem.Items.moduleSpeed) / 3)
+                        if (blockCount >= projector.getModuleCount(Content.moduleSpeed) / 3)
                         {
                           return 2
                         }

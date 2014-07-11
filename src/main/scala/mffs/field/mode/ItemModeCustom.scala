@@ -7,7 +7,7 @@ import java.util.{Set => JSet}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.module.ItemModuleArray
 import mffs.util.TCache
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.{Content, ModularForceFieldSystem, Settings}
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -39,7 +39,7 @@ class ItemModeCustom extends ItemMode with TCache
   private final val NBT_FIELD_SIZE: String = "fieldSize"
   private final val NBT_FILE_SAVE_PREFIX: String = "custom_mode_"
 
-  val modes = Array(ModularForceFieldSystem.Items.modeCube, ModularForceFieldSystem.Items.modeSphere, ModularForceFieldSystem.Items.modeTube, ModularForceFieldSystem.Items.modePyramid)
+  val modes = Array(Content.modeCube, Content.modeSphere, Content.modeTube, Content.modePyramid)
 
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: util.List[_], par4: Boolean)
   {
@@ -267,13 +267,13 @@ class ItemModeCustom extends ItemMode with TCache
 
     val fieldMap = getFieldBlockMapClean(projector, itemStack)
 
-    if (projector.getModuleCount(ModularForceFieldSystem.Items.moduleArray) > 0)
+    if (projector.getModuleCount(Content.moduleArray) > 0)
     {
-      val longestDirectional = (ModularForceFieldSystem.Items.moduleArray.asInstanceOf[ItemModuleArray]).getDirectionWidthMap(fieldMap.keySet)
+      val longestDirectional = (Content.moduleArray.asInstanceOf[ItemModuleArray]).getDirectionWidthMap(fieldMap.keySet)
 
       for (direction <- ForgeDirection.VALID_DIRECTIONS)
       {
-        val copyAmount = projector.getSidedModuleCount(ModularForceFieldSystem.Items.moduleArray, direction)
+        val copyAmount = projector.getSidedModuleCount(Content.moduleArray, direction)
         val directionalDisplacement = (Math.abs(longestDirectional(direction)) + Math.abs(longestDirectional(direction.getOpposite))) + 1
 
         (0 until copyAmount) foreach (i =>
@@ -296,7 +296,7 @@ class ItemModeCustom extends ItemMode with TCache
 
   def getFieldBlockMapClean(projector: IFieldMatrix, itemStack: ItemStack): Map[Vector3, (Block, Int)] =
   {
-    val scale = projector.getModuleCount(ModularForceFieldSystem.Items.moduleScale) / 3f
+    val scale = projector.getModuleCount(Content.moduleScale) / 3f
     val fieldBlocks = Map[Vector3, (Block, Int)]()
 
     if (getSaveDirectory != null)

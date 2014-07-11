@@ -1,7 +1,7 @@
 package mffs.util
 
 import mffs.util.TransferMode._
-import mffs.{ModularForceFieldSystem, Settings}
+import mffs.{Content, ModularForceFieldSystem, Settings}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank}
@@ -148,7 +148,7 @@ object FortronUtility
 
       if (transferer.isInstanceOf[IModuleAcceptor])
       {
-        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(ModularForceFieldSystem.Items.moduleCamouflage) > 0
+        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(Content.moduleCamouflage) > 0
       }
 
       if (joules > 0)

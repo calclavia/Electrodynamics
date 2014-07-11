@@ -3,7 +3,7 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import io.netty.buffer.ByteBuf
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import mffs.util.TCache
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
@@ -46,7 +46,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   override def start()
   {
     super.start()
-    fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.Items.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+    fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
   }
 
   def consumeCost()
@@ -167,7 +167,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   override def markDirty()
   {
     super.markDirty()
-    this.fortronTank.setCapacity((this.getModuleCount(ModularForceFieldSystem.Items.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
+    this.fortronTank.setCapacity((this.getModuleCount(Content.moduleCapacity) * this.capacityBoost + this.capacityBase) * FluidContainerRegistry.BUCKET_VOLUME)
     clearCache()
   }
 

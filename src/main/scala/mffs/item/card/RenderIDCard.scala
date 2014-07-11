@@ -3,7 +3,7 @@ package mffs.item.card
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.ModularForceFieldSystem
+import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.{ItemRenderer, Tessellator}
@@ -33,7 +33,7 @@ class RenderIDCard extends IItemRenderer
       glPushMatrix
       glDisable(GL_CULL_FACE)
       transform(renderType)
-      renderItemIcon(ModularForceFieldSystem.Items.cardID.getIcon(itemStack, 0))
+      renderItemIcon(Content.cardID.getIcon(itemStack, 0))
 
       if (renderType != ItemRenderType.INVENTORY)
       {
