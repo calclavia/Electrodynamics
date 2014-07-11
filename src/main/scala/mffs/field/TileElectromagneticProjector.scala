@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
+import mffs.render.FieldColor
 import mffs.security.access.MFFSPermissions
 import mffs.util.TCache
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
@@ -24,6 +25,7 @@ import resonant.api.mffs.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.access.Permission
 import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.render.EnumColor
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
@@ -74,13 +76,13 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
         if (packetType == 1)
         {
-          ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, 0.6f, 0.6f, 1, 40)
-          ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 1, 1, 50)
+          ModularForceFieldSystem.proxy.renderBeam(this.worldObj, root, vector, FieldColor.blue, 40)
+          ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.blue, 50)
         }
         else if (packetType == 2)
         {
-          ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, 1f, 0f, 0f, 40)
-          ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, 1, 0, 0, 50)
+          ModularForceFieldSystem.proxy.renderBeam(this.worldObj, vector, root, FieldColor.red, 40)
+          ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
         }
       }
       else if (packetID == TilePacketType.FIELD.id)

@@ -3,10 +3,10 @@ package mffs
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import mffs.field.TileElectromagneticProjector
-import mffs.field.gui.{GuiForceMobilizer, GuiElectromagneticProjector}
+import mffs.field.gui.{GuiElectromagneticProjector, GuiForceMobilizer}
+import mffs.field.mobilize.TileForceMobilizer
 import mffs.item.card.RenderIDCard
 import mffs.item.gui.GuiFrequency
-import mffs.field.mobilize.TileForceMobilizer
 import mffs.production._
 import mffs.render.fx._
 import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
@@ -70,37 +70,37 @@ class ClientProxy extends CommonProxy
 
   override def isOp(profile: GameProfile) = false
 
-  override def renderBeam(world: World, position: Vector3, target: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  override def renderBeam(world: World, position: Vector3, target: Vector3, color: (Float, Float, Float), age: Int)
   {
-    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXFortronBeam(world, position, target, red, green, blue, age))
+    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXFortronBeam(world, position, target, color._1, color._2, color._3, age))
   }
 
-  override def renderHologram(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int, targetPosition: Vector3)
+  override def renderHologram(world: World, position: Vector3, color: (Float, Float, Float), age: Int, targetPosition: Vector3)
   {
     if (targetPosition != null)
     {
-      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age).setTarget(targetPosition))
+      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologram(world, position, color._1, color._2, color._3, age).setTarget(targetPosition))
     }
     else
     {
-      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologram(world, position, red, green, blue, age))
+      FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologram(world, position, color._1, color._2, color._3, age))
     }
   }
 
-  override def renderHologramOrbit(world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  override def renderHologramOrbit(world: World, orbitCenter: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
-    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed))
+    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramOrbit(world, orbitCenter, orbitCenter, color._1, color._2, color._3, age, maxSpeed))
   }
 
-  override def renderHologramOrbit(controller: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  override def renderHologramOrbit(controller: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
-    val fx: FXMFFS = new FXHologramOrbit(world, orbitCenter, position, red, green, blue, age, maxSpeed)
+    val fx = new FXHologramOrbit(world, orbitCenter, position, color._1, color._2, color._3, age, maxSpeed)
     fx.setController(controller)
     FMLClientHandler.instance.getClient.effectRenderer.addEffect(fx)
   }
 
-  override def renderHologramMoving(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  override def renderHologramMoving(world: World, position: Vector3, color: (Float, Float, Float), age: Int)
   {
-    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramMoving(world, position, red, green, blue, age))
+    FMLClientHandler.instance.getClient.effectRenderer.addEffect(new FXHologramMoving(world, position, color._1, color._2, color._3, age))
   }
 }

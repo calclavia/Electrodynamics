@@ -6,6 +6,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardFrequency
+import mffs.render.FieldColor
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
 import net.minecraft.block.Block
@@ -123,7 +124,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
               {
                 if (world.isRemote)
                 {
-                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5), 0.6f, 0.6f, 1, 20)
+                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5),FieldColor.blue, 20)
                 }
                 receivedEnergy += consumedEnergy
               }

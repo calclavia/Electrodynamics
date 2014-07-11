@@ -54,6 +54,8 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     delayedEvents ++= copyEvents filter (_.ticks >= 0)
   }
 
+  def clearQueue() = delayedEvents.clear()
+
   override def getPacketData(packetID: Int): List[AnyRef] =
   {
     if (packetID == TilePacketType.DESCRIPTION.id)

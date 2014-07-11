@@ -3,9 +3,10 @@ package mffs.field.mobilize
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.base.{TilePacketType, TileFieldMatrix}
+import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
+import mffs.render.FieldColor
 import mffs.render.fx.IEffectController
 import mffs.security.access.MFFSPermissions
 import mffs.util.MFFSUtility
@@ -22,6 +23,7 @@ import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{Blacklist, EventForceManipulate}
 import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapVararg._
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
@@ -35,7 +37,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   val packetRange = 60
   val animationTime = 20
 
-  private val failedPositions = mutable.Set.empty[Vector3]
+  val failedPositions = mutable.Set.empty[Vector3]
   var anchor = new Vector3()
 
   /**
@@ -278,14 +280,20 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
       delayedEvents.clear()
       worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
+      val playPoint = position + anchor + 0.5
+      worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
       ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.RENDER.id, world, new Vector3(this), packetRange)
 
 
-      /**
-       * Send failure coordinates to client
-       */
-      val packetTile = new PacketTile(this) <<<TilePacketType.FXS.id <<< 3  <<< (failedPositions.toSeq flatMap (_.toIntList))
-      ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, new Vector3(this), packetRange)
+      if(failedPositions.size > 0)
+      {
+        /**
+         * Send failure coordinates to client
+         */
+        val coords = failedPositions.toSeq flatMap (_.toIntList)
+        val packetTile = new PacketTile(this) <<< TilePacketType.FXS.id <<< 3 <<< coords.size <<< coords
+        ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, new Vector3(this), packetRange)
+      }
 
       failedMove = false
       failedPositions.clear()
@@ -348,8 +356,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
             isTeleportPacket match
             {
-              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, 1, 1, 1, 30, vector + direction))
-              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, 0, 1, 0, 30, vector + direction))
+              case 1 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.blue, 30, vector + direction))
+              case 2 => hologramRenderPoints foreach (vector => ModularForceFieldSystem.proxy.renderHologram(world, vector, FieldColor.green, 30, vector + direction))
             }
           }
           case 2 =>
@@ -371,13 +379,13 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             hologramRenderPoints foreach (vector =>
             {
               //Render teleport start
-              ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color._1, color._2, color._3, animationTime, 30f)
+              ModularForceFieldSystem.proxy.renderHologramOrbit(this, world, anchorPosition, vector, color, animationTime, 30f)
 
               if (targetPosition.world != null && targetPosition.world.getChunkProvider.chunkExists(targetPosition.xi, targetPosition.zi))
               {
                 //Render teleport end
                 val destination = vector - anchorPosition + targetPosition
-                ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color._1, color._2, color._3, animationTime, 30f)
+                ModularForceFieldSystem.proxy.renderHologramOrbit(this, targetPosition.world, targetPosition, destination, color, animationTime, 30f)
               }
             })
 
@@ -390,7 +398,8 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
              */
             val vecSize = data.readInt()
             val hologramRenderPoints = ((0 until vecSize) map (i => data.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
-            hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(this.worldObj, _, 1, 0, 0, 30, null))
+
+            hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
           }
         }
       }

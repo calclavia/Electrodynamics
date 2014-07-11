@@ -1,5 +1,6 @@
 package mffs.util
 
+import mffs.render.FieldColor
 import mffs.util.TransferMode._
 import mffs.{Content, ModularForceFieldSystem, Settings}
 import net.minecraft.tileentity.TileEntity
@@ -158,7 +159,7 @@ object FortronUtility
         toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
         if (world.isRemote && toBeInjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5,FieldColor.blue, 20)
         }
       }
       else
@@ -168,7 +169,7 @@ object FortronUtility
         toBeEjected = receiver.requestFortron(transferer.provideFortron(toBeEjected, true), true)
         if (world.isRemote && toBeEjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3(tileEntity) + 0.5, 0.6f, 0.6f, 1, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, new Vector3(tileEntity) + 0.5, FieldColor.blue, 20)
         }
       }
     }

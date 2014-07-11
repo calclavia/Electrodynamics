@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
 import resonant.lib.prefab.AbstractProxy
+import resonant.lib.render.EnumColor
 import universalelectricity.core.transform.vector.Vector3
 
 class CommonProxy extends AbstractProxy with IGuiHandler
@@ -75,23 +76,23 @@ class CommonProxy extends AbstractProxy with IGuiHandler
     return false
   }
 
-  def renderBeam(world: World, position: Vector3, target: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  def renderBeam(world: World, position: Vector3, target: Vector3, color: (Float, Float, Float), age: Int)
   {
   }
 
-  def renderHologram(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int, targetPosition: Vector3)
+  def renderHologram(world: World, position: Vector3, color: (Float, Float, Float), age: Int, targetPosition: Vector3)
   {
   }
 
-  def renderHologramMoving(world: World, position: Vector3, red: Float, green: Float, blue: Float, age: Int)
+  def renderHologramMoving(world: World, position: Vector3, color: (Float, Float, Float), age: Int)
   {
   }
 
-  def renderHologramOrbit(world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  def renderHologramOrbit(world: World, orbitCenter: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
   }
 
-  def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, red: Float, green: Float, blue: Float, age: Int, maxSpeed: Float)
+  def renderHologramOrbit(owner: IEffectController, world: World, orbitCenter: Vector3, position: Vector3, color: (Float, Float, Float), age: Int, maxSpeed: Float)
   {
   }
 }
