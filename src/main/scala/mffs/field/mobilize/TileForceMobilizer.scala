@@ -531,9 +531,22 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   {
     if (isTeleport)
     {
-      return getCard.getItem.asInstanceOf[ICoordLink].getLink(this.getCard)
+      val cardStack = getLinkCard
+
+      if (cardStack != null)
+        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack)
     }
+
     return new VectorWorld(worldObj, getAbsoluteAnchor + getDirection)
+  }
+
+  def getLinkCard: ItemStack =
+  {
+    getModuleStacks() find (_.getItem.isInstanceOf[ICoordLink]) match
+    {
+      case Some(itemStack) => return itemStack
+      case _ => return null
+    }
   }
 
   /**
@@ -545,9 +558,9 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
    */
   def getMoveTime: Int =
   {
-    if (this.isTeleport)
+    if (isTeleport)
     {
-      var time: Int = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).asInstanceOf[Int]
+      var time = (20 * this.getTargetPosition.distance(this.getAbsoluteAnchor)).toInt
       if (this.getTargetPosition.world ne this.worldObj)
       {
         time += 20 * 60
@@ -559,12 +572,12 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
   private def isTeleport: Boolean =
   {
-    if (this.getCard != null && Settings.allowForceManipulatorTeleport)
+    if (getLinkCard != null && Settings.allowForceManipulatorTeleport)
     {
-      if (getCard.getItem.isInstanceOf[ICoordLink])
-      {
-        return getCard.getItem.asInstanceOf[ICoordLink].getLink(this.getCard) != null
-      }
+      val cardStack = getLinkCard
+
+      if (cardStack != null)
+        return cardStack.getItem.asInstanceOf[ICoordLink].getLink(cardStack) != null
     }
     return false
   }

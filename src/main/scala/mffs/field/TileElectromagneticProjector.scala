@@ -301,7 +301,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getForceFields: JSet[Vector3] = forceFields
 
-  override def getCards: Set[ItemStack] = Set[ItemStack](super.getCard, getStackInSlot(1))
 
   def getTicks: Long = ticks
 

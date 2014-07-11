@@ -174,22 +174,4 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
    * Gets the amount of empty space this tank has.
    */
   def getFortronEmpty = fortronTank.getCapacity - fortronTank.getFluidAmount
-
-  /**
-   * Gets the card that's in this machine.
-   *
-   * @return
-   */
-  def getCard: ItemStack =
-  {
-    val itemStack: ItemStack = this.getStackInSlot(0)
-    if (itemStack != null)
-    {
-      if (itemStack.getItem.isInstanceOf[ICard])
-      {
-        return itemStack
-      }
-    }
-    return null
-  }
 }

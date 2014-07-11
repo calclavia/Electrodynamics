@@ -21,7 +21,6 @@ class BlockPostMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, sta
 {
   protected override def onEvent
   {
-    println("call")
     if (!startPosition.world.isRemote)
     {
       if (block != Blocks.air)
