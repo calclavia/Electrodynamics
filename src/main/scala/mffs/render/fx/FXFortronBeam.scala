@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Reference
 import net.minecraft.util.ResourceLocation
 import net.minecraft.world.World
-import resonant.lib.render.fx.FXBeam
 import universalelectricity.core.transform.vector.Vector3
 
 /**

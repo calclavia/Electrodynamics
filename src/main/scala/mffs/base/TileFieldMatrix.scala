@@ -45,8 +45,13 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     /**
      * Evaluated queued objects
      */
-    delayedEvents.clone foreach (_.update())
-    delayedEvents dequeueAll (_.ticks <= 0)
+    val copyEvents = delayedEvents.clone
+
+    while (!delayedEvents.isEmpty)
+    {
+      delayedEvents.dequeue().update()
+    }
+    delayedEvents ++= copyEvents filter (_.ticks >= 0)
   }
 
   override def getPacketData(packetID: Int): List[AnyRef] =

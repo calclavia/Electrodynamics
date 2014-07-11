@@ -6,12 +6,12 @@ class DelayedEvent(val handler: IDelayedEventHandler, var ticks: Int, val evtMet
 
   def update()
   {
-    this.ticks -= 1
-
-    if (this.ticks <= 0)
+    if (ticks == 0)
     {
-      this.onEvent
+      onEvent
     }
+
+    ticks -= 1
   }
 
   /**

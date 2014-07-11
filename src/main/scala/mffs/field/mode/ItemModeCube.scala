@@ -21,7 +21,6 @@ class ItemModeCube extends ItemMode
     val posScale: Vector3 = projector.getPositiveScale
     val negScale: Vector3 = projector.getNegativeScale
 
-    //TODO: Check parallel possiblity
     for (x <- -negScale.xi to posScale.xi by step; y <- -negScale.yi to posScale.yi by step; z <- -negScale.zi to posScale.zi by step)
       if (y == -negScale.yi || y == posScale.yi || x == -negScale.xi || x == posScale.xi || z == -negScale.zi || z == posScale.zi)
         fieldBlocks.add(new Vector3(x, y, z))

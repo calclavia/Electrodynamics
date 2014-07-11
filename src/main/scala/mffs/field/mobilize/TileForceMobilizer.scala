@@ -499,7 +499,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   {
     if (!world.isRemote)
     {
-      val relativePosition = position.clone.subtract(getAbsoluteAnchor)
+      val relativePosition = position - getAbsoluteAnchor
       val newPosition = getTargetPosition + relativePosition
       val tileEntity = position.getTileEntity(world)
 

@@ -35,6 +35,7 @@ class BlockPreMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, val 
           {
             tileEntity.writeToNBT(tileData)
           }
+
           handler.queueEvent(new BlockPostMoveDelayedEvent(handler, 0, this.startPosition, this.newPosition, blockID, blockMetadata, tileEntity, tileData))
         }
       }
