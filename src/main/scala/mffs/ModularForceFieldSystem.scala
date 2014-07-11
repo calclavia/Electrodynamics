@@ -6,36 +6,20 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.common.{Mod, ModMetadata, SidedProxy}
+import cpw.mods.fml.common.{Mod, SidedProxy}
 import ic2.api.tile.ExplosionWhitelist
-import mffs.base.{ItemMFFS, ItemModule}
-import mffs.field.TileElectromagneticProjector
-import mffs.field.mode._
-import mffs.field.module._
-import mffs.item.ItemRemoteController
-import mffs.item.card._
-import mffs.item.fortron.ItemCardInfinite
-import mffs.field.mobilize.TileForceMobilizer
-import mffs.production._
-import mffs.security.TileBiometricIdentifier
-import mffs.security.module._
 import mffs.util.FortronUtility
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
-import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
-import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
 import org.modstats.{ModstatInfo, Modstats}
 import resonant.api.mffs.Blacklist
-import resonant.content.loader.ModManager
 import resonant.lib.config.ConfigHandler
 import resonant.lib.loadable.LoadableHandler
 import resonant.lib.network.netty.PacketManager
 import resonant.lib.prefab.damage.CustomDamageSource
-import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
 
 import scala.collection.convert.wrapAll._
 

@@ -1,6 +1,5 @@
 package mffs
 
-import cpw.mods.fml.common.registry.GameRegistry
 import mffs.base.{ItemMFFS, ItemModule}
 import mffs.field.mobilize.TileForceMobilizer
 import mffs.field.mode._
@@ -15,9 +14,9 @@ import mffs.security.module._
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
-import net.minecraftforge.oredict.{OreDictionary, ShapedOreRecipe, ShapelessOreRecipe}
+import net.minecraftforge.oredict.OreDictionary
 import resonant.content.loader.{ContentHolder, ImplicitContentName}
-import resonant.lib.recipe.{RecipeUtility, UniversalRecipe}
+import resonant.lib.recipe.UniversalRecipe
 
 /**
  * The main content of MFFS
@@ -114,50 +113,50 @@ object Content extends ContentHolder
     /**
      * Add recipe.
      */
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(focusMatrix, 8), "RMR", "MDM", "RMR", 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'D': Character, Items.diamond, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(remoteController), "WWW", "MCM", "MCM", 'W': Character, UniversalRecipe.WIRE.get, 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(coercionDeriver), "FMF", "FCF", "FMF", 'C': Character, UniversalRecipe.BATTERY.get, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D': Character, Items.diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D': Character, Items.diamond, 'C': Character, UniversalRecipe.BATTERY.get, 'F': Character, focusMatrix, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C': Character, cardBlank, 'M': Character, UniversalRecipe.PRIMARY_METAL.get, 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.MOTOR.get, 'T': Character, moduleTranslate, 'M': Character, UniversalRecipe.MOTOR.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P': Character, Items.paper, 'M': Character, UniversalRecipe.PRIMARY_METAL.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardLink), "BWB", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardFrequency), "WBW", 'B': Character, cardBlank, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(cardID), "R R", " B ", "R R", 'B': Character, cardBlank, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeSphere), " F ", "FFF", " F ", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCube), "FFF", "FFF", "FFF", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeTube), "FFF", "   ", "FFF", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modePyramid), "F  ", "FF ", "FFF", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCylinder), "S", "S", "S", 'S': Character, modeSphere))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(modeCustom), " C ", "TFP", " S ", 'S': Character, modeSphere, 'C': Character, modeCube, 'T': Character, modeTube, 'P': Character, modePyramid, 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(modeCustom), new ItemStack(modeCustom)))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSpeed, 1), "FFF", "RRR", "FFF", 'F': Character, focusMatrix, 'R': Character, Items.redstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCapacity, 2), "FCF", 'F': Character, focusMatrix, 'C': Character, UniversalRecipe.BATTERY.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleShock), "FWF", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSponge), "BBB", "BFB", "BBB", 'F': Character, focusMatrix, 'B': Character, Items.water_bucket))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDisintegration), " W ", "FBF", " W ", 'F': Character, focusMatrix, 'W': Character, UniversalRecipe.WIRE.get, 'B': Character, UniversalRecipe.BATTERY.get), Settings.config, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleDome), "F", " ", "F", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCamouflage), "WFW", "FWF", "WFW", 'F': Character, focusMatrix, 'W': Character, new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE)))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleFusion), "FJF", 'F': Character, focusMatrix, 'J': Character, moduleShock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleScale, 2), "FRF", 'F': Character, focusMatrix))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleTranslate, 2), "FSF", 'F': Character, focusMatrix, 'S': Character, moduleScale), Settings.config, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRotate, 4), "F  ", " F ", "  F", 'F': Character, focusMatrix))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleGlow, 4), "GGG", "GFG", "GGG", 'F': Character, focusMatrix, 'G': Character, Blocks.glowstone))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleStabilize), "FDF", "PSA", "FDF", 'F': Character, focusMatrix, 'P': Character, Items.diamond_pickaxe, 'S': Character, Items.diamond_shovel, 'A': Character, Items.diamond_axe, 'D': Character, Items.diamond))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleCollection), "F F", " H ", "F F", 'F': Character, focusMatrix, 'H': Character, Blocks.hopper))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleInvert), "L", "F", "L", 'F': Character, focusMatrix, 'L': Character, Blocks.lapis_block))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleSilence), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, Blocks.noteblock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleApproximation), " N ", "NFN", " N ", 'F': Character, focusMatrix, 'N': Character, Items.golden_pickaxe))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleArray), " F ", "DFD", " F ", 'F': Character, focusMatrix, 'D': Character, Items.diamond))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleRepulsion), "FFF", "DFD", "SFS", 'F': Character, focusMatrix, 'D': Character, Items.diamond, 'S': Character, Items.slime_ball), Settings.config, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiHostile), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, Items.gunpowder, 'R': Character, Items.rotten_flesh, 'B': Character, Items.bone, 'S': Character, Items.ghast_tear))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiFriendly), " R ", "GFB", " S ", 'F': Character, focusMatrix, 'G': Character, Items.cooked_porkchop, 'R': Character, new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'B': Character, Items.leather, 'S': Character, Items.slime_ball))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiPersonnel), "BFG", 'F': Character, focusMatrix, 'B': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
-    RecipeUtility.addRecipe(new ShapedOreRecipe(new ItemStack(moduleConfiscate), "PEP", "EFE", "PEP", 'F': Character, focusMatrix, 'E': Character, Items.ender_eye, 'P': Character, Items.ender_pearl), Settings.config, true)
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleWarn), "NFN", 'F': Character, focusMatrix, 'N': Character, Blocks.noteblock))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAccess), " C ", "BFB", " C ", 'F': Character, focusMatrix, 'B': Character, Blocks.iron_block, 'C': Character, Blocks.chest))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleBlockAlter), " G ", "GFG", " G ", 'F': Character, moduleBlockAccess, 'G': Character, Blocks.gold_block))
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(moduleAntiSpawn), " H ", "G G", " H ", 'H': Character, moduleAntiHostile, 'G': Character, moduleAntiFriendly))
+    recipes += shaped(new ItemStack(focusMatrix, 8), "RMR", "MDM", "RMR", 'M', UniversalRecipe.PRIMARY_METAL.get, 'D', Items.diamond, 'R', Items.redstone)
+    recipes += shaped(new ItemStack(remoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipe.WIRE.get, 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get)
+    recipes += shaped(new ItemStack(coercionDeriver), "FMF", "FCF", "FMF", 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get, 'F', focusMatrix)
+    recipes += shaped(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D', Items.diamond, 'C', UniversalRecipe.BATTERY.get, 'F', focusMatrix, 'M', UniversalRecipe.PRIMARY_METAL.get)
+    recipes += shaped(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D', Items.diamond, 'C', UniversalRecipe.BATTERY.get, 'F', focusMatrix, 'M', UniversalRecipe.PRIMARY_METAL.get)
+    recipes += shaped(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C', cardBlank, 'M', UniversalRecipe.PRIMARY_METAL.get, 'F', focusMatrix)
+    recipes += shaped(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F', focusMatrix, 'C', UniversalRecipe.MOTOR.get, 'T', moduleTranslate, 'M', UniversalRecipe.MOTOR.get)
+    recipes += shaped(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P', Items.paper, 'M', UniversalRecipe.PRIMARY_METAL.get)
+    recipes += shaped(new ItemStack(cardLink), "BWB", 'B', cardBlank, 'W', UniversalRecipe.WIRE.get)
+    recipes += shaped(new ItemStack(cardFrequency), "WBW", 'B', cardBlank, 'W', UniversalRecipe.WIRE.get)
+    recipes += shaped(new ItemStack(cardID), "R R", " B ", "R R", 'B', cardBlank, 'R', Items.redstone)
+    recipes += shaped(new ItemStack(modeSphere), " F ", "FFF", " F ", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(modeCube), "FFF", "FFF", "FFF", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(modeTube), "FFF", "   ", "FFF", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(modePyramid), "F  ", "FF ", "FFF", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(modeCylinder), "S", "S", "S", 'S', modeSphere)
+    recipes += shaped(new ItemStack(modeCustom), " C ", "TFP", " S ", 'S', modeSphere, 'C', modeCube, 'T', modeTube, 'P', modePyramid, 'F', focusMatrix)
+    recipes += shapeless(new ItemStack(modeCustom), new ItemStack(modeCustom))
+    recipes += shaped(new ItemStack(moduleSpeed, 1), "FFF", "RRR", "FFF", 'F', focusMatrix, 'R', Items.redstone)
+    recipes += shaped(new ItemStack(moduleCapacity, 2), "FCF", 'F', focusMatrix, 'C', UniversalRecipe.BATTERY.get)
+    recipes += shaped(new ItemStack(moduleShock), "FWF", 'F', focusMatrix, 'W', UniversalRecipe.WIRE.get)
+    recipes += shaped(new ItemStack(moduleSponge), "BBB", "BFB", "BBB", 'F', focusMatrix, 'B', Items.water_bucket)
+    recipes += shaped(new ItemStack(moduleDisintegration), " W ", "FBF", " W ", 'F', focusMatrix, 'W', UniversalRecipe.WIRE.get, 'B', UniversalRecipe.BATTERY.get).config(Settings.config)
+    recipes += shaped(new ItemStack(moduleDome), "F", " ", "F", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(moduleCamouflage), "WFW", "FWF", "WFW", 'F', focusMatrix, 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE))
+    recipes += shaped(new ItemStack(moduleFusion), "FJF", 'F', focusMatrix, 'J', moduleShock)
+    recipes += shaped(new ItemStack(moduleScale, 2), "FRF", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(moduleTranslate, 2), "FSF", 'F', focusMatrix, 'S', moduleScale).config(Settings.config)
+    recipes += shaped(new ItemStack(moduleRotate, 4), "F  ", " F ", "  F", 'F', focusMatrix)
+    recipes += shaped(new ItemStack(moduleGlow, 4), "GGG", "GFG", "GGG", 'F', focusMatrix, 'G', Blocks.glowstone)
+    recipes += shaped(new ItemStack(moduleStabilize), "FDF", "PSA", "FDF", 'F', focusMatrix, 'P', Items.diamond_pickaxe, 'S', Items.diamond_shovel, 'A', Items.diamond_axe, 'D', Items.diamond)
+    recipes += shaped(new ItemStack(moduleCollection), "F F", " H ", "F F", 'F', focusMatrix, 'H', Blocks.hopper)
+    recipes += shaped(new ItemStack(moduleInvert), "L", "F", "L", 'F', focusMatrix, 'L', Blocks.lapis_block)
+    recipes += shaped(new ItemStack(moduleSilence), " N ", "NFN", " N ", 'F', focusMatrix, 'N', Blocks.noteblock)
+    recipes += shaped(new ItemStack(moduleApproximation), " N ", "NFN", " N ", 'F', focusMatrix, 'N', Items.golden_pickaxe)
+    recipes += shaped(new ItemStack(moduleArray), " F ", "DFD", " F ", 'F', focusMatrix, 'D', Items.diamond)
+    recipes += shaped(new ItemStack(moduleRepulsion), "FFF", "DFD", "SFS", 'F', focusMatrix, 'D', Items.diamond, 'S', Items.slime_ball).config(Settings.config)
+    recipes += shaped(new ItemStack(moduleAntiHostile), " R ", "GFB", " S ", 'F', focusMatrix, 'G', Items.gunpowder, 'R', Items.rotten_flesh, 'B', Items.bone, 'S', Items.ghast_tear)
+    recipes += shaped(new ItemStack(moduleAntiFriendly), " R ", "GFB", " S ", 'F', focusMatrix, 'G', Items.cooked_porkchop, 'R', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'B', Items.leather, 'S', Items.slime_ball)
+    recipes += shaped(new ItemStack(moduleAntiPersonnel), "BFG", 'F', focusMatrix, 'B', moduleAntiHostile, 'G', moduleAntiFriendly)
+    recipes += shaped(new ItemStack(moduleConfiscate), "PEP", "EFE", "PEP", 'F', focusMatrix, 'E', Items.ender_eye, 'P', Items.ender_pearl).config(Settings.config)
+    recipes += shaped(new ItemStack(moduleWarn), "NFN", 'F', focusMatrix, 'N', Blocks.noteblock)
+    recipes += shaped(new ItemStack(moduleBlockAccess), " C ", "BFB", " C ", 'F', focusMatrix, 'B', Blocks.iron_block, 'C', Blocks.chest)
+    recipes += shaped(new ItemStack(moduleBlockAlter), " G ", "GFG", " G ", 'F', moduleBlockAccess, 'G', Blocks.gold_block)
+    recipes += shaped(new ItemStack(moduleAntiSpawn), " H ", "G G", " H ", 'H', moduleAntiHostile, 'G', moduleAntiFriendly)
   }
 }
