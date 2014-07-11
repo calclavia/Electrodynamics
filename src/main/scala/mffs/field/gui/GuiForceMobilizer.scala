@@ -49,7 +49,7 @@ class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends 
   override def updateScreen
   {
     super.updateScreen
-    buttonList.get(2).asInstanceOf[GuiIcon].setIndex(tile.renderMode)
+    buttonList.get(2).asInstanceOf[GuiIcon].setIndex(tile.previewMode)
     buttonList.get(3).asInstanceOf[GuiIcon].setIndex(if (tile.doAnchor) 1 else 0)
 
     if (buttonList.get(4).asInstanceOf[GuiIcon].setIndex(if (tile.absoluteDirection) 1 else 0))

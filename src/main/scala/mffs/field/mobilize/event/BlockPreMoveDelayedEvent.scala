@@ -41,7 +41,7 @@ class BlockPreMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, val 
       }
       else
       {
-        (handler.asInstanceOf[TileForceMobilizer]).markFailMove = true
+        (handler.asInstanceOf[TileForceMobilizer]).markFailMove()
       }
     }
   }

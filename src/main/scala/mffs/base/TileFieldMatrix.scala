@@ -3,7 +3,7 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import io.netty.buffer.ByteBuf
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
@@ -312,7 +312,11 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
             if (callBack != null)
               callBack.apply()
           }
-          case Failure(t) => println("An error has occurred upon field calculation: " + t.getMessage)
+          case Failure(t) =>
+          {
+            //println(getClass.getName + ": An error has occurred upon field calculation: " + t.getMessage)
+            isCalculating = false
+          }
         }
       }
     }
@@ -331,8 +335,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
       field = getMode.getInteriorPoints(this)
     else
       field = getMode.getExteriorPoints(this)
-
-    val t = System.currentTimeMillis()
 
     getModules() foreach (_.onPreCalculate(this, field))
 
@@ -378,7 +380,6 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
     val field = mutable.Set((newField.view.par map (pos => (pos.apply(rotation) + position + translation).round) filter (position => position.yi <= maxHeight && position.yi >= 0)).seq.toSeq: _ *)
 
     cache(cacheID, field)
-
     return field
   }
 

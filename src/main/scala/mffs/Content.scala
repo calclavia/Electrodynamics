@@ -29,9 +29,9 @@ object Content extends ContentHolder
    */
   val coercionDeriver: Block = new TileCoercionDeriver
   val fortronCapacitor: Block = new TileFortronCapacitor
-  val forceFieldProjector: Block = new TileElectromagneticProjector
+  val electromagneticProjector: Block = new TileElectromagneticProjector
   val biometricIdentifier: Block = new TileBiometricIdentifier
-  val forceManipulator: Block = new TileForceMobilizer
+  val forceMobilizer: Block = new TileForceMobilizer
   val forceField: Block = new TileForceField
 
   /**
@@ -117,9 +117,9 @@ object Content extends ContentHolder
     recipes += shaped(new ItemStack(remoteController), "WWW", "MCM", "MCM", 'W', UniversalRecipe.WIRE.get, 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(new ItemStack(coercionDeriver), "FMF", "FCF", "FMF", 'C', UniversalRecipe.BATTERY.get, 'M', UniversalRecipe.PRIMARY_METAL.get, 'F', focusMatrix)
     recipes += shaped(new ItemStack(fortronCapacitor), "MFM", "FCF", "MFM", 'D', Items.diamond, 'C', UniversalRecipe.BATTERY.get, 'F', focusMatrix, 'M', UniversalRecipe.PRIMARY_METAL.get)
-    recipes += shaped(new ItemStack(forceFieldProjector), " D ", "FFF", "MCM", 'D', Items.diamond, 'C', UniversalRecipe.BATTERY.get, 'F', focusMatrix, 'M', UniversalRecipe.PRIMARY_METAL.get)
+    recipes += shaped(new ItemStack(electromagneticProjector), " D ", "FFF", "MCM", 'D', Items.diamond, 'C', UniversalRecipe.BATTERY.get, 'F', focusMatrix, 'M', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(new ItemStack(biometricIdentifier), "FMF", "MCM", "FMF", 'C', cardBlank, 'M', UniversalRecipe.PRIMARY_METAL.get, 'F', focusMatrix)
-    recipes += shaped(new ItemStack(forceManipulator), "FCF", "TMT", "FCF", 'F', focusMatrix, 'C', UniversalRecipe.MOTOR.get, 'T', moduleTranslate, 'M', UniversalRecipe.MOTOR.get)
+    recipes += shaped(new ItemStack(forceMobilizer), "FCF", "TMT", "FCF", 'F', focusMatrix, 'C', UniversalRecipe.MOTOR.get, 'T', moduleTranslate, 'M', UniversalRecipe.MOTOR.get)
     recipes += shaped(new ItemStack(cardBlank), "PPP", "PMP", "PPP", 'P', Items.paper, 'M', UniversalRecipe.PRIMARY_METAL.get)
     recipes += shaped(new ItemStack(cardLink), "BWB", 'B', cardBlank, 'W', UniversalRecipe.WIRE.get)
     recipes += shaped(new ItemStack(cardFrequency), "WBW", 'B', cardBlank, 'W', UniversalRecipe.WIRE.get)

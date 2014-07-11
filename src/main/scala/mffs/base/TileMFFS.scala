@@ -202,8 +202,8 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
 
   def setActive(flag: Boolean)
   {
-    this.active = flag
-    this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+    active = flag
+    worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
   }
 
   def powerOn()
