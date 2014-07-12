@@ -1,6 +1,5 @@
 package mffs.field.mobilize
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
@@ -159,15 +158,15 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
           {
             worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, Reference.prefix + "fieldmove", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
           }
+
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, new Vector3(this), packetRange)
         }
         else
         {
           packet <<< 2 <<< getMoveTime <<< (getAbsoluteAnchor + 0.5) <<< (getTargetPosition + 0.5) <<< false <<< coordPacketData.size <<< coordPacketData
           moveTime = getMoveTime
+          ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, new Vector3(this), packetRange)
         }
-
-        ModularForceFieldSystem.packetHandler.sendToAllAround(packet, world, new Vector3(this), packetRange)
-
       }
 
       return true
@@ -364,16 +363,13 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             /**
              * Teleportation Rendering
              */
-            //TODO: Fix packet
-            val animationTime = data.readInt
+            val animationTime = data.readInt()
             val anchorPosition = new Vector3(data)
             val targetPosition = new VectorWorld(data)
-            val isPreview = data.readBoolean
-            val nbt = ByteBufUtils.readTag(data)
-            val nbtList = nbt.getTagList("list", 10)
-
-            val hologramRenderPoints = (0 until nbtList.tagCount) map (dir => new Vector3(nbtList.getCompoundTagAt(dir)) + 0.5)
-            val color = if (isPreview) (1f, 1f, 1f) else (0.1f, 1f, 0f)
+            val isPreview = data.readBoolean()
+            val vecSize = data.readInt()
+            val hologramRenderPoints = ((0 until vecSize) map (i => data.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
+            val color = if (isPreview) FieldColor.blue else FieldColor.green
 
             hologramRenderPoints foreach (vector =>
             {
