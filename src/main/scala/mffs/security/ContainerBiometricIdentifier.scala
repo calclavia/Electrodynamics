@@ -1,15 +1,16 @@
 package mffs.security
 
-import mffs.slot.{SlotActive, SlotDisabled, SlotBase}
+import mffs.item.card.ItemCardFrequency
+import mffs.slot.SlotBase
 import net.minecraft.entity.player.EntityPlayer
 import resonant.lib.gui.ContainerBase
+import resonant.lib.prefab.slot.SlotSpecific
 
 class ContainerBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier) extends ContainerBase(tile)
 {
-  addSlotToContainer(new SlotActive(tile, 0, 88, 91))
-  addSlotToContainer(new SlotBase(tile, 1, 8, 46))
-  addSlotToContainer(new SlotActive(tile, 2, 8, 91))
-  (0 until 9) foreach (i => addSlotToContainer(new SlotActive(tile, 3 + i, 8 + i * 18, 111)))
-  addSlotToContainer(new SlotBase(tile, TileBiometricIdentifier.SLOT_COPY, 8, 66))
-  addPlayerInventory(player)
+  //Frequency
+  addSlotToContainer(new SlotSpecific(tile, 0, 8, 114, classOf[ItemCardFrequency]))
+
+  for (x <- 0 until 9; y <- 0 until 5)
+    addSlotToContainer(new SlotBase(tile, x + y * 5, 9 + x * 18, 36 + y * 18))
 }

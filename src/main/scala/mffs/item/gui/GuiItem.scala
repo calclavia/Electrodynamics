@@ -11,7 +11,6 @@ import resonant.lib.gui.GuiContainerBase
  */
 class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBase(container)
 {
-  val item = itemStack.getItem.asInstanceOf[ItemCardFrequency]
   var textField: GuiTextField = _
 
   override def initGui()
@@ -20,14 +19,8 @@ class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBa
     textField = new GuiTextField(fontRendererObj, 50, 30, 80, 15)
   }
 
-  protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
-  {
-    super.drawGuiContainerForegroundLayer(x, y)
-  }
-
   override def mouseClicked(x: Int, y: Int, par3: Int)
   {
-
     super.mouseClicked(x, y, par3)
 
     if (textField != null)

@@ -1,6 +1,5 @@
 package mffs.security.card
 
-import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.Content
@@ -14,7 +13,6 @@ import net.minecraftforge.client.IItemRenderer
 import net.minecraftforge.client.IItemRenderer.ItemRenderType
 import org.lwjgl.opengl.GL11._
 import org.lwjgl.opengl.GL12
-import resonant.api.mffs.card.ICardIdentification
 import universalelectricity.core.transform.vector.Vector2
 
 /**
@@ -27,9 +25,9 @@ class RenderIDCard extends IItemRenderer
 {
   def renderItem(renderType: IItemRenderer.ItemRenderType, itemStack: ItemStack, data: AnyRef*)
   {
-    if (itemStack.getItem.isInstanceOf[ICardIdentification])
+    if (itemStack.getItem.isInstanceOf[ItemCardIdentification])
     {
-      val card: ICardIdentification = itemStack.getItem.asInstanceOf[ICardIdentification]
+      val card = itemStack.getItem.asInstanceOf[ItemCardIdentification]
       glPushMatrix
       glDisable(GL_CULL_FACE)
       transform(renderType)
@@ -39,7 +37,7 @@ class RenderIDCard extends IItemRenderer
       {
         glTranslatef(0f, 0f, -0.0005f)
       }
-      renderPlayerFace(getSkinFace(card.getProfile(itemStack)))
+      renderPlayerFace(getSkinFace(card.getAccess(itemStack).username))
       glEnable(GL_CULL_FACE)
       glPopMatrix
     }
@@ -64,30 +62,27 @@ class RenderIDCard extends IItemRenderer
     }
   }
 
-  private def getSkinFace(profile: GameProfile): ResourceLocation =
+  private def getSkinFace(username: String): ResourceLocation =
   {
-    if(profile != null)
+    try
     {
-      val name = profile.getName
-      try
-      {
-        var resourcelocation: ResourceLocation = Minecraft.getMinecraft.thePlayer.getLocationSkin
+      var resourceLocation: ResourceLocation = Minecraft.getMinecraft.thePlayer.getLocationSkin
 
-        if (name != null && !name.isEmpty)
+      if (username != null && !username.isEmpty)
+      {
+        resourceLocation = AbstractClientPlayer.getLocationSkin(username)
+        AbstractClientPlayer.getDownloadImageSkin(resourceLocation, username)
+        return resourceLocation
+      }
+    }
+    catch
+      {
+        case e: Exception =>
         {
-          resourcelocation = AbstractClientPlayer.getLocationSkin(name)
-          AbstractClientPlayer.getDownloadImageSkin(resourcelocation, name)
-          return resourcelocation
+          e.printStackTrace
         }
       }
-      catch
-        {
-          case e: Exception =>
-          {
-            e.printStackTrace
-          }
-        }
-    }
+
     return null
   }
 

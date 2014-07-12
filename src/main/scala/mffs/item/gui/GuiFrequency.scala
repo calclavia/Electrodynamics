@@ -1,5 +1,6 @@
 package mffs.item.gui
 
+import mffs.item.card.ItemCardFrequency
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
@@ -15,6 +16,8 @@ import scala.util.Random
  */
 class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(itemStack, new ContainerFrequency(player, itemStack))
 {
+  val item = itemStack.getItem.asInstanceOf[ItemCardFrequency]
+
   override def initGui()
   {
     super.initGui()

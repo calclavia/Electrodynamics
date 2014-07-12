@@ -6,7 +6,7 @@ import cpw.mods.fml.common.network.IGuiHandler
 import mffs.field.TileElectromagneticProjector
 import mffs.field.gui.{GuiForceMobilizer, GuiElectromagneticProjector, ContainerMatrix}
 import mffs.field.mobilize.TileForceMobilizer
-import mffs.item.gui.ContainerFrequency
+import mffs.item.gui.{ContainerItem, ContainerFrequency}
 import mffs.production._
 import mffs.render.fx.IEffectController
 import mffs.security.{GuiBiometricIdentifier, ContainerBiometricIdentifier, TileBiometricIdentifier}
@@ -36,7 +36,7 @@ class CommonProxy extends AbstractProxy with IGuiHandler
         }
       }
       case 1 => return new ContainerFrequency(player, player.getCurrentEquippedItem)
-      case 2 => return new ContainerFrequency(player, player.getCurrentEquippedItem)
+      case 2 => return new ContainerItem(player, player.getCurrentEquippedItem)
     }
 
     return null

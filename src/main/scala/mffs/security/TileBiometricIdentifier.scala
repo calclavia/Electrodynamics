@@ -35,7 +35,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
    * 9 x 4 slots: Access Cards
    * Under access cards we have a permission selector
    */
-  override def getSizeInventory = 2 + 9 * 4
+  override def getSizeInventory = 1 + 45
 
   override def update()
   {

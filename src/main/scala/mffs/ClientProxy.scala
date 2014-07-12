@@ -9,6 +9,7 @@ import mffs.item.gui.GuiFrequency
 import mffs.production._
 import mffs.render.fx._
 import mffs.security.card.RenderIDCard
+import mffs.security.card.gui.GuiCardID
 import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
@@ -44,7 +45,7 @@ class ClientProxy extends CommonProxy
         }
       }
       case 1 => return new GuiFrequency(player, player.getCurrentEquippedItem)
-      case 2 => return new GuiFrequency(player, player.getCurrentEquippedItem)
+      case 2 => return new GuiCardID(player, player.getCurrentEquippedItem)
     }
 
     return null
