@@ -51,16 +51,6 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
     }
   }
 
-  protected override def drawGuiContainerBackgroundLayer(var1: Float, x: Int, y: Int)
-  {
-    super.drawGuiContainerBackgroundLayer(var1, x, y)
-
-    if (tile.isInstanceOf[IBiometricIdentifierLink])
-    {
-      drawBulb(167, 4, (tile.asInstanceOf[IBiometricIdentifierLink]).getBiometricIdentifier != null)
-    }
-  }
-
   protected def drawFortronText(x: Int, y: Int)
   {
     if (tile.isInstanceOf[TileFortron])

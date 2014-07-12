@@ -5,5 +5,5 @@ package mffs.item.gui
  */
 object EnumGui extends Enumeration
 {
-  val tile, frequency = Value
+  val tile, frequency,cardID = Value
 }

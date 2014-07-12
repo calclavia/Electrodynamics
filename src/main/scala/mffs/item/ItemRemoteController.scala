@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardFrequency
 import mffs.render.FieldColor
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer

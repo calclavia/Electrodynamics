@@ -10,7 +10,7 @@ import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import mffs.util.TCache
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.block.Block
@@ -23,7 +23,7 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.lib.access.Permission
+import resonant.lib.access.java.Permission
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import universalelectricity.core.transform.region.Cuboid

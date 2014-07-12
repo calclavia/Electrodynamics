@@ -1,8 +1,7 @@
 package mffs.security.module
 
 import java.util.Set
-
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory

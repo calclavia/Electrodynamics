@@ -1,9 +1,9 @@
-package mffs.item.card
+package mffs.security.card
 
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.{ItemRenderer, Tessellator}

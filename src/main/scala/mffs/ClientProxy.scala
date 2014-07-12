@@ -5,10 +5,10 @@ import cpw.mods.fml.client.FMLClientHandler
 import mffs.field.TileElectromagneticProjector
 import mffs.field.gui.{GuiElectromagneticProjector, GuiForceMobilizer}
 import mffs.field.mobilize.TileForceMobilizer
-import mffs.item.card.RenderIDCard
 import mffs.item.gui.GuiFrequency
 import mffs.production._
 import mffs.render.fx._
+import mffs.security.card.RenderIDCard
 import mffs.security.{GuiBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
@@ -34,35 +34,17 @@ class ClientProxy extends CommonProxy
       {
         val tileEntity = world.getTileEntity(x, y, z)
 
-        if (tileEntity != null)
+        tileEntity match
         {
-          if (tileEntity.getClass == classOf[TileFortronCapacitor])
-          {
-            return new GuiFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
-          }
-          else if (tileEntity.getClass == classOf[TileElectromagneticProjector])
-          {
-            return new GuiElectromagneticProjector(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
-          }
-          else if (tileEntity.getClass == classOf[TileCoercionDeriver])
-          {
-            return new GuiCoercionDeriver(player, tileEntity.asInstanceOf[TileCoercionDeriver])
-          }
-          else if (tileEntity.getClass == classOf[TileBiometricIdentifier])
-          {
-            return new GuiBiometricIdentifier(player, tileEntity.asInstanceOf[TileBiometricIdentifier])
-          }
-          /* else if (tileEntity.getClass == classOf[TileInterdictionMatrix])
-        {
-          return new GuiInterdictionMatrix(player, tileEntity.asInstanceOf[TileInterdictionMatrix])
-        }*/
-          else if (tileEntity.getClass == classOf[TileForceMobilizer])
-          {
-            return new GuiForceMobilizer(player, tileEntity.asInstanceOf[TileForceMobilizer])
-          }
+          case tile: TileFortronCapacitor => return new GuiFortronCapacitor(player, tile)
+          case tile: TileElectromagneticProjector => return new GuiElectromagneticProjector(player, tile)
+          case tile: TileCoercionDeriver => return new GuiCoercionDeriver(player, tile)
+          case tile: TileBiometricIdentifier => return new GuiBiometricIdentifier(player, tile)
+          case tile: TileForceMobilizer => return new GuiForceMobilizer(player, tile)
         }
       }
       case 1 => return new GuiFrequency(player, player.getCurrentEquippedItem)
+      case 2 => return new GuiFrequency(player, player.getCurrentEquippedItem)
     }
 
     return null

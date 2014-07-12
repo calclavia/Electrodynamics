@@ -26,7 +26,7 @@ class GuiFrequency(player: EntityPlayer, itemStack: ItemStack) extends GuiItem(i
   {
     drawStringCentered(LanguageUtility.getLocal("item.mffs:cardFrequency.name"))
     drawStringCentered("" + item.getEncodedFrequency(itemStack), 20)
-
+    textField.drawTextBox()
     drawStringCentered(LanguageUtility.getLocal("gui.makecopy"), 80)
 
     super.drawGuiContainerForegroundLayer(x, y)

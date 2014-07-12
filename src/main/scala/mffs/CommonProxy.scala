@@ -4,12 +4,12 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
 import mffs.field.TileElectromagneticProjector
-import mffs.field.gui.ContainerMatrix
+import mffs.field.gui.{GuiForceMobilizer, GuiElectromagneticProjector, ContainerMatrix}
 import mffs.field.mobilize.TileForceMobilizer
 import mffs.item.gui.ContainerFrequency
 import mffs.production._
 import mffs.render.fx.IEffectController
-import mffs.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
+import mffs.security.{GuiBiometricIdentifier, ContainerBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
@@ -26,32 +26,17 @@ class CommonProxy extends AbstractProxy with IGuiHandler
       case 0 =>
       {
         val tileEntity = world.getTileEntity(x, y, z)
-
-        if (tileEntity != null)
+        tileEntity match
         {
-          if (tileEntity.getClass == classOf[TileFortronCapacitor])
-          {
-            return new ContainerFortronCapacitor(player, tileEntity.asInstanceOf[TileFortronCapacitor])
-          }
-          else if (tileEntity.getClass == classOf[TileElectromagneticProjector])
-          {
-            return new ContainerMatrix(player, tileEntity.asInstanceOf[TileElectromagneticProjector])
-          }
-          else if (tileEntity.getClass == classOf[TileCoercionDeriver])
-          {
-            return new ContainerCoercionDeriver(player, tileEntity.asInstanceOf[TileCoercionDeriver])
-          }
-          else if (tileEntity.getClass == classOf[TileBiometricIdentifier])
-          {
-            return new ContainerBiometricIdentifier(player, tileEntity.asInstanceOf[TileBiometricIdentifier])
-          }
-          else if (tileEntity.getClass == classOf[TileForceMobilizer])
-          {
-            return new ContainerMatrix(player, tileEntity.asInstanceOf[TileForceMobilizer])
-          }
+          case tile: TileFortronCapacitor => return new ContainerFortronCapacitor(player, tile)
+          case tile: TileElectromagneticProjector => return new ContainerMatrix(player, tile)
+          case tile: TileCoercionDeriver => return new ContainerCoercionDeriver(player, tile)
+          case tile: TileBiometricIdentifier => return new ContainerBiometricIdentifier(player, tile)
+          case tile: TileForceMobilizer => return new ContainerMatrix(player, tile)
         }
       }
       case 1 => return new ContainerFrequency(player, player.getCurrentEquippedItem)
+      case 2 => return new ContainerFrequency(player, player.getCurrentEquippedItem)
     }
 
     return null

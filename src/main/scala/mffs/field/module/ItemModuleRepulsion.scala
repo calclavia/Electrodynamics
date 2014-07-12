@@ -4,7 +4,7 @@ import java.util.{Set => JSet}
 
 import mffs.base.ItemModule
 import mffs.field.TileElectromagneticProjector
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack

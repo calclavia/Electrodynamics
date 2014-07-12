@@ -3,7 +3,7 @@ package mffs.field.module
 import mffs.ModularForceFieldSystem
 import mffs.base.ItemModule
 import mffs.field.TileForceField
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack

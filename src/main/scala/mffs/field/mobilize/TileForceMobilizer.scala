@@ -7,7 +7,7 @@ import mffs.field.mobilize.event.{BlockPreMoveDelayedEvent, DelayedEvent}
 import mffs.item.card.ItemCard
 import mffs.render.FieldColor
 import mffs.render.fx.IEffectController
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.client.renderer.RenderBlocks

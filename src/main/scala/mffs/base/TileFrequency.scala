@@ -6,7 +6,7 @@ import com.mojang.authlib.GameProfile
 import io.netty.buffer.ByteBuf
 import mffs.Reference
 import mffs.item.card.ItemCardFrequency
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
@@ -15,7 +15,7 @@ import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.security.IBiometricIdentifier
-import resonant.lib.access.Permission
+import resonant.lib.access.java.Permission
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

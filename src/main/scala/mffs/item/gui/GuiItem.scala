@@ -22,7 +22,6 @@ class GuiItem(itemStack: ItemStack, container: Container) extends GuiContainerBa
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    textField.drawTextBox()
     super.drawGuiContainerForegroundLayer(x, y)
   }
 

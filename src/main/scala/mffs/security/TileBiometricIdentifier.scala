@@ -6,13 +6,13 @@ import java.util.{Set => JSet}
 import com.mojang.authlib.GameProfile
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFrequency
-import mffs.security.access.AccessProfile
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
 import resonant.api.mffs.card.ICardIdentification
 import resonant.api.mffs.security.IBiometricIdentifier
-import resonant.lib.access.Permission
+import resonant.lib.access.java.Permission
+import resonant.lib.access.scala.AccessHolder
 import resonant.lib.content.prefab.TRotatable
 import universalelectricity.core.transform.vector.Vector3
 
@@ -23,7 +23,7 @@ object TileBiometricIdentifier
 
 class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier with TRotatable
 {
-  var accessProfile = new AccessProfile()
+  var accessProfile = new AccessHolder()
 
   /**
    * Rendering
@@ -48,7 +48,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
     if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride)
       return true
 
-    return accessProfile.hasPermission(profile, permission)
+    return accessProfile.hasPermission(profile.getName, permission)
   }
 
   /*
@@ -121,7 +121,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
 
   def rebuildAccess()
   {
-    accessProfile = new AccessProfile()
+    accessProfile = new AccessHolder()
     //TODO: Rebuild the access based on the cards.
   }
 

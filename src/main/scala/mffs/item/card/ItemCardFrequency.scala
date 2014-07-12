@@ -19,7 +19,6 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
 {
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {
-    //TODO: Hash this
     list.add(LanguageUtility.getLocal("info.cardFrequency.freq") + " " + getEncodedFrequency(itemStack))
   }
 

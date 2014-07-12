@@ -6,10 +6,11 @@ import mffs.field.mode._
 import mffs.field.module._
 import mffs.field.{TileElectromagneticProjector, TileForceField}
 import mffs.item.ItemRemoteController
-import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardIdentification, ItemCardLink}
+import mffs.item.card.{ItemCard, ItemCardFrequency, ItemCardLink}
 import mffs.item.fortron.ItemCardInfinite
 import mffs.production.{TileCoercionDeriver, TileFortronCapacitor}
 import mffs.security.TileBiometricIdentifier
+import mffs.security.card.ItemCardIdentification
 import mffs.security.module._
 import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}

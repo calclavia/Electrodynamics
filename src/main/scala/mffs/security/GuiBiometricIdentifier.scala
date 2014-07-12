@@ -1,49 +1,21 @@
 package mffs.security
 
-import mffs.ModularForceFieldSystem
-import mffs.base.{GuiMFFS, TilePacketType}
-import net.minecraft.client.gui.{GuiButton, GuiTextField}
+import mffs.base.GuiMFFS
 import net.minecraft.entity.player.EntityPlayer
-import resonant.lib.network.discriminator.PacketTile
-import universalelectricity.core.transform.vector.Vector2
+import resonant.lib.render.EnumColor
 
 class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier) extends GuiMFFS(new ContainerBiometricIdentifier(player, tile), tile)
 {
-  private var textFieldUsername: GuiTextField = null
-
   override def initGui
   {
     super.initGui
-    this.textFieldUsername = new GuiTextField(fontRendererObj, 52, 18, 90, 12)
-    this.textFieldUsername.setMaxStringLength(30)
-    /*
-    var x: Int = 0
-    var y: Int = 0
-    {
-      var i: Int = 0
-      while (i < MFFSPermissions.getPermissions.length)
-      {
-        {
-          x += 1
-          this.buttonList.add(new GuiButtonPress(i + 1, this.width / 2 - 50 + 20 * x, this.height / 2 - 75 + 20 * y, new Vector2(18, 18 * i), this, MFFSPermissions.getPermissions(i).name))
-          if (i % 3 == 0 && i != 0)
-          {
-            x = 0
-            y += 1
-          }
-        }
-        ({
-          i += 1;
-          i - 1
-        })
-      }
-    }*/
   }
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
-    fontRendererObj.drawString(tile.getInventoryName, this.xSize / 2 - fontRendererObj.getStringWidth(tile.getInventoryName) / 2, 6, 4210752)
-    this.drawTextWithTooltip("rights", "%1", 8, 32, x, y, 0)
+    drawStringCentered(tile.getInventoryName)
+
+    drawStringCentered(EnumColor.AQUA + "ID and Group Cards", 20)
     /*
     try
     {
@@ -103,7 +75,7 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
         }
       }
     */
-    this.drawTextWithTooltip("master", 28, 90 + (fontRendererObj.FONT_HEIGHT / 2), x, y)
+
     super.drawGuiContainerForegroundLayer(x, y)
   }
 
@@ -127,24 +99,9 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
   protected override def drawGuiContainerBackgroundLayer(f: Float, x: Int, y: Int)
   {
     super.drawGuiContainerBackgroundLayer(f, x, y)
-    /*
-    this.drawSlot(87, 90)
-    this.drawSlot(7, 45)
-    this.drawSlot(7, 65)
-    this.drawSlot(7, 90)
-    {
-      var var4: Int = 0
-      while (var4 < 9)
-      {
-        {
-          this.drawSlot(8 + var4 * 18 - 1, 110)
-        }
-        ({
-          var4 += 1;
-          var4 - 1
-        })
-      }
-    }*/
+
+    for (x <- 0 until 9; y <- 0 until 5)
+      drawSlot(8 + x * 18, 35 + y * 18)
   }
 
   protected override def keyTyped(par1: Char, par2: Int)
@@ -166,21 +123,5 @@ class GuiBiometricIdentifier(player: EntityPlayer, tile: TileBiometricIdentifier
         {
         }
       }*/
-  }
-
-  override def mouseClicked(x: Int, y: Int, par3: Int)
-  {
-    super.mouseClicked(x, y, par3)
-    this.textFieldUsername.mouseClicked(x - containerWidth, y - containerHeight, par3)
-  }
-
-  protected override def actionPerformed(guiButton: GuiButton)
-  {
-    super.actionPerformed(guiButton)
-
-    if (guiButton.id > 0)
-    {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.TOGGLE_MODE.id: Integer, (guiButton.id - 1): Integer))
-    }
   }
 }

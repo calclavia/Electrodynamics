@@ -3,7 +3,7 @@ package mffs.field
 import cpw.mods.fml.common.network.ByteBufUtils
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.security.access.MFFSPermissions
+import mffs.security.MFFSPermissions
 import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.block.Block

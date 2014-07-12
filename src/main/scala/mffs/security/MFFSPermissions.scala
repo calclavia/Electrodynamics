@@ -1,6 +1,6 @@
-package mffs.security.access
+package mffs.security
 
-import resonant.lib.access.Permissions
+import resonant.lib.access.java.Permissions
 
 object MFFSPermissions
 {
