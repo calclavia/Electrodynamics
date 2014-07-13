@@ -8,12 +8,14 @@ import mffs.field.mobilize.event.{DelayedEvent, IDelayedEventHandler}
 import mffs.field.module.ItemModuleArray
 import mffs.item.card.ItemCard
 import mffs.util.TCache
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.IFieldMatrix
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.content.prefab.TRotatable
+import resonant.lib.network.discriminator.{PacketType, PacketTile}
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -24,7 +26,7 @@ import scala.collection.mutable.Queue
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.util.{Failure, Success}
-
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable
 {
   protected var calculatedField: mutable.Set[Vector3] = null
@@ -56,30 +58,30 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
   def clearQueue() = delayedEvents.clear()
 
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return super.getPacketData(packetID) :+ (absoluteDirection: java.lang.Boolean)
-    }
+    super.write(buf, id)
 
-    return super.getPacketData(packetID)
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< absoluteDirection
+    }
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, dataStream)
+    super.read(buf, id, player, packet)
 
     if (world.isRemote)
     {
-      if (packetID == TilePacketType.DESCRIPTION.id)
+      if (id == TilePacketType.descrption.id)
       {
-        absoluteDirection = dataStream.readBoolean()
+        absoluteDirection = buf.readBoolean()
       }
     }
     else
     {
-      if (packetID == TilePacketType.TOGGLE_MODE_4.id)
+      if (id == TilePacketType.TOGGLE_MODE_4.id)
       {
         absoluteDirection = !absoluteDirection
       }

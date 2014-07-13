@@ -1,16 +1,16 @@
 package mffs.base
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import mffs.util.{FortronUtility, TransferMode}
-import net.minecraft.item.ItemStack
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
-import resonant.api.mffs.card.ICard
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.netty.PacketManager
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
@@ -31,7 +31,7 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
 
     if (!worldObj.isRemote && ticks % 60 == 0)
     {
-      sendFortronToClients(25)
+      sendFortronToClients
     }
   }
 
@@ -48,41 +48,29 @@ abstract class TileFortron extends TileFrequency with IFluidHandler with IFortro
   /**
    * Packets
    */
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.FORTRON.id)
+    super.write(buf, id)
+
+    if (id == TilePacketType.fortron.id)
     {
-      val nbt = new NBTTagCompound
-
-      if (fortronTank.getFluid != null)
-      {
-        nbt.setTag("fortron", fortronTank.getFluid.writeToNBT(new NBTTagCompound))
-      }
-
-      return List((TilePacketType.FORTRON.id: Integer), nbt)
-    }
-
-    return super.getPacketData(packetID)
-  }
-
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
-  {
-    super.onReceivePacket(packetID, dataStream)
-
-    if (packetID == TilePacketType.FORTRON.id)
-    {
-      val nbt = ByteBufUtils.readTag(dataStream)
-
-      if (nbt != null)
-      {
-        fortronTank.setFluid(FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fortron")))
-      }
+      buf <<< fortronTank
     }
   }
 
-  def sendFortronToClients(range: Int)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this, getPacketData(TilePacketType.FORTRON.id).toArray: _*), this.worldObj, new Vector3(this), range)
+    super.read(buf, id, player, packet)
+
+    if (id == TilePacketType.fortron.id)
+    {
+      fortronTank = buf.readTank()
+    }
+  }
+
+  def sendFortronToClients
+  {
+    ModularForceFieldSystem.packetHandler.sendToAllAround(PacketManager.request(this, TilePacketType.fortron.id), this.worldObj, new Vector3(this), 25)
   }
 
   /**

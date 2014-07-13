@@ -24,7 +24,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.IProjector
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.access.java.Permission
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.discriminator.{PacketType, PacketTile}
 import resonant.lib.render.EnumColor
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
@@ -62,16 +62,16 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, dataStream)
+    super.read(buf, id, player, packet)
 
     if (worldObj.isRemote)
     {
-      if (packetID == TilePacketType.FXS.id)
+      if (id == TilePacketType.effect.id)
       {
-        val packetType = dataStream.readInt
-        val vector: Vector3 = new Vector3(dataStream.readInt, dataStream.readInt, dataStream.readInt) + 0.5
+        val packetType = buf.readInt
+        val vector: Vector3 = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
         val root: Vector3 = new Vector3(this) + 0.5
 
         if (packetType == 1)
@@ -85,9 +85,9 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
           ModularForceFieldSystem.proxy.renderHologramMoving(this.worldObj, vector, FieldColor.red, 50)
         }
       }
-      else if (packetID == TilePacketType.FIELD.id)
+      else if (id == TilePacketType.field.id)
       {
-        val nbt = ByteBufUtils.readTag(dataStream)
+        val nbt = ByteBufUtils.readTag(buf)
         val nbtList = nbt.getTagList("blockList", 10)
         calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i)))).toArray: _ *)
       }
@@ -100,7 +100,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     val nbtList = new NBTTagList
     calculatedField foreach (vec => nbtList.appendTag(vec.toNBT))
     nbt.setTag("blockList", nbtList)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.FIELD.id: Integer, nbt))
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.field.id: Integer, nbt))
   }
 
   /**

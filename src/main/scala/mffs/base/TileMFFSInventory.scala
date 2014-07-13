@@ -3,12 +3,13 @@ package mffs.base
 import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.utility.inventory.TPrefabInventory
-
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 /**
  * All TileEntities that have an inventory should extend this.
  *
@@ -16,28 +17,25 @@ import resonant.lib.utility.inventory.TPrefabInventory
  */
 abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabInventory
 {
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.DESCRIPTION.id)
+    super.write(buf, id)
+
+    if (id == TilePacketType.descrption.id)
     {
       val nbt = new NBTTagCompound
       getInventory.save(nbt)
-      return super.getPacketData(packetID) :+ nbt
+      buf <<< nbt
     }
-
-    return super.getPacketData(packetID)
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, dataStream)
+    super.read(buf, id, player, packet)
 
-    if (worldObj.isRemote)
+    if (id == TilePacketType.descrption.id || id == TilePacketType.INVENTORY.id)
     {
-      if (packetID == TilePacketType.DESCRIPTION.id || packetID == TilePacketType.INVENTORY.id)
-      {
-        getInventory.load(ByteBufUtils.readTag(dataStream))
-      }
+      getInventory.load(buf.readTag())
     }
   }
 

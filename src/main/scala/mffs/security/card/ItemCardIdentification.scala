@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
 import resonant.lib.access.scala.AccessUser
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
@@ -36,7 +37,8 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     if (access != null)
     {
       info.add(LanguageUtility.getLocal("info.cardIdentification.username") + " " + access.username)
-      val permString = LanguageUtility.getLocal("permission." + access.permissions.map(_.toString).mkString(","))
+
+      val permString = LanguageUtility.getLocal(access.permissions.map("permission." + _.toString).mkString(","))
       info.addAll(LanguageUtility.splitStringPerWord(permString, 5))
     }
     else
@@ -86,12 +88,18 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     return null
   }
 
-  override def read(buf: ByteBuf, player: EntityPlayer, extra: AnyRef*)
+  /**
+   * Reads a packet
+   * @param buf   - data encoded into the packet
+   * @param player - player that is receiving the packet
+   * @param packet - The packet instance that was sending this packet.
+   */
+  override def read(buf: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    val itemStack = extra(0).asInstanceOf[ItemStack]
+    val itemStack = player.getCurrentEquippedItem
     var access = getAccess(itemStack)
 
-    if(access != null)
+    if (access != null)
     {
       access.username = player.getGameProfile.getName
     }

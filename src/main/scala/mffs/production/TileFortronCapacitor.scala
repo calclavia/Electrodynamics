@@ -4,18 +4,21 @@ import java.util.{HashSet => JHashSet, Set => JSet}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.TransferMode.TransferMode
 import mffs.util.{FortronUtility, TransferMode}
 import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.IFluidContainerItem
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronCapacitor, IFortronFrequency, IFortronStorage}
 import resonant.api.mffs.modules.IModule
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -71,25 +74,26 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   /**
    * Packet Methods
    */
-  override def getPacketData(packetID: Int): List[AnyRef] =
-  {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return super.getPacketData(packetID) :+ (transferMode.id: Integer)
-    }
 
-    return super.getPacketData(packetID)
+  override def write(buf: ByteBuf, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< transferMode.id
+    }
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, dataStream)
+    super.read(buf, id, player, packet)
 
-    if (packetID == TilePacketType.DESCRIPTION.id)
+    if (id == TilePacketType.descrption.id)
     {
-      transferMode = TransferMode(dataStream.readInt)
+      transferMode = TransferMode(buf.readInt)
     }
-    else if (packetID == TilePacketType.TOGGLE_MODE.id)
+    else if (id == TilePacketType.TOGGLE_MODE.id)
     {
       transferMode = this.transferMode.toggle
     }

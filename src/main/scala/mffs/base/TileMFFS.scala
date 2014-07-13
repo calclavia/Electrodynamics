@@ -1,8 +1,8 @@
 package mffs.base
 
 import io.netty.buffer.ByteBuf
+import mffs.ModularForceFieldSystem
 import mffs.item.card.ItemCardLink
-import mffs.{ModularForceFieldSystem, Reference}
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.entity.Entity
@@ -14,9 +14,11 @@ import resonant.api.blocks.ICamouflageMaterial
 import resonant.api.mffs.IActivatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.discriminator.PacketTile
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.IPlayerUsing
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.{TPacketIDReceiver, TPacketIDSender}
+import resonant.lib.network.netty.PacketManager
 import resonant.lib.utility.inventory.InventoryUtility
 import universalelectricity.core.transform.vector.Vector3
 
@@ -26,7 +28,7 @@ import scala.collection.convert.wrapAll._
  * A base tile class for all MFFS blocks to inherit.
  * @author Calclavia
  */
-abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMaterial with IPacketReceiver with IActivatable with IPlayerUsing
+abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMaterial with TPacketIDReceiver with TPacketIDSender with IActivatable with IPlayerUsing
 {
   /**
    * Used for client side animations.
@@ -114,63 +116,30 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
     }
   }
 
-  /**
-   * Override this for packet updating list.
-   */
-  def getPacketData(packetID: Int): List[AnyRef] =
-  {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return List(TilePacketType.DESCRIPTION.id: Integer, active: java.lang.Boolean, isRedstoneActive: java.lang.Boolean)
-    }
-
-    return List[AnyRef]()
-  }
-
   override def getDescriptionPacket: Packet =
   {
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  def getDescPacket: PacketTile = new PacketTile(this, getPacketData(TilePacketType.DESCRIPTION.id).toArray: _*)
+  def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.descrption.id)
 
-  override def onReceivePacket(data: ByteBuf, player: EntityPlayer, obj: AnyRef*)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    try
-    {
-      onReceivePacket(data.readInt, data)
-    }
-    catch
-      {
-        case e: Exception =>
-        {
-          Reference.logger.error("Packet receiving failed: " + getClass.getSimpleName)
-          e.printStackTrace
-        }
-      }
-  }
-
-  /**
-   * Inherit this function to receive packets. Make sure this function is supered.
-   *
-   * @throws IOException
-   */
-  def onReceivePacket(packetID: Int, dataStream: ByteBuf)
-  {
-    if (packetID == TilePacketType.DESCRIPTION.id)
+    if (id == TilePacketType.descrption.id)
     {
       val prevActive = active
-      active = dataStream.readBoolean()
-      isRedstoneActive = dataStream.readBoolean()
+      active = buf.readBoolean()
+      isRedstoneActive = buf.readBoolean()
 
       if (prevActive != this.active)
       {
         markRender()
       }
     }
-    else if (packetID == TilePacketType.TOGGLE_ACTIVATION.id)
+    else if (id == TilePacketType.TOGGLE_ACTIVATION.id)
     {
-      this.isRedstoneActive = !this.isRedstoneActive
+      isRedstoneActive = !isRedstoneActive
+
       if (isRedstoneActive)
       {
         setActive(true)
@@ -179,6 +148,17 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
       {
         setActive(false)
       }
+    }
+  }
+
+  override def write(buf: ByteBuf, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< active
+      buf <<< isRedstoneActive
     }
   }
 

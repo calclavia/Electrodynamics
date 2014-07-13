@@ -11,11 +11,12 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import resonant.api.items.IItemFrequency
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.PacketType
+import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 
-class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceiver
+class ItemCardFrequency extends ItemCard with IItemFrequency with TPacketReceiver
 {
   override def addInformation(itemStack: ItemStack, par2EntityPlayer: EntityPlayer, list: List[_], par4: Boolean)
   {
@@ -40,9 +41,9 @@ class ItemCardFrequency extends ItemCard with IItemFrequency with IPacketReceive
     return Hashing.md5().hashInt(getFrequency(itemStack)).toString.take(12)
   }
 
-  override def onReceivePacket(data: ByteBuf, player: EntityPlayer, extra: AnyRef*)
+  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    setFrequency(data.readInt(), extra(0).asInstanceOf[ItemStack])
+    setFrequency(data.readInt(), player.getCurrentEquippedItem)
   }
 
   /**

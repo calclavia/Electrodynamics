@@ -61,7 +61,7 @@ class ItemModuleDisintegration extends ItemModule
         if (Blacklist.disintegrationBlacklist.contains(block) || block.isInstanceOf[BlockLiquid] || block.isInstanceOf[IFluidBlock])
           return 1
 
-        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(projector.asInstanceOf[TileEntity], TilePacketType.FXS.id: Integer, 2: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer))
+        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(projector.asInstanceOf[TileEntity], TilePacketType.effect.id: Integer, 2: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer))
 
         if (projector.getModuleCount(Content.moduleCollection) > 0)
         {

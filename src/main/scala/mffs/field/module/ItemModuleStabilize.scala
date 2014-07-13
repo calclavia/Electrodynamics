@@ -90,7 +90,7 @@ class ItemModuleStabilize extends ItemModule
                         val copyStack = checkStack.copy
                         inventory.decrStackSize(i, 1)
                         (copyStack.getItem.asInstanceOf[ItemBlock]).placeBlockAt(copyStack, null, world, position.xi, position.yi, position.zi, 0, 0, 0, 0, metadata)
-                        ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile, TilePacketType.FXS.id: Integer, 1: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer), world)
+                        ModularForceFieldSystem.packetHandler.sendToAllInDimension(new PacketTile(tile, TilePacketType.effect.id: Integer, 1: Integer, position.xi: Integer, position.yi: Integer, position.zi: Integer), world)
 
                         blockCount += 1;
 

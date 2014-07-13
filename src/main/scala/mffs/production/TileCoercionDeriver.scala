@@ -5,16 +5,19 @@ import io.netty.buffer.ByteBuf
 import mffs.base.{TileModuleAcceptor, TilePacketType}
 import mffs.item.card.ItemCardFrequency
 import mffs.util.FortronUtility
-import mffs.{Content, ModularForceFieldSystem, Settings}
+import mffs.{Content, Settings}
 import net.minecraft.client.renderer.RenderBlocks
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
 import resonant.lib.content.prefab.TElectric
+import resonant.lib.network.discriminator.PacketType
 import universalelectricity.api.UniversalClass
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.Vector3
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -168,31 +171,33 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     return false
   }
 
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return super.getPacketData(packetID) :+ (isInversed: java.lang.Boolean) :+ (processTime: Integer)
-    }
+    super.write(buf, id)
 
-    return super.getPacketData(packetID)
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< isInversed
+      buf <<< processTime
+    }
   }
 
-  override def onReceivePacket(packetID: Int, data: ByteBuf)
+
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, data)
+    super.read(buf, id, player, packet)
 
     if (world.isRemote)
     {
-      if (packetID == TilePacketType.DESCRIPTION.id)
+      if (id == TilePacketType.descrption.id)
       {
-        isInversed = data.readBoolean()
-        processTime = data.readInt()
+        isInversed = buf.readBoolean()
+        processTime = buf.readInt()
       }
     }
     else
     {
-      if (packetID == TilePacketType.TOGGLE_MODE.id)
+      if (id == TilePacketType.TOGGLE_MODE.id)
       {
         isInversed = !isInversed
       }

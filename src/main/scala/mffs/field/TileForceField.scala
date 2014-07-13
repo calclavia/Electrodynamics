@@ -21,14 +21,14 @@ import net.minecraft.world.IBlockAccess
 import resonant.api.mffs.modules.IModule
 import resonant.api.mffs.{IForceField, IProjector}
 import resonant.content.spatial.block.SpatialTile
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.network.handle.IPacketReceiver
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
+import resonant.lib.network.handle.TPacketReceiver
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._
 
-class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver with IForceField
+class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver with IForceField
 {
   private var camoStack: ItemStack = null
   private var projector: Vector3 = null
@@ -357,26 +357,16 @@ class TileForceField extends SpatialTile(Material.glass) with IPacketReceiver wi
     return null
   }
 
-  override def onReceivePacket(data: ByteBuf, player: EntityPlayer, obj: AnyRef*)
+  override def read(data: ByteBuf, player: EntityPlayer, packet: PacketType)
   {
-    try
-    {
-      setProjector(new Vector3(data.readInt, data.readInt, data.readInt))
-      markRender()
-      camoStack = null
+    setProjector(new Vector3(data.readInt, data.readInt, data.readInt))
+    markRender()
+    camoStack = null
 
-      if (data.readBoolean)
-      {
-        camoStack = ItemStack.loadItemStackFromNBT(ByteBufUtils.readTag(data))
-      }
+    if (data.readBoolean)
+    {
+      camoStack = ItemStack.loadItemStackFromNBT(ByteBufUtils.readTag(data))
     }
-    catch
-      {
-        case e: Exception =>
-        {
-          e.printStackTrace
-        }
-      }
   }
 
   /**

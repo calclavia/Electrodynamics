@@ -12,7 +12,7 @@ import mffs.util.MFFSUtility
 import mffs.{Content, ModularForceFieldSystem, Reference, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.Entity
-import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
@@ -21,14 +21,14 @@ import net.minecraftforge.common.util.ForgeDirection
 import resonant.api.mffs.card.ICoordLink
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.api.mffs.{Blacklist, EventForceManipulate}
-import resonant.lib.network.discriminator.PacketTile
-import resonant.lib.wrapper.WrapVararg._
+import resonant.lib.network.discriminator.{PacketType, PacketTile}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 import scala.math._
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 
 class TileForceMobilizer extends TileFieldMatrix with IEffectController
 {
@@ -128,7 +128,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       queueEvent(new DelayedEvent(this, getMoveTime, () =>
       {
         moveEntities
-        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(TileForceMobilizer.this, TilePacketType.FIELD.id: Integer))
+        ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(TileForceMobilizer.this, TilePacketType.field.id: Integer))
 
         if (!isTeleport && doAnchor)
         {
@@ -148,7 +148,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
         val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
 
         val packet = new PacketTile(this)
-        packet <<< TilePacketType.FXS.id
+        packet <<< TilePacketType.effect.id
 
         if (!isTeleport)
         {
@@ -231,7 +231,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
           val coordPacketData = renderBlocks.toSeq flatMap (_.toIntList)
 
           val packet = new PacketTile(this)
-          packet <<< TilePacketType.FXS.id
+          packet <<< TilePacketType.effect.id
 
           if (isTeleport)
           {
@@ -280,7 +280,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
       val playPoint = position + anchor + 0.5
       worldObj.playSoundEffect(playPoint.x, playPoint.y, playPoint.z, Reference.prefix + "powerdown", 0.6f, 1 - this.worldObj.rand.nextFloat * 0.1f)
-      ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.RENDER.id, world, new Vector3(this), packetRange)
+      ModularForceFieldSystem.packetHandler.sendToAllAround(new PacketTile(this) <<< TilePacketType.render.id, world, new Vector3(this), packetRange)
 
 
       if (failedPositions.size > 0)
@@ -289,7 +289,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
          * Send failure coordinates to client
          */
         val coords = failedPositions.toSeq flatMap (_.toIntList)
-        val packetTile = new PacketTile(this) <<< TilePacketType.FXS.id <<< 3 <<< coords.size <<< coords
+        val packetTile = new PacketTile(this) <<< TilePacketType.effect.id <<< 3 <<< coords.size <<< coords
         ModularForceFieldSystem.packetHandler.sendToAllAround(packetTile, world, new Vector3(this), packetRange)
       }
 
@@ -315,25 +315,29 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     return (ForgeDirection.VALID_DIRECTIONS count ((dir: ForgeDirection) => (position + dir).getBlock(world).isOpaqueCube)) < 6
   }
 
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return super.getPacketData(packetID) ++ Seq(anchor, previewMode, doAnchor, if (moveTime > 0) moveTime else getMoveTime).toAnyRef
-    }
+    super.write(buf, id)
 
-    return super.getPacketData(packetID)
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< anchor
+      buf <<< previewMode
+      buf <<< doAnchor
+      buf <<< (if (moveTime > 0) moveTime else getMoveTime)
+    }
   }
 
-  override def onReceivePacket(packetID: Int, data: ByteBuf)
+
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, data)
+    super.read(buf, id, player, packet)
 
     if (world.isRemote)
     {
-      if (packetID == TilePacketType.FXS.id)
+      if (id == TilePacketType.effect.id)
       {
-        data.readInt() match
+        buf.readInt() match
         {
           case 1 =>
           {
@@ -342,10 +346,10 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
              *
              * Params: ID, Type1, Type2, Size, the coordinate
              */
-            val isTeleportPacket = data.readInt()
-            val vecSize = data.readInt()
+            val isTeleportPacket = buf.readInt()
+            val vecSize = buf.readInt()
 
-            val hologramRenderPoints = ((0 until vecSize) map (i => data.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
+            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
 
             /**
              * Movement Rendering
@@ -363,12 +367,12 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             /**
              * Teleportation Rendering
              */
-            val animationTime = data.readInt()
-            val anchorPosition = new Vector3(data)
-            val targetPosition = new VectorWorld(data)
-            val isPreview = data.readBoolean()
-            val vecSize = data.readInt()
-            val hologramRenderPoints = ((0 until vecSize) map (i => data.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
+            val animationTime = buf.readInt()
+            val anchorPosition = new Vector3(buf)
+            val targetPosition = new VectorWorld(buf)
+            val isPreview = buf.readBoolean()
+            val vecSize = buf.readInt()
+            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
             val color = if (isPreview) FieldColor.blue else FieldColor.green
 
             hologramRenderPoints foreach (vector =>
@@ -391,43 +395,43 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
             /**
              * Fail hologram rendering
              */
-            val vecSize = data.readInt()
-            val hologramRenderPoints = ((0 until vecSize) map (i => data.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
+            val vecSize = buf.readInt()
+            val hologramRenderPoints = ((0 until vecSize) map (i => buf.readInt().toDouble + 0.5)).toList grouped 3 map (new Vector3(_))
 
             hologramRenderPoints foreach (ModularForceFieldSystem.proxy.renderHologram(world, _, FieldColor.red, 30, null))
           }
         }
       }
-      else if (packetID == TilePacketType.RENDER.id)
+      else if (id == TilePacketType.render.id)
       {
         canRenderMove = false
       }
-      else if (packetID == TilePacketType.FIELD.id)
+      else if (id == TilePacketType.field.id)
       {
         this.moveEntities
       }
-      else if (packetID == TilePacketType.DESCRIPTION.id)
+      else if (id == TilePacketType.descrption.id)
       {
-        anchor = new Vector3(data)
-        previewMode = data.readInt()
-        doAnchor = data.readBoolean()
-        clientMoveTime = data.readInt
+        anchor = new Vector3(buf)
+        previewMode = buf.readInt()
+        doAnchor = buf.readBoolean()
+        clientMoveTime = buf.readInt
       }
     }
     else
     {
-      if (packetID == TilePacketType.TOGGLE_MODE.id)
+      if (id == TilePacketType.TOGGLE_MODE.id)
       {
         anchor = new Vector3()
         markDirty()
       }
-      else if (packetID == TilePacketType.TOGGLE_MODE_2.id)
+      else if (id == TilePacketType.TOGGLE_MODE_2.id)
       {
-        this.previewMode = (this.previewMode + 1) % 3
+        previewMode = (previewMode + 1) % 3
       }
-      else if (packetID == TilePacketType.TOGGLE_MODE_3.id)
+      else if (id == TilePacketType.TOGGLE_MODE_3.id)
       {
-        this.doAnchor = !this.doAnchor
+        doAnchor = !doAnchor
       }
     }
   }

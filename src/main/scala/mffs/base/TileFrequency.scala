@@ -3,7 +3,6 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import com.mojang.authlib.GameProfile
-import io.netty.buffer.ByteBuf
 import mffs.Reference
 import mffs.item.card.ItemCardFrequency
 import mffs.security.MFFSPermissions
@@ -34,11 +33,6 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency with
   {
     FrequencyGridRegistry.instance.remove(this)
     super.invalidate()
-  }
-
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
-  {
-    super.onReceivePacket(packetID, dataStream)
   }
 
   override def getFrequency: Int =

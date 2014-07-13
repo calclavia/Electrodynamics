@@ -3,12 +3,15 @@ package mffs.base
 import java.util.{Set => JSet}
 
 import io.netty.buffer.ByteBuf
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import mffs.util.TCache
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
 import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
 
 import scala.collection.convert.wrapAll._
 
@@ -23,23 +26,23 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
   protected var capacityBase = 500
   protected var capacityBoost = 5
 
-  override def getPacketData(packetID: Int): List[AnyRef] =
+  override def write(buf: ByteBuf, id: Int)
   {
-    if (packetID == TilePacketType.DESCRIPTION.id)
-    {
-      return super.getPacketData(packetID) :+ (getFortronCost: Integer)
-    }
+    super.write(buf, id)
 
-    return super.getPacketData(packetID)
+    if (id == TilePacketType.descrption.id)
+    {
+      buf <<< getFortronCost
+    }
   }
 
-  override def onReceivePacket(packetID: Int, dataStream: ByteBuf)
+  override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    super.onReceivePacket(packetID, dataStream)
+    super.read(buf, id, player, packet)
 
-    if (packetID == TilePacketType.DESCRIPTION.id)
+    if (id == TilePacketType.descrption.id)
     {
-      clientFortronCost = dataStream.readInt
+      clientFortronCost = buf.readInt()
     }
   }
 
@@ -57,13 +60,12 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with 
     }
   }
 
-  @unchecked
   override def getModule(module: IModule): ItemStack =
   {
     val cacheID = "getModule_" + module.hashCode
 
     if (hasCache(classOf[ItemStack], cacheID)) return getCache(classOf[ItemStack], cacheID)
-
+    @unchecked
     val returnStack = new ItemStack(module.asInstanceOf[Item], getModuleStacks().count(_.getItem == module))
 
     cache(cacheID, returnStack.copy)
