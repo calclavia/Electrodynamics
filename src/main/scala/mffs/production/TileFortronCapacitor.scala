@@ -79,7 +79,7 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< transferMode.id
     }
@@ -89,11 +89,11 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   {
     super.read(buf, id, player, packet)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       transferMode = TransferMode(buf.readInt)
     }
-    else if (id == TilePacketType.TOGGLE_MODE.id)
+    else if (id == TilePacketType.toggleMoe.id)
     {
       transferMode = this.transferMode.toggle
     }

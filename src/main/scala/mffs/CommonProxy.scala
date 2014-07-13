@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
 import mffs.field.TileElectromagneticProjector
-import mffs.field.gui.ContainerMatrix
+import mffs.field.gui.{ContainerElectromagneticProjector, ContainerMatrix}
 import mffs.field.mobilize.TileForceMobilizer
 import mffs.item.gui.{ContainerFrequency, ContainerItem}
 import mffs.production._
@@ -28,7 +28,7 @@ class CommonProxy extends AbstractProxy with IGuiHandler
         tileEntity match
         {
           case tile: TileFortronCapacitor => return new ContainerFortronCapacitor(player, tile)
-          case tile: TileElectromagneticProjector => return new ContainerMatrix(player, tile)
+          case tile: TileElectromagneticProjector => return new ContainerElectromagneticProjector(player, tile)
           case tile: TileCoercionDeriver => return new ContainerCoercionDeriver(player, tile)
           case tile: TileBiometricIdentifier => return new ContainerBiometricIdentifier(player, tile)
           case tile: TileForceMobilizer => return new ContainerMatrix(player, tile)

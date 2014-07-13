@@ -59,7 +59,7 @@ class GuiFortronCapacitor(player: EntityPlayer, tile: TileFortronCapacitor) exte
 
     if (guiButton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tile, TilePacketType.TOGGLE_MODE.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this.tile, TilePacketType.toggleMoe.id: Integer))
     }
   }
 }

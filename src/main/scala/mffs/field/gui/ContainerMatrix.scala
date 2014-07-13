@@ -8,7 +8,7 @@ import resonant.lib.gui.ContainerBase
 import resonant.lib.prefab.slot.SlotSpecific
 import universalelectricity.core.transform.vector.Vector2
 
-class ContainerMatrix(player: EntityPlayer, tileEntity: TileFieldMatrix, val matrixCenter: Vector2 = new Vector2(80, 55)) extends ContainerBase(tileEntity)
+class ContainerMatrix(player: EntityPlayer, tileEntity: TileFieldMatrix, val matrixCenter: Vector2 = new Vector2(110, 55)) extends ContainerBase(tileEntity)
 {
   //Frequency
   addSlotToContainer(new SlotSpecific(tileEntity, 0, 8, 114, classOf[ItemCardFrequency]))

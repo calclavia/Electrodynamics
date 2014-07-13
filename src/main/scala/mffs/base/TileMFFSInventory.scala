@@ -21,7 +21,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       val nbt = new NBTTagCompound
       getInventory.save(nbt)
@@ -33,7 +33,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
   {
     super.read(buf, id, player, packet)
 
-    if (id == TilePacketType.descrption.id || id == TilePacketType.INVENTORY.id)
+    if (id == TilePacketType.description.id || id == TilePacketType.inventory.id)
     {
       getInventory.load(buf.readTag())
     }
@@ -43,7 +43,7 @@ abstract class TileMFFSInventory extends TileMFFS with TInventory with TPrefabIn
   {
     val nbt: NBTTagCompound = new NBTTagCompound
     this.writeToNBT(nbt)
-    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.INVENTORY.id: Integer, nbt))
+    ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(this, TilePacketType.inventory.id: Integer, nbt))
   }
 
   /**

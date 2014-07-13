@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
+import mffs.item.card.ItemCard
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.TCache
@@ -21,8 +22,9 @@ import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import resonant.api.mffs.machine.IProjector
-import resonant.api.mffs.modules.IModule
+import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.access.java.Permission
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
@@ -44,11 +46,25 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   /** True to make the field constantly tick */
   private var fieldRequireTicks = false
 
+  /** Are the filters in the projector inverted? */
+  private var isInverted = false
+
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
   capacityBase = 50
   startModuleIndex = 1
 
-  override def getSizeInventory = 1 + 25
+  override def getSizeInventory = 1 + 25 + 6
+
+  override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
+  {
+    slotID match
+    {
+      case 0 => itemStack.getItem.isInstanceOf[ItemCard]
+      case modeSlotID => itemStack.getItem.isInstanceOf[IProjectorMode]
+      case x: Int if x < 26 => itemStack.getItem.isInstanceOf[IModule]
+      case _ => true
+    }
+  }
 
   override def start()
   {
@@ -60,13 +76,27 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
   override def getLightValue(access: IBlockAccess) = if (getMode() != null) 10 else 0
 
+  override def write(buf: ByteBuf, id: Int)
+  {
+    super.write(buf, id)
+
+    if (id == TilePacketType.description.id)
+    {
+      buf <<< isInverted
+    }
+  }
+
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
     super.read(buf, id, player, packet)
 
     if (worldObj.isRemote)
     {
-      if (id == TilePacketType.effect.id)
+      if (id == TilePacketType.description.id)
+      {
+        isInverted = buf.readBoolean()
+      }
+      else if (id == TilePacketType.effect.id)
       {
         val packetType = buf.readInt
         val vector: Vector3 = new Vector3(buf.readInt, buf.readInt, buf.readInt) + 0.5
@@ -88,6 +118,13 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
         val nbt = ByteBufUtils.readTag(buf)
         val nbtList = nbt.getTagList("blockList", 10)
         calculatedField = mutable.Set(((0 until nbtList.tagCount) map (i => new Vector3(nbtList.getCompoundTagAt(i)))).toArray: _ *)
+      }
+    }
+    else
+    {
+      if (id == TilePacketType.toggleMode2.id)
+      {
+        isInverted = !isInverted
       }
     }
   }
@@ -340,9 +377,11 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     return hasPerm
   }
 
-  //TODO: implement
-  def getFilterItems: Set[Item] = null
-  def isInvertedFilter: Boolean = false
+  def getFilterItems: Set[Item] = getFilterStacks map (_.getItem)
+
+  def getFilterStacks: Set[ItemStack] = ((26 until 32) map (getStackInSlot(_)) filter (_ != null)).toSet
+
+  def isInvertedFilter: Boolean = isInverted
 
   /**
    * Rendering

@@ -320,7 +320,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< anchor
       buf <<< previewMode
@@ -410,7 +410,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
       {
         this.moveEntities
       }
-      else if (id == TilePacketType.descrption.id)
+      else if (id == TilePacketType.description.id)
       {
         anchor = new Vector3(buf)
         previewMode = buf.readInt()
@@ -420,16 +420,16 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     }
     else
     {
-      if (id == TilePacketType.TOGGLE_MODE.id)
+      if (id == TilePacketType.toggleMoe.id)
       {
         anchor = new Vector3()
         markDirty()
       }
-      else if (id == TilePacketType.TOGGLE_MODE_2.id)
+      else if (id == TilePacketType.toggleMode2.id)
       {
         previewMode = (previewMode + 1) % 3
       }
-      else if (id == TilePacketType.TOGGLE_MODE_3.id)
+      else if (id == TilePacketType.toggleMode3.id)
       {
         doAnchor = !doAnchor
       }
@@ -648,7 +648,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
 
       if (entity.isInstanceOf[EntityPlayerMP])
       {
-        (entity.asInstanceOf[EntityPlayerMP]).playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
+        entity.asInstanceOf[EntityPlayerMP].playerNetServerHandler.setPlayerLocation(location.x, location.y, location.z, entity.rotationYaw, entity.rotationPitch)
       }
       else
       {

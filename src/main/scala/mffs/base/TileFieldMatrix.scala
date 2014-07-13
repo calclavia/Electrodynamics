@@ -63,7 +63,7 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< absoluteDirection
     }
@@ -75,14 +75,14 @@ abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with
 
     if (world.isRemote)
     {
-      if (id == TilePacketType.descrption.id)
+      if (id == TilePacketType.description.id)
       {
         absoluteDirection = buf.readBoolean()
       }
     }
     else
     {
-      if (id == TilePacketType.TOGGLE_MODE_4.id)
+      if (id == TilePacketType.toggleMode4.id)
       {
         absoluteDirection = !absoluteDirection
       }

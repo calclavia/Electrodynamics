@@ -175,7 +175,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< isInversed
       buf <<< processTime
@@ -188,7 +188,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
 
     if (world.isRemote)
     {
-      if (id == TilePacketType.descrption.id)
+      if (id == TilePacketType.description.id)
       {
         isInversed = buf.readBoolean()
         processTime = buf.readInt()
@@ -196,7 +196,7 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     }
     else
     {
-      if (id == TilePacketType.TOGGLE_MODE.id)
+      if (id == TilePacketType.toggleMoe.id)
       {
         isInversed = !isInversed
       }

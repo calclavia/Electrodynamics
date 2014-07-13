@@ -6,5 +6,5 @@ package mffs.base
  */
 object TilePacketType extends Enumeration
 {
-  val descrption, frequency, fortron, TOGGLE_ACTIVATION, TOGGLE_MODE, INVENTORY, STRING, effect, TOGGLE_MODE_2, TOGGLE_MODE_3, TOGGLE_MODE_4, field, render = Value
+  val description, frequency, fortron, toggleActivation, inventory, string, effect, toggleMoe, toggleMode2, toggleMode3, toggleMode4, field, render = Value
 }

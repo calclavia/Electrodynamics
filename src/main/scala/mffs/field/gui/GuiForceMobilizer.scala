@@ -15,7 +15,7 @@ import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
 import universalelectricity.core.transform.vector.Vector2
 
-class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends GuiMatrix(new ContainerMatrix(player, tile, new Vector2(110, 55)), tile)
+class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
 {
   override def initGui
   {
@@ -71,19 +71,19 @@ class GuiForceMobilizer(player: EntityPlayer, tile: TileForceMobilizer) extends 
     if (guiButton.id == 1)
     {
 
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.TOGGLE_MODE.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMoe.id: Integer))
     }
     else if (guiButton.id == 2)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.TOGGLE_MODE_2.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode2.id: Integer))
     }
     else if (guiButton.id == 3)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.TOGGLE_MODE_3.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode3.id: Integer))
     }
     else if (guiButton.id == 4)
     {
-      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.TOGGLE_MODE_4.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToAll(new PacketTile(tile, TilePacketType.toggleMode4.id: Integer))
     }
   }
 }

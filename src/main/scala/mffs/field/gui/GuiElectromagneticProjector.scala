@@ -8,18 +8,18 @@ import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.item.ItemStack
-import net.minecraft.tileentity.TileEntity
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
 
-class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerMatrix(player, tile), tile)
+class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneticProjector) extends GuiMatrix(new ContainerElectromagneticProjector(player, tile), tile)
 {
   override def initGui()
   {
     super.initGui()
     buttonList.add(new GuiIcon(1, width / 2 - 110, height / 2 - 82, null, new ItemStack(Items.compass)))
+    buttonList.add(new GuiButton(2, width / 2 - 73, height / 2 - 20, 45, 20, "Invert"))
     setupTooltips()
   }
 
@@ -31,12 +31,14 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
     {
       setupTooltips()
     }
+
+    buttonList.get(2).asInstanceOf[GuiButton].displayString = (if (tile.isInvertedFilter) EnumColor.BRIGHT_GREEN else EnumColor.RED) + "Invert"
   }
 
   protected override def drawGuiContainerForegroundLayer(x: Int, y: Int)
   {
     drawStringCentered(tile.getInventoryName)
-    drawString(tile.getDirection.name, 8, 100)
+    drawString("Filters", 20, 20)
 
     drawFortronText(x, y)
     drawString(EnumColor.RED + new UnitDisplay(UnitDisplay.Unit.LITER, tile.getFortronCost * 20).symbol().toString + "/s", 120, 119)
@@ -48,6 +50,10 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
     super.drawGuiContainerBackgroundLayer(f, x, y)
     drawMatrix()
     drawFrequencyGui()
+
+    //Filter slots
+    for (x <- 0 until 2; y <- 0 until 3)
+      drawSlot(20 + 18 * x, 30 + 18 * y)
   }
 
   protected override def actionPerformed(guiButton: GuiButton)
@@ -56,7 +62,12 @@ class GuiElectromagneticProjector(player: EntityPlayer, tile: TileElectromagneti
 
     if (guiButton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile.asInstanceOf[TileEntity], TilePacketType.TOGGLE_MODE_4.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< TilePacketType.toggleMode4.id)
+    }
+
+    if (guiButton.id == 2)
+    {
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile) <<< TilePacketType.toggleMode2.id)
     }
   }
 

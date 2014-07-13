@@ -30,7 +30,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< getFortronCost
     }
@@ -40,7 +40,7 @@ abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with 
   {
     super.read(buf, id, player, packet)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       clientFortronCost = buf.readInt()
     }

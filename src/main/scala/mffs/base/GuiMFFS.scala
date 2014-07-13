@@ -33,7 +33,7 @@ class GuiMFFS(container: Container, tile: TileMFFS) extends GuiContainerBase(con
 
     if (tile != null && guiButton.id == 0)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.TOGGLE_ACTIVATION.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleActivation.id: Integer))
     }
   }
 

@@ -68,7 +68,7 @@ class GuiCoercionDeriver(player: EntityPlayer, tile: TileCoercionDeriver) extend
 
     if (guibutton.id == 1)
     {
-      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.TOGGLE_MODE.id: Integer))
+      ModularForceFieldSystem.packetHandler.sendToServer(new PacketTile(tile, TilePacketType.toggleMoe.id: Integer))
     }
   }
 }

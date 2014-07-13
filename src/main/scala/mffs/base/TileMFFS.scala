@@ -121,11 +121,11 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
     return ModularForceFieldSystem.packetHandler.toMCPacket(getDescPacket)
   }
 
-  def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.descrption.id)
+  def getDescPacket: PacketType = PacketManager.request(this, TilePacketType.description.id)
 
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       val prevActive = active
       active = buf.readBoolean()
@@ -136,7 +136,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
         markRender()
       }
     }
-    else if (id == TilePacketType.TOGGLE_ACTIVATION.id)
+    else if (id == TilePacketType.toggleActivation.id)
     {
       isRedstoneActive = !isRedstoneActive
 
@@ -155,7 +155,7 @@ abstract class TileMFFS extends SpatialTile(Material.iron) with ICamouflageMater
   {
     super.write(buf, id)
 
-    if (id == TilePacketType.descrption.id)
+    if (id == TilePacketType.description.id)
     {
       buf <<< active
       buf <<< isRedstoneActive
