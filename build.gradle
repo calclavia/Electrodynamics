@@ -31,31 +31,20 @@ version = "${config.version.mod.major}.${config.version.mod.minor}.${config.vers
 
 if (System.getenv("TEAMCITY_BUILDCONF_NAME").equalsIgnoreCase("Production")) {
     group = "com.calclavia.mffs"
-    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-")
 } else {
     group = "dev.calclavia.mffs"
-    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME").replaceAll(" ", "-") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
 }
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
 	
-	replaceIn "ModularForceFieldSystem.java"
+	replaceIn "References.java"
 	replace "@MAJOR@", config.version.mod.major
 	replace "@MINOR@", config.version.mod.minor
 	replace "@REVIS@", config.version.mod.revis
-
-	if (System.getenv("BUILD_NUMBER") != null) {
-		replace "@BUILD@", System.getenv("BUILD_NUMBER")
-	}
-	else {
-		replace "@BUILD@", 1
-	}
-
-    replaceIn "mcmod.info"
-    replace "@MAJOR@", config.version.mod.major
-    replace "@MINOR@", config.version.mod.minor
-    replace "@REVIS@", config.version.mod.revis
+    replace "@BUILD@", System.getenv("BUILD_NUMBER")
 }
 
 if (System.getenv("BUILD_NUMBER") != null)
@@ -63,6 +52,11 @@ if (System.getenv("BUILD_NUMBER") != null)
 
 processResources {
 	from 'build.properties'
+
+    replaceIn "mcmod.info"
+    replace "@MAJOR@", config.version.mod.major
+    replace "@MINOR@", config.version.mod.minor
+    replace "@REVIS@", config.version.mod.revis
 }
 
 task copyBuildXml(type: Copy) {
