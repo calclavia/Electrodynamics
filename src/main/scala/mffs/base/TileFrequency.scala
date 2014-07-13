@@ -74,8 +74,7 @@ abstract class TileFrequency extends TileMFFSInventory with IBlockFrequency
     return super.configure(player, side, hit)
   }
 
-  //TODO: Check the "isActive" to see if it's really needed.
-  def hasPermission(profile: GameProfile, permission: Permission): Boolean = isActive && getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
+  def hasPermission(profile: GameProfile, permission: Permission): Boolean = !isActive || getBiometricIdentifiers.forall(_.hasPermission(profile, permission))
 
   def hasPermission(profile: GameProfile, permissions: Permission*): Boolean = permissions.forall(hasPermission(profile, _))
 

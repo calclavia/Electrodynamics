@@ -45,7 +45,7 @@ class ItemModuleConfiscate extends ItemModuleDefense
 
           if (relevantSlots.size > 0)
           {
-            player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("%p", "" + relevantSlots.size)))
+            player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("#p", "" + relevantSlots.size)))
           }
         }
       )

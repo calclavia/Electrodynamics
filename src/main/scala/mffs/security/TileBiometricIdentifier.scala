@@ -56,7 +56,7 @@ class TileBiometricIdentifier extends TileFrequency with TRotatable
     return itemStack.getItem.isInstanceOf[IAccessCard]
   }
 
-  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_.getItem.isInstanceOf[IAccessCard])).toSet
+  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_ != null) filter (_.getItem.isInstanceOf[IAccessCard])).toSet
 
   override def getInventoryStackLimit: Int = 1
 

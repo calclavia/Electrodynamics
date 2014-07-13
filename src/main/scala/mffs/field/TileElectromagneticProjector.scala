@@ -50,7 +50,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   private var isInverted = false
 
   bounds = new Cuboid(0, 0, 0, 1, 0.8, 1)
-  capacityBase = 50
+  capacityBase = 30
   startModuleIndex = 1
 
   override def getSizeInventory = 1 + 25 + 6
@@ -60,7 +60,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
     slotID match
     {
       case 0 => itemStack.getItem.isInstanceOf[ItemCard]
-      case modeSlotID => itemStack.getItem.isInstanceOf[IProjectorMode]
+      case `modeSlotID` => itemStack.getItem.isInstanceOf[IProjectorMode]
       case x: Int if x < 26 => itemStack.getItem.isInstanceOf[IModule]
       case _ => true
     }
@@ -345,14 +345,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   def getTicks: Long = ticks
 
   def isInField(position: Vector3) = if (getMode != null) getMode.isInField(this, position) else false
-
-  override def hasPermission(profile: GameProfile, permission: Permission): Boolean =
-  {
-    if (super.hasPermission(profile, permission))
-      return getModuleCount(Content.moduleInvert) == 0
-
-    return true
-  }
 
   def isAccessGranted(checkWorld: World, checkPos: Vector3, player: EntityPlayer, action: PlayerInteractEvent.Action): Boolean =
   {

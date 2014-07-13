@@ -6,18 +6,18 @@ itemGroup.MFFS=Modular Force Field System
 fluid.fortron=Fortron
 
 # Chat Messages
-death.attack.areaDefense=%1$s disregarded warnings and was disintegrated.
-death.attack.fieldShock=%1$s was disintegrated by a force field.
+death.attack.areaDefense=#1 disregarded warnings and was disintegrated.
+death.attack.fieldShock=#1 was disintegrated by a force field.
 x
 message.cardFrequency.generated=Generated random frequency:
-message.cardFrequency.set=Frequency set to: %p
-message.remoteController.linked=Linked to position: %p with block: %q
-message.remoteController.fail=Unable to harness %p from the Fortron field.
+message.cardFrequency.set=Frequency set to: #p
+message.remoteController.linked=Linked to position: #p with block: #q
+message.remoteController.fail=Unable to harness #p from the Fortron field.
 message.moduleAntiPersonnel.death=Farewell.
-message.moduleConfiscate.confiscate=%p of your item(s) has been confiscated.
+message.moduleConfiscate.confiscate=#p of your item(s) has been confiscated.
 message.moduleWarn.warn=Leave this zone immediately. You have no right to enter.
 message.interdictionMatrix.warn=Warning! You are near the scanning range!
-message.modeCustom.modeChange=Changed selection mode to %p
+message.modeCustom.modeChange=Changed selection mode to #p
 message.modeCustom.saved=Field structure saved.
 
 # Blocks
