@@ -6,7 +6,6 @@ import mffs.render.button.GuiTransferModeButton
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
 import org.lwjgl.opengl.GL11
-import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor
 import resonant.lib.wrapper.WrapList._

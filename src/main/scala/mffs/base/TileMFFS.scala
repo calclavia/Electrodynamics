@@ -11,7 +11,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.network.Packet
 import resonant.api.blocks.ICamouflageMaterial
-import resonant.api.mffs.IActivatable
+import resonant.api.mffs.machine.IActivatable
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.content.prefab.TRotatable
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper

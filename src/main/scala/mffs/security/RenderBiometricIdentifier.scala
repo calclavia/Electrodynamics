@@ -17,7 +17,7 @@ final object RenderBiometricIdentifier
   val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "biometricIdentifier_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "biometricIdentifier.tcn"))
 
-  def render(tile: TileBiometricIdentifier, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
+  def render(tile: TileBiometricIdentifier, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

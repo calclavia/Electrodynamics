@@ -14,7 +14,7 @@ final object RenderFortronCapacitor
   val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "fortronCapacitor.tcn"))
 
-  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
+  def render(tileEntity: TileFortronCapacitor, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

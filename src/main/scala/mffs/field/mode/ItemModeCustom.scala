@@ -7,7 +7,7 @@ import java.util.{Set => JSet}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.field.module.ItemModuleArray
 import mffs.util.TCache
-import mffs.{Content, ModularForceFieldSystem, Settings}
+import mffs.{Content, Settings}
 import net.minecraft.block.Block
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.ChatComponentText
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.{IFieldMatrix, IProjector}
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.utility.nbt.NBTUtility
 import resonant.lib.wrapper.WrapList._

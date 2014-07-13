@@ -1,7 +1,6 @@
 package mffs.field.gui
 
 import mffs.base.{GuiMFFS, TileFieldMatrix}
-import net.minecraft.inventory.Container
 import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.utility.LanguageUtility
 import universalelectricity.core.transform.region.Rectangle
@@ -48,7 +47,6 @@ abstract class GuiMatrix(container: ContainerMatrix, tile: TileFieldMatrix) exte
     tooltips.put(new Rectangle(new Vector2(matrixCenter.xi - 18, matrixCenter.yi + 18), 18), down)
     tooltips.put(new Rectangle(new Vector2(matrixCenter.xi + 18, matrixCenter.yi + 18), 18), down)
   }
-
 
   def drawMatrix()
   {

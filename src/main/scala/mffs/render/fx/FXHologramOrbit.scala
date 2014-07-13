@@ -2,7 +2,7 @@ package mffs.render.fx
 
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import net.minecraft.client.particle.EntityFX
 import net.minecraft.client.renderer.{OpenGlHelper, RenderBlocks, Tessellator}
 import net.minecraft.world.World

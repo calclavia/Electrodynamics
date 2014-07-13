@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.render.model.ModelPlane
 import net.minecraftforge.common.util.ForgeDirection
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldMatrix, IProjector}
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.vector.Vector3
 
 class ItemModeTube extends ItemModeCube

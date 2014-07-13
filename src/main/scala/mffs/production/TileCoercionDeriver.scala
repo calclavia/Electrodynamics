@@ -13,11 +13,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.api.mffs.modules.IModule
 import resonant.lib.content.prefab.TElectric
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import universalelectricity.api.UniversalClass
 import universalelectricity.compatibility.Compatibility
 import universalelectricity.core.transform.vector.Vector3
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 
 /**
  * A TileEntity that extract energy into Fortron.
@@ -182,7 +182,6 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
     }
   }
 
-
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
     super.read(buf, id, player, packet)
@@ -248,12 +247,12 @@ class TileCoercionDeriver extends TileModuleAcceptor with TElectric
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame, isActive)
+    RenderCoercionDeriver.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
 
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack)
   {
-    RenderCoercionDeriver.render(this, -0.5, -0.5, -0.5, 0, true)
+    RenderCoercionDeriver.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }
 }

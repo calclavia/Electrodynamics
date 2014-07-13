@@ -3,10 +3,9 @@ package mffs.base
 import mffs.ModularForceFieldSystem
 import mffs.render.button.GuiIcon
 import net.minecraft.client.gui.GuiButton
-import net.minecraft.init.{Items, Blocks}
+import net.minecraft.init.Blocks
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack
-import resonant.api.mffs.IBiometricIdentifierLink
 import resonant.lib.gui.GuiContainerBase
 import resonant.lib.network.discriminator.PacketTile
 import resonant.lib.render.EnumColor

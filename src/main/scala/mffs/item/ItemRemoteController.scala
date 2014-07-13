@@ -20,8 +20,8 @@ import net.minecraft.world.World
 import net.minecraft.world.chunk.Chunk
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.api.mffs.EventForceManipulate
 import resonant.api.mffs.card.ICoordLink
+import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.fortron.{FrequencyGridRegistry, IFortronFrequency}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
@@ -124,7 +124,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
               {
                 if (world.isRemote)
                 {
-                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5),FieldColor.blue, 20)
+                  ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(entityPlayer).add(new Vector3(0, entityPlayer.getEyeHeight - 0.2, 0)), new Vector3(fortronTile.asInstanceOf[TileEntity]).add(0.5), FieldColor.blue, 20)
                 }
                 receivedEnergy += consumedEnergy
               }
@@ -155,7 +155,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
     return itemStack
   }
 
-  @SubscribeEvent def preMove(evt: EventForceManipulate.EventPreForceManipulate)
+  @SubscribeEvent def preMove(evt: EventForceMobilize.EventPreForceManipulate)
   {
     this.temporaryRemoteBlacklist.clear
   }
@@ -166,7 +166,7 @@ class ItemRemoteController extends ItemCardFrequency with ICoordLink
    *
    * @param evt
    */
-  @SubscribeEvent def onMove(evt: EventForceManipulate.EventPostForceManipulate)
+  @SubscribeEvent def onMove(evt: EventForceMobilize.EventPostForceManipulate)
   {
     if (!evt.world.isRemote)
     {

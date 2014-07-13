@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.api.mffs.{IFieldMatrix, IProjector}
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay

@@ -9,13 +9,13 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fluids.FluidContainerRegistry
-import resonant.api.mffs.modules.{IModule, IModuleAcceptor}
+import resonant.api.mffs.modules.{IModule, IModuleProvider}
 import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 
 import scala.collection.convert.wrapAll._
 
-abstract class TileModuleAcceptor extends TileFortron with IModuleAcceptor with TCache
+abstract class TileModuleAcceptor extends TileFortron with IModuleProvider with TCache
 {
   var startModuleIndex = 1
   var endModuleIndex = getSizeInventory - 1

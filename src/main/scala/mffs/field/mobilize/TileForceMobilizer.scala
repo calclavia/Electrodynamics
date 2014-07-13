@@ -18,17 +18,18 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.AxisAlignedBB
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.util.ForgeDirection
+import resonant.api.mffs.Blacklist
 import resonant.api.mffs.card.ICoordLink
+import resonant.api.mffs.event.EventForceMobilize
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
-import resonant.api.mffs.{Blacklist, EventForceManipulate}
-import resonant.lib.network.discriminator.{PacketType, PacketTile}
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.{Vector3, VectorWorld}
 
 import scala.collection.convert.wrapAll._
 import scala.collection.mutable
 import scala.math._
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 
 class TileForceMobilizer extends TileFieldMatrix with IEffectController
 {
@@ -328,7 +329,6 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     }
   }
 
-
   override def read(buf: ByteBuf, id: Int, player: EntityPlayer, packet: PacketType)
   {
     super.read(buf, id, player, packet)
@@ -500,7 +500,7 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
     {
       return false
     }
-    val evt = new EventForceManipulate.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
+    val evt = new EventForceMobilize.EventCheckForceManipulate(position.world, position.xi, position.yi, position.zi, target.xi, target.yi, target.zi)
     MinecraftForge.EVENT_BUS.post(evt)
 
     if (evt.isCanceled)
@@ -728,12 +728,12 @@ class TileForceMobilizer extends TileFieldMatrix with IEffectController
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame, isActive)
+    RenderForceMobilizer.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
 
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack)
   {
-    RenderForceMobilizer.render(this, -0.5, -0.5, -0.5, 0, true)
+    RenderForceMobilizer.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }
 }

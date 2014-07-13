@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.MinecraftForge
-import resonant.api.mffs.EventForceManipulate
+import resonant.api.mffs.event.EventForceMobilize
 import resonant.lib.utility.MovementUtility
 import universalelectricity.core.transform.vector.VectorWorld
 
@@ -76,7 +76,7 @@ class BlockPostMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, sta
           }
           this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, startPosition.world, startPosition))
           this.handler.queueEvent(new BlockNotifyDelayedEvent(this.handler, 0, newPosition.world, newPosition))
-          MinecraftForge.EVENT_BUS.post(new EventForceManipulate.EventPostForceManipulate(startPosition.world, startPosition.xi, startPosition.yi, startPosition.zi, newPosition.xi, newPosition.yi, newPosition.zi))
+          MinecraftForge.EVENT_BUS.post(new EventForceMobilize.EventPostForceManipulate(startPosition.world, startPosition.xi, startPosition.yi, startPosition.zi, newPosition.xi, newPosition.yi, newPosition.zi))
         }
         catch
           {

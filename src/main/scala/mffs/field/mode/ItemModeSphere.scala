@@ -3,10 +3,10 @@ package mffs.field.mode
 import java.util.{HashSet, Set}
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import mffs.{Content, ModularForceFieldSystem}
+import mffs.Content
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldMatrix, IProjector}
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
 import universalelectricity.core.transform.vector.Vector3
 

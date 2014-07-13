@@ -4,7 +4,6 @@ import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.ChatComponentText
-import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.lib.utility.LanguageUtility
 
 class ItemModuleAntiPersonnel extends ItemModuleDefense

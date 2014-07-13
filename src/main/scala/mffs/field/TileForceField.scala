@@ -18,8 +18,8 @@ import net.minecraft.network.Packet
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.util.{IIcon, MovingObjectPosition}
 import net.minecraft.world.IBlockAccess
+import resonant.api.mffs.machine.{IForceField, IProjector}
 import resonant.api.mffs.modules.IModule
-import resonant.api.mffs.{IForceField, IProjector}
 import resonant.content.spatial.block.SpatialTile
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.network.handle.TPacketReceiver
@@ -175,7 +175,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
 
     if (projector != null && entity.isInstanceOf[EntityPlayer])
     {
-      val biometricIdentifier = projector.getBiometricIdentifier()
+      val biometricIdentifier = projector.getBiometricIdentifier
 
       val entityPlayer = entity.asInstanceOf[EntityPlayer]
 
@@ -207,7 +207,7 @@ class TileForceField extends SpatialTile(Material.glass) with TPacketReceiver wi
       if (!projector.getModuleStacks(projector.getModuleSlots(): _*).forall(stack => stack.getItem().asInstanceOf[IModule].onCollideWithForceField(world, x, y, z, entity, stack)))
         return
 
-      val biometricIdentifier = projector.getBiometricIdentifier()
+      val biometricIdentifier = projector.getBiometricIdentifier
 
       if (center.distance(new Vector3(entity)) < 0.5)
       {

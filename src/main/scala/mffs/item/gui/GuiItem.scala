@@ -1,6 +1,5 @@
 package mffs.item.gui
 
-import mffs.item.card.ItemCardFrequency
 import net.minecraft.client.gui.GuiTextField
 import net.minecraft.inventory.Container
 import net.minecraft.item.ItemStack

@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.BlockFluidBase
-import resonant.api.mffs.IProjector
+import resonant.api.mffs.machine.IProjector
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._

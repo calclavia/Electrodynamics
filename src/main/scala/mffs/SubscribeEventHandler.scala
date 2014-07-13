@@ -21,8 +21,8 @@ import net.minecraftforge.client.event.TextureStitchEvent
 import net.minecraftforge.event.entity.living.LivingSpawnEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action
+import resonant.api.mffs.event.{EventForceMobilize, EventStabilize}
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.api.mffs.{EventForceManipulate, EventStabilize}
 import resonant.lib.config.ConfigHandler
 import resonant.lib.event.ChunkModifiedEvent
 import universalelectricity.core.transform.vector.Vector3
@@ -63,7 +63,7 @@ object SubscribeEventHandler
   }
 
   @SubscribeEvent
-  def eventPreForceManipulate(evt: EventForceManipulate.EventPreForceManipulate)
+  def eventPreForceManipulate(evt: EventForceMobilize.EventPreForceManipulate)
   {
     val tileEntity: TileEntity = evt.world.getTileEntity(evt.beforeX, evt.beforeY, evt.beforeZ)
 

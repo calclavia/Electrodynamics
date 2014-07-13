@@ -5,7 +5,7 @@ import java.util.{HashSet, Set}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldMatrix, IProjector}
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.lib.render.block.ModelCube
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.rotation.Rotation

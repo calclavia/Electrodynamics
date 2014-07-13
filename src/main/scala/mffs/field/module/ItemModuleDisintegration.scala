@@ -2,18 +2,18 @@ package mffs.field.module
 
 import java.util.Set
 
-import mffs.{Content, ModularForceFieldSystem}
 import mffs.base.{ItemModule, TileMFFSInventory, TilePacketType}
 import mffs.field.TileElectromagneticProjector
 import mffs.field.mobilize.event.{BlockDropDelayedEvent, BlockInventoryDropDelayedEvent, IDelayedEventHandler}
 import mffs.util.MFFSUtility
+import mffs.{Content, ModularForceFieldSystem}
 import net.minecraft.block.BlockLiquid
 import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
+import resonant.api.mffs.Blacklist
 import resonant.api.mffs.fortron.FrequencyGridRegistry
-import resonant.api.mffs.security.IInterdictionMatrix
-import resonant.api.mffs.{Blacklist, IProjector}
+import resonant.api.mffs.machine.IProjector
 import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.vector.Vector3
 
@@ -42,17 +42,14 @@ class ItemModuleDisintegration extends ItemModule
       {
         val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
-        if (FrequencyGridRegistry.instance.getNodes(classOf[IInterdictionMatrix]) filter ((i: IInterdictionMatrix) => i.isActive() && new Vector3(i.asInstanceOf[TileEntity]).distance(position) <= i.getActionRange() && i.getFrequency() != projector.getFrequency()) exists (_.getModuleCount(Content.moduleBlockAlter) > 0))
-          return 1
-
         val filterMatch = !projector.getModuleSlots().exists(
           i =>
           {
             val filterStack = projector.getStackInSlot(i)
 
             MFFSUtility.getFilterBlock(filterStack) != null &&
-                    (filterStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) ||
-                            (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
+            (filterStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) ||
+             (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
           })
 
         if (projector.getModuleCount(Content.moduleCamouflage) > 0 == !filterMatch)

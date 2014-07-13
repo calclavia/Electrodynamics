@@ -7,7 +7,7 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidStack, FluidTank}
 import resonant.api.mffs.fortron.IFortronFrequency
-import resonant.api.mffs.modules.IModuleAcceptor
+import resonant.api.mffs.modules.IModuleProvider
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.mutable
@@ -147,9 +147,9 @@ object FortronUtility
       val world: World = tileEntity.getWorldObj()
       var isCamo = false
 
-      if (transferer.isInstanceOf[IModuleAcceptor])
+      if (transferer.isInstanceOf[IModuleProvider])
       {
-        isCamo = (transferer.asInstanceOf[IModuleAcceptor]).getModuleCount(Content.moduleCamouflage) > 0
+        isCamo = (transferer.asInstanceOf[IModuleProvider]).getModuleCount(Content.moduleCamouflage) > 0
       }
 
       if (joules > 0)
@@ -159,7 +159,7 @@ object FortronUtility
         toBeInjected = transferer.requestFortron(receiver.provideFortron(toBeInjected, true), true)
         if (world.isRemote && toBeInjected > 0 && !isCamo)
         {
-          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5,FieldColor.blue, 20)
+          ModularForceFieldSystem.proxy.renderBeam(world, new Vector3(tileEntity) + 0.5, new Vector3(receiver.asInstanceOf[TileEntity]) + 0.5, FieldColor.blue, 20)
         }
       }
       else

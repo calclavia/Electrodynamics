@@ -6,12 +6,10 @@ import mffs.base.ItemModule
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import resonant.api.mffs.modules.IInterdictionMatrixModule
-import resonant.api.mffs.security.IInterdictionMatrix
 import resonant.lib.utility.LanguageUtility
 import resonant.lib.wrapper.WrapList._
 
-class ItemModuleDefense extends ItemModule with IInterdictionMatrixModule
+class ItemModuleDefense extends ItemModule
 {
   override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: List[_], b: Boolean)
   {

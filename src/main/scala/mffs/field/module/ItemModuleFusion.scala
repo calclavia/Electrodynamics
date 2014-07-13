@@ -5,8 +5,8 @@ import java.util.Set
 import mffs.base.ItemModule
 import mffs.field.TileElectromagneticProjector
 import net.minecraft.tileentity.TileEntity
-import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.FrequencyGridRegistry
+import resonant.api.mffs.machine.IProjector
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.convert.wrapAll._

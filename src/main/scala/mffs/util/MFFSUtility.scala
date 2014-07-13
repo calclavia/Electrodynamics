@@ -12,8 +12,8 @@ import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonant.api.mffs.IProjector
 import resonant.api.mffs.fortron.FrequencyGridRegistry
+import resonant.api.mffs.machine.IProjector
 import resonant.engine.grid.frequency.FrequencyGrid
 import resonant.lib.access.java.Permission
 import universalelectricity.core.transform.rotation.Rotation

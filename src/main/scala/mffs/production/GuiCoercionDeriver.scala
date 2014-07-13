@@ -4,7 +4,6 @@ import mffs.ModularForceFieldSystem
 import mffs.base.{GuiMFFS, TilePacketType}
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
 import resonant.lib.gui.GuiContainerBase.SlotType
 import resonant.lib.network.discriminator.PacketTile

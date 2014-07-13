@@ -1,13 +1,13 @@
 package mffs.security.module
 
 import java.util.Set
+
 import mffs.security.MFFSPermissions
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
-import resonant.api.mffs.security.{IBiometricIdentifier, IInterdictionMatrix}
 import resonant.lib.utility.LanguageUtility
 
 import scala.collection.JavaConversions._

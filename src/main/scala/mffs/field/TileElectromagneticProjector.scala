@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import io.netty.buffer.ByteBuf
 import mffs.base.{TileFieldMatrix, TilePacketType}
 import mffs.field.mode.ItemModeCustom
-import mffs.item.card.ItemCard
 import mffs.render.FieldColor
 import mffs.security.MFFSPermissions
 import mffs.util.TCache
@@ -21,11 +20,10 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
-import resonant.api.mffs.IProjector
-import resonant.api.mffs.modules.{IModule, IProjectorMode}
+import resonant.api.mffs.machine.IProjector
+import resonant.api.mffs.modules.IModule
 import resonant.lib.access.java.Permission
-import resonant.lib.network.discriminator.{PacketType, PacketTile}
-import resonant.lib.render.EnumColor
+import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
@@ -195,6 +193,8 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
    */
   def projectField()
   {
+    //TODO: We cannot construct a field if it intersects another field with different frequency. Override not allowed.
+
     if (!isCalculating)
     {
       if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
@@ -236,7 +236,7 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
             relevantModules.exists({ module =>
               flag = module.onProject(this, vector)
               flag == 0
-            })
+                                   })
 
             if (flag != 1 && flag != 2)
             {
@@ -274,8 +274,8 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   private def canReplaceBlock(vector: Vector3, block: Block): Boolean =
   {
     return block == null ||
-            (getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
-            (block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
+           (getModuleCount(Content.moduleDisintegration) > 0 && block.getBlockHardness(this.worldObj, vector.xi, vector.yi, vector.zi) != -1) ||
+           (block.getMaterial.isLiquid || block == Blocks.snow || block == Blocks.vine || block == Blocks.tallgrass || block == Blocks.deadbush || block.isReplaceable(world, vector.xi, vector.yi, vector.zi))
   }
 
   def destroyField()
@@ -302,7 +302,6 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   def getProjectionSpeed: Int = 28 + 28 * getModuleCount(Content.moduleSpeed, getModuleSlots: _*)
 
   override def getForceFields: JSet[Vector3] = forceFields
-
 
   def getTicks: Long = ticks
 
@@ -351,12 +350,12 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame, isActive)
+    RenderElectromagneticProjector.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
 
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack)
   {
-    RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true)
+    RenderElectromagneticProjector.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }
 }

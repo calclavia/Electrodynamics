@@ -4,17 +4,16 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.common.FMLCommonHandler
 import cpw.mods.fml.common.network.IGuiHandler
 import mffs.field.TileElectromagneticProjector
-import mffs.field.gui.{GuiForceMobilizer, GuiElectromagneticProjector, ContainerMatrix}
+import mffs.field.gui.ContainerMatrix
 import mffs.field.mobilize.TileForceMobilizer
-import mffs.item.gui.{ContainerItem, ContainerFrequency}
+import mffs.item.gui.{ContainerFrequency, ContainerItem}
 import mffs.production._
 import mffs.render.fx.IEffectController
-import mffs.security.{GuiBiometricIdentifier, ContainerBiometricIdentifier, TileBiometricIdentifier}
+import mffs.security.{ContainerBiometricIdentifier, TileBiometricIdentifier}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.World
 import resonant.lib.prefab.AbstractProxy
-import resonant.lib.render.EnumColor
 import universalelectricity.core.transform.vector.Vector3
 
 class CommonProxy extends AbstractProxy with IGuiHandler

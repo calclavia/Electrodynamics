@@ -12,10 +12,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.IFieldMatrix
+import resonant.api.mffs.machine.{IFieldMatrix, IPermissionProvider}
 import resonant.api.mffs.modules.{IModule, IProjectorMode}
 import resonant.lib.content.prefab.TRotatable
-import resonant.lib.network.discriminator.{PacketType, PacketTile}
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+import resonant.lib.network.discriminator.PacketType
 import resonant.lib.utility.RotationUtility
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3
@@ -26,8 +27,8 @@ import scala.collection.mutable.Queue
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.util.{Failure, Success}
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
-abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable
+
+abstract class TileFieldMatrix extends TileModuleAcceptor with IFieldMatrix with IDelayedEventHandler with TRotatable with IPermissionProvider
 {
   protected var calculatedField: mutable.Set[Vector3] = null
   protected final val delayedEvents = new Queue[DelayedEvent]()

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.tileentity.TileEntity
 import org.lwjgl.opengl.GL11
-import resonant.api.mffs.{IFieldMatrix, IProjector}
+import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.rotation.Rotation
 import universalelectricity.core.transform.vector.Vector3

@@ -7,12 +7,10 @@ import com.mojang.authlib.GameProfile
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import mffs.base.TileFrequency
 import mffs.item.card.ItemCardFrequency
-import mffs.security.card.ItemCardAccess
 import mffs.{ModularForceFieldSystem, Settings}
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.item.ItemStack
-import resonant.api.mffs.card.ICardIdentification
-import resonant.api.mffs.security.IBiometricIdentifier
+import resonant.api.mffs.card.IAccessCard
 import resonant.lib.access.java.Permission
 import resonant.lib.content.prefab.TRotatable
 import universalelectricity.core.transform.vector.Vector3
@@ -22,7 +20,7 @@ object TileBiometricIdentifier
   val SLOT_COPY = 12
 }
 
-class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier with TRotatable
+class TileBiometricIdentifier extends TileFrequency with TRotatable
 {
   /**
    * Rendering
@@ -47,7 +45,7 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
     if (!isActive || ModularForceFieldSystem.proxy.isOp(profile) && Settings.allowOpOverride)
       return true
 
-    return getCards map (stack => stack.getItem.asInstanceOf[ItemCardAccess].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
+    return getCards map (stack => stack.getItem.asInstanceOf[IAccessCard].getAccess(stack)) filter (_ != null) exists (_.hasPermission(profile.getName, permission))
   }
 
   override def isItemValidForSlot(slotID: Int, itemStack: ItemStack): Boolean =
@@ -55,31 +53,16 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
     if (slotID == 0)
       return itemStack.getItem.isInstanceOf[ItemCardFrequency]
 
-    return itemStack.getItem.isInstanceOf[ItemCardAccess]
+    return itemStack.getItem.isInstanceOf[IAccessCard]
   }
 
-  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_.getItem.isInstanceOf[ItemCardAccess])).toSet
+  override def getCards: Set[ItemStack] = (getInventory().getContainedItems filter (_.getItem.isInstanceOf[IAccessCard])).toSet
 
   override def getInventoryStackLimit: Int = 1
 
-  /**
-   * Gets the current card that is being edited.
-   **/
-  def getManipulatingCard: ItemStack =
+  override def getBiometricIdentifiers: JSet[TileBiometricIdentifier] =
   {
-    if (this.getStackInSlot(1) != null)
-    {
-      if (this.getStackInSlot(1).getItem.isInstanceOf[ICardIdentification])
-      {
-        return this.getStackInSlot(1)
-      }
-    }
-    return null
-  }
-
-  override def getBiometricIdentifiers: JSet[IBiometricIdentifier] =
-  {
-    val set = new util.HashSet[IBiometricIdentifier]()
+    val set = new util.HashSet[TileBiometricIdentifier]()
     set.add(this)
     return set
   }
@@ -93,12 +76,12 @@ class TileBiometricIdentifier extends TileFrequency with IBiometricIdentifier wi
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderBiometricIdentifier.render(this, pos.x, pos.y, pos.z, frame, isActive)
+    RenderBiometricIdentifier.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
 
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack)
   {
-    RenderBiometricIdentifier.render(this, -0.5, -0.5, -0.5, 0, true)
+    RenderBiometricIdentifier.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }
 }

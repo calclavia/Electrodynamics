@@ -15,7 +15,7 @@ final object RenderForceMobilizer
   val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer.tcn"))
 
-  def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
+  def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

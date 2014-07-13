@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import resonant.api.mffs.IProjector
+import resonant.api.mffs.machine.IProjector
 import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 

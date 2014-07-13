@@ -15,7 +15,7 @@ final object RenderCoercionDeriver
   val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelPath + "coercionDeriver_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "coercionDeriver.tcn"))
 
-  def render(tileEntity: TileCoercionDeriver, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
+  def render(tileEntity: TileCoercionDeriver, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     if (isActive)
     {

@@ -4,7 +4,7 @@ import java.util.{HashSet, Set}
 
 import mffs.base.ItemModule
 import net.minecraftforge.common.util.ForgeDirection
-import resonant.api.mffs.IFieldMatrix
+import resonant.api.mffs.machine.IFieldMatrix
 import universalelectricity.core.transform.vector.Vector3
 
 import scala.collection.JavaConversions._
@@ -35,10 +35,10 @@ class ItemModuleArray extends ItemModule
             val directionalDisplacementScale = directionalDisplacement * (i + 1)
 
             originalField.foreach(originalFieldBlock =>
-            {
-              val newFieldBlock: Vector3 = originalFieldBlock.clone + (new Vector3(direction) * directionalDisplacementScale)
-              interior.add(newFieldBlock)
-            })
+                                  {
+                                    val newFieldBlock: Vector3 = originalFieldBlock.clone + (new Vector3(direction) * directionalDisplacementScale)
+                                    interior.add(newFieldBlock)
+                                  })
           }
         )
       }

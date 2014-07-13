@@ -1,15 +1,15 @@
 package mffs.base
 
-import cpw.mods.fml.common.network.ByteBufUtils
 import io.netty.buffer.ByteBuf
 import mffs.ModularForceFieldSystem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import resonant.lib.content.prefab.TInventory
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.{PacketTile, PacketType}
 import resonant.lib.utility.inventory.TPrefabInventory
-import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
+
 /**
  * All TileEntities that have an inventory should extend this.
  *

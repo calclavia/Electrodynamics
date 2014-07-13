@@ -4,7 +4,7 @@ import mffs.field.mobilize.TileForceMobilizer
 import net.minecraft.init.Blocks
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.common.MinecraftForge
-import resonant.api.mffs.EventForceManipulate
+import resonant.api.mffs.event.EventForceMobilize
 import resonant.lib.utility.MovementUtility
 import universalelectricity.core.transform.vector.VectorWorld
 
@@ -22,7 +22,7 @@ class BlockPreMoveDelayedEvent(_handler: IDelayedEventHandler, _ticks: Int, val 
       if ((handler.asInstanceOf[TileForceMobilizer]).canMove(startPosition, newPosition))
       {
         val tileEntity = startPosition.getTileEntity
-        val evt = new EventForceManipulate.EventPreForceManipulate(startPosition.world, startPosition.xi, startPosition.yi, startPosition.zi, newPosition.xi, newPosition.yi, newPosition.zi)
+        val evt = new EventForceMobilize.EventPreForceManipulate(startPosition.world, startPosition.xi, startPosition.yi, startPosition.zi, newPosition.xi, newPosition.yi, newPosition.zi)
         MinecraftForge.EVENT_BUS.post(evt)
 
         if (!evt.isCanceled)
