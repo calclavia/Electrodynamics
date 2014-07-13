@@ -39,11 +39,11 @@ if (System.getenv("TEAMCITY_BUILDCONF_NAME").equalsIgnoreCase("Production")) {
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
-	
-	replaceIn "References.java"
-	replace "@MAJOR@", config.version.mod.major
-	replace "@MINOR@", config.version.mod.minor
-	replace "@REVIS@", config.version.mod.revis
+
+    replaceIn "References.java"
+    replace "@MAJOR@", config.version.mod.major
+    replace "@MINOR@", config.version.mod.minor
+    replace "@REVIS@", config.version.mod.revis
     replace "@BUILD@", System.getenv("BUILD_NUMBER")
 }
 
@@ -51,19 +51,27 @@ if (System.getenv("BUILD_NUMBER") != null)
     version += ".${System.getenv("BUILD_NUMBER")}"
 
 processResources {
-	from 'build.properties'
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-    replaceIn "mcmod.info"
-    replace "@MAJOR@", config.version.mod.major
-    replace "@MINOR@", config.version.mod.minor
-    replace "@REVIS@", config.version.mod.revis
+    // replace stuff in text files, not binary ones.
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.info'
+
+        // replace version and MCVersion
+        // forge version is also accessible via project.minecraftforgeVersion
+        // it contains the full minecraft version, including buildNumber
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    // copy everything else, thats not text
+    from 'build.properties'
 }
 
 task copyBuildXml(type: Copy) {
     from 'build.properties'
     into 'output'
 }
-
 
 /**
  * Generates a TeamCity XML changelog via the REST API.
@@ -124,7 +132,7 @@ publishing {
                 classifier "build"
                 extension "properties"
             }
-        }		
+        }
     }
     repositories {
         maven {
@@ -134,25 +142,25 @@ publishing {
 }
 
 repositories {
-	maven {
-		name 'Calclavia Maven'
-		url 'http://calclavia.com/maven'
-	}
-	maven {
-		name = "forge"
-		url = "http://files.minecraftforge.net/maven"
-	}
-	ivy {
-		name 'FMP'
-		artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
-	}
-	ivy {
-		artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
-	}
-	mavenCentral()
+    maven {
+        name 'Calclavia Maven'
+        url 'http://calclavia.com/maven'
+    }
+    maven {
+        name = "forge"
+        url = "http://files.minecraftforge.net/maven"
+    }
+    ivy {
+        name 'FMP'
+        artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
+    }
+    ivy {
+        artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
+    }
+    mavenCentral()
 }
 
 dependencies {
     compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${config.version.universalelectricity}", classifier: "dev"
-	compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
+    compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 }
