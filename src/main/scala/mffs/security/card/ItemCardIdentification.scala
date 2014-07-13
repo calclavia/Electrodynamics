@@ -9,7 +9,9 @@ import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.world.World
+import resonant.lib.access.java.Permissions
 import resonant.lib.access.scala.AccessUser
+import resonant.lib.network.ByteBufWrapper.ByteBufWrapper
 import resonant.lib.network.discriminator.PacketType
 import resonant.lib.network.handle.TPacketReceiver
 import resonant.lib.utility.LanguageUtility
@@ -38,7 +40,7 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     {
       info.add(LanguageUtility.getLocal("info.cardIdentification.username") + " " + access.username)
 
-      val permString = LanguageUtility.getLocal(access.permissions.map("permission." + _.toString).mkString(","))
+      val permString = LanguageUtility.getLocal(access.permissions.map(_.id).mkString(", "))
       info.addAll(LanguageUtility.splitStringPerWord(permString, 5))
     }
     else
@@ -99,13 +101,44 @@ class ItemCardIdentification extends ItemCardAccess with TPacketReceiver
     val itemStack = player.getCurrentEquippedItem
     var access = getAccess(itemStack)
 
-    if (access != null)
+    buf.readInt() match
     {
-      access.username = player.getGameProfile.getName
+      case 0 =>
+      {
+        /**
+         * Permission toggle packet
+         */
+        val perm = Permissions.find(buf.readString())
+
+        if (access == null)
+        {
+          access = new AccessUser(player)
+        }
+
+        if (perm != null)
+        {
+          if (access.permissions.contains(perm))
+            access.permissions -= perm
+          else
+            access.permissions += perm
+        }
+      }
+      case 1 =>
+      {
+        /**
+         * Username packet
+         */
+        if (access != null)
+        {
+          access.username = buf.readString()
+        }
+        else
+        {
+          access = new AccessUser(buf.readString())
+        }
+      }
     }
-    else
-    {
-      access = new AccessUser(player)
-    }
+
+    setAccess(itemStack, access)
   }
 }

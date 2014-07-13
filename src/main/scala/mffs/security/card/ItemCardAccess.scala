@@ -13,8 +13,5 @@ abstract class ItemCardAccess extends ItemCard
 {
   def getAccess(itemStack: ItemStack): AbstractAccess
 
-  def setAccess(itemStack: ItemStack, access: AbstractAccess)
-  {
-    itemStack.setTagCompound(access.toNBT)
-  }
+  def setAccess(itemStack: ItemStack, access: AbstractAccess) = itemStack.setTagCompound(access.toNBT)
 }

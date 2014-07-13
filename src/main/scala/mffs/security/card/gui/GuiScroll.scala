@@ -1,21 +1,20 @@
 package mffs.security.card.gui
 
 import org.lwjgl.input.Mouse
-import universalelectricity.core.transform.vector.Vector2
 
 /**
  * @author Calclavia
  */
-class GuiScroll( val height: Int)
+class GuiScroll(val height: Int)
 {
   /**
    * A value between 0 and 1, indicating the scroll distance.
    */
   private var _currentScroll = 0f
 
-   def currentScroll = _currentScroll
+  def currentScroll = _currentScroll
 
-   def currentScroll_=(scroll: Float) = _currentScroll = Math.min(Math.max(scroll, 0), 1)
+  def currentScroll_=(scroll: Float) = _currentScroll = Math.min(Math.max(scroll, 0), 1)
 
   /**
    * Handles mouse input.
