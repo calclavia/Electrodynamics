@@ -165,12 +165,12 @@ class TileFortronCapacitor extends TileModuleAcceptor with IFortronStorage with 
   @SideOnly(Side.CLIENT)
   override def renderDynamic(pos: Vector3, frame: Float, pass: Int)
   {
-    RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame, isActive)
+    RenderFortronCapacitor.render(this, pos.x, pos.y, pos.z, frame, isActive, false)
   }
 
   @SideOnly(Side.CLIENT)
   override def renderInventory(itemStack: ItemStack)
   {
-    RenderFortronCapacitor.render(this, -0.5, -0.5, -0.5, 0, true)
+    RenderFortronCapacitor.render(this, -0.5, -0.5, -0.5, 0, true, true)
   }
 }

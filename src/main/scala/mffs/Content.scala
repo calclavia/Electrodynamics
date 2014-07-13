@@ -95,11 +95,11 @@ object Content extends ContentHolder
   val moduleSponge = new ItemModuleSponge
   val moduleStabilize = new ItemModuleStabilize
   val moduleRepulsion = new ItemModuleRepulsion
-  val moduleAntiHostile = new ItemModuleAntiHostile
-  val moduleAntiFriendly = new ItemModuleAntiFriendly
-  val moduleAntiPersonnel = new ItemModuleAntiPersonnel
+  val moduleAntiHostile = new ItemModuleAntiHostile().setCost(10)
+  val moduleAntiFriendly = new ItemModuleAntiFriendly().setCost(5)
+  val moduleAntiPersonnel = new ItemModuleAntiPersonnel().setCost(15)
   val moduleConfiscate = new ItemModuleConfiscate
-  val moduleWarn = new ItemModuleWarn
+  val moduleWarn = new ItemModuleBroadcast
   @ImplicitContentName
   val moduleBlockAccess = new ItemModuleDefense().setCost(10)
   @ImplicitContentName

@@ -1,37 +1,40 @@
 package mffs.base
 
-import java.util.{List, Set}
+import java.util.{List => JList, Set => JSet}
 
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import resonant.api.mffs.machine.{IFieldMatrix, IProjector}
 import resonant.api.mffs.modules.IModule
 import resonant.lib.utility.LanguageUtility
-import resonant.lib.wrapper.WrapList._
 import universalelectricity.api.UnitDisplay
+import universalelectricity.core.transform.region.Cuboid
 import universalelectricity.core.transform.vector.Vector3
 
+import scala.collection.convert.wrapAll._
+import resonant.lib.wrapper.WrapList._
 class ItemModule extends ItemMFFS with IModule
 {
   private var fortronCost = 0.5f
 
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: List[_], b: Boolean)
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: JList[_], b: Boolean)
   {
     info.add(LanguageUtility.getLocal("info.item.fortron") + " " + new UnitDisplay(UnitDisplay.Unit.LITER, getFortronCost(1) * 20) + "/s")
     super.addInformation(itemStack, player, info, b)
   }
 
-  override def onPreCalculate(projector: IFieldMatrix, position: Set[Vector3])
+  override def onPreCalculate(projector: IFieldMatrix, position: JSet[Vector3])
   {
   }
 
-  override def onPostCalculate(projector: IFieldMatrix, position: Set[Vector3])
+  override def onPostCalculate(projector: IFieldMatrix, position: JSet[Vector3])
   {
   }
 
-  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
+  override def onProject(projector: IProjector, fields: JSet[Vector3]): Boolean =
   {
     return false
   }
@@ -63,7 +66,7 @@ class ItemModule extends ItemMFFS with IModule
     return this.fortronCost
   }
 
-  override def onDestroy(projector: IProjector, field: Set[Vector3]): Boolean =
+  override def onDestroy(projector: IProjector, field: JSet[Vector3]): Boolean =
   {
     return false
   }
@@ -75,4 +78,10 @@ class ItemModule extends ItemMFFS with IModule
     return false
   }
 
+  def getEntitiesInField(projector: IProjector): Set[Entity] =
+  {
+    val tile = projector.asInstanceOf[TileEntity]
+    val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + 1) + (new Vector3(tile) + projector.getTranslation)
+    return (tile.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])).toSet
+  }
 }

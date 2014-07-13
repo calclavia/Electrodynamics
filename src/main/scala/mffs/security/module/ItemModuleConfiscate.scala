@@ -2,77 +2,54 @@ package mffs.security.module
 
 import java.util.Set
 
+import mffs.field.TileElectromagneticProjector
 import mffs.security.MFFSPermissions
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.IInventory
-import net.minecraft.item.ItemStack
 import net.minecraft.util.ChatComponentText
+import resonant.api.mffs.machine.IProjector
 import resonant.lib.utility.LanguageUtility
-
-import scala.collection.JavaConversions._
+import universalelectricity.core.transform.vector.Vector3
 
 class ItemModuleConfiscate extends ItemModuleDefense
 {
-  override def onDefend(interdictionMatrix: IInterdictionMatrix, entityLiving: EntityLivingBase): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
   {
-    if (entityLiving.isInstanceOf[EntityPlayer])
-    {
-      val player: EntityPlayer = entityLiving.asInstanceOf[EntityPlayer]
-      val biometricIdentifier: IBiometricIdentifier = interdictionMatrix.getBiometricIdentifier
-      if (biometricIdentifier != null && biometricIdentifier.hasPermission(player.getGameProfile, MFFSPermissions.bypassConfiscation))
-      {
-        return false
-      }
-    }
-    val controlledStacks: Set[ItemStack] = interdictionMatrix.getFilteredItems
-    var confiscationCount: Int = 0
-    var inventory: IInventory = null
+    val proj = projector.asInstanceOf[TileElectromagneticProjector]
+    val entities = getEntitiesInField(projector)
 
-    if (entityLiving.isInstanceOf[EntityPlayer])
-    {
-      val biometricIdentifier: IBiometricIdentifier = interdictionMatrix.getBiometricIdentifier
-      if (biometricIdentifier != null && biometricIdentifier.hasPermission((entityLiving.asInstanceOf[EntityPlayer]).getGameProfile, MFFSPermissions.defense))
-      {
-        return false
-      }
-      val player: EntityPlayer = entityLiving.asInstanceOf[EntityPlayer]
-      inventory = player.inventory
-    }
-    else if (entityLiving.isInstanceOf[IInventory])
-    {
-      inventory = entityLiving.asInstanceOf[IInventory]
-    }
-
-    if (inventory != null)
-    {
-      var i: Int = 0
-
-      while (i < inventory.getSizeInventory)
-      {
-        val checkStack: ItemStack = inventory.getStackInSlot(i)
-        if (checkStack != null)
+    entities.view
+      .filter(_.isInstanceOf[EntityPlayer])
+      .map(_.asInstanceOf[EntityPlayer])
+      .filter(player => !proj.hasPermission(player.getGameProfile, MFFSPermissions.bypassConfiscation))
+      .foreach(
+        player =>
         {
-          val foundItemMatch = controlledStacks filter (_ != null) exists (_.isItemEqual(checkStack))
+          val filterItems = proj.getFilterItems
+          //TODO: Support inventory entities
+          val inventory = player.inventory
 
-          if ((interdictionMatrix.getFilterMode && foundItemMatch) || (!interdictionMatrix.getFilterMode && !foundItemMatch))
+          val relevantSlots = (0 until inventory.getSizeInventory)
+            .filter(
+              i =>
+              {
+                val checkStack = inventory.getStackInSlot(i)
+                checkStack != null && proj.isInvertedFilter != (filterItems exists (_ == checkStack.getItem))
+              }
+            )
+
+          relevantSlots foreach (i =>
           {
-            interdictionMatrix.mergeIntoInventory(inventory.getStackInSlot(i))
+            proj.mergeIntoInventory(inventory.getStackInSlot(i))
             inventory.setInventorySlotContents(i, null)
-            confiscationCount += 1
+          })
+
+          if (relevantSlots.size > 0)
+          {
+            player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("%p", "" + relevantSlots.size)))
           }
         }
+      )
 
-        i += 1
-      }
-
-      if (confiscationCount > 0 && entityLiving.isInstanceOf[EntityPlayer])
-      {
-        (entityLiving.asInstanceOf[EntityPlayer]).addChatMessage(new ChatComponentText("[" + interdictionMatrix.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleConfiscate.confiscate").replaceAll("%p", "" + confiscationCount)))
-      }
-
-      interdictionMatrix.requestFortron(confiscationCount, true)
-    }
     return false
   }
 }

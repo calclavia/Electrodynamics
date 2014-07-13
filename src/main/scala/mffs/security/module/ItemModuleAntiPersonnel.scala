@@ -1,41 +1,43 @@
 package mffs.security.module
 
+import java.util.Set
+
+import mffs.field.TileElectromagneticProjector
 import mffs.{ModularForceFieldSystem, Settings}
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.ChatComponentText
+import resonant.api.mffs.machine.IProjector
 import resonant.lib.utility.LanguageUtility
+import universalelectricity.core.transform.vector.Vector3
 
 class ItemModuleAntiPersonnel extends ItemModuleDefense
 {
-  override def onDefend(interdictionMatrix: IInterdictionMatrix, entityLiving: EntityLivingBase): Boolean =
+  override def onProject(projector: IProjector, fields: Set[Vector3]): Boolean =
   {
-    val hasPermission: Boolean = false
+    val proj = projector.asInstanceOf[TileElectromagneticProjector]
+    val entities = getEntitiesInField(projector)
 
-    if (!hasPermission && entityLiving.isInstanceOf[EntityPlayer])
-    {
-      val player: EntityPlayer = entityLiving.asInstanceOf[EntityPlayer]
-
-      if (!player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
-      {
-        var i: Int = 0
-        while (i < player.inventory.getSizeInventory)
+    entities.view
+      .filter(entity => entity.isInstanceOf[EntityPlayer])
+      .map(_.asInstanceOf[EntityPlayer])
+      .filter(player => !player.capabilities.isCreativeMode && !player.isEntityInvulnerable)
+      .foreach(
+        player =>
         {
-          if (player.inventory.getStackInSlot(i) != null)
-          {
-            interdictionMatrix.mergeIntoInventory(player.inventory.getStackInSlot(i))
-            player.inventory.setInventorySlotContents(i, null)
-          }
+          (0 until player.inventory.getSizeInventory)
+            .filter(player.inventory.getStackInSlot(_) != null)
+            .foreach(
+              i =>
+              {
+                proj.mergeIntoInventory(player.inventory.getStackInSlot(i))
+                player.inventory.setInventorySlotContents(i, null)
+              }
+            )
 
-          i += 1
+          player.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 1000)
+          player.addChatMessage(new ChatComponentText("[" + proj.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleAntiPersonnel.death")))
         }
-
-        player.setHealth(1)
-        player.attackEntityFrom(ModularForceFieldSystem.damageFieldShock, 100)
-        interdictionMatrix.requestFortron(Settings.interdictionMatrixMurderEnergy, false)
-        player.addChatMessage(new ChatComponentText("[" + interdictionMatrix.getInventoryName + "] " + LanguageUtility.getLocal("message.moduleAntiPersonnel.death")))
-      }
-    }
+      )
 
     return false
   }

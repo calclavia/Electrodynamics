@@ -177,16 +177,6 @@ gui.bypassConfiscation.tooltip=Allow the player to bypass the Interdiction Matri
 gui.remoteControl.name=Remote Control
 gui.remoteControl.tooltip=Allow the player to use the remote control within defensive region.
 
-# Interdiction Matrix
-gui.filterMode.name=Filter Mode
-gui.filterMode.tooltip=The mode in which to filter out items and blocks.
-gui.warn.name=Warning
-gui.warn.tooltip=The range in which the Interdiction Matrix will give the player a warning.
-gui.action.name=Action
-gui.action.tooltip=The range in which the Interdiction Matrix will apply the modulated actions to the player.
-gui.matrix.banned=Banned
-gui.matrix.allowed=Allowed
-
 # Force Field Projector
 gui.projector.mode=Mode
 gui.projector.up=Up

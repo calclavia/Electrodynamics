@@ -16,7 +16,7 @@ import net.minecraft.block.Block
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Blocks
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.{NBTTagCompound, NBTTagList}
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
@@ -197,76 +197,78 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
     if (!isCalculating)
     {
-      if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
+      val potentialField = calculatedField
+
+      val relevantModules = getModules(getModuleSlots: _*)
+
+      if (!relevantModules.exists(_.onProject(this, potentialField)))
       {
-        markFieldUpdate = false
-
-        if (forceFields.size <= 0)
+        if (!isCompleteConstructing || markFieldUpdate || fieldRequireTicks)
         {
-          if (getModeStack.getItem.isInstanceOf[TCache])
+          markFieldUpdate = false
+
+          if (forceFields.size <= 0)
           {
-            (getModeStack.getItem.asInstanceOf[TCache]).clearCache
-          }
-        }
-
-        val constructionSpeed = Math.min(getProjectionSpeed, Settings.maxForceFieldsPerTick)
-        val potentialField = calculatedField
-        val relevantModules = getModules(getModuleSlots: _*)
-
-        if (relevantModules.exists(_.onProject(this, potentialField)))
-          return
-
-        //Creates a collection of positions that will be evaluated
-        val evaluateField = potentialField
-                .view.par
-                .filter(!_.equals(position))
-                .filter(v => canReplaceBlock(v, v.getBlock(world)))
-                .filter(_.getBlock(world) != Content.forceField)
-                .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
-                .take(constructionSpeed)
-
-        //The collection containing the coordinates to actually place the field blocks.
-        val constructField = mutable.Set.empty[Vector3]
-
-        val result = evaluateField.forall(
-          vector =>
-          {
-            var flag = 0
-
-            relevantModules.exists({ module =>
-              flag = module.onProject(this, vector)
-              flag == 0
-                                   })
-
-            if (flag != 1 && flag != 2)
+            if (getModeStack.getItem.isInstanceOf[TCache])
             {
-              constructField.add(vector)
+              (getModeStack.getItem.asInstanceOf[TCache]).clearCache
             }
+          }
 
-            flag != 2
-          })
+          val constructionSpeed = Math.min(getProjectionSpeed, Settings.maxForceFieldsPerTick)
 
-        if (result)
-        {
-          constructField.foreach(
+          //Creates a collection of positions that will be evaluated
+          val evaluateField = potentialField
+            .view.par
+            .filter(!_.equals(position))
+            .filter(v => canReplaceBlock(v, v.getBlock(world)))
+            .filter(_.getBlock(world) != Content.forceField)
+            .filter(v => world.getChunkFromBlockCoords(v.xi, v.zi).isChunkLoaded)
+            .take(constructionSpeed)
+
+          //The collection containing the coordinates to actually place the field blocks.
+          val constructField = mutable.Set.empty[Vector3]
+
+          val result = evaluateField.forall(
             vector =>
             {
-              /**
-               * Default force field block placement action.
-               */
-              if (!world.isRemote)
-                vector.setBlock(world, Content.forceField)
+              var flag = 0
 
-              forceFields += vector
+              relevantModules.exists({ module =>
+                flag = module.onProject(this, vector)
+                flag == 0
+                                     })
 
-              val tileEntity = vector.getTileEntity(world)
+              if (flag != 1 && flag != 2)
+              {
+                constructField.add(vector)
+              }
 
-              if (tileEntity.isInstanceOf[TileForceField])
-                (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
+              flag != 2
             })
-        }
 
-        isCompleteConstructing = evaluateField.size == 0
+          if (result)
+          {
+            constructField.foreach(
+              vector =>
+              {
+                /**
+                 * Default force field block placement action.
+                 */
+                if (!world.isRemote)
+                  vector.setBlock(world, Content.forceField)
+
+                forceFields += vector
+
+                val tileEntity = vector.getTileEntity(world)
+
+                if (tileEntity.isInstanceOf[TileForceField])
+                  (tileEntity.asInstanceOf[TileForceField]).setProjector(new Vector3(this))
+              })
+          }
+
+          isCompleteConstructing = evaluateField.size == 0
+        }
       }
     }
   }
@@ -337,6 +339,10 @@ class TileElectromagneticProjector extends TileFieldMatrix with IProjector
 
     return hasPerm
   }
+
+  //TODO: implement
+  def getFilterItems: Set[Item] = null
+  def isInvertedFilter: Boolean = false
 
   /**
    * Rendering

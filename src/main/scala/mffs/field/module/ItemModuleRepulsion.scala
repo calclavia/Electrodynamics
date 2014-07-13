@@ -23,8 +23,7 @@ class ItemModuleRepulsion extends ItemModule
   {
     val tile = projector.asInstanceOf[TileEntity]
     val repulsionVelocity = Math.max(projector.getModuleCount(this) / 20, 1.2)
-    val volume = new Cuboid(-projector.getNegativeScale, projector.getPositiveScale + 1) + (new Vector3(tile) + projector.getTranslation)
-    val entities = tile.getWorldObj.getEntitiesWithinAABB(classOf[Entity], volume.toAABB) map (_.asInstanceOf[Entity])
+    val entities = getEntitiesInField(projector)
 
     //TODO: Check parallel
     entities.par
