@@ -15,7 +15,7 @@ final object RenderForceMobilizer
   val textureOff: ResourceLocation = new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "forceMobilizer.tcn"))
 
-  def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
+  def render(tileEntity: TileForceMobilizer, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
   {
     if (isActive)
     {
@@ -29,7 +29,7 @@ final object RenderForceMobilizer
     glPushMatrix
     glTranslated(x + 0.5, y + 0.5, z + 0.5)
 
-    if (tileEntity.world != null)
+    if (!isItem)
     {
       glRotatef(-90, 0, 1, 0)
       RenderUtility.rotateBlockBasedOnDirection(tileEntity.getDirection)

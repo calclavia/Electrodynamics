@@ -17,7 +17,7 @@ final object RenderBiometricIdentifier
   val textureOff = new ResourceLocation(Reference.domain, Reference.modelPath + "biometricIdentifier_off.png")
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "biometricIdentifier.tcn"))
 
-  def render(tile: TileBiometricIdentifier, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
+  def render(tile: TileBiometricIdentifier, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem:Boolean)
   {
     if (isActive)
     {
@@ -31,7 +31,7 @@ final object RenderBiometricIdentifier
     glPushMatrix
     glTranslated(x + 0.5, y + 0.5, z + 0.5)
 
-    if (tile.world != null)
+    if (!isItem)
     {
       glRotatef(-90, 0, 1, 0)
       RenderUtility.rotateBlockBasedOnDirection(tile.getDirection)
@@ -39,7 +39,7 @@ final object RenderBiometricIdentifier
 
     model.renderAllExcept("holoScreen")
 
-    if (tile.world != null)
+    if (!isItem)
     {
       /**
        * Simulate flicker and, hovering

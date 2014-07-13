@@ -212,6 +212,7 @@ info.modeCustom.notSaved=Field not saved.
 info.modeCustom.shift=Hold shift for more...
 
 # More tooltips
+info.module.defense=Defense Module
 info.item.linkedWith=Linked with:
 info.item.dimension=Dimension:
 info.item.notLinked=Not linked.

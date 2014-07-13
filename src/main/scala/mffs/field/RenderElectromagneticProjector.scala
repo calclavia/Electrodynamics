@@ -18,7 +18,7 @@ final object RenderElectromagneticProjector
 
   val model = AdvancedModelLoader.loadModel(new ResourceLocation(Reference.domain, Reference.modelPath + "electromagneticProjector.tcn"))
 
-  def render(tileEntity: TileElectromagneticProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean)
+  def render(tileEntity: TileElectromagneticProjector, x: Double, y: Double, z: Double, frame: Float, isActive: Boolean, isItem: Boolean)
   {
     glPushMatrix
     glTranslated(x + 0.5, y + 0.5, z + 0.5)
@@ -32,7 +32,7 @@ final object RenderElectromagneticProjector
       FMLClientHandler.instance.getClient.renderEngine.bindTexture(textureOff)
     }
 
-    if (tileEntity.world != null)
+    if (!isItem)
     {
       glRotatef(-90, 0, 1, 0)
       RenderUtility.rotateBlockBasedOnDirection(tileEntity.getDirection)

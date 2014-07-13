@@ -15,7 +15,7 @@ class ItemModuleDefense extends ItemModule with IInterdictionMatrixModule
 {
   override def addInformation(itemStack: ItemStack, player: EntityPlayer, info: List[_], b: Boolean)
   {
-    info.add("\u00a74" + LanguageUtility.getLocal("tile.mffs:interdictionMatrix.name"))
+    info.add("\u00a74" + LanguageUtility.getLocal("info.module.defense"))
     super.addInformation(itemStack, player, info, b)
   }
 
