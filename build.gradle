@@ -15,7 +15,6 @@ buildscript {
     }
 }
 
-
 apply plugin: 'forge'
 apply plugin: 'scala'
 apply plugin: 'maven-publish'
@@ -29,8 +28,8 @@ buildProps.withReader {
 }
 
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
-group = "mffs"
-archivesBaseName = "Modular-Force-Field-System"
+group = ("mffs" + "-" + System.getenv("TEAMCITY_PROJECT_NAME")).toLowerCase()
+archivesBaseName = (System.getenv("TEAMCITY_PROJECT_NAME") + "-" + System.getenv("TEAMCITY_PROJECT_NAME")).replaceAll(' ','-')
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
@@ -76,16 +75,16 @@ publishing {
         mavenJava(MavenPublication) {
             artifact jar
 			
+			artifact("output/build.properties") {
+				classifier "properties"
+				extension "properties"
+			}
+			
 			/*
 			artifact {
 				classifier = "changelog"
 				file 'output/' + "${System.getenv().JOB_NAME}-${project.version}" + '-changelog' + '.txt'
 			}*/
-			
-			artifact {
-				classifier = "properties"
-				file 'output/build.properties'
-			}
         }		
     }
     repositories {
