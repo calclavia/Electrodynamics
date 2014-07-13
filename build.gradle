@@ -28,8 +28,14 @@ buildProps.withReader {
 }
 
 version = "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
-group = ("mffs" + "-" + System.getenv("TEAMCITY_PROJECT_NAME")).toLowerCase()
-archivesBaseName = (System.getenv("TEAMCITY_PROJECT_NAME") + "-" + System.getenv("TEAMCITY_PROJECT_NAME")).replaceAll(' ','-')
+
+if (System.getenv("TEAMCITY_BUILDCONF_NAME").equalsIgnoreCase("Production")) {
+    group = "com.calclavia.mffs"
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME")
+} else {
+    group = "dev.calclavia.mffs"
+    archivesBaseName = System.getenv("TEAMCITY_PROJECT_NAME") + "-" + System.getenv("TEAMCITY_BUILDCONF_NAME")
+}
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
@@ -64,8 +70,48 @@ task copyBuildXml(type: Copy) {
     into 'output'
 }
 
+
+/**
+ * Generates a TeamCity XML changelog via the REST API.
+ */
+task("createChangelog").doLast {
+
+    def teamCityURL = "http://ci.calclavia.com/"
+
+    /**
+     * Create a new file
+     */
+    def file = new FileOutputStream("output/changelog.xml")
+    def out = new BufferedOutputStream(file)
+
+    /**
+     * Grab the build first, parse the XML to find the changelog XML URL
+     */
+    def changesXML = new XmlSlurper().parse(teamCityURL + "guestAuth/app/rest/changes?locator=build:(id:" + teamcity["teamcity.build.id"] + ")")
+    def changes = changesXML.change
+
+    /**
+     * Add the XML definition header in the front of the file and remove all other occurrences of the XML header
+     */
+    out << ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><changes>")
+
+    println("createChangelog: Identified " + changes.size() + " changes to be written into the changelog.")
+
+    for (int i = 0; i < changes.size(); i++) {
+        /**
+         * Write each changelog XML into the URL
+         */
+        def changelogURL = teamCityURL + "guestAuth/app/rest/changes/id:" + changes[i].@id.text()
+        out << new URL(changelogURL).getText().replaceAll("<\\?xml version=\"1\\.0\" encoding=\"UTF-8\" standalone=\"yes\"\\?>", "")
+    }
+
+    out << "</changes>"
+
+    out.close()
+}
+
 jar {
-    dependsOn copyBuildXml
+    dependsOn copyBuildXml, createChangelog
     classifier = 'core'
     destinationDir = file 'output'
 }
@@ -74,17 +120,16 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-			
-			artifact("output/build.properties") {
-				classifier "properties"
-				extension "properties"
-			}
-			
-			/*
-			artifact {
-				classifier = "changelog"
-				file 'output/' + "${System.getenv().JOB_NAME}-${project.version}" + '-changelog' + '.txt'
-			}*/
+
+            artifact("output/changelog.xml") {
+                classifier "changelog"
+                extension "xml"
+            }
+
+            artifact("output/build.properties") {
+                classifier "build"
+                extension "properties"
+            }
         }		
     }
     repositories {
@@ -114,24 +159,6 @@ repositories {
 }
 
 dependencies {
-	compile group: 'universalelectricity', name: 'Universal-Electricity', version: "${config.version.universalelectricity}", classifier: "dev"
-	compile group: 'resonant-engine-development', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
+    compile group: 'dev.calclavia.universalelectricity', name: 'universal-electricity', version: "${config.version.universalelectricity}", classifier: "dev"
+	compile group: 'dev.calclavia.resonantengine', name: 'resonant-engine', version: "${config.version.resonantengine}", classifier: "dev"
 }
-
-import net.minecraftforge.gradle.tasks.dev.ChangelogTask
-import net.minecraftforge.gradle.common.Constants
-import net.minecraftforge.gradle.delayed.*
-
-task createChangelog(type: ChangelogTask) {
-    def jobName = "${System.getenv().JOB_NAME}"
-    def buildNumber = "${System.getenv().BUILD_NUMBER}"
-    jobName.replaceAll(' ','%20')
-    setServerRoot(new DelayedString(project, 'http://ci.calclavia.com/'))
-    setJobName(new DelayedString(project, jobName.toString()));
-    setAuthName(new DelayedString(project, 'console_script'));
-    setAuthPassword(new DelayedString(project, '625d2ac53190be3422faa0c474fb299b'));
-    setTargetBuild({buildNumber.toString()});
-    setOutput(new DelayedFile(project, 'output/' + jobName + "-${project.version}" + '-changelog' + '.txt'));
-}
-
-build.dependsOn "createChangelog"
