@@ -2,6 +2,7 @@ package mffs.field
 
 import cpw.mods.fml.client.FMLClientHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import mffs.render.FieldColor
 import mffs.{Reference, Settings}
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.{RenderHelper, Tessellator}
@@ -82,16 +83,22 @@ final object RenderElectromagneticProjector
       RenderHelper.enableStandardItemLighting
       glPopMatrix
 
+      /**
+       * Render hologram
+       */
       if (Settings.highGraphics)
       {
         glPushMatrix
         glTranslated(x + 0.5, y + 1.35, z + 0.5)
+
+        val color = if (isActive) FieldColor.blue else FieldColor.red
         FMLClientHandler.instance.getClient.renderEngine.bindTexture(Reference.hologramTexture)
+
         RenderUtility.enableBlending
         RenderUtility.disableLighting
         glPushMatrix
-        glColor4f(1, 1, 1, Math.sin(tileEntity.getTicks.asInstanceOf[Double] / 10).asInstanceOf[Float] / 2 + 1)
-        glTranslatef(0, Math.sin(Math.toRadians(tileEntity.getTicks * 3)).asInstanceOf[Float] / 7, 0)
+        glColor4d(color._1, color._2, color._3, Math.sin(tileEntity.getTicks.toDouble / 10) / 2 + 0.8)
+        glTranslatef(0, Math.sin(Math.toRadians(tileEntity.getTicks * 3)).toFloat / 7, 0)
         glRotatef(tileEntity.getTicks * 4, 0, 1, 0)
         glRotatef(36f + tileEntity.getTicks * 4, 0, 1, 1)
         tileEntity.getMode.render(tileEntity, x, y, z, frame, tileEntity.getTicks)

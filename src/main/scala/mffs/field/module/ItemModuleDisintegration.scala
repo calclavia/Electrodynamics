@@ -12,12 +12,9 @@ import net.minecraft.item.{ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraftforge.fluids.IFluidBlock
 import resonant.api.mffs.Blacklist
-import resonant.api.mffs.fortron.FrequencyGridRegistry
 import resonant.api.mffs.machine.IProjector
 import resonant.lib.network.discriminator.PacketTile
 import universalelectricity.core.transform.vector.Vector3
-
-import scala.collection.convert.wrapAll._
 
 class ItemModuleDisintegration extends ItemModule
 {
@@ -33,6 +30,7 @@ class ItemModuleDisintegration extends ItemModule
 
   override def onProject(projector: IProjector, position: Vector3): Int =
   {
+    val proj = projector.asInstanceOf[TileElectromagneticProjector]
     if (projector.getTicks % 40 == 0)
     {
       val tileEntity = projector.asInstanceOf[TileEntity]
@@ -42,14 +40,11 @@ class ItemModuleDisintegration extends ItemModule
       {
         val blockMetadata = position.getBlockMetadata(tileEntity.getWorldObj)
 
-        val filterMatch = !projector.getModuleSlots().exists(
-          i =>
+        val filterMatch = !proj.getFilterStacks.exists(
+          itemStack =>
           {
-            val filterStack = projector.getStackInSlot(i)
-
-            MFFSUtility.getFilterBlock(filterStack) != null &&
-            (filterStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) ||
-             (filterStack.getItem.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
+            MFFSUtility.getFilterBlock(itemStack) != null &&
+            (itemStack.isItemEqual(new ItemStack(block, 1, blockMetadata)) || (itemStack.asInstanceOf[ItemBlock].field_150939_a == block && projector.getModuleCount(Content.moduleApproximation) > 0))
           })
 
         if (projector.getModuleCount(Content.moduleCamouflage) > 0 == !filterMatch)

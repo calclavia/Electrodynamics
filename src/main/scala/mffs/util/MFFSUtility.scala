@@ -7,7 +7,7 @@ import mffs.field.mode.ItemModeCustom
 import net.minecraft.block.Block
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.{ItemBlock, ItemStack}
+import net.minecraft.item.{Item, ItemBlock, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
@@ -99,11 +99,19 @@ object MFFSUtility
   {
     if (itemStack != null)
     {
-      if (itemStack.getItem.isInstanceOf[ItemBlock])
-      {
-        return itemStack.getItem().asInstanceOf[ItemBlock].field_150939_a
-      }
+      return getFilterBlock(itemStack.getItem)
+
     }
+    return null
+  }
+
+  def getFilterBlock(item: Item): Block =
+  {
+    if (item.isInstanceOf[ItemBlock])
+    {
+      return item.asInstanceOf[ItemBlock].field_150939_a
+    }
+
     return null
   }
 
