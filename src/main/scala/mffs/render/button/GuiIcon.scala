@@ -37,24 +37,6 @@ class GuiIcon(id: Int, xPos: Int, yPos: Int, itemStacks: ItemStack*) extends Gui
 
     if (visible && itemStacks(index) != null)
     {
-
-      /*
-      var yDisplacement = 0
-
-      if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
-      {
-        val block = itemStacks(index).getItem.asInstanceOf[ItemBlock].field_150939_a
-
-        if (block == Blocks.unlit_redstone_torch || block == Blocks.redstone_torch)
-        {
-          yDisplacement = 0
-        }
-        else if (itemStacks(index).getItem.isInstanceOf[ItemBlock])
-        {
-          yDisplacement = 0
-        }
-      }*/
-
       drawItemStack(itemStacks(index), xPosition, yPosition)
     }
   }

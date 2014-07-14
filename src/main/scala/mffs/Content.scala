@@ -16,7 +16,7 @@ import net.minecraft.block.Block
 import net.minecraft.init.{Blocks, Items}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.oredict.OreDictionary
-import resonant.content.loader.{ContentHolder, ImplicitContentName}
+import resonant.content.loader.{ContentHolder, ExplicitContentName}
 import resonant.lib.recipe.UniversalRecipe
 
 /**
@@ -39,13 +39,13 @@ object Content extends ContentHolder
    * Misc Items
    */
   val remoteController = new ItemRemoteController
-  @ImplicitContentName
+  @ExplicitContentName
   val focusMatrix = new ItemMFFS()
 
   /**
    * Cards
    */
-  @ImplicitContentName
+  @ExplicitContentName
   val cardBlank = new ItemCard
   val cardInfinite = new ItemCardInfinite
   val cardFrequency = new ItemCardFrequency
@@ -65,32 +65,32 @@ object Content extends ContentHolder
   /**
    * Modules
    */
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleTranslate = new ItemModule().setCost(3f)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleScale = new ItemModule().setCost(2.5f)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleRotate = new ItemModule().setCost(0.5f)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleSpeed = new ItemModule().setCost(1.5f)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleCapacity = new ItemModule().setCost(0.5f)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleCollection = new ItemModule().setMaxStackSize(1).setCost(15)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleInvert = new ItemModule().setMaxStackSize(1).setCost(15)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleSilence = new ItemModule().setMaxStackSize(1).setCost(1)
   val moduleFusion = new ItemModuleFusion
   val moduleDome = new ItemModuleDome
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleCamouflage = new ItemModule().setCost(1.5f).setMaxStackSize(1)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleApproximation = new ItemModule().setMaxStackSize(1).setCost(1f)
   val moduleArray = new ItemModuleArray().setCost(3f)
   val moduleDisintegration = new ItemModuleDisintegration
   val moduleShock = new ItemModuleShock
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleGlow = new ItemModule
   val moduleSponge = new ItemModuleSponge
   val moduleStabilize = new ItemModuleStabilize
@@ -100,11 +100,11 @@ object Content extends ContentHolder
   val moduleAntiPersonnel = new ItemModuleAntiPersonnel().setCost(15)
   val moduleConfiscate = new ItemModuleConfiscate
   val moduleWarn = new ItemModuleBroadcast
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleBlockAccess = new ItemModuleDefense().setCost(10)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleBlockAlter = new ItemModuleDefense().setCost(15)
-  @ImplicitContentName
+  @ExplicitContentName
   val moduleAntiSpawn = new ItemModuleDefense().setCost(10)
 
   manager.setTab(MFFSCreativeTab).setPrefix(Reference.prefix)
