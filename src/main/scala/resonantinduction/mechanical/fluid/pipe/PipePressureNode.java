@@ -7,7 +7,7 @@ import resonant.api.grid.INode;
 import resonant.api.grid.INodeProvider;
 import resonant.lib.grid.NodeRegistry;
 import resonant.lib.utility.WorldUtility;
-import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 
 /** Pressure node for the pipe
  * 

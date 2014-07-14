@@ -29,9 +29,10 @@ import resonant.lib.utility.WorldUtility;
 import resonant.lib.utility.render.RenderBlockUtility;
 import archaic.Archaic;
 import resonantinduction.core.Reference;
-import resonantinduction.core.grid.fluid.FluidDistributionetwork;
-import resonantinduction.core.grid.fluid.IFluidDistribution;
-import resonantinduction.core.grid.fluid.TileFluidDistribution;
+import resonantinduction.core.grid.fluid.distribution.FluidDistributionGrid;
+import resonantinduction.core.grid.fluid.distribution.IFluidDistributor;
+import resonantinduction.core.grid.fluid.distribution.TankNetwork;
+import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.core.transform.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
@@ -92,7 +93,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	}
 
 	@Override
-	public FluidDistributionetwork getNetwork()
+	public FluidDistributionGrid getNetwork()
 	{
 		if (this.network == null)
 		{
@@ -103,7 +104,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 	}
 
 	@Override
-	public void setNetwork(FluidDistributionetwork network)
+	public void setNetwork(FluidDistributionGrid network)
 	{
 		if (network instanceof TankNetwork)
 		{
@@ -118,7 +119,7 @@ public class TileTank extends TileFluidDistribution implements IComparatorInputO
 		{
 			if (tileEntity instanceof TileTank)
 			{
-				getNetwork().merge(((IFluidDistribution) tileEntity).getNetwork());
+				getNetwork().merge(((IFluidDistributor) tileEntity).getNetwork());
 				renderSides = WorldUtility.setEnableSide(renderSides, side, true);
 				connectedBlocks[side.ordinal()] = tileEntity;
 			}

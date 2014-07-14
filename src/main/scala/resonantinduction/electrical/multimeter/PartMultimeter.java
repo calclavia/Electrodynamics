@@ -15,7 +15,7 @@ import resonant.api.grid.INodeProvider;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.utility.WrenchUtility;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.core.prefab.part.PartFace;

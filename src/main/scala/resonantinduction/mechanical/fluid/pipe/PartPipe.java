@@ -16,7 +16,7 @@ import resonant.api.grid.INode;
 import resonant.core.ResonantEngine;
 import resonant.lib.type.EvictingList;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import resonantinduction.core.prefab.part.PartFramedNode;
 import resonantinduction.mechanical.Mechanical;

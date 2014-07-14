@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.grid.fluid.TileFluidDistribution;
+import resonantinduction.core.grid.fluid.distribution.TileFluidDistribution;
 import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.api.energy.UnitDisplay.Unit;
 import universalelectricity.api.energy.UnitDisplay.UnitPrefix;

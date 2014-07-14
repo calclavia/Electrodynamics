@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import resonant.api.IRotatable;
 import resonant.api.grid.INode;
-import resonantinduction.core.grid.fluid.FluidPressureNode;
+import resonantinduction.core.grid.fluid.pressure.FluidPressureNode;
 import resonantinduction.core.grid.fluid.IPressureNodeProvider;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.core.transform.vector.Vector3;
