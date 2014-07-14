@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import resonantinduction.core.prefab.part.PartAdvanced;
+import resonantinduction.core.prefab.part.TraitPart;
 import universalelectricity.api.CompatibilityModule;
 import universalelectricity.api.UniversalClass;
 import universalelectricity.api.energy.EnergyNetworkLoader;
@@ -20,7 +20,7 @@ import codechicken.multipart.TMultiPart;
 
 @UniversalClass
 @Deprecated
-public abstract class PartConductor extends PartAdvanced implements IConductor
+public abstract class PartConductor extends TraitPart implements IConductor
 {
     private IEnergyNetwork network;
 

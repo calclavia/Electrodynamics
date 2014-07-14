@@ -19,7 +19,7 @@ import codechicken.lib.data.MCDataOutput;
  * @author Calclavia
  * 
  */
-public abstract class PartColorableMaterial<M extends Enum> extends PartAdvanced
+public abstract class PartColorableMaterial<M extends Enum> extends TraitPart
 {
 	public static final int DEFAULT_COLOR = 15;
 	public int color = DEFAULT_COLOR;
