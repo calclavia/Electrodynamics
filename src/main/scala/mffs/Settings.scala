@@ -1,7 +1,11 @@
 package mffs
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import net.minecraft.block.Block
 import net.minecraftforge.common.config.Configuration
+import resonant.api.mffs.Blacklist
 import resonant.lib.config.Config
+import resonant.lib.config.ConfigEvent.PostConfigEvent
 
 /**
  * MFFS Configuration Settings
@@ -49,4 +53,12 @@ object Settings
   var stabilizationBlacklist: Array[String] = _
   @Config(comment = "A list of block names to not be disintegrated by the electromagnetic projector.")
   var disintegrationBlacklist: Array[String] = _
+
+  @SubscribeEvent
+  def configEvent(evt: PostConfigEvent)
+  {
+    Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+    Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+    Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
+  }
 }

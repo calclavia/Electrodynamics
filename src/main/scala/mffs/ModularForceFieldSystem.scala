@@ -23,7 +23,7 @@ import resonant.lib.prefab.damage.CustomDamageSource
 
 import scala.collection.convert.wrapAll._
 
-@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory", useMetadata = true)
+@Mod(modid = Reference.id, name = Reference.name, version = Reference.version, dependencies = "required-after:ResonantEngine", modLanguage = "scala", guiFactory = "mffs.MFFSGuiFactory")
 @ModstatInfo(prefix = "mffs")
 object ModularForceFieldSystem
 {
@@ -37,20 +37,12 @@ object ModularForceFieldSystem
   val fakeProfile = new GameProfile(UUID.randomUUID, "mffs")
 
   val packetHandler = new PacketManager(Reference.channel)
-  val modProxy = new LoadableHandler
+  val loadables = new LoadableHandler
 
   @EventHandler
   def preInit(event: FMLPreInitializationEvent)
   {
     Settings.config = new Configuration(event.getSuggestedConfigurationFile)
-    ConfigHandler.sync(Settings, Settings.config)
-
-    modProxy.applyModule(packetHandler)
-    modProxy.applyModule(Content)
-
-    Settings.config.load
-
-    modProxy.preInit()
 
     /**
      * Registration
@@ -58,6 +50,18 @@ object ModularForceFieldSystem
     Modstats.instance.getReporter.registerMod(this)
     NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy)
     MinecraftForge.EVENT_BUS.register(SubscribeEventHandler)
+    MinecraftForge.EVENT_BUS.register(Settings)
+
+    ConfigHandler.sync(Settings, Settings.config)
+
+    loadables.applyModule(proxy)
+    loadables.applyModule(packetHandler)
+    loadables.applyModule(Content)
+
+    Settings.config.load
+
+    loadables.preInit()
+
     MinecraftForge.EVENT_BUS.register(Content.remoteController)
 
     /**
@@ -74,7 +78,7 @@ object ModularForceFieldSystem
   @EventHandler
   def load(evt: FMLInitializationEvent)
   {
-    modProxy.init()
+    loadables.init()
   }
 
   @EventHandler
@@ -82,27 +86,24 @@ object ModularForceFieldSystem
   {
     Settings.config.load()
 
-    Blacklist.stabilizationBlacklist.addAll(Settings.stabilizationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-
+    /**
+     * Add to black lists
+     */
     Blacklist.stabilizationBlacklist.add(Blocks.water)
     Blacklist.stabilizationBlacklist.add(Blocks.flowing_water)
     Blacklist.stabilizationBlacklist.add(Blocks.lava)
     Blacklist.stabilizationBlacklist.add(Blocks.flowing_lava)
-
-    Blacklist.disintegrationBlacklist.addAll(Settings.disintegrationBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
 
     Blacklist.disintegrationBlacklist.add(Blocks.water)
     Blacklist.disintegrationBlacklist.add(Blocks.flowing_water)
     Blacklist.disintegrationBlacklist.add(Blocks.lava)
     Blacklist.disintegrationBlacklist.add(Blocks.flowing_lava)
 
-    Blacklist.mobilizerBlacklist.addAll(Settings.mobilizerBlacklist.map(Block.blockRegistry.getObject(_).asInstanceOf[Block]).toList)
-
     Blacklist.mobilizerBlacklist.add(Blocks.bedrock)
     Blacklist.mobilizerBlacklist.add(Content.forceField)
     ExplosionWhitelist.addWhitelistedBlock(Content.forceField)
 
-    modProxy.postInit()
+    loadables.postInit()
 
     Settings.config.save()
   }
