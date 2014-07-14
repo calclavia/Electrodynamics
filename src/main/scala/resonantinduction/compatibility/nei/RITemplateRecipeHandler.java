@@ -1,4 +1,4 @@
-package resonantinduction.core.nei;
+package resonantinduction.compatibility.nei;
 
 import java.awt.Point;
 import java.awt.Rectangle;

@@ -1,20 +1,20 @@
-package resonantinduction.core.nei;
+package resonantinduction.compatibility.nei;
 
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.ResonantInduction.RecipeType;
 
-public class RICrusherRecipeHandler extends RITemplateRecipeHandler
+public class RIMixerRecipeHandler extends RITemplateRecipeHandler
 {
 
 	@Override
 	public String getRecipeName()
 	{
-		return LanguageUtility.getLocal("resonantinduction.machine.crusher");
+		return LanguageUtility.getLocal("resonantinduction.machine.mixer");
 	}
 
 	@Override
 	public RecipeType getMachine()
 	{
-		return RecipeType.CRUSHER;
+		return RecipeType.MIXER;
 	}
 }

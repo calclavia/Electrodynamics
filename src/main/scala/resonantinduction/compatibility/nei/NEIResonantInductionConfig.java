@@ -1,4 +1,4 @@
-package resonantinduction.core.nei;
+package resonantinduction.compatibility.nei;
 
 import net.minecraft.block.Block;
 import resonantinduction.core.ResonantInduction;

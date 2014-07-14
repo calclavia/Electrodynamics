@@ -1,4 +1,4 @@
-package resonantinduction.core.nei;
+package resonantinduction.compatibility.nei;
 
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.ResonantInduction.RecipeType;
