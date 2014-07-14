@@ -27,7 +27,7 @@ public class BlockMachine extends BlockTile
 
     public BlockMachine(int id, String name, Material material)
     {
-        super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), material);
+        super(Settings.config.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), material);
         this.setCreativeTab(ResonantInductionTabs.CORE);
         this.setUnlocalizedName(Reference.PREFIX + name);
         this.setTextureName(Reference.PREFIX + name);

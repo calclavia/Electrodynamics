@@ -24,7 +24,7 @@ public class BlockKitchenSink extends BlockMachine
 {
     public BlockKitchenSink()
     {
-        super(Settings.CONFIGURATION, "FluidSink", Material.iron);
+        super(Settings.config, "FluidSink", Material.iron);
         this.setResistance(4f);
         this.setHardness(4f);
     }

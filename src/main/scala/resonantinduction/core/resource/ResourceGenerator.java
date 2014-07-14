@@ -51,6 +51,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * Generates the resources based on available ores in Resonant Induction
  * @author Calclavia
  */
 public class ResourceGenerator implements IVirtualObject
@@ -402,9 +403,9 @@ public class ResourceGenerator implements IVirtualObject
 
 			if (!materials.containsKey(materialName))
 			{
-				Settings.CONFIGURATION.load();
-				boolean allowMaterial = Settings.CONFIGURATION.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
-				Settings.CONFIGURATION.save();
+				Settings.config.load();
+				boolean allowMaterial = Settings.config.get("Resource_Generator", "Enable " + oreDictName, true).getBoolean(true);
+				Settings.config.save();
 
 				if (!allowMaterial || OreDetectionBlackList.isIngotBlackListed("ingot" + oreDictName) || OreDetectionBlackList.isOreBlackListed("ore" + oreDictName))
 				{

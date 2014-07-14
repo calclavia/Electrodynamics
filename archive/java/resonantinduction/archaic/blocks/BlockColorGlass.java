@@ -13,7 +13,7 @@ public class BlockColorGlass extends BlockColored
 
 	public BlockColorGlass(String name)
 	{
-		super(name, Settings.CONFIGURATION.getBlock(name, Settings.getNextBlockID()).getInt(), Material.glass);
+		super(name, Settings.config.getBlock(name, Settings.getNextBlockID()).getInt(), Material.glass);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 		this.setHardness(.5f);
 		this.setResistance(.5f);

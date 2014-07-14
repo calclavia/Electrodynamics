@@ -64,14 +64,14 @@ public class ItemBlockTank extends ItemBlock implements IFluidContainerItem
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		String translation = LanguageUtility.getLocal(Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage());
+		String translation = LanguageUtility.getLocal(Block.blocksList[this.getBlock()].getUnlocalizedName() + "." + itemStack.getItemDamage());
 
 		if (translation == null || translation.isEmpty())
 		{
-			return Block.blocksList[this.getBlockID()].getUnlocalizedName();
+			return Block.blocksList[this.getBlock()].getUnlocalizedName();
 		}
 
-		return Block.blocksList[this.getBlockID()].getUnlocalizedName() + "." + itemStack.getItemDamage();
+		return Block.blocksList[this.getBlock()].getUnlocalizedName() + "." + itemStack.getItemDamage();
 	}
 
 	@Override

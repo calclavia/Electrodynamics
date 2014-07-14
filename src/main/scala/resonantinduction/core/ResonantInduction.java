@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.BlockFluidFinite;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import org.modstats.ModstatInfo;
@@ -25,7 +24,7 @@ import resonant.lib.network.PacketHandler;
 import resonant.lib.network.PacketTile;
 import resonant.lib.prefab.item.ItemBlockMetadata;
 import resonant.lib.utility.LanguageUtility;
-import resonantinduction.core.blocks.BlockIndustrialStone;
+import resonantinduction.core.content.BlockIndustrialStone;
 import resonantinduction.core.blocks.IndustrialStoneBlocksRecipes;
 import resonantinduction.core.handler.TextureHookHandler;
 import resonantinduction.core.items.ItemDevStaff;
@@ -71,7 +70,7 @@ public class ResonantInduction
     public static final PacketAnnotation PACKET_ANNOTATION = new PacketAnnotation(Reference.CHANNEL);
     public static final HashMap<Integer, BlockFluidFinite> blockMixtureFluids = new HashMap<Integer, BlockFluidFinite>();
     public static final HashMap<Integer, BlockFluidFinite> blockMoltenFluid = new HashMap<Integer, BlockFluidFinite>();
-    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.CORE);
+    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.CORE);
     @Instance(ID)
     public static ResonantInduction INSTANCE;
     @SidedProxy(clientSide = "resonantinduction.core.ClientProxy", serverSide = "resonantinduction.core.CommonProxy")
@@ -87,7 +86,7 @@ public class ResonantInduction
     public static Block blockDust, blockRefinedDust;
     
 	public static Block blockIndustrialStone;
-    
+
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt)
@@ -95,7 +94,7 @@ public class ResonantInduction
         ResonantInduction.LOGGER.setParent(FMLLog.getLogger());
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
         Modstats.instance().getReporter().registerMod(this);
-        Settings.CONFIGURATION.load();
+        Settings.config.load();
         // Register Forge Events
         MinecraftForge.EVENT_BUS.register(ResourceGenerator.INSTANCE);
         MinecraftForge.EVENT_BUS.register(new TextureHookHandler());
@@ -128,7 +127,7 @@ public class ResonantInduction
         GameRegistry.registerTileEntity(TileFluidMixture.class, "ri_fluid_mixture");
 
         proxy.preInit();
-        TabRI.ITEMSTACK = new ItemStack(blockIndustrialStone);
+        ResonantTab.ITEMSTACK = new ItemStack(blockIndustrialStone);
     }
 
     @EventHandler
@@ -145,7 +144,7 @@ public class ResonantInduction
     @EventHandler
     public void postInit(FMLPostInitializationEvent evt)
     {
-        ConfigHandler.configure(Settings.CONFIGURATION, "resonantinduction");
+        ConfigHandler.configure(Settings.config, "resonantinduction");
 
         // Generate Resources
         ResourceGenerator.generateOreResources();
@@ -155,7 +154,7 @@ public class ResonantInduction
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack (itemFlour ,1,1),new Object []{itemFlour, Item.bucketWater}));
 		MachineRecipes.INSTANCE.addRecipe(RecipeType.GRINDER.name(), Item.wheat, itemFlour);
         proxy.postInit();
-        Settings.CONFIGURATION.save();
+        Settings.config.save();
         IndustrialStoneBlocksRecipes.init();
         
     }

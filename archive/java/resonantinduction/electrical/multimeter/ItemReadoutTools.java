@@ -40,7 +40,7 @@ public class ItemReadoutTools extends ItemBase
 
     public ItemReadoutTools()
     {
-        super(Settings.getNextItemID(), "DMTools", Settings.CONFIGURATION,Reference.PREFIX, CreativeTabs.tabTools);
+        super(Settings.getNextItemID(), "DMTools", Settings.config,Reference.PREFIX, CreativeTabs.tabTools);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
 

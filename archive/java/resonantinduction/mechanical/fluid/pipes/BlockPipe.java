@@ -35,7 +35,7 @@ public class BlockPipe extends BlockMachine
 
     public BlockPipe()
     {
-        super(Settings.CONFIGURATION, "FluidPipe", Material.iron);
+        super(Settings.config, "FluidPipe", Material.iron);
         this.setBlockBounds(0.30F, 0.30F, 0.30F, 0.70F, 0.70F, 0.70F);
         this.setHardness(1f);
         this.setResistance(3f);

@@ -28,7 +28,7 @@ public class BlockEncoder extends BlockMachine
 
     public BlockEncoder()
     {
-        super(Settings.CONFIGURATION, "encoder", Material.wood);
+        super(Settings.config, "encoder", Material.wood);
     }
 
     @SideOnly(Side.CLIENT)

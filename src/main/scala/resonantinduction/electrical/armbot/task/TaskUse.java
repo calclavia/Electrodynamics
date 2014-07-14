@@ -41,7 +41,7 @@ public class TaskUse extends TaskBaseArmbot
 	{
 		if (super.onUpdate() == ProcessReturn.CONTINUE)
 		{
-			Block block = Block.blocksList[((IArmbot) this.program.getMachine()).getHandPos().getBlockID(this.program.getMachine().getLocation().left())];
+			Block block = Block.blocksList[((IArmbot) this.program.getMachine()).getHandPos().getBlock(this.program.getMachine().getLocation().left())];
 			TileEntity targetTile = ((IArmbot) this.program.getMachine()).getHandPos().getTileEntity(this.program.getMachine().getLocation().left());
 
 			if (targetTile != null)

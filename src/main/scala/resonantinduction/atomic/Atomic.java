@@ -88,34 +88,10 @@ import resonantinduction.atomic.machine.thermometer.TileThermometer;
 import resonantinduction.atomic.schematic.SchematicAccelerator;
 import resonantinduction.atomic.schematic.SchematicFissionReactor;
 import resonantinduction.atomic.schematic.SchematicFusionReactor;
-import resonantinduction.atomic.blocks.TileElectromagnet;
-import resonantinduction.atomic.blocks.TileSiren;
-import resonantinduction.atomic.items.ItemBreederFuel;
-import resonantinduction.atomic.items.ItemDarkMatter;
-import resonantinduction.atomic.items.ItemHazmat;
-import resonantinduction.atomic.items.ItemRadioactive;
-import resonantinduction.atomic.machine.accelerator.EntityParticle;
-import resonantinduction.atomic.machine.accelerator.TileAccelerator;
-import resonantinduction.atomic.machine.boiler.BlockNuclearBoiler;
-import resonantinduction.atomic.machine.centrifuge.BlockCentrifuge;
-import resonantinduction.atomic.machine.centrifuge.TileCentrifuge;
-import resonantinduction.atomic.machine.extractor.BlockChemicalExtractor;
-import resonantinduction.atomic.machine.extractor.turbine.TileElectricTurbine;
-import resonantinduction.atomic.machine.extractor.turbine.TileFunnel;
-import resonantinduction.atomic.machine.plasma.BlockPlasmaHeater;
-import resonantinduction.atomic.machine.plasma.TilePlasma;
-import resonantinduction.atomic.machine.plasma.TilePlasmaHeater;
-import resonantinduction.atomic.machine.quantum.TileQuantumAssembler;
-import resonantinduction.atomic.machine.reactor.TileControlRod;
-import resonantinduction.atomic.machine.thermometer.TileThermometer;
-import resonantinduction.atomic.schematic.SchematicAccelerator;
-import resonantinduction.atomic.schematic.SchematicBreedingReactor;
-import resonantinduction.atomic.schematic.SchematicFissionReactor;
-import resonantinduction.atomic.schematic.SchematicFusionReactor;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import universalelectricity.core.transform.vector.Vector3;
 import universalelectricity.api.vector.VectorWorld;
 import cpw.mods.fml.common.Loader;
@@ -148,7 +124,7 @@ public class Atomic
     { 0, 0, 0, 0 }, 0);
     public static final String BAN_ANTIMATTER_POWER = FlagRegistry.registerFlag("ban_antimatter_power");
     public static final String NAME = Reference.NAME + " Atomic";
-    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
+    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.DEFAULT);
     private static final String[] SUPPORTED_LANGUAGES = new String[]
     { "en_US", "pl_PL", "de_DE", "ru_RU" };
 
@@ -279,7 +255,7 @@ public class Atomic
         BlockCreativeBuilder.register(new SchematicFissionReactor());
         BlockCreativeBuilder.register(new SchematicFusionReactor());
 
-        Settings.CONFIGURATION.load();
+        Settings.config.load();
 
         /** Register Packets */
         PacketAnnotation.register(TileAccelerator.class);
@@ -311,7 +287,7 @@ public class Atomic
         FLUIDSTACK_TOXIC_WASTE = new FluidStack(FluidRegistry.getFluidID("toxicwaste"), 0);
 
         /** Block Initiation */
-        blockRadioactive = contentRegistry.createBlock(BlockRadioactive.class).setUnlocalizedName(Reference.PREFIX + "radioactive").setTextureName(Reference.PREFIX + "radioactive").setCreativeTab(TabRI.DEFAULT);
+        blockRadioactive = contentRegistry.createBlock(BlockRadioactive.class).setUnlocalizedName(Reference.PREFIX + "radioactive").setTextureName(Reference.PREFIX + "radioactive").setCreativeTab(ResonantTab.DEFAULT);
         blockUraniumOre = contentRegistry.createBlock(BlockUraniumOre.class);
 
         blockElectricTurbine = contentRegistry.createTile(BlockElectricTurbine.class, TileElectricTurbine.class);
@@ -332,10 +308,10 @@ public class Atomic
         blockToxicWaste = contentRegistry.createBlock(BlockToxicWaste.class).setCreativeTab(null);
 
         /** Items */
-        itemHazmatTop = new ItemHazmat(Settings.CONFIGURATION.getItem("HazmatTop", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 0).setUnlocalizedName(Reference.PREFIX + "hazmatMask");
-        itemHazmatBody = new ItemHazmat(Settings.CONFIGURATION.getItem("HazmatBody", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 1).setUnlocalizedName(Reference.PREFIX + "hazmatBody");
-        itemHazmatLeggings = new ItemHazmat(Settings.CONFIGURATION.getItem("HazmatBottom", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 2).setUnlocalizedName(Reference.PREFIX + "hazmatLeggings");
-        itemHazmatBoots = new ItemHazmat(Settings.CONFIGURATION.getItem("HazmatBoots", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 3).setUnlocalizedName(Reference.PREFIX + "hazmatBoots");
+        itemHazmatTop = new ItemHazmat(Settings.config.getItem("HazmatTop", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 0).setUnlocalizedName(Reference.PREFIX + "hazmatMask");
+        itemHazmatBody = new ItemHazmat(Settings.config.getItem("HazmatBody", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 1).setUnlocalizedName(Reference.PREFIX + "hazmatBody");
+        itemHazmatLeggings = new ItemHazmat(Settings.config.getItem("HazmatBottom", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 2).setUnlocalizedName(Reference.PREFIX + "hazmatLeggings");
+        itemHazmatBoots = new ItemHazmat(Settings.config.getItem("HazmatBoots", Settings.getNextItemID()).getInt(), hazmatArmorMaterial, proxy.getArmorIndex("hazmat"), 3).setUnlocalizedName(Reference.PREFIX + "hazmatBoots");
 
         itemCell = contentRegistry.createItem("cellEmpty", Item.class);
         itemFissileFuel = contentRegistry.createItem("rodFissileFuel", ItemFissileFuel.class);
@@ -353,7 +329,7 @@ public class Atomic
         FLUID_PLASMA.setBlockID(blockPlasma);
 
         int bucketID = Settings.getNextItemID();
-        itemBucketToxic = (new ItemBucket(Settings.CONFIGURATION.getItem("Toxic Waste Bucket", bucketID).getInt(bucketID), blockToxicWaste.blockID)).setCreativeTab(TabRI.DEFAULT).setUnlocalizedName(Reference.PREFIX + "bucketToxicWaste")
+        itemBucketToxic = (new ItemBucket(Settings.config.getItem("Toxic Waste Bucket", bucketID).getInt(bucketID), blockToxicWaste.blockID)).setCreativeTab(ResonantTab.DEFAULT).setUnlocalizedName(Reference.PREFIX + "bucketToxicWaste")
                 .setContainerItem(Item.bucketEmpty).setTextureName(Reference.PREFIX + "bucketToxicWaste");
 
         FluidContainerRegistry.registerFluidContainer(FluidRegistry.getFluid("toxicwaste"), new ItemStack(itemBucketToxic), new ItemStack(Item.bucketEmpty));
@@ -361,19 +337,19 @@ public class Atomic
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("deuterium"), 200), new ItemStack(itemDeuteriumCell), new ItemStack(itemCell));
         FluidContainerRegistry.registerFluidContainer(new FluidStack(FluidRegistry.getFluid("tritium"), 200), new ItemStack(itemTritiumCell), new ItemStack(itemCell));
 
-        if (OreDictionary.getOres("oreUranium").size() > 1 && Settings.CONFIGURATION.get(Configuration.CATEGORY_GENERAL, "Auto Disable Uranium If Exist", false).getBoolean(false))
+        if (OreDictionary.getOres("oreUranium").size() > 1 && Settings.config.get(Configuration.CATEGORY_GENERAL, "Auto Disable Uranium If Exist", false).getBoolean(false))
         {
             ResonantInduction.LOGGER.fine("Disabled Uranium Generation. Detected another uranium being generated: " + OreDictionary.getOres("oreUranium").size());
         }
         else
         {
             uraniumOreGeneration = new OreGenReplaceStone("Uranium Ore", "oreUranium", new ItemStack(blockUraniumOre), 0, 25, 9, 3, "pickaxe", 2);
-            uraniumOreGeneration.enable(Settings.CONFIGURATION);
+            uraniumOreGeneration.enable(Settings.config);
             OreGenerator.addOre(uraniumOreGeneration);
             ResonantInduction.LOGGER.fine("Added Atomic Science uranium to ore generator.");
         }
 
-        Settings.CONFIGURATION.save();
+        Settings.config.save();
 
         MinecraftForge.EVENT_BUS.register(itemAntimatter);
         MinecraftForge.EVENT_BUS.register(FulminationHandler.INSTANCE);
@@ -419,8 +395,8 @@ public class Atomic
         });
 
         proxy.preInit();
-        Settings.CONFIGURATION.save();
-        TabRI.ITEMSTACK = new ItemStack(blockReactorCell);
+        Settings.config.save();
+        ResonantTab.ITEMSTACK = new ItemStack(blockReactorCell);
     }
 
     @EventHandler
@@ -556,7 +532,7 @@ public class Atomic
 
         Atomic.proxy.init();
 
-        Settings.CONFIGURATION.load();
+        Settings.config.load();
 
         if (Loader.isModLoaded("IC2") && Settings.allowAlternateRecipes)
         {
@@ -644,7 +620,7 @@ public class Atomic
             }
         }
 
-        Settings.CONFIGURATION.save();
+        Settings.config.save();
     }
 
     @ForgeSubscribe

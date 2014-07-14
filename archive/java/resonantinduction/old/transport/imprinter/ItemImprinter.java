@@ -23,7 +23,7 @@ public class ItemImprinter extends Item
 {
     public ItemImprinter(int id)
     {
-        super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
+        super(Settings.config.getItem("imprint", id).getInt());
         this.setUnlocalizedName("imprint");
         this.setCreativeTab(ResonantInductionTabs.CORE);
         this.setHasSubtypes(true);

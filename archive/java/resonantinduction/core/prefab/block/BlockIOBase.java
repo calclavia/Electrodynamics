@@ -20,7 +20,7 @@ public class BlockIOBase extends BlockSidedIO
 {
 	public BlockIOBase(String name, int id)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
+		super(Settings.config.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), Material.piston);
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setUnlocalizedName(Reference.PREFIX + name);
 		this.setTextureName(Reference.PREFIX + name);

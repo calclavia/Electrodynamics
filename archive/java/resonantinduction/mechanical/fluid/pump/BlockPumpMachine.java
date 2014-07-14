@@ -25,7 +25,7 @@ public class BlockPumpMachine extends BlockMachine
 
     public BlockPumpMachine()
     {
-        super(Settings.CONFIGURATION, "StarterPump", Material.iron);
+        super(Settings.config, "StarterPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

@@ -24,29 +24,20 @@ import resonantinduction.archaic.engineering.TileEngineeringTable;
 import archaic.filter.BlockImprinter;
 import resonantinduction.archaic.filter.TileFilter;
 import archaic.filter.TileImprinter;
-import resonantinduction.archaic.firebox.BlockFirebox;
 import archaic.firebox.BlockHotPlate;
 import archaic.firebox.TileFirebox;
 import resonantinduction.archaic.firebox.TileHotPlate;
 import resonantinduction.archaic.fluid.grate.TileGrate;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
 import resonantinduction.archaic.fluid.tank.TileTank;
 import archaic.process.BlockCastingMold;
 import archaic.process.BlockMillstone;
 import archaic.process.TileCastingMold;
 import archaic.process.TileMillstone;
-import resonantinduction.archaic.engineering.TileEngineeringTable;
-import resonantinduction.archaic.filter.TileFilter;
-import resonantinduction.archaic.firebox.BlockFirebox;
-import resonantinduction.archaic.firebox.TileHotPlate;
-import resonantinduction.archaic.fluid.grate.TileGrate;
-import resonantinduction.archaic.fluid.gutter.TileGutter;
-import resonantinduction.archaic.fluid.tank.TileTank;
 import resonantinduction.archaic.waila.Waila;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import resonantinduction.core.prefab.imprint.ItemImprint;
 import resonantinduction.core.resource.ItemHandCrank;
 import cpw.mods.fml.common.Mod;
@@ -71,7 +62,7 @@ public class Archaic
     /** Mod Information */
     public static final String ID = "ResonantInduction|Archaic";
     public static final String NAME = Reference.NAME + " Archaic";
-    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
+    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.DEFAULT);
     @Instance(ID)
     public static Archaic INSTANCE;
     @SidedProxy(clientSide = "resonantinduction.archaic.ClientProxy", serverSide = "resonantinduction.archaic.CommonProxy")
@@ -105,7 +96,7 @@ public class Archaic
     {
         modproxies = new ProxyHandler();
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
-        Settings.CONFIGURATION.load();
+        Settings.config.load();
         blockEngineeringTable = contentRegistry.newBlock(TileEngineeringTable.class);
         blockCrate = contentRegistry.createBlock(BlockCrate.class, ItemBlockCrate.class, TileCrate.class);
         blockImprinter = contentRegistry.createTile(BlockImprinter.class, TileImprinter.class);
@@ -124,7 +115,7 @@ public class Archaic
         itemHammer = contentRegistry.createItem(ItemHammer.class);
 
         modproxies.applyModule(Waila.class, true);
-        Settings.CONFIGURATION.save();
+        Settings.config.save();
 
         PacketAnnotation.register(TileFirebox.class);
         PacketAnnotation.register(TileFilter.class);
@@ -143,7 +134,7 @@ public class Archaic
     @EventHandler
     public void postInit(FMLPostInitializationEvent evt)
     {
-        TabRI.ITEMSTACK = new ItemStack(blockEngineeringTable);
+        ResonantTab.ITEMSTACK = new ItemStack(blockEngineeringTable);
         if (OreDictionary.getOres("cobblestone") == null)
         {
             OreDictionary.registerOre("cobblestone", Block.cobblestone);

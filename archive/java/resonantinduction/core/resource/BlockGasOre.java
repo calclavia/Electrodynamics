@@ -41,7 +41,7 @@ public class BlockGasOre extends Block implements IFluidBlock
 
 	public BlockGasOre()
 	{
-		super(Settings.CONFIGURATION.getBlock("GasBlock", Settings.getNextBlockID()).getInt(), gas);
+		super(Settings.config.getBlock("GasBlock", Settings.getNextBlockID()).getInt(), gas);
 		this.setUnlocalizedName("BlockGas");
 		this.setTickRandomly(true);
 	}

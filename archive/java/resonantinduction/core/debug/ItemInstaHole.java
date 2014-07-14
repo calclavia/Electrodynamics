@@ -17,7 +17,7 @@ public class ItemInstaHole extends Item
 
     public ItemInstaHole()
     {
-        super(Settings.CONFIGURATION.getItem("InstaHole", Settings.getNextItemID()).getInt());
+        super(Settings.config.getItem("InstaHole", Settings.getNextItemID()).getInt());
         this.setUnlocalizedName("InstaHole");
         this.setCreativeTab(CreativeTabs.tabTools);
     }

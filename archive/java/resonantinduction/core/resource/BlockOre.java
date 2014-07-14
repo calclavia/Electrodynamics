@@ -32,7 +32,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
 
     public BlockOre()
     {
-        super(Settings.CONFIGURATION.getBlock("Ore", Settings.getNextBlockID()).getInt(), Material.rock);
+        super(Settings.config.getBlock("Ore", Settings.getNextBlockID()).getInt(), Material.rock);
         this.setCreativeTab(CreativeTabs.tabBlock);
         this.setUnlocalizedName(Reference.PREFIX + "Ore");
         this.setHardness(2.5f);
@@ -124,7 +124,7 @@ public class BlockOre extends Block implements IExtraBlockInfo
             if (this.doWorldGen)
             {
                 ItemStack stack = new ItemStack(RecipeLoader.blockOre, 1, this.ordinal());
-                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(Settings.CONFIGURATION);
+                return (OreGenReplaceStone) new OreGenReplaceStone(this.name, this.name + "Ore", stack, this.maxY, this.ammount, this.branch).enable(Settings.config);
             }
             return null;
         }

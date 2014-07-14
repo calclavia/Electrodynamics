@@ -28,7 +28,7 @@ public class BlockDrain extends BlockMachine
 
     public BlockDrain()
     {
-        super(Settings.CONFIGURATION, "FluidDrain", Material.iron);
+        super(Settings.config, "FluidDrain", Material.iron);
     }
 
     @Override

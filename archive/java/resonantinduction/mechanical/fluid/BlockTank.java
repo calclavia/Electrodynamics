@@ -33,7 +33,7 @@ public class BlockTank extends BlockMachine
 
     public BlockTank()
     {
-        super(Settings.CONFIGURATION, "FluidTank", Material.rock);
+        super(Settings.config, "FluidTank", Material.rock);
         this.setHardness(1f);
         this.setResistance(5f);
     }

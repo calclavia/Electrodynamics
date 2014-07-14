@@ -13,7 +13,7 @@ public class BlockColorSand extends BlockColored
 {
 	public BlockColorSand()
 	{
-		super("colorSand", Settings.CONFIGURATION.getBlock("colorSand", Settings.getNextBlockID()).getInt(), Material.sand);
+		super("colorSand", Settings.config.getBlock("colorSand", Settings.getNextBlockID()).getInt(), Material.sand);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 		this.setHardness(1f);
 		this.setResistance(.5f);

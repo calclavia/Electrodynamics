@@ -30,7 +30,7 @@ public class BlockConstructionPump extends BlockMachine
 
     public BlockConstructionPump()
     {
-        super(Settings.CONFIGURATION, "ConstructionPump", Material.iron);
+        super(Settings.config, "ConstructionPump", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
 

@@ -16,7 +16,7 @@ import resonant.lib.render.EnumColor;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.MultipartUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.TabRI;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.electrical.wire.flat.PartFlatWire;
 import resonantinduction.electrical.wire.flat.RenderFlatWire;
 import resonantinduction.electrical.wire.framed.PartFramedWire;
@@ -39,7 +39,7 @@ public class ItemWire extends JItemMultiPart
 		super(id);
 		this.setUnlocalizedName(Reference.PREFIX + "wire");
 		this.setTextureName(Reference.PREFIX + "wire");
-		this.setCreativeTab(TabRI.DEFAULT);
+		this.setCreativeTab(ResonantTab.DEFAULT);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
 	}

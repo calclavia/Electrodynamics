@@ -7,8 +7,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import resonant.lib.prefab.block.BlockRadioactive;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,7 +20,7 @@ public class BlockUraniumOre extends BlockRadioactive
         super(id, Material.rock);
         this.setUnlocalizedName(Reference.PREFIX + "oreUranium");
         this.setStepSound(soundStoneFootstep);
-        this.setCreativeTab(TabRI.DEFAULT);
+        this.setCreativeTab(ResonantTab.DEFAULT);
         this.setHardness(2f);
         this.setTextureName(Reference.PREFIX + "oreUranium");
 

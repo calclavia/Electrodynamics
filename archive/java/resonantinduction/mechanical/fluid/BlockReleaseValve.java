@@ -22,7 +22,7 @@ public class BlockReleaseValve extends BlockMachine
 {
     public BlockReleaseValve()
     {
-        super(Settings.CONFIGURATION, "ReleaseValve", Material.iron);
+        super(Settings.config, "ReleaseValve", Material.iron);
         this.setHardness(1f);
         this.setResistance(5f);
     }

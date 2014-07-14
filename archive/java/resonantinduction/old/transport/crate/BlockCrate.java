@@ -36,7 +36,7 @@ public class BlockCrate extends BlockMachine
 
     public BlockCrate()
     {
-        super(Settings.CONFIGURATION, "crate", UniversalElectricity.machine);
+        super(Settings.config, "crate", UniversalElectricity.machine);
     }
 
     @SideOnly(Side.CLIENT)

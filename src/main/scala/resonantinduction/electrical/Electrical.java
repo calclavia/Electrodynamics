@@ -13,8 +13,8 @@ import resonant.lib.network.PacketHandler;
 import resonant.lib.recipe.UniversalRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import resonantinduction.core.resource.ItemResourcePart;
 import resonantinduction.electrical.armbot.BlockArmbot;
 import resonantinduction.electrical.armbot.TileArmbot;
@@ -69,7 +69,7 @@ public class Electrical
     @Mod.Metadata(ID)
     public static ModMetadata metadata;
 
-    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
+    public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.DEFAULT);
 
     // Energy
     public static Item itemWire;
@@ -109,7 +109,7 @@ public class Electrical
         modproxies = new ProxyHandler();
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
 
-        Settings.CONFIGURATION.load();
+        Settings.config.load();
         // Energy
         itemWire = contentRegistry.createItem(ItemWire.class);
         itemMultimeter = contentRegistry.createItem(ItemMultimeter.class);
@@ -135,7 +135,7 @@ public class Electrical
         //Railings
         //itemRailing = contentRegistry.createItem(ItemItemRailing.class);
 
-        Settings.CONFIGURATION.save();
+        Settings.config.save();
 
         OreDictionary.registerOre("wire", itemWire);
         OreDictionary.registerOre("motor", blockMotor);
@@ -143,7 +143,7 @@ public class Electrical
         OreDictionary.registerOre("batteryBox", ItemBlockBattery.setTier(new ItemStack(blockBattery, 1, 0), (byte) 0));
 
         /** Set reference itemstacks */
-        TabRI.ITEMSTACK = new ItemStack(itemTransformer);
+        ResonantTab.ITEMSTACK = new ItemStack(itemTransformer);
 
         for (EnumWireMaterial material : EnumWireMaterial.values())
         {

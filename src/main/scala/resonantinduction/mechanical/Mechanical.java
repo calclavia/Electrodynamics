@@ -1,5 +1,6 @@
 package resonantinduction.mechanical;
 
+import resonantinduction.core.ResonantTab;
 import resonantinduction.mechanical.belt.BlockConveyorBelt;
 import resonantinduction.mechanical.belt.TileConveyorBelt;
 import resonantinduction.mechanical.energy.grid.MechanicalNode;
@@ -32,7 +33,6 @@ import resonant.lib.recipe.UniversalRecipe;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 import resonantinduction.core.interfaces.IMechanicalNode;
 import resonantinduction.mechanical.energy.turbine.BlockWaterTurbine;
 import resonantinduction.mechanical.energy.turbine.BlockWindTurbine;
@@ -76,7 +76,7 @@ public class Mechanical
 	@Mod.Metadata(ID)
 	public static ModMetadata metadata;
 
-	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.CONFIGURATION, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(TabRI.DEFAULT);
+	public static final ContentRegistry contentRegistry = new ContentRegistry(Settings.config, Settings.idManager, ID).setPrefix(Reference.PREFIX).setTab(ResonantTab.DEFAULT);
 
 	// Energy
 	public static Item itemGear;
@@ -114,7 +114,7 @@ public class Mechanical
 		BlockCreativeBuilder.register(new SchematicWaterTurbine());
 		NodeRegistry.register(IMechanicalNode.class, MechanicalNode.class);
 
-		Settings.CONFIGURATION.load();
+		Settings.config.load();
 
 		itemGear = contentRegistry.createItem(ItemGear.class);
 		itemGearShaft = contentRegistry.createItem(ItemGearShaft.class);
@@ -141,9 +141,9 @@ public class Mechanical
         blockTilePlacer = contentRegistry.newBlock(TilePlacer.class);
 
 		proxy.preInit();
-		Settings.CONFIGURATION.save();
+		Settings.config.save();
 
-		TabRI.ITEMSTACK = new ItemStack(blockGrinderWheel);
+		ResonantTab.ITEMSTACK = new ItemStack(blockGrinderWheel);
 
 		PacketAnnotation.register(TileWindTurbine.class);
 		PacketAnnotation.register(TileWaterTurbine.class);

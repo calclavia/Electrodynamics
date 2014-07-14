@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import net.minecraftforge.fluids.FluidRegistry;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.TabRI;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.resource.ItemOreResource;
 import resonantinduction.core.resource.ResourceGenerator;
 import cpw.mods.fml.relauncher.Side;
@@ -37,7 +37,7 @@ public class ItemOreResourceBucket extends Item
         setMaxStackSize(1);
         setUnlocalizedName(Reference.PREFIX + name);
         setTextureName(Reference.PREFIX + name);
-        setCreativeTab(TabRI.CORE);
+        setCreativeTab(ResonantTab.CORE);
         setHasSubtypes(true);
         setMaxDamage(0);
     }

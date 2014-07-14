@@ -20,7 +20,7 @@ public class ItemColoredDust extends Item
 
 	public ItemColoredDust()
 	{
-		super(Settings.CONFIGURATION.getItem("GlowingRefinedSand", Settings.getNextItemID()).getInt());
+		super(Settings.config.getItem("GlowingRefinedSand", Settings.getNextItemID()).getInt());
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 		this.setCreativeTab(CreativeTabs.tabMaterials);

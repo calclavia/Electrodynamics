@@ -21,7 +21,7 @@ public class BlockSteamPiston extends BlockMachine
 
     public BlockSteamPiston()
     {
-        super(Settings.CONFIGURATION, "SteamEngine", Material.iron);
+        super(Settings.config, "SteamEngine", Material.iron);
 
     }
 

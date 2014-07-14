@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import resonant.api.armor.IAntiPoisonArmor;
 import resonantinduction.core.Reference;
-import resonantinduction.core.TabRI;
+import resonantinduction.core.ResonantTab;
 
 /** Hazmat */
 public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
@@ -17,7 +17,7 @@ public class ItemHazmat extends ItemArmor implements IAntiPoisonArmor
     public ItemHazmat(int id, EnumArmorMaterial material, int index, int slot)
     {
         super(id, material, index, slot);
-        this.setCreativeTab(TabRI.DEFAULT);
+        this.setCreativeTab(ResonantTab.DEFAULT);
         this.setMaxDamage(200000);
     }
 

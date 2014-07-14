@@ -13,7 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import resonant.lib.utility.LanguageUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.TabRI;
+import resonantinduction.core.ResonantTab;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,15 +24,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class ItemOreResource extends Item
 {
-	private int blockID = ResonantInduction.blockRefinedDust.blockID;
-	;
 
-	public ItemOreResource(int id, String name)
+	private Block block = ResonantInduction.blockRefinedDust;
+
+	public ItemOreResource()
 	{
-		super(id);
-		setUnlocalizedName(Reference.PREFIX + name);
-		setTextureName(Reference.PREFIX + name);
-		setCreativeTab(TabRI.CORE);
 		setHasSubtypes(true);
 		setMaxDamage(0);
 	}

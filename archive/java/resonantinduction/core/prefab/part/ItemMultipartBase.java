@@ -14,7 +14,7 @@ public abstract class ItemMultipartBase extends JItemMultiPart
 {
 	public ItemMultipartBase(String name, int id)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
+		super(Settings.config.get(Configuration.CATEGORY_ITEM, name, id).getInt(id));
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setUnlocalizedName(Reference.PREFIX + name);
 		this.setTextureName(Reference.PREFIX + name);

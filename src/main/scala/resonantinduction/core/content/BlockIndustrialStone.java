@@ -1,4 +1,4 @@
-package resonantinduction.core.blocks;
+package resonantinduction.core.content;
 
 import java.util.List;
 

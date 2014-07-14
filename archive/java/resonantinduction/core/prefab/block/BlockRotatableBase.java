@@ -18,7 +18,7 @@ public class BlockRotatableBase extends BlockRotatable
 {
 	public BlockRotatableBase(String name, int id)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), UniversalElectricity.machine);
+		super(Settings.config.get(Configuration.CATEGORY_BLOCK, name, id).getInt(id), UniversalElectricity.machine);
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setUnlocalizedName(Reference.PREFIX + name);
 		this.setTextureName(Reference.PREFIX + name);

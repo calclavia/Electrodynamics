@@ -87,7 +87,7 @@ public class ResonantInduction
 		MinecraftForge.EVENT_BUS.register(new LinkEventHandler());
 		MinecraftForge.EVENT_BUS.register(new FluidEventHandler());
 
-		Settings.CONFIGURATION.load();
+		Settings.config.load();
 
 		blockMulti = new BlockMulti(Settings.getNextBlockID()).setPacketType(PACKET_TILE);
 
@@ -105,7 +105,7 @@ public class ResonantInduction
 		GameRegistry.registerBlock(blockFluidMixture, blockFluidMixture.getUnlocalizedName());
 		GameRegistry.registerTileEntity(TileFluidMixture.class, blockFluidMixture.getUnlocalizedName());
 
-		Settings.CONFIGURATION.save();
+		Settings.config.save();
 	}
 
 	@EventHandler

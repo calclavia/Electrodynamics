@@ -40,7 +40,7 @@ public class ItemWire extends JItemMultiPart
 
 	public ItemWire(int id)
 	{
-		super(Settings.CONFIGURATION.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
+		super(Settings.config.get(Configuration.CATEGORY_ITEM, "wire", id).getInt(id));
 		this.setUnlocalizedName(Reference.PREFIX + "wire");
 		this.setCreativeTab(ResonantInductionTabs.CORE);
 		this.setHasSubtypes(true);

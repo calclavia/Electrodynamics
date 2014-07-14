@@ -17,17 +17,17 @@ import net.minecraft.nbt.NBTTagList;
 import resonant.lib.utility.LanguageUtility;
 import resonant.lib.utility.nbt.NBTUtility;
 import resonantinduction.core.Reference;
+import resonantinduction.core.ResonantTab;
 import resonantinduction.core.Settings;
-import resonantinduction.core.TabRI;
 
 public class ItemImprint extends Item
 {
 	public ItemImprint(int id)
 	{
-		super(Settings.CONFIGURATION.getItem("imprint", id).getInt());
+		super(Settings.config.getItem("imprint", id).getInt());
 		this.setUnlocalizedName(Reference.PREFIX + "imprint");
 		this.setTextureName(Reference.PREFIX + "imprint");
-		this.setCreativeTab(TabRI.DEFAULT);
+		this.setCreativeTab(ResonantTab.DEFAULT);
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 	}

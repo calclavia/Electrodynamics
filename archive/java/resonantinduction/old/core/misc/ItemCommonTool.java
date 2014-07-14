@@ -57,7 +57,7 @@ public class ItemCommonTool extends Item implements IExtraItemInfo
 
 	public ItemCommonTool()
 	{
-		super(Settings.CONFIGURATION.getItem("Items", "CommonTools", Settings.getNextItemID()).getInt());
+		super(Settings.config.getItem("Items", "CommonTools", Settings.getNextItemID()).getInt());
 		this.maxStackSize = 1;
 		this.setCreativeTab(CreativeTabs.tabTools);
 	}
