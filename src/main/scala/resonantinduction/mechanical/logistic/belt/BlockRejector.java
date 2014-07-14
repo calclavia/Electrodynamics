@@ -6,7 +6,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import resonant.lib.render.block.BlockRenderingHandler;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.imprint.BlockImprintable;
+import resonantinduction.archaic.filter.imprint.BlockImprintable;
 import universalelectricity.api.UniversalElectricity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

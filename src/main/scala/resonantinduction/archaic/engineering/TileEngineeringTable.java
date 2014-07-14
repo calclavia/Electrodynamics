@@ -45,7 +45,7 @@ import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
-import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.archaic.filter.imprint.ItemImprint;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.core.transform.vector.Vector3;
 import codechicken.multipart.ControlKeyModifer;

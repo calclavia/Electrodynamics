@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.imprint;
+package resonantinduction.archaic.filter.imprint;
 
 import java.util.Set;
 

@@ -14,8 +14,8 @@ import resonant.api.IRotatable;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.utility.inventory.InternalInventoryHandler;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.imprint.ItemImprint;
-import resonantinduction.core.prefab.imprint.TileFilterable;
+import resonantinduction.archaic.filter.imprint.ItemImprint;
+import resonantinduction.archaic.filter.imprint.TileFilterable;
 import universalelectricity.core.transform.vector.Vector3;
 
 import com.google.common.io.ByteArrayDataInput;

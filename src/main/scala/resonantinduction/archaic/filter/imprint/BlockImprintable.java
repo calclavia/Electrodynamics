@@ -1,4 +1,4 @@
-package resonantinduction.core.prefab.imprint;
+package resonantinduction.archaic.filter.imprint;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;

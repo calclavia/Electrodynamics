@@ -13,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.PacketHandler;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.imprint.TileFilterable;
+import resonantinduction.archaic.filter.imprint.TileFilterable;
 import resonantinduction.mechanical.Mechanical;
 
 import com.google.common.io.ByteArrayDataInput;

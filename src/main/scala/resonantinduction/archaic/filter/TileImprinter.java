@@ -14,7 +14,7 @@ import resonant.lib.network.IPacketReceiver;
 import resonant.lib.network.PacketHandler;
 import resonant.lib.prefab.tile.TileAdvanced;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.archaic.filter.imprint.ItemImprint;
 
 import com.google.common.io.ByteArrayDataInput;
 

@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import resonant.lib.prefab.block.BlockTile;
 import resonant.lib.utility.inventory.InventoryUtility;
 import resonantinduction.core.Reference;
-import resonantinduction.core.prefab.imprint.ItemImprint;
+import resonantinduction.archaic.filter.imprint.ItemImprint;
 import universalelectricity.api.UniversalElectricity;
 import universalelectricity.api.vector.Vector2;
 import universalelectricity.core.transform.vector.Vector3;
