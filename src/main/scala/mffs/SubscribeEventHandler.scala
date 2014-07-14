@@ -151,15 +151,17 @@ object SubscribeEventHandler
   @SubscribeEvent
   def chunkModifyEvent(evt: ChunkModifiedEvent.ChunkSetBlockEvent)
   {
-    if (!evt.world.isRemote && evt.blockID == 0)
+    if (!evt.world.isRemote && evt.block == Blocks.air)
     {
+      val vec = new Vector3(evt.x, evt.y, evt.z)
+
       FrequencyGridRegistry.instance.getNodes(classOf[TileElectromagneticProjector])
-              .view
-              .filter(_.getWorldObj == evt.world)
-              .filter(_.getCalculatedField != null)
-              .filter(_.getCalculatedField.contains(new Vector3(evt.x, evt.y, evt.z)))
-              .force
-              .foreach(_.markFieldUpdate = true)
+        .view
+        .filter(_.getWorldObj == evt.world)
+        .filter(_.getCalculatedField != null)
+        .filter(_.getCalculatedField.contains(vec))
+        .force
+        .foreach(_.markFieldUpdate = true)
     }
   }
 
