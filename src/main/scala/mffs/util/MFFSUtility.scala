@@ -115,45 +115,42 @@ object MFFSUtility
     return null
   }
 
-  def getCamoBlock(projector: IProjector, position: Vector3): ItemStack =
+  def getCamoBlock(proj: IProjector, position: Vector3): ItemStack =
   {
+    val projector = proj.asInstanceOf[TileElectromagneticProjector]
     val tile = projector.asInstanceOf[TileEntity]
 
     if (projector != null)
     {
       if (!tile.getWorldObj().isRemote)
       {
-          if (projector.getModuleCount(Content.moduleCamouflage) > 0)
+        if (projector.getModuleCount(Content.moduleCamouflage) > 0)
+        {
+          if (projector.getMode.isInstanceOf[ItemModeCustom])
           {
-            if (projector.getMode.isInstanceOf[ItemModeCustom])
+            val fieldMap = (projector.getMode.asInstanceOf[ItemModeCustom]).getFieldBlockMap(projector, projector.getModeStack)
+
+            if (fieldMap != null)
             {
-              val fieldMap = (projector.getMode.asInstanceOf[ItemModeCustom]).getFieldBlockMap(projector, projector.getModeStack)
+              val fieldCenter = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
+              var relativePosition: Vector3 = position - fieldCenter
+              relativePosition = relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
 
-              if (fieldMap != null)
+              val blockInfo = fieldMap(relativePosition.round)
+
+              if (blockInfo != null && !blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
               {
-                val fieldCenter = new Vector3(projector.asInstanceOf[TileEntity]) + projector.getTranslation()
-                var relativePosition: Vector3 = position - fieldCenter
-                relativePosition = relativePosition.apply(new Rotation(-projector.getRotationYaw, -projector.getRotationPitch, 0))
-
-                val blockInfo = fieldMap(relativePosition.round)
-
-                if (blockInfo != null && !blockInfo._1.isAir(tile.getWorldObj(), position.xi, position.yi, position.zi))
-                {
-                  return new ItemStack(blockInfo._1, 1, blockInfo._2)
-                }
-              }
-            }
-
-            for (i <- projector.getModuleSlots)
-            {
-              val checkStack: ItemStack = projector.getStackInSlot(i)
-              val block: Block = getFilterBlock(checkStack)
-              if (block != null)
-              {
-                return checkStack
+                return new ItemStack(blockInfo._1, 1, blockInfo._2)
               }
             }
           }
+
+          projector.getFilterStacks filter (getFilterBlock(_) != null) headOption match
+          {
+            case Some(entry) => return entry
+            case _ => return null
+          }
+        }
       }
     }
 
