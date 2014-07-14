@@ -31,7 +31,7 @@ class TileTurntable extends SpatialBlock(Material.piston) with TRotatable with R
   override def registerIcons(iconReg: IIconRegister)
   {
     super.registerIcons(iconReg)
-    TileTurntable.top = iconReg.registerIcon(Reference.PREFIX + "turntable")
+    TileTurntable.top = iconReg.registerIcon(Reference.prefix + "turntable")
   }
 
   override def updateEntity()

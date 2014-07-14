@@ -12,25 +12,25 @@ object Reference
   final val idPrefix = "ResonantInduction"
 
   /** The official name of the mod */
-  final val NAME: String = "Resonant Induction"
-  final val LOGGER = Logger.getLogger(Reference.NAME)
+  final val name: String = "Resonant Induction"
+  final val logger = Logger.getLogger(Reference.name)
 
-  final val MAJOR_VERSION: String = "@MAJOR@"
-  final val MINOR_VERSION: String = "@MINOR@"
-  final val REVISION_VERSION: String = "@REVIS@"
-  final val BUILD_VERSION: String = "@BUILD@"
-  final val VERSION: String = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVISION_VERSION
-  final val CHANNEL: String = "resonindc"
+  final val majorVersion: String = "@MAJOR@"
+  final val minorVersion: String = "@MINOR@"
+  final val revisionVersion: String = "@REVIS@"
+  final val build: String = "@BUILD@"
+  final val version: String = majorVersion + "." + minorVersion + "." + revisionVersion
+  final val channel: String = "resonindc"
   /**
    * Directory Information
    */
-  final val DOMAIN: String = "resonantinduction"
-  final val PREFIX: String = DOMAIN + ":"
-  final val DIRECTORY: String = "/assets/" + DOMAIN + "/"
-  final val TEXTURE_DIRECTORY: String = "textures/"
-  final val GUI_DIRECTORY: String = TEXTURE_DIRECTORY + "gui/"
-  final val BLOCK_TEXTURE_DIRECTORY: String = TEXTURE_DIRECTORY + "blocks/"
-  final val ITEM_TEXTURE_DIRECTORY: String = TEXTURE_DIRECTORY + "items/"
-  final val MODEL_PATH: String = "models/"
-  final val MODEL_DIRECTORY: String = DIRECTORY + MODEL_PATH
+  final val domain: String = "resonantinduction"
+  final val prefix: String = domain + ":"
+  final val assetDirectory: String = "/assets/" + domain + "/"
+  final val textureDirectory: String = "textures/"
+  final val guiDirectory: String = textureDirectory + "gui/"
+  final val blockTextureDirectory: String = textureDirectory + "blocks/"
+  final val itemTextureDirectory: String = textureDirectory + "items/"
+  final val modelPath: String = "models/"
+  final val modelDirectory: String = assetDirectory + modelPath
 }

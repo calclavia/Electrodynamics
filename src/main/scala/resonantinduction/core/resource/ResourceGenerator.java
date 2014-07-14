@@ -39,7 +39,7 @@ import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.ResonantInduction.RecipeType;
 import resonantinduction.core.Settings;
-import resonantinduction.core.fluid.FluidColored;
+import resonantinduction.core.prefab.FluidColored;
 import resonantinduction.core.resource.fluid.BlockFluidMaterial;
 import resonantinduction.core.resource.fluid.BlockFluidMixture;
 

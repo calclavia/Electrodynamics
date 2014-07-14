@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import resonant.lib.render.RenderUtility;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
-import resonantinduction.core.fluid.FluidColored;
+import resonantinduction.core.prefab.FluidColored;
 import resonantinduction.core.resource.ResourceGenerator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

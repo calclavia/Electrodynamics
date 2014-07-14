@@ -1,17 +1,16 @@
 package resonantinduction.core.grid;
 
 import net.minecraftforge.common.util.ForgeDirection;
-import resonant.api.grid.INode;
-import resonant.api.grid.INodeProvider;
 import codechicken.multipart.PartMap;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
+import universalelectricity.api.core.grid.INode;
+import universalelectricity.api.core.grid.INodeProvider;
 
-//TODO: Move to UE 3.2
 public class TraitNodeProvider extends TileMultipart implements INodeProvider
 {
 	@Override
-	public INode getNode(Class<? extends INode> nodeType, ForgeDirection from)
+	public <N extends INode> N getNode(Class<N> nodeType, ForgeDirection from)
 	{
 		TMultiPart part = this.partMap(from.ordinal());
 		

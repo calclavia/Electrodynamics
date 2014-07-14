@@ -1,35 +1,23 @@
 package resonantinduction.core
 
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent, FMLServerStartingEvent}
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.common.{FMLCommonHandler, FMLLog, Mod, SidedProxy}
-import mffs.{Settings, Content}
-import net.minecraft.block.Block
-import net.minecraft.command.{ICommandManager, ServerCommandManager}
-import net.minecraft.item.crafting.FurnaceRecipes
-import net.minecraft.item.{Item, ItemStack}
+import cpw.mods.fml.common.{Mod, SidedProxy}
+import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
-import net.minecraftforge.oredict.ShapelessOreRecipe
 import org.modstats.{ModstatInfo, Modstats}
-import resonant.api.recipe.MachineRecipes
 import resonant.lib.config.ConfigHandler
 import resonant.lib.loadable.LoadableHandler
 import resonant.lib.network.netty.PacketManager
-import resonant.lib.utility.LanguageUtility
-import resonantinduction.core.blocks.IndustrialStoneBlocksRecipes
 import resonantinduction.core.handler.TextureHookHandler
-import resonantinduction.core.items.{ItemDevStaff, ItemFlour}
-import resonantinduction.core.prefab.part.PacketMultiPart
-import resonantinduction.core.resource.fluid.{ItemOreResourceBucket, TileFluidMixture}
-import resonantinduction.core.resource.{BlockDust, ItemBiomass, ItemOreResource, ResourceGenerator, TileDust}
+import resonantinduction.core.resource.ResourceGenerator
 
 /** The core module of Resonant Induction
   *
   * @author Calclavia */
-@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.VERSION, modLanguage = "scala", dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
+@Mod(modid = ResonantInduction.ID, name = ResonantInduction.NAME, version = Reference.version, modLanguage = "scala", dependencies = "required-after:ForgeMultipart@[1.0.0.244,);required-after:ResonantEngine;before:ThermalExpansion;before:Mekanism")
 @ModstatInfo(prefix = "resonantin")
 object ResonantInduction
 {

@@ -48,7 +48,7 @@ object CoreContent extends ContentHolder
   val  itemFlour = contentRegistry.createItem(classOf[ItemFlour])
   */
 
-  manager.setTab(ResonantTab).setPrefix(Reference.PREFIX)
+  manager.setTab(ResonantTab).setPrefix(Reference.prefix)
 
   /**
    * Recipe registration
