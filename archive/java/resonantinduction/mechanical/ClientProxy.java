@@ -1,5 +1,6 @@
 package resonantinduction.mechanical;
 
+import mechanical.CommonProxy;
 import resonantinduction.mechanical.render.MechanicalBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

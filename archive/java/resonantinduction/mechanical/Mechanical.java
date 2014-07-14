@@ -1,10 +1,11 @@
 package resonantinduction.mechanical;
 
+import mechanical.CommonProxy;
 import net.minecraft.block.Block;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;
-import resonantinduction.mechanical.belt.BlockConveyorBelt;
+import mechanical.belt.BlockConveyorBelt;
 import resonantinduction.old.core.recipe.RecipeLoader;
 import resonantinduction.old.transport.ResonantInductionTransport;
 import calclavia.lib.network.PacketHandler;
@@ -36,7 +37,7 @@ public class Mechanical
 	@Instance(ID)
 	public static Mechanical INSTANCE;
 
-	@SidedProxy(clientSide = "resonantinduction.mechanical.ClientProxy", serverSide = "resonantinduction.mechanical.CommonProxy")
+	@SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.Metadata(ID)

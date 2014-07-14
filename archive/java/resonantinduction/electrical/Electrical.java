@@ -69,7 +69,7 @@ public class Electrical
 	@Instance(ID)
 	public static Electrical INSTANCE;
 
-	@SidedProxy(clientSide = "resonantinduction.electrical.ClientProxy", serverSide = "resonantinduction.electrical.CommonProxy")
+	@SidedProxy(clientSide = "ClientProxy", serverSide = "CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.Metadata(ID)

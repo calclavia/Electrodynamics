@@ -1,5 +1,6 @@
 package resonantinduction.archaic;
 
+import resonantinduction.archaic.CommonProxy;
 import resonantinduction.core.Reference;
 import resonantinduction.core.ResonantInduction;
 import resonantinduction.core.Settings;

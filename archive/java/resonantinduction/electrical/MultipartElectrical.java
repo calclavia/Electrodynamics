@@ -20,9 +20,9 @@ public class MultipartElectrical implements IPartFactory
 	public MultipartElectrical()
 	{
 		MultiPartRegistry.registerParts(this, PART_TYPES);
-		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "resonantinduction.electrical.wire.trait.TraitConductor");
-		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "resonantinduction.electrical.wire.trait.TraitEnergyHandler");
-		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "resonantinduction.electrical.wire.trait.TraitEnergySink");
+		MultipartGenerator.registerTrait("universalelectricity.api.energy.IConductor", "TraitConductor");
+		MultipartGenerator.registerTrait("cofh.api.energy.IEnergyHandler", "TraitEnergyHandler");
+		MultipartGenerator.registerTrait("ic2.api.energy.tile.IEnergySink", "TraitEnergySink");
 	}
 
 	@Override
